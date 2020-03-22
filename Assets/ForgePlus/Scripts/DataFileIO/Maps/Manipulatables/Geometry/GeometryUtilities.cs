@@ -1,0 +1,77 @@
+﻿using ForgePlus.ShapesCollections;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Rendering;
+using Weland;
+
+namespace ForgePlus.LevelManipulation.Utilities
+{
+    public static class GeometryUtilities
+    {
+        /// <summary>
+        /// Used for converting between world-unit (WU) "increments" and meters.
+        /// One WU is 1024 "increments", and we want a WU to convert to 2 meters, so we use 512 as the conversion ratio.
+        /// </summary>
+        public const float WorldUnitIncrementsPerMeter = 512f;
+        public const float WorldUnitIncrementsPerWorldUnit = 1024f;
+        public const float MeterToWorldUnit = WorldUnitIncrementsPerMeter / WorldUnitIncrementsPerWorldUnit;
+
+        public static Vector3 GetMeshVertex(Level level, int endpointIndex, short height = 0)
+        {
+            var endpoint = level.Endpoints[endpointIndex];
+
+            // Convert from Marathon right-handed to Unity left-handed
+            // by flipping Y-axis and assigning it to Z
+            return new Vector3(endpoint.X, height, -endpoint.Y) / WorldUnitIncrementsPerMeter;
+        }
+
+        public static Platform GetPlatformForPolygonIndex(Level level, short polygonIndex)
+        {
+            return level.Platforms.First(platform => platform.PolygonIndex == polygonIndex);
+        }
+
+        public static void BuildRendererObject(
+            Level level,
+            GameObject rendererHost,
+            Vector3[] vertices,
+            int[] triangles,
+            Vector2[] uvs,
+            ShapeDescriptor shapeDescriptor,
+            Weland.Light light,
+            short transferMode,
+            bool isOpaqueSurface,
+            WallsCollection.SurfaceTypes surfaceType = WallsCollection.SurfaceTypes.Normal,
+            Media media = null)
+        {
+            var mesh = new Mesh();
+            mesh.name = rendererHost.name;
+
+            mesh.SetVertices(vertices);
+            mesh.SetTriangles(triangles, submesh: 0);
+            mesh.SetUVs(channel: 0, uvs: uvs);
+            mesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
+                                    MeshUpdateFlags.DontRecalculateBounds |
+                                    MeshUpdateFlags.DontResetBoneBounds);
+
+            rendererHost.AddComponent<MeshFilter>().sharedMesh = mesh;
+
+            // Assign Common Wall Material
+            var material = WallsCollection.GetMaterial(shapeDescriptor, transferMode, isOpaqueSurface, surfaceType);
+            rendererHost.AddComponent<MeshRenderer>().sharedMaterial = material;
+
+            // Assign Light
+            if (light != null)
+            {
+                var surfaceLight = rendererHost.AddComponent<SurfaceLight>();
+                surfaceLight.AssignFPLight(FPLight.GetFPLight(light), level.Lights.IndexOf(light));
+            }
+
+            if (surfaceType == WallsCollection.SurfaceTypes.Media)
+            {
+                var surfaceMedia = rendererHost.AddComponent<SurfaceMedia>();
+                surfaceMedia.AssignMedia(media);
+                surfaceMedia.AssignFPLight(FPLight.GetFPLight(level.Lights[media.LightIndex]), media.LightIndex, (float)media.MinimumLightIntensity);
+            }
+        }
+    }
+}
