@@ -15,12 +15,27 @@ namespace ForgePlus.LevelManipulation
         }
 
         public short? Index { get; set; }
-        public Side WelandObject { get; set; }
+        
+        public Side WelandObject
+        {
+            get
+            {
+                return fpSide;
+            }
+            set
+            {
+                fpSide = value;
+            }
+        }
+
         public GameObject TopSurface;
         public GameObject MiddleSurface;
         public GameObject BottomSurface;
 
         public FPLevel FPLevel { private get; set; }
+
+        [SerializeField]
+        private Side fpSide;
 
         public static FPSide GenerateSurfaces(FPLevel fpLevel, bool isClockwise, Line line)
         {
@@ -329,6 +344,13 @@ namespace ForgePlus.LevelManipulation
             #region Vertices
             var bottomPosition = (short)(lowHeight - highHeight);
 
+            if (!isClockwiseSide)
+            {
+                var originalA = endpointIndexA;
+                endpointIndexA = endpointIndexB;
+                endpointIndexB = originalA;
+            }
+
             var vertices = new Vector3[]
             {
                 GeometryUtilities.GetMeshVertex(fpLevel.Level, endpointIndexA, bottomPosition),
@@ -340,30 +362,22 @@ namespace ForgePlus.LevelManipulation
 
             #region Triangles
             var triangles = new int[6];
-            if (isClockwiseSide)
-            {
-                triangles[1] = 1;
-                triangles[4] = 3;
-            }
-            else
-            {
-                triangles[1] = 3;
-                triangles[4] = 1;
-            }
 
             triangles[0] = 0;
+            triangles[1] = 1;
             triangles[2] = 2;
             triangles[3] = 2;
+            triangles[4] = 3;
             triangles[5] = 0;
             #endregion Triangles
 
             #region UVs
             var uvs = new Vector2[vertices.Length];
 
-            // Note: Marathon uses Top Left Origin
             var wallDimensions = new Vector2((vertices[3] - vertices[0]).magnitude, vertices[1].y - vertices[0].y) * GeometryUtilities.MeterToWorldUnit;
             var offset = new Vector2(textureOffsetX, -textureOffsetY) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
 
+            // Note: Marathon uses a Top-Left Origin, so that is compensated for here.
             var uvOrigin = Vector2.up + offset;
             var uvFar = new Vector2(uvOrigin.x + wallDimensions.x, uvOrigin.y - wallDimensions.y);
 
