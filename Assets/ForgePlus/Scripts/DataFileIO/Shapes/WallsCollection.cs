@@ -11,9 +11,6 @@ namespace ForgePlus.ShapesCollections
         {
             Normal,
             Media,
-            Landscape,
-            TransparentSide,
-            OpaqueTransparentSide,
         }
 
         // Normal
@@ -96,6 +93,12 @@ namespace ForgePlus.ShapesCollections
         {
             var collectionIndex = shapeDescriptor.Collection;
             var bitmapIndex = shapeDescriptor.Bitmap;
+
+            if (collectionIndex >= 27 && collectionIndex <= 30)
+            {
+                // If this is a landscape bitmap, then force landscape transfer mode
+                transferMode = 9;
+            }
 
             var material = Materials.ContainsKey(GetMaterialKey(shapeDescriptor, transferMode, isOpaqueSurface)) ? Materials[GetMaterialKey(shapeDescriptor, transferMode, isOpaqueSurface)] : null;
 

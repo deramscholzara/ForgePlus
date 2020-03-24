@@ -52,9 +52,19 @@ namespace ForgePlus.DataFileIO
 
                 PlayerPrefs.SetString(GetPlayerPrefsKey(type), result);
 
-                callback(result);
+                try
+                {
+                    LoadFile(type);
 
-                LoadFile(type);
+                    callback(result);
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"Attempt to load file at path \"{result}\" failed with exception: {exception.ToString()}");
+                    PlayerPrefs.SetString(GetPlayerPrefsKey(type), string.Empty);
+
+                    callback(string.Empty);
+                }
             }
 
             dialogIsOpen = false;
