@@ -164,6 +164,20 @@ namespace ForgePlus.LevelManipulation
             }
             #endregion Platforms
 
+            #region TransferModes_VertexColor
+            var floorTransferModesVertexColors = new Color[floorVertices.Length];
+            for (var i = 0; i < floorVertices.Length; i++)
+            {
+                floorTransferModesVertexColors[i] = GeometryUtilities.GetTransferModeVertexColor(polygon.FloorTransferMode, isSideSurface: false);
+            }
+
+            var ceilingTransferModesVertexColors = new Color[ceilingVertices.Length];
+            for (var i = 0; i < ceilingVertices.Length; i++)
+            {
+                ceilingTransferModesVertexColors[i] = GeometryUtilities.GetTransferModeVertexColor(polygon.CeilingTransferMode, isSideSurface: false);
+            }
+            #endregion TransferModes_VertexColor
+
             GeometryUtilities.BuildRendererObject(
                 FPLevel.Level,
                 floorRoot,
@@ -173,6 +187,7 @@ namespace ForgePlus.LevelManipulation
                 polygon.FloorTexture,
                 FPLevel.Level.Lights[polygon.FloorLight],
                 polygon.FloorTransferMode,
+                floorTransferModesVertexColors,
                 isOpaqueSurface: true);
 
             GeometryUtilities.BuildRendererObject(
@@ -184,6 +199,7 @@ namespace ForgePlus.LevelManipulation
                 polygon.CeilingTexture,
                 FPLevel.Level.Lights[polygon.CeilingLight],
                 polygon.CeilingTransferMode,
+                ceilingTransferModesVertexColors,
                 isOpaqueSurface: true);
 
             if (hasMedia)
@@ -224,6 +240,7 @@ namespace ForgePlus.LevelManipulation
                     mediaShapeDescriptor,
                     FPLevel.Level.Lights[polygon.MediaLight],
                     transferMode: 0,
+                    floorTransferModesVertexColors,
                     isOpaqueSurface: true,
                     WallsCollection.SurfaceTypes.Media,
                     media);

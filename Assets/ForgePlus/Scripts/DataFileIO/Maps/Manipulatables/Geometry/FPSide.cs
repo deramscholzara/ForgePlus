@@ -387,6 +387,17 @@ namespace ForgePlus.LevelManipulation
             uvs[3] = uvFar;
             #endregion UVs
 
+            #region TransferModes_VertexColor
+            var transferModesVertexColor = GeometryUtilities.GetTransferModeVertexColor(transferMode, isSideSurface: true);
+            var transferModesVertexColors = new Color[]
+            {
+                transferModesVertexColor,
+                transferModesVertexColor,
+                transferModesVertexColor,
+                transferModesVertexColor
+            };
+            #endregion TransferModes_VertexColor
+
             var sideGameObject = new GameObject(name);
             sideGameObject.transform.SetParent(parent);
 
@@ -399,6 +410,7 @@ namespace ForgePlus.LevelManipulation
                 shapeDescriptor,
                 light,
                 transferMode,
+                transferModesVertexColors,
                 isOpaqueSurface);
 
             return sideGameObject;

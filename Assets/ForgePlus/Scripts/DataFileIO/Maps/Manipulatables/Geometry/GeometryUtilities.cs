@@ -39,6 +39,7 @@ namespace ForgePlus.LevelManipulation.Utilities
             ShapeDescriptor shapeDescriptor,
             Weland.Light light,
             short transferMode,
+            Color[] transferModesVertexColors,
             bool isOpaqueSurface,
             WallsCollection.SurfaceTypes surfaceType = WallsCollection.SurfaceTypes.Normal,
             Media media = null)
@@ -49,9 +50,13 @@ namespace ForgePlus.LevelManipulation.Utilities
             mesh.SetVertices(vertices);
             mesh.SetTriangles(triangles, submesh: 0);
             mesh.SetUVs(channel: 0, uvs: uvs);
+            mesh.SetColors(transferModesVertexColors);
             mesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
                                     MeshUpdateFlags.DontRecalculateBounds |
                                     MeshUpdateFlags.DontResetBoneBounds);
+            mesh.RecalculateTangents(MeshUpdateFlags.DontNotifyMeshUsers |
+                                     MeshUpdateFlags.DontRecalculateBounds |
+                                     MeshUpdateFlags.DontResetBoneBounds);
 
             rendererHost.AddComponent<MeshFilter>().sharedMesh = mesh;
 
@@ -71,6 +76,32 @@ namespace ForgePlus.LevelManipulation.Utilities
                 var surfaceMedia = rendererHost.AddComponent<SurfaceMedia>();
                 surfaceMedia.AssignMedia(media);
                 surfaceMedia.AssignFPLight(FPLight.GetFPLight(level.Lights[media.LightIndex]), media.LightIndex, (float)media.MinimumLightIntensity);
+            }
+        }
+
+        public static Color GetTransferModeVertexColor(short transferMode, bool isSideSurface)
+        {
+            switch (transferMode)
+            {
+                case 4: // Pulsate
+                case 5: // Wobble
+                    return new Color(0f, 0f, 2f, 0f);
+                case 6: // Wobble Fast
+                    return new Color(0f, 0f, 20f, 0f);
+                case 15: // Horizontal Slide
+                    return isSideSurface ? new Color(-1f / 8f, 0f, 0f, 0f) : new Color(0f, -1f / 8f, 0f, 0f);
+                case 16: // Horizontal Slide Fast
+                    return isSideSurface ? new Color(-2f / 8f, 0f, 0f, 0f) : new Color(0f, -2f / 8f, 0f, 0f);
+                case 17: // Vertical Slide
+                    return isSideSurface ? new Color(0f, 1f / 8f, 0f, 0f) : new Color(1f / 8f, 0f, 0f, 0f);
+                case 18: // Vertical Slide Fast
+                    return isSideSurface ? new Color(0f, 2f / 8f, 0f, 0f) : new Color(2f / 8f, 0f, 0f, 0f);
+                case 19: // Wander
+                    return new Color(0f, 0f, 0f, 1f);
+                case 20: // Wander Fast
+                    return new Color(0f, 0f, 0f, 2f);
+                default: // Normal
+                    return Color.clear;
             }
         }
     }
