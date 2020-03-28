@@ -39,7 +39,7 @@ namespace Weland
                 BinaryReaderBE reader = new BinaryReaderBE(File.Open(filename, FileMode.Open));
                 Load(reader);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
                 collectionHeaders = new CollectionHeader[ShapeDescriptor.MaximumCollections];
                 collections = new Collection[collectionHeaders.Length];
@@ -48,6 +48,8 @@ namespace Weland
                     collectionHeaders[i] = new CollectionHeader();
                     collections[i] = new Collection();
                 }
+
+                throw exception;
             }
         }
 
