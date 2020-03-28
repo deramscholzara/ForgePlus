@@ -24,9 +24,6 @@ namespace ForgePlus.ShapesCollections
         // Media (could be Normal, but I like the added ripple effect)
         private static readonly Shader MediaShader = Shader.Find("ForgePlus/Media");
 
-        // Missing bitmap
-        private static readonly Shader OpaqueTriplanarShader = Shader.Find("ForgePlus/OpaqueTriplanar");
-
         // No assignment
         private static readonly Material UnassignedMaterial = new Material(Shader.Find("ForgePlus/Unassigned"));
 
@@ -79,12 +76,12 @@ namespace ForgePlus.ShapesCollections
             ClearMaterials(Materials);
             ClearMaterials(MediaMaterials);
 
-            foreach (var textureKey in Textures.Keys)
+            foreach (var texturesKey in Textures.Keys)
             {
-                Object.Destroy(Textures[textureKey]);
-
-                Textures.Remove(textureKey);
+                Object.Destroy(Textures[texturesKey]);
             }
+            
+            Textures.Clear();
         }
 
         private static void ClearMaterials(IDictionary<string, Material> materials)
@@ -138,7 +135,7 @@ namespace ForgePlus.ShapesCollections
                 }
                 else
                 {
-                    shaderToUse = OpaqueTriplanarShader;
+                    shaderToUse = OpaqueNormalShader;
                 }
 
                 if (!textureToUse)
