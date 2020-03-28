@@ -34,7 +34,6 @@ namespace ForgePlus.DataFileIO
 
             if (data == null)
             {
-                Debug.LogError($"Tried getting shape ShapeDescriptor with no loaded Shapes file.  You may need to call LoadData() first.");
                 // No shapes data is loaded, so exit
                 return null;
             }
