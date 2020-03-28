@@ -80,9 +80,7 @@ namespace ForgePlus.DataFileIO
                 LoadData();
             }
 
-            // TODO: actually set this up so it uses the token for cancellation (in loading bar UI?)
-            var cts = new CancellationTokenSource();
-            BuildLevel(cts.Token);
+            BuildLevel();
 
             if (!Application.isPlaying)
             {
@@ -105,7 +103,7 @@ namespace ForgePlus.DataFileIO
             OnLevelClosed();
         }
 
-        private void BuildLevel(CancellationToken cancellationToken)
+        private void BuildLevel()
         {
             FPLevel = new GameObject($"Level ({LevelName})").AddComponent<FPLevel>();
             FPLevel.Level = level;

@@ -127,8 +127,6 @@ namespace ForgePlus.LevelManipulation
 
         public async void BeginState(States state, bool loop = false)
         {
-            // TODO: Implement loop variable (like how FPLight does it)
-
             platformBehaviorCTS?.Cancel();
 
             platformBehaviorCTS = new CancellationTokenSource();
@@ -141,10 +139,8 @@ namespace ForgePlus.LevelManipulation
             if (!loop && WelandObject.DelaysBeforeActivation &&
                 (state == States.Extended || state == States.Contracted))
             {
-                // TODO: should this include "Extended" state?  Or is this only a delay when contracted?
                 // TODO: Should this also delay if reactivating during the Extending and Contracting states?
-                // TODO: await for a Hold() if "delays before activation" flat, and not looping
-                ////await Hold(cancellationToken, delay);
+                await Hold(cancellationToken, delay, currentPosition);
             }
 
             while (!cancellationToken.IsCancellationRequested && Application.isPlaying)
@@ -152,7 +148,7 @@ namespace ForgePlus.LevelManipulation
                 switch (currentState)
                 {
                     case States.Extended:
-                        await Hold(cancellationToken, delay);
+                        await Hold(cancellationToken, delay, extendedPosition);
 
                         if (!loop)
                         {
@@ -169,14 +165,18 @@ namespace ForgePlus.LevelManipulation
                             return;
                         }
 
-                        if (!loop)
+                        if (loop)
+                        {
+                            currentPosition = contractedPosition;
+                        }
+                        else
                         {
                             currentState = States.Extended;
                         }
 
                         break;
                     case States.Contracted:
-                        await Hold(cancellationToken, delay);
+                        await Hold(cancellationToken, delay, contractedPosition);
 
                         if (!loop)
                         {
@@ -194,14 +194,18 @@ namespace ForgePlus.LevelManipulation
                             await Move(cancellationToken, speed, contractedPosition);
                         }
 
-                        if (WelandObject.DeactivatesAtEachLevel || (!WelandObject.InitiallyExtended && WelandObject.DeactivatesAtInitialLevel))
+                        if (loop)
                         {
-                            DeactivateRuntimeBehavior();
-                            return;
+                            currentPosition = extendedPosition;
                         }
-
-                        if (!loop)
+                        else
                         {
+                            if (WelandObject.DeactivatesAtEachLevel || (!WelandObject.InitiallyExtended && WelandObject.DeactivatesAtInitialLevel))
+                            {
+                                DeactivateRuntimeBehavior();
+                                return;
+                            }
+
                             currentState = States.Contracted;
                         }
 
@@ -210,8 +214,10 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        private async Task Hold(CancellationToken cancellationToken, float duration)
+        private async Task Hold(CancellationToken cancellationToken, float duration, float holdPosition)
         {
+            currentPosition = holdPosition;
+
             var endTime = Time.realtimeSinceStartup + duration;
             while (GetStateOffsetRealTimeSinceStartup() < endTime)
             {
