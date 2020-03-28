@@ -60,10 +60,9 @@ namespace ForgePlus.DataFileIO
                 }
                 catch (Exception exception)
                 {
-                    UnloadFile(type);
-
                     Debug.LogError($"Attempt to load file at path \"{result}\" failed with exception: {exception.ToString()}");
-                    PlayerPrefs.SetString(GetPlayerPrefsKey(type), string.Empty);
+
+                    UnloadFile(type);
 
                     callback(string.Empty);
                 }
@@ -71,6 +70,30 @@ namespace ForgePlus.DataFileIO
 
             dialogIsOpen = false;
             UIBlocking.Instance.Unblock();
+        }
+
+        public void UnloadFile(DataFileTypes type)
+        {
+            switch (type)
+            {
+                case DataFileTypes.Maps:
+                    MapsLoading.Instance.UnloadFile();
+                    break;
+                case DataFileTypes.Shapes:
+                    ShapesLoading.Instance.UnloadFile();
+                    break;
+                case DataFileTypes.Physics:
+                    Debug.LogWarning("Physics unloading not yet supported.");
+                    break;
+                case DataFileTypes.Sounds:
+                    Debug.LogWarning("Sounds unloading not yet supported.");
+                    break;
+                case DataFileTypes.Images:
+                    Debug.LogWarning("Images unloading not yet supported.");
+                    break;
+            }
+            
+            PlayerPrefs.SetString(GetPlayerPrefsKey(type), string.Empty);
         }
 
         private string GetPlayerPrefsKey(DataFileTypes type)
@@ -96,28 +119,6 @@ namespace ForgePlus.DataFileIO
                     break;
                 case DataFileTypes.Images:
                     Debug.LogWarning("Images loading not yet supported.");
-                    break;
-            }
-        }
-
-        private void UnloadFile(DataFileTypes type)
-        {
-            switch (type)
-            {
-                case DataFileTypes.Maps:
-                    MapsLoading.Instance.UnloadFile();
-                    break;
-                case DataFileTypes.Shapes:
-                    ShapesLoading.Instance.UnloadFile();
-                    break;
-                case DataFileTypes.Physics:
-                    Debug.LogWarning("Physics unloading not yet supported.");
-                    break;
-                case DataFileTypes.Sounds:
-                    Debug.LogWarning("Sounds unloading not yet supported.");
-                    break;
-                case DataFileTypes.Images:
-                    Debug.LogWarning("Images unloading not yet supported.");
                     break;
             }
         }
