@@ -105,14 +105,14 @@ namespace ForgePlus.LevelManipulation
 
             mesh.triangles = new int[]
             {
-                2, 1, 0, // triangle bottom
+                2, 1, 0, // triangle bottom cap
                 0, 1, 3, // triangle right-side lower
                 3, 1, 4, // triangle right-side upper
                 1, 2, 4, // triangle back-side lower
                 4, 2, 5, // triangle back-side upper
                 2, 0, 5, // triangle left-side lower
                 5, 0, 3, // triangle left-side upper
-                3, 4, 5,  // triangle top
+                3, 4, 5,  // triangle top cap
             };
 
             mesh.colors = new Color[]
