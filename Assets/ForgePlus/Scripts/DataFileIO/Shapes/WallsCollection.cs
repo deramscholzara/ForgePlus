@@ -32,7 +32,8 @@ namespace ForgePlus.ShapesCollections
 
         private static readonly Texture2D GridTexture = Resources.Load<Texture2D>("Walls/Grid");
 
-        private static readonly Dictionary<string, Material> Materials = new Dictionary<string, Material>(200);
+        private static readonly Dictionary<ShapeDescriptor, Texture2D> Textures = new Dictionary<ShapeDescriptor, Texture2D>(250);
+        private static readonly Dictionary<string, Material> Materials = new Dictionary<string, Material>(400);
         private static readonly Dictionary<string, Material> MediaMaterials = new Dictionary<string, Material>(5);
 
         public static Material GetMaterial(
@@ -73,18 +74,25 @@ namespace ForgePlus.ShapesCollections
             }
         }
 
-        public static void ClearMaterials()
+        public static void ClearCollection()
+        {
+            ClearMaterials(Materials);
+            ClearMaterials(MediaMaterials);
+
+            foreach (var textureKey in Textures.Keys)
+            {
+                Object.Destroy(Textures[textureKey]);
+
+                Textures.Remove(textureKey);
+            }
+        }
+
+        private static void ClearMaterials(IDictionary<string, Material> materials)
         {
             // Don't actually clear the Materials list,
             // just clear their textures so the Materials can be reused
-            foreach (var material in Materials.Values)
+            foreach (var material in materials.Values)
             {
-                var textureOnMaterial = material.mainTexture;
-                if (textureOnMaterial != GridTexture)
-                {
-                    Object.Destroy(material.mainTexture);
-                }
-
                 material.mainTexture = null;
             }
         }
@@ -104,7 +112,21 @@ namespace ForgePlus.ShapesCollections
 
             if (!material || !material.mainTexture)
             {
-                Texture2D textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
+                Texture2D textureToUse;
+                if (Textures.ContainsKey(shapeDescriptor))
+                {
+                    textureToUse = Textures[shapeDescriptor];
+                }
+                else
+                {
+                    textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
+
+                    if (textureToUse)
+                    {
+                        Textures[shapeDescriptor] = textureToUse;
+                    }
+                }
+
                 Shader shaderToUse;
                 if (transferMode == 9)
                 {
@@ -118,7 +140,6 @@ namespace ForgePlus.ShapesCollections
                 {
                     shaderToUse = OpaqueTriplanarShader;
                 }
-
 
                 if (!textureToUse)
                 {
@@ -151,7 +172,7 @@ namespace ForgePlus.ShapesCollections
 
         private static string GetMaterialKey(ShapeDescriptor shapeDescriptor, short transferMode, bool isOpaqueWithAlphaVariant)
         {
-            // TODO: Make the Key in track bitmap, collection, transfer mode, and light index,
+            // TODO: Make the Key in track bitmap, collection, transfer mode, and  --- light index ---,
             //       and set up SurfaceLight always get its materials from this class.
             //       This should reduce material count, and thus also draw calls.
             return $"{shapeDescriptor.Collection},{shapeDescriptor.Bitmap},{transferMode},{isOpaqueWithAlphaVariant}";

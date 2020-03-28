@@ -119,7 +119,7 @@ namespace ForgePlus.DataFileIO
             FPLevel.FPMapObjects = new Dictionary<short, FPMapObject>();
 
             // Clear out Walls Materials so it can be repopulated with the correct set
-            WallsCollection.ClearMaterials();
+            WallsCollection.ClearCollection();
 
             // Initialize Lights here so they are in proper index order
             FPLight.ClearFPLightsList();
