@@ -8,13 +8,16 @@ namespace ForgePlus.DataFileIO
 {
     public class Button_SelectDataFile : MonoBehaviour
     {
-        private const string defaultPathText = "select a file...";
+        public const string defaultPathText = "select a file...";
 
         [SerializeField]
         private TMPro.TextMeshProUGUI filePathDisplayText = null;
 
         [SerializeField]
         private DataFileTypes dataFileType = DataFileTypes.Unspecified;
+
+        [SerializeField]
+        private Button_UnloadDataFile unloadButton = null;
 
         public void OnClick()
         {
@@ -28,7 +31,18 @@ namespace ForgePlus.DataFileIO
 
         private void OnPathUpdated(string path)
         {
-            filePathDisplayText.text = string.IsNullOrEmpty(path) ? defaultPathText : path;
+            if (string.IsNullOrEmpty(path))
+            {
+                filePathDisplayText.text = defaultPathText;
+
+                unloadButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                filePathDisplayText.text = path;
+
+                unloadButton.gameObject.SetActive(true);
+            }
         }
     }
 }
