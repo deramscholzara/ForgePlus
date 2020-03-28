@@ -15,7 +15,7 @@ namespace ForgePlus.DataFileIO
 
         protected override void PreUnloadDataCleanup()
         {
-            WallsCollection.ClearMaterials();
+            WallsCollection.ClearCollection();
         }
     }
 }
