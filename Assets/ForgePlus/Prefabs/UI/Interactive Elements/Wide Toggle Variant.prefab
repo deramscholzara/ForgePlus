@@ -22,6 +22,11 @@ PrefabInstance:
       propertyPath: m_PreferredWidth
       value: 125
       objectReference: {fileID: 0}
+    - target: {fileID: 5965558954833741972, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+        type: 3}
+      propertyPath: m_FlexibleWidth
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741973, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -130,7 +135,7 @@ PrefabInstance:
     - target: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: m_Name
-      value: Wide Toggle
+      value: Wide Toggle Variant
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
