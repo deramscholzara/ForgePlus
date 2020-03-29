@@ -8,7 +8,7 @@ namespace ForgePlus.ApplicationGeneral
     {
         public void OnValueChanged(bool value)
         {
-            Screen.fullScreen = value;
+            SettingsManager.Instance.IsFullScreen = value;
         }
     }
 }
