@@ -10,12 +10,12 @@ namespace ForgePlus.LevelManipulation
         // This member is purely here so it's exposed in the inspector
         // TODO: Get rid of this once there's a proper inspector implemented.
         //       - Note: Can then use "IndexOf" to get the index of the FPLight for the inspector
-        private int lightIndex = -1;
+        private short lightIndex = -1;
 #pragma warning restore IDE0044
         private FPLight fPLight;
         private float minimumIntensity = 0f; // For Media
 
-        public void AssignFPLight(FPLight fpLight, int lightIndex, float minimumIntensity = 0f)
+        public void AssignFPLight(FPLight fpLight, short lightIndex, float minimumIntensity = 0f)
         {
             this.lightIndex = lightIndex;
             fPLight = fpLight;

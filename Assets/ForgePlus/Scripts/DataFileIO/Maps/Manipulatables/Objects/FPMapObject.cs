@@ -8,6 +8,8 @@ namespace ForgePlus.LevelManipulation
     [RequireComponent(typeof(MeshCollider))]
     public class FPMapObject : MonoBehaviour, IFPManipulatable<MapObject>, IFPSelectable
     {
+        private readonly int selectedShaderPropertyId = Shader.PropertyToID("_Selected");
+
         private static Material MapObjectPlaceholderMaterial;
         private static Mesh ItemMesh;
         private static Mesh SceneryMesh;
@@ -53,7 +55,7 @@ namespace ForgePlus.LevelManipulation
                     unselectedMaterial = renderer.sharedMaterial;
                 }
 
-                renderer.material.SetFloat("_Selected", 1f);
+                renderer.material.SetFloat(selectedShaderPropertyId, 1f);
             }
             else
             {
