@@ -315,6 +315,7 @@ namespace ForgePlus.LevelManipulation
             short textureOffsetY = 0;
             ShapeDescriptor shapeDescriptor = ShapeDescriptor.Empty;
             Weland.Light light = null;
+            short lightIndex = 0;
 
             if (side != null)
             {
@@ -325,18 +326,21 @@ namespace ForgePlus.LevelManipulation
                         textureOffsetY = side.Primary.Y;
                         shapeDescriptor = side.Primary.Texture;
                         light = fpLevel.Level.Lights[side.PrimaryLightsourceIndex];
+                        lightIndex = side.PrimaryLightsourceIndex;
                         break;
                     case SideDataSources.Secondary:
                         textureOffsetX = side.Secondary.X;
                         textureOffsetY = side.Secondary.Y;
                         shapeDescriptor = side.Secondary.Texture;
                         light = fpLevel.Level.Lights[side.SecondaryLightsourceIndex];
+                        lightIndex = side.SecondaryLightsourceIndex;
                         break;
                     case SideDataSources.Transparent:
                         textureOffsetX = side.Transparent.X;
                         textureOffsetY = side.Transparent.Y;
                         shapeDescriptor = side.Transparent.Texture;
                         light = fpLevel.Level.Lights[side.TransparentLightsourceIndex];
+                        lightIndex = side.TransparentLightsourceIndex;
                         break;
                 }
             }
@@ -408,7 +412,8 @@ namespace ForgePlus.LevelManipulation
                 triangles,
                 uvs,
                 shapeDescriptor,
-                light,
+                fpLevel.FPLights[lightIndex],
+                lightIndex,
                 transferMode,
                 transferModesVertexColors,
                 isOpaqueSurface);

@@ -37,7 +37,8 @@ namespace ForgePlus.LevelManipulation.Utilities
             int[] triangles,
             Vector2[] uvs,
             ShapeDescriptor shapeDescriptor,
-            Weland.Light light,
+            FPLight fpLight,
+            short lightIndex,
             short transferMode,
             Color[] transferModesVertexColors,
             bool isOpaqueSurface,
@@ -65,17 +66,16 @@ namespace ForgePlus.LevelManipulation.Utilities
             rendererHost.AddComponent<MeshRenderer>().sharedMaterial = material;
 
             // Assign Light
-            if (light != null)
+            if (fpLight != null)
             {
                 var surfaceLight = rendererHost.AddComponent<SurfaceLight>();
-                surfaceLight.AssignFPLight(FPLight.GetFPLight(light), level.Lights.IndexOf(light));
+                surfaceLight.AssignFPLight(fpLight, lightIndex, surfaceType != WallsCollection.SurfaceTypes.Media ? 0f : (float)media.MinimumLightIntensity);
             }
 
             if (surfaceType == WallsCollection.SurfaceTypes.Media)
             {
-                var surfaceMedia = rendererHost.AddComponent<SurfaceMedia>();
+                var surfaceMedia = rendererHost.AddComponent<FPMedia>();
                 surfaceMedia.AssignMedia(media);
-                surfaceMedia.AssignFPLight(FPLight.GetFPLight(level.Lights[media.LightIndex]), media.LightIndex, (float)media.MinimumLightIntensity);
             }
         }
 

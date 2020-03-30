@@ -6,7 +6,7 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPPlatform : MonoBehaviour, IFPManipulatable<Platform>
+    public class FPPlatform : MonoBehaviour, IFPManipulatable<Platform>, IFPDestructionPreparable
     {
         public enum LinkedSurfaces
         {
@@ -45,6 +45,11 @@ namespace ForgePlus.LevelManipulation
         private States currentState = States.Contracted;
 
         private float remainingStateTime = 0f;
+
+        public void PrepareForDestruction()
+        {
+            DeactivateRuntimeBehavior();
+        }
 
         public void SetPlatform(short index, Platform platform, LinkedSurfaces linkedSurface)
         {
@@ -119,7 +124,7 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        private void DeactivateRuntimeBehavior()
+        public void DeactivateRuntimeBehavior()
         {
             platformBehaviorCTS?.Cancel();
             platformBehaviorCTS = null;
