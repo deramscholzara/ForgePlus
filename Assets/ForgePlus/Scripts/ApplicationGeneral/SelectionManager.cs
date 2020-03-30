@@ -157,12 +157,10 @@ namespace ForgePlus.LevelManipulation
         {
             if (SelectedObjects.Contains(selection))
             {
-                UnityEngine.Debug.Log("Deselect");
                 DeselectObject(selection, multiSelect);
             }
             else
             {
-                UnityEngine.Debug.Log("Select");
                 SelectObject(selection, multiSelect);
             }
         }

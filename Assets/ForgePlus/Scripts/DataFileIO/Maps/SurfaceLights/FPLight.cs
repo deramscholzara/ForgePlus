@@ -43,6 +43,8 @@ namespace ForgePlus.LevelManipulation
             Index = index;
             WelandObject = light;
             FPLevel = fpLevel;
+
+            BeginRuntimeStyleBehavior();
         }
 
         public void PrepareForDestruction()
