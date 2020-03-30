@@ -3,7 +3,7 @@ guid: 4fd2c5e43a78e164fb3f83ef2e46c657
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 10
+  serializedVersion: 11
   mipmaps:
     mipMapMode: 1
     enableMipMap: 1
@@ -59,14 +59,15 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   ignorePngGamma: 0
+  applyGammaDecoding: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 1024
     resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
+    textureFormat: 3
+    textureCompression: 2
+    compressionQuality: 54
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
@@ -76,9 +77,9 @@ TextureImporter:
     buildTarget: Standalone
     maxTextureSize: 1024
     resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
+    textureFormat: 3
+    textureCompression: 2
+    compressionQuality: 54
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0

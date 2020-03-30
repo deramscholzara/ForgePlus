@@ -5,8 +5,7 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    // TODO: Convert to FPMedia
-    public class SurfaceMedia : SurfaceLightBase
+    public class FPMedia : SurfaceLightBase
     {
         private const float MagnitudeToWorldUnit = 1f / 40f;
 

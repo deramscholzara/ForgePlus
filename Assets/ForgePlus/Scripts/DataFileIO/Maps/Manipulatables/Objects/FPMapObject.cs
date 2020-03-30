@@ -5,7 +5,8 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPMapObject : MonoBehaviour, IFPManipulatable<MapObject>
+    [RequireComponent(typeof(MeshCollider))]
+    public class FPMapObject : MonoBehaviour, IFPManipulatable<MapObject>, IFPSelectable
     {
         private static Material MapObjectPlaceholderMaterial;
         private static Mesh ItemMesh;
@@ -25,6 +26,42 @@ namespace ForgePlus.LevelManipulation
         public MapObject WelandObject { get; set; }
 
         public FPLevel FPLevel { private get; set; }
+
+        private Material unselectedMaterial = null;
+
+        // TODO: Set up visibility filtering (static state member+enum per relevant type?)
+        public void OnMouseUpAsButton()
+        {
+            SelectionManager.Instance.ToggleObjectSelection(this);
+        }
+
+        public void SetSelectability(bool enabled)
+        {
+            GetComponent<MeshCollider>().enabled = enabled;
+        }
+
+        public void DisplaySelectionState(bool state)
+        {
+            var renderer = GetComponent<Renderer>();
+
+            if (state)
+            {
+                // TODO: Create a selection utilities class for instantiating and arranging selection corners to vertices (needs a shader that renders on top of everything else, in a new render pass, too)
+                //       Not really needed for MapObjects, since they'll just use stripes effect, but it'll be important for geometry (specifically, polygons & sides (selecting a side also displays line info))
+                if (!unselectedMaterial)
+                {
+                    unselectedMaterial = renderer.sharedMaterial;
+                }
+
+                renderer.material.SetFloat("_Selected", 1f);
+            }
+            else
+            {
+                renderer.sharedMaterial = unselectedMaterial;
+                
+                unselectedMaterial = null;
+            }
+        }
 
         public void Awake()
         {
@@ -75,6 +112,8 @@ namespace ForgePlus.LevelManipulation
             }
 
             gameObject.AddComponent<MeshRenderer>().sharedMaterial = MapObjectPlaceholderMaterial;
+
+            gameObject.AddComponent<MeshCollider>().convex = true;
 
             var floorRelativeElevation = FPLevel.Level.Polygons[WelandObject.PolygonIndex].FloorHeight + WelandObject.Z;
 

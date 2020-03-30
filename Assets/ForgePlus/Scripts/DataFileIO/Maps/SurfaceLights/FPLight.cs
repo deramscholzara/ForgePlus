@@ -8,7 +8,7 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPLight
+    public class FPLight : IFPManipulatable<Weland.Light>, IFPDestructionPreparable
     {
         public enum States
         {
@@ -20,15 +20,15 @@ namespace ForgePlus.LevelManipulation
             SecondaryInactive,
         }
 
-        // TODO: Convert to indexed dictionary instead of list
-        private static readonly List<FPLight> FPLights = new List<FPLight>(32);
-
         // One "tick" = 1/30 seconds.  This is used to maintain classic flicker frequency.
         private const float mininumFlickerDuration = 1f / 30f;
 
         private readonly AnimationCurve smoothLightCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
 
-        private Weland.Light light;
+        public short? Index { get; set; }
+        public Weland.Light WelandObject { get; set; }
+
+        public FPLevel FPLevel { private get; set; }
 
         private CancellationTokenSource lightPhaseCTS;
 
@@ -38,48 +38,29 @@ namespace ForgePlus.LevelManipulation
 
         public float CurrentIntensity { get; private set; }
 
-        private FPLight(Weland.Light light)
+        public FPLight(short index, Weland.Light light, FPLevel fpLevel)
         {
-            this.light = light;
+            Index = index;
+            WelandObject = light;
+            FPLevel = fpLevel;
         }
 
-        public static FPLight GetFPLight(Weland.Light light)
+        public void PrepareForDestruction()
         {
-
-            var foundLight = FPLights.FirstOrDefault(item => item.IsDrivenByLight(light));
-
-            if (foundLight == null)
-            {
-                foundLight = new FPLight(light);
-                FPLights.Add(foundLight);
-            }
-
-            return foundLight;
-        }
-
-        public static void ClearFPLightsList()
-        {
-            foreach (var fpLight in FPLights)
-            {
-                if (fpLight.lightPhaseCTS != null)
-                {
-                    fpLight.lightPhaseCTS.Cancel();
-                }
-            }
-
-            FPLights.Clear();
+            lightPhaseCTS?.Cancel();
+            lightPhaseCTS = null;
         }
 
         public void BeginRuntimeStyleBehavior()
         {
-            if (light.InitiallyActive)
+            if (WelandObject.InitiallyActive)
             {
-                CurrentIntensity = (float)light.PrimaryActive.Intensity;
+                CurrentIntensity = (float)WelandObject.PrimaryActive.Intensity;
                 BeginPhase(States.PrimaryActive, loop: false);
             }
             else
             {
-                CurrentIntensity = (float)light.PrimaryInactive.Intensity;
+                CurrentIntensity = (float)WelandObject.PrimaryInactive.Intensity;
                 BeginPhase(States.PrimaryInactive, loop: false);
             }
         }
@@ -91,7 +72,7 @@ namespace ForgePlus.LevelManipulation
             lightPhaseCTS = new CancellationTokenSource();
             var cancellationToken = lightPhaseCTS.Token;
 
-            remainingPhaseOffset = light.Phase;
+            remainingPhaseOffset = WelandObject.Phase;
 
             if (loop)
             {
@@ -110,7 +91,7 @@ namespace ForgePlus.LevelManipulation
                 switch (currentState)
                 {
                     case States.BecomingActive:
-                        await RunIntensityPhaseFunction(cancellationToken, light.BecomingActive);
+                        await RunIntensityPhaseFunction(cancellationToken, WelandObject.BecomingActive);
 
                         if (!loop)
                         {
@@ -119,20 +100,20 @@ namespace ForgePlus.LevelManipulation
 
                         break;
                     case States.PrimaryActive:
-                        await RunIntensityPhaseFunction(cancellationToken, light.PrimaryActive);
+                        await RunIntensityPhaseFunction(cancellationToken, WelandObject.PrimaryActive);
 
                         if (!loop)
                         {
-                            if (light.Stateless ||
-                                (light.SecondaryActive.Period > 0 &&
-                                 (light.SecondaryActive.LightingFunction != LightingFunction.Constant ||
-                                  light.SecondaryActive.Intensity != light.PrimaryActive.Intensity)))
+                            if (WelandObject.Stateless ||
+                                (WelandObject.SecondaryActive.Period > 0 &&
+                                 (WelandObject.SecondaryActive.LightingFunction != LightingFunction.Constant ||
+                                  WelandObject.SecondaryActive.Intensity != WelandObject.PrimaryActive.Intensity)))
                             {
                                 // Only go to the second phase if it has a lasting duration
                                 // and if it's not constant at the same intensity as the primary phase.
                                 currentState = States.SecondaryActive;
                             }
-                            else if (light.PrimaryInactive.LightingFunction == LightingFunction.Constant)
+                            else if (WelandObject.PrimaryInactive.LightingFunction == LightingFunction.Constant)
                             {
                                 // If there's no second phase, and the primary phase is constant,
                                 // then there's no reason to keep updating lighting values.
@@ -142,11 +123,11 @@ namespace ForgePlus.LevelManipulation
 
                         break;
                     case States.SecondaryActive:
-                        await RunIntensityPhaseFunction(cancellationToken, light.SecondaryActive);
+                        await RunIntensityPhaseFunction(cancellationToken, WelandObject.SecondaryActive);
 
                         if (!loop)
                         {
-                            if (light.Stateless)
+                            if (WelandObject.Stateless)
                             {
                                 currentState = States.BecomingInactive;
                             }
@@ -158,7 +139,7 @@ namespace ForgePlus.LevelManipulation
 
                         break;
                     case States.BecomingInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, light.BecomingInactive);
+                        await RunIntensityPhaseFunction(cancellationToken, WelandObject.BecomingInactive);
 
                         if (!loop)
                         {
@@ -167,20 +148,20 @@ namespace ForgePlus.LevelManipulation
 
                         break;
                     case States.PrimaryInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, light.PrimaryInactive);
+                        await RunIntensityPhaseFunction(cancellationToken, WelandObject.PrimaryInactive);
 
                         if (!loop)
                         {
-                            if (light.Stateless ||
-                                (light.SecondaryInactive.Period > 0 &&
-                                 (light.SecondaryInactive.LightingFunction != LightingFunction.Constant ||
-                                  light.SecondaryInactive.Intensity != light.PrimaryInactive.Intensity)))
+                            if (WelandObject.Stateless ||
+                                (WelandObject.SecondaryInactive.Period > 0 &&
+                                 (WelandObject.SecondaryInactive.LightingFunction != LightingFunction.Constant ||
+                                  WelandObject.SecondaryInactive.Intensity != WelandObject.PrimaryInactive.Intensity)))
                             {
                                 // Only go to the second phase if it has a lasting duration
                                 // and if it's not constant at the same intensity as the primary phase.
                                 currentState = States.SecondaryInactive;
                             }
-                            else if (light.PrimaryInactive.LightingFunction == LightingFunction.Constant)
+                            else if (WelandObject.PrimaryInactive.LightingFunction == LightingFunction.Constant)
                             {
                                 // If there's no second phase, and the primary phase is constant,
                                 // then there's no reason to keep updating lighting values.
@@ -190,11 +171,11 @@ namespace ForgePlus.LevelManipulation
 
                         break;
                     case States.SecondaryInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, light.SecondaryInactive);
+                        await RunIntensityPhaseFunction(cancellationToken, WelandObject.SecondaryInactive);
 
                         if (!loop)
                         {
-                            if (light.Stateless)
+                            if (WelandObject.Stateless)
                             {
                                 currentState = States.BecomingActive;
                             }
@@ -360,7 +341,7 @@ namespace ForgePlus.LevelManipulation
 
         private bool IsDrivenByLight(Weland.Light light)
         {
-            return light == this.light;
+            return light == this.WelandObject;
         }
     }
 }

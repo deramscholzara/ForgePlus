@@ -98,6 +98,8 @@ namespace ForgePlus.DataFileIO
                 return;
             }
 
+            FPLevel.PrepareForDestruction();
+
             UnityEngine.Object.Destroy(FPLevel.gameObject);
 
             OnLevelClosed();
@@ -112,6 +114,8 @@ namespace ForgePlus.DataFileIO
             FPLevel.FPPolygons = new Dictionary<short, FPPolygon>();
             FPLevel.FPLines = new Dictionary<short, FPLine>();
             FPLevel.FPSides = new Dictionary<short, FPSide>();
+            FPLevel.FPLights = new Dictionary<short, FPLight>();
+            FPLevel.FPMedias = new Dictionary<short, FPMedia>();
             FPLevel.FPCeilingFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPFloorFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPMapObjects = new Dictionary<short, FPMapObject>();
@@ -120,10 +124,9 @@ namespace ForgePlus.DataFileIO
             WallsCollection.ClearCollection();
 
             // Initialize Lights here so they are in proper index order
-            FPLight.ClearFPLightsList();
-            foreach (var light in level.Lights)
+            for (var i = 0; i < level.Lights.Count; i++)
             {
-                FPLight.GetFPLight(light).BeginRuntimeStyleBehavior();
+                FPLevel.FPLights[(short)i] = new FPLight((short)i, level.Lights[i], FPLevel);
             }
 
             #region Polygons_And_Media
