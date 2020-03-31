@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ForgePlus.Inspection;
+using System.Collections.Generic;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -167,11 +168,15 @@ namespace ForgePlus.LevelManipulation
 
         public void SelectObject(IFPSelectable selection, bool multiSelect = false)
         {
+            InspectorPanel.Instance.ClearAllInspectors();
+
             if (!SelectedObjects.Contains(selection))
             {
                 if (!multiSelect)
                 {
                     DeselectAll();
+
+                    (selection as IFPInspectable).Inspect();
                 }
 
                 SelectedObjects.Add(selection);
@@ -182,6 +187,8 @@ namespace ForgePlus.LevelManipulation
 
         public void DeselectObject(IFPSelectable selection, bool multiSelect = false)
         {
+            InspectorPanel.Instance.ClearAllInspectors();
+
             if (SelectedObjects.Contains(selection))
             {
                 if (multiSelect || SelectedObjects.Count <= 1)
@@ -196,9 +203,11 @@ namespace ForgePlus.LevelManipulation
                     {
                         if (selectedObject != selection)
                         {
-                            DeselectObject(selectedObject, multiSelect: true);
+                            selectedObject.DisplaySelectionState(false);
                         }
                     }
+
+                    SelectedObjects.RemoveAll(selectedObject => selectedObject != selection);
                 }
             }
         }

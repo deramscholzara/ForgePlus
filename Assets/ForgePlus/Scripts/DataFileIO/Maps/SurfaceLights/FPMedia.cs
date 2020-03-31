@@ -1,70 +1,58 @@
 ﻿using ForgePlus.LevelManipulation.Utilities;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using Weland;
 
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPMedia : SurfaceLightBase
+    public class FPMedia : IFPManipulatable<Media>, IFPDestructionPreparable
     {
-        private const float MagnitudeToWorldUnit = 1f / 40f;
+        public short? Index { get; set; }
+        public Media WelandObject { get; set; }
 
-        private readonly int mediaDirectionPropertyId = Shader.PropertyToID("_MediaDirectionAngle");
-        private readonly int mediaSpeedPropertyId = Shader.PropertyToID("_MediaFlowSpeed");
-        private readonly int mediaDepthPropertyId = Shader.PropertyToID("_MediaDepth");
+        public FPLevel FPLevel { private get; set; }
 
-        [SerializeField]
-        private Media media;
+        public float CurrentHeight { get; private set; }
 
-        public void AssignMedia(Media media)
+        private CancellationTokenSource synchronizationLoopCTS;
+
+        public FPMedia(short index, Media media, FPLevel fpLevel)
         {
-            this.media = media;
+            Index = index;
+            WelandObject = media;
+            FPLevel = fpLevel;
 
-            UpdateDirectionFlowAndDepth();
+            BeginRuntimeStyleBehavior();
         }
 
-        private void UpdateDirectionFlowAndDepth()
+        public void PrepareForDestruction()
         {
-            if (media != null)
-            {
-                if (media.CurrentMagnitude != 0)
-                {
-                    surfaceMaterial.SetFloat(mediaDirectionPropertyId, (float)media.Direction);
-                    surfaceMaterial.SetFloat(mediaSpeedPropertyId, (float)media.CurrentMagnitude * MagnitudeToWorldUnit);
-                }
-                else
-                {
-                    surfaceMaterial.SetFloat(mediaDirectionPropertyId, 25f);
-                    surfaceMaterial.SetFloat(mediaSpeedPropertyId, 0f);
-                }
-
-                switch (media.Type)
-                {
-                    case MediaType.Water:
-                        surfaceMaterial.SetFloat(mediaDepthPropertyId, 6f);
-                        break;
-                    case MediaType.Lava:
-                        surfaceMaterial.SetFloat(mediaDepthPropertyId, 0.01f);
-                        break;
-                    case MediaType.Goo:
-                        surfaceMaterial.SetFloat(mediaDepthPropertyId, 1f);
-                        break;
-                    case MediaType.Sewage:
-                        surfaceMaterial.SetFloat(mediaDepthPropertyId, 1f);
-                        break;
-                    case MediaType.Jjaro:
-                        surfaceMaterial.SetFloat(mediaDepthPropertyId, 1.25f);
-                        break;
-                }
-            }
+            synchronizationLoopCTS?.Cancel();
+            synchronizationLoopCTS = null;
         }
 
-        protected override void SetDisplayValue(float intensity)
+        public async void BeginRuntimeStyleBehavior()
         {
-            if (media != null)
+            synchronizationLoopCTS?.Cancel();
+
+            synchronizationLoopCTS = new CancellationTokenSource();
+            var cancellationToken = synchronizationLoopCTS.Token;
+
+            while (!cancellationToken.IsCancellationRequested && Application.isPlaying)
             {
-                var currentHeight = Mathf.Lerp((float)media.Low / GeometryUtilities.WorldUnitIncrementsPerMeter, (float)media.High / GeometryUtilities.WorldUnitIncrementsPerMeter, intensity);
-                transform.position = new Vector3(0f, currentHeight, 0f);
+                var lowHeight = (float)WelandObject.Low / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                var highHeight = (float)WelandObject.High / GeometryUtilities.WorldUnitIncrementsPerMeter;
+
+                var intensity = (float)FPLevel.FPLights[WelandObject.LightIndex].CurrentIntensity;
+                intensity = Mathf.Max(intensity, (float)WelandObject.MinimumLightIntensity);
+
+                var currentHeight = Mathf.Lerp(lowHeight, highHeight, intensity);
+
+                CurrentHeight = currentHeight;
+
+                await Task.Yield();
             }
         }
     }

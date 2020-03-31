@@ -129,6 +129,12 @@ namespace ForgePlus.DataFileIO
                 FPLevel.FPLights[(short)i] = new FPLight((short)i, level.Lights[i], FPLevel);
             }
 
+            // Initialize Medias here so they are in proper index order
+            for (var i = 0; i < level.Medias.Count; i++)
+            {
+                FPLevel.FPMedias[(short)i] = new FPMedia((short)i, level.Medias[i], FPLevel);
+            }
+
             #region Polygons_And_Media
             var polygonsGroupGO = new GameObject("Polygons");
             polygonsGroupGO.transform.SetParent(FPLevel.transform);
