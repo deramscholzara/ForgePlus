@@ -406,7 +406,6 @@ namespace ForgePlus.LevelManipulation
             sideGameObject.transform.SetParent(parent);
 
             GeometryUtilities.BuildRendererObject(
-                fpLevel.Level,
                 sideGameObject,
                 vertices,
                 triangles,

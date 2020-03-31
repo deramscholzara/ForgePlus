@@ -1,12 +1,12 @@
-﻿using ForgePlus.LevelManipulation.Utilities;
-using ForgePlus.Runtime.Constraints;
+﻿using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation.Utilities;
 using UnityEngine;
 using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
     [RequireComponent(typeof(MeshCollider))]
-    public class FPMapObject : MonoBehaviour, IFPManipulatable<MapObject>, IFPSelectable
+    public class FPMapObject : MonoBehaviour, IFPManipulatable<MapObject>, IFPSelectable, IFPInspectable
     {
         private readonly int selectedShaderPropertyId = Shader.PropertyToID("_Selected");
 
@@ -34,7 +34,7 @@ namespace ForgePlus.LevelManipulation
         // TODO: Set up visibility filtering (static state member+enum per relevant type?)
         public void OnMouseUpAsButton()
         {
-            SelectionManager.Instance.ToggleObjectSelection(this);
+            SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
         }
 
         public void SetSelectability(bool enabled)
@@ -60,9 +60,20 @@ namespace ForgePlus.LevelManipulation
             else
             {
                 renderer.sharedMaterial = unselectedMaterial;
-                
+
                 unselectedMaterial = null;
             }
+        }
+
+        public void Inspect()
+        {
+            var prefab = Resources.Load<InspectorFPMapObject>("Inspectors/Inspector - FPMapObject");
+            var inspector = Instantiate(prefab);
+            inspector.PopulateValues(this);
+            InspectorPanel.Instance.AddInspector(inspector);
+
+            // Note: This method would call Inspect() on any other relevant objects
+            //       - like a side calling a line, and a line calling a polygon
         }
 
         public void Awake()
@@ -121,13 +132,7 @@ namespace ForgePlus.LevelManipulation
 
             transform.position = new Vector3(WelandObject.X, floorRelativeElevation, -WelandObject.Y) / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
-            if (WelandObject.Type == ObjectType.Player ||
-                WelandObject.Type == ObjectType.Monster)
-            {
-                // Directionality only for these types
-                // 
-                transform.eulerAngles = new Vector3(0f, (float)WelandObject.Facing + 90f, 0f);
-            }
+            transform.eulerAngles = new Vector3(0f, (float)WelandObject.Facing + 90f, 0f);
         }
 
         private Mesh BuildTriangleMesh(Color color)

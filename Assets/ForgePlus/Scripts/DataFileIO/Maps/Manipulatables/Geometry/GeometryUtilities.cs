@@ -31,7 +31,33 @@ namespace ForgePlus.LevelManipulation.Utilities
         }
 
         public static void BuildRendererObject(
-            Level level,
+            GameObject rendererHost,
+            Vector3[] vertices,
+            int[] triangles,
+            Vector2[] uvs,
+            ShapeDescriptor shapeDescriptor,
+            FPLight fpLight,
+            short lightIndex,
+            short transferMode,
+            Color[] transferModesVertexColors,
+            bool isOpaqueSurface)
+        {
+            BuildRendererObject(
+                                rendererHost,
+                                vertices,
+                                triangles,
+                                uvs,
+                                shapeDescriptor,
+                                fpLight,
+                                lightIndex,
+                                transferMode,
+                                transferModesVertexColors,
+                                isOpaqueSurface,
+                                null,
+                                -1);
+        }
+
+        public static void BuildRendererObject(
             GameObject rendererHost,
             Vector3[] vertices,
             int[] triangles,
@@ -42,8 +68,8 @@ namespace ForgePlus.LevelManipulation.Utilities
             short transferMode,
             Color[] transferModesVertexColors,
             bool isOpaqueSurface,
-            WallsCollection.SurfaceTypes surfaceType = WallsCollection.SurfaceTypes.Normal,
-            Media media = null)
+            FPMedia fpMedia,
+            short mediaIndex)
         {
             var mesh = new Mesh();
             mesh.name = rendererHost.name;
@@ -62,6 +88,7 @@ namespace ForgePlus.LevelManipulation.Utilities
             rendererHost.AddComponent<MeshFilter>().sharedMesh = mesh;
 
             // Assign Common Wall Material
+            var surfaceType = fpMedia == null ? WallsCollection.SurfaceTypes.Normal : WallsCollection.SurfaceTypes.Media;
             var material = WallsCollection.GetMaterial(shapeDescriptor, transferMode, isOpaqueSurface, surfaceType);
             rendererHost.AddComponent<MeshRenderer>().sharedMaterial = material;
 
@@ -69,13 +96,13 @@ namespace ForgePlus.LevelManipulation.Utilities
             if (fpLight != null)
             {
                 var surfaceLight = rendererHost.AddComponent<SurfaceLight>();
-                surfaceLight.AssignFPLight(fpLight, lightIndex, surfaceType != WallsCollection.SurfaceTypes.Media ? 0f : (float)media.MinimumLightIntensity);
+                surfaceLight.AssignFPLight(lightIndex, fpLight);
             }
 
-            if (surfaceType == WallsCollection.SurfaceTypes.Media)
+            if (fpMedia != null)
             {
-                var surfaceMedia = rendererHost.AddComponent<FPMedia>();
-                surfaceMedia.AssignMedia(media);
+                var surfaceMedia = rendererHost.AddComponent<SurfaceMedia>();
+                surfaceMedia.AssignFPMedia(mediaIndex, fpMedia);
             }
         }
 

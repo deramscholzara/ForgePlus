@@ -20,9 +20,14 @@ namespace ForgePlus.LevelManipulation
 
         public void PrepareForDestruction()
         {
-            foreach(var fpLight in FPLights.Values)
+            foreach (var fpLight in FPLights.Values)
             {
                 fpLight.PrepareForDestruction();
+            }
+
+            foreach (var fpMedia in FPMedias.Values)
+            {
+                fpMedia.PrepareForDestruction();
             }
 
             foreach (var fpPlatform in FPCeilingFpPlatforms.Values)

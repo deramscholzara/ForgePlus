@@ -179,7 +179,6 @@ namespace ForgePlus.LevelManipulation
             #endregion TransferModes_VertexColor
 
             GeometryUtilities.BuildRendererObject(
-                FPLevel.Level,
                 floorRoot,
                 floorVertices,
                 floorTriangles,
@@ -192,7 +191,6 @@ namespace ForgePlus.LevelManipulation
                 isOpaqueSurface: true);
 
             GeometryUtilities.BuildRendererObject(
-                FPLevel.Level,
                 ceilingRoot,
                 ceilingVertices,
                 ceilingTriangles,
@@ -234,7 +232,6 @@ namespace ForgePlus.LevelManipulation
                 #endregion Infinity_Media_Texture_Assignment
 
                 GeometryUtilities.BuildRendererObject(
-                    FPLevel.Level,
                     mediaRoot,
                     mediaVertices,
                     mediaTriangles,
@@ -245,8 +242,8 @@ namespace ForgePlus.LevelManipulation
                     transferMode: 0,
                     floorTransferModesVertexColors,
                     isOpaqueSurface: true,
-                    WallsCollection.SurfaceTypes.Media,
-                    media);
+                    FPLevel.FPMedias[polygon.MediaIndex],
+                    polygon.MediaIndex);
             }
         }
 

@@ -340,10 +340,5 @@ namespace ForgePlus.LevelManipulation
         {
             return Time.realtimeSinceStartup + phaseOffset;
         }
-
-        private bool IsDrivenByLight(Weland.Light light)
-        {
-            return light == this.WelandObject;
-        }
     }
 }
