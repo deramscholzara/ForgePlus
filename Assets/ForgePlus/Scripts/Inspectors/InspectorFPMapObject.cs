@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Weland;
 
 namespace ForgePlus.Inspection
 {
@@ -22,7 +23,32 @@ namespace ForgePlus.Inspection
 
             Value_Id.text =             fpMapObject.Index.ToString();
             Value_Type.text =           fpMapObject.WelandObject.Type.ToString();
-            Value_Index.text =          fpMapObject.WelandObject.Index.ToString(); // TODO: Use this to get the exact type
+
+            switch(fpMapObject.WelandObject.Type)
+            {
+                case Weland.ObjectType.Player:
+                    Value_Index.text = $"Team ({fpMapObject.WelandObject.Index})";
+                    break;
+                case Weland.ObjectType.Monster:
+                    Value_Index.text = $"{(MonsterType)fpMapObject.WelandObject.Index} ({fpMapObject.WelandObject.Index})";
+                    break;
+                case Weland.ObjectType.Item:
+                    Value_Index.text = $"{(ItemType)fpMapObject.WelandObject.Index} ({fpMapObject.WelandObject.Index})";
+                    break;
+                case Weland.ObjectType.Scenery:
+                    Value_Index.text = $"({fpMapObject.WelandObject.Index})";
+                    break;
+                case Weland.ObjectType.Sound:
+                    Value_Index.text = $"({fpMapObject.WelandObject.Index})";
+                    break;
+                case Weland.ObjectType.Goal:
+                    Value_Index.text = $"({fpMapObject.WelandObject.Index})";
+                    break;
+                default:
+                    Value_Index.text = "Invalid";
+                    break;
+            }
+
             Value_PolygonIndex.text =   fpMapObject.WelandObject.PolygonIndex.ToString();
             Value_Flags.text =          "TODO: Flags";
             Value_Angle.text =          fpMapObject.WelandObject.Facing.ToString();

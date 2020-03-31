@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ForgePlus.LevelManipulation;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Weland;
@@ -46,6 +47,8 @@ namespace ForgePlus.DataFileIO
 
         public void CloseAndUnloadCurrentLevel()
         {
+            SelectionManager.Instance.DeselectAll();
+
             if (currentlyOpenLevel == null)
             {
                 // Nothing currently open, so exit

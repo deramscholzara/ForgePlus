@@ -209,11 +209,18 @@ namespace ForgePlus.LevelManipulation
 
                     SelectedObjects.RemoveAll(selectedObject => selectedObject != selection);
                 }
+
+                if (SelectedObjects.Count == 1)
+                {
+                    (selection as IFPInspectable).Inspect();
+                }
             }
         }
 
         public void DeselectAll()
         {
+            InspectorPanel.Instance.ClearAllInspectors();
+
             foreach (var selectedObject in SelectedObjects)
             {
                 selectedObject.DisplaySelectionState(false);
