@@ -8,5 +8,7 @@ namespace ForgePlus.Inspection
     public abstract class InspectorBase : MonoBehaviour
     {
         public abstract void PopulateValues(IFPInspectable inspectedObject);
+
+        public abstract void UpdateValuesInInspectedObject(IFPInspectable inspectedObject);
     }
 }
