@@ -33,6 +33,26 @@ namespace ForgePlus.ShapesCollections
         private static readonly Dictionary<string, Material> Materials = new Dictionary<string, Material>(400);
         private static readonly Dictionary<string, Material> MediaMaterials = new Dictionary<string, Material>(5);
 
+        public static Texture2D GetTexture(ShapeDescriptor shapeDescriptor)
+        {
+            Texture2D textureToUse;
+            if (Textures.ContainsKey(shapeDescriptor))
+            {
+                textureToUse = Textures[shapeDescriptor];
+            }
+            else
+            {
+                textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
+
+                if (textureToUse)
+                {
+                    Textures[shapeDescriptor] = textureToUse;
+                }
+            }
+
+            return textureToUse;
+        }
+
         public static Material GetMaterial(
             ShapeDescriptor shapeDescriptor,
             short transferMode,
@@ -109,20 +129,7 @@ namespace ForgePlus.ShapesCollections
 
             if (!material || !material.mainTexture)
             {
-                Texture2D textureToUse;
-                if (Textures.ContainsKey(shapeDescriptor))
-                {
-                    textureToUse = Textures[shapeDescriptor];
-                }
-                else
-                {
-                    textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
-
-                    if (textureToUse)
-                    {
-                        Textures[shapeDescriptor] = textureToUse;
-                    }
-                }
+                var textureToUse = GetTexture(shapeDescriptor);
 
                 Shader shaderToUse;
                 if (transferMode == 9)

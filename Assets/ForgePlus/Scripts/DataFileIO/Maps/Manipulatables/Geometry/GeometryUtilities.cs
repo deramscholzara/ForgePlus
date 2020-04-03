@@ -42,8 +42,7 @@ namespace ForgePlus.LevelManipulation.Utilities
             Color[] transferModesVertexColors,
             bool isOpaqueSurface)
         {
-            BuildRendererObject(
-                                rendererHost,
+            BuildRendererObject(rendererHost,
                                 vertices,
                                 triangles,
                                 uvs,
@@ -99,10 +98,17 @@ namespace ForgePlus.LevelManipulation.Utilities
                 surfaceLight.AssignFPLight(lightIndex, fpLight);
             }
 
-            if (fpMedia != null)
+            if (fpMedia == null)
+            {
+                rendererHost.AddComponent<MeshCollider>();
+            }
+            else
             {
                 var surfaceMedia = rendererHost.AddComponent<SurfaceMedia>();
                 surfaceMedia.AssignFPMedia(mediaIndex, fpMedia);
+
+                // Note: make the collider convex so that it is double-sided
+                rendererHost.AddComponent<MeshCollider>().convex = true;
             }
         }
 

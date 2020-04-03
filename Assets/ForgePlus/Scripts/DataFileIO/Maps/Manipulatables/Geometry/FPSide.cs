@@ -1,11 +1,12 @@
-﻿using ForgePlus.LevelManipulation.Utilities;
+﻿using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Runtime.Constraints;
 using UnityEngine;
 using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPSide : MonoBehaviour, IFPManipulatable<Side>
+    public class FPSide : MonoBehaviour, IFPManipulatable<Side>, IFPSelectable, IFPInspectable
     {
         private enum SideDataSources
         {
@@ -15,18 +16,8 @@ namespace ForgePlus.LevelManipulation
         }
 
         public short? Index { get; set; }
-        
-        public Side WelandObject
-        {
-            get
-            {
-                return fpSide;
-            }
-            set
-            {
-                fpSide = value;
-            }
-        }
+
+        public Side WelandObject { get; set; }
 
         public GameObject TopSurface;
         public GameObject MiddleSurface;
@@ -34,8 +25,31 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        [SerializeField]
-        private Side fpSide;
+        public void OnMouseUpAsButton()
+        {
+            Debug.LogError("FPSide components should never be directly selected, this shouldn't even have a collider to receive input.", this);
+        }
+
+        public void SetSelectability(bool enabled)
+        {
+            // Intentionally empty - Selectability is handled in FPSurfaceSide
+        }
+
+        public void DisplaySelectionState(bool state)
+        {
+            // TODO: Should actually display it here so it only shows the indicators on the selected side, not the line
+            FPLevel.FPLines[WelandObject.LineIndex].DisplaySelectionState(state);
+        }
+
+        public void Inspect()
+        {
+            var prefab = Resources.Load<InspectorFPSide>("Inspectors/Inspector - FPSide");
+            var inspector = Instantiate(prefab);
+            inspector.PopulateValues(this);
+            InspectorPanel.Instance.AddInspector(inspector);
+
+            FPLevel.FPLines[WelandObject.LineIndex].Inspect();
+        }
 
         public static FPSide GenerateSurfaces(FPLevel fpLevel, bool isClockwise, Line line)
         {
@@ -192,6 +206,10 @@ namespace ForgePlus.LevelManipulation
                                                   sideDataSource,
                                                   isOpaqueSurface: true);
 
+                    var fpSurfaceSide = topSurface.AddComponent<FPSurfaceSide>();
+                    fpSurfaceSide.parentFPSide = sideRootGO.GetComponent<FPSide>();
+                    fpLevel.FPSurfaceSides.Add(fpSurfaceSide);
+
                     if (opposingPlatform != null && opposingPlatform.ComesFromCeiling)
                     {
                         topSurface.transform.position = new Vector3(0f, (float)(highHeight - lowHeight) / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
@@ -228,6 +246,10 @@ namespace ForgePlus.LevelManipulation
                                                  sideDataSource: sideDataSource,
                                                  isOpaqueSurface: isOpaqueSurface);
 
+                var fpSurfaceSide = middleSurface.AddComponent<FPSurfaceSide>();
+                fpSurfaceSide.parentFPSide = sideRootGO.GetComponent<FPSide>();
+                fpLevel.FPSurfaceSides.Add(fpSurfaceSide);
+
                 middleSurface.transform.position = new Vector3(0f, (float)line.LowestAdjacentCeiling / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
             }
 
@@ -256,6 +278,10 @@ namespace ForgePlus.LevelManipulation
                                                      sideDataSource,
                                                      isOpaqueSurface: true);
 
+                    var fpSurfaceSide = bottomSurface.AddComponent<FPSurfaceSide>();
+                    fpSurfaceSide.parentFPSide = sideRootGO.GetComponent<FPSide>();
+                    fpLevel.FPSurfaceSides.Add(fpSurfaceSide);
+
                     if (opposingPlatform != null && opposingPlatform.ComesFromFloor)
                     {
                         bottomSurface.transform.position = Vector3.zero;
@@ -271,7 +297,7 @@ namespace ForgePlus.LevelManipulation
 
             if (sideRootGO)
             {
-                var fpSide = sideRootGO.AddComponent<FPSide>();
+                var fpSide = sideRootGO.GetComponent<FPSide>();
                 fpSide.Index = sideIndex;
                 fpSide.WelandObject = side;
                 fpLevel.FPSides[sideIndex] = fpSide;
@@ -293,7 +319,7 @@ namespace ForgePlus.LevelManipulation
         {
             if (!sideRootGO)
             {
-                sideRootGO = new GameObject(isClockwise ? $"Clockwise ({sideIndex})" : $"Counterclockwise ({sideIndex})");
+                sideRootGO = new GameObject(isClockwise ? $"Clockwise ({sideIndex})" : $"Counterclockwise ({sideIndex})", typeof(FPSide));
             }
         }
 

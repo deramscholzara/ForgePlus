@@ -471,7 +471,7 @@ PrefabInstance:
     - target: {fileID: 1694522168783279667, guid: 3866a95c5e096664a86584fd01bef6e6,
         type: 3}
       propertyPath: m_Name
-      value: InspectionString - ID
+      value: InspectionString - Index (in level data)
       objectReference: {fileID: 0}
     - target: {fileID: 3775193951065726469, guid: 3866a95c5e096664a86584fd01bef6e6,
         type: 3}
@@ -707,7 +707,7 @@ PrefabInstance:
     - target: {fileID: 1694522168783279667, guid: 3866a95c5e096664a86584fd01bef6e6,
         type: 3}
       propertyPath: m_Name
-      value: InspectionString - Index
+      value: InspectionString - Subtype (Index)
       objectReference: {fileID: 0}
     - target: {fileID: 3775193951065726469, guid: 3866a95c5e096664a86584fd01bef6e6,
         type: 3}
