@@ -2,8 +2,6 @@
 using ForgePlus.ShapesCollections;
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using Weland;
 
@@ -119,6 +117,10 @@ namespace ForgePlus.DataFileIO
             FPLevel.FPCeilingFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPFloorFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPMapObjects = new Dictionary<short, FPMapObject>();
+
+            FPLevel.FPSurfacePolygons = new List<FPSurfacePolygon>();
+            FPLevel.FPSurfaceSides = new List<FPSurfaceSide>();
+            FPLevel.FPSurfaceMedias = new List<FPSurfaceMedia>();
 
             // Clear out Walls Materials so it can be repopulated with the correct set
             WallsCollection.ClearCollection();

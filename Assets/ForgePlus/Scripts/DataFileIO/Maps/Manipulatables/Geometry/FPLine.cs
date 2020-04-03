@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using ForgePlus.Inspection;
+using UnityEngine;
 using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPLine : MonoBehaviour, IFPManipulatable<Line>
+    public class FPLine : MonoBehaviour, IFPManipulatable<Line>, IFPSelectable, IFPInspectable
     {
         public short? Index { get; set; }
         public Line WelandObject { get; set; }
@@ -11,6 +12,34 @@ namespace ForgePlus.LevelManipulation
         public FPSide CounterclockwiseSide;
 
         public FPLevel FPLevel { private get; set; }
+
+        public void OnMouseUpAsButton()
+        {
+            // TODO: Implement this
+            throw new System.NotImplementedException();
+        }
+
+        public void SetSelectability(bool enabled)
+        {
+            // TODO: Set Line selectability
+        }
+
+        public void DisplaySelectionState(bool state)
+        {
+            // TODO: Display selection state of the line itself - not just the side "corners"
+            //       (maybe put some sort of line "tube" at the top and bottom.
+            // TODO: Create a selection utilities class for instantiating and arranging selection corners to vertices (needs a shader that renders on top of everything else, in a new render pass, too)
+            //       Not really needed for MapObjects, since they'll just use stripes effect, but it'll be important for geometry (specifically, polygons & sides (selecting a side also displays line info))
+            Debug.Log($"LINE: Display Selection of \"{name}\"", this);
+        }
+
+        public void Inspect()
+        {
+            var prefab = Resources.Load<InspectorFPLine>("Inspectors/Inspector - FPLine");
+            var inspector = Instantiate(prefab);
+            inspector.PopulateValues(this);
+            InspectorPanel.Instance.AddInspector(inspector);
+        }
 
         public void GenerateSurfaces()
         {

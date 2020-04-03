@@ -5,7 +5,6 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    [RequireComponent(typeof(MeshCollider))]
     public class FPMapObject : MonoBehaviour, IFPManipulatable<MapObject>, IFPSelectable, IFPInspectable
     {
         private readonly int selectedShaderPropertyId = Shader.PropertyToID("_Selected");
@@ -31,7 +30,6 @@ namespace ForgePlus.LevelManipulation
 
         private Material unselectedMaterial = null;
 
-        // TODO: Set up visibility filtering (static state member+enum per relevant type?)
         public void OnMouseUpAsButton()
         {
             SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
@@ -48,8 +46,6 @@ namespace ForgePlus.LevelManipulation
 
             if (state)
             {
-                // TODO: Create a selection utilities class for instantiating and arranging selection corners to vertices (needs a shader that renders on top of everything else, in a new render pass, too)
-                //       Not really needed for MapObjects, since they'll just use stripes effect, but it'll be important for geometry (specifically, polygons & sides (selecting a side also displays line info))
                 if (!unselectedMaterial)
                 {
                     unselectedMaterial = renderer.sharedMaterial;
@@ -71,9 +67,6 @@ namespace ForgePlus.LevelManipulation
             var inspector = Instantiate(prefab);
             inspector.PopulateValues(this);
             InspectorPanel.Instance.AddInspector(inspector);
-
-            // Note: This method would call Inspect() on any other relevant objects
-            //       - like a side calling a line, and a line calling a polygon
         }
 
         public void Awake()

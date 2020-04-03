@@ -1,11 +1,12 @@
-﻿using ForgePlus.LevelManipulation.Utilities;
+﻿using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.ShapesCollections;
 using UnityEngine;
 using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPPolygon : MonoBehaviour, IFPManipulatable<Polygon>
+    public class FPPolygon : MonoBehaviour, IFPManipulatable<Polygon>, IFPSelectable, IFPInspectable
     {
         public short? Index { get; set; }
         public Polygon WelandObject { get; set; }
@@ -13,6 +14,31 @@ namespace ForgePlus.LevelManipulation
         public GameObject FloorSurface;
 
         public FPLevel FPLevel { private get; set; }
+
+        public void OnMouseUpAsButton()
+        {
+            Debug.LogError("FPPolygon components should never be directly selected, this shouldn't even have a collider to receive input.", this);
+        }
+
+        public void SetSelectability(bool enabled)
+        {
+            // Intentionally empty - Selectability is handled in FPSurfacePolygon
+        }
+
+        public void DisplaySelectionState(bool state)
+        {
+            // TODO: Create a selection utilities class for instantiating and arranging selection corners to vertices (needs a shader that renders on top of everything else, in a new render pass, too)
+            //       Not really needed for MapObjects, since they'll just use stripes effect, but it'll be important for geometry (specifically, polygons & sides (selecting a side also displays line info))
+            Debug.Log($"POLYGON: Display Selection of \"{name}\"", this);
+        }
+
+        public void Inspect()
+        {
+            var prefab = Resources.Load<InspectorFPPolygon>("Inspectors/Inspector - FPPolygon");
+            var inspector = Instantiate(prefab);
+            inspector.PopulateValues(this);
+            InspectorPanel.Instance.AddInspector(inspector);
+        }
 
         public void GenerateSurfaces(Polygon polygon, short polygonIndex)
         {
@@ -190,6 +216,10 @@ namespace ForgePlus.LevelManipulation
                 floorTransferModesVertexColors,
                 isOpaqueSurface: true);
 
+            var fpSurfacePolygonFloor = floorRoot.AddComponent<FPSurfacePolygon>();
+            fpSurfacePolygonFloor.parentFPPolygon = this;
+            FPLevel.FPSurfacePolygons.Add(fpSurfacePolygonFloor);
+
             GeometryUtilities.BuildRendererObject(
                 ceilingRoot,
                 ceilingVertices,
@@ -201,6 +231,10 @@ namespace ForgePlus.LevelManipulation
                 polygon.CeilingTransferMode,
                 ceilingTransferModesVertexColors,
                 isOpaqueSurface: true);
+
+            var fpSurfacePolygonCeiling = ceilingRoot.AddComponent<FPSurfacePolygon>();
+            fpSurfacePolygonCeiling.parentFPPolygon = this;
+            FPLevel.FPSurfacePolygons.Add(fpSurfacePolygonCeiling);
 
             if (hasMedia)
             {
@@ -244,6 +278,10 @@ namespace ForgePlus.LevelManipulation
                     isOpaqueSurface: true,
                     FPLevel.FPMedias[polygon.MediaIndex],
                     polygon.MediaIndex);
+
+                var fpSurfacePolygonMedia = mediaRoot.AddComponent<FPSurfaceMedia>();
+                fpSurfacePolygonMedia.parentFPPolygon = this;
+                FPLevel.FPSurfaceMedias.Add(fpSurfacePolygonMedia);
             }
         }
 
