@@ -1,6 +1,7 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.ShapesCollections;
+using System.Collections.Generic;
 using UnityEngine;
 using Weland;
 
@@ -8,6 +9,8 @@ namespace ForgePlus.LevelManipulation
 {
     public class FPPolygon : MonoBehaviour, IFPManipulatable<Polygon>, IFPSelectable, IFPInspectable
     {
+        private List<GameObject> selectionVisualizationIndicators = new List<GameObject>(16);
+
         public short? Index { get; set; }
         public Polygon WelandObject { get; set; }
         public GameObject CeilingSurface;
@@ -27,9 +30,48 @@ namespace ForgePlus.LevelManipulation
 
         public void DisplaySelectionState(bool state)
         {
-            // TODO: Create a selection utilities class for instantiating and arranging selection corners to vertices (needs a shader that renders on top of everything else, in a new render pass, too)
-            //       Not really needed for MapObjects, since they'll just use stripes effect, but it'll be important for geometry (specifically, polygons & sides (selecting a side also displays line info))
-            Debug.Log($"POLYGON: Display Selection of \"{name}\"", this);
+            if (state)
+            {
+                var polygonIsClockwise = FPLevel.FPLines[WelandObject.LineIndexes[0]].WelandObject.ClockwisePolygonOwner == Index;
+
+                CreateSelectionIndicators(CeilingSurface, polygonIsClockwise, isfloor: false);
+                CreateSelectionIndicators(FloorSurface, polygonIsClockwise, isfloor: true);
+            }
+            else
+            {
+                foreach (var indicator in selectionVisualizationIndicators)
+                {
+                    Destroy(indicator);
+                }
+
+                selectionVisualizationIndicators.Clear();
+            }
+        }
+
+        private void CreateSelectionIndicators(GameObject surface, bool isClockwise, bool isfloor)
+        {
+            var vertices = surface.GetComponent<MeshFilter>().sharedMesh.vertices;
+            var localToWorldMatrix = surface.transform.localToWorldMatrix;
+
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                var currentVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i]);
+                Vector3 previousVertexWorldPosition;
+                Vector3 nextVertexWorldPosition;
+
+                if (isClockwise == isfloor)
+                {
+                    previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
+                    nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
+                }
+                else
+                {
+                    previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
+                    nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
+                }
+
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator($"Vertex ({i})t", surface.transform, currentVertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition));
+            }
         }
 
         public void Inspect()

@@ -1,6 +1,7 @@
 ﻿using ForgePlus.DataFileIO;
 using ForgePlus.Inspection;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -17,6 +18,9 @@ namespace ForgePlus.LevelManipulation
             Objects,
             Level,
         }
+
+        public static int DefaultLayer;
+        public static int SelectionIndicatorLayer;
 
         // Using read-only to force this to only ever be modified/cleared
         private readonly List<IFPSelectable> SelectedObjects = new List<IFPSelectable>(500);
@@ -35,6 +39,8 @@ namespace ForgePlus.LevelManipulation
             {
                 if (currentSceneSelectionFilter != value)
                 {
+                    DeselectAll();
+
                     currentSceneSelectionFilter = value;
 
                     UpdateSelectionToMatchFilter();
@@ -335,6 +341,9 @@ namespace ForgePlus.LevelManipulation
 
         private void Start()
         {
+            DefaultLayer = LayerMask.NameToLayer("Default");
+            SelectionIndicatorLayer = LayerMask.NameToLayer("SelectionVisualization");
+
             LevelData.OnLevelOpened += OnLevelOpened;
             LevelData.OnLevelClosed += OnLevelClosed;
 

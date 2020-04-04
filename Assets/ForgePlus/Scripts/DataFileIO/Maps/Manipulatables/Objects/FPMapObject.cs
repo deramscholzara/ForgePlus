@@ -52,12 +52,16 @@ namespace ForgePlus.LevelManipulation
                 }
 
                 renderer.material.SetFloat(selectedShaderPropertyId, 1f);
+
+                gameObject.layer = SelectionManager.SelectionIndicatorLayer;
             }
             else
             {
                 renderer.sharedMaterial = unselectedMaterial;
 
                 unselectedMaterial = null;
+
+                gameObject.layer = SelectionManager.DefaultLayer;
             }
         }
 
