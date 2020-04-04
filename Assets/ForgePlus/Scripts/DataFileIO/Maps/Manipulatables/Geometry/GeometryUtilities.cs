@@ -16,6 +16,8 @@ namespace ForgePlus.LevelManipulation.Utilities
         public const float WorldUnitIncrementsPerWorldUnit = 1024f;
         public const float MeterToWorldUnit = WorldUnitIncrementsPerMeter / WorldUnitIncrementsPerWorldUnit;
 
+        private static readonly Material SelectionIndicatorMaterial = new Material(Shader.Find("ForgePlus/GeometrySelectionIndicator"));
+
         public static Vector3 GetMeshVertex(Level level, int endpointIndex, short height = 0)
         {
             var endpoint = level.Endpoints[endpointIndex];
@@ -136,6 +138,67 @@ namespace ForgePlus.LevelManipulation.Utilities
                 default: // Normal
                     return Color.clear;
             }
+        }
+
+        public static GameObject CreateSelectionIndicator(string name, Transform parent, Vector3 vertexWorldPosition, Vector3 nextVertexWorldPosition, Vector3 previousVertexWorldPosition)
+        {
+            var thickness = 0.04f;
+            var length = 0.2f;
+            var clockwiseDirection = (nextVertexWorldPosition - vertexWorldPosition).normalized;
+            var counterclockwiseDirection = (previousVertexWorldPosition - vertexWorldPosition).normalized;
+            var scale = Mathf.Min(1f, Vector3.Distance(vertexWorldPosition, nextVertexWorldPosition) / (length * 2f), Vector3.Distance(vertexWorldPosition, previousVertexWorldPosition) / (length * 2f));
+
+            Debug.Log("Scale: " + scale);
+
+            var indicator = new GameObject($"Selection Indicators - {name}");
+            indicator.transform.position = vertexWorldPosition;
+            indicator.transform.SetParent(parent, worldPositionStays: true);
+            indicator.layer = SelectionManager.SelectionIndicatorLayer;
+
+            indicator.AddComponent<MeshFilter>().sharedMesh = CreateSelectionIndicatorMesh(clockwiseDirection, counterclockwiseDirection, length, thickness, scale);
+            indicator.AddComponent<MeshRenderer>().sharedMaterial = SelectionIndicatorMaterial;
+
+            return indicator;
+        }
+
+        private static Mesh CreateSelectionIndicatorMesh(Vector3 clockwiseDirection, Vector3 counterclockwiseDirection, float length, float thickness, float scale)
+        {
+            var mesh = new Mesh();
+
+            var facingVector = Vector3.Cross(clockwiseDirection, counterclockwiseDirection);
+            var clockwiseThicknessDirection = Vector3.Cross(facingVector, clockwiseDirection).normalized;
+            var counterclockwiseThicknessDirection = Vector3.Cross(counterclockwiseDirection, facingVector).normalized;
+            var insetCornerPosition = thickness / Mathf.Abs(Mathf.Sin(Vector3.Angle(clockwiseDirection, counterclockwiseDirection) * 0.5f * Mathf.Deg2Rad)) * (clockwiseThicknessDirection + counterclockwiseThicknessDirection).normalized;
+
+            mesh.vertices = new Vector3[]
+            {
+                Vector3.zero,
+                (clockwiseDirection * length) * scale,
+                (clockwiseDirection * length + clockwiseThicknessDirection * thickness) * scale,
+                insetCornerPosition * scale,
+                (counterclockwiseThicknessDirection * thickness + counterclockwiseDirection * length) * scale,
+                (counterclockwiseDirection * length) * scale
+            };
+
+            mesh.triangles = new int[]
+            {
+                0, 1, 2,
+                2, 3, 0,
+                3, 4, 0,
+                4, 5, 0
+            };
+
+            mesh.colors = new Color[]
+            {
+                new Color(1f, 1f, 1f, 0.75f),
+                new Color(1f, 1f, 1f, 0.75f),
+                new Color(1f, 1f, 1f, 0f),
+                new Color(1f, 1f, 1f, 0f),
+                new Color(1f, 1f, 1f, 0f),
+                new Color(1f, 1f, 1f, 0.75f),
+            };
+
+            return mesh;
         }
     }
 }

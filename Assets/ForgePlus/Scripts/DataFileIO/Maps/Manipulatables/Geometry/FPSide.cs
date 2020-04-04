@@ -1,6 +1,7 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Runtime.Constraints;
+using System.Collections.Generic;
 using UnityEngine;
 using Weland;
 
@@ -23,6 +24,8 @@ namespace ForgePlus.LevelManipulation
         public GameObject MiddleSurface;
         public GameObject BottomSurface;
 
+        private List<GameObject> selectionVisualizationIndicators = new List<GameObject>(4);
+
         public FPLevel FPLevel { private get; set; }
 
         public void OnMouseUpAsButton()
@@ -37,8 +40,88 @@ namespace ForgePlus.LevelManipulation
 
         public void DisplaySelectionState(bool state)
         {
-            // TODO: Should actually display it here so it only shows the indicators on the selected side, not the line
-            FPLevel.FPLines[WelandObject.LineIndex].DisplaySelectionState(state);
+            if (state)
+            {
+                bool collectedTopSurface = false;
+                Vector3 topLeftWorldPosition = Vector3.zero;
+                Vector3 topRightWorldPosition = Vector3.zero;
+                Vector3 bottomRightWorldPosition = Vector3.zero;
+                Vector3 bottomLeftWorldPosition = Vector3.zero;
+                GameObject topParent = null;
+                GameObject bottomParent = null;
+
+                if (TopSurface)
+                {
+                    var localToWorldMatrix = TopSurface.transform.localToWorldMatrix;
+                    var mesh = TopSurface.GetComponent<MeshFilter>().sharedMesh;
+
+                    topLeftWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[1]);
+                    topRightWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[2]);
+
+                    topParent = TopSurface;
+
+                    bottomRightWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[3]);
+                    bottomLeftWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[0]);
+
+                    bottomParent = TopSurface;
+
+                    collectedTopSurface = true;
+                }
+
+                if (MiddleSurface)
+                {
+                    var localToWorldMatrix = MiddleSurface.transform.localToWorldMatrix;
+                    var mesh = MiddleSurface.GetComponent<MeshFilter>().sharedMesh;
+
+                    if (!collectedTopSurface)
+                    {
+                        topLeftWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[1]);
+                        topRightWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[2]);
+
+                        topParent = MiddleSurface;
+
+                        collectedTopSurface = true;
+                    }
+
+                    bottomRightWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[3]);
+                    bottomLeftWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[0]);
+
+                    bottomParent = MiddleSurface;
+                }
+
+                if (BottomSurface)
+                {
+                    var localToWorldMatrix = BottomSurface.transform.localToWorldMatrix;
+                    var mesh = BottomSurface.GetComponent<MeshFilter>().sharedMesh;
+
+                    if (!collectedTopSurface)
+                    {
+                        topLeftWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[1]);
+                        topRightWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[2]);
+
+                        topParent = BottomSurface;
+                    }
+
+                    bottomRightWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[3]);
+                    bottomLeftWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[0]);
+
+                    bottomParent = BottomSurface;
+                }
+
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator("Top-Left", topParent.transform, topLeftWorldPosition, topRightWorldPosition, bottomLeftWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator("Top-Right", topParent.transform, topRightWorldPosition, bottomRightWorldPosition, topLeftWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator("Bottom-Right", bottomParent.transform, bottomRightWorldPosition, bottomLeftWorldPosition, topRightWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator("Bottom-Left", bottomParent.transform, bottomLeftWorldPosition, topLeftWorldPosition, bottomRightWorldPosition));
+            }
+            else
+            {
+                foreach(var indicator in selectionVisualizationIndicators)
+                {
+                    Destroy(indicator);
+                }
+
+                selectionVisualizationIndicators.Clear();
+            }
         }
 
         public void Inspect()
