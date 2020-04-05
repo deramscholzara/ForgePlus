@@ -148,8 +148,6 @@ namespace ForgePlus.LevelManipulation.Utilities
             var counterclockwiseDirection = (previousVertexWorldPosition - vertexWorldPosition).normalized;
             var scale = Mathf.Min(1f, Vector3.Distance(vertexWorldPosition, nextVertexWorldPosition) / (length * 2f), Vector3.Distance(vertexWorldPosition, previousVertexWorldPosition) / (length * 2f));
 
-            Debug.Log("Scale: " + scale);
-
             var indicator = new GameObject($"Selection Indicators - {name}");
             indicator.transform.position = vertexWorldPosition;
             indicator.transform.SetParent(parent, worldPositionStays: true);
