@@ -10,6 +10,11 @@ namespace ForgePlus.LevelManipulation
         private readonly int selectedShaderPropertyId = Shader.PropertyToID("_Selected");
 
         private static Material MapObjectPlaceholderMaterial;
+        private static Material MapObjectPlaceholderSelectedMaterial;
+
+        private static Mesh PlayerMesh;
+        private static Mesh MonsterMesh;
+
         private static Mesh ItemMesh;
         private static Mesh SceneryMesh;
         private static Mesh SoundMesh;
@@ -28,8 +33,6 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        private Material unselectedMaterial = null;
-
         public void OnMouseUpAsButton()
         {
             SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
@@ -46,20 +49,13 @@ namespace ForgePlus.LevelManipulation
 
             if (state)
             {
-                if (!unselectedMaterial)
-                {
-                    unselectedMaterial = renderer.sharedMaterial;
-                }
-
-                renderer.material.SetFloat(selectedShaderPropertyId, 1f);
+                renderer.sharedMaterial = MapObjectPlaceholderSelectedMaterial;
 
                 gameObject.layer = SelectionManager.SelectionIndicatorLayer;
             }
             else
             {
-                renderer.sharedMaterial = unselectedMaterial;
-
-                unselectedMaterial = null;
+                renderer.sharedMaterial = MapObjectPlaceholderMaterial;
 
                 gameObject.layer = SelectionManager.DefaultLayer;
             }
@@ -78,6 +74,8 @@ namespace ForgePlus.LevelManipulation
             if (!MapObjectPlaceholderMaterial)
             {
                 MapObjectPlaceholderMaterial = new Material(Shader.Find("ForgePlus/MapObjectPlaceholder"));
+                MapObjectPlaceholderSelectedMaterial = new Material(MapObjectPlaceholderMaterial);
+                MapObjectPlaceholderSelectedMaterial.SetFloat(selectedShaderPropertyId, 1f);
             }
 
             if (!ItemMesh)
@@ -101,10 +99,20 @@ namespace ForgePlus.LevelManipulation
             switch (WelandObject.Type)
             {
                 case ObjectType.Player:
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = BuildTriangleMesh(Color.yellow);
+                    if (!PlayerMesh)
+                    {
+                        PlayerMesh = BuildTriangleMesh(Color.yellow);
+                    }
+
+                    gameObject.AddComponent<MeshFilter>().sharedMesh = PlayerMesh;
                     break;
                 case ObjectType.Monster:
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = BuildTriangleMesh(Color.red);
+                    if (!MonsterMesh)
+                    {
+                        MonsterMesh = BuildTriangleMesh(Color.red);
+                    }
+
+                    gameObject.AddComponent<MeshFilter>().sharedMesh = MonsterMesh;
                     break;
                 case ObjectType.Item:
                     gameObject.AddComponent<MeshFilter>().sharedMesh = ItemMesh;
