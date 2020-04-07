@@ -2,6 +2,7 @@
 using ForgePlus.ShapesCollections;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using Weland;
 
@@ -75,12 +76,24 @@ namespace ForgePlus.DataFileIO
 
             if (level == null)
             {
+                var loadDataStartTime = DateTime.Now;
+                
                 LoadData();
+                
+                Debug.Log($"--- LevelLoad: Loaded level data in timespan: {DateTime.Now - loadDataStartTime}");
             }
 
+            var buildStartTime = DateTime.Now;
+            
             BuildLevel();
+            
+            Debug.Log($"--- LevelBuild: Built full level from data in total timespan: {DateTime.Now - buildStartTime}");
 
+            var initializationStartTime = DateTime.Now;
+            
             OnLevelOpened(level.Name);
+            
+            LevelInitializationDebugTimer(initializationStartTime);
         }
 
         public void CloseLevel()
@@ -100,6 +113,8 @@ namespace ForgePlus.DataFileIO
 
         private void BuildLevel()
         {
+            var initializeFPLevelStartTime = DateTime.Now;
+
             FPLevel = new GameObject($"Level ({LevelName})").AddComponent<FPLevel>();
             FPLevel.Level = level;
             FPLevel.Index = (short)LevelIndex;
@@ -120,19 +135,31 @@ namespace ForgePlus.DataFileIO
             // Clear out Walls Materials so it can be repopulated with the correct set
             WallsCollection.ClearCollection();
 
+            Debug.Log($"--- LevelBuild: Initialized FPLevel in timespan: {DateTime.Now - initializeFPLevelStartTime}");
+
+            var buildFPLightsStartTime = DateTime.Now;
+
             // Initialize Lights here so they are in proper index order
             for (var i = 0; i < level.Lights.Count; i++)
             {
                 FPLevel.FPLights[(short)i] = new FPLight((short)i, level.Lights[i], FPLevel);
             }
 
+            Debug.Log($"--- LevelBuild: Built & started FPLights in timespan: {DateTime.Now - buildFPLightsStartTime}");
+
+            var buildFPMediasStartTime = DateTime.Now;
+
             // Initialize Medias here so they are in proper index order
             for (var i = 0; i < level.Medias.Count; i++)
             {
                 FPLevel.FPMedias[(short)i] = new FPMedia((short)i, level.Medias[i], FPLevel);
             }
+            
+            Debug.Log($"--- LevelBuild: Built & started FPMedias in timespan: {DateTime.Now - buildFPMediasStartTime}");
 
             #region Polygons_And_Media
+            var buildPolygonsStartTime = DateTime.Now;
+
             var polygonsGroupGO = new GameObject("Polygons");
             polygonsGroupGO.transform.SetParent(FPLevel.transform);
 
@@ -152,9 +179,13 @@ namespace ForgePlus.DataFileIO
 
                 fpPolygon.GenerateSurfaces(polygon, (short)polygonIndex);
             }
+
+            Debug.Log($"--- LevelBuild: Built Polygons, Medias, & Platforms in timespan: {DateTime.Now - buildPolygonsStartTime}");
             #endregion Polygons_And_Media
 
             #region Lines_And_Sides
+            var buildSidesStartTime = DateTime.Now;
+
             var linesGroupGO = new GameObject("Lines");
             linesGroupGO.transform.SetParent(FPLevel.transform);
 
@@ -174,9 +205,13 @@ namespace ForgePlus.DataFileIO
 
                 fpLine.GenerateSurfaces();
             }
+
+            Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
             #endregion Lines_And_Sides
 
             #region Objects_And_Placements
+            var buildObjectsStartTime = DateTime.Now;
+
             var mapObjectsGroupGO = new GameObject("MapObjects");
             mapObjectsGroupGO.transform.SetParent(FPLevel.transform);
 
@@ -196,7 +231,20 @@ namespace ForgePlus.DataFileIO
 
                 fpMapObject.GenerateObject();
             }
+
+            Debug.Log($"--- LevelBuild: Built Objects in timespan: {DateTime.Now - buildObjectsStartTime}");
             #endregion Objects_And_Placements
+        }
+
+        private async void LevelInitializationDebugTimer(DateTime startTime)
+        {
+            // Yield 3 times, to ensure we hit the frame after initialization ocurred
+            // (meaning Awake(), Start(), OnEnabled(), etc. all ran)
+            await Task.Yield();
+            await Task.Yield();
+            await Task.Yield();
+
+            Debug.Log($"--- LevelLoad: Initialized level in timespan: {DateTime.Now - startTime}");
         }
     }
 }
