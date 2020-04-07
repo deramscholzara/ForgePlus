@@ -70,14 +70,14 @@ namespace ForgePlus.LevelManipulation
                     nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
                 }
 
-                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator($"Vertex ({i})t", surface.transform, currentVertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator($"Vertex ({i})t", surface.transform, currentVertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition));
             }
         }
 
         public void Inspect()
         {
-            var prefab = Resources.Load<InspectorFPPolygon>("Inspectors/Inspector - FPPolygon");
-            var inspector = Instantiate(prefab);
+            var inspectorPrefab = Resources.Load<InspectorFPPolygon>("Inspectors/Inspector - FPPolygon");
+            var inspector = Instantiate(inspectorPrefab);
             inspector.PopulateValues(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }

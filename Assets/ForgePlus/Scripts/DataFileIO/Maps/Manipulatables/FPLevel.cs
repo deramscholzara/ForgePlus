@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using ForgePlus.Inspection;
+using System.Collections.Generic;
 using UnityEngine;
 using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPLevel : SingletonMonoBehaviour<FPLevel>, IFPDestructionPreparable
+    public class FPLevel : SingletonMonoBehaviour<FPLevel>, IFPDestructionPreparable, IFPSelectable, IFPInspectable
     {
         public short Index = -1;
         public Level Level;
@@ -21,6 +22,30 @@ namespace ForgePlus.LevelManipulation
         public List<FPSurfacePolygon> FPSurfacePolygons;
         public List<FPSurfaceSide> FPSurfaceSides;
         public List<FPSurfaceMedia> FPSurfaceMedias;
+
+        public void SetSelectability(bool enabled)
+        {
+            // Intentionally blank - no current reason to toggle this, as it is selected/deselected by switching to/from Level mode.
+        }
+
+        public void OnMouseUpAsButton()
+        {
+            // TODO: Make it so that clicking "empty space" selects FPLevel?
+            Debug.LogError("FPLevel components should never be directly selected, this shouldn't even have a collider to receive input.", this);
+        }
+
+        public void DisplaySelectionState(bool state)
+        {
+            // Intentially blank - no real need to show the selection state of the level, as it's apparent enough from it showing up in the inspector
+        }
+
+        public void Inspect()
+        {
+            var inspectorPrefab = Resources.Load<InspectorFPLevel>("Inspectors/Inspector - FPLevel");
+            var inspector = Instantiate(inspectorPrefab);
+            inspector.PopulateValues(this);
+            InspectorPanel.Instance.AddInspector(inspector);
+        }
 
         public void PrepareForDestruction()
         {

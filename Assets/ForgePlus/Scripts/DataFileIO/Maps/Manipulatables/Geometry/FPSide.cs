@@ -108,10 +108,10 @@ namespace ForgePlus.LevelManipulation
                     bottomParent = BottomSurface;
                 }
 
-                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator("Top-Left", topParent.transform, topLeftWorldPosition, topRightWorldPosition, bottomLeftWorldPosition));
-                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator("Top-Right", topParent.transform, topRightWorldPosition, bottomRightWorldPosition, topLeftWorldPosition));
-                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator("Bottom-Right", bottomParent.transform, bottomRightWorldPosition, bottomLeftWorldPosition, topRightWorldPosition));
-                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSelectionIndicator("Bottom-Left", bottomParent.transform, bottomLeftWorldPosition, topLeftWorldPosition, bottomRightWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator("Top-Left", topParent.transform, topLeftWorldPosition, topRightWorldPosition, bottomLeftWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator("Top-Right", topParent.transform, topRightWorldPosition, bottomRightWorldPosition, topLeftWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator("Bottom-Right", bottomParent.transform, bottomRightWorldPosition, bottomLeftWorldPosition, topRightWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator("Bottom-Left", bottomParent.transform, bottomLeftWorldPosition, topLeftWorldPosition, bottomRightWorldPosition));
             }
             else
             {
@@ -126,8 +126,8 @@ namespace ForgePlus.LevelManipulation
 
         public void Inspect()
         {
-            var prefab = Resources.Load<InspectorFPSide>("Inspectors/Inspector - FPSide");
-            var inspector = Instantiate(prefab);
+            var inspectorPrefab = Resources.Load<InspectorFPSide>("Inspectors/Inspector - FPSide");
+            var inspector = Instantiate(inspectorPrefab);
             inspector.PopulateValues(this);
             InspectorPanel.Instance.AddInspector(inspector);
 
@@ -316,24 +316,29 @@ namespace ForgePlus.LevelManipulation
 
                 var typeDescriptor = hasOpposingPolygon ? $"Transparent - HasTransparentSide - Source:{sideDataSource}" : $"Full - Unopposed - Source:{sideDataSource}";
 
-                middleSurface = BuildWallSurface(fpLevel,
-                                                 $"Side Middle ({sideIndex}) - ({typeDescriptor})",
-                                                 line.HighestAdjacentFloor,
-                                                 line.LowestAdjacentCeiling,
-                                                 line.EndpointIndexes[0],
-                                                 line.EndpointIndexes[1],
-                                                 isClockwise,
-                                                 sideRootGO.transform,
-                                                 side,
-                                                 transferMode: side == null ? (short)0 : (sideDataSource == SideDataSources.Primary ? side.PrimaryTransferMode : side.TransparentTransferMode),
-                                                 sideDataSource: sideDataSource,
-                                                 isOpaqueSurface: isOpaqueSurface);
+                // Note: If the highest possible ceiling in this poly isn't higher than the lowest possible floor,
+                //       then then the middle side would never be seen, so there's no reason to draw it.
+                if (highestFacingCeiling > lowestFacingFloor)
+                {
+                    middleSurface = BuildWallSurface(fpLevel,
+                                                     $"Side Middle ({sideIndex}) - ({typeDescriptor})",
+                                                     line.HighestAdjacentFloor,
+                                                     line.LowestAdjacentCeiling,
+                                                     line.EndpointIndexes[0],
+                                                     line.EndpointIndexes[1],
+                                                     isClockwise,
+                                                     sideRootGO.transform,
+                                                     side,
+                                                     transferMode: side == null ? (short)0 : (sideDataSource == SideDataSources.Primary ? side.PrimaryTransferMode : side.TransparentTransferMode),
+                                                     sideDataSource: sideDataSource,
+                                                     isOpaqueSurface: isOpaqueSurface);
 
-                var fpSurfaceSide = middleSurface.AddComponent<FPSurfaceSide>();
-                fpSurfaceSide.parentFPSide = sideRootGO.GetComponent<FPSide>();
-                fpLevel.FPSurfaceSides.Add(fpSurfaceSide);
+                    var fpSurfaceSide = middleSurface.AddComponent<FPSurfaceSide>();
+                    fpSurfaceSide.parentFPSide = sideRootGO.GetComponent<FPSide>();
+                    fpLevel.FPSurfaceSides.Add(fpSurfaceSide);
 
-                middleSurface.transform.position = new Vector3(0f, (float)line.LowestAdjacentCeiling / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+                    middleSurface.transform.position = new Vector3(0f, (float)line.LowestAdjacentCeiling / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+                }
             }
 
             if (needsBottom)
