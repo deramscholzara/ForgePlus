@@ -14,7 +14,6 @@ namespace ForgePlus.ShapesCollections
         }
 
         // Normal
-        private static readonly Shader OpaqueNormalShader = Shader.Find("ForgePlus/OpaqueNormal");
         private static readonly Shader OpaqueWithAlphaAlphaNormalShader = Shader.Find("ForgePlus/OpaqueWithAlphaNormal");
         private static readonly Shader TransparentNormalShader = Shader.Find("ForgePlus/TransparentNormal");
 
@@ -29,9 +28,12 @@ namespace ForgePlus.ShapesCollections
 
         private static readonly Texture2D GridTexture = Resources.Load<Texture2D>("Walls/Grid");
 
-        private static readonly Dictionary<ShapeDescriptor, Texture2D> Textures = new Dictionary<ShapeDescriptor, Texture2D>(250);
-        private static readonly Dictionary<string, Material> Materials = new Dictionary<string, Material>(400);
-        private static readonly Dictionary<string, Material> MediaMaterials = new Dictionary<string, Material>(5);
+        private static readonly Dictionary<ShapeDescriptor, Texture2D> Textures = new Dictionary<ShapeDescriptor, Texture2D>(255);
+
+        private static readonly Dictionary<ShapeDescriptor, Material> Materials = new Dictionary<ShapeDescriptor, Material>(255);
+        private static readonly Dictionary<ShapeDescriptor, Material> TransparentMaterials = new Dictionary<ShapeDescriptor, Material>(100);
+        private static readonly Dictionary<ShapeDescriptor, Material> LandscapeMaterials = new Dictionary<ShapeDescriptor, Material>(1);
+        private static readonly Dictionary<ShapeDescriptor, Material> MediaMaterials = new Dictionary<ShapeDescriptor, Material>(5);
 
         public static Texture2D GetTexture(ShapeDescriptor shapeDescriptor)
         {
@@ -43,6 +45,7 @@ namespace ForgePlus.ShapesCollections
             else
             {
                 textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
+                textureToUse.name = $"Collection({shapeDescriptor.Collection}) Bitmap({shapeDescriptor.Bitmap})";
 
                 if (textureToUse)
                 {
@@ -61,29 +64,13 @@ namespace ForgePlus.ShapesCollections
         {
             if ((ushort)shapeDescriptor != (ushort)ShapeDescriptor.Empty)
             {
-                var trackedMaterial = GetTrackedMaterial(shapeDescriptor, transferMode, isOpaqueSurface);
+                var landscapeTransferMode = transferMode == 9 ||
+                                            (shapeDescriptor.Collection >= 27 && shapeDescriptor.Collection <= 30);
 
-                if (surfaceType == SurfaceTypes.Media)
-                {
-                    Material mediaMaterial;
-                    if (MediaMaterials.ContainsKey(GetMaterialKey(shapeDescriptor, transferMode, isOpaqueSurface)))
-                    {
-                        mediaMaterial = MediaMaterials[GetMaterialKey(shapeDescriptor, transferMode, isOpaqueSurface)];
-                    }
-                    else
-                    {
-                        mediaMaterial = new Material(MediaShader);
-                    }
-
-                    if (mediaMaterial.mainTexture != trackedMaterial.mainTexture)
-                    {
-                        mediaMaterial.mainTexture = trackedMaterial.mainTexture;
-                    }
-
-                    return mediaMaterial;
-                }
-
-                return trackedMaterial;
+                return GetTrackedMaterial(shapeDescriptor,
+                                          landscapeTransferMode,
+                                          isOpaqueSurface,
+                                          surfaceType);
             }
             else
             {
@@ -95,16 +82,17 @@ namespace ForgePlus.ShapesCollections
         {
             ClearMaterials(Materials);
             ClearMaterials(MediaMaterials);
+            ClearMaterials(LandscapeMaterials);
 
             foreach (var texturesKey in Textures.Keys)
             {
                 Object.Destroy(Textures[texturesKey]);
             }
-            
+
             Textures.Clear();
         }
 
-        private static void ClearMaterials(IDictionary<string, Material> materials)
+        private static void ClearMaterials(IDictionary<ShapeDescriptor, Material> materials)
         {
             // Don't actually clear the Materials list,
             // just clear their textures so the Materials can be reused
@@ -114,72 +102,61 @@ namespace ForgePlus.ShapesCollections
             }
         }
 
-        private static Material GetTrackedMaterial(ShapeDescriptor shapeDescriptor, short transferMode, bool isOpaqueSurface)
+        private static Material GetTrackedMaterial(
+            ShapeDescriptor shapeDescriptor,
+            bool landscapeTransferMode,
+            bool isOpaqueSurface,
+            SurfaceTypes surfaceType)
         {
-            var collectionIndex = shapeDescriptor.Collection;
-            var bitmapIndex = shapeDescriptor.Bitmap;
-
-            if (collectionIndex >= 27 && collectionIndex <= 30)
+            var textureToUse = GetTexture(shapeDescriptor);
+            if (!textureToUse)
             {
-                // If this is a landscape bitmap, then force landscape transfer mode
-                transferMode = 9;
+                textureToUse = GridTexture;
             }
 
-            var material = Materials.ContainsKey(GetMaterialKey(shapeDescriptor, transferMode, isOpaqueSurface)) ? Materials[GetMaterialKey(shapeDescriptor, transferMode, isOpaqueSurface)] : null;
-
-            if (!material || !material.mainTexture)
+            if (surfaceType == SurfaceTypes.Media)
             {
-                var textureToUse = GetTexture(shapeDescriptor);
-
-                Shader shaderToUse;
-                if (transferMode == 9)
+                return GetTrackedMaterial(shapeDescriptor, textureToUse, MediaShader, MediaMaterials);
+            }
+            else if (landscapeTransferMode)
+            {
+                return GetTrackedMaterial(shapeDescriptor, textureToUse, OpaqueLandscapeShader, LandscapeMaterials);
+            }
+            else
+            {
+                if (isOpaqueSurface ||
+                    textureToUse.format != TextureFormat.ARGB32)
                 {
-                    shaderToUse = OpaqueLandscapeShader;
-                }
-                else if (textureToUse)
-                {
-                    shaderToUse = textureToUse.format == TextureFormat.ARGB32 ? (isOpaqueSurface ? OpaqueWithAlphaAlphaNormalShader : TransparentNormalShader) : OpaqueNormalShader;
-                }
-                else
-                {
-                    shaderToUse = OpaqueNormalShader;
-                }
-
-                if (!textureToUse)
-                {
-                    textureToUse = GridTexture;
-                }
-
-                if (material)
-                {
-                    if (material.shader != shaderToUse)
-                    {
-                        material.shader = shaderToUse;
-                    }
+                    return GetTrackedMaterial(shapeDescriptor, textureToUse, OpaqueWithAlphaAlphaNormalShader, Materials);
                 }
                 else
                 {
-                    material = new Material(shaderToUse);
-                    Materials[GetMaterialKey(shapeDescriptor, transferMode, isOpaqueSurface)] = material;
+                    return GetTrackedMaterial(shapeDescriptor, textureToUse, TransparentNormalShader, TransparentMaterials);
                 }
+            }
+        }
 
-                if (!material.mainTexture)
-                {
-                    material.mainTexture = textureToUse;
-                }
+        private static Material GetTrackedMaterial(ShapeDescriptor shapeDescriptor, Texture2D textureToUse, Shader shaderToUse, IDictionary<ShapeDescriptor, Material> trackedMaterials)
+        {
+            Material material;
+            if (trackedMaterials.ContainsKey(shapeDescriptor))
+            {
+                material = trackedMaterials[shapeDescriptor];
+            }
+            else
+            {
+                material = new Material(shaderToUse);
+                trackedMaterials[shapeDescriptor] = material;
+            }
 
-                material.name = $"Collection({collectionIndex}) Bitmap({bitmapIndex})";
+            if (material.mainTexture != textureToUse)
+            {
+                material.mainTexture = textureToUse;
+
+                material.name = textureToUse.name;
             }
 
             return material;
-        }
-
-        private static string GetMaterialKey(ShapeDescriptor shapeDescriptor, short transferMode, bool isOpaqueWithAlphaVariant)
-        {
-            // TODO: Make the Key in track bitmap, collection, transfer mode, and  --- light index ---,
-            //       and set up SurfaceLight always get its materials from this class.
-            //       This should reduce material count, and thus also draw calls.
-            return $"{shapeDescriptor.Collection},{shapeDescriptor.Bitmap},{transferMode},{isOpaqueWithAlphaVariant}";
         }
     }
 }
