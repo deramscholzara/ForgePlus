@@ -1,4 +1,5 @@
 ﻿using ForgePlus.ShapesCollections;
+using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -140,7 +141,7 @@ namespace ForgePlus.LevelManipulation.Utilities
             }
         }
 
-        public static GameObject CreateSelectionIndicator(string name, Transform parent, Vector3 vertexWorldPosition, Vector3 nextVertexWorldPosition, Vector3 previousVertexWorldPosition)
+        public static GameObject CreateSurfaceSelectionIndicator(string name, Transform parent, Vector3 vertexWorldPosition, Vector3 nextVertexWorldPosition, Vector3 previousVertexWorldPosition)
         {
             var thickness = 0.04f;
             var length = 0.2f;
@@ -153,13 +154,13 @@ namespace ForgePlus.LevelManipulation.Utilities
             indicator.transform.SetParent(parent, worldPositionStays: true);
             indicator.layer = SelectionManager.SelectionIndicatorLayer;
 
-            indicator.AddComponent<MeshFilter>().sharedMesh = CreateSelectionIndicatorMesh(clockwiseDirection, counterclockwiseDirection, length, thickness, scale);
+            indicator.AddComponent<MeshFilter>().sharedMesh = CreateSurfaceSelectionIndicatorCornerMesh(clockwiseDirection, counterclockwiseDirection, length, thickness, scale);
             indicator.AddComponent<MeshRenderer>().sharedMaterial = SelectionIndicatorMaterial;
 
             return indicator;
         }
 
-        private static Mesh CreateSelectionIndicatorMesh(Vector3 clockwiseDirection, Vector3 counterclockwiseDirection, float length, float thickness, float scale)
+        private static Mesh CreateSurfaceSelectionIndicatorCornerMesh(Vector3 clockwiseDirection, Vector3 counterclockwiseDirection, float length, float thickness, float scale)
         {
             var mesh = new Mesh();
 

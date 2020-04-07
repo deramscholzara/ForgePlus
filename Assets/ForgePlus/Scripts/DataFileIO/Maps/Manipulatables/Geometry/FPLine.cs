@@ -35,8 +35,8 @@ namespace ForgePlus.LevelManipulation
 
         public void Inspect()
         {
-            var prefab = Resources.Load<InspectorFPLine>("Inspectors/Inspector - FPLine");
-            var inspector = Instantiate(prefab);
+            var inspectorPrefab = Resources.Load<InspectorFPLine>("Inspectors/Inspector - FPLine");
+            var inspector = Instantiate(inspectorPrefab);
             inspector.PopulateValues(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }

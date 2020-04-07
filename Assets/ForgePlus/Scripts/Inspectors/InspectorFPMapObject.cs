@@ -30,9 +30,11 @@ namespace ForgePlus.Inspection
                     Value_Index.text = $"({fpMapObject.WelandObject.Index})";
                     break;
                 case Weland.ObjectType.Monster:
+                    // TODO: Need to also inspect the Placement object "MonsterPlacement" from Weland.Level
                     Value_Index.text = $"{(MonsterType)fpMapObject.WelandObject.Index} ({fpMapObject.WelandObject.Index})";
                     break;
                 case Weland.ObjectType.Item:
+                    // TODO: Need to also inspect the Placement object "ItemPlacement" from Weland.Level
                     Value_Index.text = $"{(ItemType)fpMapObject.WelandObject.Index} ({fpMapObject.WelandObject.Index})";
                     break;
                 case Weland.ObjectType.Scenery:
@@ -57,7 +59,7 @@ namespace ForgePlus.Inspection
                                $"Blind: {fpMapObject.WelandObject.Blind}\n" +
                                $"Deaf: {fpMapObject.WelandObject.Deaf}\n" +
                                $"Floats: {fpMapObject.WelandObject.Floats}\n" +
-                               $"NetworkOnly: {fpMapObject.WelandObject.NetworkOnly}\n";
+                               $"NetworkOnly: {fpMapObject.WelandObject.NetworkOnly}";
 
 
             Value_Angle.text =          fpMapObject.WelandObject.Facing.ToString();

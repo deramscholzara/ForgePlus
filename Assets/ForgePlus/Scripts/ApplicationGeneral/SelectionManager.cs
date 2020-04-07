@@ -109,6 +109,11 @@ namespace ForgePlus.LevelManipulation
             if (shouldSet)
             {
                 CurrentSceneSelectionFilter = SceneSelectionFilters.Level;
+
+                if (FPLevel.Instance)
+                {
+                    ToggleObjectSelection(FPLevel.Instance, multiSelect: false);
+                }
             }
         }
 
@@ -126,7 +131,7 @@ namespace ForgePlus.LevelManipulation
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
-                        ////SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
+                        SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
                         SetSelectability<FPSurfacePolygon>(FPLevel.Instance.FPSurfacePolygons, enabled: true); // Forwards to polygon, which adds polygon inspector (and selects polygon)
                         SetSelectability<FPSurfaceSide>(FPLevel.Instance.FPSurfaceSides, enabled: true); // Forwards to side, which adds side & line inspector (and selects side)
@@ -142,7 +147,7 @@ namespace ForgePlus.LevelManipulation
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
-                        ////SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
+                        SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
                         SetSelectability<FPSurfacePolygon>(FPLevel.Instance.FPSurfacePolygons, enabled: false);
                         SetSelectability<FPSurfaceSide>(FPLevel.Instance.FPSurfaceSides, enabled: false);
@@ -158,7 +163,7 @@ namespace ForgePlus.LevelManipulation
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: true); // Shown in right-palette and just selects and inspects the media
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
-                        ////SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
+                        SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
                         SetSelectability<FPSurfacePolygon>(FPLevel.Instance.FPSurfacePolygons, enabled: true); // Forwards to polygon, which adds media & polygon inspector (and selects media)
                         SetSelectability<FPSurfaceSide>(FPLevel.Instance.FPSurfaceSides, enabled: true); // Forwards to polygon, which adds media & polygon inspector (and selects media)
@@ -174,7 +179,7 @@ namespace ForgePlus.LevelManipulation
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: true); // Shown in right-palette and just selects and inspects the media
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
-                        ////SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
+                        SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
                         SetSelectability<FPSurfacePolygon>(FPLevel.Instance.FPSurfacePolygons, enabled: true); // Forwards to polygon, which adds platform & polygon inspector (and selects platform)
                         SetSelectability<FPSurfaceSide>(FPLevel.Instance.FPSurfaceSides, enabled: true); // Forwards to polygon, which adds platform & polygon inspector (and selects platform)
@@ -190,7 +195,7 @@ namespace ForgePlus.LevelManipulation
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, true);
-                        ////SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
+                        SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
                         SetSelectability<FPSurfacePolygon>(FPLevel.Instance.FPSurfacePolygons, enabled: false);
                         SetSelectability<FPSurfaceSide>(FPLevel.Instance.FPSurfaceSides, enabled: false);
@@ -204,7 +209,7 @@ namespace ForgePlus.LevelManipulation
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
-                        ////SetSelectability<FPLevel>(FPLevel.Instance, enabled: true);
+                        SetSelectability<FPLevel>(FPLevel.Instance, enabled: true);
 
                         SetSelectability<FPSurfacePolygon>(FPLevel.Instance.FPSurfacePolygons, enabled: false);
                         SetSelectability<FPSurfaceSide>(FPLevel.Instance.FPSurfaceSides, enabled: false);
@@ -220,7 +225,7 @@ namespace ForgePlus.LevelManipulation
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
-                        ////SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
+                        SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
                         SetSelectability<FPSurfacePolygon>(FPLevel.Instance.FPSurfacePolygons, enabled: false);
                         SetSelectability<FPSurfaceSide>(FPLevel.Instance.FPSurfaceSides, enabled: false);

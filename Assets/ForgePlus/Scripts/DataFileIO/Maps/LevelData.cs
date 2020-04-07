@@ -80,11 +80,6 @@ namespace ForgePlus.DataFileIO
 
             BuildLevel();
 
-            if (!Application.isPlaying)
-            {
-                return;
-            }
-
             OnLevelOpened(level.Name);
         }
 
