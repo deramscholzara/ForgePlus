@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ForgePlus.Inspection;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +9,7 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPLight : IFPManipulatable<Weland.Light>, IFPDestructionPreparable
+    public class FPLight : IFPManipulatable<Weland.Light>, IFPDestructionPreparable, IFPSelectable, IFPInspectable
     {
         public enum States
         {
@@ -45,6 +46,24 @@ namespace ForgePlus.LevelManipulation
             FPLevel = fpLevel;
 
             BeginRuntimeStyleBehavior();
+        }
+
+        public void SetSelectability(bool enabled)
+        {
+            // Intentionally blank - no current reason to toggle this, as its selection comes from the palette or already-gated FPSurface components
+        }
+
+        public void DisplaySelectionState(bool state)
+        {
+            // Intentially blank - selection is displayed via the palette swatches
+        }
+
+        public void Inspect()
+        {
+            var inspectorPrefab = Resources.Load<InspectorFPLight>("Inspectors/Inspector - FPLight");
+            var inspector = Object.Instantiate(inspectorPrefab);
+            inspector.PopulateValues(this);
+            InspectorPanel.Instance.AddInspector(inspector);
         }
 
         public void PrepareForDestruction()
