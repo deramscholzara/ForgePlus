@@ -34,8 +34,8 @@ namespace ForgePlus.LevelManipulation
             {
                 var polygonIsClockwise = FPLevel.FPLines[WelandObject.LineIndexes[0]].WelandObject.ClockwisePolygonOwner == Index;
 
-                CreateSelectionIndicators(CeilingSurface, polygonIsClockwise, isfloor: false);
-                CreateSelectionIndicators(FloorSurface, polygonIsClockwise, isfloor: true);
+                CreateSelectionIndicators(CeilingSurface, isfloor: false);
+                CreateSelectionIndicators(FloorSurface, isfloor: true);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        private void CreateSelectionIndicators(GameObject surface, bool isClockwise, bool isfloor)
+        private void CreateSelectionIndicators(GameObject surface, bool isfloor)
         {
             var vertices = surface.GetComponent<MeshFilter>().sharedMesh.vertices;
             var localToWorldMatrix = surface.transform.localToWorldMatrix;
@@ -59,7 +59,7 @@ namespace ForgePlus.LevelManipulation
                 Vector3 previousVertexWorldPosition;
                 Vector3 nextVertexWorldPosition;
 
-                if (isClockwise == isfloor)
+                if (isfloor)
                 {
                     previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
                     nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
