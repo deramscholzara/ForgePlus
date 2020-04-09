@@ -17,6 +17,15 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_Angle;
         public TextMeshProUGUI Value_Position;
 
+        public GameObject PlacementValuesRoot;
+        public TextMeshProUGUI Value_Placement_InitialCount;
+        public TextMeshProUGUI Value_Placement_MinimumCount;
+        public TextMeshProUGUI Value_Placement_MaximumCount;
+        public TextMeshProUGUI Value_Placement_RandomCount;
+        public TextMeshProUGUI Value_Placement_RandomChance;
+        public TextMeshProUGUI Value_Placement_RandomLocation;
+
+
         public override void PopulateValues(IFPInspectable inspectedObject)
         {
             var fpMapObject = inspectedObject as FPMapObject;
@@ -66,6 +75,21 @@ namespace ForgePlus.Inspection
             Value_Position.text =       $"X: {fpMapObject.WelandObject.X}\n" +
                                         $"Y: {fpMapObject.WelandObject.Y}\n" +
                                         $"Z: {fpMapObject.WelandObject.Z}";
+
+            var placement = fpMapObject.Placement;
+            if (placement == null)
+            {
+                PlacementValuesRoot.SetActive(false);
+            }
+            else
+            {
+                Value_Placement_InitialCount.text =     placement.InitialCount.ToString();
+                Value_Placement_MinimumCount.text =     placement.MinimumCount.ToString();
+                Value_Placement_MaximumCount.text =     placement.MaximumCount.ToString();
+                Value_Placement_RandomCount.text =      placement.RandomCount.ToString();
+                Value_Placement_RandomChance.text =     $"{placement.RandomPercent} %";
+                Value_Placement_RandomLocation.text =   placement.RandomLocation.ToString();
+            }
         }
 
         public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)

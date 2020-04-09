@@ -394,11 +394,11 @@ namespace Weland
         {
             get
             {
-                return (int)Math.Round((double)randomChance * 100 / 65535);
+                return (int)Math.Round((double)randomChance * 100 / ushort.MaxValue);
             }
             set
             {
-                randomChance = (ushort)Math.Round((double)value * 65535 / 100);
+                randomChance = (ushort)Math.Round((double)value * ushort.MaxValue / 100);
             }
         }
 

@@ -33,6 +33,23 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
+        public Placement Placement
+        {
+            get
+            {
+                if (WelandObject.Type == ObjectType.Monster)
+                {
+                    return FPLevel.Level.MonsterPlacement[WelandObject.Index];
+                }
+                else if (WelandObject.Type == ObjectType.Item)
+                { 
+                    return FPLevel.Level.ItemPlacement[WelandObject.Index];
+                }
+
+                return null;
+            }
+        }
+
         public void OnMouseUpAsButton()
         {
             SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
