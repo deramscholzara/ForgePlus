@@ -48,32 +48,97 @@ namespace ForgePlus.Inspection
             Value_Type.text = fpPolygon.WelandObject.Type.ToString();
             Value_Permutation.text = fpPolygon.WelandObject.Permutation.ToString();
 
-            Value_MediaIndex.text =                     fpPolygon.WelandObject.MediaIndex.ToString();
-            Value_MediaLight.text =                     fpPolygon.WelandObject.MediaLight.ToString();
+            Value_MediaIndex.text = fpPolygon.WelandObject.MediaIndex.ToString();
+            Value_MediaLight.text = fpPolygon.WelandObject.MediaLight.ToString();
 
-            Value_AmbientSound.text =                   fpPolygon.WelandObject.AmbientSound.ToString();
-            Value_RandomSound.text =                    fpPolygon.WelandObject.RandomSound.ToString();
+            Value_AmbientSound.text = fpPolygon.WelandObject.AmbientSound.ToString();
+            Value_RandomSound.text = fpPolygon.WelandObject.RandomSound.ToString();
 
-            Value_Floor_Height.text =                   fpPolygon.WelandObject.FloorHeight.ToString();
+            Value_Floor_Height.text = fpPolygon.WelandObject.FloorHeight.ToString();
             var floorTexture = WallsCollection.GetTexture(fpPolygon.WelandObject.FloorTexture);
-            Value_Floor_Texture.texture =               floorTexture ? floorTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-            Value_Floor_Offset.text =                   fpPolygon.WelandObject.FloorOrigin.ToString();
-            Value_Floor_LightIndex.text =               fpPolygon.WelandObject.FloorLight.ToString();
-            Value_Floor_TransferMode.text =             fpPolygon.WelandObject.FloorTransferMode.ToString();
+            Value_Floor_Texture.texture = floorTexture ? floorTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
+            Value_Floor_Offset.text = fpPolygon.WelandObject.FloorOrigin.ToString();
+            Value_Floor_LightIndex.text = fpPolygon.WelandObject.FloorLight.ToString();
+            Value_Floor_TransferMode.text = fpPolygon.WelandObject.FloorTransferMode.ToString();
 
-            Value_Ceiling_Height.text =                 fpPolygon.WelandObject.CeilingHeight.ToString();
+            Value_Ceiling_Height.text = fpPolygon.WelandObject.CeilingHeight.ToString();
             var ceilingTexture = WallsCollection.GetTexture(fpPolygon.WelandObject.CeilingTexture);
-            Value_Ceiling_Texture.texture =             ceilingTexture ? ceilingTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-            Value_Ceiling_Offset.text =                 fpPolygon.WelandObject.CeilingOrigin.ToString();
-            Value_Ceiling_LightIndex.text =             fpPolygon.WelandObject.CeilingLight.ToString();
-            Value_Ceiling_TransferMode.text =           fpPolygon.WelandObject.CeilingTransferMode.ToString();
+            Value_Ceiling_Texture.texture = ceilingTexture ? ceilingTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
+            Value_Ceiling_Offset.text = fpPolygon.WelandObject.CeilingOrigin.ToString();
+            Value_Ceiling_LightIndex.text = fpPolygon.WelandObject.CeilingLight.ToString();
+            Value_Ceiling_TransferMode.text = fpPolygon.WelandObject.CeilingTransferMode.ToString();
 
-            Value_VertexCount.text =                    fpPolygon.WelandObject.VertexCount.ToString();
-            Value_VertexIndices.text =                  fpPolygon.WelandObject.EndpointIndexes.ToString();
-            Value_LineIndices.text =                    fpPolygon.WelandObject.LineIndexes.ToString();
-            Value_SideIndices.text =                    fpPolygon.WelandObject.SideIndexes.ToString();
-            Value_FirstObjectIndex.text =               fpPolygon.WelandObject.FirstObjectIndex.ToString();
-            Value_AdjacentPolygonIndices.text =         fpPolygon.WelandObject.AdjacentPolygonIndexes.ToString();
+            Value_VertexCount.text = fpPolygon.WelandObject.VertexCount.ToString();
+
+            var endpointIndices = string.Empty;
+            for (var i = 0; i < fpPolygon.WelandObject.VertexCount; i++)
+            {
+                var index = fpPolygon.WelandObject.EndpointIndexes[i].ToString();
+
+                if (i == 0)
+                {
+                    endpointIndices += index;
+                }
+                else
+                {
+                    endpointIndices += $"\n{index}";
+                }
+            }
+
+            Value_VertexIndices.text = endpointIndices;
+
+            var lineIndices = string.Empty;
+            for (var i = 0; i < fpPolygon.WelandObject.VertexCount; i++)
+            {
+                var index = fpPolygon.WelandObject.LineIndexes[i].ToString();
+
+                if (i == 0)
+                {
+                    lineIndices += index;
+                }
+                else
+                {
+                    lineIndices += $"\n{index}";
+                }
+            }
+
+            Value_LineIndices.text = lineIndices;
+
+            var sideIndices = string.Empty;
+            for (var i = 0; i < fpPolygon.WelandObject.VertexCount; i++)
+            {
+                var index = fpPolygon.WelandObject.SideIndexes[i] < 0 ? "- no side -" : fpPolygon.WelandObject.SideIndexes[i].ToString();
+
+                if (i == 0)
+                {
+                    sideIndices += index;
+                }
+                else
+                {
+                    sideIndices += $"\n{index}";
+                }
+            }
+
+            Value_SideIndices.text = sideIndices;
+
+            var adjacentPolygonIndices = string.Empty;
+            for (var i = 0; i < fpPolygon.WelandObject.VertexCount; i++)
+            {
+                var index = fpPolygon.WelandObject.AdjacentPolygonIndexes[i] < 0 ? "- no polygon -" : fpPolygon.WelandObject.AdjacentPolygonIndexes[i].ToString();
+
+                if (i == 0)
+                {
+                    adjacentPolygonIndices += index;
+                }
+                else
+                {
+                    adjacentPolygonIndices += $"\n{index}";
+                }
+            }
+
+            Value_SideIndices.text = adjacentPolygonIndices;
+
+            Value_FirstObjectIndex.text = fpPolygon.WelandObject.FirstObjectIndex.ToString();
         }
 
         public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)

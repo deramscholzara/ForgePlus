@@ -68,7 +68,7 @@ namespace ForgePlus.LevelManipulation
                     nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
                 }
 
-                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator($"Vertex ({i})t", surface.transform, currentVertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition));
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator($"Vertex ({i})", surface.transform, currentVertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition));
             }
         }
 
