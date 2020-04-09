@@ -28,12 +28,6 @@ namespace ForgePlus.LevelManipulation
             // Intentionally blank - no current reason to toggle this, as it is selected/deselected by switching to/from Level mode.
         }
 
-        public void OnMouseUpAsButton()
-        {
-            // TODO: Make it so that clicking "empty space" selects FPLevel?
-            Debug.LogError("FPLevel components should never be directly selected, this shouldn't even have a collider to receive input.", this);
-        }
-
         public void DisplaySelectionState(bool state)
         {
             // Intentially blank - no real need to show the selection state of the level, as it's apparent enough from it showing up in the inspector

@@ -18,14 +18,9 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        public void OnMouseUpAsButton()
-        {
-            Debug.LogError("FPPolygon components should never be directly selected, this shouldn't even have a collider to receive input.", this);
-        }
-
         public void SetSelectability(bool enabled)
         {
-            // Intentionally empty - Selectability is handled in FPSurfacePolygon
+            // Intentionally empty - Selectability is handled in FPSurfacePolygon & the availability of SwitchFPLight buttons
         }
 
         public void DisplaySelectionState(bool state)
@@ -43,32 +38,6 @@ namespace ForgePlus.LevelManipulation
                 }
 
                 selectionVisualizationIndicators.Clear();
-            }
-        }
-
-        private void CreateSelectionIndicators(GameObject surface, bool isfloor)
-        {
-            var vertices = surface.GetComponent<MeshFilter>().sharedMesh.vertices;
-            var localToWorldMatrix = surface.transform.localToWorldMatrix;
-
-            for (var i = 0; i < vertices.Length; i++)
-            {
-                var currentVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i]);
-                Vector3 previousVertexWorldPosition;
-                Vector3 nextVertexWorldPosition;
-
-                if (isfloor)
-                {
-                    previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
-                    nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
-                }
-                else
-                {
-                    previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
-                    nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
-                }
-
-                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator($"Vertex ({i})", surface.transform, currentVertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition));
             }
         }
 
@@ -360,6 +329,32 @@ namespace ForgePlus.LevelManipulation
                 var firstIndex = triangles[currentTriangleIndex];
                 triangles[currentTriangleIndex] = triangles[currentTriangleIndex + 2];
                 triangles[currentTriangleIndex + 2] = firstIndex;
+            }
+        }
+
+        private void CreateSelectionIndicators(GameObject surface, bool isfloor)
+        {
+            var vertices = surface.GetComponent<MeshFilter>().sharedMesh.vertices;
+            var localToWorldMatrix = surface.transform.localToWorldMatrix;
+
+            for (var i = 0; i < vertices.Length; i++)
+            {
+                var currentVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i]);
+                Vector3 previousVertexWorldPosition;
+                Vector3 nextVertexWorldPosition;
+
+                if (isfloor)
+                {
+                    previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
+                    nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
+                }
+                else
+                {
+                    previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
+                    nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
+                }
+
+                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator($"Vertex ({i})", surface.transform, currentVertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition));
             }
         }
     }

@@ -28,11 +28,6 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        public void OnMouseUpAsButton()
-        {
-            Debug.LogError("FPSide components should never be directly selected, this shouldn't even have a collider to receive input.", this);
-        }
-
         public void SetSelectability(bool enabled)
         {
             // Intentionally empty - Selectability is handled in FPSurfaceSide

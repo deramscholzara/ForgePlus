@@ -1,5 +1,6 @@
 ﻿using ForgePlus.DataFileIO;
 using ForgePlus.Inspection;
+using ForgePlus.Palette;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -112,7 +113,7 @@ namespace ForgePlus.LevelManipulation
 
                 if (FPLevel.Instance)
                 {
-                    ToggleObjectSelection(FPLevel.Instance, multiSelect: false);
+                    SelectObject(FPLevel.Instance, multiSelect: false);
                 }
             }
         }
@@ -127,7 +128,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: true);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: true);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: true);
-                        ////SetSelectability<FPLight>(FPLight.FPLights.ToArray(), enabled: false);
+                        SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
@@ -143,7 +144,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
-                        ////SetSelectability<FPLight>(FPLight.FPLights.ToArray(), enabled: true); // Shown in right-palette and just selects and inspects the light
+                        SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: true); // Shown in right-palette and just selects and inspects the light
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
@@ -159,7 +160,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
-                        ////SetSelectability<FPLight>(FPLight.FPLights.ToArray(), enabled: false);
+                        SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: true); // Shown in right-palette and just selects and inspects the media
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
@@ -175,7 +176,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
-                        ////SetSelectability<FPLight>(FPLight.FPLights.ToArray(), enabled: false);
+                        SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: true); // Shown in right-palette and just selects and inspects the media
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
@@ -191,7 +192,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
-                        ////SetSelectability<FPLight>(FPLight.FPLights.ToArray(), enabled: false);
+                        SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, true);
@@ -205,7 +206,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
-                        ////SetSelectability<FPLight>(FPLight.FPLights.ToArray(), enabled: false);
+                        SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
@@ -221,7 +222,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
-                        ////SetSelectability<FPLight>(FPLight.FPLights.ToArray(), enabled: false);
+                        SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         ////SetSelectability<FPMedia>(FPLevel.Instance, enabled: false);
                         ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
@@ -232,6 +233,8 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPSurfaceMedia>(FPLevel.Instance.FPSurfaceMedias, enabled: false);
                         break;
                 }
+
+                PaletteManager.Instance.UpdatePaletteToMatchSelectionMode();
             }
         }
 
