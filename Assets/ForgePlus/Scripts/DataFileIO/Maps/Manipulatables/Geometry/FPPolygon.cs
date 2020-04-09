@@ -32,8 +32,6 @@ namespace ForgePlus.LevelManipulation
         {
             if (state)
             {
-                var polygonIsClockwise = FPLevel.FPLines[WelandObject.LineIndexes[0]].WelandObject.ClockwisePolygonOwner == Index;
-
                 CreateSelectionIndicators(CeilingSurface, isfloor: false);
                 CreateSelectionIndicators(FloorSurface, isfloor: true);
             }
