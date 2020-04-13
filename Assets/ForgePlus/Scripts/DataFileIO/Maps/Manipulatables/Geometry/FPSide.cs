@@ -512,6 +512,7 @@ namespace ForgePlus.LevelManipulation
                 isOpaqueSurface);
 
             var fpSurfaceSide = surfaceGameObject.AddComponent<FPInteractiveSurfaceSide>();
+            fpSurfaceSide.surfaceShapeDescriptor = shapeDescriptor;
             fpSurfaceSide.ParentFPSide = fpSide;
             fpSurfaceSide.FPLight = fpLevel.FPLights[lightIndex];
 

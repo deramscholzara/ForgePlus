@@ -134,11 +134,11 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
-                        SetSelectability<FPInteractiveSurfacePolygon>(FPLevel.Instance.FPInteractiveSurfacePolygons, enabled: true); // Forwards to polygon, which adds polygon inspector (and selects polygon)
-                        SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true); // Forwards to side, which adds side & line inspector (and selects side)
+                        SetSelectability<FPInteractiveSurfacePolygon>(FPLevel.Instance.FPInteractiveSurfacePolygons, enabled: true);
+                        SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true);
 
                         // TODO: Make this true when media subfilter is available
-                        SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false); // Forwards to polygon, which adds polygon inspector (and selects polygon)
+                        SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
                     case SceneSelectionFilters.Lights:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
@@ -164,9 +164,9 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
-                        SetSelectability<FPInteractiveSurfacePolygon>(FPLevel.Instance.FPInteractiveSurfacePolygons, enabled: true); // Forwards to polygon, which adds media & polygon inspector (and selects media)
-                        SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true); // Forwards to polygon, which adds media & polygon inspector (and selects media)
-                        SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: true); // Forwards to polygon, which adds media & polygon inspector (and selects media)
+                        SetSelectability<FPInteractiveSurfacePolygon>(FPLevel.Instance.FPInteractiveSurfacePolygons, enabled: true);
+                        SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true);
+                        SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: true);
                         break;
                     case SceneSelectionFilters.Platforms:
                         // TODO: When the selection filter is Platforms, selecting an FPSurfacePolygon or FPSurfaceSide should forward to the FPPolygon, which would in-turn forward to the FPPlatform
@@ -180,8 +180,8 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
 
-                        SetSelectability<FPInteractiveSurfacePolygon>(FPLevel.Instance.FPInteractiveSurfacePolygons, enabled: true); // Forwards to polygon, which adds platform & polygon inspector (and selects platform)
-                        SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true); // Forwards to polygon, which adds platform & polygon inspector (and selects platform)
+                        SetSelectability<FPInteractiveSurfacePolygon>(FPLevel.Instance.FPInteractiveSurfacePolygons, enabled: true);
+                        SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
                     case SceneSelectionFilters.Objects:
@@ -212,7 +212,20 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: false);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
-                    case SceneSelectionFilters.Textures:// Uses None mode because you can't actually "select" anything when texture painting (selection mode should be disabled)
+                    case SceneSelectionFilters.Textures:
+                        SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
+                        SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
+                        SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
+                        SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
+                        SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
+                        ////SetSelectability<FPPlatform>(FindObjectsOfType<FPPlatform>(), enabled: false);
+                        SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
+                        SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
+
+                        SetSelectability<FPInteractiveSurfacePolygon>(FPLevel.Instance.FPInteractiveSurfacePolygons, enabled: true);
+                        SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true);
+                        SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
+                        break;
                     case SceneSelectionFilters.None:
                     default:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
