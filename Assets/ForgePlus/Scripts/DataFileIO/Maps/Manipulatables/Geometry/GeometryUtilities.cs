@@ -73,6 +73,22 @@ namespace ForgePlus.LevelManipulation.Utilities
             FPMedia fpMedia,
             short mediaIndex)
         {
+            if (fpMedia != null)
+            {
+                // Add backside geometry for the underside of medias
+                // - supports seeing the media from below
+                // - supports collider selection from both sides
+                var mediaTriangles = new int[triangles.Length * 2];
+
+                for (var i = 0; i < triangles.Length; i++)
+                {
+                    mediaTriangles[i] = triangles[i];
+                    mediaTriangles[mediaTriangles.Length - 1 - i] = triangles[i];
+                }
+
+                triangles = mediaTriangles;
+            }
+
             var mesh = new Mesh();
             mesh.name = rendererHost.name;
 
@@ -101,18 +117,13 @@ namespace ForgePlus.LevelManipulation.Utilities
                 surfaceLight.AssignFPLight(lightIndex, fpLight);
             }
 
-            if (fpMedia == null)
-            {
-                rendererHost.AddComponent<MeshCollider>();
-            }
-            else
+            if (fpMedia != null)
             {
                 var surfaceMedia = rendererHost.AddComponent<SurfaceMedia>();
                 surfaceMedia.AssignFPMedia(mediaIndex, fpMedia);
-
-                // Note: make the collider convex so that it is double-sided
-                rendererHost.AddComponent<MeshCollider>().convex = true;
             }
+
+            rendererHost.AddComponent<MeshCollider>();
         }
 
         public static Color GetTransferModeVertexColor(short transferMode, bool isSideSurface)

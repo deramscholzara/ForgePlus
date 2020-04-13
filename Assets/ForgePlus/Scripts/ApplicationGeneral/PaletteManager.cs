@@ -1,6 +1,7 @@
 ﻿using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,10 +9,17 @@ namespace ForgePlus.Palette
 {
     public class PaletteManager : SingletonMonoBehaviour<PaletteManager>
     {
-        public Transform SwatchesParent;
-        public ToggleGroup ToggleGroup;
+        [SerializeField]
+        private Transform swatchesParent = null;
 
-        public SwatchFPLight LightSwatchPrefab;
+        [SerializeField]
+        private ToggleGroup toggleGroup = null;
+
+        [SerializeField]
+        private SwatchFPLight lightSwatchPrefab = null;
+
+        [SerializeField]
+        private SwatchFPMedia mediaSwatchPrefab = null;
 
         private List<GameObject> currentSwatches = new List<GameObject>();
 
@@ -57,6 +65,22 @@ namespace ForgePlus.Palette
             currentSwatches.Clear();
         }
 
+        public void SelectSwatchForLight(FPLight fpLight)
+        {
+            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPLight>().FPLight == fpLight);
+            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
+
+            matchingToggle.isOn = true;
+        }
+
+        public void SelectSwatchForMedia(FPMedia fpMedia)
+        {
+            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPMedia>().FPMedia == fpMedia);
+            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
+
+            matchingToggle.isOn = true;
+        }
+
         private void SetToNone(bool shouldSet)
         {
             Clear();
@@ -65,6 +89,8 @@ namespace ForgePlus.Palette
         private void SetToGeometry(bool shouldSet)
         {
             Clear();
+
+            toggleGroup.allowSwitchOff = false;
 
             // TODO: populate with tools
             //       - Line Drawing
@@ -75,6 +101,8 @@ namespace ForgePlus.Palette
         {
             Clear();
 
+            toggleGroup.allowSwitchOff = false;
+
             // TODO: populate with textures for painting
         }
 
@@ -82,11 +110,13 @@ namespace ForgePlus.Palette
         {
             Clear();
 
-            var turnedOnFirstItem = false;
+            toggleGroup.allowSwitchOff = true;
+
             foreach (var fpLight in FPLevel.Instance.FPLights.Values)
             {
-                var swatch = Instantiate(LightSwatchPrefab, SwatchesParent);
-                swatch.SetInitialValues(fpLight, ToggleGroup);
+                var swatch = Instantiate(lightSwatchPrefab, swatchesParent);
+                swatch.SetInitialValues(fpLight, toggleGroup);
+                currentSwatches.Add(swatch.gameObject);
             }
         }
 
@@ -94,12 +124,21 @@ namespace ForgePlus.Palette
         {
             Clear();
 
-            // TODO: populate with medias for selection and painting
+            toggleGroup.allowSwitchOff = true;
+
+            foreach (var fpMedia in FPLevel.Instance.FPMedias.Values)
+            {
+                var swatch = Instantiate(mediaSwatchPrefab, swatchesParent);
+                swatch.SetInitialValues(fpMedia, toggleGroup);
+                currentSwatches.Add(swatch.gameObject);
+            }
         }
 
         private void SetToPlatforms(bool shouldSet)
         {
             Clear();
+
+            toggleGroup.allowSwitchOff = true;
 
             // TODO: populate with shortcuts that focus the camera on the associated platform polygon when clicked.
         }
@@ -107,6 +146,8 @@ namespace ForgePlus.Palette
         private void SetToObjects(bool shouldSet)
         {
             Clear();
+
+            toggleGroup.allowSwitchOff = false;
 
             // TODO: populate with placement tools
             //       - Players
