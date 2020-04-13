@@ -1,9 +1,11 @@
 ﻿using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
+using ForgePlus.ShapesCollections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Weland;
 
 namespace ForgePlus.Palette
 {
@@ -16,12 +18,19 @@ namespace ForgePlus.Palette
         private ToggleGroup toggleGroup = null;
 
         [SerializeField]
+        private SwatchTexture textureSwatchPrefab = null;
+
+        [SerializeField]
         private SwatchFPLight lightSwatchPrefab = null;
 
         [SerializeField]
         private SwatchFPMedia mediaSwatchPrefab = null;
 
-        private List<GameObject> currentSwatches = new List<GameObject>();
+        [SerializeField]
+        private GameObject horizontalLayoutHelperPrefab = null;
+
+        private readonly List<GameObject> currentSwatches = new List<GameObject>();
+        private readonly List<GameObject> currentLayoutHelpers = new List<GameObject>();
 
         public void UpdatePaletteToMatchSelectionMode()
         {
@@ -63,6 +72,21 @@ namespace ForgePlus.Palette
             }
 
             currentSwatches.Clear();
+
+            foreach (var helper in currentLayoutHelpers)
+            {
+                Destroy(helper);
+            }
+
+            currentLayoutHelpers.Clear();
+        }
+
+        public void SelectSwatchForTexture(ShapeDescriptor shapeDescriptor)
+        {
+            var matchingSwatch = currentSwatches.First(swatch => (ushort)swatch.GetComponent<SwatchTexture>().ShapeDescriptor == (ushort)shapeDescriptor);
+            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
+
+            matchingToggle.isOn = true;
         }
 
         public void SelectSwatchForLight(FPLight fpLight)
@@ -103,7 +127,48 @@ namespace ForgePlus.Palette
 
             toggleGroup.allowSwitchOff = false;
 
-            // TODO: populate with textures for painting
+            var loadedTextureEntries = WallsCollection.GetAllLoadedTextures().ToList();
+            loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.Collection == entryB.Key.Collection ?
+                                                           entryA.Key.Bitmap.CompareTo(entryB.Key.Bitmap) :
+                                                           (((entryA.Key.Collection >= 27 && entryB.Key.Collection <= 30) || (entryB.Key.Collection >= 27 && entryB.Key.Collection <= 30)) ?
+                                                            -entryA.Key.Collection.CompareTo(entryB.Key.Collection) :
+                                                            entryA.Key.Collection.CompareTo(entryB.Key.Collection))));
+
+            GameObject currentHorizontalHelper = null;
+
+            foreach (var textureEntry in loadedTextureEntries)
+            {
+
+                if (textureEntry.Key.Collection >= 27 && textureEntry.Key.Collection <= 30)
+                {
+                    currentHorizontalHelper = null;
+
+                    var swatch = Instantiate(textureSwatchPrefab, swatchesParent);
+                    swatch.SetInitialValues(textureEntry, toggleGroup);
+                    currentSwatches.Add(swatch.gameObject);
+                }
+                else
+                {
+                    if (!currentHorizontalHelper)
+                    {
+                        currentHorizontalHelper = Instantiate(horizontalLayoutHelperPrefab, swatchesParent);
+                        currentLayoutHelpers.Add(currentHorizontalHelper);
+
+                        var swatch = Instantiate(textureSwatchPrefab, currentHorizontalHelper.transform);
+                        swatch.SetInitialValues(textureEntry, toggleGroup);
+                        currentSwatches.Add(swatch.gameObject);
+                    }
+                    else
+                    {
+                        var swatch = Instantiate(textureSwatchPrefab, currentHorizontalHelper.transform);
+                        swatch.SetInitialValues(textureEntry, toggleGroup);
+                        currentSwatches.Add(swatch.gameObject);
+
+                        currentHorizontalHelper = null;
+                    }
+                }
+
+            }
         }
 
         private void SetToLights(bool shouldSet)

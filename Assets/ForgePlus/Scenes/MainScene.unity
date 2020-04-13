@@ -3969,9 +3969,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   swatchesParent: {fileID: 721885660}
   toggleGroup: {fileID: 1363802790}
+  textureSwatchPrefab: {fileID: 5000291769163170436, guid: 985e2eb88a9d35a41a51ad5d74bdd047,
+    type: 3}
   lightSwatchPrefab: {fileID: 3807090575379149399, guid: 5e9c2d9078f706045b3e03c98eb4a87c,
     type: 3}
   mediaSwatchPrefab: {fileID: 2762513857080766875, guid: bae4c6ae61c1bb641aec7ede2f1ffa22,
+    type: 3}
+  horizontalLayoutHelperPrefab: {fileID: 7233170400647042335, guid: 5a38fb43df7bee1498883cb950172f21,
     type: 3}
 --- !u!1 &817852203
 GameObject:
@@ -10416,11 +10420,6 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
-        type: 3}
-      propertyPath: m_Interactable
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}

@@ -1,5 +1,6 @@
 ﻿using ForgePlus.DataFileIO;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Weland;
 
@@ -35,7 +36,12 @@ namespace ForgePlus.ShapesCollections
         private static readonly Dictionary<ShapeDescriptor, Material> LandscapeMaterials = new Dictionary<ShapeDescriptor, Material>(1);
         private static readonly Dictionary<ShapeDescriptor, Material> MediaMaterials = new Dictionary<ShapeDescriptor, Material>(5);
 
-        public static Texture2D GetTexture(ShapeDescriptor shapeDescriptor)
+        public static IDictionary<ShapeDescriptor, Texture2D> GetAllLoadedTextures()
+        {
+            return Textures;
+        }
+
+        public static Texture2D GetTexture(ShapeDescriptor shapeDescriptor, bool returnPlaceholderIfNotFound = false)
         {
             Texture2D textureToUse;
             if (Textures.ContainsKey(shapeDescriptor))
@@ -51,6 +57,11 @@ namespace ForgePlus.ShapesCollections
                 {
                     Textures[shapeDescriptor] = textureToUse;
                 }
+            }
+
+            if (textureToUse == null && returnPlaceholderIfNotFound)
+            {
+                textureToUse = GridTexture;
             }
 
             return textureToUse;
@@ -108,11 +119,7 @@ namespace ForgePlus.ShapesCollections
             bool isOpaqueSurface,
             SurfaceTypes surfaceType)
         {
-            var textureToUse = GetTexture(shapeDescriptor);
-            if (!textureToUse)
-            {
-                textureToUse = GridTexture;
-            }
+            var textureToUse = GetTexture(shapeDescriptor, returnPlaceholderIfNotFound: true);
 
             if (surfaceType == SurfaceTypes.Media)
             {
