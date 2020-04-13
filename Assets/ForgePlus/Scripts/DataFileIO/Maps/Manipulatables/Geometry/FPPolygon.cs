@@ -213,6 +213,7 @@ namespace ForgePlus.LevelManipulation
             }
             #endregion TransferModes_VertexColor
 
+            // Floor
             GeometryUtilities.BuildRendererObject(
                 floorRoot,
                 floorVertices,
@@ -225,10 +226,14 @@ namespace ForgePlus.LevelManipulation
                 floorTransferModesVertexColors,
                 isOpaqueSurface: true);
 
-            var fpSurfacePolygonFloor = floorRoot.AddComponent<FPSurfacePolygon>();
-            fpSurfacePolygonFloor.parentFPPolygon = this;
-            FPLevel.FPSurfacePolygons.Add(fpSurfacePolygonFloor);
+            var fpSurfacePolygonFloor = floorRoot.AddComponent<FPInteractiveSurfacePolygon>();
+            fpSurfacePolygonFloor.ParentFPPolygon = this;
+            fpSurfacePolygonFloor.FPLight = FPLevel.FPLights[polygon.FloorLight];
+            fpSurfacePolygonFloor.FPMedia = hasMedia ? FPLevel.FPMedias[polygon.MediaIndex] : null;
 
+            FPLevel.FPInteractiveSurfacePolygons.Add(fpSurfacePolygonFloor);
+
+            // Ceiling
             GeometryUtilities.BuildRendererObject(
                 ceilingRoot,
                 ceilingVertices,
@@ -241,10 +246,14 @@ namespace ForgePlus.LevelManipulation
                 ceilingTransferModesVertexColors,
                 isOpaqueSurface: true);
 
-            var fpSurfacePolygonCeiling = ceilingRoot.AddComponent<FPSurfacePolygon>();
-            fpSurfacePolygonCeiling.parentFPPolygon = this;
-            FPLevel.FPSurfacePolygons.Add(fpSurfacePolygonCeiling);
+            var fpSurfacePolygonCeiling = ceilingRoot.AddComponent<FPInteractiveSurfacePolygon>();
+            fpSurfacePolygonCeiling.ParentFPPolygon = this;
+            fpSurfacePolygonCeiling.FPLight = FPLevel.FPLights[polygon.CeilingLight];
+            fpSurfacePolygonCeiling.FPMedia = hasMedia ? FPLevel.FPMedias[polygon.MediaIndex] : null;
 
+            FPLevel.FPInteractiveSurfacePolygons.Add(fpSurfacePolygonCeiling);
+
+            // Media
             if (hasMedia)
             {
                 #region Infinity_Media_Texture_Assignment
@@ -288,9 +297,12 @@ namespace ForgePlus.LevelManipulation
                     FPLevel.FPMedias[polygon.MediaIndex],
                     polygon.MediaIndex);
 
-                var fpSurfacePolygonMedia = mediaRoot.AddComponent<FPSurfaceMedia>();
-                fpSurfacePolygonMedia.parentFPPolygon = this;
-                FPLevel.FPSurfaceMedias.Add(fpSurfacePolygonMedia);
+                var fpSurfacePolygonMedia = mediaRoot.AddComponent<FPInteractiveSurfaceMedia>();
+                fpSurfacePolygonMedia.ParentFPPolygon = this;
+                fpSurfacePolygonMedia.FPLight = FPLevel.FPLights[polygon.MediaLight];
+                fpSurfacePolygonMedia.FPMedia = FPLevel.FPMedias[polygon.MediaIndex];
+
+                FPLevel.FPInteractiveSurfaceMedias.Add(fpSurfacePolygonMedia);
             }
         }
 

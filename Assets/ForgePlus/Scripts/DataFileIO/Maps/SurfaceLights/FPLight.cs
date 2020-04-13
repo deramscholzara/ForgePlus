@@ -50,7 +50,7 @@ namespace ForgePlus.LevelManipulation
 
         public void SetSelectability(bool enabled)
         {
-            // Intentionally blank - no current reason to toggle this, as its selection comes from the palette or already-gated FPSurface components
+            // Intentionally blank - no current reason to toggle this, as its selection comes from the palette or already-gated FPInteractiveSurface components
         }
 
         public void DisplaySelectionState(bool state)

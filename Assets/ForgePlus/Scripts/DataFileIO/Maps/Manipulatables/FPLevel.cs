@@ -19,9 +19,9 @@ namespace ForgePlus.LevelManipulation
         public Dictionary<short, FPPlatform> FPFloorFpPlatforms;
         public Dictionary<short, FPMapObject> FPMapObjects;
 
-        public List<FPSurfacePolygon> FPSurfacePolygons;
-        public List<FPSurfaceSide> FPSurfaceSides;
-        public List<FPSurfaceMedia> FPSurfaceMedias;
+        public List<FPInteractiveSurfacePolygon> FPInteractiveSurfacePolygons;
+        public List<FPInteractiveSurfaceSide> FPInteractiveSurfaceSides;
+        public List<FPInteractiveSurfaceMedia> FPInteractiveSurfaceMedias;
 
         public void SetSelectability(bool enabled)
         {

@@ -8,23 +8,24 @@ using UnityEngine.UI;
 namespace ForgePlus.Palette
 {
     [RequireComponent(typeof(Toggle))]
-    public class SwatchFPLight : MonoBehaviour
+    public class SwatchFPMedia : MonoBehaviour
     {
-        public FPLight FPLight;
+        public FPMedia FPMedia;
 
         [SerializeField]
         private TextMeshProUGUI label = null;
 
         [SerializeField]
-        private Image lightPreview = null;
+        private TextMeshProUGUI label_Type = null;
 
         private bool isSelected = false;
 
-        public void SetInitialValues(FPLight fpLight, ToggleGroup toggleGroup)
+        public void SetInitialValues(FPMedia fpMedia, ToggleGroup toggleGroup)
         {
-            FPLight = fpLight;
+            FPMedia = fpMedia;
 
-            label.text = fpLight.Index.ToString();
+            label.text = fpMedia.Index.ToString();
+            label_Type.text = fpMedia.WelandObject.Type.ToString();
 
             var toggle = GetComponent<Toggle>();
             toggle.group = toggleGroup;
@@ -37,13 +38,8 @@ namespace ForgePlus.Palette
             if (isSelected != value)
             {
                 isSelected = value;
-                SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
+                SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
             }
-        }
-
-        private void Update()
-        {
-            lightPreview.color = new Color(FPLight.CurrentIntensity, FPLight.CurrentIntensity, FPLight.CurrentIntensity, 1f);
         }
     }
 }

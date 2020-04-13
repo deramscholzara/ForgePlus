@@ -268,7 +268,7 @@ PrefabInstance:
     - target: {fileID: 7742388150495697346, guid: 0542c903576daac49b8c5bd5e6f650c3,
         type: 3}
       propertyPath: m_Name
-      value: Swatch - FPLight Variant
+      value: Swatch - FPLight
       objectReference: {fileID: 0}
     - target: {fileID: 7742388150495697359, guid: 0542c903576daac49b8c5bd5e6f650c3,
         type: 3}
@@ -278,7 +278,7 @@ PrefabInstance:
     - target: {fileID: 7742388150495697359, guid: 0542c903576daac49b8c5bd5e6f650c3,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7742388150495697359, guid: 0542c903576daac49b8c5bd5e6f650c3,
         type: 3}
@@ -298,7 +298,7 @@ PrefabInstance:
     - target: {fileID: 7742388150495697359, guid: 0542c903576daac49b8c5bd5e6f650c3,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClick
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 7742388150495697359, guid: 0542c903576daac49b8c5bd5e6f650c3,
         type: 3}

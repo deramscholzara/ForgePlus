@@ -3967,9 +3967,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60a353cd9c84f3f4f84962ab2afa9264, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SwatchesParent: {fileID: 721885660}
-  ToggleGroup: {fileID: 1363802790}
-  LightSwatchPrefab: {fileID: 3807090575379149399, guid: 5e9c2d9078f706045b3e03c98eb4a87c,
+  swatchesParent: {fileID: 721885660}
+  toggleGroup: {fileID: 1363802790}
+  lightSwatchPrefab: {fileID: 3807090575379149399, guid: 5e9c2d9078f706045b3e03c98eb4a87c,
+    type: 3}
+  mediaSwatchPrefab: {fileID: 2762513857080766875, guid: bae4c6ae61c1bb641aec7ede2f1ffa22,
     type: 3}
 --- !u!1 &817852203
 GameObject:
@@ -5264,11 +5266,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
-      propertyPath: m_Interactable
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
-        type: 3}
       propertyPath: m_IsOn
       value: 0
       objectReference: {fileID: 0}
@@ -5310,7 +5307,7 @@ PrefabInstance:
     - target: {fileID: 5965558955888383294, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 6
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5965558955888383294, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
@@ -5335,7 +5332,7 @@ PrefabInstance:
     - target: {fileID: 5965558955888383294, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5d92cab146ca0242ac5c3ba3f421ffc, type: 3}

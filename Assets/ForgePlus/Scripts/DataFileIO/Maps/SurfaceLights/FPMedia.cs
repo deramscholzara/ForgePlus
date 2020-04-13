@@ -1,4 +1,5 @@
-﻿using ForgePlus.LevelManipulation.Utilities;
+﻿using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation.Utilities;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -7,7 +8,7 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPMedia : IFPManipulatable<Media>, IFPDestructionPreparable
+    public class FPMedia : IFPManipulatable<Media>, IFPDestructionPreparable, IFPSelectable, IFPInspectable
     {
         public short? Index { get; set; }
         public Media WelandObject { get; set; }
@@ -25,6 +26,24 @@ namespace ForgePlus.LevelManipulation
             FPLevel = fpLevel;
 
             BeginRuntimeStyleBehavior();
+        }
+
+        public void SetSelectability(bool enabled)
+        {
+            // Intentionally blank - no current reason to toggle this, as its selection comes from the palette or already-gated FPInteractiveSurface components
+        }
+
+        public void DisplaySelectionState(bool state)
+        {
+            // Intentially blank - selection is displayed via the palette swatches
+        }
+
+        public void Inspect()
+        {
+            var inspectorPrefab = Resources.Load<InspectorFPMedia>("Inspectors/Inspector - FPMedia");
+            var inspector = Object.Instantiate(inspectorPrefab);
+            inspector.PopulateValues(this);
+            InspectorPanel.Instance.AddInspector(inspector);
         }
 
         public void PrepareForDestruction()

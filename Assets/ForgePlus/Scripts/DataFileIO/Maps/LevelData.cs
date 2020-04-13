@@ -128,9 +128,9 @@ namespace ForgePlus.DataFileIO
             FPLevel.FPFloorFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPMapObjects = new Dictionary<short, FPMapObject>();
 
-            FPLevel.FPSurfacePolygons = new List<FPSurfacePolygon>();
-            FPLevel.FPSurfaceSides = new List<FPSurfaceSide>();
-            FPLevel.FPSurfaceMedias = new List<FPSurfaceMedia>();
+            FPLevel.FPInteractiveSurfacePolygons = new List<FPInteractiveSurfacePolygon>();
+            FPLevel.FPInteractiveSurfaceSides = new List<FPInteractiveSurfaceSide>();
+            FPLevel.FPInteractiveSurfaceMedias = new List<FPInteractiveSurfaceMedia>();
 
             // Clear out Walls Materials so it can be repopulated with the correct set
             WallsCollection.ClearCollection();
