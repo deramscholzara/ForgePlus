@@ -51,10 +51,10 @@ namespace ForgePlus.ShapesCollections
             else
             {
                 textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
-                textureToUse.name = $"Collection({shapeDescriptor.Collection}) Bitmap({shapeDescriptor.Bitmap})";
 
                 if (textureToUse)
                 {
+                    textureToUse.name = $"Collection({shapeDescriptor.Collection}) Bitmap({shapeDescriptor.Bitmap})";
                     Textures[shapeDescriptor] = textureToUse;
                 }
             }
