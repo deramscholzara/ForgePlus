@@ -1,8 +1,10 @@
 ﻿using ForgePlus.LevelManipulation;
+using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.ShapesCollections;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using Weland;
 
@@ -66,7 +68,7 @@ namespace ForgePlus.DataFileIO
             level = null;
         }
 
-        public void OpenLevel()
+        public async Task OpenLevel()
         {
             if (FPLevel)
             {
@@ -77,22 +79,22 @@ namespace ForgePlus.DataFileIO
             if (level == null)
             {
                 var loadDataStartTime = DateTime.Now;
-                
+
                 LoadData();
-                
+
                 Debug.Log($"--- LevelLoad: Loaded level data in timespan: {DateTime.Now - loadDataStartTime}");
             }
 
             var buildStartTime = DateTime.Now;
-            
-            BuildLevel();
-            
+
+            await BuildLevel();
+
             Debug.Log($"--- LevelBuild: Built full level from data in total timespan: {DateTime.Now - buildStartTime}");
 
             var initializationStartTime = DateTime.Now;
-            
+
             OnLevelOpened(level.Name);
-            
+
             LevelInitializationDebugTimer(initializationStartTime);
         }
 
@@ -111,7 +113,7 @@ namespace ForgePlus.DataFileIO
             OnLevelClosed();
         }
 
-        private void BuildLevel()
+        private async Task BuildLevel()
         {
             var initializeFPLevelStartTime = DateTime.Now;
 
@@ -127,6 +129,7 @@ namespace ForgePlus.DataFileIO
             FPLevel.FPCeilingFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPFloorFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPMapObjects = new Dictionary<short, FPMapObject>();
+            FPLevel.FPAnnotations = new Dictionary<short, GameObject>();
 
             FPLevel.FPInteractiveSurfacePolygons = new List<FPInteractiveSurfacePolygon>();
             FPLevel.FPInteractiveSurfaceSides = new List<FPInteractiveSurfaceSide>();
@@ -136,6 +139,32 @@ namespace ForgePlus.DataFileIO
             WallsCollection.ClearCollection();
 
             Debug.Log($"--- LevelBuild: Initialized FPLevel in timespan: {DateTime.Now - initializeFPLevelStartTime}");
+
+            await Task.Yield();
+
+            var buildTexturesStartTime = DateTime.Now;
+
+            // Initialize Textures here so they in proper index order
+            var landscapeShapeDescriptor = new ShapeDescriptor();
+            // Note: Landscape collections in Shapes are respectively sequential to Landscape map info starting at 27
+            landscapeShapeDescriptor.Collection = (byte)(level.Landscape + 27);
+            WallsCollection.GetTexture(landscapeShapeDescriptor, returnPlaceholderIfNotFound: false);
+
+            var wallShapeDescriptor = new ShapeDescriptor();
+            // Note: Walls collections in Shapes are respectively sequential to Environment map info starting at 17
+            wallShapeDescriptor.Collection = (byte)(level.Environment + 17);
+            for (var i = 0; i < 256; i++)
+            {
+                wallShapeDescriptor.Bitmap = (byte)i;
+                if (!WallsCollection.GetTexture(wallShapeDescriptor, returnPlaceholderIfNotFound: false))
+                {
+                    break;
+                }
+            }
+
+            Debug.Log($"--- LevelBuild: Built Textures in timespan: {DateTime.Now - buildTexturesStartTime}");
+
+            await Task.Yield();
 
             var buildFPLightsStartTime = DateTime.Now;
 
@@ -147,6 +176,8 @@ namespace ForgePlus.DataFileIO
 
             Debug.Log($"--- LevelBuild: Built & started FPLights in timespan: {DateTime.Now - buildFPLightsStartTime}");
 
+            await Task.Yield();
+
             var buildFPMediasStartTime = DateTime.Now;
 
             // Initialize Medias here so they are in proper index order
@@ -154,8 +185,10 @@ namespace ForgePlus.DataFileIO
             {
                 FPLevel.FPMedias[(short)i] = new FPMedia((short)i, level.Medias[i], FPLevel);
             }
-            
+
             Debug.Log($"--- LevelBuild: Built & started FPMedias in timespan: {DateTime.Now - buildFPMediasStartTime}");
+
+            await Task.Yield();
 
             #region Polygons_And_Media
             var buildPolygonsStartTime = DateTime.Now;
@@ -183,6 +216,8 @@ namespace ForgePlus.DataFileIO
             Debug.Log($"--- LevelBuild: Built Polygons, Medias, & Platforms in timespan: {DateTime.Now - buildPolygonsStartTime}");
             #endregion Polygons_And_Media
 
+            await Task.Yield();
+
             #region Lines_And_Sides
             var buildSidesStartTime = DateTime.Now;
 
@@ -209,6 +244,8 @@ namespace ForgePlus.DataFileIO
             Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
             #endregion Lines_And_Sides
 
+            await Task.Yield();
+
             #region Objects_And_Placements
             var buildObjectsStartTime = DateTime.Now;
 
@@ -234,11 +271,26 @@ namespace ForgePlus.DataFileIO
 
             Debug.Log($"--- LevelBuild: Built Objects in timespan: {DateTime.Now - buildObjectsStartTime}");
             #endregion Objects_And_Placements
+
+            await Task.Yield();
+
+            for (var i = 0; i < level.Annotations.Count; i++)
+            {
+                var annotation = level.Annotations[i];
+                var annotationInstance = UnityEngine.Object.Instantiate(Resources.Load<TextMeshPro>("Objects/MapAnnotation"));
+                annotationInstance.text = annotation.Text;
+                var height = (FPLevel.FPPolygons[annotation.PolygonIndex].WelandObject.FloorHeight + FPLevel.FPPolygons[annotation.PolygonIndex].WelandObject.CeilingHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                annotationInstance.transform.position = new Vector3(annotation.X / GeometryUtilities.WorldUnitIncrementsPerMeter, height, -annotation.Y / GeometryUtilities.WorldUnitIncrementsPerMeter);
+
+                annotationInstance.transform.SetParent(FPLevel.transform, worldPositionStays: true);
+
+                FPLevel.FPAnnotations[(short)i] = annotationInstance.gameObject;
+            }
         }
 
         private async void LevelInitializationDebugTimer(DateTime startTime)
         {
-            // Yield 3 times, to ensure we hit the frame after initialization ocurred
+            // Yield 2 times, to ensure we hit the frame after initialization ocurred
             // (meaning Awake(), Start(), OnEnabled(), etc. all ran)
             await Task.Yield();
             await Task.Yield();

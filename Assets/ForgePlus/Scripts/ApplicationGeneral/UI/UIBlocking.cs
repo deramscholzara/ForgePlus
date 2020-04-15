@@ -22,9 +22,6 @@ namespace ForgePlus.ApplicationGeneral
         private float fadeDuration = 1f / 3f;
 
         [SerializeField]
-        private AnimationCurve fadeCurve = new AnimationCurve(new Keyframe(0f, 0f, 1f, 1f), new Keyframe(1f, 1f));
-
-        [SerializeField]
         private CanvasGroup blockerCanvasGroup = null;
 
         [SerializeField]
@@ -33,12 +30,20 @@ namespace ForgePlus.ApplicationGeneral
         [SerializeField]
         private float blockedAlpha = 0.8f;
 
+        private int currentBlockingCount = 0;
+
         private float fadePosition = 0f;
 
         private CancellationTokenSource fadeCTS;
 
         public async void Block()
         {
+            currentBlockingCount++;
+            if (currentBlockingCount > 1)
+            {
+                return;
+            }
+
             fadeCTS?.Cancel();
 
             OnChanged?.Invoke(true);
@@ -59,6 +64,12 @@ namespace ForgePlus.ApplicationGeneral
 
         public async void Unblock()
         {
+            currentBlockingCount--;
+            if (currentBlockingCount > 0)
+            {
+                return;
+            }
+
             fadeCTS?.Cancel();
 
             OnChanged?.Invoke(false);

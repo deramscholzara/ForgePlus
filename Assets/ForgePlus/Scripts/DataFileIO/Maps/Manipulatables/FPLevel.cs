@@ -18,6 +18,7 @@ namespace ForgePlus.LevelManipulation
         public Dictionary<short, FPPlatform> FPCeilingFpPlatforms;
         public Dictionary<short, FPPlatform> FPFloorFpPlatforms;
         public Dictionary<short, FPMapObject> FPMapObjects;
+        public Dictionary<short, GameObject> FPAnnotations; // TODO: Convert this to actually use an FPAnnotations class, in support of editing.
 
         public List<FPInteractiveSurfacePolygon> FPInteractiveSurfacePolygons;
         public List<FPInteractiveSurfaceSide> FPInteractiveSurfaceSides;

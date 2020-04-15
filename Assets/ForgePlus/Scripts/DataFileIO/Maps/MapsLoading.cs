@@ -1,4 +1,4 @@
-﻿using ForgePlus.LevelManipulation;
+﻿using ForgePlus.ApplicationGeneral;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -44,8 +44,10 @@ namespace ForgePlus.DataFileIO
             }
         }
 
-        public void OpenLevel(int levelIndex = 0)
+        public async void OpenLevel(int levelIndex = 0)
         {
+            UIBlocking.Instance.Block();
+
             LoadFile(forceReload: false);
 
             if (data == null)
@@ -57,7 +59,9 @@ namespace ForgePlus.DataFileIO
 
             CloseLevel();
 
-            data.OpenLevel(levelIndex);
+            await data.OpenLevel(levelIndex);
+
+            UIBlocking.Instance.Unblock();
         }
 
         public void CloseLevel()

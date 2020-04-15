@@ -34,7 +34,7 @@ namespace ForgePlus.DataFileIO
             }
         }
 
-        public void OpenLevel(int levelIndex)
+        public async Task OpenLevel(int levelIndex)
         {
             LoadData();
 
@@ -42,7 +42,7 @@ namespace ForgePlus.DataFileIO
 
             currentlyOpenLevel = new LevelData(levelIndex, file);
 
-            currentlyOpenLevel.OpenLevel();
+            await currentlyOpenLevel.OpenLevel();
         }
 
         public void CloseAndUnloadCurrentLevel()
