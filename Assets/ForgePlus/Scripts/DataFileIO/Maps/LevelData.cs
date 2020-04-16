@@ -19,6 +19,8 @@ namespace ForgePlus.DataFileIO
             Transparent,
         }
 
+        public const int GeometryBuildChunkSize = 256;
+
         public static Action<string> OnLevelOpened;
         public static Action OnLevelClosed;
 
@@ -129,7 +131,7 @@ namespace ForgePlus.DataFileIO
             FPLevel.FPCeilingFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPFloorFpPlatforms = new Dictionary<short, FPPlatform>();
             FPLevel.FPMapObjects = new Dictionary<short, FPMapObject>();
-            FPLevel.FPAnnotations = new Dictionary<short, GameObject>();
+            FPLevel.FPAnnotations = new Dictionary<short, FPAnnotation>();
 
             FPLevel.FPInteractiveSurfacePolygons = new List<FPInteractiveSurfacePolygon>();
             FPLevel.FPInteractiveSurfaceSides = new List<FPInteractiveSurfaceSide>();
@@ -142,6 +144,7 @@ namespace ForgePlus.DataFileIO
 
             await Task.Yield();
 
+            #region Initialization_Textures
             var buildTexturesStartTime = DateTime.Now;
 
             // Initialize Textures here so they in proper index order
@@ -163,9 +166,11 @@ namespace ForgePlus.DataFileIO
             }
 
             Debug.Log($"--- LevelBuild: Built Textures in timespan: {DateTime.Now - buildTexturesStartTime}");
+            #endregion Initialization_Textures
 
             await Task.Yield();
 
+            #region Initialization_Lights
             var buildFPLightsStartTime = DateTime.Now;
 
             // Initialize Lights here so they are in proper index order
@@ -175,9 +180,11 @@ namespace ForgePlus.DataFileIO
             }
 
             Debug.Log($"--- LevelBuild: Built & started FPLights in timespan: {DateTime.Now - buildFPLightsStartTime}");
+            #endregion Initialization_Lights
 
             await Task.Yield();
 
+            #region Initialization_Medias
             var buildFPMediasStartTime = DateTime.Now;
 
             // Initialize Medias here so they are in proper index order
@@ -187,6 +194,7 @@ namespace ForgePlus.DataFileIO
             }
 
             Debug.Log($"--- LevelBuild: Built & started FPMedias in timespan: {DateTime.Now - buildFPMediasStartTime}");
+            #endregion Initialization_Medias
 
             await Task.Yield();
 
@@ -211,6 +219,11 @@ namespace ForgePlus.DataFileIO
                 fpPolygon.FPLevel = FPLevel;
 
                 fpPolygon.GenerateSurfaces(polygon, (short)polygonIndex);
+
+                if (polygonIndex > 0 && polygonIndex % GeometryBuildChunkSize == 0)
+                {
+                    await Task.Yield();
+                }
             }
 
             Debug.Log($"--- LevelBuild: Built Polygons, Medias, & Platforms in timespan: {DateTime.Now - buildPolygonsStartTime}");
@@ -239,6 +252,11 @@ namespace ForgePlus.DataFileIO
                 fpLine.FPLevel = FPLevel;
 
                 fpLine.GenerateSurfaces();
+
+                if (lineIndex > 0 && lineIndex % GeometryBuildChunkSize == 0)
+                {
+                    await Task.Yield();
+                }
             }
 
             Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
@@ -267,6 +285,11 @@ namespace ForgePlus.DataFileIO
                 fpMapObject.FPLevel = FPLevel;
 
                 fpMapObject.GenerateObject();
+
+                if (objectIndex > 0 && objectIndex % GeometryBuildChunkSize == 0)
+                {
+                    await Task.Yield();
+                }
             }
 
             Debug.Log($"--- LevelBuild: Built Objects in timespan: {DateTime.Now - buildObjectsStartTime}");
@@ -274,18 +297,28 @@ namespace ForgePlus.DataFileIO
 
             await Task.Yield();
 
+            #region Annotations
+            var annotationsGroupGO = new GameObject("Annotations");
+            annotationsGroupGO.transform.SetParent(FPLevel.transform);
+
             for (var i = 0; i < level.Annotations.Count; i++)
             {
                 var annotation = level.Annotations[i];
-                var annotationInstance = UnityEngine.Object.Instantiate(Resources.Load<TextMeshPro>("Objects/MapAnnotation"));
-                annotationInstance.text = annotation.Text;
-                var height = (FPLevel.FPPolygons[annotation.PolygonIndex].WelandObject.FloorHeight + FPLevel.FPPolygons[annotation.PolygonIndex].WelandObject.CeilingHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                annotationInstance.transform.position = new Vector3(annotation.X / GeometryUtilities.WorldUnitIncrementsPerMeter, height, -annotation.Y / GeometryUtilities.WorldUnitIncrementsPerMeter);
+                var annotationInstance = UnityEngine.Object.Instantiate(FPAnnotation.Prefab);
+                annotationInstance.Index = (short)i;
+                annotationInstance.WelandObject = annotation;
+                annotationInstance.FPLevel = FPLevel;
 
-                annotationInstance.transform.SetParent(FPLevel.transform, worldPositionStays: true);
+                annotationInstance.RefreshLabel();
 
-                FPLevel.FPAnnotations[(short)i] = annotationInstance.gameObject;
+                var positionalHeight = (FPLevel.FPPolygons[annotation.PolygonIndex].WelandObject.FloorHeight + FPLevel.FPPolygons[annotation.PolygonIndex].WelandObject.CeilingHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                annotationInstance.transform.position = new Vector3(annotation.X / GeometryUtilities.WorldUnitIncrementsPerMeter, positionalHeight, -annotation.Y / GeometryUtilities.WorldUnitIncrementsPerMeter);
+
+                annotationInstance.transform.SetParent(annotationsGroupGO.transform, worldPositionStays: true);
+
+                FPLevel.FPAnnotations[(short)i] = annotationInstance;
             }
+            #endregion Annotations
         }
 
         private async void LevelInitializationDebugTimer(DateTime startTime)

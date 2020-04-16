@@ -18,7 +18,7 @@ namespace ForgePlus.LevelManipulation
         public Dictionary<short, FPPlatform> FPCeilingFpPlatforms;
         public Dictionary<short, FPPlatform> FPFloorFpPlatforms;
         public Dictionary<short, FPMapObject> FPMapObjects;
-        public Dictionary<short, GameObject> FPAnnotations; // TODO: Convert this to actually use an FPAnnotations class, in support of editing.
+        public Dictionary<short, FPAnnotation> FPAnnotations;
 
         public List<FPInteractiveSurfacePolygon> FPInteractiveSurfacePolygons;
         public List<FPInteractiveSurfaceSide> FPInteractiveSurfaceSides;
@@ -27,11 +27,6 @@ namespace ForgePlus.LevelManipulation
         public void SetSelectability(bool enabled)
         {
             // Intentionally blank - no current reason to toggle this, as it is selected/deselected by switching to/from Level mode.
-        }
-
-        public void DisplaySelectionState(bool state)
-        {
-            // Intentially blank - no real need to show the selection state of the level, as it's apparent enough from it showing up in the inspector
         }
 
         public void Inspect()
