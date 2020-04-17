@@ -1,43 +1,103 @@
-﻿using UnityEngine;
+﻿using ForgePlus.DataFileIO;
+using System.Collections.Generic;
+using UnityEngine;
 
 
 namespace ForgePlus.LevelManipulation
 {
     public class RuntimeSurfaceLight : MonoBehaviour
     {
+        protected struct RuntimeSurfaceMaterialKey
+        {
+            public Material sourceMaterial;
+            public FPLight sourceLight;
+            public FPMedia sourceMedia;
+        }
+
+        private static readonly Dictionary<RuntimeSurfaceMaterialKey, Material> runtimeSurfaceMaterialInstances = new Dictionary<RuntimeSurfaceMaterialKey, Material>();
+        private static readonly Dictionary<RuntimeSurfaceMaterialKey, List<GameObject>> runtimeSurfaceRendererBatches = new Dictionary<RuntimeSurfaceMaterialKey, List<GameObject>>();
+        ////private static readonly List<GameObject> staticBatchables = new List<GameObject>(); // TODO: Can't tell if this is any better or worse - needs more experimentation
+        private static bool levelEventsHaveRegistered = false;
+
         private readonly int lightIntensityPropertyId = Shader.PropertyToID("_LightIntensity");
+
+        protected RuntimeSurfaceMaterialKey runtimeSurfaceMaterialKey = new RuntimeSurfaceMaterialKey();
 
         protected Material surfaceMaterial;
 
-#pragma warning disable IDE0044
-        // This member is purely here so it's exposed in the inspector
-        // TODO: Get rid of this once there's a proper inspector implemented.
-        //       - Note: Can then use "IndexOf" to get the index of the FPLight for the inspector
-        private short lightIndex = -1;
-#pragma warning restore IDE0044
         private FPLight fPLight;
+        private bool isStaticBatchable;
 
-        public void AssignFPLight(short lightIndex, FPLight fpLight)
+        private static void OnLevelOpened(string levelName)
         {
-            this.lightIndex = lightIndex;
-            fPLight = fpLight;
-        }
-
-        private void Awake()
-        {
-            // TODO: There must be a more efficient way to do this, than to make
-            //       a unique material for each renderer.
-            //       Does Unity's instancing system handle this automatically?
-            //       Can DOTS in shaders/materials help with this?
-            surfaceMaterial = GetComponent<MeshRenderer>().material;
-        }
-
-        private void Update()
-        {
-            if (fPLight != null)
+            foreach (var batch in runtimeSurfaceRendererBatches.Values)
             {
-                surfaceMaterial.SetFloat(lightIntensityPropertyId, fPLight.CurrentIntensity);
+                var batchParent = new GameObject("Static Batch");
+                batchParent.transform.SetParent(FPLevel.Instance.transform);
+
+                StaticBatchingUtility.Combine(batch.ToArray(), batchParent);
             }
+
+            // TODO: Can't tell if this is any better or worse - needs more experimentation
+            ////var batchParent = new GameObject("Static Batch");
+            ////batchParent.transform.SetParent(FPLevel.Instance.transform);
+
+            ////StaticBatchingUtility.Combine(staticBatchables.ToArray(), batchParent);
+        }
+
+        private static void OnLevelClosed()
+        {
+            runtimeSurfaceMaterialInstances.Clear();
+            runtimeSurfaceRendererBatches.Clear();
+            ////staticBatchables.Clear(); // TODO: Can't tell if this is any better or worse - needs more experimentation
+        }
+
+        public void InitializeRuntimeSurface(FPLight fpLight, bool isStaticBatchable)
+        {
+            if (!levelEventsHaveRegistered)
+            {
+                levelEventsHaveRegistered = true;
+
+                LevelData.OnLevelOpened += OnLevelOpened;
+                LevelData.OnLevelClosed += OnLevelClosed;
+            }
+
+            this.fPLight = fpLight;
+            this.isStaticBatchable = isStaticBatchable;
+
+            var renderer = GetComponent<MeshRenderer>();
+
+            runtimeSurfaceMaterialKey.sourceMaterial = renderer.sharedMaterial;
+            runtimeSurfaceMaterialKey.sourceLight = fpLight;
+
+            // RuntimeSurfaceLight.InitializeRuntimeSurface must not run before runtimeSurfaceMaterialKey is initialized
+            if (runtimeSurfaceMaterialInstances.ContainsKey(runtimeSurfaceMaterialKey))
+            {
+                surfaceMaterial = runtimeSurfaceMaterialInstances[runtimeSurfaceMaterialKey];
+            }
+            else
+            {
+                surfaceMaterial = new Material(runtimeSurfaceMaterialKey.sourceMaterial);
+                runtimeSurfaceMaterialInstances[runtimeSurfaceMaterialKey] = surfaceMaterial;
+            }
+
+            if (isStaticBatchable)
+            {
+                if (!runtimeSurfaceRendererBatches.ContainsKey(runtimeSurfaceMaterialKey))
+                {
+                    runtimeSurfaceRendererBatches[runtimeSurfaceMaterialKey] = new List<GameObject>();
+                }
+
+                runtimeSurfaceRendererBatches[runtimeSurfaceMaterialKey].Add(gameObject);
+                ////staticBatchables.Add(gameObject); // TODO: Can't tell if this is any better or worse - needs more experimentation
+            }
+
+            renderer.sharedMaterial = surfaceMaterial;
+        }
+
+        protected virtual void Update()
+        {
+            surfaceMaterial.SetFloat(lightIntensityPropertyId, fPLight.CurrentIntensity);
         }
     }
 }
