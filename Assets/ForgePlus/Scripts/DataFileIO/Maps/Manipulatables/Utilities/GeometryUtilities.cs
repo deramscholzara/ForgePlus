@@ -40,10 +40,10 @@ namespace ForgePlus.LevelManipulation.Utilities
             Vector2[] uvs,
             ShapeDescriptor shapeDescriptor,
             FPLight fpLight,
-            short lightIndex,
             short transferMode,
             Color[] transferModesVertexColors,
-            bool isOpaqueSurface)
+            bool isOpaqueSurface,
+            bool isStaticBatchable)
         {
             BuildRendererObject(rendererHost,
                                 vertices,
@@ -51,12 +51,11 @@ namespace ForgePlus.LevelManipulation.Utilities
                                 uvs,
                                 shapeDescriptor,
                                 fpLight,
-                                lightIndex,
                                 transferMode,
                                 transferModesVertexColors,
                                 isOpaqueSurface,
-                                null,
-                                -1);
+                                isStaticBatchable,
+                                fpMedia: null);
         }
 
         public static void BuildRendererObject(
@@ -66,12 +65,11 @@ namespace ForgePlus.LevelManipulation.Utilities
             Vector2[] uvs,
             ShapeDescriptor shapeDescriptor,
             FPLight fpLight,
-            short lightIndex,
             short transferMode,
             Color[] transferModesVertexColors,
             bool isOpaqueSurface,
-            FPMedia fpMedia,
-            short mediaIndex)
+            bool isStaticBatchable,
+            FPMedia fpMedia)
         {
             if (fpMedia != null)
             {
@@ -110,17 +108,16 @@ namespace ForgePlus.LevelManipulation.Utilities
             var material = WallsCollection.GetMaterial(shapeDescriptor, transferMode, isOpaqueSurface, surfaceType);
             rendererHost.AddComponent<MeshRenderer>().sharedMaterial = material;
 
-            // Assign Light
-            if (fpLight != null)
-            {
-                var surfaceLight = rendererHost.AddComponent<RuntimeSurfaceLight>();
-                surfaceLight.AssignFPLight(lightIndex, fpLight);
-            }
-
+            // Assign Appropriate Runtime Surface Component
             if (fpMedia != null)
             {
                 var surfaceMedia = rendererHost.AddComponent<RuntimeSurfaceMedia>();
-                surfaceMedia.AssignFPMedia(mediaIndex, fpMedia);
+                surfaceMedia.InitializeRuntimeSurface(fpLight, fpMedia);
+            }
+            else if (fpLight != null)
+            {
+                var surfaceLight = rendererHost.AddComponent<RuntimeSurfaceLight>();
+                surfaceLight.InitializeRuntimeSurface(fpLight, isStaticBatchable);
             }
 
             rendererHost.AddComponent<MeshCollider>();

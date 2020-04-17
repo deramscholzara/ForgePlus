@@ -5,7 +5,7 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class RuntimeSurfaceMedia : MonoBehaviour
+    public class RuntimeSurfaceMedia : RuntimeSurfaceLight
     {
         private const float MagnitudeToWorldUnit = 1f / 40f; // Note: Not sure why this isn't 1/30 to match the tick rate.
 
@@ -13,20 +13,16 @@ namespace ForgePlus.LevelManipulation
         private readonly int mediaSpeedPropertyId = Shader.PropertyToID("_MediaFlowSpeed");
         private readonly int mediaDepthPropertyId = Shader.PropertyToID("_MediaDepth");
 
-#pragma warning disable IDE0044
-        // This member is purely here so it's exposed in the inspector
-        // TODO: Get rid of this once there's a proper inspector implemented.
-        //       - Note: Can then use "IndexOf" to get the index of the FPLight for the inspector
-        private short mediaIndex = -1;
-#pragma warning restore IDE0044
         private FPMedia fpMedia;
 
-        private Material surfaceMaterial;
-        
-        public void AssignFPMedia(short mediaIndex, FPMedia fpMedia)
+        public void InitializeRuntimeSurface(FPLight fpLight, FPMedia fpMedia)
         {
-            this.mediaIndex = mediaIndex;
             this.fpMedia = fpMedia;
+
+            runtimeSurfaceMaterialKey.sourceMedia = fpMedia;
+
+            // RuntimeSurfaceLight.InitializeRuntimeSurface must not run before runtimeSurfaceMaterialKey is initialized
+            base.InitializeRuntimeSurface(fpLight, isStaticBatchable: false);
 
             UpdateDirectionFlowAndDepth();
         }
@@ -64,21 +60,11 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        private void Awake()
+        protected override void Update()
         {
-            // TODO: There must be a more efficient way to do this, than to make
-            //       a unique material for each renderer.
-            //       Does Unity's instancing system handle this automatically?
-            //       Can DOTS in shaders/materials help with this?
-            surfaceMaterial = GetComponent<MeshRenderer>().sharedMaterial;
-        }
+            base.Update();
 
-        private void Update()
-        {
-            if (fpMedia != null)
-            {
-                transform.position = new Vector3(0f, fpMedia.CurrentHeight, 0f);
-            }
+            transform.position = new Vector3(0f, fpMedia.CurrentHeight, 0f);
         }
     }
 }

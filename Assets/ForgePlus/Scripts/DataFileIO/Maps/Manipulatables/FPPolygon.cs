@@ -179,12 +179,16 @@ namespace ForgePlus.LevelManipulation
             #endregion Generate_Mesh_Data
 
             #region Platforms
+            var hasCeilingPlatform = false;
+            var hasFloorPlatform = false;
             if (polygon.Type == PolygonType.Platform)
             {
                 var platform = GeometryUtilities.GetPlatformForPolygonIndex(FPLevel.Level, polygonIndex);
 
                 if (platform.ComesFromCeiling)
                 {
+                    hasCeilingPlatform = true;
+
                     var fpPlatform = ceilingRoot.AddComponent<FPPlatform>();
                     fpPlatform.SetPlatform((short)FPLevel.Level.Platforms.IndexOf(platform), platform, FPPlatform.LinkedSurfaces.Ceiling);
                     FPLevel.FPCeilingFpPlatforms[polygonIndex] = fpPlatform;
@@ -192,6 +196,8 @@ namespace ForgePlus.LevelManipulation
 
                 if (platform.ComesFromFloor)
                 {
+                    hasFloorPlatform = true;
+
                     var fpPlatform = floorRoot.AddComponent<FPPlatform>();
                     fpPlatform.SetPlatform((short)FPLevel.Level.Platforms.IndexOf(platform), platform, FPPlatform.LinkedSurfaces.Floor);
                     FPLevel.FPFloorFpPlatforms[polygonIndex] = fpPlatform;
@@ -221,10 +227,10 @@ namespace ForgePlus.LevelManipulation
                 floorUvs,
                 polygon.FloorTexture,
                 FPLevel.FPLights[polygon.FloorLight],
-                polygon.FloorLight,
                 polygon.FloorTransferMode,
                 floorTransferModesVertexColors,
-                isOpaqueSurface: true);
+                isOpaqueSurface: true,
+                isStaticBatchable: !hasFloorPlatform);
 
             var fpSurfacePolygonFloor = floorRoot.AddComponent<FPInteractiveSurfacePolygon>();
             fpSurfacePolygonFloor.ParentFPPolygon = this;
@@ -242,10 +248,10 @@ namespace ForgePlus.LevelManipulation
                 ceilingUvs,
                 polygon.CeilingTexture,
                 FPLevel.FPLights[polygon.CeilingLight],
-                polygon.CeilingLight,
                 polygon.CeilingTransferMode,
                 ceilingTransferModesVertexColors,
-                isOpaqueSurface: true);
+                isOpaqueSurface: true,
+                isStaticBatchable: !hasCeilingPlatform);
 
             var fpSurfacePolygonCeiling = ceilingRoot.AddComponent<FPInteractiveSurfacePolygon>();
             fpSurfacePolygonCeiling.ParentFPPolygon = this;
@@ -292,12 +298,11 @@ namespace ForgePlus.LevelManipulation
                     mediaUvs,
                     mediaShapeDescriptor,
                     FPLevel.FPLights[polygon.MediaLight],
-                    polygon.MediaLight,
                     transferMode: 0,
                     floorTransferModesVertexColors,
                     isOpaqueSurface: true,
-                    FPLevel.FPMedias[polygon.MediaIndex],
-                    polygon.MediaIndex);
+                    isStaticBatchable: false,
+                    FPLevel.FPMedias[polygon.MediaIndex]);
 
                 var fpSurfacePolygonMedia = mediaRoot.AddComponent<FPInteractiveSurfaceMedia>();
                 fpSurfacePolygonMedia.ParentFPPolygon = this;

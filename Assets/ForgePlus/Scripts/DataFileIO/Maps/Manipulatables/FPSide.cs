@@ -271,6 +271,8 @@ namespace ForgePlus.LevelManipulation
                 {
                     CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
+                    var isPartOfPlatform = opposingPlatform != null && opposingPlatform.ComesFromCeiling;
+
                     var surface = BuildWallSurface(fpLevel,
                                                    $"Side Top ({sideIndex}) (High - Source:{sideDataSource})",
                                                    lowHeight,
@@ -282,9 +284,10 @@ namespace ForgePlus.LevelManipulation
                                                    side == null ? (short)0 : side.PrimaryTransferMode,
                                                    sideDataSource,
                                                    isOpaqueSurface: true,
-                                                   facingPolygonIndex);
+                                                   facingPolygonIndex,
+                                                   isStaticBatchable: !isPartOfPlatform);
 
-                    if (opposingPlatform != null && opposingPlatform.ComesFromCeiling)
+                    if (isPartOfPlatform)
                     {
                         surface.transform.position = new Vector3(0f, (float)(highHeight - lowHeight) / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
@@ -324,7 +327,8 @@ namespace ForgePlus.LevelManipulation
                                                    transferMode: side == null ? (short)0 : (sideDataSource == SideDataSources.Primary ? side.PrimaryTransferMode : side.TransparentTransferMode),
                                                    sideDataSource: sideDataSource,
                                                    isOpaqueSurface: isOpaqueSurface,
-                                                   facingPolygonIndex);
+                                                   facingPolygonIndex,
+                                                   isStaticBatchable: true);
 
                     surface.transform.position = new Vector3(0f, (float)line.LowestAdjacentCeiling / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
@@ -344,6 +348,8 @@ namespace ForgePlus.LevelManipulation
                 {
                     CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
+                    var isPartOfPlatform = opposingPlatform != null && opposingPlatform.ComesFromFloor;
+
                     var surface = BuildWallSurface(fpLevel,
                                                    $"Side Bottom ({sideIndex}) (Low - Source:{sideDataSource})",
                                                    lowHeight,
@@ -355,9 +361,10 @@ namespace ForgePlus.LevelManipulation
                                                    side == null ? (short)0 : (sideDataSource == SideDataSources.Primary ? side.PrimaryTransferMode : side.SecondaryTransferMode),
                                                    sideDataSource,
                                                    isOpaqueSurface: true,
-                                                   facingPolygonIndex);
+                                                   facingPolygonIndex,
+                                                   isStaticBatchable: !isPartOfPlatform);
 
-                    if (opposingPlatform != null && opposingPlatform.ComesFromFloor)
+                    if (isPartOfPlatform)
                     {
                         surface.transform.position = Vector3.zero;
 
@@ -401,14 +408,14 @@ namespace ForgePlus.LevelManipulation
             short transferMode,
             SideDataSources sideDataSource,
             bool isOpaqueSurface,
-            short facingPolygonIndex)
+            short facingPolygonIndex,
+            bool isStaticBatchable)
         {
             var side = fpSide.WelandObject;
 
             short textureOffsetX = 0;
             short textureOffsetY = 0;
             ShapeDescriptor shapeDescriptor = ShapeDescriptor.Empty;
-            Weland.Light light = null;
             short lightIndex = 0;
 
             if (side != null)
@@ -419,21 +426,18 @@ namespace ForgePlus.LevelManipulation
                         textureOffsetX = side.Primary.X;
                         textureOffsetY = side.Primary.Y;
                         shapeDescriptor = side.Primary.Texture;
-                        light = fpLevel.Level.Lights[side.PrimaryLightsourceIndex];
                         lightIndex = side.PrimaryLightsourceIndex;
                         break;
                     case SideDataSources.Secondary:
                         textureOffsetX = side.Secondary.X;
                         textureOffsetY = side.Secondary.Y;
                         shapeDescriptor = side.Secondary.Texture;
-                        light = fpLevel.Level.Lights[side.SecondaryLightsourceIndex];
                         lightIndex = side.SecondaryLightsourceIndex;
                         break;
                     case SideDataSources.Transparent:
                         textureOffsetX = side.Transparent.X;
                         textureOffsetY = side.Transparent.Y;
                         shapeDescriptor = side.Transparent.Texture;
-                        light = fpLevel.Level.Lights[side.TransparentLightsourceIndex];
                         lightIndex = side.TransparentLightsourceIndex;
                         break;
                 }
@@ -506,10 +510,10 @@ namespace ForgePlus.LevelManipulation
                 uvs,
                 shapeDescriptor,
                 fpLevel.FPLights[lightIndex],
-                lightIndex,
                 transferMode,
                 transferModesVertexColors,
-                isOpaqueSurface);
+                isOpaqueSurface,
+                isStaticBatchable);
 
             var fpSurfaceSide = surfaceGameObject.AddComponent<FPInteractiveSurfaceSide>();
             fpSurfaceSide.surfaceShapeDescriptor = shapeDescriptor;
