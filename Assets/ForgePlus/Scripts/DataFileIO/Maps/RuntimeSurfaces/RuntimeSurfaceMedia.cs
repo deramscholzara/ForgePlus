@@ -70,7 +70,7 @@ namespace ForgePlus.LevelManipulation
             //       a unique material for each renderer.
             //       Does Unity's instancing system handle this automatically?
             //       Can DOTS in shaders/materials help with this?
-            surfaceMaterial = GetComponent<MeshRenderer>().material;
+            surfaceMaterial = GetComponent<MeshRenderer>().sharedMaterial;
         }
 
         private void Update()

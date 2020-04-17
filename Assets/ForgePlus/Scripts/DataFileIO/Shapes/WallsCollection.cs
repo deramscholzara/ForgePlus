@@ -29,6 +29,8 @@ namespace ForgePlus.ShapesCollections
 
         private static readonly Texture2D GridTexture = Resources.Load<Texture2D>("Walls/Grid");
 
+        private static readonly int mediaSubColorPropertyId = Shader.PropertyToID("_SubMediaColor");
+
         private static readonly Dictionary<ShapeDescriptor, Texture2D> Textures = new Dictionary<ShapeDescriptor, Texture2D>(255);
 
         private static readonly Dictionary<ShapeDescriptor, Material> Materials = new Dictionary<ShapeDescriptor, Material>(255);
@@ -154,6 +156,19 @@ namespace ForgePlus.ShapesCollections
             {
                 material = new Material(shaderToUse);
                 trackedMaterials[shapeDescriptor] = material;
+
+                if (shaderToUse == MediaShader)
+                {
+                    var fastAverageTextureColor = textureToUse.GetPixelBilinear(0f, 0f);
+                    fastAverageTextureColor += textureToUse.GetPixelBilinear(0.25f, 0.75f);
+                    fastAverageTextureColor += textureToUse.GetPixelBilinear(0.66f, 0.33f);
+                    fastAverageTextureColor *= 1f / 3f;
+
+                    Color.RGBToHSV(fastAverageTextureColor, out float hue, out float saturation, out _);
+                    fastAverageTextureColor = Color.HSVToRGB(hue, saturation, 1f);
+
+                    material.SetColor(mediaSubColorPropertyId, fastAverageTextureColor);
+                }
             }
 
             if (material.mainTexture != textureToUse)
