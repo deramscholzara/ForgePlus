@@ -353,7 +353,8 @@ namespace ForgePlus.LevelManipulation
 
         private void CreateSelectionIndicators(GameObject surface, bool isfloor)
         {
-            var vertices = surface.GetComponent<MeshFilter>().sharedMesh.vertices;
+            var vertices = surface.GetComponent<MeshCollider>().sharedMesh.vertices;
+
             var localToWorldMatrix = surface.transform.localToWorldMatrix;
 
             for (var i = 0; i < vertices.Length; i++)

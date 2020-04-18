@@ -24,14 +24,12 @@ namespace ForgePlus.Inspection
 
             Value_Id.text =                             fpLine.Index.ToString();
 
-            var flagsValue =                            $"Has Transparent Side: {(fpLine.WelandObject.Flags & LineFlags.HasTransparentSide) != 0}\n" +
+            Value_Flags.text =                          $"Has Transparent Side: {(fpLine.WelandObject.Flags & LineFlags.HasTransparentSide) != 0}\n" +
                                                         $"Variable Elevation: {(fpLine.WelandObject.Flags & LineFlags.VariableElevation) != 0}\n" +
                                                         $"Elevation: {(fpLine.WelandObject.Flags & LineFlags.Elevation) != 0}\n" +
                                                         $"Landscape: {(fpLine.WelandObject.Flags & LineFlags.Landscape) != 0}\n" +
                                                         $"Transparent: {(fpLine.WelandObject.Flags & LineFlags.Transparent) != 0}\n" +
                                                         $"Solid: {(fpLine.WelandObject.Flags & LineFlags.Solid)}";
-
-            Value_Flags.text =                          flagsValue;
 
             Value_Length.text =                         fpLine.WelandObject.Length.ToString();
             Value_HighestFloorHeight.text =             fpLine.WelandObject.HighestAdjacentFloor.ToString();
