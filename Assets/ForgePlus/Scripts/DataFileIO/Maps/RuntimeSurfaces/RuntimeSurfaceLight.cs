@@ -1,4 +1,5 @@
-﻿using ForgePlus.DataFileIO;
+﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.DataFileIO;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,97 +8,29 @@ namespace ForgePlus.LevelManipulation
 {
     public class RuntimeSurfaceLight : MonoBehaviour
     {
-        protected struct RuntimeSurfaceMaterialKey
-        {
-            public Material sourceMaterial;
-            public FPLight sourceLight;
-            public FPMedia sourceMedia;
-        }
-
-        private static readonly Dictionary<RuntimeSurfaceMaterialKey, Material> runtimeSurfaceMaterialInstances = new Dictionary<RuntimeSurfaceMaterialKey, Material>();
-        private static readonly Dictionary<RuntimeSurfaceMaterialKey, List<GameObject>> runtimeSurfaceRendererBatches = new Dictionary<RuntimeSurfaceMaterialKey, List<GameObject>>();
-        ////private static readonly List<GameObject> staticBatchables = new List<GameObject>(); // TODO: Can't tell if this is any better or worse - needs more experimentation
-        private static bool levelEventsHaveRegistered = false;
-
-        private readonly int lightIntensityPropertyId = Shader.PropertyToID("_LightIntensity");
-
-        protected RuntimeSurfaceMaterialKey runtimeSurfaceMaterialKey = new RuntimeSurfaceMaterialKey();
-
-        protected Material surfaceMaterial;
-
-        private FPLight fPLight;
-        private bool isStaticBatchable;
-
-        private static void OnLevelOpened(string levelName)
-        {
-            foreach (var batch in runtimeSurfaceRendererBatches.Values)
-            {
-                var batchParent = new GameObject("Static Batch");
-                batchParent.transform.SetParent(FPLevel.Instance.transform);
-
-                StaticBatchingUtility.Combine(batch.ToArray(), batchParent);
-            }
-
-            // TODO: Can't tell if this is any better or worse - needs more experimentation
-            ////var batchParent = new GameObject("Static Batch");
-            ////batchParent.transform.SetParent(FPLevel.Instance.transform);
-
-            ////StaticBatchingUtility.Combine(staticBatchables.ToArray(), batchParent);
-        }
-
-        private static void OnLevelClosed()
-        {
-            runtimeSurfaceMaterialInstances.Clear();
-            runtimeSurfaceRendererBatches.Clear();
-            ////staticBatchables.Clear(); // TODO: Can't tell if this is any better or worse - needs more experimentation
-        }
+        protected SurfaceBatchingManager.RuntimeSurfaceMaterialKey runtimeSurfaceMaterialInstanceKey = new SurfaceBatchingManager.RuntimeSurfaceMaterialKey();
 
         public void InitializeRuntimeSurface(FPLight fpLight, bool isStaticBatchable)
         {
-            if (!levelEventsHaveRegistered)
-            {
-                levelEventsHaveRegistered = true;
-
-                LevelData.OnLevelOpened += OnLevelOpened;
-                LevelData.OnLevelClosed += OnLevelClosed;
-            }
-
-            this.fPLight = fpLight;
-            this.isStaticBatchable = isStaticBatchable;
-
             var renderer = GetComponent<MeshRenderer>();
 
-            runtimeSurfaceMaterialKey.sourceMaterial = renderer.sharedMaterial;
-            runtimeSurfaceMaterialKey.sourceLight = fpLight;
+            runtimeSurfaceMaterialInstanceKey.sourceMaterial = renderer.sharedMaterial;
+            runtimeSurfaceMaterialInstanceKey.sourceLight = fpLight;
 
             // RuntimeSurfaceLight.InitializeRuntimeSurface must not run before runtimeSurfaceMaterialKey is initialized
-            if (runtimeSurfaceMaterialInstances.ContainsKey(runtimeSurfaceMaterialKey))
-            {
-                surfaceMaterial = runtimeSurfaceMaterialInstances[runtimeSurfaceMaterialKey];
-            }
-            else
-            {
-                surfaceMaterial = new Material(runtimeSurfaceMaterialKey.sourceMaterial);
-                runtimeSurfaceMaterialInstances[runtimeSurfaceMaterialKey] = surfaceMaterial;
-            }
+            renderer.sharedMaterial = SurfaceBatchingManager.Instance.GetUniqueMaterial(runtimeSurfaceMaterialInstanceKey); ;
 
             if (isStaticBatchable)
             {
-                if (!runtimeSurfaceRendererBatches.ContainsKey(runtimeSurfaceMaterialKey))
-                {
-                    runtimeSurfaceRendererBatches[runtimeSurfaceMaterialKey] = new List<GameObject>();
-                }
-
-                runtimeSurfaceRendererBatches[runtimeSurfaceMaterialKey].Add(gameObject);
-                ////staticBatchables.Add(gameObject); // TODO: Can't tell if this is any better or worse - needs more experimentation
+                SurfaceBatchingManager.Instance.AddToBatches(runtimeSurfaceMaterialInstanceKey, gameObject);
             }
-
-            renderer.sharedMaterial = surfaceMaterial;
         }
 
-        protected virtual void Update()
-        {
-            surfaceMaterial.SetFloat(lightIntensityPropertyId, fPLight.CurrentIntensity);
-        }
+        // TODO: use this class to control material/mesh batching stuff for geometry/texture/light/media editing
+        //       - expose merge and unmerge methods
+        //           - can be used when geometry is modified (unmerge on edit-start, merge on edit-complete)
+        //           - use the key-specific methods in SurfaceBatchingManager
+        //       - convert InitializeRuntimeSurface into an UpdateMaterialKey method
+        //           - which would also appropriately unmerge/remerge and remove/add to batches as-appropriate if the key or isStaticMatchable actually changed
     }
 }

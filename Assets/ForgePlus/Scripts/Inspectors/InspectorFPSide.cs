@@ -42,7 +42,7 @@ namespace ForgePlus.Inspection
             Value_LineIndex.text =                  fpLine.WelandObject.LineIndex.ToString();
             Value_PolygonIndex.text =               fpLine.WelandObject.PolygonIndex.ToString();
 
-            var flagsValue =                        $"Panel Active: {(fpLine.WelandObject.Flags & SideFlags.ControlPanelStatus) != 0}\n" +
+            Value_Flags.text =                      $"Panel Active: {(fpLine.WelandObject.Flags & SideFlags.ControlPanelStatus) != 0}\n" +
                                                     $"Control Panel: {(fpLine.WelandObject.Flags & SideFlags.IsControlPanel) != 0}\n" +
                                                     $"Repair Switch: {(fpLine.WelandObject.Flags & SideFlags.IsRepairSwitch) != 0}\n" +
                                                     $"Destructive Switch: {(fpLine.WelandObject.Flags & SideFlags.IsDestructiveSwitch) != 0}\n" +

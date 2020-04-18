@@ -48,7 +48,7 @@ namespace ForgePlus.LevelManipulation
                 if (TopSurface)
                 {
                     var localToWorldMatrix = TopSurface.transform.localToWorldMatrix;
-                    var mesh = TopSurface.GetComponent<MeshFilter>().sharedMesh;
+                    var mesh = TopSurface.GetComponent<MeshCollider>().sharedMesh;
 
                     topLeftWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[1]);
                     topRightWorldPosition = localToWorldMatrix.MultiplyPoint(mesh.vertices[2]);
@@ -66,7 +66,7 @@ namespace ForgePlus.LevelManipulation
                 if (MiddleSurface)
                 {
                     var localToWorldMatrix = MiddleSurface.transform.localToWorldMatrix;
-                    var mesh = MiddleSurface.GetComponent<MeshFilter>().sharedMesh;
+                    var mesh = MiddleSurface.GetComponent<MeshCollider>().sharedMesh;
 
                     if (!collectedTopSurface)
                     {
@@ -87,7 +87,7 @@ namespace ForgePlus.LevelManipulation
                 if (BottomSurface)
                 {
                     var localToWorldMatrix = BottomSurface.transform.localToWorldMatrix;
-                    var mesh = BottomSurface.GetComponent<MeshFilter>().sharedMesh;
+                    var mesh = BottomSurface.GetComponent<MeshCollider>().sharedMesh;
 
                     if (!collectedTopSurface)
                     {
@@ -253,9 +253,16 @@ namespace ForgePlus.LevelManipulation
 
             // Create our own, accurate variation on of Side.Type, since we
             // want to display possibly visible untextured side surfaces.
-            var needsTop = hasOpposingPolygon && highestFacingCeiling > lowestOpposingCeiling;
-            var needsMiddle = !hasOpposingPolygon || hasTransparentSide || (!line.Transparent && !touchesAnyPlatformAndIsTwoSided);
-            var needsBottom = hasOpposingPolygon && lowestFacingFloor < highestOpposingFloor;
+            var needsTop = hasOpposingPolygon &&
+                           highestFacingCeiling > lowestOpposingCeiling;
+
+            var needsMiddle = (!hasOpposingPolygon ||
+                              hasTransparentSide ||
+                              (!line.Transparent && !touchesAnyPlatformAndIsTwoSided)) &&
+                              (true);
+
+            var needsBottom = hasOpposingPolygon &&
+                              highestOpposingFloor > lowestFacingFloor;
 
             FPSide fpSide = null;
 
@@ -264,42 +271,39 @@ namespace ForgePlus.LevelManipulation
                 // Always Primary
                 var sideDataSource = SideDataSources.Primary;
 
-                short lowHeight = lowestOpposingCeiling;
                 short highHeight = highestFacingCeiling;
+                short lowHeight = lowestOpposingCeiling;
 
-                if (highHeight > lowHeight)
+                CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
+
+                var isPartOfPlatform = opposingPlatform != null && opposingPlatform.ComesFromCeiling;
+
+                var surface = BuildWallSurface(fpLevel,
+                                                $"Side Top ({sideIndex}) (High - Source:{sideDataSource})",
+                                                lowHeight,
+                                                highHeight,
+                                                line.EndpointIndexes[0],
+                                                line.EndpointIndexes[1],
+                                                isClockwise,
+                                                fpSide,
+                                                side == null ? (short)0 : side.PrimaryTransferMode,
+                                                sideDataSource,
+                                                isOpaqueSurface: true,
+                                                facingPolygonIndex,
+                                                isStaticBatchable: !isPartOfPlatform);
+
+                if (isPartOfPlatform)
                 {
-                    CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
+                    surface.transform.position = new Vector3(0f, (float)(highHeight - lowHeight) / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
-                    var isPartOfPlatform = opposingPlatform != null && opposingPlatform.ComesFromCeiling;
-
-                    var surface = BuildWallSurface(fpLevel,
-                                                   $"Side Top ({sideIndex}) (High - Source:{sideDataSource})",
-                                                   lowHeight,
-                                                   highHeight,
-                                                   line.EndpointIndexes[0],
-                                                   line.EndpointIndexes[1],
-                                                   isClockwise,
-                                                   fpSide,
-                                                   side == null ? (short)0 : side.PrimaryTransferMode,
-                                                   sideDataSource,
-                                                   isOpaqueSurface: true,
-                                                   facingPolygonIndex,
-                                                   isStaticBatchable: !isPartOfPlatform);
-
-                    if (isPartOfPlatform)
-                    {
-                        surface.transform.position = new Vector3(0f, (float)(highHeight - lowHeight) / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
-
-                        ConstrainWallSurfaceToPlatform(fpLevel.FPCeilingFpPlatforms[opposingPolygonIndex], surface, isFloorPlatform: false);
-                    }
-                    else
-                    {
-                        surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
-                    }
-
-                    fpSide.TopSurface = surface;
+                    ConstrainWallSurfaceToPlatform(fpLevel.FPCeilingFpPlatforms[opposingPolygonIndex], surface, isFloorPlatform: false);
                 }
+                else
+                {
+                    surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+                }
+
+                fpSide.TopSurface = surface;
             }
 
             if (needsMiddle)
@@ -312,7 +316,8 @@ namespace ForgePlus.LevelManipulation
 
                 // Note: If the highest possible ceiling in this poly isn't higher than the lowest possible floor,
                 //       then then the middle side would never be seen, so there's no reason to draw it.
-                if (highestFacingCeiling > lowestFacingFloor)
+                if (highestFacingCeiling > lowestFacingFloor &&
+                    lowestOpposingCeiling > highestOpposingFloor)
                 {
                     CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
@@ -341,42 +346,39 @@ namespace ForgePlus.LevelManipulation
                 // Secondary if there is a top section, Primary otherwise
                 var sideDataSource = needsTop ? SideDataSources.Secondary : SideDataSources.Primary;
 
-                short lowHeight = lowestFacingFloor;
                 short highHeight = highestOpposingFloor;
+                short lowHeight = lowestFacingFloor;
 
-                if (highHeight > lowHeight)
+                CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
+
+                var isPartOfPlatform = opposingPlatform != null && opposingPlatform.ComesFromFloor;
+
+                var surface = BuildWallSurface(fpLevel,
+                                                $"Side Bottom ({sideIndex}) (Low - Source:{sideDataSource})",
+                                                lowHeight,
+                                                highHeight,
+                                                line.EndpointIndexes[0],
+                                                line.EndpointIndexes[1],
+                                                isClockwise,
+                                                fpSide,
+                                                side == null ? (short)0 : (sideDataSource == SideDataSources.Primary ? side.PrimaryTransferMode : side.SecondaryTransferMode),
+                                                sideDataSource,
+                                                isOpaqueSurface: true,
+                                                facingPolygonIndex,
+                                                isStaticBatchable: !isPartOfPlatform);
+
+                if (isPartOfPlatform)
                 {
-                    CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
+                    surface.transform.position = Vector3.zero;
 
-                    var isPartOfPlatform = opposingPlatform != null && opposingPlatform.ComesFromFloor;
-
-                    var surface = BuildWallSurface(fpLevel,
-                                                   $"Side Bottom ({sideIndex}) (Low - Source:{sideDataSource})",
-                                                   lowHeight,
-                                                   highHeight,
-                                                   line.EndpointIndexes[0],
-                                                   line.EndpointIndexes[1],
-                                                   isClockwise,
-                                                   fpSide,
-                                                   side == null ? (short)0 : (sideDataSource == SideDataSources.Primary ? side.PrimaryTransferMode : side.SecondaryTransferMode),
-                                                   sideDataSource,
-                                                   isOpaqueSurface: true,
-                                                   facingPolygonIndex,
-                                                   isStaticBatchable: !isPartOfPlatform);
-
-                    if (isPartOfPlatform)
-                    {
-                        surface.transform.position = Vector3.zero;
-
-                        ConstrainWallSurfaceToPlatform(fpLevel.FPFloorFpPlatforms[opposingPolygonIndex], surface, isFloorPlatform: true);
-                    }
-                    else
-                    {
-                        surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
-                    }
-
-                    fpSide.BottomSurface = surface;
+                    ConstrainWallSurfaceToPlatform(fpLevel.FPFloorFpPlatforms[opposingPolygonIndex], surface, isFloorPlatform: true);
                 }
+                else
+                {
+                    surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+                }
+
+                fpSide.BottomSurface = surface;
             }
 
             return fpSide;

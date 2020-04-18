@@ -1,6 +1,5 @@
 ﻿using ForgePlus.Inspection;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -24,6 +23,7 @@ namespace ForgePlus.LevelManipulation
         // One "tick" = 1/30 seconds.  This is used to maintain classic flicker frequency.
         private const float mininumFlickerDuration = 1f / 30f;
 
+        private static readonly int lightIntensityPropertyId = Shader.PropertyToID("_LightIntensity");
         private readonly AnimationCurve smoothLightCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
 
         public short? Index { get; set; }
@@ -31,13 +31,32 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        private CancellationTokenSource lightPhaseCTS;
+        public float CurrentIntensity
+        {
+            get
+            {
+                return currentIntensity;
+            }
+            private set
+            {
+                currentIntensity = value;
+
+                foreach (var material in subscribedMaterials)
+                {
+                    material.SetFloat(lightIntensityPropertyId, currentIntensity);
+                }
+            }
+        }
+
+        private float currentIntensity = 0f;
 
         private States currentState = States.BecomingActive;
         private short remainingPhaseOffset;
         private float remainingPhaseTime = 0f;
 
-        public float CurrentIntensity { get; private set; }
+        private List<Material> subscribedMaterials = new List<Material>();
+
+        private CancellationTokenSource lightPhaseCTS;
 
         public FPLight(short index, Weland.Light light, FPLevel fpLevel)
         {
@@ -65,6 +84,18 @@ namespace ForgePlus.LevelManipulation
         {
             lightPhaseCTS?.Cancel();
             lightPhaseCTS = null;
+        }
+
+        public void SubscribeMaterial(Material material)
+        {
+            subscribedMaterials.Add(material);
+
+            material.SetFloat(lightIntensityPropertyId, CurrentIntensity);
+        }
+
+        public void UnsubscribeMaterial(Material material)
+        {
+            subscribedMaterials.Remove(material);
         }
 
         public void BeginRuntimeStyleBehavior()
