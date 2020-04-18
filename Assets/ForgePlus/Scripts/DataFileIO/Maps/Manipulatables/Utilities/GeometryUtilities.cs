@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Weland;
+using Weland.Extensions;
 
 namespace ForgePlus.LevelManipulation.Utilities
 {
@@ -117,7 +118,7 @@ namespace ForgePlus.LevelManipulation.Utilities
             else if (fpLight != null)
             {
                 var surfaceLight = rendererHost.AddComponent<RuntimeSurfaceLight>();
-                surfaceLight.InitializeRuntimeSurface(fpLight, isStaticBatchable);
+                surfaceLight.InitializeRuntimeSurface(shapeDescriptor.UsesLandscapeCollection() ? null : fpLight, isStaticBatchable);
             }
 
             rendererHost.AddComponent<MeshCollider>();

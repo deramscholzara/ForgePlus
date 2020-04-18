@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Weland;
+using Weland.Extensions;
 
 namespace ForgePlus.ShapesCollections
 {
@@ -77,8 +78,7 @@ namespace ForgePlus.ShapesCollections
         {
             if ((ushort)shapeDescriptor != (ushort)ShapeDescriptor.Empty)
             {
-                var landscapeTransferMode = transferMode == 9 ||
-                                            (shapeDescriptor.Collection >= 27 && shapeDescriptor.Collection <= 30);
+                var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
 
                 return GetTrackedMaterial(shapeDescriptor,
                                           landscapeTransferMode,

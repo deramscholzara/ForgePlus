@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Weland;
+using Weland.Extensions;
 
 namespace ForgePlus.Palette
 {
@@ -133,7 +134,7 @@ namespace ForgePlus.Palette
             var loadedTextureEntries = WallsCollection.GetAllLoadedTextures().ToList();
             loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.Collection == entryB.Key.Collection ?
                                                            entryA.Key.Bitmap.CompareTo(entryB.Key.Bitmap) :
-                                                           (((entryA.Key.Collection >= 27 && entryB.Key.Collection <= 30) || (entryB.Key.Collection >= 27 && entryB.Key.Collection <= 30)) ?
+                                                           ((entryA.Key.UsesLandscapeCollection() || entryB.Key.UsesLandscapeCollection()) ?
                                                             -entryA.Key.Collection.CompareTo(entryB.Key.Collection) :
                                                             entryA.Key.Collection.CompareTo(entryB.Key.Collection))));
 
@@ -142,7 +143,7 @@ namespace ForgePlus.Palette
             foreach (var textureEntry in loadedTextureEntries)
             {
 
-                if (textureEntry.Key.Collection >= 27 && textureEntry.Key.Collection <= 30)
+                if (textureEntry.Key.UsesLandscapeCollection())
                 {
                     currentHorizontalHelper = null;
 

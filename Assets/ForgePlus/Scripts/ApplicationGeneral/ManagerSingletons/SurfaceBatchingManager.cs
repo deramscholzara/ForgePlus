@@ -135,7 +135,10 @@ namespace ForgePlus.ApplicationGeneral
 
                 SurfaceMaterials[key] = uniqueMaterial;
 
-                key.sourceLight.SubscribeMaterial(uniqueMaterial);
+                if (key.sourceLight != null)
+                {
+                    key.sourceLight.SubscribeMaterial(uniqueMaterial);
+                }
 
                 if (key.sourceMedia != null)
                 {
