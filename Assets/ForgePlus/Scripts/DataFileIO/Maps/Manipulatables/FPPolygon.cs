@@ -237,6 +237,7 @@ namespace ForgePlus.LevelManipulation
             fpSurfacePolygonFloor.surfaceShapeDescriptor = polygon.FloorTexture;
             fpSurfacePolygonFloor.FPLight = FPLevel.FPLights[polygon.FloorLight];
             fpSurfacePolygonFloor.FPMedia = hasMedia ? FPLevel.FPMedias[polygon.MediaIndex] : null;
+            fpSurfacePolygonFloor.FPPlatform = hasFloorPlatform ? FPLevel.FPFloorFpPlatforms[polygonIndex] : null;
 
             FPLevel.FPInteractiveSurfacePolygons.Add(fpSurfacePolygonFloor);
 
@@ -258,6 +259,7 @@ namespace ForgePlus.LevelManipulation
             fpSurfacePolygonCeiling.surfaceShapeDescriptor = polygon.CeilingTexture;
             fpSurfacePolygonCeiling.FPLight = FPLevel.FPLights[polygon.CeilingLight];
             fpSurfacePolygonCeiling.FPMedia = hasMedia ? FPLevel.FPMedias[polygon.MediaIndex] : null;
+            fpSurfacePolygonCeiling.FPPlatform = hasCeilingPlatform ? FPLevel.FPCeilingFpPlatforms[polygonIndex] : null;
 
             FPLevel.FPInteractiveSurfacePolygons.Add(fpSurfacePolygonCeiling);
 

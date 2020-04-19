@@ -1,11 +1,12 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPMapObject : MonoBehaviour, IFPManipulatable<MapObject>, IFPSelectionDisplayable, IFPInspectable
+    public class FPMapObject : FPInteractiveSurfaceBase, IFPManipulatable<MapObject>, IFPSelectionDisplayable, IFPInspectable
     {
         private readonly int selectedShaderPropertyId = Shader.PropertyToID("_Selected");
 
@@ -50,13 +51,18 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public void OnMouseUpAsButton()
+        public override void OnPointerClick(PointerEventData eventData)
         {
-            SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
+            if (isSelectable)
+            {
+                SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
+            }
         }
 
-        public void SetSelectability(bool enabled)
+        public override void SetSelectability(bool enabled)
         {
+            base.SetSelectability(enabled);
+
             GetComponent<MeshCollider>().enabled = enabled;
         }
 

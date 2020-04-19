@@ -290,7 +290,8 @@ namespace ForgePlus.LevelManipulation
                                                 sideDataSource,
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
-                                                isStaticBatchable: !isPartOfPlatform);
+                                                isStaticBatchable: !isPartOfPlatform,
+                                                fpPlatform: isPartOfPlatform ? fpLevel.FPCeilingFpPlatforms[opposingPolygonIndex] : null);
 
                 if (isPartOfPlatform)
                 {
@@ -333,7 +334,8 @@ namespace ForgePlus.LevelManipulation
                                                    sideDataSource: sideDataSource,
                                                    isOpaqueSurface: isOpaqueSurface,
                                                    facingPolygonIndex,
-                                                   isStaticBatchable: true);
+                                                   isStaticBatchable: true,
+                                                   fpPlatform: null);
 
                     surface.transform.position = new Vector3(0f, (float)line.LowestAdjacentCeiling / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
@@ -365,7 +367,8 @@ namespace ForgePlus.LevelManipulation
                                                 sideDataSource,
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
-                                                isStaticBatchable: !isPartOfPlatform);
+                                                isStaticBatchable: !isPartOfPlatform,
+                                                fpPlatform: isPartOfPlatform ? fpLevel.FPFloorFpPlatforms[opposingPolygonIndex] : null);
 
                 if (isPartOfPlatform)
                 {
@@ -411,7 +414,8 @@ namespace ForgePlus.LevelManipulation
             SideDataSources sideDataSource,
             bool isOpaqueSurface,
             short facingPolygonIndex,
-            bool isStaticBatchable)
+            bool isStaticBatchable,
+            FPPlatform fpPlatform)
         {
             var side = fpSide.WelandObject;
 
@@ -521,6 +525,7 @@ namespace ForgePlus.LevelManipulation
             fpSurfaceSide.surfaceShapeDescriptor = shapeDescriptor;
             fpSurfaceSide.ParentFPSide = fpSide;
             fpSurfaceSide.FPLight = fpLevel.FPLights[lightIndex];
+            fpSurfaceSide.FPPlatform = fpPlatform;
 
             var mediaIndex = fpLevel.FPPolygons[facingPolygonIndex].WelandObject.MediaIndex;
             fpSurfaceSide.FPMedia = mediaIndex >= 0 ? fpLevel.FPMedias[mediaIndex] : null;
@@ -532,7 +537,7 @@ namespace ForgePlus.LevelManipulation
 
         private static void ConstrainWallSurfaceToPlatform(FPPlatform fpPlatform, GameObject wallSurface, bool isFloorPlatform)
         {
-            var constraint = wallSurface.AddComponent<PositionConstraint>();
+            var constraint = wallSurface.AddComponent<FPPositionConstraint>();
             constraint.Parent = fpPlatform.transform;
 
             if (isFloorPlatform)

@@ -1,10 +1,11 @@
 ﻿using ForgePlus.Inspection;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPLine : MonoBehaviour, IFPManipulatable<Line>, IFPSelectionDisplayable, IFPInspectable
+    public class FPLine : FPInteractiveSurfaceBase, IFPManipulatable<Line>, IFPSelectionDisplayable, IFPInspectable
     {
         public short? Index { get; set; }
         public Line WelandObject { get; set; }
@@ -13,14 +14,19 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        public void OnMouseUpAsButton()
+        public override void OnPointerClick(PointerEventData eventData)
         {
-            // TODO: Implement this
-            throw new System.NotImplementedException();
+            if (isSelectable)
+            {
+                // TODO: Implement this
+                throw new System.NotImplementedException();
+            }
         }
 
-        public void SetSelectability(bool enabled)
+        public override void SetSelectability(bool enabled)
         {
+            base.SetSelectability(enabled);
+
             // TODO: Set Line selectability
         }
 

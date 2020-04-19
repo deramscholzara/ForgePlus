@@ -1,4 +1,5 @@
-﻿using ForgePlus.LevelManipulation.Utilities;
+﻿using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation.Utilities;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -6,7 +7,7 @@ using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPPlatform : MonoBehaviour, IFPManipulatable<Platform>, IFPDestructionPreparable
+    public class FPPlatform : MonoBehaviour, IFPManipulatable<Platform>, IFPDestructionPreparable, IFPSelectable, IFPInspectable
     {
         public enum LinkedSurfaces
         {
@@ -45,6 +46,19 @@ namespace ForgePlus.LevelManipulation
         private States currentState = States.Contracted;
 
         private float remainingStateTime = 0f;
+
+        public void SetSelectability(bool enabled)
+        {
+            // Intentionally blank - no current reason to toggle this, as its selection comes from already-gated FPInteractiveSurface components
+        }
+
+        public void Inspect()
+        {
+            var inspectorPrefab = Resources.Load<InspectorFPPlatform>("Inspectors/Inspector - FPPlatform");
+            var inspector = Object.Instantiate(inspectorPrefab);
+            inspector.PopulateValues(this);
+            InspectorPanel.Instance.AddInspector(inspector);
+        }
 
         public void PrepareForDestruction()
         {
@@ -269,7 +283,6 @@ namespace ForgePlus.LevelManipulation
             return Time.realtimeSinceStartup + remainingStateTime;
         }
 
-        // TODO: Use FixedUpdate and move a Rigidbody when collision is added and utilized
         private void Update()
         {
             if (WelandObject != null)
