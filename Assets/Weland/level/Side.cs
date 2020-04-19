@@ -92,6 +92,11 @@ namespace Weland
             return controlPanelClasses[ControlPanelType] == ControlPanelClass.TagSwitch;
         }
 
+        public ControlPanelClass GetControlPanelClass()
+        {
+            return controlPanelClasses[ControlPanelType];
+        }
+
         public SideType Type;
         public SideFlags Flags;
         public TextureDefinition Primary;
