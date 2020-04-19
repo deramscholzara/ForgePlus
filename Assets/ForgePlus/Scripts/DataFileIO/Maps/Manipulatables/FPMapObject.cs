@@ -15,6 +15,7 @@ namespace ForgePlus.LevelManipulation
 
         private static Mesh PlayerMesh;
         private static Mesh MonsterMesh;
+        private static Mesh GoalMesh; // TODO: replace this with something more appropriate - like a flag or something
 
         private static Mesh ItemMesh;
         private static Mesh SceneryMesh;
@@ -137,6 +138,13 @@ namespace ForgePlus.LevelManipulation
                     gameObject.AddComponent<MeshFilter>().sharedMesh = SoundMesh;
                     break;
                 case ObjectType.Goal:
+                    if (!GoalMesh)
+                    {
+                        GoalMesh = BuildTriangleMesh(Color.white);
+                    }
+
+                    gameObject.AddComponent<MeshFilter>().sharedMesh = GoalMesh;
+                    break;
                 default:
                     Debug.LogError($"Object type \"{WelandObject.Type}\" is not implemented and will not be displayed.");
                     return;
