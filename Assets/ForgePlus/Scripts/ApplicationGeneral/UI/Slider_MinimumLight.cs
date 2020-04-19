@@ -9,12 +9,14 @@ namespace ForgePlus.ApplicationGeneral
     {
         public void OnValueChanged(float value)
         {
-            SettingsManager.Instance.MinimumLight = value;
+            // Square to convert to gamma-space values (only needed if the project is in Linear space)
+            SettingsManager.Instance.MinimumLight = value * value;
         }
 
         public void OnEnable()
         {
-            GetComponent<Slider>().SetValueWithoutNotify(SettingsManager.Instance.MinimumLight);
+            // Square-root to convert from gamma-space values (only needed if the project is in Linear space)
+            GetComponent<Slider>().SetValueWithoutNotify(Mathf.Sqrt(SettingsManager.Instance.MinimumLight));
         }
     }
 }
