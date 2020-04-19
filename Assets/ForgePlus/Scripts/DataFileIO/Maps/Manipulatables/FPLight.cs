@@ -39,7 +39,7 @@ namespace ForgePlus.LevelManipulation
             }
             private set
             {
-                // Square the lighting value to mimic "inverse square" lighting falloff.
+                // Square to convert to gamma-space values (only needed if the project is in Linear space)
                 currentIntensity = value * value;
 
                 foreach (var material in subscribedMaterials)
