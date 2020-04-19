@@ -12,6 +12,7 @@ namespace ForgePlus.Inspection
     public class InspectorFPLight : InspectorBase
     {
         public TextMeshProUGUI Value_Id;
+        public TextMeshProUGUI Value_Tag;
         public TextMeshProUGUI Value_Type;
         public TextMeshProUGUI Value_Phase;
         public TextMeshProUGUI Value_Flags;
@@ -57,8 +58,9 @@ namespace ForgePlus.Inspection
             var fpLight = inspectedObject as FPLight;
 
             Value_Id.text = fpLight.Index.ToString();
-            Value_Type.text = fpLight.Index.ToString();
-            Value_Phase.text = fpLight.Index.ToString();
+            Value_Tag.text = fpLight.WelandObject.TagIndex.ToString();
+            Value_Type.text = fpLight.WelandObject.Type.ToString();
+            Value_Phase.text = fpLight.WelandObject.Phase.ToString();
 
             Value_Flags.text = $"Initially Active: {fpLight.WelandObject.InitiallyActive}\n" +
                                $"Slaved Intensities: {(fpLight.WelandObject.Flags & LightFlags.SlavedIntensities) != 0}\n" +
