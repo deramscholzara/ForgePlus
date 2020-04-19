@@ -13,10 +13,11 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_Type;
         public TextMeshProUGUI Value_LineIndex;
         public TextMeshProUGUI Value_PolygonIndex;
+        public TextMeshProUGUI Value_AmbientDelta;
         public TextMeshProUGUI Value_Flags;
+
         public TextMeshProUGUI Value_ControlPanelType;
         public TextMeshProUGUI Value_ControlPanelPermutation;
-        public TextMeshProUGUI Value_AmbientDelta;
 
         public RawImage Value_Primary_Texture;
         public TextMeshProUGUI Value_Primary_Offset;
@@ -41,6 +42,7 @@ namespace ForgePlus.Inspection
             Value_Type.text =                       fpLine.WelandObject.Type.ToString();
             Value_LineIndex.text =                  fpLine.WelandObject.LineIndex.ToString();
             Value_PolygonIndex.text =               fpLine.WelandObject.PolygonIndex.ToString();
+            Value_AmbientDelta.text =               fpLine.WelandObject.AmbientDelta.ToString();
 
             Value_Flags.text =                      $"Panel Active: {(fpLine.WelandObject.Flags & SideFlags.ControlPanelStatus) != 0}\n" +
                                                     $"Control Panel: {(fpLine.WelandObject.Flags & SideFlags.IsControlPanel) != 0}\n" +
@@ -51,9 +53,8 @@ namespace ForgePlus.Inspection
                                                     $"Projectiles Only: {(fpLine.WelandObject.Flags & SideFlags.SwitchCanOnlyBeHitByProjectiles) != 0}\n" +
                                                     $"Dirty: {(fpLine.WelandObject.Flags & SideFlags.Dirty) != 0}";
 
-            Value_ControlPanelType.text =           fpLine.WelandObject.ControlPanelType.ToString();
+            Value_ControlPanelType.text =           fpLine.WelandObject.GetControlPanelClass().ToString();
             Value_ControlPanelPermutation.text =    fpLine.WelandObject.ControlPanelPermutation.ToString();
-            Value_AmbientDelta.text =               fpLine.WelandObject.AmbientDelta.ToString();
 
             var hasPrimaryData =                    (ushort)fpLine.WelandObject.Primary.Texture != ushort.MaxValue;
             Value_Primary_Texture.texture =         hasPrimaryData ? WallsCollection.GetTexture(fpLine.WelandObject.Primary.Texture) : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
