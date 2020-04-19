@@ -5000,6 +5000,7 @@ GameObject:
   - component: {fileID: 1061089423}
   - component: {fileID: 1061089424}
   - component: {fileID: 1061089425}
+  - component: {fileID: 1061089426}
   m_Layer: 0
   m_Name: EditorModeCamera
   m_TagString: Untagged
@@ -5137,6 +5138,22 @@ MonoBehaviour:
   accelerationPerSecond: 5
   turboAccelerationPerSecond: 30
   decelerationPerSecond: 40
+--- !u!114 &1061089426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061089419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 1073741825
+  m_MaxRayIntersections: 0
 --- !u!1001 &1111946444
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6877,11 +6894,6 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
-        type: 3}
-      propertyPath: m_Interactable
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}

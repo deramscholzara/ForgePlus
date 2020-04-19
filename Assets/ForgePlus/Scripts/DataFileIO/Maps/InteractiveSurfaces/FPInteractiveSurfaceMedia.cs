@@ -1,5 +1,6 @@
 ﻿using ForgePlus.Palette;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -9,7 +10,7 @@ namespace ForgePlus.LevelManipulation
         public FPLight FPLight = null;
         public FPMedia FPMedia = null;
 
-        public override void OnMouseUpAsButton()
+        public override void OnPointerClick(PointerEventData eventData)
         {
             if (isSelectable)
             {
@@ -39,6 +40,7 @@ namespace ForgePlus.LevelManipulation
         public override void SetSelectability(bool enabled)
         {
             base.SetSelectability(enabled);
+
             GetComponent<MeshCollider>().enabled = enabled;
         }
     }

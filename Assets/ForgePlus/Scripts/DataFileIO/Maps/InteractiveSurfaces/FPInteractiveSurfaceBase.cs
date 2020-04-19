@@ -1,16 +1,13 @@
-﻿using ForgePlus.Inspection;
-using ForgePlus.LevelManipulation.Utilities;
-using ForgePlus.Runtime.Constraints;
-using UnityEngine;
-using Weland;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
-    public abstract class FPInteractiveSurfaceBase : MonoBehaviour, IFPSelectable
+    public abstract class FPInteractiveSurfaceBase : MonoBehaviour, IFPSelectable, IPointerClickHandler
     {
         protected bool isSelectable = false;
 
-        public abstract void OnMouseUpAsButton();
+        public abstract void OnPointerClick(PointerEventData eventData);
 
         public virtual void SetSelectability(bool enabled)
         {

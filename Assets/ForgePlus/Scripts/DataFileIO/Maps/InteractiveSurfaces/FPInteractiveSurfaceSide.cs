@@ -1,5 +1,6 @@
 ﻿using ForgePlus.Palette;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Weland;
 
 namespace ForgePlus.LevelManipulation
@@ -10,11 +11,9 @@ namespace ForgePlus.LevelManipulation
         public ShapeDescriptor surfaceShapeDescriptor = ShapeDescriptor.Empty;
         public FPLight FPLight = null;
         public FPMedia FPMedia = null;
+        public FPPlatform FPPlatform = null;
 
-        // TODO: Use this for selecting the platform this surface is parented to (in platforms tool mode)
-        public FPPolygon ParentFPPolygon = null;
-
-        public override void OnMouseUpAsButton()
+        public override void OnPointerClick(PointerEventData eventData)
         {
             if (isSelectable)
             {
@@ -37,6 +36,13 @@ namespace ForgePlus.LevelManipulation
                         if (FPMedia != null)
                         {
                             PaletteManager.Instance.SelectSwatchForMedia(FPMedia);
+                        }
+
+                        break;
+                    case SelectionManager.SceneSelectionFilters.Platforms:
+                        if (FPPlatform != null)
+                        {
+                            SelectionManager.Instance.ToggleObjectSelection(FPPlatform, multiSelect: false);
                         }
 
                         break;

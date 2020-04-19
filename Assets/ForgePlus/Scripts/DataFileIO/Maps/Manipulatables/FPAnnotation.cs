@@ -4,10 +4,11 @@ using UnityEngine;
 using Weland;
 using TMPro;
 using System.Threading.Tasks;
+using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class FPAnnotation : MonoBehaviour, IFPManipulatable<Annotation>, IFPSelectionDisplayable, IFPInspectable
+    public class FPAnnotation : FPInteractiveSurfaceBase, IFPManipulatable<Annotation>, IFPSelectionDisplayable, IFPInspectable
     {
         private static FPAnnotation prefab;
 
@@ -35,13 +36,18 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public void OnMouseUpAsButton()
+        public override void OnPointerClick(PointerEventData eventData)
         {
-            SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
+            if (isSelectable)
+            {
+                SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
+            }
         }
 
-        public void SetSelectability(bool enabled)
+        public override void SetSelectability(bool enabled)
         {
+            base.SetSelectability(enabled);
+
             gameObject.SetActive(enabled);
         }
 
