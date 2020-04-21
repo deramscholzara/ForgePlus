@@ -345,8 +345,8 @@ namespace ForgePlus.LevelManipulation
 
             if (needsBottom)
             {
-                // Secondary if there is a top section, Primary otherwise
-                var sideDataSource = needsTop ? SideDataSources.Secondary : SideDataSources.Primary;
+                // Secondary if there is a top section or if secondary data is available, Primary otherwise
+                var sideDataSource = needsTop || (ushort)side.Secondary.Texture != (ushort)ShapeDescriptor.Empty ? SideDataSources.Secondary : SideDataSources.Primary;
 
                 short highHeight = highestOpposingFloor;
                 short lowHeight = lowestFacingFloor;
