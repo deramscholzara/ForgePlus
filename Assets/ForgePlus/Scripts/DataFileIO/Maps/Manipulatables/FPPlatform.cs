@@ -1,5 +1,6 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -33,6 +34,9 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
+        // TODO: Add this to IFPInspectable so it must be implemented in all inspectables
+        public event Action<FPPlatform> OnInspectionStateChange;
+
         // TODO: Use this for checking "is active" state for toggling?
         private CancellationTokenSource platformBehaviorCTS;
 
@@ -47,6 +51,14 @@ namespace ForgePlus.LevelManipulation
 
         private float remainingStateTime = 0f;
 
+        public bool IsRuntimeActive
+        {
+            get
+            {
+                return platformBehaviorCTS != null;
+            }
+        }
+
         public void SetSelectability(bool enabled)
         {
             // Intentionally blank - no current reason to toggle this, as its selection comes from already-gated FPInteractiveSurface components
@@ -55,7 +67,7 @@ namespace ForgePlus.LevelManipulation
         public void Inspect()
         {
             var inspectorPrefab = Resources.Load<InspectorFPPlatform>("Inspectors/Inspector - FPPlatform");
-            var inspector = Object.Instantiate(inspectorPrefab);
+            var inspector = UnityEngine.Object.Instantiate(inspectorPrefab);
             inspector.PopulateValues(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
@@ -122,6 +134,30 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        public void SetRuntimeActive(bool value)
+        {
+            if (value)
+            {
+                ActivateRuntimeBehavior();
+            }
+            else
+            {
+                DeactivateRuntimeBehavior();
+            }
+        }
+
+        public void ObstructRuntimeBehavior()
+        {
+            if (IsRuntimeActive)
+            {
+                if (currentState == States.Extending &&
+                    WelandObject.ReversesDirectionWhenObstructed)
+                {
+                    BeginState(States.Contracting, loop: false);
+                }
+            }
+        }
+
         private void ActivateRuntimeBehavior()
         {
             if (currentState == States.Extended)
@@ -136,12 +172,16 @@ namespace ForgePlus.LevelManipulation
             {
                 BeginState(currentState, loop: false);
             }
+
+            OnInspectionStateChange?.Invoke(this);
         }
 
         public void DeactivateRuntimeBehavior()
         {
             platformBehaviorCTS?.Cancel();
             platformBehaviorCTS = null;
+
+            OnInspectionStateChange?.Invoke(this);
         }
 
         public async void BeginState(States state, bool loop = false)
@@ -169,6 +209,11 @@ namespace ForgePlus.LevelManipulation
                     case States.Extended:
                         await Hold(cancellationToken, delay, extendedPosition);
 
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
                         if (!loop)
                         {
                             currentState = States.Contracting;
@@ -178,10 +223,9 @@ namespace ForgePlus.LevelManipulation
                     case States.Extending:
                         await Move(cancellationToken, speed, extendedPosition);
 
-                        if (WelandObject.DeactivatesAtEachLevel || (WelandObject.InitiallyExtended && WelandObject.DeactivatesAtInitialLevel))
+                        if (cancellationToken.IsCancellationRequested)
                         {
-                            DeactivateRuntimeBehavior();
-                            return;
+                            break;
                         }
 
                         if (loop)
@@ -191,11 +235,22 @@ namespace ForgePlus.LevelManipulation
                         else
                         {
                             currentState = States.Extended;
+
+                            if (WelandObject.DeactivatesAtEachLevel || (WelandObject.InitiallyExtended && WelandObject.DeactivatesAtInitialLevel))
+                            {
+                                DeactivateRuntimeBehavior();
+                                return;
+                            }
                         }
 
                         break;
                     case States.Contracted:
                         await Hold(cancellationToken, delay, contractedPosition);
+
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
 
                         if (!loop)
                         {
@@ -213,19 +268,24 @@ namespace ForgePlus.LevelManipulation
                             await Move(cancellationToken, speed, contractedPosition);
                         }
 
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            break;
+                        }
+
                         if (loop)
                         {
                             currentPosition = extendedPosition;
                         }
                         else
                         {
+                            currentState = States.Contracted;
+
                             if (WelandObject.DeactivatesAtEachLevel || (!WelandObject.InitiallyExtended && WelandObject.DeactivatesAtInitialLevel))
                             {
                                 DeactivateRuntimeBehavior();
                                 return;
                             }
-
-                            currentState = States.Contracted;
                         }
 
                         break;
