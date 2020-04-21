@@ -3,6 +3,7 @@ using ForgePlus.Inspection;
 using ForgePlus.Palette;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -425,6 +426,18 @@ namespace ForgePlus.LevelManipulation
         private void OnLevelClosed()
         {
             DeselectAll();
+        }
+
+        private void Update()
+        {
+            if (Input.GetMouseButtonUp(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
+            {
+                if (!EventSystem.current.IsPointerOverGameObject())
+                {
+                    SelectionManager.Instance.DeselectAll();
+                }
+            }
         }
     }
 }
