@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using ForgePlus.LevelManipulation;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,11 @@ namespace ForgePlus.Inspection
         {
             foreach (var inspector in inspectors)
             {
+                if (inspector is IFPDestructionPreparable)
+                {
+                    (inspector as IFPDestructionPreparable).PrepareForDestruction();
+                }
+
                 Destroy(inspector.gameObject);
             }
 

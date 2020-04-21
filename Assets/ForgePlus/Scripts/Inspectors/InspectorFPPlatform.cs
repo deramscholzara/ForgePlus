@@ -1,9 +1,10 @@
 ﻿using ForgePlus.LevelManipulation;
 using TMPro;
+using UnityEngine.UI;
 
 namespace ForgePlus.Inspection
 {
-    public class InspectorFPPlatform : InspectorBase
+    public class InspectorFPPlatform : InspectorBase, IFPDestructionPreparable
     {
         public TextMeshProUGUI Value_Id;
         public TextMeshProUGUI Value_Tag;
@@ -15,11 +16,14 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_MinimumHeight;
         public TextMeshProUGUI Value_Flags;
 
+        public Toggle Simulation_IsActive;
+        public Button Simulation_Obstruct;
 
+        private FPPlatform fpPlatform = null;
 
         public override void PopulateValues(IFPInspectable inspectedObject)
         {
-            var fpPlatform = inspectedObject as FPPlatform;
+            fpPlatform = inspectedObject as FPPlatform;
 
             Value_Id.text = fpPlatform.Index.ToString();
             Value_Tag.text = fpPlatform.WelandObject.Tag.ToString();
@@ -57,6 +61,12 @@ namespace ForgePlus.Inspection
                                $"Is Locked: {fpPlatform.WelandObject.IsLocked}\n" +
                                $"Is Secret: {fpPlatform.WelandObject.IsSecret}\n" +
                                $"Is Door: {fpPlatform.WelandObject.IsDoor}";
+
+            Simulation_IsActive.onValueChanged.AddListener(delegate { fpPlatform.SetRuntimeActive(Simulation_IsActive.isOn); });
+            fpPlatform.OnInspectionStateChange += OnInspectionStateChange;
+            OnInspectionStateChange(fpPlatform);
+
+            Simulation_Obstruct.onClick.AddListener(delegate { fpPlatform.ObstructRuntimeBehavior(); });
         }
 
         public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
@@ -64,6 +74,28 @@ namespace ForgePlus.Inspection
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject
             throw new System.NotImplementedException();
+        }
+
+        public void PrepareForDestruction()
+        {
+            fpPlatform.OnInspectionStateChange -= OnInspectionStateChange;
+
+            foreach (var fpPlatform in FPLevel.Instance.FPCeilingFpPlatforms.Values)
+            {
+                fpPlatform.BeginRuntimeStyleBehavior();
+            }
+
+            foreach (var fpPlatform in FPLevel.Instance.FPFloorFpPlatforms.Values)
+            {
+                fpPlatform.BeginRuntimeStyleBehavior();
+            }
+        }
+
+        private void OnInspectionStateChange(FPPlatform platform)
+        {
+            // TODO: Make this update everything that is display - a full refresh.
+
+            Simulation_IsActive.SetIsOnWithoutNotify(platform.IsRuntimeActive);
         }
     }
 }
