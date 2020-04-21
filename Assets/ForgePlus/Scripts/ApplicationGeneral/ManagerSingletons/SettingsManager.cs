@@ -32,7 +32,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             get
             {
-                return PlayerPrefs.GetFloat(PlayerPrefsSettingsKey_MinimumLight, 0.2f);
+                return PlayerPrefs.GetFloat(PlayerPrefsSettingsKey_MinimumLight, 0.025f);
             }
             set
             {
