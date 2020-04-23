@@ -161,9 +161,16 @@ namespace ForgePlus.LevelManipulation
 
             gameObject.AddComponent<MeshCollider>().convex = true;
 
-            var floorRelativeElevation = FPLevel.Level.Polygons[WelandObject.PolygonIndex].FloorHeight + WelandObject.Z;
+            int elevation = WelandObject.FromCeiling ?
+                            FPLevel.Level.Polygons[WelandObject.PolygonIndex].CeilingHeight + WelandObject.Z :
+                            FPLevel.Level.Polygons[WelandObject.PolygonIndex].FloorHeight + WelandObject.Z;
 
-            transform.position = new Vector3(WelandObject.X, floorRelativeElevation, -WelandObject.Y) / GeometryUtilities.WorldUnitIncrementsPerMeter;
+            if (WelandObject.FromCeiling)
+            {
+                transform.localScale = new Vector3(1f, -1f, 1f);
+            }
+
+            transform.position = new Vector3(WelandObject.X, elevation, -WelandObject.Y) / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
             transform.eulerAngles = new Vector3(0f, (float)WelandObject.Facing + 90f, 0f);
         }
