@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace ForgePlus.ApplicationGeneral
 {
@@ -24,31 +25,37 @@ namespace ForgePlus.ApplicationGeneral
             // TODO: make this, and use it in the dictionary below
         }
 
-        private class StaticBatch
+        private class SurfaceBatch
         {
             public class Surface
             {
                 public GameObject Root { get; private set; }
 
-                private Mesh dynamicMesh;
-
                 public Surface(GameObject root)
                 {
                     Root = root;
-                    dynamicMesh = root.GetComponent<MeshFilter>().sharedMesh;
+                }
+
+                public Mesh MakeStaticAndGetMesh()
+                {
+                    Root.GetComponent<Renderer>().enabled = false;
+
+                    return Root.GetComponent<MeshFilter>().sharedMesh;
                 }
 
                 public void MakeDynamic()
                 {
-                    Root.GetComponent<MeshFilter>().sharedMesh = dynamicMesh;
+                    Root.GetComponent<Renderer>().enabled = true;
                 }
             }
 
+            private Material sourceMaterial;
             private List<Surface> surfaces;
             private GameObject mergeObject;
 
-            public StaticBatch()
+            public SurfaceBatch(Material sourceMaterial)
             {
+                this.sourceMaterial = sourceMaterial;
                 surfaces = new List<Surface>();
                 mergeObject = null;
             }
@@ -96,11 +103,38 @@ namespace ForgePlus.ApplicationGeneral
                     Unmerge();
                 }
 
-                mergeObject = new GameObject("Static Batch");
+                mergeObject = new GameObject("Batched Surfaces");
                 mergeObject.transform.SetParent(FPLevel.Instance.transform);
 
-                var batchArray = surfaces.Select(surface => surface.Root).ToArray();
-                StaticBatchingUtility.Combine(batchArray, mergeObject);
+                var mergedVertices = new List<Vector3>();
+                var mergedTriangles = new List<int>();
+                var mergedUVs = new List<Vector2>();
+                var mergedColors = new List<Color>();
+
+                foreach (var surface in surfaces)
+                {
+                    var dynamicMesh = surface.MakeStaticAndGetMesh();
+                    mergedTriangles.AddRange(dynamicMesh.triangles.Select(triangleIndex => triangleIndex + mergedVertices.Count));
+                    mergedVertices.AddRange(dynamicMesh.vertices.Select(position => surface.Root.transform.localToWorldMatrix.MultiplyPoint(position)));
+                    mergedUVs.AddRange(dynamicMesh.uv);
+                    mergedColors.AddRange(dynamicMesh.colors);
+                }
+
+                var mergedMesh = new Mesh();
+                mergedMesh.name = "Batched Mesh";
+                mergedMesh.SetVertices(mergedVertices);
+                mergedMesh.SetTriangles(mergedTriangles, submesh: 0);
+                mergedMesh.SetUVs(channel: 0, uvs: mergedUVs);
+                mergedMesh.SetColors(mergedColors);
+                mergedMesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
+                                              MeshUpdateFlags.DontRecalculateBounds |
+                                              MeshUpdateFlags.DontResetBoneBounds);
+                mergedMesh.RecalculateTangents(MeshUpdateFlags.DontNotifyMeshUsers |
+                                               MeshUpdateFlags.DontRecalculateBounds |
+                                               MeshUpdateFlags.DontResetBoneBounds);
+
+                mergeObject.AddComponent<MeshFilter>().sharedMesh = mergedMesh;
+                mergeObject.AddComponent<MeshRenderer>().sharedMaterial = sourceMaterial;
             }
 
             public void Unmerge()
@@ -121,7 +155,7 @@ namespace ForgePlus.ApplicationGeneral
         private bool applyStaticBatchingOnLevelLoad = true;
 
         private readonly Dictionary<RuntimeSurfaceMaterialKey, Material> SurfaceMaterials = new Dictionary<RuntimeSurfaceMaterialKey, Material>();
-        private readonly Dictionary<RuntimeSurfaceMaterialKey, StaticBatch> StaticBatches = new Dictionary<RuntimeSurfaceMaterialKey, StaticBatch>();
+        private readonly Dictionary<RuntimeSurfaceMaterialKey, SurfaceBatch> StaticBatches = new Dictionary<RuntimeSurfaceMaterialKey, SurfaceBatch>();
 
         public Material GetUniqueMaterial(RuntimeSurfaceMaterialKey key)
         {
@@ -153,7 +187,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             if (!StaticBatches.ContainsKey(key))
             {
-                StaticBatches[key] = new StaticBatch();
+                StaticBatches[key] = new SurfaceBatch(GetUniqueMaterial(key));
             }
 
             StaticBatches[key].AddSurface(surface);
