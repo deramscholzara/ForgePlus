@@ -110,7 +110,7 @@ namespace ForgePlus.LevelManipulation
                 var lowHeight = (float)WelandObject.Low / GeometryUtilities.WorldUnitIncrementsPerMeter;
                 var highHeight = (float)WelandObject.High / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
-                var intensity = (float)FPLevel.FPLights[WelandObject.LightIndex].CurrentIntensity;
+                var intensity = FPLevel.FPLights[WelandObject.LightIndex].CurrentLinearIntensity;
                 intensity = Mathf.Max(intensity, (float)WelandObject.MinimumLightIntensity);
 
                 var currentHeight = Mathf.Lerp(lowHeight, highHeight, intensity);

@@ -31,25 +31,34 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        public float CurrentIntensity
+        public float CurrentGammaIntensity { get; private set; }
+
+        public float CurrentLinearIntensity
         {
             get
             {
-                return currentIntensity;
+                return currentLinearIntensity;
             }
             private set
             {
+                currentLinearIntensity = value;
+
                 // Square to convert to gamma-space values (only needed if the project is in Linear space)
-                currentIntensity = value * value;
+                CurrentGammaIntensity = currentLinearIntensity * currentLinearIntensity;
+
+                if (Index == 22)
+                {
+                    Debug.Log($"Linear: {CurrentLinearIntensity}, Gamma: {CurrentGammaIntensity}");
+                }
 
                 foreach (var material in subscribedMaterials)
                 {
-                    material.SetFloat(lightIntensityPropertyId, currentIntensity);
+                    material.SetFloat(lightIntensityPropertyId, CurrentGammaIntensity);
                 }
             }
         }
 
-        private float currentIntensity = 0f;
+        private float currentLinearIntensity = 0f;
 
         private States currentState = States.BecomingActive;
         private short remainingPhaseOffset;
@@ -91,7 +100,7 @@ namespace ForgePlus.LevelManipulation
         {
             subscribedMaterials.Add(material);
 
-            material.SetFloat(lightIntensityPropertyId, CurrentIntensity);
+            material.SetFloat(lightIntensityPropertyId, CurrentGammaIntensity);
         }
 
         public void UnsubscribeMaterial(Material material)
@@ -103,12 +112,12 @@ namespace ForgePlus.LevelManipulation
         {
             if (WelandObject.InitiallyActive)
             {
-                CurrentIntensity = (float)WelandObject.PrimaryActive.Intensity;
+                CurrentLinearIntensity = (float)WelandObject.PrimaryActive.Intensity;
                 BeginPhase(States.PrimaryActive, loop: false);
             }
             else
             {
-                CurrentIntensity = (float)WelandObject.PrimaryInactive.Intensity;
+                CurrentLinearIntensity = (float)WelandObject.PrimaryInactive.Intensity;
                 BeginPhase(States.PrimaryInactive, loop: false);
             }
         }
@@ -282,7 +291,7 @@ namespace ForgePlus.LevelManipulation
 
         private async Task ConstantIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity)
         {
-            CurrentIntensity = intensity;
+            CurrentLinearIntensity = intensity;
 
             var endTime = Time.realtimeSinceStartup + duration;
 
@@ -303,7 +312,7 @@ namespace ForgePlus.LevelManipulation
         {
             var endTime = Time.realtimeSinceStartup + duration;
 
-            var startingIntensity = CurrentIntensity;
+            var startingIntensity = CurrentLinearIntensity;
             var actualIntensityDelta = (float)(intensityDelta * intensity);
             var targetIntensity = (float)intensity + UnityEngine.Random.Range(-actualIntensityDelta, actualIntensityDelta);
 
@@ -311,7 +320,7 @@ namespace ForgePlus.LevelManipulation
             {
                 var remainingProgress = (endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration;
 
-                CurrentIntensity = Mathf.Lerp(targetIntensity, startingIntensity, remainingProgress);
+                CurrentLinearIntensity = Mathf.Lerp(targetIntensity, startingIntensity, remainingProgress);
 
                 await Task.Yield();
 
@@ -328,7 +337,7 @@ namespace ForgePlus.LevelManipulation
         {
             var endTime = Time.realtimeSinceStartup + duration;
 
-            var startingIntensity = CurrentIntensity;
+            var startingIntensity = CurrentLinearIntensity;
             var actualIntensityDelta = (float)(intensityDelta * intensity);
             var targetIntensity = (float)intensity + UnityEngine.Random.Range(-actualIntensityDelta, actualIntensityDelta);
 
@@ -336,7 +345,7 @@ namespace ForgePlus.LevelManipulation
             {
                 var elapsedProgress = 1f - ((endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration);
 
-                CurrentIntensity = Mathf.Lerp(startingIntensity, targetIntensity, smoothLightCurve.Evaluate(elapsedProgress));
+                CurrentLinearIntensity = Mathf.Lerp(startingIntensity, targetIntensity, smoothLightCurve.Evaluate(elapsedProgress));
 
                 await Task.Yield();
 
@@ -365,7 +374,7 @@ namespace ForgePlus.LevelManipulation
                     flickerIntensity = (float)intensity + UnityEngine.Random.Range(-actualIntensityDelta, actualIntensityDelta);
                 }
 
-                CurrentIntensity = flickerIntensity;
+                CurrentLinearIntensity = flickerIntensity;
 
                 var flickerEndTime = Time.realtimeSinceStartup + mininumFlickerDuration;
                 while (Time.realtimeSinceStartup < flickerEndTime && GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)

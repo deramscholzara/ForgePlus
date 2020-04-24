@@ -43,7 +43,7 @@ namespace ForgePlus.Palette
 
         private void Update()
         {
-            lightPreview.color = new Color(FPLight.CurrentIntensity, FPLight.CurrentIntensity, FPLight.CurrentIntensity, 1f);
+            lightPreview.color = new Color(FPLight.CurrentGammaIntensity, FPLight.CurrentGammaIntensity, FPLight.CurrentGammaIntensity, 1f);
         }
     }
 }
