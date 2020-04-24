@@ -1,4 +1,5 @@
 ﻿using ForgePlus.LevelManipulation;
+using ForgePlus.ShapesCollections;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -19,6 +20,9 @@ namespace ForgePlus.Palette
         [SerializeField]
         private RawImage texturePreview = null;
 
+        [SerializeField]
+        private GameObject usageIndicator = null;
+
         private bool isSelected = false;
 
         public void SetInitialValues(KeyValuePair<ShapeDescriptor, Texture2D> textureEntry, ToggleGroup toggleGroup)
@@ -33,6 +37,8 @@ namespace ForgePlus.Palette
             toggle.group = toggleGroup;
 
             isSelected = toggle.isOn;
+
+            usageIndicator.SetActive(WallsCollection.GetTextureIsInUse(ShapeDescriptor));
         }
 
         public void OnValueChanged(bool value)
