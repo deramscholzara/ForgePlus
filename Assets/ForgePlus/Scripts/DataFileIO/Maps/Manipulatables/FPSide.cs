@@ -251,32 +251,36 @@ namespace ForgePlus.LevelManipulation
                 }
             }
 
-            // Create our own, accurate variation on of Side.Type, since we
-            // want to display possibly visible untextured side surfaces.
-            var needsTop = hasOpposingPolygon &&
-                           highestFacingCeiling > lowestOpposingCeiling;
+            // Data-driven surface-exposure
+            var dataExpectsFullSide = !hasTransparentSide && side != null && side.Type == SideType.Full && (ushort)side.Primary.Texture != (ushort)ShapeDescriptor.Empty;
+            var dataExpectsTop = !dataExpectsFullSide && side != null && (side.Type == SideType.High || side.Type == SideType.Split);
 
-            var needsMiddle = (!hasOpposingPolygon ||
-                              hasTransparentSide ||
-                              (!line.Transparent && !touchesAnyPlatformAndIsTwoSided)) &&
-                              (true);
+            // Geometry-driven surface-exposure
+            var exposesTop = !dataExpectsFullSide &&
+                             hasOpposingPolygon &&
+                             highestFacingCeiling > lowestOpposingCeiling;
 
-            var needsBottom = hasOpposingPolygon &&
-                              highestOpposingFloor > lowestFacingFloor;
+            var exposesMiddle = !hasOpposingPolygon ||
+                                hasTransparentSide ||
+                                dataExpectsFullSide;
+
+            var exposesBottom = !dataExpectsFullSide &&
+                                hasOpposingPolygon &&
+                                highestOpposingFloor > lowestFacingFloor;
 
             FPSide fpSide = null;
 
-            if (needsTop)
+            if (exposesTop)
             {
-                // Always Primary
+                var isPartOfCeilingPlatform = opposingPlatform != null && opposingPlatform.ComesFromCeiling;
+
+                // Top is always Primary
                 var sideDataSource = SideDataSources.Primary;
 
-                short highHeight = highestFacingCeiling;
-                short lowHeight = lowestOpposingCeiling;
+                var highHeight = highestFacingCeiling;
+                var lowHeight = lowestOpposingCeiling;
 
                 CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
-
-                var isPartOfPlatform = opposingPlatform != null && opposingPlatform.ComesFromCeiling;
 
                 var surface = BuildWallSurface(fpLevel,
                                                 $"Side Top ({sideIndex}) (High - Source:{sideDataSource})",
@@ -290,10 +294,10 @@ namespace ForgePlus.LevelManipulation
                                                 sideDataSource,
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
-                                                isStaticBatchable: !isPartOfPlatform,
-                                                fpPlatform: isPartOfPlatform ? fpLevel.FPCeilingFpPlatforms[opposingPolygonIndex] : null);
+                                                isStaticBatchable: !isPartOfCeilingPlatform,
+                                                fpPlatform: isPartOfCeilingPlatform ? fpLevel.FPCeilingFpPlatforms[opposingPolygonIndex] : null);
 
-                if (isPartOfPlatform)
+                if (isPartOfCeilingPlatform)
                 {
                     surface.transform.position = new Vector3(0f, (float)(highHeight - lowHeight) / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
@@ -307,25 +311,26 @@ namespace ForgePlus.LevelManipulation
                 fpSide.TopSurface = surface;
             }
 
-            if (needsMiddle)
+            if (exposesMiddle)
             {
                 // Transparent if there's an opposing polygon, Primary otherwise (because it's a "Full", unopposed side)
-                var sideDataSource = hasOpposingPolygon ? SideDataSources.Transparent : SideDataSources.Primary;
+                var sideDataSource = !hasOpposingPolygon || dataExpectsFullSide ? SideDataSources.Primary : SideDataSources.Transparent;
                 var isOpaqueSurface = !hasOpposingPolygon || !isTransparent;
+
+                var highHeight = dataExpectsFullSide ? highestFacingCeiling : line.LowestAdjacentCeiling;
+                var lowHeight = dataExpectsFullSide ? lowestFacingFloor : line.HighestAdjacentFloor;
 
                 var typeDescriptor = hasOpposingPolygon ? $"Transparent - HasTransparentSide - Source:{sideDataSource}" : $"Full - Unopposed - Source:{sideDataSource}";
 
-                // Note: If the highest possible ceiling in this poly isn't higher than the lowest possible floor,
-                //       then then the middle side would never be seen, so there's no reason to draw it.
                 if (highestFacingCeiling > lowestFacingFloor &&
-                    lowestOpposingCeiling > highestOpposingFloor)
+                    (lowestOpposingCeiling > highestOpposingFloor || dataExpectsFullSide))
                 {
                     CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
                     var surface = BuildWallSurface(fpLevel,
                                                    $"Side Middle ({sideIndex}) - ({typeDescriptor})",
-                                                   line.HighestAdjacentFloor,
-                                                   line.LowestAdjacentCeiling,
+                                                   lowHeight,
+                                                   highHeight,
                                                    line.EndpointIndexes[0],
                                                    line.EndpointIndexes[1],
                                                    isClockwise,
@@ -337,23 +342,23 @@ namespace ForgePlus.LevelManipulation
                                                    isStaticBatchable: true,
                                                    fpPlatform: null);
 
-                    surface.transform.position = new Vector3(0f, (float)line.LowestAdjacentCeiling / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+                    surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
                     fpSide.MiddleSurface = surface;
                 }
             }
 
-            if (needsBottom)
+            if (exposesBottom)
             {
-                // Secondary if there is a top section or if secondary data is available, Primary otherwise
-                var sideDataSource = needsTop || (side != null && (ushort)side.Secondary.Texture != (ushort)ShapeDescriptor.Empty) ? SideDataSources.Secondary : SideDataSources.Primary;
+                var isPartOfFloorPlatform = opposingPlatform != null && opposingPlatform.ComesFromFloor;
 
-                short highHeight = highestOpposingFloor;
-                short lowHeight = lowestFacingFloor;
+                // Secondary if there is an exposable or expected (in data) top section
+                var sideDataSource = dataExpectsTop ? SideDataSources.Secondary : SideDataSources.Primary;
+
+                var highHeight = highestOpposingFloor;
+                var lowHeight = lowestFacingFloor;
 
                 CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
-
-                var isPartOfPlatform = opposingPlatform != null && opposingPlatform.ComesFromFloor;
 
                 var surface = BuildWallSurface(fpLevel,
                                                 $"Side Bottom ({sideIndex}) (Low - Source:{sideDataSource})",
@@ -367,10 +372,10 @@ namespace ForgePlus.LevelManipulation
                                                 sideDataSource,
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
-                                                isStaticBatchable: !isPartOfPlatform,
-                                                fpPlatform: isPartOfPlatform ? fpLevel.FPFloorFpPlatforms[opposingPolygonIndex] : null);
+                                                isStaticBatchable: !isPartOfFloorPlatform,
+                                                fpPlatform: isPartOfFloorPlatform ? fpLevel.FPFloorFpPlatforms[opposingPolygonIndex] : null);
 
-                if (isPartOfPlatform)
+                if (isPartOfFloorPlatform)
                 {
                     surface.transform.position = Vector3.zero;
 
