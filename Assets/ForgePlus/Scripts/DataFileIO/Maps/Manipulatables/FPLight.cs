@@ -46,11 +46,6 @@ namespace ForgePlus.LevelManipulation
                 // Square to convert to gamma-space values (only needed if the project is in Linear space)
                 CurrentGammaIntensity = currentLinearIntensity * currentLinearIntensity;
 
-                if (Index == 22)
-                {
-                    Debug.Log($"Linear: {CurrentLinearIntensity}, Gamma: {CurrentGammaIntensity}");
-                }
-
                 foreach (var material in subscribedMaterials)
                 {
                     material.SetFloat(lightIntensityPropertyId, CurrentGammaIntensity);
