@@ -34,9 +34,11 @@ namespace ForgePlus.ShapesCollections
 
         private static readonly Dictionary<ShapeDescriptor, Texture2D> Textures = new Dictionary<ShapeDescriptor, Texture2D>(255);
 
+        private static readonly Dictionary<ShapeDescriptor, int> TextureUsageCounter = new Dictionary<ShapeDescriptor, int>();
+
         private static readonly Dictionary<ShapeDescriptor, Material> Materials = new Dictionary<ShapeDescriptor, Material>(255);
         private static readonly Dictionary<ShapeDescriptor, Material> TransparentMaterials = new Dictionary<ShapeDescriptor, Material>(100);
-        private static readonly Dictionary<ShapeDescriptor, Material> LandscapeMaterials = new Dictionary<ShapeDescriptor, Material>(1);
+        private static readonly Dictionary<ShapeDescriptor, Material> LandscapeMaterials = new Dictionary<ShapeDescriptor, Material>(4);
         private static readonly Dictionary<ShapeDescriptor, Material> MediaMaterials = new Dictionary<ShapeDescriptor, Material>(5);
 
         public static IDictionary<ShapeDescriptor, Texture2D> GetAllLoadedTextures()
@@ -70,15 +72,33 @@ namespace ForgePlus.ShapesCollections
             return textureToUse;
         }
 
+        public static bool GetTextureIsInUse(ShapeDescriptor shapeDescriptor)
+        {
+            return TextureUsageCounter.ContainsKey(shapeDescriptor);
+        }
+
         public static Material GetMaterial(
             ShapeDescriptor shapeDescriptor,
             short transferMode,
             bool isOpaqueSurface,
-            SurfaceTypes surfaceType)
+            SurfaceTypes surfaceType,
+            bool incrementUsageCounter)
         {
             if ((ushort)shapeDescriptor != (ushort)ShapeDescriptor.Empty)
             {
                 var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
+
+                if (TextureUsageCounter.ContainsKey(shapeDescriptor))
+                {
+                    if (incrementUsageCounter)
+                    {
+                        TextureUsageCounter[shapeDescriptor]++;
+                    }
+                }
+                else
+                {
+                    TextureUsageCounter[shapeDescriptor] = 1;
+                }
 
                 return GetTrackedMaterial(shapeDescriptor,
                                           landscapeTransferMode,
@@ -93,7 +113,10 @@ namespace ForgePlus.ShapesCollections
 
         public static void ClearCollection()
         {
+            TextureUsageCounter.Clear();
+
             ClearMaterials(Materials);
+            ClearMaterials(TransparentMaterials);
             ClearMaterials(MediaMaterials);
             ClearMaterials(LandscapeMaterials);
 

@@ -106,7 +106,7 @@ namespace ForgePlus.LevelManipulation.Utilities
 
             // Assign Common Wall Material
             var surfaceType = fpMedia == null ? WallsCollection.SurfaceTypes.Normal : WallsCollection.SurfaceTypes.Media;
-            var material = WallsCollection.GetMaterial(shapeDescriptor, transferMode, isOpaqueSurface, surfaceType);
+            var material = WallsCollection.GetMaterial(shapeDescriptor, transferMode, isOpaqueSurface, surfaceType, incrementUsageCounter: true);
             rendererHost.AddComponent<MeshRenderer>().sharedMaterial = material;
 
             // Assign Appropriate Runtime Surface Component
