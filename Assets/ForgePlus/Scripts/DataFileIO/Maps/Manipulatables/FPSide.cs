@@ -174,15 +174,12 @@ namespace ForgePlus.LevelManipulation
             var facingPolygon = fpLevel.Level.Polygons[facingPolygonIndex];
             var opposingPolygon = hasOpposingPolygon ? fpLevel.Level.Polygons[opposingPolygonIndex] : null;
 
-            bool touchesAnyPlatformAndIsTwoSided = false;
             Platform facingPlatform = null;
             Platform opposingPlatform = null;
             if (opposingPolygon != null)
             {
                 if (facingPolygon.Type == PolygonType.Platform || opposingPolygon.Type == PolygonType.Platform)
                 {
-                    touchesAnyPlatformAndIsTwoSided = true;
-
                     if (facingPolygon.Type == PolygonType.Platform)
                     {
                         facingPlatform = GeometryUtilities.GetPlatformForPolygonIndex(fpLevel.Level, facingPolygonIndex);
