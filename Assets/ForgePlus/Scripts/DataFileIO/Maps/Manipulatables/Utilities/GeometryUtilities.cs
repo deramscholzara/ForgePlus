@@ -29,22 +29,9 @@ namespace ForgePlus.LevelManipulation.Utilities
             return new Vector3(endpoint.X, height, -endpoint.Y) / WorldUnitIncrementsPerMeter;
         }
 
-        public static Platform GetPlatformForPolygonIndex(Level level, short polygonIndex)
+        public static Platform GetPlatformForPolygon(Level level, Polygon polygon)
         {
-            return level.Platforms.First(platform => platform.PolygonIndex == polygonIndex);
-        }
-
-        public static short GetPlatformIndexForPolygonIndex(Level level, short polygonIndex)
-        {
-            for (short i = 0; i < level.Platforms.Count; i++)
-            {
-                if (level.Platforms[i].PolygonIndex == polygonIndex)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
+            return polygon.Type == PolygonType.Platform ? level.Platforms[polygon.Permutation] : null;
         }
 
         public static void BuildRendererObject(

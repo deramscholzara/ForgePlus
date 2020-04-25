@@ -181,11 +181,10 @@ namespace ForgePlus.LevelManipulation
             #region Platforms
             var hasCeilingPlatform = false;
             var hasFloorPlatform = false;
-            short platformIndex = -1;
+            short platformIndex = polygon.Permutation;
             if (polygon.Type == PolygonType.Platform)
             {
-                var platform = GeometryUtilities.GetPlatformForPolygonIndex(FPLevel.Level, polygonIndex);
-                platformIndex = GeometryUtilities.GetPlatformIndexForPolygonIndex(FPLevel.Level, polygonIndex);
+                var platform = GeometryUtilities.GetPlatformForPolygon(FPLevel.Level, WelandObject);
 
                 if (platform.ComesFromCeiling)
                 {

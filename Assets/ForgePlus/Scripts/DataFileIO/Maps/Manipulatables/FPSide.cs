@@ -176,20 +176,10 @@ namespace ForgePlus.LevelManipulation
 
             Platform facingPlatform = null;
             Platform opposingPlatform = null;
+            facingPlatform = GeometryUtilities.GetPlatformForPolygon(fpLevel.Level, facingPolygon);
             if (opposingPolygon != null)
             {
-                if (facingPolygon.Type == PolygonType.Platform || opposingPolygon.Type == PolygonType.Platform)
-                {
-                    if (facingPolygon.Type == PolygonType.Platform)
-                    {
-                        facingPlatform = GeometryUtilities.GetPlatformForPolygonIndex(fpLevel.Level, facingPolygonIndex);
-                    }
-
-                    if (opposingPolygon.Type == PolygonType.Platform)
-                    {
-                        opposingPlatform = GeometryUtilities.GetPlatformForPolygonIndex(fpLevel.Level, opposingPolygonIndex);
-                    }
-                }
+                opposingPlatform = GeometryUtilities.GetPlatformForPolygon(fpLevel.Level, opposingPolygon);
             }
 
             var highestFacingCeiling = facingPolygon.CeilingHeight;
@@ -270,11 +260,7 @@ namespace ForgePlus.LevelManipulation
             if (exposesTop)
             {
                 var isPartOfCeilingPlatform = opposingPlatform != null && opposingPlatform.ComesFromCeiling;
-                short platformIndex = -1;
-                if (isPartOfCeilingPlatform)
-                {
-                    platformIndex = GeometryUtilities.GetPlatformIndexForPolygonIndex(fpLevel.Level, opposingPolygonIndex);
-                }
+                short platformIndex = opposingPolygon.Permutation;
 
                 // Top is always Primary
                 var sideDataSource = SideDataSources.Primary;
@@ -353,11 +339,7 @@ namespace ForgePlus.LevelManipulation
             if (exposesBottom)
             {
                 var isPartOfFloorPlatform = opposingPlatform != null && opposingPlatform.ComesFromFloor;
-                short platformIndex = -1;
-                if (isPartOfFloorPlatform)
-                {
-                    platformIndex = GeometryUtilities.GetPlatformIndexForPolygonIndex(fpLevel.Level, opposingPolygonIndex);
-                }
+                short platformIndex = opposingPolygon.Permutation;
 
                 // Secondary if there is an exposable or expected (in data) top section
                 var sideDataSource = dataExpectsTop ? SideDataSources.Secondary : SideDataSources.Primary;
