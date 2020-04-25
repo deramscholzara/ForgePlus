@@ -2371,7 +2371,7 @@ PrefabInstance:
     - target: {fileID: 3982486684797976067, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
       propertyPath: m_VerticalScrollbarVisibility
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3982486684797976092, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
