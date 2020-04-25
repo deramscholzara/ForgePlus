@@ -18,10 +18,10 @@ namespace ForgePlus.Inspection
         public Toggle Value_Flags_IsControlPanel;
         public Toggle Value_Flags_ControlPanelIsActive;
         public Toggle Value_Flags_IsRepairSwitch;
-        public Toggle Value_Flags_IsDestructiveSwitch;
         public Toggle Value_Flags_CanBeDestroyed;
+        public Toggle Value_Flags_IsDestructiveSwitch;
         public Toggle Value_Flags_ProjectilesOnly;
-        public Toggle Value_Flags_LightedSwitch;
+        public Toggle Value_Flags_LightedMustBeAbove75Percent;
         public Toggle Value_Flags_Dirty;
 
         public TextMeshProUGUI Value_ControlPanelType;
@@ -58,7 +58,7 @@ namespace ForgePlus.Inspection
             Value_Flags_IsDestructiveSwitch.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsDestructiveSwitch) != 0);
             Value_Flags_CanBeDestroyed.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.SwitchCanBeDestroyed) != 0);
             Value_Flags_ProjectilesOnly.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.SwitchCanOnlyBeHitByProjectiles) != 0);
-            Value_Flags_LightedSwitch.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsLightedSwitch) != 0);
+            Value_Flags_LightedMustBeAbove75Percent.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsLightedSwitch) != 0);
             Value_Flags_Dirty.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.Dirty) != 0);
 
             Value_ControlPanelType.text =           fpLine.WelandObject.GetControlPanelClass().ToString();
