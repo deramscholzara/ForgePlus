@@ -14,7 +14,34 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_Delay;
         public TextMeshProUGUI Value_MaximumHeight;
         public TextMeshProUGUI Value_MinimumHeight;
-        public TextMeshProUGUI Value_Flags;
+
+        public Toggle Value_Flags_InitiallyActive;
+        public Toggle Value_Flags_InitiallyExtended;
+        public Toggle Value_Flags_IsLocked;
+        public Toggle Value_Flags_IsPlayerControllable;
+        public Toggle Value_Flags_IsMonsterControllable;
+        public Toggle Value_Flags_CausesDamage;
+        public Toggle Value_Flags_ReversesWhenObstructed;
+        public Toggle Value_Flags_DeactivatesAtEachLevel;
+        public Toggle Value_Flags_DeactivatesAtInitialLevel;
+        public Toggle Value_Flags_ActivatesAdjacentOnActivation;
+        public Toggle Value_Flags_ActivatesAdjacentOnDeactivation;
+        public Toggle Value_Flags_DeactivatesAdjacentOnActivation;
+        public Toggle Value_Flags_DeactivatesAdjacentOnDeactivation;
+        public Toggle Value_Flags_ActivatesAdjacentAtEachLevel;
+        public Toggle Value_Flags_DelaysBeforeActivation;
+        public Toggle Value_Flags_ActivatesOnlyOnce;
+        public Toggle Value_Flags_ActivatesLight;
+        public Toggle Value_Flags_DeactivatesLight;
+        public Toggle Value_Flags_CannotBeExternallyDeactivated;
+        public Toggle Value_Flags_ContractsSlower;
+        public Toggle Value_Flags_UsesNativePolygonHeights;
+        public Toggle Value_Flags_ExtendsFloorToCeiling;
+        public Toggle Value_Flags_ComesFromFloor;
+        public Toggle Value_Flags_ComesFromCeiling;
+        public Toggle Value_Flags_DoesNotActivateParent;
+        public Toggle Value_Flags_IsSecret;
+        public Toggle Value_Flags_IsDoor;
 
         public Toggle Simulation_IsActive;
         public Button Simulation_Obstruct;
@@ -34,33 +61,33 @@ namespace ForgePlus.Inspection
             Value_MaximumHeight.text = fpPlatform.WelandObject.MaximumHeight.ToString();
             Value_MinimumHeight.text = fpPlatform.WelandObject.MinimumHeight.ToString();
 
-            Value_Flags.text = $"Initially Active: {fpPlatform.WelandObject.InitiallyActive}\n" +
-                               $"Initially Extended: {fpPlatform.WelandObject.InitiallyExtended}\n" +
-                               $"Deactivates At Each Level: {fpPlatform.WelandObject.DeactivatesAtEachLevel}\n" +
-                               $"Deactivates At Initial Level: {fpPlatform.WelandObject.DeactivatesAtInitialLevel}\n" +
-                               $"Activates Adjacent Platforms When Deactivating: {fpPlatform.WelandObject.ActivatesAdjacentPlatformsWhenDeactivating}\n" +
-                               $"Extends Floor To Ceiling: {fpPlatform.WelandObject.ExtendsFloorToCeiling}\n" +
-                               $"Comes From Floor: {fpPlatform.WelandObject.ComesFromFloor}\n" +
-                               $"Comes From Ceiling: {fpPlatform.WelandObject.ComesFromCeiling}\n" +
-                               $"Causes Damage: {fpPlatform.WelandObject.CausesDamage}\n" +
-                               $"Does Not Activate Parent: {fpPlatform.WelandObject.DoesNotActivateParent}\n" +
-                               $"Activates Only Once: {fpPlatform.WelandObject.ActivatesOnlyOnce}\n" +
-                               $"Activates Light: {fpPlatform.WelandObject.ActivatesLight}\n" +
-                               $"Deactivates Light: {fpPlatform.WelandObject.DeactivatesLight}\n" +
-                               $"Is Player Controllable: {fpPlatform.WelandObject.IsPlayerControllable}\n" +
-                               $"Is Monster Controllable: {fpPlatform.WelandObject.IsMonsterControllable}\n" +
-                               $"Reverses Direction When Obstructed: {fpPlatform.WelandObject.ReversesDirectionWhenObstructed}\n" +
-                               $"Cannot Be Externally Deactivated: {fpPlatform.WelandObject.CannotBeExternallyDeactivated}\n" +
-                               $"Uses Native Polygon Heights: {fpPlatform.WelandObject.UsesNativePolygonHeights}\n" +
-                               $"Delays Before Activation: {fpPlatform.WelandObject.DelaysBeforeActivation}\n" +
-                               $"Activates Adjacent Platforms When Activating: {fpPlatform.WelandObject.ActivatesAdjacentPlatformsWhenActivating}\n" +
-                               $"Deactivates Adjacent Platforms When Activating: {fpPlatform.WelandObject.DeactivatesAdjacentPlatformsWhenActivating}\n" +
-                               $"Deactivates Adjacent Platforms When Deactivating: {fpPlatform.WelandObject.DeactivatesAdjacentPlatformsWhenDeactivating}\n" +
-                               $"Contracts Slower: {fpPlatform.WelandObject.ContractsSlower}\n" +
-                               $"Activates Adjacant Platforms At Each Level: {fpPlatform.WelandObject.ActivatesAdjacantPlatformsAtEachLevel}\n" +
-                               $"Is Locked: {fpPlatform.WelandObject.IsLocked}\n" +
-                               $"Is Secret: {fpPlatform.WelandObject.IsSecret}\n" +
-                               $"Is Door: {fpPlatform.WelandObject.IsDoor}";
+            Value_Flags_InitiallyActive.SetIsOnWithoutNotify(fpPlatform.WelandObject.InitiallyActive);
+            Value_Flags_InitiallyExtended.SetIsOnWithoutNotify(fpPlatform.WelandObject.InitiallyExtended);
+            Value_Flags_IsLocked.SetIsOnWithoutNotify(fpPlatform.WelandObject.IsLocked);
+            Value_Flags_IsPlayerControllable.SetIsOnWithoutNotify(fpPlatform.WelandObject.IsPlayerControllable);
+            Value_Flags_IsMonsterControllable.SetIsOnWithoutNotify(fpPlatform.WelandObject.IsMonsterControllable);
+            Value_Flags_CausesDamage.SetIsOnWithoutNotify(fpPlatform.WelandObject.CausesDamage);
+            Value_Flags_ReversesWhenObstructed.SetIsOnWithoutNotify(fpPlatform.WelandObject.ReversesDirectionWhenObstructed);
+            Value_Flags_DeactivatesAtEachLevel.SetIsOnWithoutNotify(fpPlatform.WelandObject.DeactivatesAtEachLevel);
+            Value_Flags_DeactivatesAtInitialLevel.SetIsOnWithoutNotify(fpPlatform.WelandObject.DeactivatesAtInitialLevel);
+            Value_Flags_ActivatesAdjacentOnActivation.SetIsOnWithoutNotify(fpPlatform.WelandObject.ActivatesAdjacentPlatformsWhenActivating);
+            Value_Flags_ActivatesAdjacentOnDeactivation.SetIsOnWithoutNotify(fpPlatform.WelandObject.ActivatesAdjacentPlatformsWhenDeactivating);
+            Value_Flags_DeactivatesAdjacentOnActivation.SetIsOnWithoutNotify(fpPlatform.WelandObject.DeactivatesAdjacentPlatformsWhenActivating);
+            Value_Flags_DeactivatesAdjacentOnDeactivation.SetIsOnWithoutNotify(fpPlatform.WelandObject.DeactivatesAdjacentPlatformsWhenDeactivating);
+            Value_Flags_ActivatesAdjacentAtEachLevel.SetIsOnWithoutNotify(fpPlatform.WelandObject.ActivatesAdjacantPlatformsAtEachLevel);
+            Value_Flags_DelaysBeforeActivation.SetIsOnWithoutNotify(fpPlatform.WelandObject.DelaysBeforeActivation);
+            Value_Flags_ActivatesOnlyOnce.SetIsOnWithoutNotify(fpPlatform.WelandObject.ActivatesOnlyOnce);
+            Value_Flags_ActivatesLight.SetIsOnWithoutNotify(fpPlatform.WelandObject.ActivatesLight);
+            Value_Flags_DeactivatesLight.SetIsOnWithoutNotify(fpPlatform.WelandObject.DeactivatesLight);
+            Value_Flags_CannotBeExternallyDeactivated.SetIsOnWithoutNotify(fpPlatform.WelandObject.CannotBeExternallyDeactivated);
+            Value_Flags_ContractsSlower.SetIsOnWithoutNotify(fpPlatform.WelandObject.ContractsSlower);
+            Value_Flags_UsesNativePolygonHeights.SetIsOnWithoutNotify(fpPlatform.WelandObject.UsesNativePolygonHeights);
+            Value_Flags_ExtendsFloorToCeiling.SetIsOnWithoutNotify(fpPlatform.WelandObject.ExtendsFloorToCeiling);
+            Value_Flags_ComesFromFloor.SetIsOnWithoutNotify(fpPlatform.WelandObject.ComesFromFloor);
+            Value_Flags_ComesFromCeiling.SetIsOnWithoutNotify(fpPlatform.WelandObject.ComesFromCeiling);
+            Value_Flags_DoesNotActivateParent.SetIsOnWithoutNotify(fpPlatform.WelandObject.DoesNotActivateParent);
+            Value_Flags_IsSecret.SetIsOnWithoutNotify(fpPlatform.WelandObject.IsSecret);
+            Value_Flags_IsDoor.SetIsOnWithoutNotify(fpPlatform.WelandObject.IsDoor);
 
             Simulation_IsActive.onValueChanged.AddListener(delegate { fpPlatform.SetRuntimeActive(Simulation_IsActive.isOn); });
             fpPlatform.OnInspectionStateChange += OnInspectionStateChange;

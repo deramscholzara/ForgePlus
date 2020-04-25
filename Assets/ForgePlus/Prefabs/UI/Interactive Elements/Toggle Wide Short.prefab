@@ -165,7 +165,7 @@ PrefabInstance:
     - target: {fileID: 7241215399324312375, guid: a5a3841590f05484f87d287b58d20952,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7241215399324312375, guid: a5a3841590f05484f87d287b58d20952,
         type: 3}
@@ -185,7 +185,17 @@ PrefabInstance:
     - target: {fileID: 7241215399324312375, guid: a5a3841590f05484f87d287b58d20952,
         type: 3}
       propertyPath: m_text
-      value: Everything
+      value: Label
+      objectReference: {fileID: 0}
+    - target: {fileID: 7241215399324312375, guid: a5a3841590f05484f87d287b58d20952,
+        type: 3}
+      propertyPath: m_firstOverflowCharacterIndex
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7241215399324312375, guid: a5a3841590f05484f87d287b58d20952,
+        type: 3}
+      propertyPath: m_isTextTruncated
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5a3841590f05484f87d287b58d20952, type: 3}
