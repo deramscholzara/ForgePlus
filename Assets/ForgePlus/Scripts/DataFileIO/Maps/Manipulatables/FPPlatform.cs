@@ -29,7 +29,7 @@ namespace ForgePlus.LevelManipulation
         //       A button in the inspector "Impact"
         //       & "Stop Impact" - no "Stop Impact" if it reverses?
 
-        public short? Index { get; set; }
+        public short Index { get; set; }
         public Platform WelandObject { get; set; }
 
         public FPLevel FPLevel { private get; set; }
@@ -40,6 +40,7 @@ namespace ForgePlus.LevelManipulation
         // TODO: Use this for checking "is active" state for toggling?
         private CancellationTokenSource platformBehaviorCTS;
 
+        private LinkedSurfaces linkedSurface;
         private float speed = 1f;
         private float delay = 1f;
         private float extendedPosition = 0f;
@@ -77,16 +78,18 @@ namespace ForgePlus.LevelManipulation
             DeactivateRuntimeBehavior();
         }
 
-        public void SetPlatform(short index, Platform platform, LinkedSurfaces linkedSurface)
+        public void SetPlatform(short index, Platform platform, FPLevel fpLevel, LinkedSurfaces linkedSurface)
         {
             Index = index;
             WelandObject = platform;
+            FPLevel = fpLevel;
 
             UpdatePlatformValues(linkedSurface);
         }
 
         public void UpdatePlatformValues(LinkedSurfaces linkedSurface)
         {
+            this.linkedSurface = linkedSurface;
             speed = (float)WelandObject.Speed / 30f;
             delay = (float)WelandObject.Delay / 30f;
 
@@ -134,7 +137,7 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public void SetRuntimeActive(bool value)
+        public void SetRuntimeActive(bool value, bool isRootActivation = true)
         {
             if (value)
             {
@@ -143,6 +146,25 @@ namespace ForgePlus.LevelManipulation
             else
             {
                 DeactivateRuntimeBehavior();
+            }
+
+            if (isRootActivation)
+            {
+                // Activate opposed platform if this is a split platform
+                if (linkedSurface == LinkedSurfaces.Floor)
+                {
+                    if (WelandObject.ComesFromCeiling)
+                    {
+                        FPLevel.FPCeilingFpPlatforms[Index].SetRuntimeActive(value, isRootActivation: false);
+                    }
+                }
+                else
+                {
+                    if (WelandObject.ComesFromFloor)
+                    {
+                        FPLevel.FPFloorFpPlatforms[Index].SetRuntimeActive(value, isRootActivation: false);
+                    }
+                }
             }
         }
 

@@ -34,6 +34,19 @@ namespace ForgePlus.LevelManipulation.Utilities
             return level.Platforms.First(platform => platform.PolygonIndex == polygonIndex);
         }
 
+        public static short GetPlatformIndexForPolygonIndex(Level level, short polygonIndex)
+        {
+            for (short i = 0; i < level.Platforms.Count; i++)
+            {
+                if (level.Platforms[i].PolygonIndex == polygonIndex)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
         public static void BuildRendererObject(
             GameObject rendererHost,
             Vector3[] vertices,

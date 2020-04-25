@@ -215,7 +215,6 @@ namespace ForgePlus.DataFileIO
                 FPLevel.FPPolygons[(short)polygonIndex] = fpPolygon;
                 fpPolygon.Index = (short)polygonIndex;
                 fpPolygon.WelandObject = polygon;
-
                 fpPolygon.FPLevel = FPLevel;
 
                 fpPolygon.GenerateSurfaces(polygon, (short)polygonIndex);
@@ -248,7 +247,6 @@ namespace ForgePlus.DataFileIO
                 FPLevel.FPLines[lineIndex] = fpLine;
                 fpLine.Index = lineIndex;
                 fpLine.WelandObject = line;
-
                 fpLine.FPLevel = FPLevel;
 
                 fpLine.GenerateSurfaces();
@@ -281,7 +279,6 @@ namespace ForgePlus.DataFileIO
                 FPLevel.FPMapObjects[(short)objectIndex] = fpMapObject;
                 fpMapObject.Index = (short)objectIndex;
                 fpMapObject.WelandObject = mapObject;
-
                 fpMapObject.FPLevel = FPLevel;
 
                 fpMapObject.GenerateObject();

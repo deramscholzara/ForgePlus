@@ -141,7 +141,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
@@ -158,7 +158,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
@@ -174,7 +174,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: true); // Shown in right-palette and just selects and inspects the light
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
@@ -190,7 +190,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: true); // Shown in right-palette and just selects and inspects the media
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
@@ -206,7 +206,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: true);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: true);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: true);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
@@ -222,7 +222,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, true);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
@@ -238,7 +238,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, true);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);
@@ -254,7 +254,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: true);
@@ -271,7 +271,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
+                        SetSelectability<FPPlatform>(FPLevel.Instance.FPFloorFpPlatforms.Values, enabled: false);
                         SetSelectability<FPMapObject>(FPLevel.Instance.FPMapObjects.Values, false);
                         SetSelectability<FPAnnotation>(FPLevel.Instance.FPAnnotations.Values, false);
                         SetSelectability<FPLevel>(FPLevel.Instance, enabled: false);

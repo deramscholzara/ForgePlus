@@ -26,7 +26,7 @@ namespace ForgePlus.LevelManipulation
         private static readonly int lightIntensityPropertyId = Shader.PropertyToID("_LightIntensity");
         private readonly AnimationCurve smoothLightCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
 
-        public short? Index { get; set; }
+        public short Index { get; set; }
         public Weland.Light WelandObject { get; set; }
 
         public FPLevel FPLevel { private get; set; }
