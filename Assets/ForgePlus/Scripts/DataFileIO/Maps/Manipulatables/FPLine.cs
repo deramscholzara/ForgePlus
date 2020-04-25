@@ -7,7 +7,7 @@ namespace ForgePlus.LevelManipulation
 {
     public class FPLine : FPInteractiveSurfaceBase, IFPManipulatable<Line>, IFPSelectionDisplayable, IFPInspectable
     {
-        public short? Index { get; set; }
+        public short Index { get; set; }
         public Line WelandObject { get; set; }
         public FPSide ClockwiseSide;
         public FPSide CounterclockwiseSide;

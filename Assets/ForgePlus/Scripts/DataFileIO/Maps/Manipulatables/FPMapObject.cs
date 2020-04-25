@@ -30,7 +30,7 @@ namespace ForgePlus.LevelManipulation
             Transparent,
         }
 
-        public short? Index { get; set; }
+        public short Index { get; set; }
         public MapObject WelandObject { get; set; }
 
         public FPLevel FPLevel { private get; set; }

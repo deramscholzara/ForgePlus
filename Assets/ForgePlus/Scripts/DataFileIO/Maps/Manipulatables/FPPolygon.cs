@@ -11,7 +11,7 @@ namespace ForgePlus.LevelManipulation
     {
         private List<GameObject> selectionVisualizationIndicators = new List<GameObject>(16);
 
-        public short? Index { get; set; }
+        public short Index { get; set; }
         public Polygon WelandObject { get; set; }
         public GameObject CeilingSurface;
         public GameObject FloorSurface;
@@ -181,17 +181,19 @@ namespace ForgePlus.LevelManipulation
             #region Platforms
             var hasCeilingPlatform = false;
             var hasFloorPlatform = false;
+            short platformIndex = -1;
             if (polygon.Type == PolygonType.Platform)
             {
                 var platform = GeometryUtilities.GetPlatformForPolygonIndex(FPLevel.Level, polygonIndex);
+                platformIndex = GeometryUtilities.GetPlatformIndexForPolygonIndex(FPLevel.Level, polygonIndex);
 
                 if (platform.ComesFromCeiling)
                 {
                     hasCeilingPlatform = true;
 
                     var fpPlatform = ceilingRoot.AddComponent<FPPlatform>();
-                    fpPlatform.SetPlatform((short)FPLevel.Level.Platforms.IndexOf(platform), platform, FPPlatform.LinkedSurfaces.Ceiling);
-                    FPLevel.FPCeilingFpPlatforms[polygonIndex] = fpPlatform;
+                    fpPlatform.SetPlatform(platformIndex, platform, FPLevel, FPPlatform.LinkedSurfaces.Ceiling);
+                    FPLevel.FPCeilingFpPlatforms[platformIndex] = fpPlatform;
                 }
 
                 if (platform.ComesFromFloor)
@@ -199,8 +201,8 @@ namespace ForgePlus.LevelManipulation
                     hasFloorPlatform = true;
 
                     var fpPlatform = floorRoot.AddComponent<FPPlatform>();
-                    fpPlatform.SetPlatform((short)FPLevel.Level.Platforms.IndexOf(platform), platform, FPPlatform.LinkedSurfaces.Floor);
-                    FPLevel.FPFloorFpPlatforms[polygonIndex] = fpPlatform;
+                    fpPlatform.SetPlatform(platformIndex, platform, FPLevel, FPPlatform.LinkedSurfaces.Floor);
+                    FPLevel.FPFloorFpPlatforms[platformIndex] = fpPlatform;
                 }
             }
             #endregion Platforms
@@ -237,7 +239,7 @@ namespace ForgePlus.LevelManipulation
             fpSurfacePolygonFloor.surfaceShapeDescriptor = polygon.FloorTexture;
             fpSurfacePolygonFloor.FPLight = FPLevel.FPLights[polygon.FloorLight];
             fpSurfacePolygonFloor.FPMedia = hasMedia ? FPLevel.FPMedias[polygon.MediaIndex] : null;
-            fpSurfacePolygonFloor.FPPlatform = hasFloorPlatform ? FPLevel.FPFloorFpPlatforms[polygonIndex] : null;
+            fpSurfacePolygonFloor.FPPlatform = hasFloorPlatform ? FPLevel.FPFloorFpPlatforms[platformIndex] : null;
 
             FPLevel.FPInteractiveSurfacePolygons.Add(fpSurfacePolygonFloor);
 
@@ -259,7 +261,7 @@ namespace ForgePlus.LevelManipulation
             fpSurfacePolygonCeiling.surfaceShapeDescriptor = polygon.CeilingTexture;
             fpSurfacePolygonCeiling.FPLight = FPLevel.FPLights[polygon.CeilingLight];
             fpSurfacePolygonCeiling.FPMedia = hasMedia ? FPLevel.FPMedias[polygon.MediaIndex] : null;
-            fpSurfacePolygonCeiling.FPPlatform = hasCeilingPlatform ? FPLevel.FPCeilingFpPlatforms[polygonIndex] : null;
+            fpSurfacePolygonCeiling.FPPlatform = hasCeilingPlatform ? FPLevel.FPCeilingFpPlatforms[platformIndex] : null;
 
             FPLevel.FPInteractiveSurfacePolygons.Add(fpSurfacePolygonCeiling);
 

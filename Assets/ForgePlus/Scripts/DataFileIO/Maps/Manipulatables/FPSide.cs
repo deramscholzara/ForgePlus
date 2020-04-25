@@ -16,7 +16,7 @@ namespace ForgePlus.LevelManipulation
             Transparent,
         }
 
-        public short? Index { get; set; }
+        public short Index { get; set; }
 
         public Side WelandObject { get; set; }
 
@@ -270,6 +270,11 @@ namespace ForgePlus.LevelManipulation
             if (exposesTop)
             {
                 var isPartOfCeilingPlatform = opposingPlatform != null && opposingPlatform.ComesFromCeiling;
+                short platformIndex = -1;
+                if (isPartOfCeilingPlatform)
+                {
+                    platformIndex = GeometryUtilities.GetPlatformIndexForPolygonIndex(fpLevel.Level, opposingPolygonIndex);
+                }
 
                 // Top is always Primary
                 var sideDataSource = SideDataSources.Primary;
@@ -292,13 +297,13 @@ namespace ForgePlus.LevelManipulation
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
                                                 isStaticBatchable: !isPartOfCeilingPlatform,
-                                                fpPlatform: isPartOfCeilingPlatform ? fpLevel.FPCeilingFpPlatforms[opposingPolygonIndex] : null);
+                                                fpPlatform: isPartOfCeilingPlatform ? fpLevel.FPCeilingFpPlatforms[platformIndex] : null);
 
                 if (isPartOfCeilingPlatform)
                 {
                     surface.transform.position = new Vector3(0f, (float)(highHeight - lowHeight) / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
-                    ConstrainWallSurfaceToPlatform(fpLevel.FPCeilingFpPlatforms[opposingPolygonIndex], surface, isFloorPlatform: false);
+                    ConstrainWallSurfaceToPlatform(fpLevel.FPCeilingFpPlatforms[platformIndex], surface, isFloorPlatform: false);
                 }
                 else
                 {
@@ -348,6 +353,11 @@ namespace ForgePlus.LevelManipulation
             if (exposesBottom)
             {
                 var isPartOfFloorPlatform = opposingPlatform != null && opposingPlatform.ComesFromFloor;
+                short platformIndex = -1;
+                if (isPartOfFloorPlatform)
+                {
+                    platformIndex = GeometryUtilities.GetPlatformIndexForPolygonIndex(fpLevel.Level, opposingPolygonIndex);
+                }
 
                 // Secondary if there is an exposable or expected (in data) top section
                 var sideDataSource = dataExpectsTop ? SideDataSources.Secondary : SideDataSources.Primary;
@@ -370,13 +380,13 @@ namespace ForgePlus.LevelManipulation
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
                                                 isStaticBatchable: !isPartOfFloorPlatform,
-                                                fpPlatform: isPartOfFloorPlatform ? fpLevel.FPFloorFpPlatforms[opposingPolygonIndex] : null);
+                                                fpPlatform: isPartOfFloorPlatform ? fpLevel.FPFloorFpPlatforms[platformIndex] : null);
 
                 if (isPartOfFloorPlatform)
                 {
                     surface.transform.position = Vector3.zero;
 
-                    ConstrainWallSurfaceToPlatform(fpLevel.FPFloorFpPlatforms[opposingPolygonIndex], surface, isFloorPlatform: true);
+                    ConstrainWallSurfaceToPlatform(fpLevel.FPFloorFpPlatforms[platformIndex], surface, isFloorPlatform: true);
                 }
                 else
                 {

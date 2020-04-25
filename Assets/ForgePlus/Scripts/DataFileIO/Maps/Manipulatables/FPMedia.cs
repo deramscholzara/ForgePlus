@@ -17,7 +17,7 @@ namespace ForgePlus.LevelManipulation
         private static readonly int mediaSpeedPropertyId = Shader.PropertyToID("_MediaFlowSpeed");
         private static readonly int mediaDepthPropertyId = Shader.PropertyToID("_MediaDepth");
 
-        public short? Index { get; set; }
+        public short Index { get; set; }
         public Media WelandObject { get; set; }
 
         public FPLevel FPLevel { private get; set; }

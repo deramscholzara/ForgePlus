@@ -12,7 +12,7 @@ namespace ForgePlus.LevelManipulation
     {
         private static FPAnnotation prefab;
 
-        public short? Index { get; set; }
+        public short Index { get; set; }
         public Annotation WelandObject { get; set; }
 
         public FPLevel FPLevel { private get; set; }
