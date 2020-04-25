@@ -15,13 +15,13 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_PolygonIndex;
         public TextMeshProUGUI Value_AmbientDelta;
 
-        public Toggle Value_Flags_IsControlPanel;
-        public Toggle Value_Flags_ControlPanelIsActive;
+        public Toggle Value_Flags_InitiallyActive;
         public Toggle Value_Flags_IsRepairSwitch;
         public Toggle Value_Flags_CanBeDestroyed;
-        public Toggle Value_Flags_IsDestructiveSwitch;
-        public Toggle Value_Flags_ProjectilesOnly;
         public Toggle Value_Flags_LightedMustBeAbove75Percent;
+        public Toggle Value_Flags_ProjectilesOnly;
+        public Toggle Value_Flags_IsControlPanel;
+        public Toggle Value_Flags_IsDestructiveSwitch;
         public Toggle Value_Flags_Dirty;
 
         public TextMeshProUGUI Value_ControlPanelType;
@@ -53,10 +53,10 @@ namespace ForgePlus.Inspection
             Value_AmbientDelta.text =               fpLine.WelandObject.AmbientDelta.ToString();
 
             Value_Flags_IsControlPanel.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsControlPanel) != 0);
-            Value_Flags_ControlPanelIsActive.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.ControlPanelStatus) != 0);
+            Value_Flags_InitiallyActive.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.ControlPanelStatus) != 0);
             Value_Flags_IsRepairSwitch.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsRepairSwitch) != 0);
-            Value_Flags_IsDestructiveSwitch.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsDestructiveSwitch) != 0);
             Value_Flags_CanBeDestroyed.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.SwitchCanBeDestroyed) != 0);
+            Value_Flags_IsDestructiveSwitch.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsDestructiveSwitch) != 0);
             Value_Flags_ProjectilesOnly.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.SwitchCanOnlyBeHitByProjectiles) != 0);
             Value_Flags_LightedMustBeAbove75Percent.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsLightedSwitch) != 0);
             Value_Flags_Dirty.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.Dirty) != 0);
