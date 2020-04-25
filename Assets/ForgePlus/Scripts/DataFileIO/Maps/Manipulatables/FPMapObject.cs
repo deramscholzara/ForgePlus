@@ -54,7 +54,7 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            if (isSelectable)
+            if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
             {
                 SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
             }
