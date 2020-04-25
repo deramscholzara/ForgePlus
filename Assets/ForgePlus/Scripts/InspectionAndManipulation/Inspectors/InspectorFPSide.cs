@@ -14,7 +14,15 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_LineIndex;
         public TextMeshProUGUI Value_PolygonIndex;
         public TextMeshProUGUI Value_AmbientDelta;
-        public TextMeshProUGUI Value_Flags;
+
+        public Toggle Value_Flags_IsControlPanel;
+        public Toggle Value_Flags_ControlPanelIsActive;
+        public Toggle Value_Flags_IsRepairSwitch;
+        public Toggle Value_Flags_IsDestructiveSwitch;
+        public Toggle Value_Flags_CanBeDestroyed;
+        public Toggle Value_Flags_ProjectilesOnly;
+        public Toggle Value_Flags_LightedSwitch;
+        public Toggle Value_Flags_Dirty;
 
         public TextMeshProUGUI Value_ControlPanelType;
         public TextMeshProUGUI Value_ControlPanelPermutation;
@@ -44,14 +52,14 @@ namespace ForgePlus.Inspection
             Value_PolygonIndex.text =               fpLine.WelandObject.PolygonIndex.ToString();
             Value_AmbientDelta.text =               fpLine.WelandObject.AmbientDelta.ToString();
 
-            Value_Flags.text =                      $"Panel Active: {(fpLine.WelandObject.Flags & SideFlags.ControlPanelStatus) != 0}\n" +
-                                                    $"Control Panel: {(fpLine.WelandObject.Flags & SideFlags.IsControlPanel) != 0}\n" +
-                                                    $"Repair Switch: {(fpLine.WelandObject.Flags & SideFlags.IsRepairSwitch) != 0}\n" +
-                                                    $"Destructive Switch: {(fpLine.WelandObject.Flags & SideFlags.IsDestructiveSwitch) != 0}\n" +
-                                                    $"Lighted Switch: {(fpLine.WelandObject.Flags & SideFlags.IsLightedSwitch) != 0}\n" +
-                                                    $"Can Be Destroyed: {(fpLine.WelandObject.Flags & SideFlags.SwitchCanBeDestroyed) != 0}\n" +
-                                                    $"Projectiles Only: {(fpLine.WelandObject.Flags & SideFlags.SwitchCanOnlyBeHitByProjectiles) != 0}\n" +
-                                                    $"Dirty: {(fpLine.WelandObject.Flags & SideFlags.Dirty) != 0}";
+            Value_Flags_IsControlPanel.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsControlPanel) != 0);
+            Value_Flags_ControlPanelIsActive.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.ControlPanelStatus) != 0);
+            Value_Flags_IsRepairSwitch.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsRepairSwitch) != 0);
+            Value_Flags_IsDestructiveSwitch.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsDestructiveSwitch) != 0);
+            Value_Flags_CanBeDestroyed.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.SwitchCanBeDestroyed) != 0);
+            Value_Flags_ProjectilesOnly.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.SwitchCanOnlyBeHitByProjectiles) != 0);
+            Value_Flags_LightedSwitch.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsLightedSwitch) != 0);
+            Value_Flags_Dirty.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.Dirty) != 0);
 
             Value_ControlPanelType.text =           fpLine.WelandObject.GetControlPanelClass().ToString();
             Value_ControlPanelPermutation.text =    fpLine.WelandObject.ControlPanelPermutation.ToString();

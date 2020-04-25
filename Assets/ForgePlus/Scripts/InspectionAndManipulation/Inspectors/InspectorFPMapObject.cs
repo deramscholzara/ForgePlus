@@ -1,8 +1,7 @@
 ﻿using ForgePlus.LevelManipulation;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 using Weland;
 
 namespace ForgePlus.Inspection
@@ -13,9 +12,16 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_Type;
         public TextMeshProUGUI Value_Index;
         public TextMeshProUGUI Value_PolygonIndex;
-        public TextMeshProUGUI Value_Flags;
         public TextMeshProUGUI Value_Angle;
         public TextMeshProUGUI Value_Position;
+
+        public Toggle Value_Flags_Invisible;
+        public Toggle Value_Flags_FromCeiling;
+        public Toggle Value_Flags_Blind;
+        public Toggle Value_Flags_Deaf;
+        public Toggle Value_Flags_NetworkOnly;
+        public Toggle Value_Flags_Floats;
+        public Toggle Value_Flags_OnPlatform;
 
         public GameObject PlacementValuesRoot;
         public TextMeshProUGUI Value_Placement_InitialCount;
@@ -30,10 +36,10 @@ namespace ForgePlus.Inspection
         {
             var fpMapObject = inspectedObject as FPMapObject;
 
-            Value_Id.text =             fpMapObject.Index.ToString();
-            Value_Type.text =           fpMapObject.WelandObject.Type.ToString();
+            Value_Id.text = fpMapObject.Index.ToString();
+            Value_Type.text = fpMapObject.WelandObject.Type.ToString();
 
-            switch(fpMapObject.WelandObject.Type)
+            switch (fpMapObject.WelandObject.Type)
             {
                 case Weland.ObjectType.Player:
                     Value_Index.text = $"({fpMapObject.WelandObject.Index})";
@@ -60,19 +66,18 @@ namespace ForgePlus.Inspection
                     break;
             }
 
-            Value_PolygonIndex.text =   fpMapObject.WelandObject.PolygonIndex.ToString();
+            Value_PolygonIndex.text = fpMapObject.WelandObject.PolygonIndex.ToString();
 
-            Value_Flags.text = $"Invisible: {fpMapObject.WelandObject.Invisible}\n" +
-                               $"OnPlatform: {fpMapObject.WelandObject.OnPlatform}\n" +
-                               $"FromCeiling: {fpMapObject.WelandObject.FromCeiling}\n" +
-                               $"Blind: {fpMapObject.WelandObject.Blind}\n" +
-                               $"Deaf: {fpMapObject.WelandObject.Deaf}\n" +
-                               $"Floats: {fpMapObject.WelandObject.Floats}\n" +
-                               $"NetworkOnly: {fpMapObject.WelandObject.NetworkOnly}";
+            Value_Flags_Invisible.SetIsOnWithoutNotify(fpMapObject.WelandObject.Invisible);
+            Value_Flags_FromCeiling.SetIsOnWithoutNotify(fpMapObject.WelandObject.FromCeiling);
+            Value_Flags_Blind.SetIsOnWithoutNotify(fpMapObject.WelandObject.Blind);
+            Value_Flags_Deaf.SetIsOnWithoutNotify(fpMapObject.WelandObject.Deaf);
+            Value_Flags_NetworkOnly.SetIsOnWithoutNotify(fpMapObject.WelandObject.NetworkOnly);
+            Value_Flags_Floats.SetIsOnWithoutNotify(fpMapObject.WelandObject.Floats);
+            Value_Flags_OnPlatform.SetIsOnWithoutNotify(fpMapObject.WelandObject.OnPlatform);
 
-
-            Value_Angle.text =          fpMapObject.WelandObject.Facing.ToString();
-            Value_Position.text =       $"X: {fpMapObject.WelandObject.X}\n" +
+            Value_Angle.text = fpMapObject.WelandObject.Facing.ToString();
+            Value_Position.text = $"X: {fpMapObject.WelandObject.X}\n" +
                                         $"Y: {fpMapObject.WelandObject.Y}\n" +
                                         $"Z: {fpMapObject.WelandObject.Z}";
 
@@ -83,12 +88,12 @@ namespace ForgePlus.Inspection
             }
             else
             {
-                Value_Placement_InitialCount.text =     placement.InitialCount.ToString();
-                Value_Placement_MinimumCount.text =     placement.MinimumCount.ToString();
-                Value_Placement_MaximumCount.text =     placement.MaximumCount.ToString();
-                Value_Placement_RandomCount.text =      placement.RandomCount.ToString();
-                Value_Placement_RandomChance.text =     $"{placement.RandomPercent} %";
-                Value_Placement_RandomLocation.text =   placement.RandomLocation.ToString();
+                Value_Placement_InitialCount.text = placement.InitialCount.ToString();
+                Value_Placement_MinimumCount.text = placement.MinimumCount.ToString();
+                Value_Placement_MaximumCount.text = placement.MaximumCount.ToString();
+                Value_Placement_RandomCount.text = placement.RandomCount.ToString();
+                Value_Placement_RandomChance.text = $"{placement.RandomPercent} %";
+                Value_Placement_RandomLocation.text = placement.RandomLocation.ToString();
             }
         }
 
