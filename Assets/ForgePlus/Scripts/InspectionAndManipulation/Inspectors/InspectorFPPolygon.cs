@@ -1,11 +1,8 @@
 ﻿using ForgePlus.LevelManipulation;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using TMPro;
-using Weland;
-using UnityEngine.UI;
 using ForgePlus.ShapesCollections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace ForgePlus.Inspection
 {

@@ -1,11 +1,7 @@
 ﻿using ForgePlus.LevelManipulation;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using Weland;
 using UnityEngine.UI;
-using ForgePlus.ShapesCollections;
+using Weland;
 
 namespace ForgePlus.Inspection
 {
@@ -15,7 +11,10 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_Tag;
         public TextMeshProUGUI Value_Type;
         public TextMeshProUGUI Value_Phase;
-        public TextMeshProUGUI Value_Flags;
+
+        public Toggle Value_Flags_StartsActive;
+        public Toggle Value_Flags_SlavedIntensities;
+        public Toggle Value_Flags_CycleAllStates;
 
         public TextMeshProUGUI Value_PrimaryActive_Function;
         public TextMeshProUGUI Value_PrimaryActive_Period;
@@ -62,9 +61,9 @@ namespace ForgePlus.Inspection
             Value_Type.text = fpLight.WelandObject.Type.ToString();
             Value_Phase.text = fpLight.WelandObject.Phase.ToString();
 
-            Value_Flags.text = $"Initially Active: {fpLight.WelandObject.InitiallyActive}\n" +
-                               $"Slaved Intensities: {(fpLight.WelandObject.Flags & LightFlags.SlavedIntensities) != 0}\n" +
-                               $"Stateless: {fpLight.WelandObject.Stateless}";
+            Value_Flags_StartsActive.SetIsOnWithoutNotify(fpLight.WelandObject.InitiallyActive);
+            Value_Flags_SlavedIntensities.SetIsOnWithoutNotify((fpLight.WelandObject.Flags & LightFlags.SlavedIntensities) != 0);
+            Value_Flags_CycleAllStates.SetIsOnWithoutNotify(fpLight.WelandObject.Stateless);
 
             PopulateFunction(Value_PrimaryInactive_Function,
                              Value_PrimaryInactive_Period,

@@ -1,11 +1,6 @@
 ﻿using ForgePlus.LevelManipulation;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
-using Weland;
 using UnityEngine.UI;
-using ForgePlus.ShapesCollections;
 
 namespace ForgePlus.Inspection
 {
@@ -19,7 +14,8 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_FlowMagnitude;
         public TextMeshProUGUI Value_LightIndex;
         public TextMeshProUGUI Value_MinimumLightIntensity;
-        public TextMeshProUGUI Value_Flags;
+        
+        public Toggle Value_Flags_FloorObstructsSound;
 
         public override void PopulateValues(IFPInspectable inspectedObject)
         {
@@ -33,7 +29,8 @@ namespace ForgePlus.Inspection
             Value_FlowMagnitude.text =          fpMedia.WelandObject.CurrentMagnitude.ToString();
             Value_LightIndex.text =             fpMedia.WelandObject.LightIndex.ToString();
             Value_MinimumLightIntensity.text =  fpMedia.WelandObject.MinimumLightIntensity.ToString();
-            Value_Flags.text =                  fpMedia.WelandObject.SoundObstructedByFloor.ToString();
+
+            Value_Flags_FloorObstructsSound.SetIsOnWithoutNotify(fpMedia.WelandObject.SoundObstructedByFloor);
         }
 
         public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
