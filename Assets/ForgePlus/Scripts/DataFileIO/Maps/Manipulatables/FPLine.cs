@@ -16,7 +16,7 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnPointerClick(PointerEventData eventData)
         {
-            if (isSelectable)
+            if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
             {
                 // TODO: Implement this
                 throw new System.NotImplementedException();
