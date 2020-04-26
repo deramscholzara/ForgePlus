@@ -265,7 +265,7 @@ namespace ForgePlus.LevelManipulation
 
             // Note: Clamps the randomized phase to no less than 1 tick
             //       to ensure all phases run for at least 1 tick.
-            var duration = Mathf.Max(1, ((int)lightingFunction.Period + UnityEngine.Random.Range(-lightingFunction.DeltaPeriod, lightingFunction.DeltaPeriod))) / 30f;
+            var duration = Mathf.Max(1, ((int)lightingFunction.Period + Random.Range(-lightingFunction.DeltaPeriod, lightingFunction.DeltaPeriod))) / 30f;
 
             switch (lightingFunction.LightingFunction)
             {
@@ -286,6 +286,8 @@ namespace ForgePlus.LevelManipulation
 
         private async Task ConstantIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity)
         {
+            intensity = Mathf.Clamp01(intensity);
+
             CurrentLinearIntensity = intensity;
 
             var endTime = Time.realtimeSinceStartup + duration;
@@ -305,11 +307,13 @@ namespace ForgePlus.LevelManipulation
 
         private async Task LinearIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
         {
+            intensity = Mathf.Clamp01(intensity);
+
             var endTime = Time.realtimeSinceStartup + duration;
 
             var startingIntensity = CurrentLinearIntensity;
             var actualIntensityDelta = (float)(intensityDelta * intensity);
-            var targetIntensity = (float)intensity + UnityEngine.Random.Range(-actualIntensityDelta, actualIntensityDelta);
+            var targetIntensity = (float)intensity + Random.Range(-actualIntensityDelta, actualIntensityDelta);
 
             while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
             {
@@ -330,11 +334,13 @@ namespace ForgePlus.LevelManipulation
 
         private async Task SmoothIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
         {
+            intensity = Mathf.Clamp01(intensity);
+
             var endTime = Time.realtimeSinceStartup + duration;
 
             var startingIntensity = CurrentLinearIntensity;
             var actualIntensityDelta = (float)(intensityDelta * intensity);
-            var targetIntensity = (float)intensity + UnityEngine.Random.Range(-actualIntensityDelta, actualIntensityDelta);
+            var targetIntensity = (float)intensity + Random.Range(-actualIntensityDelta, actualIntensityDelta);
 
             while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
             {
@@ -355,18 +361,25 @@ namespace ForgePlus.LevelManipulation
 
         private async Task FlickerIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
         {
+            intensity = Mathf.Clamp01(intensity);
+
             var endTime = Time.realtimeSinceStartup + duration;
 
+            var startingIntensity = CurrentLinearIntensity;
             var actualIntensityDelta = (float)(intensityDelta * intensity);
+            var targetIntensity = (float)intensity + Random.Range(-actualIntensityDelta, actualIntensityDelta);
 
             while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
             {
-                var flickerIntensity = intensity;
-                if (UnityEngine.Random.Range(0, 2) == 0)
+                var elapsedProgress = 1f - ((endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration);
+
+                var currentInterpolatedIntensity = Mathf.Lerp(startingIntensity, targetIntensity, smoothLightCurve.Evaluate(elapsedProgress));
+
+                var flickerIntensity = currentInterpolatedIntensity;
+                if (Random.Range(0, 2) == 0)
                 {
-                    // TODO: should this random range be from -actualIntensityDelto to 0f,
-                    //       so it only flickers darker?  Or should it flicker brighter, too?
-                    flickerIntensity = (float)intensity + UnityEngine.Random.Range(-actualIntensityDelta, actualIntensityDelta);
+                    flickerIntensity = (float)intensity + Random.Range(-actualIntensityDelta, 0);
+                    flickerIntensity = Mathf.Clamp01(flickerIntensity);
                 }
 
                 CurrentLinearIntensity = flickerIntensity;
