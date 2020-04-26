@@ -25,6 +25,7 @@ namespace ForgePlus.LevelManipulation
                     case SelectionManager.SceneSelectionFilters.Textures:
                         if ((ushort)surfaceShapeDescriptor != (ushort)ShapeDescriptor.Empty)
                         {
+                            SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
                             PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor);
                         }
 

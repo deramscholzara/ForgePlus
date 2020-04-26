@@ -23,12 +23,12 @@ PrefabInstance:
     - target: {fileID: 5867437698384271217, guid: 7675cffca469b7a4b81c65740eddf115,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 18
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5867437698384271217, guid: 7675cffca469b7a4b81c65740eddf115,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5867437698384271217, guid: 7675cffca469b7a4b81c65740eddf115,
         type: 3}
@@ -48,16 +48,21 @@ PrefabInstance:
     - target: {fileID: 5867437698384271217, guid: 7675cffca469b7a4b81c65740eddf115,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5867437698384271217, guid: 7675cffca469b7a4b81c65740eddf115,
         type: 3}
       propertyPath: m_firstOverflowCharacterIndex
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5867437698384271217, guid: 7675cffca469b7a4b81c65740eddf115,
         type: 3}
       propertyPath: m_isTextTruncated
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5867437698384271217, guid: 7675cffca469b7a4b81c65740eddf115,
+        type: 3}
+      propertyPath: m_fontStyle
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6547349410001217634, guid: 7675cffca469b7a4b81c65740eddf115,

@@ -152,9 +152,9 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
                     case SceneSelectionFilters.Textures:
-                        SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
+                        SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: true);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
+                        SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: true);
                         SetSelectability<FPLight>(FPLevel.Instance.FPLights.Values, enabled: false);
                         SetSelectability<FPMedia>(FPLevel.Instance.FPMedias.Values, enabled: false);
                         SetSelectability<FPPlatform>(FPLevel.Instance.FPCeilingFpPlatforms.Values, enabled: false);
