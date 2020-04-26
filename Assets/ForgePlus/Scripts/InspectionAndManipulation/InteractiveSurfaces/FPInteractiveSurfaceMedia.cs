@@ -21,12 +21,14 @@ namespace ForgePlus.LevelManipulation
                         SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
                         break;
                     case SelectionManager.SceneSelectionFilters.Lights:
-                        PaletteManager.Instance.SelectSwatchForLight(FPLight);
+                        SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
+                        PaletteManager.Instance.SelectSwatchForLight(FPLight, invokeToggleEvents: false);
                         break;
                     case SelectionManager.SceneSelectionFilters.Media:
                         if (FPMedia != null)
                         {
-                            PaletteManager.Instance.SelectSwatchForMedia(FPMedia);
+                            SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
+                            PaletteManager.Instance.SelectSwatchForMedia(FPMedia, invokeToggleEvents: false);
                         }
 
                         break;

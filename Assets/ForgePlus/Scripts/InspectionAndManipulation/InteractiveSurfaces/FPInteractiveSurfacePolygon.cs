@@ -26,17 +26,19 @@ namespace ForgePlus.LevelManipulation
                         if ((ushort)surfaceShapeDescriptor != (ushort)ShapeDescriptor.Empty)
                         {
                             SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
-                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor);
+                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
                         }
 
                         break;
                     case SelectionManager.SceneSelectionFilters.Lights:
-                        PaletteManager.Instance.SelectSwatchForLight(FPLight);
+                        SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
+                        PaletteManager.Instance.SelectSwatchForLight(FPLight, invokeToggleEvents: false);
                         break;
                     case SelectionManager.SceneSelectionFilters.Media:
                         if (FPMedia != null)
                         {
-                            PaletteManager.Instance.SelectSwatchForMedia(FPMedia);
+                            SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
+                            PaletteManager.Instance.SelectSwatchForMedia(FPMedia, invokeToggleEvents: false);
                         }
 
                         break;

@@ -4,6 +4,7 @@ using ForgePlus.ShapesCollections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Weland;
 using Weland.Extensions;
@@ -32,6 +33,8 @@ namespace ForgePlus.Palette
 
         private readonly List<GameObject> currentSwatches = new List<GameObject>();
         private readonly List<GameObject> currentLayoutHelpers = new List<GameObject>();
+
+        private bool selectionEventStartedOverEmptiness = false;
 
         public void UpdatePaletteToMatchSelectionMode()
         {
@@ -85,28 +88,41 @@ namespace ForgePlus.Palette
             currentLayoutHelpers.Clear();
         }
 
-        public void SelectSwatchForTexture(ShapeDescriptor shapeDescriptor)
+        public void SelectSwatchForTexture(ShapeDescriptor shapeDescriptor, bool invokeToggleEvents = false)
         {
             var matchingSwatch = currentSwatches.First(swatch => (ushort)swatch.GetComponent<SwatchTexture>().ShapeDescriptor == (ushort)shapeDescriptor);
             var matchingToggle = matchingSwatch.GetComponent<Toggle>();
 
-            matchingToggle.isOn = true;
+            ActivateToggle(matchingToggle, invokeToggleEvents);
         }
 
-        public void SelectSwatchForLight(FPLight fpLight)
+        public void SelectSwatchForLight(FPLight fpLight, bool invokeToggleEvents = false)
         {
             var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPLight>().FPLight == fpLight);
             var matchingToggle = matchingSwatch.GetComponent<Toggle>();
 
-            matchingToggle.isOn = true;
+            ActivateToggle(matchingToggle, invokeToggleEvents);
         }
 
-        public void SelectSwatchForMedia(FPMedia fpMedia)
+        public void SelectSwatchForMedia(FPMedia fpMedia, bool invokeToggleEvents = false)
         {
             var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPMedia>().FPMedia == fpMedia);
             var matchingToggle = matchingSwatch.GetComponent<Toggle>();
 
-            matchingToggle.isOn = true;
+            ActivateToggle(matchingToggle, invokeToggleEvents);
+        }
+
+        private void ActivateToggle(Toggle toggle, bool invokeToggleEvents)
+        {
+            if (invokeToggleEvents)
+            {
+                toggle.isOn = true;
+            }
+            else
+            {
+                //// TODO needed to prevent multi-swatch-select?: toggleGroup.SetAllTogglesOff(sendCallback: false);
+                toggle.SetIsOnWithoutNotify(true);
+            }
         }
 
         private void SetToNone(bool shouldSet)
@@ -139,10 +155,10 @@ namespace ForgePlus.Palette
                                                             entryA.Key.Collection.CompareTo(entryB.Key.Collection))));
 
             GameObject currentHorizontalHelper = null;
+            var activatedFirstSwatch = false;
 
             foreach (var textureEntry in loadedTextureEntries)
             {
-
                 if (textureEntry.Key.UsesLandscapeCollection())
                 {
                     currentHorizontalHelper = null;
@@ -172,6 +188,12 @@ namespace ForgePlus.Palette
                     }
                 }
 
+                if (!activatedFirstSwatch)
+                {
+                    currentSwatches[0].GetComponent<Toggle>().isOn = true;
+
+                    activatedFirstSwatch = true;
+                }
             }
         }
 
@@ -259,6 +281,32 @@ namespace ForgePlus.Palette
         private void OnLevelClosed()
         {
             Clear();
+        }
+
+        private void Update()
+        {
+            if (Input.GetMouseButtonDown(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            {
+                if (!EventSystem.current.IsPointerOverGameObject())
+                {
+                    selectionEventStartedOverEmptiness = true;
+                }
+            }
+
+            if (Input.GetMouseButtonUp(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
+            {
+                if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
+                {
+                    if (toggleGroup.allowSwitchOff)
+                    {
+                        toggleGroup.SetAllTogglesOff(sendCallback: true);
+                    }
+                }
+
+                selectionEventStartedOverEmptiness = false;
+            }
         }
     }
 }

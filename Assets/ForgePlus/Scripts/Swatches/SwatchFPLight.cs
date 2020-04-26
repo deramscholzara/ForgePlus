@@ -18,8 +18,6 @@ namespace ForgePlus.Palette
         [SerializeField]
         private Image lightPreview = null;
 
-        private bool isSelected = false;
-
         public void SetInitialValues(FPLight fpLight, ToggleGroup toggleGroup)
         {
             FPLight = fpLight;
@@ -28,16 +26,17 @@ namespace ForgePlus.Palette
 
             var toggle = GetComponent<Toggle>();
             toggle.group = toggleGroup;
-
-            isSelected = toggle.isOn;
         }
 
         public void OnValueChanged(bool value)
         {
-            if (isSelected != value)
+            if (value)
             {
-                isSelected = value;
                 SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
+            }
+            else
+            {
+                SelectionManager.Instance.DeselectObject(FPLight, multiSelect: false);
             }
         }
 

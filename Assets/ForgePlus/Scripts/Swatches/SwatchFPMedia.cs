@@ -18,8 +18,6 @@ namespace ForgePlus.Palette
         [SerializeField]
         private TextMeshProUGUI label_Type = null;
 
-        private bool isSelected = false;
-
         public void SetInitialValues(FPMedia fpMedia, ToggleGroup toggleGroup)
         {
             FPMedia = fpMedia;
@@ -29,16 +27,17 @@ namespace ForgePlus.Palette
 
             var toggle = GetComponent<Toggle>();
             toggle.group = toggleGroup;
-
-            isSelected = toggle.isOn;
         }
 
         public void OnValueChanged(bool value)
         {
-            if (isSelected != value)
+            if (value)
             {
-                isSelected = value;
                 SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
+            }
+            else
+            {
+                SelectionManager.Instance.DeselectObject(FPMedia, multiSelect: false);
             }
         }
     }
