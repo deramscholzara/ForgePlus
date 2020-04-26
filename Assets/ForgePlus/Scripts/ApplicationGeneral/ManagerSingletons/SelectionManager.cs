@@ -302,10 +302,10 @@ namespace ForgePlus.LevelManipulation
 
         public void SelectObject(IFPSelectable selection, bool multiSelect = false)
         {
-            InspectorPanel.Instance.ClearAllInspectors();
-
             if (!SelectedObjects.Contains(selection))
             {
+                InspectorPanel.Instance.ClearAllInspectors();
+
                 if (!multiSelect)
                 {
                     DeselectAll();
@@ -330,11 +330,11 @@ namespace ForgePlus.LevelManipulation
 
         public void DeselectObject(IFPSelectable selection, bool multiSelect = false)
         {
-            InspectorPanel.Instance.ClearAllInspectors();
-
             if (SelectedObjects.Contains(selection))
             {
-                if (multiSelect || SelectedObjects.Count <= 1)
+                InspectorPanel.Instance.ClearAllInspectors();
+
+                if (multiSelect || SelectedObjects.Count == 1)
                 {
                     // 1. Update displayed selection
                     if (selection is IFPSelectionDisplayable)
@@ -432,24 +432,27 @@ namespace ForgePlus.LevelManipulation
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            if (CurrentSceneSelectionFilter != SceneSelectionFilters.Level)
             {
-                if (!EventSystem.current.IsPointerOverGameObject())
+                if (Input.GetMouseButtonDown(0) ||
+                    (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
                 {
-                    selectionEventStartedOverEmptiness = true;
+                    if (!EventSystem.current.IsPointerOverGameObject())
+                    {
+                        selectionEventStartedOverEmptiness = true;
+                    }
                 }
-            }
 
-            if (Input.GetMouseButtonUp(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
-            {
-                if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
+                if (Input.GetMouseButtonUp(0) ||
+                    (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
                 {
-                    SelectionManager.Instance.DeselectAll();
-                }
+                    if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
+                    {
+                        DeselectAll();
+                    }
                 
-                selectionEventStartedOverEmptiness = false;
+                    selectionEventStartedOverEmptiness = false;
+                }
             }
         }
     }

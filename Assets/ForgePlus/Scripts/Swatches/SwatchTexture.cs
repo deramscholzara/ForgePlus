@@ -23,8 +23,6 @@ namespace ForgePlus.Palette
         [SerializeField]
         private GameObject usageIndicator = null;
 
-        private bool isSelected = false;
-
         public void SetInitialValues(KeyValuePair<ShapeDescriptor, Texture2D> textureEntry, ToggleGroup toggleGroup)
         {
             ShapeDescriptor = textureEntry.Key;
@@ -36,18 +34,12 @@ namespace ForgePlus.Palette
             var toggle = GetComponent<Toggle>();
             toggle.group = toggleGroup;
 
-            isSelected = toggle.isOn;
-
             usageIndicator.SetActive(WallsCollection.GetTextureIsInUse(ShapeDescriptor));
         }
 
         public void OnValueChanged(bool value)
         {
-            if (isSelected != value)
-            {
-                isSelected = value;
-                // TODO: Add FPTexture class and InspectorFPTexture?
-            }
+            SelectionManager.Instance.DeselectAll();
         }
     }
 }
