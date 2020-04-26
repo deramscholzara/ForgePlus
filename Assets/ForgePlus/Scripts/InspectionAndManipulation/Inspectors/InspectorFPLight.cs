@@ -16,6 +16,12 @@ namespace ForgePlus.Inspection
         public Toggle Value_Flags_SlavedIntensities;
         public Toggle Value_Flags_CycleAllStates;
 
+        public TextMeshProUGUI Value_BecomingActive_Function;
+        public TextMeshProUGUI Value_BecomingActive_Period;
+        public TextMeshProUGUI Value_BecomingActive_DeltaPeriod;
+        public TextMeshProUGUI Value_BecomingActive_Intensity;
+        public TextMeshProUGUI Value_BecomingActive_DeltaIntensity;
+
         public TextMeshProUGUI Value_PrimaryActive_Function;
         public TextMeshProUGUI Value_PrimaryActive_Period;
         public TextMeshProUGUI Value_PrimaryActive_DeltaPeriod;
@@ -28,11 +34,11 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_SecondaryActive_Intensity;
         public TextMeshProUGUI Value_SecondaryActive_DeltaIntensity;
 
-        public TextMeshProUGUI Value_BecomingActive_Function;
-        public TextMeshProUGUI Value_BecomingActive_Period;
-        public TextMeshProUGUI Value_BecomingActive_DeltaPeriod;
-        public TextMeshProUGUI Value_BecomingActive_Intensity;
-        public TextMeshProUGUI Value_BecomingActive_DeltaIntensity;
+        public TextMeshProUGUI Value_BecomingInactive_Function;
+        public TextMeshProUGUI Value_BecomingInactive_Period;
+        public TextMeshProUGUI Value_BecomingInactive_DeltaPeriod;
+        public TextMeshProUGUI Value_BecomingInactive_Intensity;
+        public TextMeshProUGUI Value_BecomingInactive_DeltaIntensity;
 
         public TextMeshProUGUI Value_PrimaryInactive_Function;
         public TextMeshProUGUI Value_PrimaryInactive_Period;
@@ -45,12 +51,6 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_SecondaryInactive_DeltaPeriod;
         public TextMeshProUGUI Value_SecondaryInactive_Intensity;
         public TextMeshProUGUI Value_SecondaryInactive_DeltaIntensity;
-
-        public TextMeshProUGUI Value_BecomingInactive_Function;
-        public TextMeshProUGUI Value_BecomingInactive_Period;
-        public TextMeshProUGUI Value_BecomingInactive_DeltaPeriod;
-        public TextMeshProUGUI Value_BecomingInactive_Intensity;
-        public TextMeshProUGUI Value_BecomingInactive_DeltaIntensity;
 
         public override void PopulateValues(IFPInspectable inspectedObject)
         {
