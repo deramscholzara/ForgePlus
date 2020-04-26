@@ -57,8 +57,6 @@ namespace ForgePlus.DataFileIO
                 return;
             }
 
-            CloseLevel();
-
             await data.OpenLevel(levelIndex);
 
             UIBlocking.Instance.Unblock();
