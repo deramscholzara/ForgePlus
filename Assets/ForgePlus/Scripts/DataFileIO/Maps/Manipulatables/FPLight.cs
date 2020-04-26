@@ -129,7 +129,7 @@ namespace ForgePlus.LevelManipulation
             if (loop)
             {
                 // If we're looping (such as for an editor state-preview mode)
-                // then we should not incur an "phase" offset to adjust the
+                // then we should not incur any "phase" offset to adjust the
                 // current State or position therein.
                 remainingPhaseOffset = 0;
             }
@@ -238,6 +238,8 @@ namespace ForgePlus.LevelManipulation
                         }
 
                         break;
+                    default:
+                        throw new System.Exception($"Light State: {currentState}");
                 }
             }
         }
@@ -248,7 +250,7 @@ namespace ForgePlus.LevelManipulation
 
             if (remainingPhaseOffset > 0)
             {
-                remainingPhaseOffset -= (short)(lightingFunction.Period - 1);
+                remainingPhaseOffset -= (short)(lightingFunction.Period);
 
                 if (remainingPhaseOffset > 0)
                 {
@@ -257,6 +259,8 @@ namespace ForgePlus.LevelManipulation
                 }
                 else
                 {
+                    // Note: This adds any remaining offset, which will be <= 0,
+                    //       because Phase is intended to be a "backwards" shift through time
                     functionPhaseOffset = (float)(lightingFunction.Period + remainingPhaseOffset) / 30f;
                 }
             }
@@ -281,6 +285,8 @@ namespace ForgePlus.LevelManipulation
                 case LightingFunction.Flicker:
                     await FlickerIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, (float)lightingFunction.Intensity, (float)lightingFunction.DeltaIntensity);
                     return;
+                default:
+                    throw new System.NotImplementedException($"Lighting Function: {lightingFunction.LightingFunction}");
             }
         }
 
