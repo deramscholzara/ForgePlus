@@ -19,7 +19,7 @@ namespace ForgePlus.DataFileIO
             Transparent,
         }
 
-        public const int GeometryBuildChunkSize = 256;
+        private readonly TimeSpan chunkLoadMaxTime = TimeSpan.FromSeconds(1.0 / 20); // aim for ~20 fps
 
         public static Action<string> OnLevelOpened;
         public static Action OnLevelClosed;
@@ -115,6 +115,18 @@ namespace ForgePlus.DataFileIO
             OnLevelClosed();
         }
 
+        private async Task<DateTime> ChunkLoadYield(DateTime chunkLoadStartTime)
+        {
+            if (DateTime.Now - chunkLoadStartTime >= chunkLoadMaxTime)
+            {
+                await Task.Yield();
+
+                chunkLoadStartTime = DateTime.Now;
+            }
+
+            return chunkLoadStartTime;
+        }
+
         private async Task BuildLevel()
         {
             var initializeFPLevelStartTime = DateTime.Now;
@@ -198,6 +210,8 @@ namespace ForgePlus.DataFileIO
 
             await Task.Yield();
 
+            var chunkLoadStartTime = DateTime.Now;
+
             #region Polygons_And_Media
             var buildPolygonsStartTime = DateTime.Now;
 
@@ -219,10 +233,7 @@ namespace ForgePlus.DataFileIO
 
                 fpPolygon.GenerateSurfaces(polygon, (short)polygonIndex);
 
-                if (polygonIndex > 0 && polygonIndex % GeometryBuildChunkSize == 0)
-                {
-                    await Task.Yield();
-                }
+                chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
 
             Debug.Log($"--- LevelBuild: Built Polygons, Medias, & Platforms in timespan: {DateTime.Now - buildPolygonsStartTime}");
@@ -251,10 +262,7 @@ namespace ForgePlus.DataFileIO
 
                 fpLine.GenerateSurfaces();
 
-                if (lineIndex > 0 && lineIndex % GeometryBuildChunkSize == 0)
-                {
-                    await Task.Yield();
-                }
+                chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
 
             Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
@@ -283,10 +291,7 @@ namespace ForgePlus.DataFileIO
 
                 fpMapObject.GenerateObject();
 
-                if (objectIndex > 0 && objectIndex % GeometryBuildChunkSize == 0)
-                {
-                    await Task.Yield();
-                }
+                chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
 
             Debug.Log($"--- LevelBuild: Built Objects in timespan: {DateTime.Now - buildObjectsStartTime}");
