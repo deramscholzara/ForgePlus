@@ -121,12 +121,17 @@ namespace ForgePlus.LevelManipulation
 
         public void Inspect()
         {
-            var inspectorPrefab = Resources.Load<InspectorFPSide>("Inspectors/Inspector - FPSide");
+            var inspectorPrefab = SelectionManager.Instance.CurrentSceneSelectionFilter == SelectionManager.SceneSelectionFilters.Geometry ?
+                                  Resources.Load<InspectorBase>("Inspectors/Inspector - FPSide") :
+                                  Resources.Load<InspectorBase>("Inspectors/Inspector - FPSide Textures");
             var inspector = Instantiate(inspectorPrefab);
             inspector.PopulateValues(this);
             InspectorPanel.Instance.AddInspector(inspector);
 
-            FPLevel.FPLines[WelandObject.LineIndex].Inspect();
+            if (SelectionManager.Instance.CurrentSceneSelectionFilter == SelectionManager.SceneSelectionFilters.Geometry)
+            {
+                FPLevel.FPLines[WelandObject.LineIndex].Inspect();
+            }
         }
 
         public static FPSide GenerateSurfaces(FPLevel fpLevel, bool isClockwise, Line line)

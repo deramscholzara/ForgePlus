@@ -19,15 +19,9 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_RandomSound;
 
         public TextMeshProUGUI Value_Floor_Height;
-        public RawImage Value_Floor_Texture;
-        public TextMeshProUGUI Value_Floor_Offset;
-        public TextMeshProUGUI Value_Floor_TransferMode;
         public TextMeshProUGUI Value_Floor_LightIndex;
 
         public TextMeshProUGUI Value_Ceiling_Height;
-        public RawImage Value_Ceiling_Texture;
-        public TextMeshProUGUI Value_Ceiling_Offset;
-        public TextMeshProUGUI Value_Ceiling_TransferMode;
         public TextMeshProUGUI Value_Ceiling_LightIndex;
 
         public TextMeshProUGUI Value_VertexCount;
@@ -52,17 +46,9 @@ namespace ForgePlus.Inspection
             Value_RandomSound.text = fpPolygon.WelandObject.RandomSound.ToString();
 
             Value_Floor_Height.text = fpPolygon.WelandObject.FloorHeight.ToString();
-            var floorTexture = WallsCollection.GetTexture(fpPolygon.WelandObject.FloorTexture);
-            Value_Floor_Texture.texture = floorTexture ? floorTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-            Value_Floor_Offset.text = $"X: {fpPolygon.WelandObject.FloorOrigin.X}\nY: {fpPolygon.WelandObject.FloorOrigin.Y}";
-            Value_Floor_TransferMode.text = fpPolygon.WelandObject.FloorTransferMode.ToString();
             Value_Floor_LightIndex.text = fpPolygon.WelandObject.FloorLight.ToString();
 
             Value_Ceiling_Height.text = fpPolygon.WelandObject.CeilingHeight.ToString();
-            var ceilingTexture = WallsCollection.GetTexture(fpPolygon.WelandObject.CeilingTexture);
-            Value_Ceiling_Texture.texture = ceilingTexture ? ceilingTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-            Value_Ceiling_Offset.text = $"X: {fpPolygon.WelandObject.CeilingOrigin.X}\nY: {fpPolygon.WelandObject.CeilingOrigin.Y}";
-            Value_Ceiling_TransferMode.text = fpPolygon.WelandObject.CeilingTransferMode.ToString();
             Value_Ceiling_LightIndex.text = fpPolygon.WelandObject.CeilingLight.ToString();
 
             Value_VertexCount.text = fpPolygon.WelandObject.VertexCount.ToString();
