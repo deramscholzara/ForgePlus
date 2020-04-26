@@ -28,6 +28,8 @@ namespace ForgePlus.LevelManipulation
         // Using read-only to force this to only ever be modified/cleared
         private readonly List<IFPSelectable> SelectedObjects = new List<IFPSelectable>(500);
 
+        private bool selectionEventStartedOverEmptiness = false;
+
         // TODO: Change this to Geometry when that mode is finished and becomes the default.
         private SceneSelectionFilters currentSceneSelectionFilter = SceneSelectionFilters.Geometry;
 
@@ -430,13 +432,24 @@ namespace ForgePlus.LevelManipulation
 
         private void Update()
         {
-            if (Input.GetMouseButtonUp(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
+            if (Input.GetMouseButtonDown(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
             {
                 if (!EventSystem.current.IsPointerOverGameObject())
                 {
+                    selectionEventStartedOverEmptiness = true;
+                }
+            }
+
+            if (Input.GetMouseButtonUp(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
+            {
+                if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
+                {
                     SelectionManager.Instance.DeselectAll();
                 }
+                
+                selectionEventStartedOverEmptiness = false;
             }
         }
     }
