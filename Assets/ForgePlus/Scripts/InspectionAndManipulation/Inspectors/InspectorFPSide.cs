@@ -52,8 +52,8 @@ namespace ForgePlus.Inspection
             Value_Flags_LightedMustBeAbove75Percent.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.IsLightedSwitch) != 0);
             Value_Flags_Dirty.SetIsOnWithoutNotify((fpLine.WelandObject.Flags & SideFlags.Dirty) != 0);
 
-            Value_ControlPanelType.text =           fpLine.WelandObject.GetControlPanelClass().ToString();
-            Value_ControlPanelPermutation.text =    fpLine.WelandObject.ControlPanelPermutation.ToString();
+            Value_ControlPanelType.text =           fpLine.WelandObject.IsControlPanel ? fpLine.WelandObject.GetControlPanelClass().ToString() : "-";
+            Value_ControlPanelPermutation.text =    fpLine.WelandObject.IsControlPanel ? fpLine.WelandObject.ControlPanelPermutation.ToString() : "-";
 
             var hasPrimaryData =                    (ushort)fpLine.WelandObject.Primary.Texture != ushort.MaxValue;
             Value_Primary_LightIndex.text =         hasPrimaryData ? fpLine.WelandObject.PrimaryLightsourceIndex.ToString() : "-";
