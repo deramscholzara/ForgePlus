@@ -64,3 +64,4 @@ crashlytics-build.properties
 /Assets/TextMesh Pro/
 /Assets/Z_ToBeRemoved/
 /Assets/*.*
+.DS_Store
