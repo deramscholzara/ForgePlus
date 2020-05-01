@@ -10,6 +10,7 @@ namespace ForgePlus.Inspection
     public class InspectorFPSideTextures : InspectorBase
     {
         public TextMeshProUGUI Value_Id;
+        public TextMeshProUGUI Value_Type;
 
         public RawImage Value_Primary_Texture;
         public TextMeshProUGUI Value_Primary_Offset;
@@ -31,6 +32,7 @@ namespace ForgePlus.Inspection
             var fpLine = inspectedObject as FPSide;
 
             Value_Id.text =                         fpLine.Index.ToString();
+            Value_Type.text =                       fpLine.WelandObject.Type.ToString();
 
             var hasPrimaryData =                    (ushort)fpLine.WelandObject.Primary.Texture != ushort.MaxValue;
             Value_Primary_Texture.texture =         hasPrimaryData ? WallsCollection.GetTexture(fpLine.WelandObject.Primary.Texture) : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
