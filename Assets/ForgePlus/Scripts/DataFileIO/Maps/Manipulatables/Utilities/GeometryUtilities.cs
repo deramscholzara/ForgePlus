@@ -34,6 +34,9 @@ namespace ForgePlus.LevelManipulation.Utilities
             return polygon.Type == PolygonType.Platform ? level.Platforms[polygon.Permutation] : null;
         }
 
+        /// <summary>
+        /// For Single-Layer Surfaces
+        /// </summary>
         public static void BuildRendererObject(
             GameObject rendererHost,
             Vector3[] vertices,
@@ -56,9 +59,17 @@ namespace ForgePlus.LevelManipulation.Utilities
                                 transferModesVertexColors,
                                 isOpaqueSurface,
                                 isStaticBatchable,
-                                fpMedia: null);
+                                fpMedia: null,
+                                layeredTransparentSideUvs: null,
+                                layeredTransparentSideShapeDescriptor: ShapeDescriptor.Empty,
+                                layeredTransparentSideFPLight: null,
+                                layeredTransparentSideTransferMode: -1,
+                                layeredTransparentSideTransferModesVertexColors: null);
         }
 
+        /// <summary>
+        /// For Layered Full Side Surfaces
+        /// </summary>
         public static void BuildRendererObject(
             GameObject rendererHost,
             Vector3[] vertices,
@@ -70,8 +81,92 @@ namespace ForgePlus.LevelManipulation.Utilities
             Color[] transferModesVertexColors,
             bool isOpaqueSurface,
             bool isStaticBatchable,
+            Vector2[] layeredTransparentSideUvs,
+            ShapeDescriptor layeredTransparentSideShapeDescriptor,
+            FPLight layeredTransparentSideFPLight,
+            short layeredTransparentSideTransferMode,
+            Color[] layeredTransparentSideTransferModesVertexColors)
+        {
+            BuildRendererObject(rendererHost,
+                                vertices,
+                                triangles,
+                                uvs,
+                                shapeDescriptor,
+                                fpLight,
+                                transferMode,
+                                transferModesVertexColors,
+                                isOpaqueSurface,
+                                isStaticBatchable,
+                                fpMedia: null,
+                                layeredTransparentSideUvs,
+                                layeredTransparentSideShapeDescriptor,
+                                layeredTransparentSideFPLight,
+                                layeredTransparentSideTransferMode,
+                                layeredTransparentSideTransferModesVertexColors);
+        }
+
+        /// <summary>
+        /// For Media Surfaces
+        /// </summary>
+        public static void BuildRendererObject(
+            GameObject rendererHost,
+            Vector3[] vertices,
+            int[] triangles,
+            Vector2[] uvs,
+            ShapeDescriptor shapeDescriptor,
+            FPLight fpLight,
             FPMedia fpMedia)
         {
+            BuildRendererObject(rendererHost,
+                                vertices,
+                                triangles,
+                                uvs,
+                                shapeDescriptor,
+                                fpLight,
+                                transferMode: -1,
+                                transferModesVertexColors: null,
+                                isOpaqueSurface: true,
+                                isStaticBatchable: false,
+                                fpMedia,
+                                layeredTransparentSideUvs: null,
+                                layeredTransparentSideShapeDescriptor: ShapeDescriptor.Empty,
+                                layeredTransparentSideFPLight: null,
+                                layeredTransparentSideTransferMode: -1,
+                                layeredTransparentSideTransferModesVertexColors: null);
+        }
+
+        private static void BuildRendererObject(
+            GameObject rendererHost,
+            Vector3[] vertices,
+            int[] triangles,
+            Vector2[] uvs,
+            ShapeDescriptor shapeDescriptor,
+            FPLight fpLight,
+            short transferMode,
+            Color[] transferModesVertexColors,
+            bool isOpaqueSurface,
+            bool isStaticBatchable,
+            FPMedia fpMedia,
+            Vector2[] layeredTransparentSideUvs,
+            ShapeDescriptor layeredTransparentSideShapeDescriptor,
+            FPLight layeredTransparentSideFPLight,
+            short layeredTransparentSideTransferMode,
+            Color[] layeredTransparentSideTransferModesVertexColors)
+        {
+            var hasLayeredTransparentSide = layeredTransparentSideUvs != null &&
+                                            (ushort)layeredTransparentSideShapeDescriptor != (ushort)ShapeDescriptor.Empty &&
+                                            layeredTransparentSideFPLight != null &&
+                                            layeredTransparentSideTransferMode >= 0;
+
+            if (!hasLayeredTransparentSide &&
+                (layeredTransparentSideUvs != null ||
+                (ushort)layeredTransparentSideShapeDescriptor != (ushort)ShapeDescriptor.Empty ||
+                layeredTransparentSideFPLight != null ||
+                layeredTransparentSideTransferMode >= 0))
+            {
+                throw new ArgumentNullException("All layered Transparent-Side data must be provide, if you provide any of it - and you did provide some of it.");
+            }
+
             if (fpMedia != null)
             {
                 // Add backside geometry for the underside of medias
@@ -94,7 +189,32 @@ namespace ForgePlus.LevelManipulation.Utilities
             mesh.SetVertices(vertices);
             mesh.SetTriangles(triangles, submesh: 0);
             mesh.SetUVs(channel: 0, uvs: uvs);
-            mesh.SetColors(transferModesVertexColors);
+
+            if (hasLayeredTransparentSide)
+            {
+                mesh.SetUVs(channel: 1, uvs: layeredTransparentSideUvs);
+
+                var uv2 = new Vector2[layeredTransparentSideTransferModesVertexColors.Length];
+                var uv3 = new Vector2[layeredTransparentSideTransferModesVertexColors.Length];
+                // TODO: Gotta be a better way to store/assign all this
+                for (var i = 0; i < layeredTransparentSideTransferModesVertexColors.Length; i++)
+                {
+                    var color = layeredTransparentSideTransferModesVertexColors[i];
+                    uv2[i].x = color.r;
+                    uv2[i].y = color.g;
+                    uv3[i].x = color.b;
+                    uv3[i].y = color.a;
+                }
+
+                mesh.SetUVs(channel: 2, uvs: uv2);
+                mesh.SetUVs(channel: 3, uvs: uv3);
+            }
+
+            if (transferModesVertexColors != null)
+            {
+                mesh.SetColors(transferModesVertexColors);
+            }
+
             mesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
                                     MeshUpdateFlags.DontRecalculateBounds |
                                     MeshUpdateFlags.DontResetBoneBounds);
@@ -106,8 +226,28 @@ namespace ForgePlus.LevelManipulation.Utilities
 
             // Assign Common Wall Material
             var surfaceType = fpMedia == null ? WallsCollection.SurfaceTypes.Normal : WallsCollection.SurfaceTypes.Media;
-            var material = WallsCollection.GetMaterial(shapeDescriptor, transferMode, isOpaqueSurface, surfaceType, incrementUsageCounter: true);
-            rendererHost.AddComponent<MeshRenderer>().sharedMaterial = material;
+            var material = WallsCollection.GetMaterial(shapeDescriptor,
+                                                       transferMode,
+                                                       isOpaqueSurface,
+                                                       surfaceType,
+                                                       incrementUsageCounter: true);
+
+            if (hasLayeredTransparentSide)
+            {
+                var materials = new Material[] {
+                    material, WallsCollection.GetMaterial(layeredTransparentSideShapeDescriptor,
+                                                                                       layeredTransparentSideTransferMode,
+                                                                                       isOpaqueSurface: false,
+                                                                                       WallsCollection.SurfaceTypes.LayeredTransparentOuter,
+                                                                                       incrementUsageCounter: true)
+                };
+
+                rendererHost.AddComponent<MeshRenderer>().sharedMaterials = materials;
+            }
+            else
+            {
+                rendererHost.AddComponent<MeshRenderer>().sharedMaterial = material;
+            }
 
             // Assign Appropriate Runtime Surface Component
             if (fpMedia != null)
@@ -115,10 +255,21 @@ namespace ForgePlus.LevelManipulation.Utilities
                 var surfaceMedia = rendererHost.AddComponent<RuntimeSurfaceMedia>();
                 surfaceMedia.InitializeRuntimeSurface(fpLight, fpMedia);
             }
-            else if (fpLight != null)
+            else if (fpLight != null || hasLayeredTransparentSide)
             {
                 var surfaceLight = rendererHost.AddComponent<RuntimeSurfaceLight>();
-                surfaceLight.InitializeRuntimeSurface(shapeDescriptor.UsesLandscapeCollection() ? null : fpLight, isStaticBatchable);
+
+                if (hasLayeredTransparentSide)
+                {
+                    surfaceLight.InitializeRuntimeSurface(shapeDescriptor.UsesLandscapeCollection() ? null : fpLight,
+                                                          layeredTransparentSideShapeDescriptor.UsesLandscapeCollection() ? null : layeredTransparentSideFPLight,
+                                                          isStaticBatchable);
+                }
+                else
+                {
+                    surfaceLight.InitializeRuntimeSurface(shapeDescriptor.UsesLandscapeCollection() ? null : fpLight,
+                                                          isStaticBatchable);
+                }
             }
 
             rendererHost.AddComponent<MeshCollider>();

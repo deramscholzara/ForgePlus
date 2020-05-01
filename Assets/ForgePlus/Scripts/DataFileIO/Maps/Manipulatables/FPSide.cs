@@ -244,7 +244,7 @@ namespace ForgePlus.LevelManipulation
             }
 
             // Data-driven surface-exposure
-            var dataExpectsFullSide = !hasTransparentSide && side != null && side.Type == SideType.Full && (ushort)side.Primary.Texture != (ushort)ShapeDescriptor.Empty;
+            var dataExpectsFullSide = side != null && side.Type == SideType.Full && (ushort)side.Primary.Texture != (ushort)ShapeDescriptor.Empty;
             var dataExpectsTop = !dataExpectsFullSide && side != null && (side.Type == SideType.High || side.Type == SideType.Split);
 
             // Geometry-driven surface-exposure
@@ -288,7 +288,9 @@ namespace ForgePlus.LevelManipulation
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
                                                 isStaticBatchable: !isPartOfCeilingPlatform,
-                                                fpPlatform: isPartOfCeilingPlatform ? fpLevel.FPCeilingFpPlatforms[platformIndex] : null);
+                                                fpPlatform: isPartOfCeilingPlatform ? fpLevel.FPCeilingFpPlatforms[platformIndex] : null,
+                                                hasLayeredTransparentSide: false,
+                                                layeredTransparentSideTransferMode: -1);
 
                 if (isPartOfCeilingPlatform)
                 {
@@ -310,6 +312,8 @@ namespace ForgePlus.LevelManipulation
                 var sideDataSource = !hasOpposingPolygon || dataExpectsFullSide ? SideDataSources.Primary : SideDataSources.Transparent;
                 var isOpaqueSurface = !hasOpposingPolygon || !isTransparent;
 
+                // Note: dataExpectsFullSide is redundant here, because there is no opposing polygon
+                var hasLayeredTransparentSide = !hasOpposingPolygon && hasTransparentSide && dataExpectsFullSide && (ushort)side.Transparent.Texture != (ushort)ShapeDescriptor.Empty;
                 var highHeight = dataExpectsFullSide ? highestFacingCeiling : line.LowestAdjacentCeiling;
                 var lowHeight = dataExpectsFullSide ? lowestFacingFloor : line.HighestAdjacentFloor;
 
@@ -333,7 +337,9 @@ namespace ForgePlus.LevelManipulation
                                                    isOpaqueSurface: isOpaqueSurface,
                                                    facingPolygonIndex,
                                                    isStaticBatchable: true,
-                                                   fpPlatform: null);
+                                                   fpPlatform: null,
+                                                   hasLayeredTransparentSide,
+                                                   layeredTransparentSideTransferMode: hasLayeredTransparentSide ? side.TransparentTransferMode : (short)-1);
 
                     surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
@@ -367,7 +373,9 @@ namespace ForgePlus.LevelManipulation
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
                                                 isStaticBatchable: !isPartOfFloorPlatform,
-                                                fpPlatform: isPartOfFloorPlatform ? fpLevel.FPFloorFpPlatforms[platformIndex] : null);
+                                                fpPlatform: isPartOfFloorPlatform ? fpLevel.FPFloorFpPlatforms[platformIndex] : null,
+                                                hasLayeredTransparentSide: false, 
+                                                layeredTransparentSideTransferMode: -1);
 
                 if (isPartOfFloorPlatform)
                 {
@@ -414,7 +422,9 @@ namespace ForgePlus.LevelManipulation
             bool isOpaqueSurface,
             short facingPolygonIndex,
             bool isStaticBatchable,
-            FPPlatform fpPlatform)
+            FPPlatform fpPlatform,
+            bool hasLayeredTransparentSide,
+            short layeredTransparentSideTransferMode)
         {
             var side = fpSide.WelandObject;
 
@@ -479,19 +489,7 @@ namespace ForgePlus.LevelManipulation
             #endregion Triangles
 
             #region UVs
-            var uvs = new Vector2[vertices.Length];
-
-            var wallDimensions = new Vector2((vertices[3] - vertices[0]).magnitude, vertices[1].y - vertices[0].y) * GeometryUtilities.MeterToWorldUnit;
-            var offset = new Vector2(textureOffsetX, -textureOffsetY) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
-
-            // Note: Marathon uses a Top-Left Origin, so that is compensated for here.
-            var uvOrigin = Vector2.up + offset;
-            var uvFar = new Vector2(uvOrigin.x + wallDimensions.x, uvOrigin.y - wallDimensions.y);
-
-            uvs[0] = new Vector2(uvOrigin.x, uvFar.y);
-            uvs[1] = uvOrigin;
-            uvs[2] = new Vector2(uvFar.x, uvOrigin.y);
-            uvs[3] = uvFar;
+            var uvs = GetWallSurfaceUVs(vertices, textureOffsetX, textureOffsetY);
             #endregion UVs
 
             #region TransferModes_VertexColor
@@ -508,17 +506,48 @@ namespace ForgePlus.LevelManipulation
             var surfaceGameObject = new GameObject(name);
             surfaceGameObject.transform.SetParent(fpSide.transform);
 
-            GeometryUtilities.BuildRendererObject(
-                surfaceGameObject,
-                vertices,
-                triangles,
-                uvs,
-                shapeDescriptor,
-                fpLevel.FPLights[lightIndex],
-                transferMode,
-                transferModesVertexColors,
-                isOpaqueSurface,
-                isStaticBatchable);
+            if (hasLayeredTransparentSide)
+            {
+                var layeredTransparentSideTransferModesVertexColor = GeometryUtilities.GetTransferModeVertexColor(side.TransparentTransferMode, isSideSurface: true);
+                var layeredTransparentSideTransferModesVertexColors = new Color[]
+                {
+                transferModesVertexColor,
+                transferModesVertexColor,
+                transferModesVertexColor,
+                transferModesVertexColor
+                };
+
+                GeometryUtilities.BuildRendererObject(
+                    surfaceGameObject,
+                    vertices,
+                    triangles,
+                    uvs,
+                    shapeDescriptor,
+                    fpLevel.FPLights[lightIndex],
+                    transferMode,
+                    transferModesVertexColors,
+                    isOpaqueSurface,
+                    isStaticBatchable,
+                    GetWallSurfaceUVs(vertices, side.Transparent.X, side.Transparent.Y),
+                    side.Transparent.Texture,
+                    fpLevel.FPLights[side.TransparentLightsourceIndex],
+                    layeredTransparentSideTransferMode,
+                    layeredTransparentSideTransferModesVertexColors);
+            }
+            else
+            {
+                GeometryUtilities.BuildRendererObject(
+                    surfaceGameObject,
+                    vertices,
+                    triangles,
+                    uvs,
+                    shapeDescriptor,
+                    fpLevel.FPLights[lightIndex],
+                    transferMode,
+                    transferModesVertexColors,
+                    isOpaqueSurface,
+                    isStaticBatchable);
+            }
 
             var fpSurfaceSide = surfaceGameObject.AddComponent<FPInteractiveSurfaceSide>();
             fpSurfaceSide.surfaceShapeDescriptor = shapeDescriptor;
@@ -532,6 +561,25 @@ namespace ForgePlus.LevelManipulation
             fpLevel.FPInteractiveSurfaceSides.Add(fpSurfaceSide);
 
             return surfaceGameObject;
+        }
+
+        private static Vector2[] GetWallSurfaceUVs(Vector3[] vertices, short textureOffsetX, short textureOffsetY)
+        {
+            var uvs = new Vector2[vertices.Length];
+
+            var wallDimensions = new Vector2((vertices[3] - vertices[0]).magnitude, vertices[1].y - vertices[0].y) * GeometryUtilities.MeterToWorldUnit;
+            var offset = new Vector2(textureOffsetX, -textureOffsetY) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
+
+            // Note: Marathon uses a Top-Left Origin, so that is compensated for here.
+            var uvOrigin = Vector2.up + offset;
+            var uvFar = new Vector2(uvOrigin.x + wallDimensions.x, uvOrigin.y - wallDimensions.y);
+
+            uvs[0] = new Vector2(uvOrigin.x, uvFar.y);
+            uvs[1] = uvOrigin;
+            uvs[2] = new Vector2(uvFar.x, uvOrigin.y);
+            uvs[3] = uvFar;
+
+            return uvs;
         }
 
         private static void ConstrainWallSurfaceToPlatform(FPPlatform fpPlatform, GameObject wallSurface, bool isFloorPlatform)
