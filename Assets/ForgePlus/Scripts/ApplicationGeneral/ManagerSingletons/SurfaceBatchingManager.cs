@@ -18,6 +18,8 @@ namespace ForgePlus.ApplicationGeneral
             public Material sourceMaterial;
             public FPLight sourceLight;
             public FPMedia sourceMedia;
+            public Material layeredTransparentSideSourceMaterial;
+            public FPLight layeredTransparentSideSourceLight;
         }
 
         private class SurfaceMaterial
@@ -49,13 +51,13 @@ namespace ForgePlus.ApplicationGeneral
                 }
             }
 
-            private Material sourceMaterial;
+            private Material[] sourceMaterials;
             private List<Surface> surfaces;
             private GameObject mergeObject;
 
-            public SurfaceBatch(Material sourceMaterial)
+            public SurfaceBatch(Material[] sourceMaterials)
             {
-                this.sourceMaterial = sourceMaterial;
+                this.sourceMaterials = sourceMaterials;
                 surfaces = new List<Surface>();
                 mergeObject = null;
             }
@@ -109,6 +111,9 @@ namespace ForgePlus.ApplicationGeneral
                 var mergedVertices = new List<Vector3>();
                 var mergedTriangles = new List<int>();
                 var mergedUVs = new List<Vector2>();
+                var mergedUV1s = new List<Vector2>();
+                var mergedUV2s = new List<Vector2>();
+                var mergedUV3s = new List<Vector2>();
                 var mergedColors = new List<Color>();
 
                 foreach (var surface in surfaces)
@@ -117,6 +122,15 @@ namespace ForgePlus.ApplicationGeneral
                     mergedTriangles.AddRange(dynamicMesh.triangles.Select(triangleIndex => triangleIndex + mergedVertices.Count));
                     mergedVertices.AddRange(dynamicMesh.vertices.Select(position => surface.Root.transform.localToWorldMatrix.MultiplyPoint(position)));
                     mergedUVs.AddRange(dynamicMesh.uv);
+
+                    if (sourceMaterials.Length > 1)
+                    {
+                        // Mesh.uv2 is uv1 in shaders/channels, because Unity is afraid to break old code and fix this
+                        mergedUV1s.AddRange(dynamicMesh.uv2);
+                        mergedUV2s.AddRange(dynamicMesh.uv3);
+                        mergedUV3s.AddRange(dynamicMesh.uv4);
+                    }
+
                     mergedColors.AddRange(dynamicMesh.colors);
                 }
 
@@ -125,6 +139,14 @@ namespace ForgePlus.ApplicationGeneral
                 mergedMesh.SetVertices(mergedVertices);
                 mergedMesh.SetTriangles(mergedTriangles, submesh: 0);
                 mergedMesh.SetUVs(channel: 0, uvs: mergedUVs);
+
+                if (sourceMaterials.Length > 1)
+                {
+                    mergedMesh.SetUVs(channel: 1, uvs: mergedUV1s);
+                    mergedMesh.SetUVs(channel: 2, uvs: mergedUV2s);
+                    mergedMesh.SetUVs(channel: 3, uvs: mergedUV3s);
+                }
+
                 mergedMesh.SetColors(mergedColors);
                 mergedMesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
                                               MeshUpdateFlags.DontRecalculateBounds |
@@ -134,7 +156,7 @@ namespace ForgePlus.ApplicationGeneral
                                                MeshUpdateFlags.DontResetBoneBounds);
 
                 mergeObject.AddComponent<MeshFilter>().sharedMesh = mergedMesh;
-                mergeObject.AddComponent<MeshRenderer>().sharedMaterial = sourceMaterial;
+                mergeObject.AddComponent<MeshRenderer>().sharedMaterials = sourceMaterials;
             }
 
             public void Unmerge()
@@ -154,10 +176,10 @@ namespace ForgePlus.ApplicationGeneral
         [SerializeField]
         private bool applyStaticBatchingOnLevelLoad = true;
 
-        private readonly Dictionary<RuntimeSurfaceMaterialKey, Material> SurfaceMaterials = new Dictionary<RuntimeSurfaceMaterialKey, Material>();
+        private readonly Dictionary<RuntimeSurfaceMaterialKey, Material[]> SurfaceMaterials = new Dictionary<RuntimeSurfaceMaterialKey, Material[]>();
         private readonly Dictionary<RuntimeSurfaceMaterialKey, SurfaceBatch> StaticBatches = new Dictionary<RuntimeSurfaceMaterialKey, SurfaceBatch>();
 
-        public Material GetUniqueMaterial(RuntimeSurfaceMaterialKey key)
+        public Material[] GetUniqueMaterials(RuntimeSurfaceMaterialKey key)
         {
             if (SurfaceMaterials.ContainsKey(key))
             {
@@ -165,21 +187,22 @@ namespace ForgePlus.ApplicationGeneral
             }
             else
             {
-                var uniqueMaterial = new Material(key.sourceMaterial);
+                Material[] uniqueMaterials = key.layeredTransparentSideSourceMaterial ? new Material[2] : new Material[1];
 
-                SurfaceMaterials[key] = uniqueMaterial;
+                uniqueMaterials[0] = new Material(key.sourceMaterial);
 
-                if (key.sourceLight != null)
+                if (key.layeredTransparentSideSourceMaterial)
                 {
-                    key.sourceLight.SubscribeMaterial(uniqueMaterial);
+                    uniqueMaterials[1] = new Material(key.layeredTransparentSideSourceMaterial);
                 }
 
-                if (key.sourceMedia != null)
-                {
-                    key.sourceMedia.SubscribeMaterial(uniqueMaterial);
-                }
+                SurfaceMaterials[key] = uniqueMaterials;
 
-                return uniqueMaterial;
+                key.sourceLight?.SubscribeMaterial(uniqueMaterials[0]);
+                key.layeredTransparentSideSourceLight?.SubscribeMaterial(uniqueMaterials[1]);
+                key.sourceMedia?.SubscribeMaterial(uniqueMaterials[0]);
+
+                return uniqueMaterials;
             }
         }
 
@@ -187,7 +210,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             if (!StaticBatches.ContainsKey(key))
             {
-                StaticBatches[key] = new SurfaceBatch(GetUniqueMaterial(key));
+                StaticBatches[key] = new SurfaceBatch(GetUniqueMaterials(key));
             }
 
             StaticBatches[key].AddSurface(surface);

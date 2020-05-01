@@ -303,10 +303,6 @@ namespace ForgePlus.LevelManipulation
                     mediaUvs,
                     mediaShapeDescriptor,
                     FPLevel.FPLights[polygon.MediaLight],
-                    transferMode: 0,
-                    floorTransferModesVertexColors,
-                    isOpaqueSurface: true,
-                    isStaticBatchable: false,
                     FPLevel.FPMedias[polygon.MediaIndex]);
 
                 var fpSurfacePolygonMedia = mediaRoot.AddComponent<FPInteractiveSurfaceMedia>();

@@ -14,16 +14,28 @@ namespace ForgePlus.LevelManipulation
         {
             var renderer = GetComponent<MeshRenderer>();
 
-            runtimeSurfaceMaterialInstanceKey.sourceMaterial = renderer.sharedMaterial;
+            runtimeSurfaceMaterialInstanceKey.sourceMaterial = renderer.sharedMaterials[0];
             runtimeSurfaceMaterialInstanceKey.sourceLight = fpLight;
 
             // RuntimeSurfaceLight.InitializeRuntimeSurface must not run before runtimeSurfaceMaterialKey is initialized
-            renderer.sharedMaterial = SurfaceBatchingManager.Instance.GetUniqueMaterial(runtimeSurfaceMaterialInstanceKey); ;
+            renderer.sharedMaterials = SurfaceBatchingManager.Instance.GetUniqueMaterials(runtimeSurfaceMaterialInstanceKey);
 
             if (isStaticBatchable)
             {
                 SurfaceBatchingManager.Instance.AddToBatches(runtimeSurfaceMaterialInstanceKey, gameObject);
             }
+        }
+
+        public void InitializeRuntimeSurface(FPLight fpLight, FPLight layeredTransparentSideFPLight, bool isStaticBatchable)
+        {
+            var renderer = GetComponent<MeshRenderer>();
+
+            runtimeSurfaceMaterialInstanceKey.layeredTransparentSideSourceMaterial = renderer.sharedMaterials[1];
+            runtimeSurfaceMaterialInstanceKey.layeredTransparentSideSourceLight = layeredTransparentSideFPLight;
+
+            InitializeRuntimeSurface(fpLight, isStaticBatchable);
+            ////Debug.Log($"A: {renderer.sharedMaterials.Length}");
+            ////Debug.Log($"B: {renderer.sharedMaterials.Length}");
         }
 
         // TODO: use this class to control material/mesh batching stuff for geometry/texture/light/media editing

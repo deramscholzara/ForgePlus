@@ -13,11 +13,13 @@ namespace ForgePlus.ShapesCollections
         {
             Normal,
             Media,
+            LayeredTransparentOuter,
         }
 
         // Normal
         private static readonly Shader OpaqueWithAlphaAlphaNormalShader = Shader.Find("ForgePlus/OpaqueWithAlphaNormal");
         private static readonly Shader TransparentNormalShader = Shader.Find("ForgePlus/TransparentNormal");
+        private static readonly Shader TransparentNormalLayeredOuterShader = Shader.Find("ForgePlus/TransparentNormalLayeredOuter");
 
         // Landscape
         private static readonly Shader OpaqueLandscapeShader = Shader.Find("ForgePlus/OpaqueLandscape");
@@ -38,6 +40,7 @@ namespace ForgePlus.ShapesCollections
 
         private static readonly Dictionary<ShapeDescriptor, Material> Materials = new Dictionary<ShapeDescriptor, Material>(255);
         private static readonly Dictionary<ShapeDescriptor, Material> TransparentMaterials = new Dictionary<ShapeDescriptor, Material>(100);
+        private static readonly Dictionary<ShapeDescriptor, Material> TransparentLayeredOuterMaterials = new Dictionary<ShapeDescriptor, Material>(100);
         private static readonly Dictionary<ShapeDescriptor, Material> LandscapeMaterials = new Dictionary<ShapeDescriptor, Material>(4);
         private static readonly Dictionary<ShapeDescriptor, Material> MediaMaterials = new Dictionary<ShapeDescriptor, Material>(5);
 
@@ -117,6 +120,7 @@ namespace ForgePlus.ShapesCollections
 
             ClearMaterials(Materials);
             ClearMaterials(TransparentMaterials);
+            ClearMaterials(TransparentLayeredOuterMaterials);
             ClearMaterials(MediaMaterials);
             ClearMaterials(LandscapeMaterials);
 
@@ -163,7 +167,14 @@ namespace ForgePlus.ShapesCollections
                 }
                 else
                 {
-                    return GetTrackedMaterial(shapeDescriptor, textureToUse, TransparentNormalShader, TransparentMaterials);
+                    if (surfaceType == SurfaceTypes.LayeredTransparentOuter)
+                    {
+                        return GetTrackedMaterial(shapeDescriptor, textureToUse, TransparentNormalLayeredOuterShader, TransparentLayeredOuterMaterials);
+                    }
+                    else
+                    {
+                        return GetTrackedMaterial(shapeDescriptor, textureToUse, TransparentNormalShader, TransparentMaterials);
+                    }
                 }
             }
         }
