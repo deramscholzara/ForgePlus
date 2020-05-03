@@ -1,5 +1,6 @@
 ﻿using ForgePlus.LevelManipulation;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Weland;
@@ -24,12 +25,7 @@ namespace ForgePlus.DataFileIO
                 }
                 else
                 {
-                    if (currentLevelNames == null)
-                    {
-                        currentLevelNames = file.Overlays.Select(item => item.Value.LevelName).ToArray();
-                    }
-
-                    return currentLevelNames;
+                    return file.Overlays.Select(item => item.Value.LevelName).ToArray();
                 }
             }
         }
@@ -54,6 +50,22 @@ namespace ForgePlus.DataFileIO
             }
 
             currentlyOpenLevel.UnloadData();
+        }
+
+        public void SaveCurrentLevel(string savePath)
+        {
+            if (currentlyOpenLevel == null)
+            {
+                throw new IOException($"Tried saving Level with no LevelData loaded.");
+            }
+
+            file.Directory.Clear();
+            file.Directory[0] = currentlyOpenLevel.GetSaveWad();
+            file.Save(savePath);
+
+            var levelOverlay = file.Overlays[currentlyOpenLevel.LevelIndex];
+            file.Overlays.Clear();
+            file.Overlays[currentlyOpenLevel.LevelIndex] = levelOverlay;
         }
 
         protected override void PreUnloadDataCleanup()

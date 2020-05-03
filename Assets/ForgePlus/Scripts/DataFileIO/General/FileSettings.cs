@@ -2,6 +2,7 @@
 using ForgePlus.DataFileIO.Extensions;
 using SimpleFileBrowser;
 using System;
+using System.IO;
 using UnityEngine;
 
 
@@ -21,55 +22,37 @@ namespace ForgePlus.DataFileIO
     {
         private const string playerPrefsPrefix = "FilePath_";
 
-        private bool dialogIsOpen { get; set; }
+        public event Action<DataFileTypes, string> OnPathChanged;
 
-        public void ShowSelectionBrowser(DataFileTypes type, Action<string> callback)
+        public void ShowSelectionBrowser(DataFileTypes type)
         {
-            if (!dialogIsOpen)
-            {
-                ShowSelectionBrowserCoroutine(type, callback);
-            }
+            ShowSelectionBrowserCoroutine(type);
         }
 
-        public string GetFilePathFromPlayerPrefs(DataFileTypes type)
+        public string GetFilePath(DataFileTypes type)
         {
             return PlayerPrefs.GetString(GetPlayerPrefsKey(type), string.Empty);
         }
 
-        private async void ShowSelectionBrowserCoroutine(DataFileTypes type, Action<string> callback)
+        public void UpdateFilePath(DataFileTypes type, string filePath, bool loadFile)
         {
-            UIBlocking.Instance.Block();
-            dialogIsOpen = true;
+            PlayerPrefs.SetString(GetPlayerPrefsKey(type), filePath);
 
-            FileBrowser.SetFilters(showAllFilesFilter: true, new FileBrowser.Filter(type.ToString(), type.FileExtensionWithPeriod()));
-            FileBrowser.SetDefaultFilter(type.FileExtensionWithPeriod());
+            OnPathChanged?.Invoke(type, filePath);
 
-            await FileBrowser.WaitForLoadDialog(false, null, $"Choose {type} file", "Select");
-
-            if (FileBrowser.Success)
+            if (loadFile)
             {
-                var result = FileBrowser.Result;
-
-                PlayerPrefs.SetString(GetPlayerPrefsKey(type), result);
-
                 try
                 {
-                    LoadFile(type);
-
-                    callback(result);
+                    LoadFile(type); // TODO: add an arg to auto-load the first level (for saving)
                 }
                 catch (Exception exception)
                 {
-                    Debug.LogError($"Attempt to load file at path \"{result}\" failed with exception: {exception.ToString()}");
+                    Debug.LogError($"Attempt to load file at path \"{filePath}\" failed with exception: {exception}");
 
                     UnloadFile(type);
-
-                    callback(string.Empty);
                 }
             }
-
-            dialogIsOpen = false;
-            UIBlocking.Instance.Unblock();
         }
 
         public void UnloadFile(DataFileTypes type)
@@ -92,8 +75,34 @@ namespace ForgePlus.DataFileIO
                     Debug.LogWarning("Images unloading not yet supported.");
                     break;
             }
-            
-            PlayerPrefs.SetString(GetPlayerPrefsKey(type), string.Empty);
+
+            UpdateFilePath(type, filePath: string.Empty, loadFile: false);
+        }
+
+        private async void ShowSelectionBrowserCoroutine(DataFileTypes type)
+        {
+            UIBlocking.Instance.Block();
+
+            FileBrowser.SetFilters(showAllFilesFilter: true, new FileBrowser.Filter(type.ToString(), type.FileExtensionWithPeriod()));
+            FileBrowser.SetDefaultFilter(type.FileExtensionWithPeriod());
+
+            var initialDirectory = GetFilePath(type);
+            initialDirectory = string.IsNullOrEmpty(initialDirectory) ? Environment.GetFolderPath(Environment.SpecialFolder.Desktop) : Path.GetDirectoryName(initialDirectory);
+
+            await FileBrowser.WaitForLoadDialog(
+                folderMode: false,
+                initialPath: initialDirectory,
+                title: $"Choose {type} file",
+                loadButtonText: "Load");
+
+            if (FileBrowser.Success)
+            {
+                var path = FileBrowser.Result;
+
+                UpdateFilePath(type, filePath: path, loadFile: true);
+            }
+
+            UIBlocking.Instance.Unblock();
         }
 
         private string GetPlayerPrefsKey(DataFileTypes type)
