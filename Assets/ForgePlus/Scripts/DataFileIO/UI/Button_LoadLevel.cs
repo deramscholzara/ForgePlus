@@ -1,10 +1,7 @@
-﻿using ForgePlus.DataFileIO;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace ForgePlus.LevelLoading
+namespace ForgePlus.DataFileIO
 {
     public class Button_LoadLevel : MonoBehaviour
     {

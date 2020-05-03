@@ -21,15 +21,18 @@ namespace ForgePlus.DataFileIO
 
         public void OnClick()
         {
-            FileSettings.Instance.ShowSelectionBrowser(dataFileType, OnPathUpdated);
+            FileSettings.Instance.ShowSelectionBrowser(dataFileType);
         }
 
-        private void OnEnable()
+        private void OnPathUpdated(DataFileTypes type, string newPath)
         {
-            OnPathUpdated(FileSettings.Instance.GetFilePathFromPlayerPrefs(dataFileType));
+            if (type == dataFileType)
+            {
+                RefreshPath(newPath);
+            }
         }
 
-        private void OnPathUpdated(string path)
+        private void RefreshPath(string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -43,6 +46,19 @@ namespace ForgePlus.DataFileIO
 
                 unloadButton.gameObject.SetActive(true);
             }
+        }
+
+        private void OnEnable()
+        {
+            FileSettings.Instance.OnPathChanged += OnPathUpdated;
+
+            // TODO: implement my own subscription += override so I can make it invoke the subscriber instead of initializing here
+            RefreshPath(FileSettings.Instance.GetFilePath(dataFileType));
+        }
+
+        private void OnDisable()
+        {
+            FileSettings.Instance.OnPathChanged -= OnPathUpdated;
         }
     }
 }

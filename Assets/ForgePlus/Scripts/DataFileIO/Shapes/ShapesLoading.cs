@@ -3,24 +3,9 @@ using Weland;
 
 namespace ForgePlus.DataFileIO
 {
-    public class ShapesLoading : FileLoadingBase<ShapesData, ShapesFile>
+    public class ShapesLoading : FileLoadingBase<ShapesLoading, ShapesData, ShapesFile>
     {
-        private static ShapesLoading instance;
-
-        public static ShapesLoading Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new ShapesLoading();
-                }
-
-                return instance;
-            }
-        }
-
-        protected override DataFileTypes dataFileType
+        protected override DataFileTypes DataFileType
         {
             get
             {

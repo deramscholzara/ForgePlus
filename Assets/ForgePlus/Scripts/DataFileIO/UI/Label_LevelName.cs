@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using TMPro;
-using ForgePlus.DataFileIO;
 
-namespace ForgePlus.LevelLoading
+namespace ForgePlus.DataFileIO
 {
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class Label_LevelName : MonoBehaviour
@@ -17,7 +14,7 @@ namespace ForgePlus.LevelLoading
             label = GetComponent<TextMeshProUGUI>();
         }
 
-        private void Awake()
+        private void Start()
         {
             label.enabled = false;
 

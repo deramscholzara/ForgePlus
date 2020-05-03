@@ -1,28 +1,12 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using Weland;
 
 namespace ForgePlus.DataFileIO
 {
-    public class MapsLoading : FileLoadingBase<MapsData, MapFile>
+    public class MapsLoading : FileLoadingBase<MapsLoading, MapsData, MapFile>
     {
-        private static MapsLoading instance;
-
-        public static MapsLoading Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new MapsLoading();
-                }
-
-                return instance;
-            }
-        }
-
         public IReadOnlyCollection<string> LevelNames
         {
             get
@@ -36,7 +20,7 @@ namespace ForgePlus.DataFileIO
             }
         }
 
-        protected override DataFileTypes dataFileType
+        protected override DataFileTypes DataFileType
         {
             get
             {
@@ -72,6 +56,11 @@ namespace ForgePlus.DataFileIO
             }
 
             data.CloseAndUnloadCurrentLevel();
+        }
+
+        protected override void OnLoadedChanged()
+        {
+            MapsSaving.Instance.CurrentMapsData = data;
         }
     }
 }

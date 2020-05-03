@@ -70,6 +70,14 @@ namespace ForgePlus.DataFileIO
             level = null;
         }
 
+        public Wadfile.DirectoryEntry GetSaveWad()
+        {
+            level.AssurePlayerStart();
+            // TODO: Need to re-add Player MapObjects if there were none
+
+            return level.Save();
+        }
+
         public async Task OpenLevel()
         {
             if (FPLevel)

@@ -2,16 +2,17 @@
 
 namespace ForgePlus.DataFileIO
 {
-    public abstract class FileLoadingBase<T, U>
-        where T : FileDataBase<U>, new()
-        where U : class, IFileLoadable, new()
+    public abstract class FileLoadingBase<T, U, V> : OnDemandSingleton<T>
+        where T : class, new()
+        where U : FileDataBase<V>, new()
+        where V : class, IFileLoadable, new()
     {
         public delegate void OnLoadCompleteDelegate(bool isLoaded);
-        public OnLoadCompleteDelegate OnDataLoadComplete;
+        public event OnLoadCompleteDelegate OnDataLoadCompleted;
 
-        protected abstract DataFileTypes dataFileType { get; }
+        protected abstract DataFileTypes DataFileType { get; }
 
-        protected T data;
+        protected U data;
 
         public void LoadFile(bool forceReload = true)
         {
@@ -23,7 +24,7 @@ namespace ForgePlus.DataFileIO
 
             UnloadFile();
 
-            var path = FileSettings.Instance.GetFilePathFromPlayerPrefs(dataFileType);
+            var path = FileSettings.Instance.GetFilePath(DataFileType);
 
             if (string.IsNullOrEmpty(path))
             {
@@ -31,18 +32,12 @@ namespace ForgePlus.DataFileIO
                 return;
             }
 
-            UIBlocking.Instance.Block();
-
-            data = new T();
+            data = new U();
             data.SetPath(path);
             data.LoadData();
 
-            UIBlocking.Instance.Unblock();
-
-            if (OnDataLoadComplete != null)
-            {
-                OnDataLoadComplete(isLoaded: true);
-            }
+            OnLoadedChanged();
+            OnDataLoadCompleted?.Invoke(isLoaded: true);
         }
 
         public void UnloadFile()
@@ -57,10 +52,13 @@ namespace ForgePlus.DataFileIO
 
             data = null;
 
-            if (OnDataLoadComplete != null)
-            {
-                OnDataLoadComplete(isLoaded: false);
-            }
+            OnLoadedChanged();
+            OnDataLoadCompleted?.Invoke(isLoaded: false);
+        }
+
+        protected virtual void OnLoadedChanged()
+        {
+            // Intentionally blank
         }
     }
 }
