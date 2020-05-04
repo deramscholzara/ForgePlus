@@ -51,9 +51,6 @@ namespace ForgePlus.DataFileIO
         private void OnEnable()
         {
             FileSettings.Instance.OnPathChanged += OnPathUpdated;
-
-            // TODO: implement my own subscription += override so I can make it invoke the subscriber instead of initializing here
-            RefreshPath(FileSettings.Instance.GetFilePath(dataFileType));
         }
 
         private void OnDisable()

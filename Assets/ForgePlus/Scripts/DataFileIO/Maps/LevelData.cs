@@ -4,7 +4,6 @@ using ForgePlus.ShapesCollections;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TMPro;
 using UnityEngine;
 using Weland;
 
@@ -20,9 +19,6 @@ namespace ForgePlus.DataFileIO
         }
 
         private readonly TimeSpan chunkLoadMaxTime = TimeSpan.FromSeconds(1.0 / 20); // aim for ~20 fps
-
-        public static Action<string> OnLevelOpened;
-        public static Action OnLevelClosed;
 
         public readonly int LevelIndex;
 
@@ -103,8 +99,6 @@ namespace ForgePlus.DataFileIO
 
             var initializationStartTime = DateTime.Now;
 
-            OnLevelOpened(level.Name);
-
             LevelInitializationDebugTimer(initializationStartTime);
         }
 
@@ -119,8 +113,6 @@ namespace ForgePlus.DataFileIO
             FPLevel.PrepareForDestruction();
 
             UnityEngine.Object.Destroy(FPLevel.gameObject);
-
-            OnLevelClosed();
         }
 
         private async Task<DateTime> ChunkLoadYield(DateTime chunkLoadStartTime)

@@ -10,13 +10,13 @@ namespace ForgePlus.DataFileIO
 
         public void OnClick()
         {
-            MapsSaving.Instance.Save();
+            MapsLoading.Instance.Save();
         }
 
         private void Start()
         {
-            LevelData.OnLevelOpened += OnLevelOpened;
-            LevelData.OnLevelClosed += OnLevelClosed;
+            MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
+            MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
         }
 
         private void OnLevelOpened(string levelName)

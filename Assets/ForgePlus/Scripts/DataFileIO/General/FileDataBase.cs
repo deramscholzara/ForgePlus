@@ -46,11 +46,7 @@ namespace ForgePlus.DataFileIO
                 return;
             }
 
-            PreUnloadDataCleanup();
-
             file = null;
         }
-
-        protected abstract void PreUnloadDataCleanup();
     }
 }

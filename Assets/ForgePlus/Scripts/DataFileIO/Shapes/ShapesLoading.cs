@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ForgePlus.ShapesCollections;
+using UnityEngine;
 using Weland;
 
 namespace ForgePlus.DataFileIO
@@ -11,6 +12,13 @@ namespace ForgePlus.DataFileIO
             {
                 return DataFileTypes.Shapes;
             }
+        }
+
+        public override void UnloadFile()
+        {
+            WallsCollection.ClearCollection();
+
+            base.UnloadFile();
         }
 
         public Texture2D GetShape(ShapeDescriptor shapeDescriptor)

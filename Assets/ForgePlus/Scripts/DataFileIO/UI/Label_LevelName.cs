@@ -18,8 +18,8 @@ namespace ForgePlus.DataFileIO
         {
             label.enabled = false;
 
-            LevelData.OnLevelOpened += OnLevelOpened;
-            LevelData.OnLevelClosed += OnLevelClosed;
+            MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
+            MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
         }
 
         private void OnLevelOpened(string levelName)

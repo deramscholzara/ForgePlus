@@ -414,8 +414,8 @@ namespace ForgePlus.LevelManipulation
             DefaultLayer = LayerMask.NameToLayer("Default");
             SelectionIndicatorLayer = LayerMask.NameToLayer("SelectionVisualization");
 
-            LevelData.OnLevelOpened += OnLevelOpened;
-            LevelData.OnLevelClosed += OnLevelClosed;
+            MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
+            MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
 
             UpdateSelectionToMatchFilter();
         }

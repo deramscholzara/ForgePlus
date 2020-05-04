@@ -1,6 +1,5 @@
 ﻿using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -268,8 +267,8 @@ namespace ForgePlus.ApplicationGeneral
 
         private void Start()
         {
-            LevelData.OnLevelOpened += OnLevelOpened;
-            LevelData.OnLevelClosed += OnLevelClosed;
+            MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
+            MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
         }
     }
 }
