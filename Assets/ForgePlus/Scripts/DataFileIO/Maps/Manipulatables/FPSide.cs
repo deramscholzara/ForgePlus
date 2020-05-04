@@ -24,7 +24,7 @@ namespace ForgePlus.LevelManipulation
         public GameObject MiddleSurface;
         public GameObject BottomSurface;
 
-        private List<GameObject> selectionVisualizationIndicators = new List<GameObject>(4);
+        private readonly List<GameObject> selectionVisualizationIndicators = new List<GameObject>(4);
 
         public FPLevel FPLevel { private get; set; }
 
@@ -121,14 +121,14 @@ namespace ForgePlus.LevelManipulation
 
         public void Inspect()
         {
-            var inspectorPrefab = SelectionManager.Instance.CurrentSceneSelectionFilter == SelectionManager.SceneSelectionFilters.Geometry ?
+            var inspectorPrefab = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
                                   Resources.Load<InspectorBase>("Inspectors/Inspector - FPSide") :
                                   Resources.Load<InspectorBase>("Inspectors/Inspector - FPSide Textures");
             var inspector = Instantiate(inspectorPrefab);
             inspector.PopulateValues(this);
             InspectorPanel.Instance.AddInspector(inspector);
 
-            if (SelectionManager.Instance.CurrentSceneSelectionFilter == SelectionManager.SceneSelectionFilters.Geometry)
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
             {
                 FPLevel.FPLines[WelandObject.LineIndex].Inspect();
             }

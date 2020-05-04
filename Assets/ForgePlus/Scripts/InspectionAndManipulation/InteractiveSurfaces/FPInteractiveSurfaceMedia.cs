@@ -15,16 +15,16 @@ namespace ForgePlus.LevelManipulation
             if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
             {
                 // TODO: Make this select the media itself, if in Medias mode
-                switch (SelectionManager.Instance.CurrentSceneSelectionFilter)
+                switch (ModeManager.Instance.PrimaryMode)
                 {
-                    case SelectionManager.SceneSelectionFilters.Geometry:
+                    case ModeManager.PrimaryModes.Geometry:
                         SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
                         break;
-                    case SelectionManager.SceneSelectionFilters.Lights:
+                    case ModeManager.PrimaryModes.Lights:
                         SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
                         PaletteManager.Instance.SelectSwatchForLight(FPLight, invokeToggleEvents: false);
                         break;
-                    case SelectionManager.SceneSelectionFilters.Media:
+                    case ModeManager.PrimaryModes.Media:
                         if (FPMedia != null)
                         {
                             SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
@@ -33,7 +33,7 @@ namespace ForgePlus.LevelManipulation
 
                         break;
                     default:
-                        Debug.LogError($"Selection in mode \"{SelectionManager.Instance.CurrentSceneSelectionFilter}\" is not supported.");
+                        Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
                         break;
                 }
             }

@@ -7,17 +7,17 @@ namespace ForgePlus.LevelManipulation
     {
         protected bool isSelectable = false;
 
-        public void OnBeginDrag(PointerEventData eventData)
+        public virtual void OnBeginDrag(PointerEventData eventData)
         {
             eventData.dragging = true;
         }
 
-        public void OnDrag(PointerEventData eventData)
+        public virtual void OnDrag(PointerEventData eventData)
         {
             // Intentionally blank - this is only here because IDragHandler must be implemented for Begin and End Drag events to fire.
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        public virtual void OnEndDrag(PointerEventData eventData)
         {
             eventData.dragging = false;
         }
