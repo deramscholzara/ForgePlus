@@ -1,4 +1,5 @@
-﻿using ForgePlus.LevelManipulation;
+﻿using ForgePlus.DataFileIO;
+using ForgePlus.LevelManipulation;
 using ForgePlus.ShapesCollections;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace ForgePlus.Palette
         private Transform swatchesParent = null;
 
         [SerializeField]
-        private ToggleGroup toggleGroup = null;
+        private ToggleGroup paletteToggleGroup = null;
 
         [SerializeField]
         private SwatchTexture textureSwatchPrefab = null;
@@ -29,17 +30,46 @@ namespace ForgePlus.Palette
         [SerializeField]
         private GameObject horizontalLayoutHelperPrefab = null;
 
+        [SerializeField]
+        private Toggle[] secondaryModeToggles = new Toggle[] { };
+
         private readonly List<GameObject> currentSwatches = new List<GameObject>();
         private readonly List<GameObject> currentLayoutHelpers = new List<GameObject>();
 
-        public void UpdatePaletteToMatchSelectionMode(ModeManager.PrimaryModes primaryMode, ModeManager.SecondaryModes secondaryMode)
+        public void SelectSwatchForTexture(ShapeDescriptor shapeDescriptor, bool invokeToggleEvents = false)
+        {
+            var matchingSwatch = currentSwatches.First(swatch => (ushort)swatch.GetComponent<SwatchTexture>().ShapeDescriptor == (ushort)shapeDescriptor);
+            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
+
+            ActivateToggle(matchingToggle, invokeToggleEvents);
+        }
+
+        public void SelectSwatchForLight(FPLight fpLight, bool invokeToggleEvents = false)
+        {
+            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPLight>().FPLight == fpLight);
+            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
+
+            ActivateToggle(matchingToggle, invokeToggleEvents);
+        }
+
+        public void SelectSwatchForMedia(FPMedia fpMedia, bool invokeToggleEvents = false)
+        {
+            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPMedia>().FPMedia == fpMedia);
+            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
+
+            ActivateToggle(matchingToggle, invokeToggleEvents);
+        }
+
+        private void UpdatePaletteToMatchMode(ModeManager.PrimaryModes primaryMode)
         {
             Clear();
 
-            switch (primaryMode)
+            if (FPLevel.Instance)
+            {
+                switch (primaryMode)
             {
                 case ModeManager.PrimaryModes.Geometry:
-                    toggleGroup.allowSwitchOff = false;
+                    paletteToggleGroup.allowSwitchOff = false;
 
                     // TODO: populate with tools
                     //       - Line Drawing
@@ -48,7 +78,7 @@ namespace ForgePlus.Palette
                     break;
 
                 case ModeManager.PrimaryModes.Textures:
-                    toggleGroup.allowSwitchOff = false;
+                    paletteToggleGroup.allowSwitchOff = false;
 
                     var loadedTextureEntries = WallsCollection.GetAllLoadedTextures().ToList();
                     loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.Collection == entryB.Key.Collection ?
@@ -67,7 +97,7 @@ namespace ForgePlus.Palette
                             currentHorizontalHelper = null;
 
                             var swatch = Instantiate(textureSwatchPrefab, swatchesParent);
-                            swatch.SetInitialValues(textureEntry, toggleGroup);
+                            swatch.SetInitialValues(textureEntry, paletteToggleGroup);
                             currentSwatches.Add(swatch.gameObject);
                         }
                         else
@@ -78,13 +108,13 @@ namespace ForgePlus.Palette
                                 currentLayoutHelpers.Add(currentHorizontalHelper);
 
                                 var swatch = Instantiate(textureSwatchPrefab, currentHorizontalHelper.transform);
-                                swatch.SetInitialValues(textureEntry, toggleGroup);
+                                swatch.SetInitialValues(textureEntry, paletteToggleGroup);
                                 currentSwatches.Add(swatch.gameObject);
                             }
                             else
                             {
                                 var swatch = Instantiate(textureSwatchPrefab, currentHorizontalHelper.transform);
-                                swatch.SetInitialValues(textureEntry, toggleGroup);
+                                swatch.SetInitialValues(textureEntry, paletteToggleGroup);
                                 currentSwatches.Add(swatch.gameObject);
 
                                 currentHorizontalHelper = null;
@@ -102,38 +132,38 @@ namespace ForgePlus.Palette
                     break;
 
                 case ModeManager.PrimaryModes.Lights:
-                    toggleGroup.allowSwitchOff = true;
+                    paletteToggleGroup.allowSwitchOff = true;
 
                     foreach (var fpLight in FPLevel.Instance.FPLights.Values)
                     {
                         var swatch = Instantiate(lightSwatchPrefab, swatchesParent);
-                        swatch.SetInitialValues(fpLight, toggleGroup);
+                        swatch.SetInitialValues(fpLight, paletteToggleGroup);
                         currentSwatches.Add(swatch.gameObject);
                     }
 
                     break;
 
                 case ModeManager.PrimaryModes.Media:
-                    toggleGroup.allowSwitchOff = true;
+                    paletteToggleGroup.allowSwitchOff = true;
 
                     foreach (var fpMedia in FPLevel.Instance.FPMedias.Values)
                     {
                         var swatch = Instantiate(mediaSwatchPrefab, swatchesParent);
-                        swatch.SetInitialValues(fpMedia, toggleGroup);
+                        swatch.SetInitialValues(fpMedia, paletteToggleGroup);
                         currentSwatches.Add(swatch.gameObject);
                     }
 
                     break;
 
                 case ModeManager.PrimaryModes.Platforms:
-                    toggleGroup.allowSwitchOff = true;
+                    paletteToggleGroup.allowSwitchOff = true;
 
                     // TODO: populate with shortcuts that focus the camera on the associated platform polygon when clicked.
 
                     break;
 
                 case ModeManager.PrimaryModes.Objects:
-                    toggleGroup.allowSwitchOff = false;
+                    paletteToggleGroup.allowSwitchOff = false;
 
                     // TODO: populate with placement tools
                     //       - Players
@@ -163,9 +193,10 @@ namespace ForgePlus.Palette
                 default:
                     break;
             }
+            }
         }
 
-        public void Clear()
+        private void Clear()
         {
             foreach (var swatch in currentSwatches)
             {
@@ -182,28 +213,40 @@ namespace ForgePlus.Palette
             currentLayoutHelpers.Clear();
         }
 
-        public void SelectSwatchForTexture(ShapeDescriptor shapeDescriptor, bool invokeToggleEvents = false)
+        private void UpdateSecondaryModeToggleAvailabilityToMatchPrimaryMode(ModeManager.PrimaryModes primaryMode)
         {
-            var matchingSwatch = currentSwatches.First(swatch => (ushort)swatch.GetComponent<SwatchTexture>().ShapeDescriptor == (ushort)shapeDescriptor);
-            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
+            switch (primaryMode)
+            {
+                case ModeManager.PrimaryModes.Textures:
+                    foreach (var toggle in secondaryModeToggles)
+                    {
+                        toggle.interactable = true;
+                    }
 
-            ActivateToggle(matchingToggle, invokeToggleEvents);
+                    break;
+                default:
+                    foreach (var toggle in secondaryModeToggles)
+                    {
+                        if (toggle.GetComponent<Toggle_SelectSecondaryMode>().Mode == ModeManager.SecondaryModes.Selection)
+                        {
+                            toggle.interactable = true;
+                        }
+                        else
+                        {
+                            toggle.interactable = false;
+                        }
+                    }
+
+                    ModeManager.Instance.SecondaryMode = ModeManager.SecondaryModes.Selection;
+
+                    break;
+            }
         }
 
-        public void SelectSwatchForLight(FPLight fpLight, bool invokeToggleEvents = false)
+        private void UpdateSecondaryModeTogglesToMatchSecondaryMode(ModeManager.SecondaryModes secondaryMode)
         {
-            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPLight>().FPLight == fpLight);
-            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
-
-            ActivateToggle(matchingToggle, invokeToggleEvents);
-        }
-
-        public void SelectSwatchForMedia(FPMedia fpMedia, bool invokeToggleEvents = false)
-        {
-            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPMedia>().FPMedia == fpMedia);
-            var matchingToggle = matchingSwatch.GetComponent<Toggle>();
-
-            ActivateToggle(matchingToggle, invokeToggleEvents);
+            var modeToggle = secondaryModeToggles.First(toggle => toggle.GetComponent<Toggle_SelectSecondaryMode>().Mode == secondaryMode);
+            ActivateToggle(modeToggle, invokeToggleEvents: false);
         }
 
         private void ActivateToggle(Toggle toggle, bool invokeToggleEvents)
@@ -220,13 +263,15 @@ namespace ForgePlus.Palette
 
         private void Start()
         {
-            ModeManager.Instance.OnModeChanged += UpdatePaletteToMatchSelectionMode;
+            ModeManager.Instance.OnPrimaryModeChanged += UpdatePaletteToMatchMode;
+            ModeManager.Instance.OnPrimaryModeChanged += UpdateSecondaryModeToggleAvailabilityToMatchPrimaryMode;
+            ModeManager.Instance.OnSecondaryModeChanged += UpdateSecondaryModeTogglesToMatchSecondaryMode;
             SelectionManager.Instance.OnClickEmptySpace += OnClickEmptySpace;
         }
 
         private void OnClickEmptySpace()
         {
-            toggleGroup.SetAllTogglesOff(sendCallback: true);
+            paletteToggleGroup.SetAllTogglesOff(sendCallback: true);
         }
     }
 }
