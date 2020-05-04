@@ -12,7 +12,6 @@ namespace ForgePlus.DataFileIO
         {
             if (value)
             {
-                Debug.LogWarning(Mode.ToString());
                 ModeManager.Instance.SecondaryMode = Mode;
             }
         }

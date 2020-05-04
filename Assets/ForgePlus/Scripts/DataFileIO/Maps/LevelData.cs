@@ -231,7 +231,7 @@ namespace ForgePlus.DataFileIO
                 fpPolygon.WelandObject = polygon;
                 fpPolygon.FPLevel = FPLevel;
 
-                fpPolygon.GenerateSurfaces(polygon, (short)polygonIndex);
+                fpPolygon.GenerateSurfaces();
 
                 chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }

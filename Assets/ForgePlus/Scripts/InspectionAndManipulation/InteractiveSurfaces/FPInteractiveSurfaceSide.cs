@@ -23,9 +23,10 @@ namespace ForgePlus.LevelManipulation
                         SelectionManager.Instance.ToggleObjectSelection(ParentFPSide, multiSelect: false);
                         break;
                     case ModeManager.PrimaryModes.Textures:
+                        SelectionManager.Instance.ToggleObjectSelection(ParentFPSide, multiSelect: false);
+
                         if ((ushort)surfaceShapeDescriptor != (ushort)ShapeDescriptor.Empty)
                         {
-                            SelectionManager.Instance.ToggleObjectSelection(ParentFPSide, multiSelect: false);
                             PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
                         }
 

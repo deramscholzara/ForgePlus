@@ -51,32 +51,51 @@ namespace ForgePlus.LevelManipulation
             InspectorPanel.Instance.AddInspector(inspector);
         }
 
-        public void GenerateSurfaces(Polygon polygon, short polygonIndex)
+        public void GenerateSurfaces()
         {
-            BuildFloorAndCeiling(polygon, (short)polygonIndex);
+            BuildFloorAndCeiling();
         }
 
-        private void BuildFloorAndCeiling(
-            Polygon polygon,
-            short polygonIndex)
+        public Vector2[] GetUVs(short x, short y)
+        {
+            WelandObject.FloorOrigin.X = x;
+            WelandObject.FloorOrigin.Y = y;
+
+            var meshUVs = new Vector2[WelandObject.VertexCount];
+
+            for (var i = 0; i < WelandObject.VertexCount; i++)
+            {
+                var vertexPosition = GeometryUtilities.GetMeshVertex(FPLevel.Level, WelandObject.EndpointIndexes[i]);
+
+                var u = -(vertexPosition.z * GeometryUtilities.MeterToWorldUnit);
+                var v = -(vertexPosition.x * GeometryUtilities.MeterToWorldUnit);
+                var floorOffset = new Vector2(y / GeometryUtilities.WorldUnitIncrementsPerWorldUnit,
+                                              -x / GeometryUtilities.WorldUnitIncrementsPerWorldUnit);
+                meshUVs[i] = new Vector2(u, v) + floorOffset;
+            }
+
+            return meshUVs;
+        }
+
+        private void BuildFloorAndCeiling()
         {
             #region Generate_Mesh_Data
-            var floorRoot = new GameObject($"Floor (polygon: {polygonIndex})");
+            var floorRoot = new GameObject($"Floor (polygon: {Index})");
             FloorSurface = floorRoot;
-            floorRoot.transform.position = new Vector3(0f, polygon.FloorHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+            floorRoot.transform.position = new Vector3(0f, WelandObject.FloorHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
             floorRoot.transform.SetParent(transform);
-            var ceilingRoot = new GameObject($"Ceiling (polygon: {polygonIndex})");
+            var ceilingRoot = new GameObject($"Ceiling (polygon: {Index})");
             CeilingSurface = ceilingRoot;
-            ceilingRoot.transform.position = new Vector3(0f, polygon.CeilingHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+            ceilingRoot.transform.position = new Vector3(0f, WelandObject.CeilingHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
             ceilingRoot.transform.SetParent(transform);
 
-            var floorVertices = new Vector3[polygon.VertexCount];
-            var ceilingVertices = new Vector3[polygon.VertexCount];
-            var floorTriangles = new int[(polygon.VertexCount - 2) * 3];
-            var ceilingTriangles = new int[(polygon.VertexCount - 2) * 3];
+            var floorVertices = new Vector3[WelandObject.VertexCount];
+            var ceilingVertices = new Vector3[WelandObject.VertexCount];
+            var floorTriangles = new int[(WelandObject.VertexCount - 2) * 3];
+            var ceilingTriangles = new int[(WelandObject.VertexCount - 2) * 3];
 
             #region Media
-            var hasMedia = polygon.MediaIndex >= 0;
+            var hasMedia = WelandObject.MediaIndex >= 0;
             GameObject mediaRoot = null;
             Media media = null;
 
@@ -85,35 +104,35 @@ namespace ForgePlus.LevelManipulation
 
             if (hasMedia)
             {
-                mediaRoot = new GameObject($"Media (polygon: {polygonIndex} media:{polygon.MediaIndex})");
+                mediaRoot = new GameObject($"Media (polygon: {Index} media:{WelandObject.MediaIndex})");
                 mediaRoot.transform.SetParent(floorRoot.transform);
 
-                media = FPLevel.Level.Medias[polygon.MediaIndex];
+                media = FPLevel.Level.Medias[WelandObject.MediaIndex];
 
-                mediaVertices = new Vector3[polygon.VertexCount];
-                mediaTriangles = new int[(polygon.VertexCount - 2) * 3];
+                mediaVertices = new Vector3[WelandObject.VertexCount];
+                mediaTriangles = new int[(WelandObject.VertexCount - 2) * 3];
             }
             #endregion Media
 
-            for (int earlyVertexIndex = 0, lateVertexIndex = polygon.VertexCount - 1, currentTriangleIndex = 0;
+            for (int earlyVertexIndex = 0, lateVertexIndex = WelandObject.VertexCount - 1, currentTriangleIndex = 0;
                  earlyVertexIndex <= lateVertexIndex;
                  earlyVertexIndex++, lateVertexIndex--)
             {
-                AssignFloorAndCeilingVertices(earlyVertexIndex, polygon, floorVertices, ceilingVertices);
+                AssignFloorAndCeilingVertices(earlyVertexIndex, WelandObject, floorVertices, ceilingVertices);
 
                 if (hasMedia)
                 {
-                    AssignMediaVertex(earlyVertexIndex, polygon, mediaVertices);
+                    AssignMediaVertex(earlyVertexIndex, WelandObject, mediaVertices);
                 }
 
                 if (earlyVertexIndex < lateVertexIndex)
                 {
                     // Vertex-traversal has not intersected, so continue
-                    AssignFloorAndCeilingVertices(lateVertexIndex, polygon, floorVertices, ceilingVertices);
+                    AssignFloorAndCeilingVertices(lateVertexIndex, WelandObject, floorVertices, ceilingVertices);
 
                     if (hasMedia)
                     {
-                        AssignMediaVertex(lateVertexIndex, polygon, mediaVertices);
+                        AssignMediaVertex(lateVertexIndex, WelandObject, mediaVertices);
                     }
 
                     if (earlyVertexIndex + 1 < lateVertexIndex)
@@ -147,35 +166,13 @@ namespace ForgePlus.LevelManipulation
             }
 
             #region UVs
-            var ceilingUvs = new Vector2[ceilingVertices.Length];
-            var floorUvs = new Vector2[floorVertices.Length];
+            var ceilingUvs = GetUVs(WelandObject.CeilingOrigin.X, WelandObject.CeilingOrigin.Y);
+            var floorUvs = GetUVs(WelandObject.FloorOrigin.X, WelandObject.FloorOrigin.Y);
 
             Vector2[] mediaUvs = null;
             if (hasMedia)
             {
-                mediaUvs = new Vector2[floorVertices.Length];
-            }
-
-            for (var i = 0; i < floorUvs.Length; i++)
-            {
-                var u = -(ceilingVertices[i].z * GeometryUtilities.MeterToWorldUnit);
-                var v = -(ceilingVertices[i].x * GeometryUtilities.MeterToWorldUnit);
-                var ceilingOffset = new Vector2((float)polygon.CeilingOrigin.Y / GeometryUtilities.WorldUnitIncrementsPerWorldUnit,
-                                                -(float)polygon.CeilingOrigin.X / GeometryUtilities.WorldUnitIncrementsPerWorldUnit);
-                ceilingUvs[i] = new Vector2(u, v) + ceilingOffset;
-
-                u = -(floorVertices[i].z * GeometryUtilities.MeterToWorldUnit);
-                v = -(floorVertices[i].x * GeometryUtilities.MeterToWorldUnit);
-                var floorOffset = new Vector2((float)polygon.FloorOrigin.Y / GeometryUtilities.WorldUnitIncrementsPerWorldUnit,
-                                              -(float)polygon.FloorOrigin.X / GeometryUtilities.WorldUnitIncrementsPerWorldUnit);
-                floorUvs[i] = new Vector2(u, v) + floorOffset;
-
-                if (hasMedia)
-                {
-                    u = mediaVertices[i].z * GeometryUtilities.MeterToWorldUnit;
-                    v = mediaVertices[i].x * GeometryUtilities.MeterToWorldUnit;
-                    mediaUvs[i] = new Vector2(u, v);
-                }
+                mediaUvs = GetUVs(0, 0);
             }
             #endregion UVs
             #endregion Generate_Mesh_Data
@@ -183,10 +180,10 @@ namespace ForgePlus.LevelManipulation
             #region Platforms
             var hasCeilingPlatform = false;
             var hasFloorPlatform = false;
-            short platformIndex = polygon.Permutation;
-            if (polygon.Type == PolygonType.Platform)
+            short platformIndex = WelandObject.Permutation;
+            if (WelandObject.Type == PolygonType.Platform)
             {
-                var platform = GeometryUtilities.GetPlatformForPolygon(FPLevel.Level, WelandObject);
+                var platform = GeometryUtilities.GetPlatformForPolygon(FPLevel.Level, this.WelandObject);
 
                 if (platform.ComesFromCeiling)
                 {
@@ -209,16 +206,16 @@ namespace ForgePlus.LevelManipulation
             #endregion Platforms
 
             #region TransferModes_VertexColor
-            var floorTransferModesVertexColors = new Color[floorVertices.Length];
-            for (var i = 0; i < floorVertices.Length; i++)
+            var floorTransferModesVertexColors = new Color[WelandObject.VertexCount];
+            for (var i = 0; i < WelandObject.VertexCount; i++)
             {
-                floorTransferModesVertexColors[i] = GeometryUtilities.GetTransferModeVertexColor(polygon.FloorTransferMode, isSideSurface: false);
+                floorTransferModesVertexColors[i] = GeometryUtilities.GetTransferModeVertexColor(WelandObject.FloorTransferMode, isSideSurface: false);
             }
 
-            var ceilingTransferModesVertexColors = new Color[ceilingVertices.Length];
-            for (var i = 0; i < ceilingVertices.Length; i++)
+            var ceilingTransferModesVertexColors = new Color[WelandObject.VertexCount];
+            for (var i = 0; i < WelandObject.VertexCount; i++)
             {
-                ceilingTransferModesVertexColors[i] = GeometryUtilities.GetTransferModeVertexColor(polygon.CeilingTransferMode, isSideSurface: false);
+                ceilingTransferModesVertexColors[i] = GeometryUtilities.GetTransferModeVertexColor(WelandObject.CeilingTransferMode, isSideSurface: false);
             }
             #endregion TransferModes_VertexColor
 
@@ -228,18 +225,19 @@ namespace ForgePlus.LevelManipulation
                 floorVertices,
                 floorTriangles,
                 floorUvs,
-                polygon.FloorTexture,
-                FPLevel.FPLights[polygon.FloorLight],
-                polygon.FloorTransferMode,
+                WelandObject.FloorTexture,
+                FPLevel.FPLights[WelandObject.FloorLight],
+                WelandObject.FloorTransferMode,
                 floorTransferModesVertexColors,
                 isOpaqueSurface: true,
                 isStaticBatchable: !hasFloorPlatform);
 
             var fpSurfacePolygonFloor = floorRoot.AddComponent<FPInteractiveSurfacePolygon>();
             fpSurfacePolygonFloor.ParentFPPolygon = this;
-            fpSurfacePolygonFloor.surfaceShapeDescriptor = polygon.FloorTexture;
-            fpSurfacePolygonFloor.FPLight = FPLevel.FPLights[polygon.FloorLight];
-            fpSurfacePolygonFloor.FPMedia = hasMedia ? FPLevel.FPMedias[polygon.MediaIndex] : null;
+            fpSurfacePolygonFloor.IsFloor = true;
+            fpSurfacePolygonFloor.surfaceShapeDescriptor = WelandObject.FloorTexture;
+            fpSurfacePolygonFloor.FPLight = FPLevel.FPLights[WelandObject.FloorLight];
+            fpSurfacePolygonFloor.FPMedia = hasMedia ? FPLevel.FPMedias[WelandObject.MediaIndex] : null;
             fpSurfacePolygonFloor.FPPlatform = hasFloorPlatform ? FPLevel.FPFloorFpPlatforms[platformIndex] : null;
 
             FPLevel.FPInteractiveSurfacePolygons.Add(fpSurfacePolygonFloor);
@@ -250,18 +248,19 @@ namespace ForgePlus.LevelManipulation
                 ceilingVertices,
                 ceilingTriangles,
                 ceilingUvs,
-                polygon.CeilingTexture,
-                FPLevel.FPLights[polygon.CeilingLight],
-                polygon.CeilingTransferMode,
+                WelandObject.CeilingTexture,
+                FPLevel.FPLights[WelandObject.CeilingLight],
+                WelandObject.CeilingTransferMode,
                 ceilingTransferModesVertexColors,
                 isOpaqueSurface: true,
                 isStaticBatchable: !hasCeilingPlatform);
 
             var fpSurfacePolygonCeiling = ceilingRoot.AddComponent<FPInteractiveSurfacePolygon>();
             fpSurfacePolygonCeiling.ParentFPPolygon = this;
-            fpSurfacePolygonCeiling.surfaceShapeDescriptor = polygon.CeilingTexture;
-            fpSurfacePolygonCeiling.FPLight = FPLevel.FPLights[polygon.CeilingLight];
-            fpSurfacePolygonCeiling.FPMedia = hasMedia ? FPLevel.FPMedias[polygon.MediaIndex] : null;
+            fpSurfacePolygonCeiling.IsFloor = false;
+            fpSurfacePolygonCeiling.surfaceShapeDescriptor = WelandObject.CeilingTexture;
+            fpSurfacePolygonCeiling.FPLight = FPLevel.FPLights[WelandObject.CeilingLight];
+            fpSurfacePolygonCeiling.FPMedia = hasMedia ? FPLevel.FPMedias[WelandObject.MediaIndex] : null;
             fpSurfacePolygonCeiling.FPPlatform = hasCeilingPlatform ? FPLevel.FPCeilingFpPlatforms[platformIndex] : null;
 
             FPLevel.FPInteractiveSurfacePolygons.Add(fpSurfacePolygonCeiling);
@@ -270,7 +269,7 @@ namespace ForgePlus.LevelManipulation
             if (hasMedia)
             {
                 #region Infinity_Media_Texture_Assignment
-                var mediaShapeDescriptor = new ShapeDescriptor((ushort)polygon.FloorTexture);
+                var mediaShapeDescriptor = new ShapeDescriptor((ushort)WelandObject.FloorTexture);
                 switch (media.Type)
                 {
                     case MediaType.Water:
@@ -302,13 +301,13 @@ namespace ForgePlus.LevelManipulation
                     mediaTriangles,
                     mediaUvs,
                     mediaShapeDescriptor,
-                    FPLevel.FPLights[polygon.MediaLight],
-                    FPLevel.FPMedias[polygon.MediaIndex]);
+                    FPLevel.FPLights[WelandObject.MediaLight],
+                    FPLevel.FPMedias[WelandObject.MediaIndex]);
 
                 var fpSurfacePolygonMedia = mediaRoot.AddComponent<FPInteractiveSurfaceMedia>();
                 fpSurfacePolygonMedia.ParentFPPolygon = this;
-                fpSurfacePolygonMedia.FPLight = FPLevel.FPLights[polygon.MediaLight];
-                fpSurfacePolygonMedia.FPMedia = FPLevel.FPMedias[polygon.MediaIndex];
+                fpSurfacePolygonMedia.FPLight = FPLevel.FPLights[WelandObject.MediaLight];
+                fpSurfacePolygonMedia.FPMedia = FPLevel.FPMedias[WelandObject.MediaIndex];
 
                 FPLevel.FPInteractiveSurfaceMedias.Add(fpSurfacePolygonMedia);
             }
