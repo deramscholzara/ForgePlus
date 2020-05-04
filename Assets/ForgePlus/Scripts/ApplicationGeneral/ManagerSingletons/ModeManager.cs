@@ -26,18 +26,31 @@ namespace ForgePlus.LevelManipulation
             Editing,
         }
 
-        public event Action<PrimaryModes, SecondaryModes> OnModeChanged_Sender;
-
-        public event Action<PrimaryModes, SecondaryModes> OnModeChanged
+        private event Action<PrimaryModes> OnPrimaryModeChanged_Sender;
+        public event Action<PrimaryModes> OnPrimaryModeChanged
         {
             add
             {
-                OnModeChanged_Sender += value;
-                value.Invoke(primaryMode, secondaryMode);
+                OnPrimaryModeChanged_Sender += value;
+                value.Invoke(primaryMode);
             }
             remove
             {
-                OnModeChanged_Sender -= value;
+                OnPrimaryModeChanged_Sender -= value;
+            }
+        }
+
+        private event Action<SecondaryModes> OnSecondaryModeChanged_Sender;
+        public event Action<SecondaryModes> OnSecondaryModeChanged
+        {
+            add
+            {
+                OnSecondaryModeChanged_Sender += value;
+                value.Invoke(secondaryMode);
+            }
+            remove
+            {
+                OnSecondaryModeChanged_Sender -= value;
             }
         }
 
@@ -56,9 +69,7 @@ namespace ForgePlus.LevelManipulation
                 {
                     primaryMode = value;
 
-                    secondaryMode = SecondaryModes.Selection;
-
-                    OnModeChanged_Sender?.Invoke(primaryMode, secondaryMode);
+                    OnPrimaryModeChanged_Sender?.Invoke(primaryMode);
                 }
             }
         }
@@ -75,7 +86,7 @@ namespace ForgePlus.LevelManipulation
                 {
                     secondaryMode = value;
 
-                    OnModeChanged_Sender?.Invoke(primaryMode, secondaryMode);
+                    OnSecondaryModeChanged_Sender?.Invoke(secondaryMode);
                 }
             }
         }
@@ -116,12 +127,14 @@ namespace ForgePlus.LevelManipulation
 
         private void OnLevelOpened(string levelName)
         {
-            OnModeChanged_Sender?.Invoke(primaryMode, secondaryMode);
+            OnPrimaryModeChanged_Sender?.Invoke(primaryMode);
+            OnSecondaryModeChanged_Sender?.Invoke(secondaryMode);
         }
 
         private void OnLevelClosed()
         {
-            OnModeChanged_Sender?.Invoke(PrimaryModes.None, SecondaryModes.None);
+            OnPrimaryModeChanged_Sender?.Invoke(PrimaryModes.None);
+            OnSecondaryModeChanged_Sender?.Invoke(SecondaryModes.None);
         }
 
         private void Awake()

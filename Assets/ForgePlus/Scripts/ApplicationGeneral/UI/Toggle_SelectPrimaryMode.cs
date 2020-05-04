@@ -10,13 +10,13 @@ namespace ForgePlus.DataFileIO
     public class Toggle_SelectPrimaryMode : MonoBehaviour
     {
         [SerializeField]
-        private ModeManager.PrimaryModes mode = ModeManager.PrimaryModes.None;
+        private ModeManager.PrimaryModes Mode = ModeManager.PrimaryModes.None;
 
         public void OnValueChanged(bool value)
         {
             if (value)
             {
-                ModeManager.Instance.PrimaryMode = mode;
+                ModeManager.Instance.PrimaryMode = Mode;
             }
         }
     }

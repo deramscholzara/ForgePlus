@@ -19,7 +19,7 @@ namespace ForgePlus.LevelManipulation
 
         private bool selectionEventStartedOverEmptiness = false;
 
-        public void UpdateSelectionToMatchFilter(ModeManager.PrimaryModes primaryMode, ModeManager.SecondaryModes secondaryMode)
+        public void UpdateSelectionToMatchMode(ModeManager.PrimaryModes primaryMode)
         {
             DeselectAll();
 
@@ -309,7 +309,7 @@ namespace ForgePlus.LevelManipulation
             DefaultLayer = LayerMask.NameToLayer("Default");
             SelectionIndicatorLayer = LayerMask.NameToLayer("SelectionVisualization");
 
-            ModeManager.Instance.OnModeChanged += UpdateSelectionToMatchFilter;
+            ModeManager.Instance.OnPrimaryModeChanged += UpdateSelectionToMatchMode;
         }
 
         private void Update()
