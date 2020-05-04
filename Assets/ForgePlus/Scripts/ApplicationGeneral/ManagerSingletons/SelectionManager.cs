@@ -1,6 +1,5 @@
-﻿using ForgePlus.DataFileIO;
-using ForgePlus.Inspection;
-using ForgePlus.Palette;
+﻿using ForgePlus.Inspection;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,134 +8,26 @@ namespace ForgePlus.LevelManipulation
 {
     public class SelectionManager : SingletonMonoBehaviour<SelectionManager>
     {
-        public enum SceneSelectionFilters
-        {
-            None,
-            Geometry,
-            Textures,
-            Lights,
-            Media,
-            Platforms,
-            Objects,
-            Annotations,
-            Level,
-        }
+        // TODO: Add selection subfilters here
 
         public static int DefaultLayer;
         public static int SelectionIndicatorLayer;
 
-        // Using read-only to force this to only ever be modified/cleared
+        public event Action OnClickEmptySpace;
+
         private readonly List<IFPSelectable> SelectedObjects = new List<IFPSelectable>(500);
 
         private bool selectionEventStartedOverEmptiness = false;
 
-        // TODO: Change this to Geometry when that mode is finished and becomes the default.
-        private SceneSelectionFilters currentSceneSelectionFilter = SceneSelectionFilters.Geometry;
-
-        public SceneSelectionFilters CurrentSceneSelectionFilter
+        public void UpdateSelectionToMatchFilter(ModeManager.PrimaryModes primaryMode, ModeManager.SecondaryModes secondaryMode)
         {
-            get
-            {
-                return currentSceneSelectionFilter;
+            DeselectAll();
 
-            }
-            set
-            {
-                if (currentSceneSelectionFilter != value)
-                {
-                    DeselectAll();
-
-                    currentSceneSelectionFilter = value;
-
-                    UpdateSelectionToMatchFilter();
-                }
-            }
-        }
-
-        public void SetToNone(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.None;
-            }
-        }
-
-        public void SetToGeometry(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.Geometry;
-            }
-        }
-
-        public void SetToTextures(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.Textures;
-            }
-        }
-
-        public void SetToLights(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.Lights;
-            }
-        }
-
-        public void SetToMedia(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.Media;
-            }
-        }
-
-        public void SetToPlatforms(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.Platforms;
-            }
-        }
-
-        public void SetToObjects(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.Objects;
-            }
-        }
-
-        public void SetToAnnotations(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.Annotations;
-            }
-        }
-
-        public void SetToLevel(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                CurrentSceneSelectionFilter = SceneSelectionFilters.Level;
-
-                if (FPLevel.Instance)
-                {
-                    SelectObject(FPLevel.Instance, multiSelect: false);
-                }
-            }
-        }
-
-        public void UpdateSelectionToMatchFilter()
-        {
             if (FPLevel.Instance)
             {
-                switch (currentSceneSelectionFilter)
+                switch (primaryMode)
                 {
-                    case SceneSelectionFilters.Geometry:
+                    case ModeManager.PrimaryModes.Geometry:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: true);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: true);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: true);
@@ -153,7 +44,7 @@ namespace ForgePlus.LevelManipulation
                         // TODO: Make this true when media subfilter is available
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
-                    case SceneSelectionFilters.Textures:
+                    case ModeManager.PrimaryModes.Textures:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: true);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: true);
@@ -169,7 +60,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
-                    case SceneSelectionFilters.Lights:
+                    case ModeManager.PrimaryModes.Lights:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
@@ -185,7 +76,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: true);
                         break;
-                    case SceneSelectionFilters.Media:
+                    case ModeManager.PrimaryModes.Media:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
@@ -201,7 +92,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: true);
                         break;
-                    case SceneSelectionFilters.Platforms:
+                    case ModeManager.PrimaryModes.Platforms:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
@@ -217,7 +108,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: true);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
-                    case SceneSelectionFilters.Objects:
+                    case ModeManager.PrimaryModes.Objects:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
@@ -233,7 +124,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: false);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
-                    case SceneSelectionFilters.Annotations:
+                    case ModeManager.PrimaryModes.Annotations:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
@@ -249,7 +140,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: false);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
-                    case SceneSelectionFilters.Level:
+                    case ModeManager.PrimaryModes.Level:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
                         SetSelectability<FPSide>(FPLevel.Instance.FPSides.Values, enabled: false);
@@ -264,8 +155,14 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfacePolygon>(FPLevel.Instance.FPInteractiveSurfacePolygons, enabled: false);
                         SetSelectability<FPInteractiveSurfaceSide>(FPLevel.Instance.FPInteractiveSurfaceSides, enabled: false);
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
+
+                        // Select the level here, since there's no visual way to select it besides the mode button
+                        if (FPLevel.Instance)
+                        {
+                            SelectObject(FPLevel.Instance, multiSelect: false);
+                        }
                         break;
-                    case SceneSelectionFilters.None:
+                    case ModeManager.PrimaryModes.None:
                     default:
                         SetSelectability<FPPolygon>(FPLevel.Instance.FPPolygons.Values, enabled: false);
                         SetSelectability<FPLine>(FPLevel.Instance.FPLines.Values, enabled: false);
@@ -283,8 +180,6 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<FPInteractiveSurfaceMedia>(FPLevel.Instance.FPInteractiveSurfaceMedias, enabled: false);
                         break;
                 }
-
-                PaletteManager.Instance.UpdatePaletteToMatchSelectionMode();
             }
         }
 
@@ -414,45 +309,35 @@ namespace ForgePlus.LevelManipulation
             DefaultLayer = LayerMask.NameToLayer("Default");
             SelectionIndicatorLayer = LayerMask.NameToLayer("SelectionVisualization");
 
-            MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
-            MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
-
-            UpdateSelectionToMatchFilter();
-        }
-
-        private void OnLevelOpened(string levelName)
-        {
-            UpdateSelectionToMatchFilter();
-        }
-
-        private void OnLevelClosed()
-        {
-            DeselectAll();
+            ModeManager.Instance.OnModeChanged += UpdateSelectionToMatchFilter;
         }
 
         private void Update()
         {
-            if (CurrentSceneSelectionFilter != SceneSelectionFilters.Level)
+            // Handling for when the user clicks on empty space
+            if (Input.GetMouseButtonDown(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
             {
-                if (Input.GetMouseButtonDown(0) ||
-                    (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+                if (!EventSystem.current.IsPointerOverGameObject())
                 {
-                    if (!EventSystem.current.IsPointerOverGameObject())
-                    {
-                        selectionEventStartedOverEmptiness = true;
-                    }
+                    selectionEventStartedOverEmptiness = true;
                 }
+            }
 
-                if (Input.GetMouseButtonUp(0) ||
-                    (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
+            if (Input.GetMouseButtonUp(0) ||
+                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
+            {
+                if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
                 {
-                    if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
+                    if (ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Level)
                     {
                         DeselectAll();
                     }
-                
-                    selectionEventStartedOverEmptiness = false;
+
+                    OnClickEmptySpace?.Invoke();
                 }
+
+                selectionEventStartedOverEmptiness = false;
             }
         }
     }

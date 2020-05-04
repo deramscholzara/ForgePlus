@@ -463,6 +463,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 0
+--- !u!1 &79777104 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 2016477414}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &79777105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79777104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64187796371c84d4bbf05e3d7e7ecf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 2
 --- !u!1001 &108664401
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -609,16 +628,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 792520107}
+      objectReference: {fileID: 862230731}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ForgePlus.LevelManipulation.SelectionManager, Assembly-CSharp
+      value: ForgePlus.DataFileIO.Toggle_SelectPrimaryMode, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetToLevel
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
@@ -3661,6 +3680,25 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!1 &764990535 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1447531707}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &764990536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764990535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64187796371c84d4bbf05e3d7e7ecf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 5
 --- !u!1 &768008329
 GameObject:
   m_ObjectHideFlags: 0
@@ -3870,16 +3908,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 792520107}
+      objectReference: {fileID: 1891626874}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ForgePlus.LevelManipulation.SelectionManager, Assembly-CSharp
+      value: ForgePlus.DataFileIO.Toggle_SelectPrimaryMode, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetToObjects
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
@@ -4012,6 +4050,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   applyStaticBatchingOnLevelLoad: 1
+--- !u!1 &793160945 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1554633319}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &793160946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 793160945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64187796371c84d4bbf05e3d7e7ecf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 3
 --- !u!1 &817852203
 GameObject:
   m_ObjectHideFlags: 0
@@ -4466,6 +4523,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 0
+--- !u!1 &862230730 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 108664401}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &862230731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862230730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64187796371c84d4bbf05e3d7e7ecf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 8
 --- !u!1001 &865635315
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4908,6 +4984,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 896277608}
   m_CullTransparentMesh: 0
+--- !u!1 &918716399 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1111946444}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &918716400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918716399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64187796371c84d4bbf05e3d7e7ecf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 4
 --- !u!1001 &954037780
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5347,16 +5442,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 792520107}
+      objectReference: {fileID: 918716400}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ForgePlus.LevelManipulation.SelectionManager, Assembly-CSharp
+      value: ForgePlus.DataFileIO.Toggle_SelectPrimaryMode, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetToMedia
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
@@ -7142,16 +7237,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 792520107}
+      objectReference: {fileID: 764990536}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ForgePlus.LevelManipulation.SelectionManager, Assembly-CSharp
+      value: ForgePlus.DataFileIO.Toggle_SelectPrimaryMode, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetToPlatforms
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
@@ -8058,16 +8153,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 792520107}
+      objectReference: {fileID: 793160946}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ForgePlus.LevelManipulation.SelectionManager, Assembly-CSharp
+      value: ForgePlus.DataFileIO.Toggle_SelectPrimaryMode, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetToLights
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
@@ -8248,16 +8343,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 792520107}
+      objectReference: {fileID: 1960900429}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ForgePlus.LevelManipulation.SelectionManager, Assembly-CSharp
+      value: ForgePlus.DataFileIO.Toggle_SelectPrimaryMode, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetToGeometry
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
@@ -8302,6 +8397,25 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1569866663}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1635613275 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 2024915267}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1635613276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635613275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64187796371c84d4bbf05e3d7e7ecf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 7
 --- !u!1 &1657472860
 GameObject:
   m_ObjectHideFlags: 0
@@ -9929,6 +10043,25 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
   m_LayoutPriority: 1
+--- !u!1 &1891626873 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 783673826}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1891626874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1891626873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64187796371c84d4bbf05e3d7e7ecf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 6
 --- !u!1 &1908588267
 GameObject:
   m_ObjectHideFlags: 0
@@ -10344,6 +10477,25 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 543102907}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1960900428 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1569866663}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1960900429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960900428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64187796371c84d4bbf05e3d7e7ecf02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 1
 --- !u!1001 &1961934259
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10760,16 +10912,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 792520107}
+      objectReference: {fileID: 79777105}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ForgePlus.LevelManipulation.SelectionManager, Assembly-CSharp
+      value: ForgePlus.DataFileIO.Toggle_SelectPrimaryMode, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetToTextures
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
@@ -11297,16 +11449,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 792520107}
+      objectReference: {fileID: 1635613276}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: ForgePlus.LevelManipulation.SelectionManager, Assembly-CSharp
+      value: ForgePlus.DataFileIO.Toggle_SelectPrimaryMode, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SetToAnnotations
+      value: OnValueChanged
       objectReference: {fileID: 0}
     - target: {fileID: 5965558954833741979, guid: f5d92cab146ca0242ac5c3ba3f421ffc,
         type: 3}

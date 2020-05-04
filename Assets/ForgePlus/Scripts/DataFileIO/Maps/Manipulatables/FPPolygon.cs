@@ -43,7 +43,7 @@ namespace ForgePlus.LevelManipulation
 
         public void Inspect()
         {
-            var inspectorPrefab =   SelectionManager.Instance.CurrentSceneSelectionFilter == SelectionManager.SceneSelectionFilters.Geometry ?
+            var inspectorPrefab = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
                                   Resources.Load<InspectorBase>("Inspectors/Inspector - FPPolygon") :
                                   Resources.Load<InspectorBase>("Inspectors/Inspector - FPPolygon Textures");
             var inspector = Instantiate(inspectorPrefab);

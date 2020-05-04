@@ -1,10 +1,8 @@
-﻿using ForgePlus.DataFileIO;
-using ForgePlus.LevelManipulation;
+﻿using ForgePlus.LevelManipulation;
 using ForgePlus.ShapesCollections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Weland;
 using Weland.Extensions;
@@ -34,39 +32,135 @@ namespace ForgePlus.Palette
         private readonly List<GameObject> currentSwatches = new List<GameObject>();
         private readonly List<GameObject> currentLayoutHelpers = new List<GameObject>();
 
-        private bool selectionEventStartedOverEmptiness = false;
-
-        public void UpdatePaletteToMatchSelectionMode()
+        public void UpdatePaletteToMatchSelectionMode(ModeManager.PrimaryModes primaryMode, ModeManager.SecondaryModes secondaryMode)
         {
-            switch (SelectionManager.Instance.CurrentSceneSelectionFilter)
+            Clear();
+
+            switch (primaryMode)
             {
-                case SelectionManager.SceneSelectionFilters.Geometry:
-                    SetToGeometry(shouldSet: true);
+                case ModeManager.PrimaryModes.Geometry:
+                    toggleGroup.allowSwitchOff = false;
+
+                    // TODO: populate with tools
+                    //       - Line Drawing
+                    //       - Polygon Fill (oh man... should this auto-fill when a poly is completed?)
+
                     break;
-                case SelectionManager.SceneSelectionFilters.Textures:
-                    SetToTextures(shouldSet: true);
+
+                case ModeManager.PrimaryModes.Textures:
+                    toggleGroup.allowSwitchOff = false;
+
+                    var loadedTextureEntries = WallsCollection.GetAllLoadedTextures().ToList();
+                    loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.Collection == entryB.Key.Collection ?
+                                                                   entryA.Key.Bitmap.CompareTo(entryB.Key.Bitmap) :
+                                                                   ((entryA.Key.UsesLandscapeCollection() || entryB.Key.UsesLandscapeCollection()) ?
+                                                                    -entryA.Key.Collection.CompareTo(entryB.Key.Collection) :
+                                                                    entryA.Key.Collection.CompareTo(entryB.Key.Collection))));
+
+                    GameObject currentHorizontalHelper = null;
+                    var activatedFirstSwatch = false;
+
+                    foreach (var textureEntry in loadedTextureEntries)
+                    {
+                        if (textureEntry.Key.UsesLandscapeCollection())
+                        {
+                            currentHorizontalHelper = null;
+
+                            var swatch = Instantiate(textureSwatchPrefab, swatchesParent);
+                            swatch.SetInitialValues(textureEntry, toggleGroup);
+                            currentSwatches.Add(swatch.gameObject);
+                        }
+                        else
+                        {
+                            if (!currentHorizontalHelper)
+                            {
+                                currentHorizontalHelper = Instantiate(horizontalLayoutHelperPrefab, swatchesParent);
+                                currentLayoutHelpers.Add(currentHorizontalHelper);
+
+                                var swatch = Instantiate(textureSwatchPrefab, currentHorizontalHelper.transform);
+                                swatch.SetInitialValues(textureEntry, toggleGroup);
+                                currentSwatches.Add(swatch.gameObject);
+                            }
+                            else
+                            {
+                                var swatch = Instantiate(textureSwatchPrefab, currentHorizontalHelper.transform);
+                                swatch.SetInitialValues(textureEntry, toggleGroup);
+                                currentSwatches.Add(swatch.gameObject);
+
+                                currentHorizontalHelper = null;
+                            }
+                        }
+
+                        if (!activatedFirstSwatch)
+                        {
+                            currentSwatches[0].GetComponent<Toggle>().isOn = true;
+
+                            activatedFirstSwatch = true;
+                        }
+                    }
+
                     break;
-                case SelectionManager.SceneSelectionFilters.Lights:
-                    SetToLights(shouldSet: true);
+
+                case ModeManager.PrimaryModes.Lights:
+                    toggleGroup.allowSwitchOff = true;
+
+                    foreach (var fpLight in FPLevel.Instance.FPLights.Values)
+                    {
+                        var swatch = Instantiate(lightSwatchPrefab, swatchesParent);
+                        swatch.SetInitialValues(fpLight, toggleGroup);
+                        currentSwatches.Add(swatch.gameObject);
+                    }
+
                     break;
-                case SelectionManager.SceneSelectionFilters.Media:
-                    SetToMedia(shouldSet: true);
+
+                case ModeManager.PrimaryModes.Media:
+                    toggleGroup.allowSwitchOff = true;
+
+                    foreach (var fpMedia in FPLevel.Instance.FPMedias.Values)
+                    {
+                        var swatch = Instantiate(mediaSwatchPrefab, swatchesParent);
+                        swatch.SetInitialValues(fpMedia, toggleGroup);
+                        currentSwatches.Add(swatch.gameObject);
+                    }
+
                     break;
-                case SelectionManager.SceneSelectionFilters.Platforms:
-                    SetToPlatforms(shouldSet: true);
+
+                case ModeManager.PrimaryModes.Platforms:
+                    toggleGroup.allowSwitchOff = true;
+
+                    // TODO: populate with shortcuts that focus the camera on the associated platform polygon when clicked.
+
                     break;
-                case SelectionManager.SceneSelectionFilters.Objects:
-                    SetToObjects(shouldSet: true);
+
+                case ModeManager.PrimaryModes.Objects:
+                    toggleGroup.allowSwitchOff = false;
+
+                    // TODO: populate with placement tools
+                    //       - Players
+                    //       - Monsters
+                    //           - foldout to show all subtypes
+                    //           - load view-0, frame-0 sprite
+                    //       - Items
+                    //           - foldout to show all subtypes
+                    //           - load view-0, frame-0 sprite
+                    //       - Sceneries
+                    //           - foldout to show all subtypes
+                    //           - load view-0, frame-0 sprite
+                    //       - Sounds
+                    //           - foldout to show all subtypes
+                    //           - plays sound when clicked
+                    //       - Goals
+
                     break;
-                case SelectionManager.SceneSelectionFilters.Annotations:
-                    SetToAnnotations(shouldSet: true);
+
+                case ModeManager.PrimaryModes.Annotations:
                     break;
-                case SelectionManager.SceneSelectionFilters.Level:
-                    SetToLevel(shouldSet: true);
+
+                case ModeManager.PrimaryModes.Level:
                     break;
-                case SelectionManager.SceneSelectionFilters.None:
+
+                case ModeManager.PrimaryModes.None:
                 default:
-                    SetToNone(shouldSet: true);
                     break;
             }
         }
@@ -120,193 +214,19 @@ namespace ForgePlus.Palette
             }
             else
             {
-                //// TODO needed to prevent multi-swatch-select?: toggleGroup.SetAllTogglesOff(sendCallback: false);
                 toggle.SetIsOnWithoutNotify(true);
             }
         }
 
-        private void SetToNone(bool shouldSet)
-        {
-            Clear();
-        }
-
-        private void SetToGeometry(bool shouldSet)
-        {
-            Clear();
-
-            toggleGroup.allowSwitchOff = false;
-
-            // TODO: populate with tools
-            //       - Line Drawing
-            //       - Polygon Fill (oh man... should this auto-fill when a poly is completed?)
-        }
-
-        private void SetToTextures(bool shouldSet)
-        {
-            Clear();
-
-            toggleGroup.allowSwitchOff = false;
-
-            var loadedTextureEntries = WallsCollection.GetAllLoadedTextures().ToList();
-            loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.Collection == entryB.Key.Collection ?
-                                                           entryA.Key.Bitmap.CompareTo(entryB.Key.Bitmap) :
-                                                           ((entryA.Key.UsesLandscapeCollection() || entryB.Key.UsesLandscapeCollection()) ?
-                                                            -entryA.Key.Collection.CompareTo(entryB.Key.Collection) :
-                                                            entryA.Key.Collection.CompareTo(entryB.Key.Collection))));
-
-            GameObject currentHorizontalHelper = null;
-            var activatedFirstSwatch = false;
-
-            foreach (var textureEntry in loadedTextureEntries)
-            {
-                if (textureEntry.Key.UsesLandscapeCollection())
-                {
-                    currentHorizontalHelper = null;
-
-                    var swatch = Instantiate(textureSwatchPrefab, swatchesParent);
-                    swatch.SetInitialValues(textureEntry, toggleGroup);
-                    currentSwatches.Add(swatch.gameObject);
-                }
-                else
-                {
-                    if (!currentHorizontalHelper)
-                    {
-                        currentHorizontalHelper = Instantiate(horizontalLayoutHelperPrefab, swatchesParent);
-                        currentLayoutHelpers.Add(currentHorizontalHelper);
-
-                        var swatch = Instantiate(textureSwatchPrefab, currentHorizontalHelper.transform);
-                        swatch.SetInitialValues(textureEntry, toggleGroup);
-                        currentSwatches.Add(swatch.gameObject);
-                    }
-                    else
-                    {
-                        var swatch = Instantiate(textureSwatchPrefab, currentHorizontalHelper.transform);
-                        swatch.SetInitialValues(textureEntry, toggleGroup);
-                        currentSwatches.Add(swatch.gameObject);
-
-                        currentHorizontalHelper = null;
-                    }
-                }
-
-                if (!activatedFirstSwatch)
-                {
-                    currentSwatches[0].GetComponent<Toggle>().isOn = true;
-
-                    activatedFirstSwatch = true;
-                }
-            }
-        }
-
-        private void SetToLights(bool shouldSet)
-        {
-            Clear();
-
-            toggleGroup.allowSwitchOff = true;
-
-            foreach (var fpLight in FPLevel.Instance.FPLights.Values)
-            {
-                var swatch = Instantiate(lightSwatchPrefab, swatchesParent);
-                swatch.SetInitialValues(fpLight, toggleGroup);
-                currentSwatches.Add(swatch.gameObject);
-            }
-        }
-
-        private void SetToMedia(bool shouldSet)
-        {
-            Clear();
-
-            toggleGroup.allowSwitchOff = true;
-
-            foreach (var fpMedia in FPLevel.Instance.FPMedias.Values)
-            {
-                var swatch = Instantiate(mediaSwatchPrefab, swatchesParent);
-                swatch.SetInitialValues(fpMedia, toggleGroup);
-                currentSwatches.Add(swatch.gameObject);
-            }
-        }
-
-        private void SetToPlatforms(bool shouldSet)
-        {
-            Clear();
-
-            toggleGroup.allowSwitchOff = true;
-
-            // TODO: populate with shortcuts that focus the camera on the associated platform polygon when clicked.
-        }
-
-        private void SetToObjects(bool shouldSet)
-        {
-            Clear();
-
-            toggleGroup.allowSwitchOff = false;
-
-            // TODO: populate with placement tools
-            //       - Players
-            //       - Monsters
-            //           - foldout to show all subtypes
-            //           - load view-0, frame-0 sprite
-            //       - Items
-            //           - foldout to show all subtypes
-            //           - load view-0, frame-0 sprite
-            //       - Sceneries
-            //           - foldout to show all subtypes
-            //           - load view-0, frame-0 sprite
-            //       - Sounds
-            //           - foldout to show all subtypes
-            //           - plays sound when clicked
-            //       - Goals
-        }
-
-        private void SetToAnnotations(bool shouldSet)
-        {
-            Clear();
-        }
-
-        private void SetToLevel(bool shouldSet)
-        {
-            Clear();
-        }
-
         private void Start()
         {
-            MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
-            MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
+            ModeManager.Instance.OnModeChanged += UpdatePaletteToMatchSelectionMode;
+            SelectionManager.Instance.OnClickEmptySpace += OnClickEmptySpace;
         }
 
-        private void OnLevelOpened(string levelName)
+        private void OnClickEmptySpace()
         {
-            UpdatePaletteToMatchSelectionMode();
-        }
-
-        private void OnLevelClosed()
-        {
-            Clear();
-        }
-
-        private void Update()
-        {
-            if (Input.GetMouseButtonDown(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
-            {
-                if (!EventSystem.current.IsPointerOverGameObject())
-                {
-                    selectionEventStartedOverEmptiness = true;
-                }
-            }
-
-            if (Input.GetMouseButtonUp(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
-            {
-                if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
-                {
-                    if (toggleGroup.allowSwitchOff)
-                    {
-                        toggleGroup.SetAllTogglesOff(sendCallback: true);
-                    }
-                }
-
-                selectionEventStartedOverEmptiness = false;
-            }
+            toggleGroup.SetAllTogglesOff(sendCallback: true);
         }
     }
 }

@@ -17,12 +17,12 @@ namespace ForgePlus.LevelManipulation
         {
             if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
             {
-                switch (SelectionManager.Instance.CurrentSceneSelectionFilter)
+                switch (ModeManager.Instance.PrimaryMode)
                 {
-                    case SelectionManager.SceneSelectionFilters.Geometry:
+                    case ModeManager.PrimaryModes.Geometry:
                         SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
                         break;
-                    case SelectionManager.SceneSelectionFilters.Textures:
+                    case ModeManager.PrimaryModes.Textures:
                         if ((ushort)surfaceShapeDescriptor != (ushort)ShapeDescriptor.Empty)
                         {
                             SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
@@ -30,11 +30,11 @@ namespace ForgePlus.LevelManipulation
                         }
 
                         break;
-                    case SelectionManager.SceneSelectionFilters.Lights:
+                    case ModeManager.PrimaryModes.Lights:
                         SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
                         PaletteManager.Instance.SelectSwatchForLight(FPLight, invokeToggleEvents: false);
                         break;
-                    case SelectionManager.SceneSelectionFilters.Media:
+                    case ModeManager.PrimaryModes.Media:
                         if (FPMedia != null)
                         {
                             SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
@@ -42,7 +42,7 @@ namespace ForgePlus.LevelManipulation
                         }
 
                         break;
-                    case SelectionManager.SceneSelectionFilters.Platforms:
+                    case ModeManager.PrimaryModes.Platforms:
                         if (FPPlatform != null)
                         {
                             SelectionManager.Instance.ToggleObjectSelection(FPPlatform, multiSelect: false);
@@ -50,7 +50,7 @@ namespace ForgePlus.LevelManipulation
 
                         break;
                     default:
-                        Debug.LogError($"Selection in mode \"{SelectionManager.Instance.CurrentSceneSelectionFilter}\" is not supported.");
+                        Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
                         break;
                 }
             }
