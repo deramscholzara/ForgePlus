@@ -1,4 +1,4 @@
-﻿using ForgePlus.ApplicationGeneral;
+﻿using System;
 
 namespace ForgePlus.DataFileIO
 {
@@ -7,14 +7,26 @@ namespace ForgePlus.DataFileIO
         where U : FileDataBase<V>, new()
         where V : class, IFileLoadable, new()
     {
-        public delegate void OnLoadCompleteDelegate(bool isLoaded);
-        public event OnLoadCompleteDelegate OnDataLoadCompleted;
+        private event Action<bool> OnDataLoadCompleted_Sender;
+
+        public event Action<bool> OnDataLoadCompleted
+        {
+            add
+            {
+                OnDataLoadCompleted_Sender += value;
+                value.Invoke(data != null);
+            }
+            remove
+            {
+                OnDataLoadCompleted_Sender -= value;
+            }
+        }
 
         protected abstract DataFileTypes DataFileType { get; }
 
         protected U data;
 
-        public void LoadFile(bool forceReload = true)
+        public virtual void LoadFile(bool forceReload = true)
         {
             if (!forceReload && data != null)
             {
@@ -36,11 +48,10 @@ namespace ForgePlus.DataFileIO
             data.SetPath(path);
             data.LoadData();
 
-            OnLoadedChanged();
-            OnDataLoadCompleted?.Invoke(isLoaded: true);
+            OnDataLoadCompleted_Sender?.Invoke(true);
         }
 
-        public void UnloadFile()
+        public virtual void UnloadFile()
         {
             if (data == null)
             {
@@ -52,13 +63,7 @@ namespace ForgePlus.DataFileIO
 
             data = null;
 
-            OnLoadedChanged();
-            OnDataLoadCompleted?.Invoke(isLoaded: false);
-        }
-
-        protected virtual void OnLoadedChanged()
-        {
-            // Intentionally blank
+            OnDataLoadCompleted_Sender?.Invoke(false);
         }
     }
 }

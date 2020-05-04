@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,11 +30,21 @@ namespace ForgePlus.DataFileIO
 
         private void OnEnable()
         {
-            MapsLoading.Instance.OnDataLoadComplete += OnMapsLoaded;
+            MapsLoading.Instance.OnDataLoadCompleted += OnMapsLoaded;
+            MapsLoading.Instance.OnSaveCompleted += RefreshList;
 
             if (MapsLoading.Instance.LevelNames == null)
             {
-                MapsLoading.Instance.LoadFile();
+                try
+                {
+                    MapsLoading.Instance.LoadFile();
+                }
+                catch (Exception exception)
+                {
+                    Debug.LogError($"Attempt to load file at path \"{FileSettings.Instance.GetFilePath(DataFileTypes.Maps)}\" failed with exception: {exception}");
+
+                    FileSettings.Instance.UnloadFile(DataFileTypes.Maps);
+                }
             }
             else
             {
@@ -43,7 +54,8 @@ namespace ForgePlus.DataFileIO
 
         private void OnDisable()
         {
-            MapsLoading.Instance.OnDataLoadComplete -= OnMapsLoaded;
+            MapsLoading.Instance.OnDataLoadCompleted -= OnMapsLoaded;
+            MapsLoading.Instance.OnSaveCompleted -= RefreshList;
         }
 
         private void OnMapsLoaded(bool isLoaded)

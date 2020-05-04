@@ -5,15 +5,13 @@ using SimpleFileBrowser;
 using System;
 using System.IO;
 using UnityEngine;
+using Weland;
 
 namespace ForgePlus.DataFileIO
 {
-    public class MapsSaving : OnDemandSingleton<MapsSaving>
+    public partial class MapsLoading : FileLoadingBase<MapsLoading, MapsData, MapFile>
     {
-        public MapsData CurrentMapsData { private get; set; }
-
-        public delegate void OnSaveCompleteDelegate();
-        public event OnSaveCompleteDelegate OnSaveCompleted;
+        public event Action OnSaveCompleted;
 
         public void Save()
         {
@@ -31,7 +29,6 @@ namespace ForgePlus.DataFileIO
 
             var initialPath = FileSettings.Instance.GetFilePath(type);
             var initialDirectory = Path.GetDirectoryName(initialPath);
-            initialPath = Path.Combine(initialDirectory, FPLevel.Instance.Level.Name);
 
             await FileBrowser.WaitForSaveDialog(
                 folderMode: false,
@@ -64,12 +61,12 @@ namespace ForgePlus.DataFileIO
 
         private void SaveLevelToUnmergedMapFile(string savePath)
         {
-            if (CurrentMapsData == null)
+            if (data == null)
             {
                 throw new IOException($"Tried saving Level with no MapsData loaded.");
             }
 
-            CurrentMapsData.SaveCurrentLevel(savePath);
+            data.SaveCurrentLevel(savePath);
         }
     }
 }

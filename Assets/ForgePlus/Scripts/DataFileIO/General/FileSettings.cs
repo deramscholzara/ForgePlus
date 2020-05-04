@@ -22,7 +22,26 @@ namespace ForgePlus.DataFileIO
     {
         private const string playerPrefsPrefix = "FilePath_";
 
-        public event Action<DataFileTypes, string> OnPathChanged;
+        private event Action<DataFileTypes, string> OnPathChanged_Sender;
+
+        public event Action<DataFileTypes, string> OnPathChanged
+        {
+            add
+            {
+                OnPathChanged_Sender += value;
+                value.Invoke(DataFileTypes.Maps, GetFilePath(DataFileTypes.Maps));
+                value.Invoke(DataFileTypes.Shapes, GetFilePath(DataFileTypes.Shapes));
+
+                // TODO: uncomment these when ready for them.
+                ////value.Invoke(DataFileTypes.Physics, GetFilePath(DataFileTypes.Physics));
+                ////value.Invoke(DataFileTypes.Sounds, GetFilePath(DataFileTypes.Sounds));
+                ////value.Invoke(DataFileTypes.Images, GetFilePath(DataFileTypes.Images));
+            }
+            remove
+            {
+                OnPathChanged_Sender -= value;
+            }
+        }
 
         public void ShowSelectionBrowser(DataFileTypes type)
         {
@@ -38,7 +57,7 @@ namespace ForgePlus.DataFileIO
         {
             PlayerPrefs.SetString(GetPlayerPrefsKey(type), filePath);
 
-            OnPathChanged?.Invoke(type, filePath);
+            OnPathChanged_Sender?.Invoke(type, filePath);
 
             if (loadFile)
             {

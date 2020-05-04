@@ -1,5 +1,4 @@
-﻿using ForgePlus.LevelManipulation;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,22 +10,13 @@ namespace ForgePlus.DataFileIO
     {
         private LevelData currentlyOpenLevel;
 
-        private string[] currentLevelNames = null;
-
         public IReadOnlyCollection<string> LevelNames
         {
             get
             {
                 LoadData();
 
-                if (file == null)
-                {
-                    return new string[] { };
-                }
-                else
-                {
-                    return file.Overlays.Select(item => item.Value.LevelName).ToArray();
-                }
+                return file == null ? null : file.Overlays.Select(item => item.Value.LevelName).ToArray();
             }
         }
 
@@ -66,11 +56,6 @@ namespace ForgePlus.DataFileIO
             var levelOverlay = file.Overlays[currentlyOpenLevel.LevelIndex];
             file.Overlays.Clear();
             file.Overlays[currentlyOpenLevel.LevelIndex] = levelOverlay;
-        }
-
-        protected override void PreUnloadDataCleanup()
-        {
-            CloseAndUnloadCurrentLevel();
         }
     }
 }

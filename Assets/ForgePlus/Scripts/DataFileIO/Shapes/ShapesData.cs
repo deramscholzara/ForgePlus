@@ -1,5 +1,4 @@
-﻿using ForgePlus.ShapesCollections;
-using UnityEngine;
+﻿using UnityEngine;
 using Weland;
 
 namespace ForgePlus.DataFileIO
@@ -11,11 +10,6 @@ namespace ForgePlus.DataFileIO
             LoadData();
 
             return file.GetShape(shapeDescriptor);
-        }
-
-        protected override void PreUnloadDataCleanup()
-        {
-            WallsCollection.ClearCollection();
         }
     }
 }
