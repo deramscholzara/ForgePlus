@@ -10,6 +10,14 @@ namespace ForgePlus.LevelManipulation
     {
         protected SurfaceBatchingManager.RuntimeSurfaceMaterialKey runtimeSurfaceMaterialInstanceKey = new SurfaceBatchingManager.RuntimeSurfaceMaterialKey();
 
+        public SurfaceBatchingManager.RuntimeSurfaceMaterialKey BatchingKey
+        {
+            get
+            {
+                return runtimeSurfaceMaterialInstanceKey;
+            }
+        }
+
         public void InitializeRuntimeSurface(FPLight fpLight, bool isStaticBatchable)
         {
             var renderer = GetComponent<MeshRenderer>();
