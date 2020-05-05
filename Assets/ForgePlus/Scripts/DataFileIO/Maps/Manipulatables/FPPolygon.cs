@@ -1,14 +1,22 @@
-﻿using ForgePlus.Inspection;
+﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
-using ForgePlus.ShapesCollections;
 using System.Collections.Generic;
 using UnityEngine;
 using Weland;
+using Weland.Extensions;
 
 namespace ForgePlus.LevelManipulation
 {
     public class FPPolygon : MonoBehaviour, IFPManipulatable<Polygon>, IFPSelectionDisplayable, IFPInspectable
     {
+        public enum PolygonSurfaceTypes
+        {
+            Floor,
+            Ceiling,
+            Media,
+        }
+
         private List<GameObject> selectionVisualizationIndicators = new List<GameObject>(16);
 
         public short Index { get; set; }
@@ -56,25 +64,61 @@ namespace ForgePlus.LevelManipulation
             BuildFloorAndCeiling();
         }
 
-        public Vector2[] GetUVs(short x, short y)
+        public void SetOffset(PolygonSurfaceTypes surfaceType, int uvChannel, short x, short y, bool rebatch)
         {
-            WelandObject.FloorOrigin.X = x;
-            WelandObject.FloorOrigin.Y = y;
+            SurfaceBatchingManager.RuntimeSurfaceMaterialKey batchKey;
 
-            var meshUVs = new Vector2[WelandObject.VertexCount];
-
-            for (var i = 0; i < WelandObject.VertexCount; i++)
+            switch (surfaceType)
             {
-                var vertexPosition = GeometryUtilities.GetMeshVertex(FPLevel.Level, WelandObject.EndpointIndexes[i]);
+                case PolygonSurfaceTypes.Floor:
+                    if (WelandObject.FloorTransferMode == 9 ||
+                        WelandObject.FloorTexture.UsesLandscapeCollection())
+                    {
+                        // Don't adjust UVs for landscape surfaces.
+                        return;
+                    }
 
-                var u = -(vertexPosition.z * GeometryUtilities.MeterToWorldUnit);
-                var v = -(vertexPosition.x * GeometryUtilities.MeterToWorldUnit);
-                var floorOffset = new Vector2(y / GeometryUtilities.WorldUnitIncrementsPerWorldUnit,
-                                              -x / GeometryUtilities.WorldUnitIncrementsPerWorldUnit);
-                meshUVs[i] = new Vector2(u, v) + floorOffset;
+                    WelandObject.FloorOrigin.X = x;
+                    WelandObject.FloorOrigin.Y = y;
+
+                    batchKey = FloorSurface.GetComponent<RuntimeSurfaceLight>().BatchingKey;
+
+                    break;
+                case PolygonSurfaceTypes.Ceiling:
+                    if (WelandObject.FloorTransferMode == 9 ||
+                        WelandObject.FloorTexture.UsesLandscapeCollection())
+                    {
+                        // Don't adjust UVs for landscape surfaces.
+                        return;
+                    }
+
+                    WelandObject.CeilingOrigin.X = x;
+                    WelandObject.CeilingOrigin.Y = y;
+
+                    batchKey = CeilingSurface.GetComponent<RuntimeSurfaceLight>().BatchingKey;
+
+                    break;
+                default:
+                    return;
             }
 
-            return meshUVs;
+            var surfaceObject = surfaceType == PolygonSurfaceTypes.Floor ?
+                                               FloorSurface.GetComponent<FPInteractiveSurfacePolygon>() :
+                                               CeilingSurface.GetComponent<FPInteractiveSurfacePolygon>();
+
+            if (rebatch)
+            {
+                SurfaceBatchingManager.Instance.UnmergeBatch(batchKey);
+            }
+
+            var meshUVs = BuildUVs(x, y);
+            surfaceObject.GetComponent<MeshFilter>().sharedMesh.SetUVs(uvChannel, meshUVs);
+
+            // TODO: rebatch this surface's batch
+            if (rebatch)
+            {
+                SurfaceBatchingManager.Instance.MergeBatch(batchKey);
+            }
         }
 
         private void BuildFloorAndCeiling()
@@ -166,13 +210,13 @@ namespace ForgePlus.LevelManipulation
             }
 
             #region UVs
-            var ceilingUvs = GetUVs(WelandObject.CeilingOrigin.X, WelandObject.CeilingOrigin.Y);
-            var floorUvs = GetUVs(WelandObject.FloorOrigin.X, WelandObject.FloorOrigin.Y);
+            var ceilingUvs = BuildUVs(WelandObject.CeilingOrigin.X, WelandObject.CeilingOrigin.Y);
+            var floorUvs = BuildUVs(WelandObject.FloorOrigin.X, WelandObject.FloorOrigin.Y);
 
             Vector2[] mediaUvs = null;
             if (hasMedia)
             {
-                mediaUvs = GetUVs(0, 0);
+                mediaUvs = BuildUVs(0, 0);
             }
             #endregion UVs
             #endregion Generate_Mesh_Data
@@ -349,6 +393,24 @@ namespace ForgePlus.LevelManipulation
                 triangles[currentTriangleIndex] = triangles[currentTriangleIndex + 2];
                 triangles[currentTriangleIndex + 2] = firstIndex;
             }
+        }
+
+        private Vector2[] BuildUVs(short x, short y)
+        {
+            var meshUVs = new Vector2[WelandObject.VertexCount];
+
+            for (var i = 0; i < WelandObject.VertexCount; i++)
+            {
+                var vertexPosition = GeometryUtilities.GetMeshVertex(FPLevel.Level, WelandObject.EndpointIndexes[i]);
+
+                var u = -(vertexPosition.z * GeometryUtilities.MeterToWorldUnit);
+                var v = -(vertexPosition.x * GeometryUtilities.MeterToWorldUnit);
+                var floorOffset = new Vector2(y / GeometryUtilities.WorldUnitIncrementsPerWorldUnit,
+                                              -x / GeometryUtilities.WorldUnitIncrementsPerWorldUnit);
+                meshUVs[i] = new Vector2(u, v) + floorOffset;
+            }
+
+            return meshUVs;
         }
 
         private void CreateSelectionIndicators(GameObject surface, bool isfloor)
