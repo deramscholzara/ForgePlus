@@ -14,20 +14,32 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        public override void OnPointerClick(PointerEventData eventData)
+        public override void OnPointerClickValidated(PointerEventData eventData)
         {
-            if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
-            {
-                // TODO: Implement this
-                throw new System.NotImplementedException();
-            }
+            // TODO: Implement this
+            throw new System.NotImplementedException();
+        }
+
+        public override void OnBeginDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
+        }
+
+        public override void OnDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
+        }
+
+        public override void OnEndDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
         }
 
         public override void SetSelectability(bool enabled)
         {
             base.SetSelectability(enabled);
 
-            // TODO: Set Line selectability
+            // TODO: Set Line selectability (enable scene-clickable element)
         }
 
         public void DisplaySelectionState(bool state)

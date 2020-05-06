@@ -3,26 +3,51 @@ using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
-    public abstract class FPInteractiveSurfaceBase : MonoBehaviour, IFPSelectable, IPointerClickHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+    public abstract class FPInteractiveSurfaceBase : MonoBehaviour,
+        IFPSelectable,
+        IPointerClickHandler,
+        IBeginDragHandler,
+        IEndDragHandler,
+        IDragHandler
     {
         protected bool isSelectable = false;
 
-        public virtual void OnBeginDrag(PointerEventData eventData)
+        public abstract void OnPointerClickValidated(PointerEventData eventData);
+        public abstract void OnBeginDragValidated(PointerEventData eventData);
+        public abstract void OnDragValidated(PointerEventData eventData);
+        public abstract void OnEndDragValidated(PointerEventData eventData);
+
+        public void OnPointerClick(PointerEventData eventData)
         {
-            eventData.dragging = true;
+            if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
+            {
+                OnPointerClickValidated(eventData);
+            }
         }
 
-        public virtual void OnDrag(PointerEventData eventData)
+        public void OnBeginDrag(PointerEventData eventData)
         {
-            // Intentionally blank - this is only here because IDragHandler must be implemented for Begin and End Drag events to fire.
+            if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
+            {
+                OnBeginDragValidated(eventData);
+            }
         }
 
-        public virtual void OnEndDrag(PointerEventData eventData)
+        public void OnDrag(PointerEventData eventData)
         {
-            eventData.dragging = false;
+            if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
+            {
+                OnDragValidated(eventData);
+            }
         }
 
-        public abstract void OnPointerClick(PointerEventData eventData);
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
+            {
+                OnEndDragValidated(eventData);
+            }
+        }
 
         public virtual void SetSelectability(bool enabled)
         {

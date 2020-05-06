@@ -1,5 +1,4 @@
-﻿using ForgePlus.ApplicationGeneral;
-using ForgePlus.Inspection;
+﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,10 +9,10 @@ namespace ForgePlus.LevelManipulation
 {
     public class FPPolygon : MonoBehaviour, IFPManipulatable<Polygon>, IFPSelectionDisplayable, IFPInspectable
     {
-        public enum PolygonSurfaceTypes
+        public enum PolygonDataSources
         {
-            Floor,
             Ceiling,
+            Floor,
             Media,
         }
 
@@ -64,29 +63,14 @@ namespace ForgePlus.LevelManipulation
             BuildFloorAndCeiling();
         }
 
-        public void SetOffset(PolygonSurfaceTypes surfaceType, int uvChannel, short x, short y, bool rebatch)
+        public void SetOffset(FPInteractiveSurfacePolygon surfaceObject, PolygonDataSources surfaceType, short x, short y, bool rebatch)
         {
-            SurfaceBatchingManager.RuntimeSurfaceMaterialKey batchKey;
-
             switch (surfaceType)
             {
-                case PolygonSurfaceTypes.Floor:
-                    if (WelandObject.FloorTransferMode == 9 ||
-                        WelandObject.FloorTexture.UsesLandscapeCollection())
-                    {
-                        // Don't adjust UVs for landscape surfaces.
-                        return;
-                    }
-
-                    WelandObject.FloorOrigin.X = x;
-                    WelandObject.FloorOrigin.Y = y;
-
-                    batchKey = FloorSurface.GetComponent<RuntimeSurfaceLight>().BatchingKey;
-
-                    break;
-                case PolygonSurfaceTypes.Ceiling:
-                    if (WelandObject.FloorTransferMode == 9 ||
-                        WelandObject.FloorTexture.UsesLandscapeCollection())
+                case PolygonDataSources.Ceiling:
+                    if (WelandObject.CeilingTransferMode == 9 ||
+                        WelandObject.CeilingTexture.UsesLandscapeCollection() ||
+                        (ushort)WelandObject.CeilingTexture == (ushort)ShapeDescriptor.Empty)
                     {
                         // Don't adjust UVs for landscape surfaces.
                         return;
@@ -95,29 +79,38 @@ namespace ForgePlus.LevelManipulation
                     WelandObject.CeilingOrigin.X = x;
                     WelandObject.CeilingOrigin.Y = y;
 
-                    batchKey = CeilingSurface.GetComponent<RuntimeSurfaceLight>().BatchingKey;
+                    break;
+                case PolygonDataSources.Floor:
+                    if (WelandObject.FloorTransferMode == 9 ||
+                        WelandObject.FloorTexture.UsesLandscapeCollection() ||
+                        (ushort)WelandObject.FloorTexture == (ushort)ShapeDescriptor.Empty)
+                    {
+                        // Don't adjust UVs for landscape surfaces.
+                        return;
+                    }
+
+                    WelandObject.FloorOrigin.X = x;
+                    WelandObject.FloorOrigin.Y = y;
 
                     break;
                 default:
                     return;
             }
 
-            var surfaceObject = surfaceType == PolygonSurfaceTypes.Floor ?
-                                               FloorSurface.GetComponent<FPInteractiveSurfacePolygon>() :
-                                               CeilingSurface.GetComponent<FPInteractiveSurfacePolygon>();
+            RuntimeSurfaceLight runtimeSurfaceLight = null;
 
             if (rebatch)
             {
-                SurfaceBatchingManager.Instance.UnmergeBatch(batchKey);
+                runtimeSurfaceLight = surfaceObject.GetComponent<RuntimeSurfaceLight>();
+                runtimeSurfaceLight.UnmergeBatch();
             }
 
             var meshUVs = BuildUVs(x, y);
-            surfaceObject.GetComponent<MeshFilter>().sharedMesh.SetUVs(uvChannel, meshUVs);
+            surfaceObject.GetComponent<MeshFilter>().sharedMesh.SetUVs(channel: 0, meshUVs);
 
-            // TODO: rebatch this surface's batch
             if (rebatch)
             {
-                SurfaceBatchingManager.Instance.MergeBatch(batchKey);
+                runtimeSurfaceLight.MergeBatch();
             }
         }
 
@@ -278,7 +271,7 @@ namespace ForgePlus.LevelManipulation
 
             var fpSurfacePolygonFloor = floorRoot.AddComponent<FPInteractiveSurfacePolygon>();
             fpSurfacePolygonFloor.ParentFPPolygon = this;
-            fpSurfacePolygonFloor.IsFloor = true;
+            fpSurfacePolygonFloor.DataSource = PolygonDataSources.Floor;
             fpSurfacePolygonFloor.surfaceShapeDescriptor = WelandObject.FloorTexture;
             fpSurfacePolygonFloor.FPLight = FPLevel.FPLights[WelandObject.FloorLight];
             fpSurfacePolygonFloor.FPMedia = hasMedia ? FPLevel.FPMedias[WelandObject.MediaIndex] : null;
@@ -301,7 +294,7 @@ namespace ForgePlus.LevelManipulation
 
             var fpSurfacePolygonCeiling = ceilingRoot.AddComponent<FPInteractiveSurfacePolygon>();
             fpSurfacePolygonCeiling.ParentFPPolygon = this;
-            fpSurfacePolygonCeiling.IsFloor = false;
+            fpSurfacePolygonCeiling.DataSource = PolygonDataSources.Ceiling;
             fpSurfacePolygonCeiling.surfaceShapeDescriptor = WelandObject.CeilingTexture;
             fpSurfacePolygonCeiling.FPLight = FPLevel.FPLights[WelandObject.CeilingLight];
             fpSurfacePolygonCeiling.FPMedia = hasMedia ? FPLevel.FPMedias[WelandObject.MediaIndex] : null;

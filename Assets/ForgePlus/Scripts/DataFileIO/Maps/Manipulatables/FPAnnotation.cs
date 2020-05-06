@@ -36,12 +36,24 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public override void OnPointerClick(PointerEventData eventData)
+        public override void OnPointerClickValidated(PointerEventData eventData)
         {
-            if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
-            {
-                SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
-            }
+            SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
+        }
+
+        public override void OnBeginDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
+        }
+
+        public override void OnDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
+        }
+
+        public override void OnEndDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
         }
 
         public override void SetSelectability(bool enabled)

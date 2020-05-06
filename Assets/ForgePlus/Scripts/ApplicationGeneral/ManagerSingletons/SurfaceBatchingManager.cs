@@ -9,8 +9,22 @@ namespace ForgePlus.ApplicationGeneral
 {
     public class SurfaceBatchingManager : SingletonMonoBehaviour<SurfaceBatchingManager>
     {
-        public struct RuntimeSurfaceMaterialKey
+        public struct BatchKey
         {
+            public static bool operator ==(BatchKey a, BatchKey b)
+            {
+                return !(a != b);
+            }
+
+            public static bool operator !=(BatchKey a, BatchKey b)
+            {
+                return a.sourceMaterial != b.sourceMaterial ||
+                       a.sourceLight != b.sourceLight ||
+                       a.sourceMedia != b.sourceMedia ||
+                       a.layeredTransparentSideSourceMaterial != b.layeredTransparentSideSourceMaterial ||
+                       a.layeredTransparentSideSourceLight != b.layeredTransparentSideSourceLight;
+            }
+
             // Note: Using Material instead of ShapeDescriptor here,
             // as it accounts for unique shaders used for the same texture.
             // (such as a media texture applied to a wall vs actually applied to media)
@@ -175,10 +189,10 @@ namespace ForgePlus.ApplicationGeneral
         [SerializeField]
         private bool applyStaticBatchingOnLevelLoad = true;
 
-        private readonly Dictionary<RuntimeSurfaceMaterialKey, Material[]> SurfaceMaterials = new Dictionary<RuntimeSurfaceMaterialKey, Material[]>();
-        private readonly Dictionary<RuntimeSurfaceMaterialKey, SurfaceBatch> StaticBatches = new Dictionary<RuntimeSurfaceMaterialKey, SurfaceBatch>();
+        private readonly Dictionary<BatchKey, Material[]> SurfaceMaterials = new Dictionary<BatchKey, Material[]>();
+        private readonly Dictionary<BatchKey, SurfaceBatch> StaticBatches = new Dictionary<BatchKey, SurfaceBatch>();
 
-        public Material[] GetUniqueMaterials(RuntimeSurfaceMaterialKey key)
+        public Material[] GetUniqueMaterials(BatchKey key)
         {
             if (SurfaceMaterials.ContainsKey(key))
             {
@@ -205,7 +219,7 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
-        public void AddToBatches(RuntimeSurfaceMaterialKey key, GameObject surface)
+        public void AddToBatches(BatchKey key, GameObject surface)
         {
             if (!StaticBatches.ContainsKey(key))
             {
@@ -215,7 +229,7 @@ namespace ForgePlus.ApplicationGeneral
             StaticBatches[key].AddSurface(surface);
         }
 
-        public void RemoveFromBatches(RuntimeSurfaceMaterialKey key, GameObject surface)
+        public void RemoveFromBatches(BatchKey key, GameObject surface)
         {
             var occupied = StaticBatches[key].RemoveSurface(surface);
 
@@ -241,12 +255,12 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
-        public void MergeBatch(RuntimeSurfaceMaterialKey key)
+        public void MergeBatch(BatchKey key)
         {
             StaticBatches[key].Merge();
         }
 
-        public void UnmergeBatch(RuntimeSurfaceMaterialKey key)
+        public void UnmergeBatch(BatchKey key)
         {
             StaticBatches[key].Unmerge();
         }

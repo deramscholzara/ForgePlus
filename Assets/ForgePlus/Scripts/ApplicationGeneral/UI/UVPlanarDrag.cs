@@ -28,6 +28,15 @@ namespace ForgePlus.LevelManipulation
 
             uvDraggedPosition += startingUVs;
 
+            if (Input.GetKey(KeyCode.LeftControl) ||
+                Input.GetKey(KeyCode.RightControl))
+            {
+                uvDraggedPosition /= 32f;
+
+                uvDraggedPosition.x = Mathf.Round(uvDraggedPosition.x) * 32;
+                uvDraggedPosition.y = Mathf.Round(uvDraggedPosition.y) * 32;
+            }
+
             uvDraggedPosition.x %= GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
             uvDraggedPosition.y %= GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
 
@@ -40,8 +49,17 @@ namespace ForgePlus.LevelManipulation
             uvDragVector.x = Mathf.Clamp(uvDragVector.x, -MaximumDistance, MaximumDistance);
             uvDragVector.y = Mathf.Clamp(uvDragVector.y, -MaximumDistance, MaximumDistance);
 
-            var uvOffset = new Vector2(uvDragVector.y * GeometryUtilities.WorldUnitIncrementsPerMeter,
-                                       -uvDragVector.x * GeometryUtilities.WorldUnitIncrementsPerMeter);
+            var uvOffset = new Vector2(-uvDragVector.x * GeometryUtilities.WorldUnitIncrementsPerMeter,
+                                       uvDragVector.y * GeometryUtilities.WorldUnitIncrementsPerMeter);
+
+            if (Input.GetKey(KeyCode.X))
+            {
+                uvOffset.y = 0f;
+            }
+            else if (Input.GetKey(KeyCode.Y))
+            {
+                uvOffset.x = 0f;
+            }
 
             return uvOffset;
         }

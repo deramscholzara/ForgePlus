@@ -13,7 +13,7 @@ namespace ForgePlus.LevelManipulation
         {
             this.fpMedia = fpMedia;
 
-            runtimeSurfaceMaterialInstanceKey.sourceMedia = fpMedia;
+            batchKey.sourceMedia = fpMedia;
 
             // RuntimeSurfaceLight.InitializeRuntimeSurface must not run before runtimeSurfaceMaterialKey is initialized
             base.InitializeRuntimeSurface(fpLight, isStaticBatchable: false);

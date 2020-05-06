@@ -4,12 +4,20 @@ using ForgePlus.Runtime.Constraints;
 using System.Collections.Generic;
 using UnityEngine;
 using Weland;
+using Weland.Extensions;
 
 namespace ForgePlus.LevelManipulation
 {
     public class FPSide : MonoBehaviour, IFPManipulatable<Side>, IFPSelectionDisplayable, IFPInspectable
     {
-        private enum SideDataSources
+        public enum SurfaceTypes
+        {
+            Top,
+            Middle,
+            Bottom,
+        }
+
+        public enum SideDataSources
         {
             Primary,
             Secondary,
@@ -275,7 +283,7 @@ namespace ForgePlus.LevelManipulation
 
                 CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
-                var surface = BuildWallSurface(fpLevel,
+                var surface = BuildSurface(fpLevel,
                                                 $"Side Top ({sideIndex}) (High - Source:{sideDataSource})",
                                                 lowHeight,
                                                 highHeight,
@@ -296,7 +304,7 @@ namespace ForgePlus.LevelManipulation
                 {
                     surface.transform.position = new Vector3(0f, (float)(highHeight - lowHeight) / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
-                    ConstrainWallSurfaceToPlatform(fpLevel.FPCeilingFpPlatforms[platformIndex], surface, isFloorPlatform: false);
+                    ConstrainSurfaceToPlatform(fpLevel.FPCeilingFpPlatforms[platformIndex], surface, isFloorPlatform: false);
                 }
                 else
                 {
@@ -324,7 +332,7 @@ namespace ForgePlus.LevelManipulation
                 {
                     CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
-                    var surface = BuildWallSurface(fpLevel,
+                    var surface = BuildSurface(fpLevel,
                                                    $"Side Middle ({sideIndex}) - ({typeDescriptor})",
                                                    lowHeight,
                                                    highHeight,
@@ -360,7 +368,7 @@ namespace ForgePlus.LevelManipulation
 
                 CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
-                var surface = BuildWallSurface(fpLevel,
+                var surface = BuildSurface(fpLevel,
                                                 $"Side Bottom ({sideIndex}) (Low - Source:{sideDataSource})",
                                                 lowHeight,
                                                 highHeight,
@@ -374,14 +382,14 @@ namespace ForgePlus.LevelManipulation
                                                 facingPolygonIndex,
                                                 isStaticBatchable: !isPartOfFloorPlatform,
                                                 fpPlatform: isPartOfFloorPlatform ? fpLevel.FPFloorFpPlatforms[platformIndex] : null,
-                                                hasLayeredTransparentSide: false, 
+                                                hasLayeredTransparentSide: false,
                                                 layeredTransparentSideTransferMode: -1);
 
                 if (isPartOfFloorPlatform)
                 {
                     surface.transform.position = Vector3.zero;
 
-                    ConstrainWallSurfaceToPlatform(fpLevel.FPFloorFpPlatforms[platformIndex], surface, isFloorPlatform: true);
+                    ConstrainSurfaceToPlatform(fpLevel.FPFloorFpPlatforms[platformIndex], surface, isFloorPlatform: true);
                 }
                 else
                 {
@@ -392,6 +400,72 @@ namespace ForgePlus.LevelManipulation
             }
 
             return fpSide;
+        }
+
+        public void SetOffset(FPInteractiveSurfaceSide surfaceObject, SideDataSources dataSource, int uvChannel, short x, short y, bool rebatch)
+        {
+            switch (dataSource)
+            {
+                case SideDataSources.Primary:
+                    if (WelandObject.PrimaryTransferMode == 9 ||
+                        WelandObject.Primary.Texture.UsesLandscapeCollection() ||
+                        (ushort)WelandObject.Primary.Texture == (ushort)ShapeDescriptor.Empty)
+                    {
+                        // Don't adjust UVs for landscape surfaces.
+                        return;
+                    }
+
+                    WelandObject.Primary.X = x;
+                    WelandObject.Primary.Y = y;
+
+                    break;
+                case SideDataSources.Secondary:
+                    if (WelandObject.SecondaryTransferMode == 9 ||
+                        WelandObject.Secondary.Texture.UsesLandscapeCollection() ||
+                        (ushort)WelandObject.Primary.Texture == (ushort)ShapeDescriptor.Empty)
+                    {
+                        // Don't adjust UVs for landscape surfaces.
+                        return;
+                    }
+
+                    WelandObject.Secondary.X = x;
+                    WelandObject.Secondary.Y = y;
+
+                    break;
+                case SideDataSources.Transparent:
+                    if (WelandObject.TransparentTransferMode == 9 ||
+                        WelandObject.Transparent.Texture.UsesLandscapeCollection() ||
+                        (ushort)WelandObject.Primary.Texture == (ushort)ShapeDescriptor.Empty)
+                    {
+                        // Don't adjust UVs for landscape surfaces.
+                        return;
+                    }
+
+                    WelandObject.Transparent.X = x;
+                    WelandObject.Transparent.Y = y;
+
+                    break;
+                default:
+                    return;
+            }
+
+            RuntimeSurfaceLight runtimeSurfaceLight = null;
+
+            if (rebatch)
+            {
+                runtimeSurfaceLight = surfaceObject.GetComponent<RuntimeSurfaceLight>();
+                runtimeSurfaceLight.UnmergeBatch();
+            }
+
+            var surfaceMesh = surfaceObject.GetComponent<MeshFilter>().sharedMesh;
+
+            var meshUVs = BuildUVs(surfaceMesh.vertices, x, y);
+            surfaceMesh.SetUVs(uvChannel, meshUVs);
+
+            if (rebatch)
+            {
+                runtimeSurfaceLight.MergeBatch();
+            }
         }
 
         private static void CreateSideRoot(ref FPSide fpSide, bool isClockwise, short sideIndex, Side side, FPLevel fpLevel)
@@ -408,7 +482,7 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        private static GameObject BuildWallSurface(
+        private static GameObject BuildSurface(
             FPLevel fpLevel,
             string name,
             short lowHeight,
@@ -489,7 +563,7 @@ namespace ForgePlus.LevelManipulation
             #endregion Triangles
 
             #region UVs
-            var uvs = GetWallSurfaceUVs(vertices, textureOffsetX, textureOffsetY);
+            var uvs = BuildUVs(vertices, textureOffsetX, textureOffsetY);
             #endregion UVs
 
             #region TransferModes_VertexColor
@@ -528,7 +602,7 @@ namespace ForgePlus.LevelManipulation
                     transferModesVertexColors,
                     isOpaqueSurface,
                     isStaticBatchable,
-                    GetWallSurfaceUVs(vertices, side.Transparent.X, side.Transparent.Y),
+                    BuildUVs(vertices, side.Transparent.X, side.Transparent.Y),
                     side.Transparent.Texture,
                     fpLevel.FPLights[side.TransparentLightsourceIndex],
                     layeredTransparentSideTransferMode,
@@ -550,8 +624,9 @@ namespace ForgePlus.LevelManipulation
             }
 
             var fpSurfaceSide = surfaceGameObject.AddComponent<FPInteractiveSurfaceSide>();
-            fpSurfaceSide.surfaceShapeDescriptor = shapeDescriptor;
             fpSurfaceSide.ParentFPSide = fpSide;
+            fpSurfaceSide.DataSource = sideDataSource;
+            fpSurfaceSide.surfaceShapeDescriptor = shapeDescriptor;
             fpSurfaceSide.FPLight = fpLevel.FPLights[lightIndex];
             fpSurfaceSide.FPPlatform = fpPlatform;
 
@@ -563,16 +638,16 @@ namespace ForgePlus.LevelManipulation
             return surfaceGameObject;
         }
 
-        private static Vector2[] GetWallSurfaceUVs(Vector3[] vertices, short textureOffsetX, short textureOffsetY)
+        private static Vector2[] BuildUVs(Vector3[] vertices, short textureOffsetX, short textureOffsetY)
         {
             var uvs = new Vector2[vertices.Length];
 
-            var wallDimensions = new Vector2((vertices[3] - vertices[0]).magnitude, vertices[1].y - vertices[0].y) * GeometryUtilities.MeterToWorldUnit;
+            var surfaceDimensions = new Vector2((vertices[3] - vertices[0]).magnitude, vertices[1].y - vertices[0].y) * GeometryUtilities.MeterToWorldUnit;
             var offset = new Vector2(textureOffsetX, -textureOffsetY) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
 
             // Note: Marathon uses a Top-Left Origin, so that is compensated for here.
             var uvOrigin = Vector2.up + offset;
-            var uvFar = new Vector2(uvOrigin.x + wallDimensions.x, uvOrigin.y - wallDimensions.y);
+            var uvFar = new Vector2(uvOrigin.x + surfaceDimensions.x, uvOrigin.y - surfaceDimensions.y);
 
             uvs[0] = new Vector2(uvOrigin.x, uvFar.y);
             uvs[1] = uvOrigin;
@@ -582,9 +657,9 @@ namespace ForgePlus.LevelManipulation
             return uvs;
         }
 
-        private static void ConstrainWallSurfaceToPlatform(FPPlatform fpPlatform, GameObject wallSurface, bool isFloorPlatform)
+        private static void ConstrainSurfaceToPlatform(FPPlatform fpPlatform, GameObject surface, bool isFloorPlatform)
         {
-            var constraint = wallSurface.AddComponent<FPPositionConstraint>();
+            var constraint = surface.AddComponent<FPPositionConstraint>();
             constraint.Parent = fpPlatform.transform;
 
             if (isFloorPlatform)
@@ -593,7 +668,7 @@ namespace ForgePlus.LevelManipulation
             }
             else
             {
-                constraint.WorldOffsetFromParent = wallSurface.transform.position;
+                constraint.WorldOffsetFromParent = surface.transform.position;
             }
 
             constraint.ApplyConstraint();
