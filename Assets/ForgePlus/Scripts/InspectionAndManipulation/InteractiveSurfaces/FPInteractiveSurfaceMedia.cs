@@ -10,33 +10,44 @@ namespace ForgePlus.LevelManipulation
         public FPLight FPLight = null;
         public FPMedia FPMedia = null;
 
-        public override void OnPointerClick(PointerEventData eventData)
+        public override void OnPointerClickValidated(PointerEventData eventData)
         {
-            if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
+            switch (ModeManager.Instance.PrimaryMode)
             {
-                // TODO: Make this select the media itself, if in Medias mode
-                switch (ModeManager.Instance.PrimaryMode)
-                {
-                    case ModeManager.PrimaryModes.Geometry:
-                        SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
-                        break;
-                    case ModeManager.PrimaryModes.Lights:
-                        SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForLight(FPLight, invokeToggleEvents: false);
-                        break;
-                    case ModeManager.PrimaryModes.Media:
-                        if (FPMedia != null)
-                        {
-                            SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
-                            PaletteManager.Instance.SelectSwatchForMedia(FPMedia, invokeToggleEvents: false);
-                        }
+                case ModeManager.PrimaryModes.Geometry:
+                    SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
+                    break;
+                case ModeManager.PrimaryModes.Lights:
+                    SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
+                    PaletteManager.Instance.SelectSwatchForLight(FPLight, invokeToggleEvents: false);
+                    break;
+                case ModeManager.PrimaryModes.Media:
+                    if (FPMedia != null)
+                    {
+                        SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
+                        PaletteManager.Instance.SelectSwatchForMedia(FPMedia, invokeToggleEvents: false);
+                    }
 
-                        break;
-                    default:
-                        Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
-                        break;
-                }
+                    break;
+                default:
+                    Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
+                    break;
             }
+        }
+
+        public override void OnBeginDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
+        }
+
+        public override void OnDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
+        }
+
+        public override void OnEndDragValidated(PointerEventData eventData)
+        {
+            // Intentionally blank - for now
         }
 
         public override void SetSelectability(bool enabled)
