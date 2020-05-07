@@ -12,16 +12,16 @@ namespace ForgePlus.LevelManipulation
     {
         protected bool isSelectable = false;
 
-        public abstract void OnPointerClickValidated(PointerEventData eventData);
-        public abstract void OnBeginDragValidated(PointerEventData eventData);
-        public abstract void OnDragValidated(PointerEventData eventData);
-        public abstract void OnEndDragValidated(PointerEventData eventData);
+        public abstract void OnValidatedPointerClick(PointerEventData eventData);
+        public abstract void OnValidatedBeginDrag(PointerEventData eventData);
+        public abstract void OnValidatedDrag(PointerEventData eventData);
+        public abstract void OnValidatedEndDrag(PointerEventData eventData);
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.pointerId == -1 && !eventData.dragging && isSelectable)
+            if (eventData.button == PointerEventData.InputButton.Left && !eventData.dragging && isSelectable)
             {
-                OnPointerClickValidated(eventData);
+                OnValidatedPointerClick(eventData);
             }
         }
 
@@ -29,7 +29,7 @@ namespace ForgePlus.LevelManipulation
         {
             if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
             {
-                OnBeginDragValidated(eventData);
+                OnValidatedBeginDrag(eventData);
             }
         }
 
@@ -37,7 +37,7 @@ namespace ForgePlus.LevelManipulation
         {
             if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
             {
-                OnDragValidated(eventData);
+                OnValidatedDrag(eventData);
             }
         }
 
@@ -45,7 +45,7 @@ namespace ForgePlus.LevelManipulation
         {
             if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
             {
-                OnEndDragValidated(eventData);
+                OnValidatedEndDrag(eventData);
             }
         }
 

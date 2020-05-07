@@ -10,7 +10,7 @@ namespace ForgePlus.LevelManipulation
         public FPLight FPLight = null;
         public FPMedia FPMedia = null;
 
-        public override void OnPointerClickValidated(PointerEventData eventData)
+        public override void OnValidatedPointerClick(PointerEventData eventData)
         {
             switch (ModeManager.Instance.PrimaryMode)
             {
@@ -35,17 +35,17 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public override void OnBeginDragValidated(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(PointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnDragValidated(PointerEventData eventData)
+        public override void OnValidatedDrag(PointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnEndDragValidated(PointerEventData eventData)
+        public override void OnValidatedEndDrag(PointerEventData eventData)
         {
             // Intentionally blank - for now
         }
