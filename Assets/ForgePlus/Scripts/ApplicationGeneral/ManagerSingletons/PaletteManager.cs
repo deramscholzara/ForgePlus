@@ -245,6 +245,11 @@ namespace ForgePlus.Palette
 
         private void UpdateSecondaryModeTogglesToMatchSecondaryMode(ModeManager.SecondaryModes secondaryMode)
         {
+            if (secondaryMode == ModeManager.SecondaryModes.None)
+            {
+                return;
+            }
+
             var modeToggle = secondaryModeToggles.First(toggle => toggle.GetComponent<Toggle_SelectSecondaryMode>().Mode == secondaryMode);
             ActivateToggle(modeToggle, invokeToggleEvents: false);
         }

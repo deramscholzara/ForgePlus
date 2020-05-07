@@ -28,8 +28,7 @@ namespace ForgePlus.LevelManipulation
 
             uvDraggedPosition += startingUVs;
 
-            if (Input.GetKey(KeyCode.LeftControl) ||
-                Input.GetKey(KeyCode.RightControl))
+            if (AxisLocks.Instance.SnapToGrid)
             {
                 uvDraggedPosition /= 32f;
 
