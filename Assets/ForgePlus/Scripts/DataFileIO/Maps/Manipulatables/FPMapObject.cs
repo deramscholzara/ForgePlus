@@ -16,6 +16,7 @@ namespace ForgePlus.LevelManipulation
         private static Mesh PlayerMesh;
         private static Mesh MonsterMesh;
         private static Mesh GoalMesh; // TODO: replace this with something more appropriate - like a flag or something
+        private static Mesh GenericMesh;
 
         private static Mesh ItemMesh;
         private static Mesh SceneryMesh;
@@ -158,8 +159,14 @@ namespace ForgePlus.LevelManipulation
                     gameObject.AddComponent<MeshFilter>().sharedMesh = GoalMesh;
                     break;
                 default:
-                    Debug.LogError($"Object type \"{WelandObject.Type}\" is not implemented and will not be displayed.");
-                    return;
+                    Debug.LogError($"Object type \"{WelandObject.Type}\" is not part of the standard Marathon 2 engine - so... be careful.");
+                    if (!GenericMesh)
+                    {
+                        GenericMesh = BuildTriangleMesh(Color.white);
+                    }
+
+                    gameObject.AddComponent<MeshFilter>().sharedMesh = GenericMesh;
+                    break;
             }
 
             if (!MapObjectPlaceholderMaterial)
