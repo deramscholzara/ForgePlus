@@ -46,10 +46,6 @@ namespace ForgePlus.DataFileIO
                     FileSettings.Instance.UnloadFile(DataFileTypes.Maps);
                 }
             }
-            else
-            {
-                RefreshList();
-            }
         }
 
         private void OnDisable()
@@ -60,6 +56,7 @@ namespace ForgePlus.DataFileIO
 
         private void OnMapsLoaded(bool isLoaded)
         {
+            Debug.Log("OnMapsLoaded");
             if (isLoaded)
             {
                 RefreshList();
@@ -72,6 +69,7 @@ namespace ForgePlus.DataFileIO
 
         private void RefreshList()
         {
+            Debug.Log("RefreshList");
             refreshCTS?.Cancel();
 
             refreshCTS = new CancellationTokenSource();
@@ -125,6 +123,7 @@ namespace ForgePlus.DataFileIO
 
         private void ClearList()
         {
+            Debug.Log("ClearList");
             LoadButton.interactable = false;
 
             foreach (var toggle in currentToggles)

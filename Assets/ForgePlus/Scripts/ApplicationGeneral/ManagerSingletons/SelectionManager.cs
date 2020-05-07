@@ -19,6 +19,21 @@ namespace ForgePlus.LevelManipulation
 
         private bool selectionEventStartedOverEmptiness = false;
 
+        public IFPSelectable SelectedObject
+        {
+            get
+            {
+                if (SelectedObjects.Count == 0)
+                {
+                    return null;
+                }
+
+                Debug.Log(SelectedObjects[0].GetType());
+
+                return SelectedObjects[0];
+            }
+        }
+
         public void UpdateSelectionToMatchMode(ModeManager.PrimaryModes primaryMode)
         {
             DeselectAll();

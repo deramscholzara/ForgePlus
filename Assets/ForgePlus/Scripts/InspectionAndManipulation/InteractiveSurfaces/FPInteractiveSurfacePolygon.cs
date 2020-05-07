@@ -104,8 +104,6 @@ namespace ForgePlus.LevelManipulation
                                                  eventData.position.y,
                                                  0f);
 
-                Debug.Log(screenPosition);
-
                 var pointerRay = Camera.main.ScreenPointToRay(screenPosition);
 
                 var newUVOffset = uvDragPlane.UVDraggedPosition(pointerRay);
