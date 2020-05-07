@@ -9,7 +9,11 @@ namespace ForgePlus.ApplicationGeneral
 {
     public class SurfaceBatchingManager : SingletonMonoBehaviour<SurfaceBatchingManager>
     {
+#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
         public struct BatchKey
+#pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
         {
             public static bool operator ==(BatchKey a, BatchKey b)
             {
@@ -18,6 +22,7 @@ namespace ForgePlus.ApplicationGeneral
 
             public static bool operator !=(BatchKey a, BatchKey b)
             {
+                // Defining this as it's a slightly more efficient way to determine equality for this struct
                 return a.sourceMaterial != b.sourceMaterial ||
                        a.sourceLight != b.sourceLight ||
                        a.sourceMedia != b.sourceMedia ||

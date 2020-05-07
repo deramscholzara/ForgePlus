@@ -122,5 +122,10 @@ PrefabInstance:
       propertyPath: m_FlexibleWidth
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 4970996302001294559, guid: 94c03ca683277144c94b9e1184be3766,
+        type: 3}
+      propertyPath: m_FlexibleHeight
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94c03ca683277144c94b9e1184be3766, type: 3}
