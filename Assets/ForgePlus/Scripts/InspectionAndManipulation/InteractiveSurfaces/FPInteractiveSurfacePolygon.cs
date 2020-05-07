@@ -24,11 +24,30 @@ namespace ForgePlus.LevelManipulation
                     SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
                     break;
                 case ModeManager.PrimaryModes.Textures:
-                    SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
-
-                    if ((ushort)surfaceShapeDescriptor != (ushort)ShapeDescriptor.Empty)
+                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
+                        Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                     {
-                        PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
+                        var selectedObject = SelectionManager.Instance.SelectedObject;
+                        var selectedFPPolygon = (selectedObject is FPPolygon) ? selectedObject as FPPolygon : null;
+
+                        if (selectedFPPolygon && selectedFPPolygon != ParentFPPolygon)
+                        {
+                            // Note: Polygon surfaces have swapped UVs, so swap them here
+                            ParentFPPolygon.SetOffset(this,
+                                                      DataSource,
+                                                      DataSource == FPPolygon.PolygonDataSources.Floor ? selectedFPPolygon.WelandObject.FloorOrigin.X : selectedFPPolygon.WelandObject.CeilingOrigin.X,
+                                                      DataSource == FPPolygon.PolygonDataSources.Floor ? selectedFPPolygon.WelandObject.FloorOrigin.Y : selectedFPPolygon.WelandObject.CeilingOrigin.Y,
+                                                      rebatch: true);
+                        }
+                    }
+                    else if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Painting)
+                    {
+                        SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
+
+                        if ((ushort)surfaceShapeDescriptor != (ushort)ShapeDescriptor.Empty)
+                        {
+                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
+                        }
                     }
 
                     break;
