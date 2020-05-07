@@ -35,7 +35,18 @@ namespace ForgePlus.LevelManipulation
             // Force exact snap to plane - in case there are any precision issues.
             dragVector.z = 0f;
 
+#if UNITY_EDITOR
             Debug.DrawLine(originLocalToWorldMatrix.MultiplyPoint(Vector3.zero), originLocalToWorldMatrix.MultiplyPoint(dragVector));
+#endif
+
+            if (AxisLocks.Instance.XLocked)
+            {
+                dragVector.x = 0f;
+            }
+            else if (AxisLocks.Instance.YLocked)
+            {
+                dragVector.y = 0f;
+            }
 
             return dragVector;
         }

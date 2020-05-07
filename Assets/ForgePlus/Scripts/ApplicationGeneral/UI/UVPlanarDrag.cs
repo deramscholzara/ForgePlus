@@ -52,15 +52,6 @@ namespace ForgePlus.LevelManipulation
             var uvOffset = new Vector2(-uvDragVector.x * GeometryUtilities.WorldUnitIncrementsPerMeter,
                                        uvDragVector.y * GeometryUtilities.WorldUnitIncrementsPerMeter);
 
-            if (Input.GetKey(KeyCode.X))
-            {
-                uvOffset.y = 0f;
-            }
-            else if (Input.GetKey(KeyCode.Y))
-            {
-                uvOffset.x = 0f;
-            }
-
             return uvOffset;
         }
     }
