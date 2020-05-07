@@ -12489,7 +12489,10 @@ MonoBehaviour:
     key without Shift)\n\nSurface Dragging:\n    - You can drag on surface to adjust
     textures in Texture mode, when the Palette mode (right side) is set to Edit.\n\nHotkeys:\n   
     - Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be
-    held):\n    - Invert Grid Snap Setting: control"
+    held):\n    - Invert Grid Snap Setting: control\n    - In Texture > Edit Mode,
+    you can select a surface (normal click) then alt-click a surface of the same
+    geometry type (Polygon or Side) to align that surface's texture to the selected
+    one."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
