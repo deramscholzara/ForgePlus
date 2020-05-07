@@ -10,13 +10,6 @@ namespace ForgePlus.LevelManipulation
 {
     public class FPSide : MonoBehaviour, IFPManipulatable<Side>, IFPSelectionDisplayable, IFPInspectable
     {
-        public enum SurfaceTypes
-        {
-            Top,
-            Middle,
-            Bottom,
-        }
-
         public enum SideDataSources
         {
             Primary,
