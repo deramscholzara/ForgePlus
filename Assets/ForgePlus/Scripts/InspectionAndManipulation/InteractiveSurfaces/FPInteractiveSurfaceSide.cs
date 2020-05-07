@@ -16,7 +16,7 @@ namespace ForgePlus.LevelManipulation
 
         private UVPlanarDrag uvDragPlane;
 
-        public override void OnPointerClickValidated(PointerEventData eventData)
+        public override void OnValidatedPointerClick(PointerEventData eventData)
         {
             switch (ModeManager.Instance.PrimaryMode)
             {
@@ -57,7 +57,7 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public override void OnBeginDragValidated(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(PointerEventData eventData)
         {
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
@@ -104,7 +104,7 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public override void OnDragValidated(PointerEventData eventData)
+        public override void OnValidatedDrag(PointerEventData eventData)
         {
             // TODO: Why doesn't this work when dragging over empty space?  It's because no proper pointer is automatically generated when not hitting anything.
             if (uvDragPlane != null &&
@@ -128,7 +128,7 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public override void OnEndDragValidated(PointerEventData eventData)
+        public override void OnValidatedEndDrag(PointerEventData eventData)
         {
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&

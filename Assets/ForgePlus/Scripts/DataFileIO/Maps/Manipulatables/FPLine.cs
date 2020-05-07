@@ -14,23 +14,23 @@ namespace ForgePlus.LevelManipulation
 
         public FPLevel FPLevel { private get; set; }
 
-        public override void OnPointerClickValidated(PointerEventData eventData)
+        public override void OnValidatedPointerClick(PointerEventData eventData)
         {
             // TODO: Implement this
             throw new System.NotImplementedException();
         }
 
-        public override void OnBeginDragValidated(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(PointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnDragValidated(PointerEventData eventData)
+        public override void OnValidatedDrag(PointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnEndDragValidated(PointerEventData eventData)
+        public override void OnValidatedEndDrag(PointerEventData eventData)
         {
             // Intentionally blank - for now
         }
