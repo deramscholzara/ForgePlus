@@ -44,6 +44,18 @@ namespace ForgePlus.Palette
             ActivateToggle(matchingToggle, invokeToggleEvents);
         }
 
+        public ShapeDescriptor GetSelectedTexture()
+        {
+            var activeToggle = paletteToggleGroup.GetFirstActiveToggle();
+
+            if (!activeToggle)
+            {
+                return ShapeDescriptor.Empty;
+            }
+
+            return activeToggle.GetComponent<SwatchTexture>().ShapeDescriptor;
+        }
+
         public void SelectSwatchForLight(FPLight fpLight, bool invokeToggleEvents = false)
         {
             var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPLight>().FPLight == fpLight);
@@ -52,12 +64,36 @@ namespace ForgePlus.Palette
             ActivateToggle(matchingToggle, invokeToggleEvents);
         }
 
+        public FPLight GetSelectedFPLight()
+        {
+            var activeToggle = paletteToggleGroup.GetFirstActiveToggle();
+
+            if (!activeToggle)
+            {
+                return null;
+            }
+
+            return activeToggle.GetComponent<SwatchFPLight>().FPLight;
+        }
+
         public void SelectSwatchForMedia(FPMedia fpMedia, bool invokeToggleEvents = false)
         {
             var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchFPMedia>().FPMedia == fpMedia);
             var matchingToggle = matchingSwatch.GetComponent<Toggle>();
 
             ActivateToggle(matchingToggle, invokeToggleEvents);
+        }
+
+        public FPMedia GetSelectedMedia()
+        {
+            var activeToggle = paletteToggleGroup.GetFirstActiveToggle();
+
+            if (!activeToggle)
+            {
+                return null;
+            }
+
+            return activeToggle.GetComponent<SwatchFPMedia>().FPMedia;
         }
 
         private void UpdatePaletteToMatchMode(ModeManager.PrimaryModes primaryMode)

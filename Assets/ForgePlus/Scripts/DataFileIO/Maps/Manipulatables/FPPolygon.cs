@@ -1,5 +1,6 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
+using ForgePlus.ShapesCollections;
 using System.Collections.Generic;
 using UnityEngine;
 using Weland;
@@ -112,6 +113,51 @@ namespace ForgePlus.LevelManipulation
             {
                 runtimeSurfaceLight.MergeBatch();
             }
+        }
+
+        public void SetShapeDescriptor(RuntimeSurfaceLight surfaceLight, PolygonDataSources surfaceType, ShapeDescriptor shapeDescriptor)
+        {
+            // TODO: Sides need the option to set the Transparent side on Full-TransparentSide surfaces,
+            //       and should call the appropriate version of InitializeRuntimeSurface in those cases.
+
+            short transferMode;
+
+            switch (surfaceType)
+            {
+                case PolygonDataSources.Ceiling:
+                    if ((ushort)shapeDescriptor == (ushort)WelandObject.CeilingTexture)
+                    {
+                        // Texture is not different, so exit
+                        return;
+                    }
+
+                    WallsCollection.DecrementTextureUsage(WelandObject.CeilingTexture);
+
+                    WelandObject.CeilingTexture = shapeDescriptor;
+                    transferMode = WelandObject.CeilingTransferMode;
+
+                    break;
+                case PolygonDataSources.Floor:
+                    if ((ushort)shapeDescriptor == (ushort)WelandObject.FloorTexture)
+                    {
+                        // Texture is not different, so exit
+                        return;
+                    }
+
+                    WallsCollection.DecrementTextureUsage(WelandObject.FloorTexture);
+
+                    WelandObject.FloorTexture = shapeDescriptor;
+                    transferMode = WelandObject.FloorTransferMode;
+
+                    break;
+                default:
+                    return;
+            }
+
+            surfaceLight.SetShapeDescriptor(shapeDescriptor,
+                                            transferMode,
+                                            isOpaqueSurface: true,
+                                            WallsCollection.SurfaceTypes.Normal);
         }
 
         private void BuildFloorAndCeiling()
