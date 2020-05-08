@@ -22,9 +22,19 @@ namespace ForgePlus.LevelManipulation
             {
                 case ModeManager.PrimaryModes.Geometry:
                     SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
+
                     break;
                 case ModeManager.PrimaryModes.Textures:
-                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
+                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
+                    {
+                        var selectedTexture = PaletteManager.Instance.GetSelectedTexture();
+
+                        if ((ushort)selectedTexture != (ushort)ShapeDescriptor.Empty)
+                        {
+                            ParentFPPolygon.SetShapeDescriptor(GetComponent<RuntimeSurfaceLight>(), DataSource, selectedTexture);
+                        }
+                    }
+                    else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
                         Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                     {
                         var selectedObject = SelectionManager.Instance.SelectedObject;
@@ -40,7 +50,7 @@ namespace ForgePlus.LevelManipulation
                                                       rebatch: true);
                         }
                     }
-                    else if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Painting)
+                    else
                     {
                         SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
 

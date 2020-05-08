@@ -73,6 +73,14 @@ namespace ForgePlus.ApplicationGeneral
             private List<Surface> surfaces;
             private GameObject mergeObject;
 
+            public bool IsMerged
+            {
+                get
+                {
+                    return mergeObject != null;
+                }
+            }
+
             public SurfaceBatch(Material[] sourceMaterials)
             {
                 this.sourceMaterials = sourceMaterials;
@@ -242,6 +250,21 @@ namespace ForgePlus.ApplicationGeneral
             {
                 StaticBatches.Remove(key);
             }
+        }
+
+        public bool GetBatchExists(BatchKey key)
+        {
+            return StaticBatches.ContainsKey(key);
+        }
+
+        public bool GetBatchIsMerged(BatchKey key)
+        {
+            if (!GetBatchExists(key))
+            {
+                return false;
+            }
+
+            return StaticBatches[key].IsMerged;
         }
 
         public void MergeAllBatches()

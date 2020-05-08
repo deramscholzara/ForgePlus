@@ -114,6 +114,19 @@ namespace ForgePlus.ShapesCollections
             }
         }
 
+        public static void DecrementTextureUsage(ShapeDescriptor shapeDescriptor)
+        {
+            if (TextureUsageCounter.ContainsKey(shapeDescriptor))
+            {
+                TextureUsageCounter[shapeDescriptor]--;
+
+                if (TextureUsageCounter[shapeDescriptor] <= 0)
+                {
+                    TextureUsageCounter.Remove(shapeDescriptor);
+                }
+            }
+        }
+
         public static void ClearCollection()
         {
             TextureUsageCounter.Clear();

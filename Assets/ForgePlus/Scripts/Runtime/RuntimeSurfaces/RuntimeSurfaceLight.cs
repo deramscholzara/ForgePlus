@@ -1,8 +1,9 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO;
+using ForgePlus.ShapesCollections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -38,6 +39,43 @@ namespace ForgePlus.LevelManipulation
             InitializeRuntimeSurface(fpLight, isStaticBatchable);
         }
 
+        public void SetShapeDescriptor(ShapeDescriptor shapeDescriptor, short transferMode, bool isOpaqueSurface, WallsCollection.SurfaceTypes wallsCollectionType)
+        {
+            // TODO: Sides need the option to set the Transparent side on Full-TransparentSide surfaces,
+            //       and should call the appropriate version of InitializeRuntimeSurface in those cases.
+
+            var newMaterial = WallsCollection.GetMaterial(shapeDescriptor,
+                                                          transferMode,
+                                                          isOpaqueSurface,
+                                                          wallsCollectionType,
+                                                          incrementUsageCounter: true);
+
+            if (newMaterial == batchKey.sourceMaterial)
+            {
+                return;
+            }
+
+            var wasMerged = SurfaceBatchingManager.Instance.GetBatchIsMerged(batchKey);
+
+            if (wasMerged)
+            {
+                UnmergeBatch();
+
+                SurfaceBatchingManager.Instance.RemoveFromBatches(batchKey, gameObject);
+            }
+
+            GetComponent<Renderer>().sharedMaterial = newMaterial;
+
+            batchKey.sourceMaterial = newMaterial;
+
+            if (wasMerged)
+            {
+                SurfaceBatchingManager.Instance.AddToBatches(batchKey, gameObject);
+
+                MergeBatch();
+            }
+        }
+
         public void UnmergeBatch()
         {
             if (lastUnmergeBatchKey.HasValue)
@@ -46,25 +84,24 @@ namespace ForgePlus.LevelManipulation
                 return;
             }
 
-            SurfaceBatchingManager.Instance.UnmergeBatch(batchKey);
             lastUnmergeBatchKey = batchKey;
+
+            SurfaceBatchingManager.Instance.UnmergeBatch(batchKey);
         }
 
         public void MergeBatch(bool remergeFormerBatchIfDifferent = true)
         {
             if (remergeFormerBatchIfDifferent &&
                 lastUnmergeBatchKey.HasValue &&
-                lastUnmergeBatchKey.Value != batchKey)
+                lastUnmergeBatchKey.Value != batchKey &&
+                SurfaceBatchingManager.Instance.GetBatchExists(lastUnmergeBatchKey.Value))
             {
                 SurfaceBatchingManager.Instance.MergeBatch(lastUnmergeBatchKey.Value);
             }
 
-            SurfaceBatchingManager.Instance.MergeBatch(batchKey);
             lastUnmergeBatchKey = null;
-        }
 
-        // TODO: convert InitializeRuntimeSurface into an UpdateMaterialKey method
-        //      - should UnmergeBatch/MergeBatch if the key actually changed
-        //      - should UnmergeBatch if isStaticBatchable actually changed from true to false
+            SurfaceBatchingManager.Instance.MergeBatch(batchKey);
+        }
     }
 }

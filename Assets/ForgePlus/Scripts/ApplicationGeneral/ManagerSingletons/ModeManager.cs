@@ -86,6 +86,11 @@ namespace ForgePlus.LevelManipulation
                 {
                     secondaryMode = value;
 
+                    if (secondaryMode == SecondaryModes.Painting)
+                    {
+                        SelectionManager.Instance.DeselectAll();
+                    }
+
                     OnSecondaryModeChanged_Sender?.Invoke(secondaryMode);
                 }
             }
