@@ -29,7 +29,7 @@ namespace ForgePlus.LevelManipulation
                     {
                         var selectedTexture = PaletteManager.Instance.GetSelectedTexture();
 
-                        if ((ushort)selectedTexture != (ushort)ShapeDescriptor.Empty)
+                        if (!selectedTexture.IsEmpty())
                         {
                             ParentFPPolygon.SetShapeDescriptor(GetComponent<RuntimeSurfaceLight>(), DataSource, selectedTexture);
                         }
@@ -54,7 +54,7 @@ namespace ForgePlus.LevelManipulation
                     {
                         SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
 
-                        if ((ushort)surfaceShapeDescriptor != (ushort)ShapeDescriptor.Empty)
+                        if (!surfaceShapeDescriptor.IsEmpty())
                         {
                             PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
                         }

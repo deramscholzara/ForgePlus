@@ -87,7 +87,7 @@ namespace ForgePlus.ShapesCollections
             SurfaceTypes surfaceType,
             bool incrementUsageCounter)
         {
-            if ((ushort)shapeDescriptor != (ushort)ShapeDescriptor.Empty)
+            if (!shapeDescriptor.IsEmpty())
             {
                 var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
 
