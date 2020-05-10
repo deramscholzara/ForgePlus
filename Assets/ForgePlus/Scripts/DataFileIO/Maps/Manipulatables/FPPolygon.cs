@@ -71,7 +71,7 @@ namespace ForgePlus.LevelManipulation
                 case PolygonDataSources.Ceiling:
                     if (WelandObject.CeilingTransferMode == 9 ||
                         WelandObject.CeilingTexture.UsesLandscapeCollection() ||
-                        (ushort)WelandObject.CeilingTexture == (ushort)ShapeDescriptor.Empty)
+                        WelandObject.CeilingTexture.IsEmpty())
                     {
                         // Don't adjust UVs for landscape surfaces.
                         return;
@@ -84,7 +84,7 @@ namespace ForgePlus.LevelManipulation
                 case PolygonDataSources.Floor:
                     if (WelandObject.FloorTransferMode == 9 ||
                         WelandObject.FloorTexture.UsesLandscapeCollection() ||
-                        (ushort)WelandObject.FloorTexture == (ushort)ShapeDescriptor.Empty)
+                        WelandObject.FloorTexture.IsEmpty())
                     {
                         // Don't adjust UVs for landscape surfaces.
                         return;

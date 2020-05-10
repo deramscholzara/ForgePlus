@@ -1,6 +1,4 @@
-﻿using Weland;
-
-namespace Weland.Extensions
+﻿namespace Weland.Extensions
 {
     public static class ShapeDescriptorExtensions
     {

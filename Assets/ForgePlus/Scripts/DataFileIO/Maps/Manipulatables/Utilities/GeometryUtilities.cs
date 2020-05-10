@@ -154,13 +154,13 @@ namespace ForgePlus.LevelManipulation.Utilities
             Color[] layeredTransparentSideTransferModesVertexColors)
         {
             var hasLayeredTransparentSide = layeredTransparentSideUvs != null &&
-                                            (ushort)layeredTransparentSideShapeDescriptor != (ushort)ShapeDescriptor.Empty &&
+                                            !layeredTransparentSideShapeDescriptor.IsEmpty() &&
                                             layeredTransparentSideFPLight != null &&
                                             layeredTransparentSideTransferMode >= 0;
 
             if (!hasLayeredTransparentSide &&
                 (layeredTransparentSideUvs != null ||
-                (ushort)layeredTransparentSideShapeDescriptor != (ushort)ShapeDescriptor.Empty ||
+                !layeredTransparentSideShapeDescriptor.IsEmpty() ||
                 layeredTransparentSideFPLight != null ||
                 layeredTransparentSideTransferMode >= 0))
             {

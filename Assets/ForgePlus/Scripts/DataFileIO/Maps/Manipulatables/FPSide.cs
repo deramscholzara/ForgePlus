@@ -245,7 +245,7 @@ namespace ForgePlus.LevelManipulation
             }
 
             // Data-driven surface-exposure
-            var dataExpectsFullSide = side != null && side.Type == SideType.Full && (ushort)side.Primary.Texture != (ushort)ShapeDescriptor.Empty;
+            var dataExpectsFullSide = side != null && side.Type == SideType.Full && !side.Primary.Texture.IsEmpty();
             var dataExpectsTop = !dataExpectsFullSide && side != null && (side.Type == SideType.High || side.Type == SideType.Split);
 
             // Geometry-driven surface-exposure
@@ -314,7 +314,7 @@ namespace ForgePlus.LevelManipulation
                 var isOpaqueSurface = !hasOpposingPolygon || !isTransparent;
 
                 // Note: dataExpectsFullSide is redundant here, because there is no opposing polygon
-                var hasLayeredTransparentSide = !hasOpposingPolygon && hasTransparentSide && dataExpectsFullSide && (ushort)side.Transparent.Texture != (ushort)ShapeDescriptor.Empty;
+                var hasLayeredTransparentSide = !hasOpposingPolygon && hasTransparentSide && dataExpectsFullSide && !side.Transparent.Texture.IsEmpty();
                 var highHeight = dataExpectsFullSide ? highestFacingCeiling : line.LowestAdjacentCeiling;
                 var lowHeight = dataExpectsFullSide ? lowestFacingFloor : line.HighestAdjacentFloor;
 
@@ -402,9 +402,9 @@ namespace ForgePlus.LevelManipulation
                 case SideDataSources.Primary:
                     if (WelandObject.PrimaryTransferMode == 9 ||
                         WelandObject.Primary.Texture.UsesLandscapeCollection() ||
-                        (ushort)WelandObject.Primary.Texture == (ushort)ShapeDescriptor.Empty)
+                        WelandObject.Primary.Texture.IsEmpty())
                     {
-                        // Don't adjust UVs for landscape surfaces.
+                        // Don't adjust UVs for landscape or unassigned surfaces.
                         return;
                     }
 
@@ -415,9 +415,9 @@ namespace ForgePlus.LevelManipulation
                 case SideDataSources.Secondary:
                     if (WelandObject.SecondaryTransferMode == 9 ||
                         WelandObject.Secondary.Texture.UsesLandscapeCollection() ||
-                        (ushort)WelandObject.Primary.Texture == (ushort)ShapeDescriptor.Empty)
+                        WelandObject.Secondary.Texture.IsEmpty())
                     {
-                        // Don't adjust UVs for landscape surfaces.
+                        // Don't adjust UVs for landscape or unassigned surfaces.
                         return;
                     }
 
@@ -428,9 +428,9 @@ namespace ForgePlus.LevelManipulation
                 case SideDataSources.Transparent:
                     if (WelandObject.TransparentTransferMode == 9 ||
                         WelandObject.Transparent.Texture.UsesLandscapeCollection() ||
-                        (ushort)WelandObject.Primary.Texture == (ushort)ShapeDescriptor.Empty)
+                        WelandObject.Transparent.Texture.IsEmpty())
                     {
-                        // Don't adjust UVs for landscape surfaces.
+                        // Don't adjust UVs for landscape or unassigned surfaces.
                         return;
                     }
 
