@@ -10,7 +10,7 @@ namespace ForgePlus.LevelManipulation
 {
     public class FPPolygon : MonoBehaviour, IFPManipulatable<Polygon>, IFPSelectionDisplayable, IFPInspectable
     {
-        public enum PolygonDataSources
+        public enum DataSources
         {
             Ceiling,
             Floor,
@@ -64,11 +64,11 @@ namespace ForgePlus.LevelManipulation
             BuildFloorAndCeiling();
         }
 
-        public void SetOffset(FPInteractiveSurfacePolygon surfaceObject, PolygonDataSources surfaceType, short x, short y, bool rebatch)
+        public void SetOffset(FPInteractiveSurfacePolygon surfaceObject, DataSources surfaceType, short x, short y, bool rebatch)
         {
             switch (surfaceType)
             {
-                case PolygonDataSources.Ceiling:
+                case DataSources.Ceiling:
                     if (WelandObject.CeilingTransferMode == 9 ||
                         WelandObject.CeilingTexture.UsesLandscapeCollection() ||
                         WelandObject.CeilingTexture.IsEmpty())
@@ -81,7 +81,7 @@ namespace ForgePlus.LevelManipulation
                     WelandObject.CeilingOrigin.Y = y;
 
                     break;
-                case PolygonDataSources.Floor:
+                case DataSources.Floor:
                     if (WelandObject.FloorTransferMode == 9 ||
                         WelandObject.FloorTexture.UsesLandscapeCollection() ||
                         WelandObject.FloorTexture.IsEmpty())
@@ -115,16 +115,13 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public void SetShapeDescriptor(RuntimeSurfaceLight surfaceLight, PolygonDataSources surfaceType, ShapeDescriptor shapeDescriptor)
+        public void SetShapeDescriptor(RuntimeSurfaceLight surfaceLight, DataSources surfaceType, ShapeDescriptor shapeDescriptor)
         {
-            // TODO: Sides need the option to set the Transparent side on Full-TransparentSide surfaces,
-            //       and should call the appropriate version of InitializeRuntimeSurface in those cases.
-
             short transferMode;
 
             switch (surfaceType)
             {
-                case PolygonDataSources.Ceiling:
+                case DataSources.Ceiling:
                     if ((ushort)shapeDescriptor == (ushort)WelandObject.CeilingTexture)
                     {
                         // Texture is not different, so exit
@@ -137,7 +134,7 @@ namespace ForgePlus.LevelManipulation
                     transferMode = WelandObject.CeilingTransferMode;
 
                     break;
-                case PolygonDataSources.Floor:
+                case DataSources.Floor:
                     if ((ushort)shapeDescriptor == (ushort)WelandObject.FloorTexture)
                     {
                         // Texture is not different, so exit
@@ -317,7 +314,7 @@ namespace ForgePlus.LevelManipulation
 
             var fpSurfacePolygonFloor = floorRoot.AddComponent<FPInteractiveSurfacePolygon>();
             fpSurfacePolygonFloor.ParentFPPolygon = this;
-            fpSurfacePolygonFloor.DataSource = PolygonDataSources.Floor;
+            fpSurfacePolygonFloor.DataSource = DataSources.Floor;
             fpSurfacePolygonFloor.surfaceShapeDescriptor = WelandObject.FloorTexture;
             fpSurfacePolygonFloor.FPLight = FPLevel.FPLights[WelandObject.FloorLight];
             fpSurfacePolygonFloor.FPMedia = hasMedia ? FPLevel.FPMedias[WelandObject.MediaIndex] : null;
@@ -340,7 +337,7 @@ namespace ForgePlus.LevelManipulation
 
             var fpSurfacePolygonCeiling = ceilingRoot.AddComponent<FPInteractiveSurfacePolygon>();
             fpSurfacePolygonCeiling.ParentFPPolygon = this;
-            fpSurfacePolygonCeiling.DataSource = PolygonDataSources.Ceiling;
+            fpSurfacePolygonCeiling.DataSource = DataSources.Ceiling;
             fpSurfacePolygonCeiling.surfaceShapeDescriptor = WelandObject.CeilingTexture;
             fpSurfacePolygonCeiling.FPLight = FPLevel.FPLights[WelandObject.CeilingLight];
             fpSurfacePolygonCeiling.FPMedia = hasMedia ? FPLevel.FPMedias[WelandObject.MediaIndex] : null;

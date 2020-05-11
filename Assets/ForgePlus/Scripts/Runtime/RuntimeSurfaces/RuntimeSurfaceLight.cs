@@ -39,11 +39,8 @@ namespace ForgePlus.LevelManipulation
             InitializeRuntimeSurface(fpLight, isStaticBatchable);
         }
 
-        public void SetShapeDescriptor(ShapeDescriptor shapeDescriptor, short transferMode, bool isOpaqueSurface, WallsCollection.SurfaceTypes wallsCollectionType)
+        public void SetShapeDescriptor(ShapeDescriptor shapeDescriptor, short transferMode, bool isOpaqueSurface, WallsCollection.SurfaceTypes wallsCollectionType, bool isOuterLayer = false)
         {
-            // TODO: Sides need the option to set the Transparent side on Full-TransparentSide surfaces,
-            //       and should call the appropriate version of InitializeRuntimeSurface in those cases.
-
             var newMaterial = WallsCollection.GetMaterial(shapeDescriptor,
                                                           transferMode,
                                                           isOpaqueSurface,
@@ -64,9 +61,10 @@ namespace ForgePlus.LevelManipulation
                 SurfaceBatchingManager.Instance.RemoveFromBatches(batchKey, gameObject);
             }
 
-            GetComponent<Renderer>().sharedMaterial = newMaterial;
-
-            batchKey.sourceMaterial = newMaterial;
+            var renderer = GetComponent<Renderer>();
+            var sharedMaterials = renderer.sharedMaterials;
+            sharedMaterials[isOuterLayer ? 1 : 0] = newMaterial;
+            renderer.sharedMaterials = sharedMaterials;
 
             if (wasMerged)
             {

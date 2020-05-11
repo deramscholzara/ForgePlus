@@ -8,7 +8,7 @@ namespace ForgePlus.LevelManipulation
     public class FPInteractiveSurfacePolygon : FPInteractiveSurfaceBase
     {
         public FPPolygon ParentFPPolygon = null;
-        public FPPolygon.PolygonDataSources DataSource;
+        public FPPolygon.DataSources DataSource;
         public ShapeDescriptor surfaceShapeDescriptor = ShapeDescriptor.Empty;
         public FPLight FPLight = null;
         public FPMedia FPMedia = null;
@@ -37,16 +37,16 @@ namespace ForgePlus.LevelManipulation
                     else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
                         Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                     {
-                        var selectedObject = SelectionManager.Instance.SelectedObject;
-                        var selectedFPPolygon = (selectedObject is FPPolygon) ? selectedObject as FPPolygon : null;
+                        var selectedSourceObject = SelectionManager.Instance.SelectedObject;
+                        var selectedSourceFPPolygon = (selectedSourceObject is FPPolygon) ? selectedSourceObject as FPPolygon : null;
 
-                        if (selectedFPPolygon && selectedFPPolygon != ParentFPPolygon)
+                        if (selectedSourceFPPolygon && selectedSourceFPPolygon != ParentFPPolygon)
                         {
                             // Note: Polygon surfaces have swapped UVs, so swap them here
                             ParentFPPolygon.SetOffset(this,
                                                       DataSource,
-                                                      DataSource == FPPolygon.PolygonDataSources.Floor ? selectedFPPolygon.WelandObject.FloorOrigin.X : selectedFPPolygon.WelandObject.CeilingOrigin.X,
-                                                      DataSource == FPPolygon.PolygonDataSources.Floor ? selectedFPPolygon.WelandObject.FloorOrigin.Y : selectedFPPolygon.WelandObject.CeilingOrigin.Y,
+                                                      DataSource == FPPolygon.DataSources.Floor ? selectedSourceFPPolygon.WelandObject.FloorOrigin.X : selectedSourceFPPolygon.WelandObject.CeilingOrigin.X,
+                                                      DataSource == FPPolygon.DataSources.Floor ? selectedSourceFPPolygon.WelandObject.FloorOrigin.Y : selectedSourceFPPolygon.WelandObject.CeilingOrigin.Y,
                                                       rebatch: true);
                         }
                     }
@@ -104,7 +104,7 @@ namespace ForgePlus.LevelManipulation
                 runtimeSurfaceLight.UnmergeBatch();
 
                 // Note: Polygon surfaces have swapped UVs, so swap them here
-                var startingUVs = DataSource == FPPolygon.PolygonDataSources.Floor ?
+                var startingUVs = DataSource == FPPolygon.DataSources.Floor ?
                                   new Vector2(ParentFPPolygon.WelandObject.FloorOrigin.Y, ParentFPPolygon.WelandObject.FloorOrigin.X) :
                                   new Vector2(ParentFPPolygon.WelandObject.CeilingOrigin.Y, ParentFPPolygon.WelandObject.CeilingOrigin.X);
 
@@ -124,7 +124,6 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnValidatedDrag(PointerEventData eventData)
         {
-            // TODO: Why doesn't this work when dragging over empty space?  It's because no proper pointer is automatically generated when not hitting anything.
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
