@@ -1,6 +1,7 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Runtime.Constraints;
+using ForgePlus.ShapesCollections;
 using System.Collections.Generic;
 using UnityEngine;
 using Weland;
@@ -10,7 +11,7 @@ namespace ForgePlus.LevelManipulation
 {
     public class FPSide : MonoBehaviour, IFPManipulatable<Side>, IFPSelectionDisplayable, IFPInspectable
     {
-        public enum SideDataSources
+        public enum DataSources
         {
             Primary,
             Secondary,
@@ -269,7 +270,7 @@ namespace ForgePlus.LevelManipulation
                 short platformIndex = opposingPolygon.Permutation;
 
                 // Top is always Primary
-                var sideDataSource = SideDataSources.Primary;
+                var sideDataSource = DataSources.Primary;
 
                 var highHeight = highestFacingCeiling;
                 var lowHeight = lowestOpposingCeiling;
@@ -310,11 +311,13 @@ namespace ForgePlus.LevelManipulation
             if (exposesMiddle)
             {
                 // Transparent if there's an opposing polygon, Primary otherwise (because it's a "Full", unopposed side)
-                var sideDataSource = !hasOpposingPolygon || dataExpectsFullSide ? SideDataSources.Primary : SideDataSources.Transparent;
+                var sideDataSource = !hasOpposingPolygon || dataExpectsFullSide ? DataSources.Primary : DataSources.Transparent;
                 var isOpaqueSurface = !hasOpposingPolygon || !isTransparent;
 
                 // Note: dataExpectsFullSide is redundant here, because there is no opposing polygon
-                var hasLayeredTransparentSide = !hasOpposingPolygon && hasTransparentSide && dataExpectsFullSide && !side.Transparent.Texture.IsEmpty();
+                // TODO: Hmm... maybe this shouldn't check !hasOpposingPolygon, and instead just relay on dataExpectsFullSide.
+                //       - check how Aleph One handles opposed full sides which have HasTransparentSide enabled.
+                var hasLayeredTransparentSide = !hasOpposingPolygon && side.HasLayeredTransparentSide(fpLevel.Level);
                 var highHeight = dataExpectsFullSide ? highestFacingCeiling : line.LowestAdjacentCeiling;
                 var lowHeight = dataExpectsFullSide ? lowestFacingFloor : line.HighestAdjacentFloor;
 
@@ -333,7 +336,7 @@ namespace ForgePlus.LevelManipulation
                                                    line.EndpointIndexes[1],
                                                    isClockwise,
                                                    fpSide,
-                                                   transferMode: side == null ? (short)0 : (sideDataSource == SideDataSources.Primary ? side.PrimaryTransferMode : side.TransparentTransferMode),
+                                                   transferMode: side == null ? (short)0 : (sideDataSource == DataSources.Primary ? side.PrimaryTransferMode : side.TransparentTransferMode),
                                                    sideDataSource: sideDataSource,
                                                    isOpaqueSurface: isOpaqueSurface,
                                                    facingPolygonIndex,
@@ -354,7 +357,7 @@ namespace ForgePlus.LevelManipulation
                 short platformIndex = opposingPolygon.Permutation;
 
                 // Secondary if there is an exposable or expected (in data) top section
-                var sideDataSource = dataExpectsTop ? SideDataSources.Secondary : SideDataSources.Primary;
+                var sideDataSource = dataExpectsTop ? DataSources.Secondary : DataSources.Primary;
 
                 var highHeight = highestOpposingFloor;
                 var lowHeight = lowestFacingFloor;
@@ -369,7 +372,7 @@ namespace ForgePlus.LevelManipulation
                                                 line.EndpointIndexes[1],
                                                 isClockwise,
                                                 fpSide,
-                                                side == null ? (short)0 : (sideDataSource == SideDataSources.Primary ? side.PrimaryTransferMode : side.SecondaryTransferMode),
+                                                side == null ? (short)0 : (sideDataSource == DataSources.Primary ? side.PrimaryTransferMode : side.SecondaryTransferMode),
                                                 sideDataSource,
                                                 isOpaqueSurface: true,
                                                 facingPolygonIndex,
@@ -395,11 +398,11 @@ namespace ForgePlus.LevelManipulation
             return fpSide;
         }
 
-        public void SetOffset(FPInteractiveSurfaceSide surfaceObject, SideDataSources dataSource, int uvChannel, short x, short y, bool rebatch)
+        public void SetOffset(FPInteractiveSurfaceSide surfaceObject, DataSources dataSource, int uvChannel, short x, short y, bool rebatch)
         {
             switch (dataSource)
             {
-                case SideDataSources.Primary:
+                case DataSources.Primary:
                     if (WelandObject.PrimaryTransferMode == 9 ||
                         WelandObject.Primary.Texture.UsesLandscapeCollection() ||
                         WelandObject.Primary.Texture.IsEmpty())
@@ -412,7 +415,7 @@ namespace ForgePlus.LevelManipulation
                     WelandObject.Primary.Y = y;
 
                     break;
-                case SideDataSources.Secondary:
+                case DataSources.Secondary:
                     if (WelandObject.SecondaryTransferMode == 9 ||
                         WelandObject.Secondary.Texture.UsesLandscapeCollection() ||
                         WelandObject.Secondary.Texture.IsEmpty())
@@ -425,7 +428,7 @@ namespace ForgePlus.LevelManipulation
                     WelandObject.Secondary.Y = y;
 
                     break;
-                case SideDataSources.Transparent:
+                case DataSources.Transparent:
                     if (WelandObject.TransparentTransferMode == 9 ||
                         WelandObject.Transparent.Texture.UsesLandscapeCollection() ||
                         WelandObject.Transparent.Texture.IsEmpty())
@@ -461,6 +464,68 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        public void SetShapeDescriptor(RuntimeSurfaceLight surfaceLight, DataSources surfaceType, ShapeDescriptor shapeDescriptor, bool isLayeredSurface)
+        {
+            // TODO: Sides need the option to set the Transparent side on Full-TransparentSide surfaces,
+            //       and should call the appropriate version of InitializeRuntimeSurface in those cases.
+
+            short transferMode;
+            bool isOpaqueSurface = true;
+
+            switch (surfaceType)
+            {
+                case FPSide.DataSources.Primary:
+                    if ((ushort)shapeDescriptor == (ushort)WelandObject.Primary.Texture)
+                    {
+                        // Texture is not different, so exit
+                        return;
+                    }
+
+                    WallsCollection.DecrementTextureUsage(WelandObject.Primary.Texture);
+
+                    WelandObject.Primary.Texture = shapeDescriptor;
+                    transferMode = WelandObject.PrimaryTransferMode;
+
+                    break;
+                case FPSide.DataSources.Secondary:
+                    if ((ushort)shapeDescriptor == (ushort)WelandObject.Secondary.Texture)
+                    {
+                        // Texture is not different, so exit
+                        return;
+                    }
+
+                    WallsCollection.DecrementTextureUsage(WelandObject.Secondary.Texture);
+
+                    WelandObject.Secondary.Texture = shapeDescriptor;
+                    transferMode = WelandObject.SecondaryTransferMode;
+
+                    break;
+                case FPSide.DataSources.Transparent:
+                    if ((ushort)shapeDescriptor == (ushort)WelandObject.Transparent.Texture)
+                    {
+                        // Texture is not different, so exit
+                        return;
+                    }
+
+                    WallsCollection.DecrementTextureUsage(WelandObject.Transparent.Texture);
+
+                    WelandObject.Transparent.Texture = shapeDescriptor;
+                    transferMode = WelandObject.TransparentTransferMode;
+
+                    isOpaqueSurface = !FPLevel.FPLines[WelandObject.LineIndex].WelandObject.Transparent;
+
+                    break;
+                default:
+                    return;
+            }
+
+            surfaceLight.SetShapeDescriptor(shapeDescriptor,
+                                            transferMode,
+                                            isOpaqueSurface,
+                                            WallsCollection.SurfaceTypes.Normal,
+                                            isOuterLayer: isLayeredSurface && surfaceType == DataSources.Transparent);
+        }
+
         private static void CreateSideRoot(ref FPSide fpSide, bool isClockwise, short sideIndex, Side side, FPLevel fpLevel)
         {
             if (!fpSide)
@@ -485,7 +550,7 @@ namespace ForgePlus.LevelManipulation
             bool isClockwiseSide,
             FPSide fpSide,
             short transferMode,
-            SideDataSources sideDataSource,
+            DataSources sideDataSource,
             bool isOpaqueSurface,
             short facingPolygonIndex,
             bool isStaticBatchable,
@@ -504,19 +569,19 @@ namespace ForgePlus.LevelManipulation
             {
                 switch (sideDataSource)
                 {
-                    case SideDataSources.Primary:
+                    case DataSources.Primary:
                         textureOffsetX = side.Primary.X;
                         textureOffsetY = side.Primary.Y;
                         shapeDescriptor = side.Primary.Texture;
                         lightIndex = side.PrimaryLightsourceIndex;
                         break;
-                    case SideDataSources.Secondary:
+                    case DataSources.Secondary:
                         textureOffsetX = side.Secondary.X;
                         textureOffsetY = side.Secondary.Y;
                         shapeDescriptor = side.Secondary.Texture;
                         lightIndex = side.SecondaryLightsourceIndex;
                         break;
-                    case SideDataSources.Transparent:
+                    case DataSources.Transparent:
                         textureOffsetX = side.Transparent.X;
                         textureOffsetY = side.Transparent.Y;
                         shapeDescriptor = side.Transparent.Texture;
