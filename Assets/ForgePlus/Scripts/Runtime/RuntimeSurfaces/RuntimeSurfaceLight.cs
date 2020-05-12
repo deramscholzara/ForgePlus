@@ -1,7 +1,5 @@
 ﻿using ForgePlus.ApplicationGeneral;
-using ForgePlus.DataFileIO;
 using ForgePlus.ShapesCollections;
-using System.Collections.Generic;
 using UnityEngine;
 using Weland;
 
@@ -62,9 +60,17 @@ namespace ForgePlus.LevelManipulation
             }
 
             var renderer = GetComponent<Renderer>();
-            var sharedMaterials = renderer.sharedMaterials;
-            sharedMaterials[isOuterLayer ? 1 : 0] = newMaterial;
-            renderer.sharedMaterials = sharedMaterials;
+
+            if (isOuterLayer)
+            {
+                batchKey.layeredTransparentSideSourceMaterial = newMaterial;
+            }
+            else
+            {
+                batchKey.sourceMaterial = newMaterial;
+            }
+
+            renderer.sharedMaterials = SurfaceBatchingManager.Instance.GetUniqueMaterials(batchKey);
 
             if (wasMerged)
             {
@@ -74,17 +80,28 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public void UnmergeBatch()
+        /// <summary>
+        /// Returns true if it was merged when called AND became unmerged, false otherwise.
+        /// </summary>
+        /// <returns></returns>
+        public bool UnmergeBatch()
         {
-            if (lastUnmergeBatchKey.HasValue)
+            var wasMerged = SurfaceBatchingManager.Instance.GetBatchIsMerged(batchKey);
+
+            if (wasMerged)
             {
-                Debug.LogError($"Surface \"{name}\" is already unmerged and will not make a repeat UnmergeBatch call.", this);
-                return;
+                if (lastUnmergeBatchKey.HasValue)
+                {
+                    Debug.LogError($"Surface \"{name}\" is already unmerged and will not make a repeat UnmergeBatch call.", this);
+                    return false;
+                }
+
+                lastUnmergeBatchKey = batchKey;
+
+                SurfaceBatchingManager.Instance.UnmergeBatch(batchKey);
             }
 
-            lastUnmergeBatchKey = batchKey;
-
-            SurfaceBatchingManager.Instance.UnmergeBatch(batchKey);
+            return wasMerged;
         }
 
         public void MergeBatch(bool remergeFormerBatchIfDifferent = true)

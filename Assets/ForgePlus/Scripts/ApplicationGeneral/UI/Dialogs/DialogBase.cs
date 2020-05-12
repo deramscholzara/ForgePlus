@@ -7,13 +7,13 @@ namespace ForgePlus.ApplicationGeneral
     public abstract class DialogBase : MonoBehaviour
     {
         private bool submit = false;
-        private object selectedOption = null;
+        private string selectedOption = null;
 
-        public async Task<object> Display(Transform parent, IList<object> options)
+        public async Task<string> Display(Transform parent, IList<string> options, IList<string> optionLabels)
         {
             var dialogInstance = Instantiate(this, parent);
 
-            dialogInstance.Populate(options);
+            dialogInstance.Populate(options, optionLabels);
 
             while (!submit)
             {
@@ -23,14 +23,14 @@ namespace ForgePlus.ApplicationGeneral
             return selectedOption;
         }
 
-        protected abstract void Populate(IList<object> options);
+        protected abstract void Populate(IList<string> options, IList<string> optionLabels);
 
-        public void SetSelection(object selection)
+        protected void SetSelection(string selection)
         {
             selectedOption = selection;
         }
 
-        public void Submit()
+        protected void Submit()
         {
             submit = true;
 

@@ -10,17 +10,20 @@ namespace ForgePlus.ApplicationGeneral
         {
             public DialogBase DialogPrefab { get; private set; }
 
-            public IList<object> VariableOptions { get; private set; }
+            public IList<string> VariableOptions { get; private set; }
 
-            public QueuedDialog(DialogBase dialogPrefab, IList<object> variableOptions)
+            public IList<string> VariableOptionLabels { get; private set; }
+
+            public QueuedDialog(DialogBase dialogPrefab, IList<string> variableOptions, IList<string> variableOptionLabels)
             {
                 DialogPrefab = dialogPrefab;
                 VariableOptions = variableOptions;
+                VariableOptionLabels = variableOptionLabels;
             }
 
-            public async Task<object> Display(Transform parent)
+            public async Task<string> Display(Transform parent)
             {
-                var result = await DialogPrefab.Display(parent, VariableOptions);
+                var result = await DialogPrefab.Display(parent, VariableOptions, VariableOptionLabels);
 
                 return result;
             }
@@ -28,7 +31,7 @@ namespace ForgePlus.ApplicationGeneral
 
         private readonly List<QueuedDialog> dialogQueue = new List<QueuedDialog>();
 
-        public async Task<object> DisplayQueuedDialog(DialogBase dialogPrefab, IList<object> variableOptions)
+        public async Task<string> DisplayQueuedDialog(DialogBase dialogPrefab, IList<string> variableOptions, IList<string> variableOptionLabels = null)
         {
             if (dialogPrefab == null)
             {
@@ -39,9 +42,10 @@ namespace ForgePlus.ApplicationGeneral
             if (dialogQueue.Count == 0)
             {
                 UIBlocking.Instance.Block();
+                gameObject.SetActive(true);
             }
 
-            var queuedDialog = new QueuedDialog(dialogPrefab, variableOptions);
+            var queuedDialog = new QueuedDialog(dialogPrefab, variableOptions, variableOptionLabels);
 
             dialogQueue.Add(queuedDialog);
 
@@ -56,10 +60,16 @@ namespace ForgePlus.ApplicationGeneral
 
             if (dialogQueue.Count == 0)
             {
+                gameObject.SetActive(false);
                 UIBlocking.Instance.Unblock();
             }
 
             return result;
+        }
+
+        private void Start()
+        {
+            gameObject.SetActive(false);
         }
     }
 }
