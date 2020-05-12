@@ -13,12 +13,20 @@ namespace ForgePlus.ApplicationGeneral
         {
             var dialogInstance = Instantiate(this, parent);
 
-            dialogInstance.Populate(options, optionLabels);
+            return await dialogInstance.Display(options, optionLabels);
+        }
+
+        private async Task<string> Display(IList<string> options, IList<string> optionLabels)
+        {
+            Populate(options, optionLabels);
 
             while (!submit)
             {
+                Debug.Log("Waiting... " + submit, this);
                 await Task.Yield();
             }
+
+            Destroy(gameObject);
 
             return selectedOption;
         }
@@ -33,8 +41,6 @@ namespace ForgePlus.ApplicationGeneral
         protected void Submit()
         {
             submit = true;
-
-            Destroy(gameObject);
         }
     }
 }
