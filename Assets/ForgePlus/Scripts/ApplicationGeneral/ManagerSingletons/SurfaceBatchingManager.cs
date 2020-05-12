@@ -259,12 +259,7 @@ namespace ForgePlus.ApplicationGeneral
 
         public bool GetBatchIsMerged(BatchKey key)
         {
-            if (!GetBatchExists(key))
-            {
-                return false;
-            }
-
-            return StaticBatches[key].IsMerged;
+            return GetBatchExists(key) && StaticBatches[key].IsMerged;
         }
 
         public void MergeAllBatches()

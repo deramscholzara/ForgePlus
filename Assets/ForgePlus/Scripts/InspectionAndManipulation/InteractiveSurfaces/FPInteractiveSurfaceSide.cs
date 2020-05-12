@@ -1,5 +1,8 @@
-﻿using ForgePlus.Palette;
+﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.Palette;
+using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Weland;
@@ -9,6 +12,8 @@ namespace ForgePlus.LevelManipulation
 {
     public class FPInteractiveSurfaceSide : FPInteractiveSurfaceBase
     {
+        private static Dialog_ObjectSelector SideDestinationSelectionDialog = null;
+
         public FPSide ParentFPSide = null;
         public FPSide.DataSources DataSource;
         public ShapeDescriptor surfaceShapeDescriptor = ShapeDescriptor.Empty;
@@ -17,8 +22,9 @@ namespace ForgePlus.LevelManipulation
         public FPPlatform FPPlatform = null;
 
         private UVPlanarDrag uvDragPlane;
+        private bool endDragShouldRemergeBatch = false;
 
-        public override void OnValidatedPointerClick(PointerEventData eventData)
+        public async override void OnValidatedPointerClick(PointerEventData eventData)
         {
             switch (ModeManager.Instance.PrimaryMode)
             {
@@ -37,13 +43,14 @@ namespace ForgePlus.LevelManipulation
 
                             if (destinationIsLayered)
                             {
-                                // TODO: should display destination picker here
-                                // TODO: Figure out how to pick which of the data sources to set (a popup with available options, and cancel?)
-                                //       "Choose Destination Layer" options are always:
-                                //          - Inner
-                                //          - Outer
-                                //          - Cancel
-                                // use DialogManager to display an appropriate prefab from Resources
+                                var result = await ShowLayerSourceDialog(isDestination: true);
+
+                                if (!result.HasValue)
+                                {
+                                    return;
+                                }
+
+                                destinationDataSource = result.Value;
                             }
 
                             ParentFPSide.SetShapeDescriptor(GetComponent<RuntimeSurfaceLight>(), destinationDataSource, selectedTexture, destinationIsLayered);
@@ -64,17 +71,58 @@ namespace ForgePlus.LevelManipulation
                                                                                  out var neighborIsLeft))
                             {
                                 var destinationIsLayered = ParentFPSide.WelandObject.HasLayeredTransparentSide(FPLevel.Instance.Level);
-                                var destinationDataSource = DataSource;
+                                FPSide.DataSources destinationDataSource;
 
                                 if (destinationIsLayered)
                                 {
-                                    // TODO: should display destination picker here
-                                    // TODO: Figure out how to pick which of the data sources to set (a popup with available options, and cancel?)
-                                    //       "Choose Destination Layer" options are always:
-                                    //          - Inner
-                                    //          - Outer
-                                    //          - Cancel
-                                    // use DialogManager to display an appropriate prefab from Resources
+                                    var result = await ShowLayerSourceDialog(isDestination: true);
+
+                                    if (!result.HasValue)
+                                    {
+                                        return;
+                                    }
+
+                                    destinationDataSource = result.Value;
+                                }
+                                else
+                                {
+                                    List<string> destinationDataSourceOptions = new List<string>();
+
+                                    if (!ParentFPSide.WelandObject.Primary.Texture.IsEmpty())
+                                    {
+                                        destinationDataSourceOptions.Add(FPSide.DataSources.Primary.ToString());
+                                    }
+
+                                    if (!ParentFPSide.WelandObject.Secondary.Texture.IsEmpty())
+                                    {
+                                        destinationDataSourceOptions.Add(FPSide.DataSources.Secondary.ToString());
+                                    }
+
+                                    if (!ParentFPSide.WelandObject.Transparent.Texture.IsEmpty())
+                                    {
+                                        destinationDataSourceOptions.Add(FPSide.DataSources.Transparent.ToString());
+                                    }
+
+                                    if (destinationDataSourceOptions.Count == 0)
+                                    {
+                                        // The source side has no textured surfaces, so exit
+                                        return;
+                                    }
+                                    else if (destinationDataSourceOptions.Count == 1)
+                                    {
+                                        destinationDataSource = (FPSide.DataSources)Enum.Parse(typeof(FPSide.DataSources), destinationDataSourceOptions[0]);
+                                    }
+                                    else
+                                    {
+                                        var result = await ShowVariableDataSourceDialog(destinationDataSourceOptions, isDestination: true);
+
+                                        if (!result.HasValue)
+                                        {
+                                            return;
+                                        }
+
+                                        destinationDataSource = result.Value;
+                                    }
                                 }
 
                                 var uvChannel = 0;
@@ -84,87 +132,116 @@ namespace ForgePlus.LevelManipulation
                                     uvChannel = 1;
                                 }
 
-                                List<FPSide.DataSources> sourceDataSourceOptions = new List<FPSide.DataSources>();
+                                List<string> sourceDataSourceOptions = new List<string>();
 
                                 if (!selectedSourceFPSide.WelandObject.Primary.Texture.IsEmpty())
                                 {
-                                    sourceDataSourceOptions.Add(FPSide.DataSources.Primary);
+                                    sourceDataSourceOptions.Add(FPSide.DataSources.Primary.ToString());
                                 }
 
                                 if (!selectedSourceFPSide.WelandObject.Secondary.Texture.IsEmpty())
                                 {
-                                    sourceDataSourceOptions.Add(FPSide.DataSources.Secondary);
+                                    sourceDataSourceOptions.Add(FPSide.DataSources.Secondary.ToString());
                                 }
 
                                 if (!selectedSourceFPSide.WelandObject.Transparent.Texture.IsEmpty())
                                 {
-                                    sourceDataSourceOptions.Add(FPSide.DataSources.Transparent);
+                                    sourceDataSourceOptions.Add(FPSide.DataSources.Transparent.ToString());
                                 }
 
-                                var sourceDataSource = DataSource;
+                                FPSide.DataSources sourceDataSource;
 
-                                if (sourceDataSourceOptions.Count > 1)
-                                {
-                                    // TODO: Figure out how to pick which of the data sources to align to (a popup with available options, and cancel?)
-                                    //       "Choose Destination Layer" appears when there are at least two sources to choose from (non-empty ShapeDescriptor):
-                                    //          - Primary
-                                    //          - Secondary
-                                    //          - Transparent
-                                    //          - Cancel (always)
-                                    // use DialogManager to display an appropriate prefab from Resources
-                                }
-                                else if (sourceDataSourceOptions.Count == 0)
+                                if (sourceDataSourceOptions.Count == 0)
                                 {
                                     // The source side has no textured surfaces, so exit
                                     return;
                                 }
+                                else if (sourceDataSourceOptions.Count == 1)
+                                {
+                                    sourceDataSource = (FPSide.DataSources)Enum.Parse(typeof(FPSide.DataSources), sourceDataSourceOptions[0]);
+                                }
+                                else
+                                {
+                                    var result = await ShowVariableDataSourceDialog(sourceDataSourceOptions, isDestination: false);
 
-                                short selectedObjectUVOffset_U;
-                                short selectedObjectUVOffset_Y;
+                                    if (!result.HasValue)
+                                    {
+                                        return;
+                                    }
+
+                                    sourceDataSource = result.Value;
+                                }
+
+                                short sourceX;
+                                short sourceY;
+                                short destinationHeight;
+                                short sourceHeight;
+
+                                switch(destinationDataSource)
+                                {
+                                    case FPSide.DataSources.Primary:
+                                        destinationHeight = ParentFPSide.PrimaryHighHeight;
+                                        break;
+                                    case FPSide.DataSources.Secondary:
+                                        destinationHeight = ParentFPSide.SecondaryHighHeight;
+                                        break;
+                                    case FPSide.DataSources.Transparent:
+                                        destinationHeight = ParentFPSide.TransparentHighHeight;
+                                        break;
+                                    default:
+                                        return;
+                                }
 
                                 switch (sourceDataSource)
                                 {
                                     case FPSide.DataSources.Primary:
-                                        selectedObjectUVOffset_U = selectedSourceFPSide.WelandObject.Primary.X;
+                                        sourceX = selectedSourceFPSide.WelandObject.Primary.X;
                                         // TODO: this needs to set the y based on vertical world distance
                                         //       instead of just matching it.
                                         //       Use this: (destinationHighHeight - sourceHighHeight) + sourceY
                                         //       Alternatively, it might be this: (sourceHighHeight - destinationHighHeight) + sourceY
-                                        selectedObjectUVOffset_Y = selectedSourceFPSide.WelandObject.Primary.Y;
+                                        sourceY = selectedSourceFPSide.WelandObject.Primary.Y;
+
+                                        sourceHeight = selectedSourceFPSide.PrimaryHighHeight;
 
                                         break;
                                     case FPSide.DataSources.Secondary:
-                                        selectedObjectUVOffset_U = selectedSourceFPSide.WelandObject.Secondary.X;
+                                        sourceX = selectedSourceFPSide.WelandObject.Secondary.X;
                                         // TODO: this needs to set the y based on vertical world distance
                                         //       instead of just matching it.
                                         //       Use this: (destinationHighHeight - sourceHighHeight) + sourceY
                                         //       Alternatively, it might be this: (sourceHighHeight - destinationHighHeight) + sourceY
-                                        selectedObjectUVOffset_Y = selectedSourceFPSide.WelandObject.Secondary.Y;
+                                        sourceY = selectedSourceFPSide.WelandObject.Secondary.Y;
+
+                                        sourceHeight = selectedSourceFPSide.SecondaryHighHeight;
 
                                         break;
                                     case FPSide.DataSources.Transparent:
-                                        selectedObjectUVOffset_U = selectedSourceFPSide.WelandObject.Transparent.X;
+                                        sourceX = selectedSourceFPSide.WelandObject.Transparent.X;
                                         // TODO: this needs to set the y based on vertical world distance
                                         //       instead of just matching it.
                                         //       Use this: (destinationHighHeight - sourceHighHeight) + sourceY
                                         //       Alternatively, it might be this: (sourceHighHeight - destinationHighHeight) + sourceY
-                                        selectedObjectUVOffset_Y = selectedSourceFPSide.WelandObject.Transparent.Y;
+                                        sourceY = selectedSourceFPSide.WelandObject.Transparent.Y;
+
+                                        sourceHeight = selectedSourceFPSide.TransparentHighHeight;
 
                                         break;
                                     default:
                                         return;
                                 }
 
-                                short alignmentOffset_U = neighborFlowsOutward ? (short)0 : FPLevel.Instance.FPLines[ParentFPSide.WelandObject.LineIndex].WelandObject.Length;
-                                alignmentOffset_U += neighborIsLeft ? (short)0 : FPLevel.Instance.FPLines[selectedSourceFPSide.WelandObject.LineIndex].WelandObject.Length;
+                                short horizontalOffset = neighborFlowsOutward ? (short)0 : FPLevel.Instance.FPLines[ParentFPSide.WelandObject.LineIndex].WelandObject.Length;
+                                horizontalOffset += neighborIsLeft ? (short)0 : FPLevel.Instance.FPLines[selectedSourceFPSide.WelandObject.LineIndex].WelandObject.Length;
 
-                                selectedObjectUVOffset_U += alignmentOffset_U;
+                                short newX = (short)(sourceX + horizontalOffset);
+                                short newY = (short)(destinationHeight - sourceHeight + sourceY);
 
                                 ParentFPSide.SetOffset(this,
                                                        destinationDataSource,
                                                        uvChannel,
-                                                       selectedObjectUVOffset_U,
-                                                       selectedObjectUVOffset_Y,
+                                                       newX,
+                                                       newY,
                                                        rebatch: true);
                             }
                         }
@@ -220,7 +297,7 @@ namespace ForgePlus.LevelManipulation
                     return;
                 }
 
-                runtimeSurfaceLight.UnmergeBatch();
+                endDragShouldRemergeBatch = runtimeSurfaceLight.UnmergeBatch();
 
                 Vector2 startingUVs;
 
@@ -283,8 +360,61 @@ namespace ForgePlus.LevelManipulation
             {
                 uvDragPlane = null;
 
-                GetComponent<RuntimeSurfaceLight>().MergeBatch();
+                if (endDragShouldRemergeBatch)
+                {
+                    endDragShouldRemergeBatch = false;
+                    GetComponent<RuntimeSurfaceLight>().MergeBatch();
+                }
             }
+        }
+
+        private async Task<FPSide.DataSources?> ShowLayerSourceDialog(bool isDestination)
+        {
+            if (!SideDestinationSelectionDialog)
+            {
+                SideDestinationSelectionDialog = Resources.Load<Dialog_ObjectSelector>($"Dialogs/Dialog - Side {(isDestination ? "Destination" : "Source")} Selection");
+            }
+
+            var dialogOptions = new List<string>()
+                                {
+                                    FPSide.DataSources.Primary.ToString(),
+                                    FPSide.DataSources.Transparent.ToString()
+                                };
+
+            var dialogOptionLabels = new List<string>()
+                                {
+                                    "Inner",
+                                    "Outer"
+                                };
+
+            var result = await DialogManager.Instance.DisplayQueuedDialog(SideDestinationSelectionDialog,
+                                                                          dialogOptions,
+                                                                          dialogOptionLabels);
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return (FPSide.DataSources)Enum.Parse(typeof(FPSide.DataSources), result);
+        }
+
+        private async Task<FPSide.DataSources?> ShowVariableDataSourceDialog(List<string> dialogOptions, bool isDestination)
+        {
+            if (!SideDestinationSelectionDialog)
+            {
+                SideDestinationSelectionDialog = Resources.Load<Dialog_ObjectSelector>($"Dialogs/Dialog - Side {(isDestination ? "Destination" : "Source")} Selection");
+            }
+
+            var result = await DialogManager.Instance.DisplayQueuedDialog(SideDestinationSelectionDialog,
+                                                                          dialogOptions);
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return (FPSide.DataSources)Enum.Parse(typeof(FPSide.DataSources), result);
         }
     }
 }

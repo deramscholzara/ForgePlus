@@ -22,9 +22,13 @@ namespace ForgePlus.LevelManipulation
 
         public Side WelandObject { get; set; }
 
-        public GameObject TopSurface;
-        public GameObject MiddleSurface;
-        public GameObject BottomSurface;
+        public GameObject TopSurface { get; private set; }
+        public GameObject MiddleSurface { get; private set; }
+        public GameObject BottomSurface { get; private set; }
+
+        public short PrimaryHighHeight { get; private set; }
+        public short SecondaryHighHeight { get; private set; }
+        public short TransparentHighHeight { get; private set; }
 
         private readonly List<GameObject> selectionVisualizationIndicators = new List<GameObject>(4);
 
@@ -278,21 +282,21 @@ namespace ForgePlus.LevelManipulation
                 CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
                 var surface = BuildSurface(fpLevel,
-                                                $"Side Top ({sideIndex}) (High - Source:{sideDataSource})",
-                                                lowHeight,
-                                                highHeight,
-                                                line.EndpointIndexes[0],
-                                                line.EndpointIndexes[1],
-                                                isClockwise,
-                                                fpSide,
-                                                side == null ? (short)0 : side.PrimaryTransferMode,
-                                                sideDataSource,
-                                                isOpaqueSurface: true,
-                                                facingPolygonIndex,
-                                                isStaticBatchable: !isPartOfCeilingPlatform,
-                                                fpPlatform: isPartOfCeilingPlatform ? fpLevel.FPCeilingFpPlatforms[platformIndex] : null,
-                                                hasLayeredTransparentSide: false,
-                                                layeredTransparentSideTransferMode: -1);
+                                           $"Side Top ({sideIndex}) (High - Source:{sideDataSource})",
+                                           lowHeight,
+                                           highHeight,
+                                           line.EndpointIndexes[0],
+                                           line.EndpointIndexes[1],
+                                           isClockwise,
+                                           fpSide,
+                                           side == null ? (short)0 : side.PrimaryTransferMode,
+                                           sideDataSource,
+                                           isOpaqueSurface: true,
+                                           facingPolygonIndex,
+                                           isStaticBatchable: !isPartOfCeilingPlatform,
+                                           fpPlatform: isPartOfCeilingPlatform ? fpLevel.FPCeilingFpPlatforms[platformIndex] : null,
+                                           hasLayeredTransparentSide: false,
+                                           layeredTransparentSideTransferMode: -1);
 
                 if (isPartOfCeilingPlatform)
                 {
@@ -304,6 +308,8 @@ namespace ForgePlus.LevelManipulation
                 {
                     surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
                 }
+
+                fpSide.PrimaryHighHeight = highHeight;
 
                 fpSide.TopSurface = surface;
             }
@@ -346,6 +352,16 @@ namespace ForgePlus.LevelManipulation
                                                    layeredTransparentSideTransferMode: hasLayeredTransparentSide ? side.TransparentTransferMode : (short)-1);
 
                     surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+
+                    if (sideDataSource == DataSources.Primary)
+                    {
+                        fpSide.PrimaryHighHeight = highHeight;
+                    }
+
+                    if (sideDataSource == DataSources.Transparent || hasLayeredTransparentSide)
+                    {
+                        fpSide.TransparentHighHeight = highHeight;
+                    }
 
                     fpSide.MiddleSurface = surface;
                 }
@@ -390,6 +406,15 @@ namespace ForgePlus.LevelManipulation
                 else
                 {
                     surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
+                }
+
+                if (sideDataSource == DataSources.Primary)
+                {
+                    fpSide.PrimaryHighHeight = highHeight;
+                }
+                else
+                {
+                    fpSide.SecondaryHighHeight = highHeight;
                 }
 
                 fpSide.BottomSurface = surface;
