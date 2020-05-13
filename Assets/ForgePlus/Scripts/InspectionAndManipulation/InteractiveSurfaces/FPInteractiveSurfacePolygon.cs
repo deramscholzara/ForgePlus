@@ -15,6 +15,7 @@ namespace ForgePlus.LevelManipulation
         public FPPlatform FPPlatform = null;
 
         private UVPlanarDrag uvDragPlane;
+        private bool endDragShouldRemergeBatch = false;
 
         public override void OnValidatedPointerClick(PointerEventData eventData)
         {
@@ -101,7 +102,7 @@ namespace ForgePlus.LevelManipulation
                     return;
                 }
 
-                runtimeSurfaceLight.UnmergeBatch();
+                endDragShouldRemergeBatch = runtimeSurfaceLight.UnmergeBatch();
 
                 // Note: Polygon surfaces have swapped UVs, so swap them here
                 var startingUVs = DataSource == FPPolygon.DataSources.Floor ?
@@ -153,7 +154,11 @@ namespace ForgePlus.LevelManipulation
             {
                 uvDragPlane = null;
 
-                GetComponent<RuntimeSurfaceLight>().MergeBatch();
+                if (endDragShouldRemergeBatch)
+                {
+                    endDragShouldRemergeBatch = false;
+                    GetComponent<RuntimeSurfaceLight>().MergeBatch();
+                }
             }
         }
     }

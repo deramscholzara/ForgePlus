@@ -1,7 +1,25 @@
-﻿namespace Weland.Extensions
+﻿using ForgePlus.LevelManipulation;
+using System;
+
+namespace Weland.Extensions
 {
     public static class GeometryExtensions
     {
+        public static bool HasDataSource(this Side side, FPSide.DataSources dataSource)
+        {
+            switch(dataSource)
+            {
+                case FPSide.DataSources.Primary:
+                    return !side.Primary.Texture.IsEmpty();
+                case FPSide.DataSources.Secondary:
+                    return !side.Secondary.Texture.IsEmpty();
+                case FPSide.DataSources.Transparent:
+                    return !side.Transparent.Texture.IsEmpty();
+                default:
+                    throw new NotImplementedException($"FPSide DataSource \"{dataSource}\" is not implemented.");
+            }
+        }
+
         public static bool HasLayeredTransparentSide(this Side side, Level level)
         {
             var destinationLine = level.Lines[side.LineIndex];
@@ -20,7 +38,7 @@
 
         private static Side Side(this Line line, Level level, bool clockwiseSide)
         {
-            var sideIndex = clockwiseSide ? line.ClockwisePolygonSideIndex : line.CounterclockwisePolygonOwner;
+            var sideIndex = clockwiseSide ? line.ClockwisePolygonSideIndex : line.CounterclockwisePolygonSideIndex;
 
             if (sideIndex < 0)
             {

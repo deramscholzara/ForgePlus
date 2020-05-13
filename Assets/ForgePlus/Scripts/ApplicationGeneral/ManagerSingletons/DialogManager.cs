@@ -24,7 +24,7 @@ namespace ForgePlus.ApplicationGeneral
             public async Task<string> Display(Transform parent)
             {
                 var result = await DialogPrefab.Display(parent, VariableOptions, VariableOptionLabels);
-                Debug.Log("result A: " + result);
+
                 return result;
             }
         }
@@ -55,17 +55,15 @@ namespace ForgePlus.ApplicationGeneral
             }
 
             var result = await queuedDialog.Display(parent: transform);
-            Debug.Log("result B: " + result);
+
             dialogQueue.Remove(queuedDialog);
 
             if (dialogQueue.Count == 0)
             {
-                Debug.Log("result C: " + result);
                 gameObject.SetActive(false);
                 UIBlocking.Instance.Unblock();
             }
 
-            Debug.Log("result D: " + result);
             return result;
         }
 
