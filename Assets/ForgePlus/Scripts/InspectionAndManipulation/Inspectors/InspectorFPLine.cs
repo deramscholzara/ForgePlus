@@ -26,7 +26,7 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_CounterClockwise_Side_Index;
         public TextMeshProUGUI Value_CounterClockwise_Polygon_Index;
 
-        public override void PopulateValues(IFPInspectable inspectedObject)
+        public override void RefreshValuesInInspector()
         {
             var fpLine = inspectedObject as FPLine;
 
@@ -50,7 +50,7 @@ namespace ForgePlus.Inspection
             Value_LowestCeilingHeight.text = fpLine.WelandObject.LowestAdjacentCeiling.ToString();
         }
 
-        public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
+        public override void UpdateValuesInInspectedObject()
         {
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject

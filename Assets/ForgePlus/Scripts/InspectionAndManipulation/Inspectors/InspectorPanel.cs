@@ -1,5 +1,4 @@
 ﻿using ForgePlus.LevelManipulation;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +15,14 @@ namespace ForgePlus.Inspection
         {
             inspectors.Add(inspector as InspectorBase);
             inspector.transform.SetParent(inspectorsParent, worldPositionStays: false);
+        }
+
+        public void RefreshAllInspectors()
+        {
+            foreach (var inspector in inspectors)
+            {
+                inspector.RefreshValuesInInspector();
+            }
         }
 
         public void ClearAllInspectors()

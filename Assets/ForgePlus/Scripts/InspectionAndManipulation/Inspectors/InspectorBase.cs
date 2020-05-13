@@ -1,14 +1,20 @@
-﻿using ForgePlus.LevelManipulation;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ForgePlus.Inspection
 {
     public abstract class InspectorBase : MonoBehaviour
     {
-        public abstract void PopulateValues(IFPInspectable inspectedObject);
+        protected IFPInspectable inspectedObject;
 
-        public abstract void UpdateValuesInInspectedObject(IFPInspectable inspectedObject);
+        public void PopulateValues(IFPInspectable inspectedObject)
+        {
+            this.inspectedObject = inspectedObject;
+
+            RefreshValuesInInspector();
+        }
+
+        public abstract void RefreshValuesInInspector();
+
+        public abstract void UpdateValuesInInspectedObject();
     }
 }

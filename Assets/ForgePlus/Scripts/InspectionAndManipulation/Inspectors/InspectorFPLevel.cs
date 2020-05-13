@@ -40,7 +40,7 @@ namespace ForgePlus.Inspection
         public Toggle Value_Flags_M1_WeaponsStyle;
         public Toggle Value_Flags_M1_ActivationRange;
 
-        public override void PopulateValues(IFPInspectable inspectedObject)
+        public override void RefreshValuesInInspector()
         {
             var fpLevel = inspectedObject as FPLevel;
 
@@ -79,7 +79,7 @@ namespace ForgePlus.Inspection
             Value_Flags_M1_ActivationRange.SetIsOnWithoutNotify(fpLevel.Level.M1ActivationRange);
         }
 
-        public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
+        public override void UpdateValuesInInspectedObject()
         {
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject

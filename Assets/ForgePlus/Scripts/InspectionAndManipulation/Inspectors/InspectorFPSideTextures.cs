@@ -3,7 +3,6 @@ using ForgePlus.ShapesCollections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Weland;
 
 namespace ForgePlus.Inspection
 {
@@ -27,7 +26,7 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_Transparent_TransferMode;
         public TextMeshProUGUI Value_Transparent_LightIndex;
 
-        public override void PopulateValues(IFPInspectable inspectedObject)
+        public override void RefreshValuesInInspector()
         {
             var fpLine = inspectedObject as FPSide;
 
@@ -53,7 +52,7 @@ namespace ForgePlus.Inspection
             Value_Transparent_TransferMode.text =   hasTransparentData ? fpLine.WelandObject.TransparentTransferMode.ToString() : "-";
         }
 
-        public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
+        public override void UpdateValuesInInspectedObject()
         {
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject
