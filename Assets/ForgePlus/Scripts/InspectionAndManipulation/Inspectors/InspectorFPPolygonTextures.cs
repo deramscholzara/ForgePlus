@@ -20,7 +20,7 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_Ceiling_TransferMode;
         public TextMeshProUGUI Value_Ceiling_LightIndex;
 
-        public override void PopulateValues(IFPInspectable inspectedObject)
+        public override void RefreshValuesInInspector()
         {
             var fpPolygon = inspectedObject as FPPolygon;
 
@@ -39,7 +39,7 @@ namespace ForgePlus.Inspection
             Value_Ceiling_LightIndex.text = fpPolygon.WelandObject.CeilingLight.ToString();
         }
 
-        public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
+        public override void UpdateValuesInInspectedObject()
         {
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject

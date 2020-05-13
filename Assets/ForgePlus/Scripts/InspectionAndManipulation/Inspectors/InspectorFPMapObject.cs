@@ -31,8 +31,7 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_Placement_RandomChance;
         public TextMeshProUGUI Value_Placement_RandomLocation;
 
-
-        public override void PopulateValues(IFPInspectable inspectedObject)
+        public override void RefreshValuesInInspector()
         {
             var fpMapObject = inspectedObject as FPMapObject;
 
@@ -97,7 +96,7 @@ namespace ForgePlus.Inspection
             }
         }
 
-        public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
+        public override void UpdateValuesInInspectedObject()
         {
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject (casted to FPMapObject in this case)

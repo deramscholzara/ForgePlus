@@ -52,7 +52,7 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_SecondaryInactive_Intensity;
         public TextMeshProUGUI Value_SecondaryInactive_DeltaIntensity;
 
-        public override void PopulateValues(IFPInspectable inspectedObject)
+        public override void RefreshValuesInInspector()
         {
             var fpLight = inspectedObject as FPLight;
 
@@ -106,10 +106,9 @@ namespace ForgePlus.Inspection
                              Value_SecondaryInactive_Intensity,
                              Value_SecondaryInactive_DeltaIntensity,
                              fpLight.WelandObject.SecondaryInactive);
-
         }
 
-        public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
+        public override void UpdateValuesInInspectedObject()
         {
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject

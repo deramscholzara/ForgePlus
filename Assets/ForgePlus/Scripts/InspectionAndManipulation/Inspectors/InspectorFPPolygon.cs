@@ -1,8 +1,5 @@
 ﻿using ForgePlus.LevelManipulation;
-using ForgePlus.ShapesCollections;
 using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace ForgePlus.Inspection
 {
@@ -31,7 +28,7 @@ namespace ForgePlus.Inspection
         public TextMeshProUGUI Value_FirstObjectIndex;
         public TextMeshProUGUI Value_AdjacentPolygonIndices;
 
-        public override void PopulateValues(IFPInspectable inspectedObject)
+        public override void RefreshValuesInInspector()
         {
             var fpPolygon = inspectedObject as FPPolygon;
 
@@ -124,7 +121,7 @@ namespace ForgePlus.Inspection
             Value_FirstObjectIndex.text = fpPolygon.WelandObject.FirstObjectIndex.ToString();
         }
 
-        public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
+        public override void UpdateValuesInInspectedObject()
         {
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject

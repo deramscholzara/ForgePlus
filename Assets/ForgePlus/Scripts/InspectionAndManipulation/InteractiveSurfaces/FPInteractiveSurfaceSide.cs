@@ -1,4 +1,5 @@
 ﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.Inspection;
 using ForgePlus.Palette;
 using System;
 using System.Collections.Generic;
@@ -252,8 +253,10 @@ namespace ForgePlus.LevelManipulation
                     break;
                 default:
                     Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
-                    break;
+                    return;
             }
+
+            InspectorPanel.Instance.RefreshAllInspectors();
         }
 
         public override void OnValidatedBeginDrag(PointerEventData eventData)
@@ -301,6 +304,12 @@ namespace ForgePlus.LevelManipulation
                                                 surfaceWorldNormal,
                                                 textureWorldUp);
             }
+            else
+            {
+                return;
+            }
+
+            InspectorPanel.Instance.RefreshAllInspectors();
         }
 
         public override void OnValidatedDrag(PointerEventData eventData)
@@ -324,6 +333,12 @@ namespace ForgePlus.LevelManipulation
                                        (short)newUVOffset.y,
                                        rebatch: false);
             }
+            else
+            {
+                return;
+            }
+
+            InspectorPanel.Instance.RefreshAllInspectors();
         }
 
         public override void OnValidatedEndDrag(PointerEventData eventData)
@@ -340,6 +355,12 @@ namespace ForgePlus.LevelManipulation
                     GetComponent<RuntimeSurfaceLight>().MergeBatch();
                 }
             }
+            else
+            {
+                return;
+            }
+
+            InspectorPanel.Instance.RefreshAllInspectors();
         }
 
         private async Task<FPSide.DataSources?> ShowLayerSourceDialog(bool isDestination)

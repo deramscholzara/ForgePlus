@@ -48,7 +48,7 @@ namespace ForgePlus.Inspection
 
         private FPPlatform fpPlatform = null;
 
-        public override void PopulateValues(IFPInspectable inspectedObject)
+        public override void RefreshValuesInInspector()
         {
             fpPlatform = inspectedObject as FPPlatform;
 
@@ -96,7 +96,7 @@ namespace ForgePlus.Inspection
             Simulation_Obstruct.onClick.AddListener(delegate { fpPlatform.ObstructRuntimeBehavior(); });
         }
 
-        public override void UpdateValuesInInspectedObject(IFPInspectable inspectedObject)
+        public override void UpdateValuesInInspectedObject()
         {
             // TODO: Use this when editing is added - the UI editing controls should call this when their values change,
             //       this will then set the values from the controls onto the inspectedObject
