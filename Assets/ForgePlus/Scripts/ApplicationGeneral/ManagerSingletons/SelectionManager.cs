@@ -28,8 +28,6 @@ namespace ForgePlus.LevelManipulation
                     return null;
                 }
 
-                Debug.Log(SelectedObjects[0].GetType());
-
                 return SelectedObjects[0];
             }
         }

@@ -2,6 +2,7 @@
 using ForgePlus.Palette;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -47,6 +48,7 @@ namespace ForgePlus.LevelManipulation
 
                                 if (!result.HasValue)
                                 {
+                                    // Dialog was cancelled, so exit
                                     return;
                                 }
 
@@ -62,188 +64,160 @@ namespace ForgePlus.LevelManipulation
                         var selectedSourceObject = SelectionManager.Instance.SelectedObject;
                         var selectedSourceFPSide = (selectedSourceObject is FPSide) ? selectedSourceObject as FPSide : null;
 
-                        if (selectedSourceFPSide &&
-                            selectedSourceFPSide != ParentFPSide)
+                        if (!selectedSourceFPSide)
                         {
-                            if (selectedSourceFPSide.WelandObject.SideIsNeighbor(FPLevel.Instance.Level,
-                                                                                 ParentFPSide.WelandObject,
-                                                                                 out var neighborFlowsOutward,
-                                                                                 out var neighborIsLeft))
+                            // There is no selection to use as a source, so exit
+                            return;
+                        }
+
+                        var destinationIsSource = selectedSourceFPSide == ParentFPSide;
+
+                        // Assign defaults for when the destination is the source (instead of a neighbor).
+                        // True for both of these means that there will be no offset difference from source to destination.
+                        var neighborFlowsOutward = true;
+                        var neighborIsLeft = true;
+
+                        if (destinationIsSource ||
+                            selectedSourceFPSide.WelandObject.SideIsNeighbor(FPLevel.Instance.Level,
+                                                                             ParentFPSide.WelandObject,
+                                                                             out neighborFlowsOutward,
+                                                                             out neighborIsLeft))
+                        {
+                            #region Alignment_DataSource_Destination
+                            var destinationIsLayered = ParentFPSide.WelandObject.HasLayeredTransparentSide(FPLevel.Instance.Level);
+                            var destinationDataSource = DataSource;
+
+                            if (destinationIsLayered)
                             {
-                                var destinationIsLayered = ParentFPSide.WelandObject.HasLayeredTransparentSide(FPLevel.Instance.Level);
-                                FPSide.DataSources destinationDataSource;
+                                var result = await ShowLayerSourceDialog(isDestination: true);
 
-                                if (destinationIsLayered)
+                                if (!result.HasValue)
                                 {
-                                    var result = await ShowLayerSourceDialog(isDestination: true);
-
-                                    if (!result.HasValue)
-                                    {
-                                        return;
-                                    }
-
-                                    destinationDataSource = result.Value;
-                                }
-                                else
-                                {
-                                    List<string> destinationDataSourceOptions = new List<string>();
-
-                                    if (!ParentFPSide.WelandObject.Primary.Texture.IsEmpty())
-                                    {
-                                        destinationDataSourceOptions.Add(FPSide.DataSources.Primary.ToString());
-                                    }
-
-                                    if (!ParentFPSide.WelandObject.Secondary.Texture.IsEmpty())
-                                    {
-                                        destinationDataSourceOptions.Add(FPSide.DataSources.Secondary.ToString());
-                                    }
-
-                                    if (!ParentFPSide.WelandObject.Transparent.Texture.IsEmpty())
-                                    {
-                                        destinationDataSourceOptions.Add(FPSide.DataSources.Transparent.ToString());
-                                    }
-
-                                    if (destinationDataSourceOptions.Count == 0)
-                                    {
-                                        // The source side has no textured surfaces, so exit
-                                        return;
-                                    }
-                                    else if (destinationDataSourceOptions.Count == 1)
-                                    {
-                                        destinationDataSource = (FPSide.DataSources)Enum.Parse(typeof(FPSide.DataSources), destinationDataSourceOptions[0]);
-                                    }
-                                    else
-                                    {
-                                        var result = await ShowVariableDataSourceDialog(destinationDataSourceOptions, isDestination: true);
-
-                                        if (!result.HasValue)
-                                        {
-                                            return;
-                                        }
-
-                                        destinationDataSource = result.Value;
-                                    }
+                                    // Dialog was cancelled, so exit
+                                    return;
                                 }
 
-                                var uvChannel = 0;
-                                if (destinationDataSource == FPSide.DataSources.Transparent &&
-                                    destinationIsLayered)
+                                destinationDataSource = result.Value;
+                            }
+
+                            var destinationUVChannel = 0;
+                            if (destinationDataSource == FPSide.DataSources.Transparent &&
+                                destinationIsLayered)
+                            {
+                                destinationUVChannel = 1;
+                            }
+                            #endregion Alignment_DataSource_Destination
+
+                            #region Alignment_DataSource_Source
+                            FPSide.DataSources sourceDataSource;
+
+                            if (destinationIsSource && destinationIsLayered)
+                            {
+                                sourceDataSource = destinationDataSource == FPSide.DataSources.Primary ? FPSide.DataSources.Transparent : FPSide.DataSources.Primary;
+                            }
+                            else
+                            {
+                                List<FPSide.DataSources> sourceDataSourceOptions = new List<FPSide.DataSources>();
+
+                                foreach (var dataSource in Enum.GetValues(typeof(FPSide.DataSources)).Cast<FPSide.DataSources>())
                                 {
-                                    uvChannel = 1;
+                                    if (selectedSourceFPSide.WelandObject.HasDataSource(dataSource) &&
+                                        (!destinationIsSource || dataSource != DataSource))
+                                    {
+                                        sourceDataSourceOptions.Add(dataSource);
+                                    }
                                 }
-
-                                List<string> sourceDataSourceOptions = new List<string>();
-
-                                if (!selectedSourceFPSide.WelandObject.Primary.Texture.IsEmpty())
-                                {
-                                    sourceDataSourceOptions.Add(FPSide.DataSources.Primary.ToString());
-                                }
-
-                                if (!selectedSourceFPSide.WelandObject.Secondary.Texture.IsEmpty())
-                                {
-                                    sourceDataSourceOptions.Add(FPSide.DataSources.Secondary.ToString());
-                                }
-
-                                if (!selectedSourceFPSide.WelandObject.Transparent.Texture.IsEmpty())
-                                {
-                                    sourceDataSourceOptions.Add(FPSide.DataSources.Transparent.ToString());
-                                }
-
-                                FPSide.DataSources sourceDataSource;
 
                                 if (sourceDataSourceOptions.Count == 0)
                                 {
-                                    // The source side has no textured surfaces, so exit
+                                    // The source side has no textured surfaces,
+                                    // or the source is the destination and there was only one data source,
+                                    // so exit
                                     return;
                                 }
                                 else if (sourceDataSourceOptions.Count == 1)
                                 {
-                                    sourceDataSource = (FPSide.DataSources)Enum.Parse(typeof(FPSide.DataSources), sourceDataSourceOptions[0]);
+                                    sourceDataSource = sourceDataSourceOptions[0];
                                 }
                                 else
                                 {
-                                    var result = await ShowVariableDataSourceDialog(sourceDataSourceOptions, isDestination: false);
+                                    var result = await ShowVariableDataSourceDialog(sourceDataSourceOptions.Select(source => source.ToString()).ToList(), isDestination: false);
 
                                     if (!result.HasValue)
                                     {
+                                        // Dialog was cancelled, so exit
                                         return;
                                     }
 
                                     sourceDataSource = result.Value;
                                 }
-
-                                short sourceX;
-                                short sourceY;
-                                short destinationHeight;
-                                short sourceHeight;
-
-                                switch(destinationDataSource)
-                                {
-                                    case FPSide.DataSources.Primary:
-                                        destinationHeight = ParentFPSide.PrimaryHighHeight;
-                                        break;
-                                    case FPSide.DataSources.Secondary:
-                                        destinationHeight = ParentFPSide.SecondaryHighHeight;
-                                        break;
-                                    case FPSide.DataSources.Transparent:
-                                        destinationHeight = ParentFPSide.TransparentHighHeight;
-                                        break;
-                                    default:
-                                        return;
-                                }
-
-                                switch (sourceDataSource)
-                                {
-                                    case FPSide.DataSources.Primary:
-                                        sourceX = selectedSourceFPSide.WelandObject.Primary.X;
-                                        // TODO: this needs to set the y based on vertical world distance
-                                        //       instead of just matching it.
-                                        //       Use this: (destinationHighHeight - sourceHighHeight) + sourceY
-                                        //       Alternatively, it might be this: (sourceHighHeight - destinationHighHeight) + sourceY
-                                        sourceY = selectedSourceFPSide.WelandObject.Primary.Y;
-
-                                        sourceHeight = selectedSourceFPSide.PrimaryHighHeight;
-
-                                        break;
-                                    case FPSide.DataSources.Secondary:
-                                        sourceX = selectedSourceFPSide.WelandObject.Secondary.X;
-                                        // TODO: this needs to set the y based on vertical world distance
-                                        //       instead of just matching it.
-                                        //       Use this: (destinationHighHeight - sourceHighHeight) + sourceY
-                                        //       Alternatively, it might be this: (sourceHighHeight - destinationHighHeight) + sourceY
-                                        sourceY = selectedSourceFPSide.WelandObject.Secondary.Y;
-
-                                        sourceHeight = selectedSourceFPSide.SecondaryHighHeight;
-
-                                        break;
-                                    case FPSide.DataSources.Transparent:
-                                        sourceX = selectedSourceFPSide.WelandObject.Transparent.X;
-                                        // TODO: this needs to set the y based on vertical world distance
-                                        //       instead of just matching it.
-                                        //       Use this: (destinationHighHeight - sourceHighHeight) + sourceY
-                                        //       Alternatively, it might be this: (sourceHighHeight - destinationHighHeight) + sourceY
-                                        sourceY = selectedSourceFPSide.WelandObject.Transparent.Y;
-
-                                        sourceHeight = selectedSourceFPSide.TransparentHighHeight;
-
-                                        break;
-                                    default:
-                                        return;
-                                }
-
-                                short horizontalOffset = neighborFlowsOutward ? (short)0 : FPLevel.Instance.FPLines[ParentFPSide.WelandObject.LineIndex].WelandObject.Length;
-                                horizontalOffset += neighborIsLeft ? (short)0 : FPLevel.Instance.FPLines[selectedSourceFPSide.WelandObject.LineIndex].WelandObject.Length;
-
-                                short newX = (short)(sourceX + horizontalOffset);
-                                short newY = (short)(destinationHeight - sourceHeight + sourceY);
-
-                                ParentFPSide.SetOffset(this,
-                                                       destinationDataSource,
-                                                       uvChannel,
-                                                       newX,
-                                                       newY,
-                                                       rebatch: true);
                             }
+                            #endregion Alignment_DataSource_Source
+
+                            short sourceX;
+                            short sourceY;
+                            short destinationHeight;
+                            short sourceHeight;
+
+                            switch (destinationDataSource)
+                            {
+                                case FPSide.DataSources.Primary:
+                                    destinationHeight = ParentFPSide.PrimaryHighHeight;
+                                    break;
+                                case FPSide.DataSources.Secondary:
+                                    destinationHeight = ParentFPSide.SecondaryHighHeight;
+                                    break;
+                                case FPSide.DataSources.Transparent:
+                                    destinationHeight = ParentFPSide.TransparentHighHeight;
+                                    break;
+                                default:
+                                    return;
+                            }
+
+                            switch (sourceDataSource)
+                            {
+                                case FPSide.DataSources.Primary:
+                                    sourceX = selectedSourceFPSide.WelandObject.Primary.X;
+                                    sourceY = selectedSourceFPSide.WelandObject.Primary.Y;
+
+                                    sourceHeight = selectedSourceFPSide.PrimaryHighHeight;
+
+                                    break;
+                                case FPSide.DataSources.Secondary:
+                                    sourceX = selectedSourceFPSide.WelandObject.Secondary.X;
+                                    sourceY = selectedSourceFPSide.WelandObject.Secondary.Y;
+
+                                    sourceHeight = selectedSourceFPSide.SecondaryHighHeight;
+
+                                    break;
+                                case FPSide.DataSources.Transparent:
+                                    sourceX = selectedSourceFPSide.WelandObject.Transparent.X;
+                                    sourceY = selectedSourceFPSide.WelandObject.Transparent.Y;
+
+                                    sourceHeight = selectedSourceFPSide.TransparentHighHeight;
+
+                                    break;
+                                default:
+                                    return;
+                            }
+
+                            short horizontalOffset = neighborFlowsOutward ? (short)0 : FPLevel.Instance.FPLines[ParentFPSide.WelandObject.LineIndex].WelandObject.Length;
+                            if (neighborIsLeft)
+                            {
+                                horizontalOffset *= -1;
+                            }
+
+                            horizontalOffset += neighborIsLeft ? (short)0 : FPLevel.Instance.FPLines[selectedSourceFPSide.WelandObject.LineIndex].WelandObject.Length;
+
+                            short newX = (short)(sourceX + horizontalOffset);
+                            short newY = (short)(sourceHeight - destinationHeight + sourceY);
+
+                            ParentFPSide.SetOffset(this,
+                                                    destinationDataSource,
+                                                    destinationUVChannel,
+                                                    newX,
+                                                    newY,
+                                                    rebatch: true);
                         }
                     }
                     else

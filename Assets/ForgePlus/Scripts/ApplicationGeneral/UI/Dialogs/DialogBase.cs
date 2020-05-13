@@ -22,7 +22,6 @@ namespace ForgePlus.ApplicationGeneral
 
             while (!submit)
             {
-                Debug.Log("Waiting... " + submit, this);
                 await Task.Yield();
             }
 

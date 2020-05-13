@@ -100,16 +100,17 @@ namespace ForgePlus.LevelManipulation
 
             RuntimeSurfaceLight runtimeSurfaceLight = null;
 
+            var shouldRemerge = false;
             if (rebatch)
             {
                 runtimeSurfaceLight = surfaceObject.GetComponent<RuntimeSurfaceLight>();
-                runtimeSurfaceLight.UnmergeBatch();
+                shouldRemerge = runtimeSurfaceLight.UnmergeBatch();
             }
 
             var meshUVs = BuildUVs(x, y);
             surfaceObject.GetComponent<MeshFilter>().sharedMesh.SetUVs(channel: 0, meshUVs);
 
-            if (rebatch)
+            if (rebatch && shouldRemerge)
             {
                 runtimeSurfaceLight.MergeBatch();
             }
