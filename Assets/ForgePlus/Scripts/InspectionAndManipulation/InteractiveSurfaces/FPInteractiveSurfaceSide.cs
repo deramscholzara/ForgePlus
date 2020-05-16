@@ -1,5 +1,6 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Palette;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace ForgePlus.LevelManipulation
             {
                 case ModeManager.PrimaryModes.Geometry:
                     SelectionManager.Instance.ToggleObjectSelection(ParentFPSide, multiSelect: false);
+
                     break;
                 case ModeManager.PrimaryModes.Textures:
                     if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
@@ -224,6 +226,7 @@ namespace ForgePlus.LevelManipulation
                     else
                     {
                         SelectionManager.Instance.ToggleObjectSelection(ParentFPSide, multiSelect: false);
+                        InputListener(ParentFPSide);
 
                         if (!surfaceShapeDescriptor.IsEmpty())
                         {
@@ -361,6 +364,64 @@ namespace ForgePlus.LevelManipulation
             }
 
             InspectorPanel.Instance.RefreshAllInspectors();
+        }
+
+        public override void OnDirectionalInputDown(Vector2 direction)
+        {
+            base.OnDirectionalInputDown(direction);
+
+            switch (ModeManager.Instance.PrimaryMode)
+            {
+                case ModeManager.PrimaryModes.Textures:
+                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                    {
+                        var destinationIsLayered = ParentFPSide.WelandObject.HasLayeredTransparentSide(FPLevel.Instance.Level);
+                        var destinationDataSource = DataSource;
+                        var uvChannel = 0;
+
+                        var newX = (short)(-direction.x * GeometryUtilities.UnitsPerTextureOffetNudge);
+                        var newY = (short)(direction.y * GeometryUtilities.UnitsPerTextureOffetNudge);
+
+                        if (destinationIsLayered &&
+                            (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+                        {
+                            destinationDataSource = FPSide.DataSources.Transparent;
+                            uvChannel = 1;
+                        }
+
+                        switch(destinationDataSource)
+                        {
+                            case FPSide.DataSources.Primary:
+                                newX += (short)(Mathf.RoundToInt(ParentFPSide.WelandObject.Primary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentFPSide.WelandObject.Primary.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+
+                                break;
+                            case FPSide.DataSources.Secondary:
+                                newX += (short)(Mathf.RoundToInt(ParentFPSide.WelandObject.Secondary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentFPSide.WelandObject.Secondary.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+
+                                break;
+                            case FPSide.DataSources.Transparent:
+                                newX += (short)(Mathf.RoundToInt(ParentFPSide.WelandObject.Transparent.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentFPSide.WelandObject.Transparent.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+
+                                break;
+                            default:
+                                return;
+                        }
+
+                        ParentFPSide.SetOffset(this,
+                                               destinationDataSource,
+                                               uvChannel,
+                                               newX,
+                                               newY,
+                                               rebatch: true);
+                    }
+
+                    break;
+                default:
+                    return;
+            }
         }
 
         private async Task<FPSide.DataSources?> ShowLayerSourceDialog(bool isDestination)

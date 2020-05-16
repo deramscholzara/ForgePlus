@@ -17,6 +17,8 @@ namespace ForgePlus.LevelManipulation.Utilities
         public const float WorldUnitIncrementsPerMeter = 512f;
         public const float WorldUnitIncrementsPerWorldUnit = 1024f;
         public const float MeterToWorldUnit = WorldUnitIncrementsPerMeter / WorldUnitIncrementsPerWorldUnit;
+        
+        public const float UnitsPerTextureOffetNudge = WorldUnitIncrementsPerWorldUnit / 128f;
 
         private static readonly Material SelectionIndicatorMaterial = new Material(Shader.Find("ForgePlus/GeometrySelectionIndicator"));
 

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
@@ -11,6 +13,8 @@ namespace ForgePlus.LevelManipulation
         IDragHandler
     {
         protected bool isSelectable = false;
+
+        private CancellationTokenSource inputListenerCancellationTokenSource;
 
         public abstract void OnValidatedPointerClick(PointerEventData eventData);
         public abstract void OnValidatedBeginDrag(PointerEventData eventData);
@@ -49,9 +53,54 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        public virtual void OnDirectionalInputDown(Vector2 direction)
+        {
+            // Intentionally blank
+        }
+
         public virtual void SetSelectability(bool enabled)
         {
             isSelectable = enabled;
+        }
+
+        protected async void InputListener(IFPSelectable mustBeSelectedObject)
+        {
+            while (Application.isPlaying && SelectionManager.Instance.GetIsSelected(mustBeSelectedObject))
+            {
+                var inputDirection = Vector2.zero;
+                var directionalInputReceived = false;
+
+                if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    inputDirection.y += 1f;
+                    directionalInputReceived = true;
+                }
+                
+                if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    inputDirection.y -= 1f;
+                    directionalInputReceived = true;
+                }
+
+                if (Input.GetKeyDown(KeyCode.RightArrow))
+                {
+                    inputDirection.x += 1f;
+                    directionalInputReceived = true;
+                }
+                
+                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                {
+                    inputDirection.x -= 1f;
+                    directionalInputReceived = true;
+                }
+
+                if (directionalInputReceived)
+                {
+                    OnDirectionalInputDown(inputDirection);
+                }
+
+                await Task.Yield();
+            }
         }
     }
 }
