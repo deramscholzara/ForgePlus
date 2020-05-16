@@ -56,12 +56,6 @@ sysinfo.txt
 crashlytics-build.properties
 
 # Project-specific ignores
-/Assets/PlaneClipping/
-/Assets/Resources/
-/Assets/Scripts/
 /Assets/Test Textures/
-/Assets/TestMaps/
-/Assets/TextMesh Pro/
-/Assets/Z_ToBeRemoved/
-/Assets/*.*
+/Assets/Test Textures.meta
 .DS_Store
