@@ -68,6 +68,8 @@ namespace ForgePlus.DataFileIO
                 return;
             }
 
+            CloseLevel();
+
             await data.OpenLevel(levelIndex);
 
             OnLevelOpened_Sender?.Invoke(FPLevel.Instance.Level.Name);
