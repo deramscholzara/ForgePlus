@@ -196,6 +196,11 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        public bool GetIsSelected(IFPSelectable selectable)
+        {
+            return SelectedObjects.Contains(selectable);
+        }
+
         public void ToggleObjectSelection(IFPSelectable selection, bool multiSelect = false)
         {
             if (SelectedObjects.Contains(selection))
@@ -250,21 +255,21 @@ namespace ForgePlus.LevelManipulation
                         (selection as IFPSelectionDisplayable).DisplaySelectionState(false);
                     }
 
+                    // 2. Update actual selection list
                     SelectedObjects.Remove(selection);
                 }
                 else
                 {
                     // When single-deselecting with multiple selections,
                     // deselect everything else, instead - better for UX
-
                     foreach (var selectedObject in SelectedObjects)
                     {
                         if (selectedObject != selection)
                         {
                             // 1. Update displayed selection
-                            if (selection is IFPSelectionDisplayable)
+                            if (selectedObject is IFPSelectionDisplayable)
                             {
-                                (selection as IFPSelectionDisplayable).DisplaySelectionState(false);
+                                (selectedObject as IFPSelectionDisplayable).DisplaySelectionState(false);
                             }
                         }
                     }
@@ -287,12 +292,14 @@ namespace ForgePlus.LevelManipulation
 
             foreach (var selectedObject in SelectedObjects)
             {
+                // 1. Update displayed selection
                 if (selectedObject is IFPSelectionDisplayable)
                 {
                     (selectedObject as IFPSelectionDisplayable).DisplaySelectionState(false);
                 }
             }
 
+            // 2. Update actual selection list
             SelectedObjects.Clear();
         }
 

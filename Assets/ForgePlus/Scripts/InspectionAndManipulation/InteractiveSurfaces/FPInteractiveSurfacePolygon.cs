@@ -1,4 +1,5 @@
 ﻿using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Palette;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -37,14 +38,13 @@ namespace ForgePlus.LevelManipulation
                         }
                     }
                     else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
-                        Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+                             Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                     {
                         var selectedSourceObject = SelectionManager.Instance.SelectedObject;
                         var selectedSourceFPPolygon = (selectedSourceObject is FPPolygon) ? selectedSourceObject as FPPolygon : null;
 
                         if (selectedSourceFPPolygon && selectedSourceFPPolygon != ParentFPPolygon)
                         {
-                            // Note: Polygon surfaces have swapped UVs, so swap them here
                             ParentFPPolygon.SetOffset(this,
                                                       DataSource,
                                                       DataSource == FPPolygon.DataSources.Floor ? selectedSourceFPPolygon.WelandObject.FloorOrigin.X : selectedSourceFPPolygon.WelandObject.CeilingOrigin.X,
@@ -55,6 +55,7 @@ namespace ForgePlus.LevelManipulation
                     else
                     {
                         SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
+                        InputListener(ParentFPPolygon);
 
                         if (!surfaceShapeDescriptor.IsEmpty())
                         {
@@ -181,6 +182,37 @@ namespace ForgePlus.LevelManipulation
             }
 
             InspectorPanel.Instance.RefreshAllInspectors();
+        }
+
+        public override void OnDirectionalInputDown(Vector2 direction)
+        {
+            base.OnDirectionalInputDown(direction);
+
+            switch (ModeManager.Instance.PrimaryMode)
+            {
+                case ModeManager.PrimaryModes.Textures:
+                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                    {
+                        var newX = (short)(direction.y * GeometryUtilities.UnitsPerTextureOffetNudge);
+                        var newY = (short)(direction.x * GeometryUtilities.UnitsPerTextureOffetNudge);
+
+                        var originalX = DataSource == FPPolygon.DataSources.Floor ? ParentFPPolygon.WelandObject.FloorOrigin.X : ParentFPPolygon.WelandObject.CeilingOrigin.X;
+                        var originalY = DataSource == FPPolygon.DataSources.Floor ? ParentFPPolygon.WelandObject.FloorOrigin.Y : ParentFPPolygon.WelandObject.CeilingOrigin.Y;
+
+                        newX += (short)(Mathf.Round(originalX / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                        newY += (short)(Mathf.Round(originalY / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+
+                        ParentFPPolygon.SetOffset(this,
+                                                  DataSource,
+                                                  newX,
+                                                  newY,
+                                                  rebatch: true);
+                    }
+
+                    break;
+                default:
+                    return;
+            }
         }
     }
 }

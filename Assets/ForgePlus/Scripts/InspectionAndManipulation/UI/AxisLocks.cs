@@ -23,8 +23,8 @@ namespace ForgePlus.LevelManipulation
         {
             get
             {
-                if (Input.GetKey(KeyCode.LeftControl) ||
-                    Input.GetKey(KeyCode.RightControl))
+                if (Input.GetKey(KeyCode.LeftAlt) ||
+                    Input.GetKey(KeyCode.RightAlt))
                 {
                     return !snapToGrid;
                 }

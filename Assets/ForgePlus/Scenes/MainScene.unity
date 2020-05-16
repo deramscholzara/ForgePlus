@@ -3105,11 +3105,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 327548886}
     m_Modifications:
-    - target: {fileID: 3982486684797976066, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
-        type: 3}
-      propertyPath: m_ChildForceExpandHeight
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3982486684797976092, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
       propertyPath: m_Name
@@ -3233,22 +3228,12 @@ PrefabInstance:
     - target: {fileID: 3982486684893546867, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.22949678
-      objectReference: {fileID: 0}
-    - target: {fileID: 3982486685209149640, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
-        type: 3}
-      propertyPath: m_ChildForceExpandHeight
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3982486685209149640, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
-        type: 3}
-      propertyPath: m_ChildForceExpandWidth
-      value: 0
+      value: 0.4498185
       objectReference: {fileID: 0}
     - target: {fileID: 3982486685209149642, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3982486685209149642, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
@@ -3263,12 +3248,12 @@ PrefabInstance:
     - target: {fileID: 3982486685209149642, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 759.73254
+      value: 755
       objectReference: {fileID: 0}
     - target: {fileID: 3982486685209149642, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 574.3
+      value: 804.28
       objectReference: {fileID: 0}
     - target: {fileID: 3982486685209149642, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
@@ -3298,7 +3283,7 @@ PrefabInstance:
     - target: {fileID: 3982486685953456788, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 15.267477
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3982486685953456788, guid: d50fa85d8fee1cb4ca09c44f5af1d6a9,
         type: 3}
@@ -12528,8 +12513,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 379.86627, y: -287.15}
-  m_SizeDelta: {x: 759.73254, y: 574.3}
+  m_AnchoredPosition: {x: 377.5, y: -402.14}
+  m_SizeDelta: {x: 755, y: 804.28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2023198906
 MonoBehaviour:
@@ -12546,7 +12531,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: -1
+  m_PreferredWidth: 100
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
@@ -12575,13 +12560,18 @@ MonoBehaviour:
     - Forward/Back/Left/Right: WASD\r\n        - Down/Up: Q/E\r\n        - Go faster:
     Hold Shift\r\n\n    Looking:\n        - Move mouse while holding RMB or Space\n\nUI
     Controls:\n    - Open/Close Menu: Tab or Escape\n    - Show/Hide All UI: ` (~
-    key without Shift)\n\nSurface Dragging:\n    - You can drag on surface to adjust
-    textures in Texture mode, when the Palette mode (right side) is set to Edit.\n\nHotkeys:\n   
-    - Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be
-    held):\n    - Invert Grid Snap Setting: control\n    - In Texture > Edit Mode,
+    key without Shift)\n\nSurface Dragging:\n    - You can drag on a surface to adjust
+    textures in Texture mode, when the Palette mode (right side) is set to Edit. 
+    With the surface selected in this mode, you can also use arrow keys to nudge
+    and snap it in 128th increments (classic pixel distance).\n\nHotkeys:\n    -
+    Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be
+    held):\n    - Invert Grid Snap Setting: alt/option\n    - In Texture > Edit Mode,
     you can select a surface (normal click) then alt-click a surface of the same
     geometry type (Polygon or Side) to align that surface's texture to the selected
-    one."
+    one.  SIdes must be neighbors, but polygons (ceilings and floors) can be anywhere. 
+    The assigned textures are not required to be the same, and will not be updated
+    when aligning.\n\nPainting:\n    - In Texture > Paint Mode, you can click on
+    surfaces to assign the selected texture swatch to those surfaces."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12654,12 +12644,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 2023198907}
-    characterCount: 607
+    characterCount: 1238
     spriteCount: 0
-    spaceCount: 162
-    wordCount: 98
+    spaceCount: 283
+    wordCount: 206
     linkCount: 0
-    lineCount: 25
+    lineCount: 35
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
