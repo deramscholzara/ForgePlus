@@ -24,8 +24,6 @@ namespace ForgePlus.DataFileIO
         {
             LoadData();
 
-            CloseAndUnloadCurrentLevel();
-
             currentlyOpenLevel = new LevelData(levelIndex, file);
 
             await currentlyOpenLevel.OpenLevel();
