@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Weland;
+using Weland.Extensions;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -93,30 +94,33 @@ namespace ForgePlus.LevelManipulation
             speed = (float)WelandObject.Speed / 30f;
             delay = (float)WelandObject.Delay / 30f;
 
+            var minimumHeight = WelandObject.RuntimeMinimumHeight(FPLevel.Level);
+            var maximumHeight = WelandObject.RuntimeMaximumHeight(FPLevel.Level);
+
             if (WelandObject.ComesFromFloor && WelandObject.ComesFromCeiling)
             {
-                extendedPosition = (float)(WelandObject.MaximumHeight + WelandObject.MinimumHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                extendedPosition = (float)(maximumHeight + minimumHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
                 if (linkedSurface == LinkedSurfaces.Floor)
                 {
-                    contractedPosition = (float)WelandObject.MinimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                    contractedPosition = (float)minimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
                 }
                 else
                 {
-                    contractedPosition = (float)WelandObject.MaximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                    contractedPosition = (float)maximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
                 }
             }
             else
             {
                 if (linkedSurface == LinkedSurfaces.Floor)
                 {
-                    extendedPosition = (float)WelandObject.MaximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                    contractedPosition = (float)WelandObject.MinimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                    extendedPosition = (float)maximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                    contractedPosition = (float)minimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
                 }
                 else
                 {
-                    extendedPosition = (float)WelandObject.MinimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                    contractedPosition = (float)WelandObject.MaximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                    extendedPosition = (float)minimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                    contractedPosition = (float)maximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
                 }
             }
         }
