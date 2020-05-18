@@ -5,6 +5,36 @@ namespace Weland.Extensions
 {
     public static class GeometryExtensions
     {
+        public static short RuntimeMinimumHeight(this Platform platform, Level level)
+        {
+            if (platform.ExtendsFloorToCeiling)
+            {
+                return level.Polygons[platform.PolygonIndex].FloorHeight;
+            }
+
+            if (platform.MinimumHeight != -1)
+            {
+                return platform.MinimumHeight;
+            }
+
+            return level.AutocalPlatformMinimum((short)level.Platforms.IndexOf(platform));
+        }
+
+        public static short RuntimeMaximumHeight(this Platform platform, Level level)
+        {
+            if (platform.ExtendsFloorToCeiling)
+            {
+                return level.Polygons[platform.PolygonIndex].CeilingHeight;
+            }
+            
+            if (platform.MaximumHeight != -1)
+            {
+                return platform.MaximumHeight;
+            }
+
+            return level.AutocalPlatformMaximum((short)level.Platforms.IndexOf(platform));
+        }
+
         public static bool HasDataSource(this Side side, FPSide.DataSources dataSource)
         {
             switch(dataSource)

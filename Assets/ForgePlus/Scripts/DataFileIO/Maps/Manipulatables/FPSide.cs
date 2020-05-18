@@ -198,12 +198,12 @@ namespace ForgePlus.LevelManipulation
             {
                 if (facingPlatform.ComesFromFloor)
                 {
-                    var roundedUpMidpoint = (short)Mathf.CeilToInt((facingPlatform.MinimumHeight + facingPlatform.MaximumHeight) * 0.5f);
+                    var roundedUpMidpoint = (short)Mathf.CeilToInt((facingPlatform.RuntimeMinimumHeight(fpLevel.Level) + facingPlatform.RuntimeMaximumHeight(fpLevel.Level)) * 0.5f);
                     highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, roundedUpMidpoint);
                 }
                 else
                 {
-                    highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, facingPlatform.MaximumHeight);
+                    highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, facingPlatform.RuntimeMaximumHeight(fpLevel.Level));
                 }
             }
 
@@ -212,12 +212,12 @@ namespace ForgePlus.LevelManipulation
             {
                 if (opposingPlatform.ComesFromFloor)
                 {
-                    var roundedDownMidpoint = (short)Mathf.FloorToInt((opposingPlatform.MinimumHeight + opposingPlatform.MaximumHeight) * 0.5f);
+                    var roundedDownMidpoint = (short)Mathf.FloorToInt((opposingPlatform.RuntimeMinimumHeight(fpLevel.Level) + opposingPlatform.RuntimeMaximumHeight(fpLevel.Level)) * 0.5f);
                     lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, roundedDownMidpoint);
                 }
                 else
                 {
-                    lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, opposingPlatform.MinimumHeight);
+                    lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, opposingPlatform.RuntimeMinimumHeight(fpLevel.Level));
                 }
             }
 
@@ -226,12 +226,12 @@ namespace ForgePlus.LevelManipulation
             {
                 if (facingPlatform.ComesFromCeiling)
                 {
-                    var roundedDownMidpoint = (short)Mathf.FloorToInt((facingPlatform.MinimumHeight + facingPlatform.MaximumHeight) * 0.5f);
+                    var roundedDownMidpoint = (short)Mathf.FloorToInt((facingPlatform.RuntimeMinimumHeight(fpLevel.Level) + facingPlatform.RuntimeMaximumHeight(fpLevel.Level)) * 0.5f);
                     lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, roundedDownMidpoint);
                 }
                 else
                 {
-                    lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, facingPlatform.MinimumHeight);
+                    lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, facingPlatform.RuntimeMinimumHeight(fpLevel.Level));
                 }
             }
 
@@ -240,12 +240,12 @@ namespace ForgePlus.LevelManipulation
             {
                 if (opposingPlatform.ComesFromCeiling)
                 {
-                    var roundedUpMidpoint = (short)Mathf.CeilToInt((opposingPlatform.MinimumHeight + opposingPlatform.MaximumHeight) * 0.5f);
+                    var roundedUpMidpoint = (short)Mathf.CeilToInt((opposingPlatform.RuntimeMinimumHeight(fpLevel.Level) + opposingPlatform.RuntimeMaximumHeight(fpLevel.Level)) * 0.5f);
                     highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, roundedUpMidpoint);
                 }
                 else
                 {
-                    highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, opposingPlatform.MaximumHeight);
+                    highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, opposingPlatform.RuntimeMaximumHeight(fpLevel.Level));
                 }
             }
 

@@ -1,6 +1,7 @@
 ﻿using ForgePlus.LevelManipulation;
 using TMPro;
 using UnityEngine.UI;
+using Weland.Extensions;
 
 namespace ForgePlus.Inspection
 {
@@ -58,9 +59,8 @@ namespace ForgePlus.Inspection
             Value_Type.text = fpPlatform.WelandObject.Type.ToString();
             Value_Speed.text = fpPlatform.WelandObject.Speed.ToString();
             Value_Delay.text = fpPlatform.WelandObject.Delay.ToString();
-            Value_MaximumHeight.text = fpPlatform.WelandObject.MaximumHeight.ToString();
-            Value_MinimumHeight.text = fpPlatform.WelandObject.MinimumHeight.ToString();
-
+            Value_MaximumHeight.text = fpPlatform.WelandObject.RuntimeMaximumHeight(FPLevel.Instance.Level).ToString();
+            Value_MinimumHeight.text = fpPlatform.WelandObject.RuntimeMinimumHeight(FPLevel.Instance.Level).ToString();
             Value_Flags_InitiallyActive.SetIsOnWithoutNotify(fpPlatform.WelandObject.InitiallyActive);
             Value_Flags_InitiallyExtended.SetIsOnWithoutNotify(fpPlatform.WelandObject.InitiallyExtended);
             Value_Flags_IsLocked.SetIsOnWithoutNotify(fpPlatform.WelandObject.IsLocked);
