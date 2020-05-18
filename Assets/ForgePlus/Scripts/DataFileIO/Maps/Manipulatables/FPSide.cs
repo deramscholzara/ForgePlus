@@ -320,8 +320,7 @@ namespace ForgePlus.LevelManipulation
                 var sideDataSource = !hasOpposingPolygon || dataExpectsFullSide ? DataSources.Primary : DataSources.Transparent;
                 var isOpaqueSurface = !hasOpposingPolygon || !isTransparent;
 
-                // Note: dataExpectsFullSide is redundant here, because there is no opposing polygon
-                // TODO: Hmm... maybe this shouldn't check !hasOpposingPolygon, and instead just relay on dataExpectsFullSide.
+                // TODO: Hmm... maybe this shouldn't check !hasOpposingPolygon, and instead just rely on dataExpectsFullSide.
                 //       - check how Aleph One handles opposed full sides which have HasTransparentSide enabled.
                 var hasLayeredTransparentSide = !hasOpposingPolygon && side.HasLayeredTransparentSide(fpLevel.Level);
                 var highHeight = dataExpectsFullSide ? highestFacingCeiling : line.LowestAdjacentCeiling;

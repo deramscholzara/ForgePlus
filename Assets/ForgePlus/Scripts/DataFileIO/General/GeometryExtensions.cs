@@ -52,6 +52,11 @@ namespace Weland.Extensions
 
         public static bool HasLayeredTransparentSide(this Side side, Level level)
         {
+            if (side == null)
+            {
+                return false;
+            }
+
             var destinationLine = level.Lines[side.LineIndex];
 
             return (destinationLine.Flags & LineFlags.HasTransparentSide) != 0 &&
