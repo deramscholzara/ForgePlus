@@ -262,7 +262,7 @@ namespace Weland
                 }
             }
 
-            bool isLandscape = bitmap.Width == 512 && bitmap.Height == 270;
+            bool isLandscape = Type == CollectionType.Wall && bitmap.Width > bitmap.Height;
 
             if (hasAlpha)
             {
@@ -280,18 +280,7 @@ namespace Weland
                 }
             }
 
-            if (!bitmap.ColumnOrder || isLandscape)
-            {
-                for (int y = 0; y < bitmap.Height; y++)
-                {
-                    for (int x = 0; x < bitmap.Width; x++)
-                    {
-                        result.SetPixel(bitmap.Width - 1 - x, bitmap.Height - y - 1, colors[bitmap.Data[x + y * bitmap.Width]]);
-
-                    }
-                }
-            }
-            else
+            if (bitmap.ColumnOrder && !isLandscape)
             {
                 for (int x = 0; x < bitmap.Width; x++)
                 {
@@ -301,7 +290,17 @@ namespace Weland
 
                     }
                 }
+            }
+            else
+            {
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        result.SetPixel(bitmap.Width - 1 - x, bitmap.Height - y - 1, colors[bitmap.Data[x + y * bitmap.Width]]);
 
+                    }
+                }
             }
 
             if (isLandscape)
