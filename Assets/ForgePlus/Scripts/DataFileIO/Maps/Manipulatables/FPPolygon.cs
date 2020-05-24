@@ -123,7 +123,7 @@ namespace ForgePlus.LevelManipulation
             switch (surfaceType)
             {
                 case DataSources.Ceiling:
-                    if ((ushort)shapeDescriptor == (ushort)WelandObject.CeilingTexture)
+                    if (shapeDescriptor.Equals(WelandObject.CeilingTexture))
                     {
                         // Texture is not different, so exit
                         return;
@@ -136,7 +136,7 @@ namespace ForgePlus.LevelManipulation
 
                     break;
                 case DataSources.Floor:
-                    if ((ushort)shapeDescriptor == (ushort)WelandObject.FloorTexture)
+                    if (shapeDescriptor.Equals(WelandObject.FloorTexture))
                     {
                         // Texture is not different, so exit
                         return;

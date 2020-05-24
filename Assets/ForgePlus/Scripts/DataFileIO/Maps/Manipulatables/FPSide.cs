@@ -500,7 +500,7 @@ namespace ForgePlus.LevelManipulation
             switch (surfaceType)
             {
                 case FPSide.DataSources.Primary:
-                    if ((ushort)shapeDescriptor == (ushort)WelandObject.Primary.Texture)
+                    if (shapeDescriptor.Equals(WelandObject.Primary.Texture))
                     {
                         // Texture is not different, so exit
                         return;
@@ -513,7 +513,7 @@ namespace ForgePlus.LevelManipulation
 
                     break;
                 case FPSide.DataSources.Secondary:
-                    if ((ushort)shapeDescriptor == (ushort)WelandObject.Secondary.Texture)
+                    if (shapeDescriptor.Equals(WelandObject.Secondary.Texture))
                     {
                         // Texture is not different, so exit
                         return;
@@ -526,7 +526,7 @@ namespace ForgePlus.LevelManipulation
 
                     break;
                 case FPSide.DataSources.Transparent:
-                    if ((ushort)shapeDescriptor == (ushort)WelandObject.Transparent.Texture)
+                    if (shapeDescriptor.Equals(WelandObject.Transparent.Texture))
                     {
                         // Texture is not different, so exit
                         return;
