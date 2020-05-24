@@ -1,6 +1,7 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Palette;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Weland;
@@ -18,6 +19,9 @@ namespace ForgePlus.LevelManipulation
 
         private UVPlanarDrag uvDragPlane;
         private bool endDragShouldRemergeBatch = false;
+
+        private List<FPPolygon> alignmentGroupedPolygons = new List<FPPolygon>();
+        private List<FPInteractiveSurfacePolygon> alignmentGroupedSurfaces = new List<FPInteractiveSurfacePolygon>();
 
         public override void OnValidatedPointerClick(PointerEventData eventData)
         {
@@ -121,9 +125,25 @@ namespace ForgePlus.LevelManipulation
                 var textureWorldUp = Vector3.left;
 
                 uvDragPlane = new UVPlanarDrag(startingUVs,
-                                                startingPosition,
-                                                surfaceWorldNormal,
-                                                textureWorldUp);
+                                               startingPosition,
+                                               surfaceWorldNormal,
+                                               textureWorldUp);
+
+                if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+                {
+                    alignmentGroupedPolygons.Clear();
+                    alignmentGroupedSurfaces.Clear();
+
+                    var commonElevation = DataSource == FPPolygon.DataSources.Floor ?
+                                          ParentFPPolygon.WelandObject.FloorHeight :
+                                          ParentFPPolygon.WelandObject.CeilingHeight;
+
+                    var commonShapeDescriptor = DataSource == FPPolygon.DataSources.Floor ?
+                                                ParentFPPolygon.WelandObject.FloorTexture :
+                                                ParentFPPolygon.WelandObject.CeilingTexture;
+
+                    CollectSimilarAdjacentPolygons(ParentFPPolygon, commonElevation, commonShapeDescriptor);
+                }
             }
             else
             {
@@ -153,6 +173,15 @@ namespace ForgePlus.LevelManipulation
                                           (short)newUVOffset.y,
                                           (short)newUVOffset.x,
                                           rebatch: false);
+
+                for (var i = 0; i < alignmentGroupedPolygons.Count; i++)
+                {
+                    alignmentGroupedPolygons[i].SetOffset(alignmentGroupedSurfaces[i],
+                                                          DataSource,
+                                                          (short)newUVOffset.y,
+                                                          (short)newUVOffset.x,
+                                                          rebatch: false);
+                }
             }
             else
             {
@@ -174,7 +203,15 @@ namespace ForgePlus.LevelManipulation
                 {
                     endDragShouldRemergeBatch = false;
                     GetComponent<RuntimeSurfaceLight>().MergeBatch();
+
+                    foreach (var alignmentGroupedSurface in alignmentGroupedSurfaces)
+                    {
+                        alignmentGroupedSurface.GetComponent<RuntimeSurfaceLight>().MergeBatch();
+                    }
                 }
+
+                alignmentGroupedPolygons.Clear();
+                alignmentGroupedSurfaces.Clear();
             }
             else
             {
@@ -212,6 +249,55 @@ namespace ForgePlus.LevelManipulation
                     break;
                 default:
                     return;
+            }
+        }
+
+        private void CollectSimilarAdjacentPolygons(FPPolygon centralPolygon, short commonElevation, ShapeDescriptor commonShapeDescriptor)
+        {
+            for (var i = 0; i < Polygon.MaxVertexCount; i++)
+            {
+                var adjacentPolygonIndex = ParentFPPolygon.WelandObject.AdjacentPolygonIndexes[i];
+
+                if (adjacentPolygonIndex < 0)
+                {
+                    continue;
+                }
+
+                var adjacentPolygon = FPLevel.Instance.FPPolygons[adjacentPolygonIndex];
+
+                if (alignmentGroupedPolygons.Contains(adjacentPolygon))
+                {
+                    continue;
+                }
+
+                var adjacentElevation = DataSource == FPPolygon.DataSources.Floor ?
+                                        adjacentPolygon.WelandObject.FloorHeight :
+                                        adjacentPolygon.WelandObject.CeilingHeight;
+
+                if (adjacentElevation != commonElevation)
+                {
+                    continue;
+                }
+
+                var adjacentShapeDescriptor = DataSource == FPPolygon.DataSources.Floor ?
+                                              adjacentPolygon.WelandObject.FloorTexture :
+                                              adjacentPolygon.WelandObject.CeilingTexture;
+
+                if (!adjacentShapeDescriptor.Equals(commonShapeDescriptor))
+                {
+                    continue;
+                }
+
+                var alignmentGroupedSurface = DataSource == FPPolygon.DataSources.Floor ?
+                                              adjacentPolygon.FloorSurface.GetComponent<FPInteractiveSurfacePolygon>() :
+                                              adjacentPolygon.CeilingSurface.GetComponent<FPInteractiveSurfacePolygon>();
+
+                alignmentGroupedPolygons.Add(adjacentPolygon);
+                alignmentGroupedSurfaces.Add(alignmentGroupedSurface);
+
+                alignmentGroupedSurface.GetComponent<RuntimeSurfaceLight>().UnmergeBatch();
+
+                CollectSimilarAdjacentPolygons(adjacentPolygon, commonElevation, commonShapeDescriptor);
             }
         }
     }
