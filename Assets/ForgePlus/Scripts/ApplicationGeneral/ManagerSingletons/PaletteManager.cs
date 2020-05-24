@@ -38,7 +38,7 @@ namespace ForgePlus.Palette
 
         public void SelectSwatchForTexture(ShapeDescriptor shapeDescriptor, bool invokeToggleEvents = false)
         {
-            var matchingSwatch = currentSwatches.First(swatch => (ushort)swatch.GetComponent<SwatchTexture>().ShapeDescriptor == (ushort)shapeDescriptor);
+            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<SwatchTexture>().ShapeDescriptor.Equals(shapeDescriptor));
             var matchingToggle = matchingSwatch.GetComponent<Toggle>();
 
             ActivateToggle(matchingToggle, invokeToggleEvents);
