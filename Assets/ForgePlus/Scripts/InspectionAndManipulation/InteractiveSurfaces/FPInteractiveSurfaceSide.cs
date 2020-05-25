@@ -244,6 +244,7 @@ namespace ForgePlus.LevelManipulation
 
                 var startingPosition = eventData.pointerPressRaycast.worldPosition;
 
+
                 var surfaceWorldNormal = eventData.pointerCurrentRaycast.worldNormal;
 
                 var textureWorldUp = Vector3.up;
@@ -264,7 +265,6 @@ namespace ForgePlus.LevelManipulation
                         CollectSimilarContiguousAdjacentSurfaces(alignmentGroup[i].DestinationSide, alignmentGroup[i].DestinationDataSource);
                     }
                 }
-
             }
             else
             {
@@ -503,13 +503,9 @@ namespace ForgePlus.LevelManipulation
                     return;
             }
 
-            short horizontalOffset = destinationFlowsOutward ? (short)0 : FPLevel.Instance.FPLines[destinationSide.WelandObject.LineIndex].WelandObject.Length;
-            if (destinationIsLeftOfSource)
-            {
-                horizontalOffset *= -1;
-            }
-
-            horizontalOffset += destinationIsLeftOfSource ? (short)0 : FPLevel.Instance.FPLines[sourceSide.WelandObject.LineIndex].WelandObject.Length;
+            short horizontalOffset = destinationIsLeftOfSource ?
+                                     (short)-FPLevel.Instance.FPLines[destinationSide.WelandObject.LineIndex].WelandObject.Length :
+                                     FPLevel.Instance.FPLines[sourceSide.WelandObject.LineIndex].WelandObject.Length;
 
             short newX = (short)(sourceX + horizontalOffset);
             short newY = (short)(sourceHeight - destinationHeight + sourceY);

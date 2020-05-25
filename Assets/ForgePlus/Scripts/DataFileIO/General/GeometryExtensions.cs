@@ -27,7 +27,7 @@ namespace Weland.Extensions
             {
                 return level.Polygons[platform.PolygonIndex].CeilingHeight;
             }
-            
+
             if (platform.MaximumHeight != -1)
             {
                 return platform.MaximumHeight;
@@ -38,7 +38,7 @@ namespace Weland.Extensions
 
         public static bool HasDataSource(this Side side, FPSide.DataSources dataSource)
         {
-            switch(dataSource)
+            switch (dataSource)
             {
                 case FPSide.DataSources.Primary:
                     return !side.Primary.Texture.IsEmpty();
@@ -76,7 +76,7 @@ namespace Weland.Extensions
         {
             var sideIndex = clockwiseSide ? line.ClockwisePolygonSideIndex : line.CounterclockwisePolygonSideIndex;
 
-            if (sideIndex < 0)
+            if (sideIndex < 0 || !FPLevel.Instance.FPSides.ContainsKey(sideIndex))
             {
                 return null;
             }
