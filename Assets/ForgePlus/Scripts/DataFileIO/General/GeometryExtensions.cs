@@ -1,5 +1,6 @@
 ﻿using ForgePlus.LevelManipulation;
 using System;
+using System.Collections.Generic;
 
 namespace Weland.Extensions
 {
@@ -69,6 +70,18 @@ namespace Weland.Extensions
             var line = level.Lines[side.LineIndex];
 
             return GetIsClockwise(side, level, line);
+        }
+
+        public static FPSide GetFPSide(this Line line, Level level, bool clockwiseSide)
+        {
+            var sideIndex = clockwiseSide ? line.ClockwisePolygonSideIndex : line.CounterclockwisePolygonSideIndex;
+
+            if (sideIndex < 0)
+            {
+                return null;
+            }
+
+            return FPLevel.Instance.FPSides[sideIndex];
         }
 
         private static Side Side(this Line line, Level level, bool clockwiseSide)
@@ -142,39 +155,6 @@ namespace Weland.Extensions
             return false;
         }
 
-        // TODO: Keeping this around in case it's useful in the future (like for aligned offset dragging).
-        // TODO: Will likely want a NeighboringPolygons variant, as well.
-        ////private static List<Side> NeighboringSides(this Side side, Level level, bool left)
-        ////{
-        ////    var line = level.Lines[side.LineIndex];
-        ////    var endpointIndex = side.EndpointIndex(level, line, left);
-        ////    var endpointLines = level.EndpointLines[endpointIndex];
-
-        ////    var neighboringSides = new List<Side>();
-
-        ////    foreach (var neighborLine in endpointLines)
-        ////    {
-        ////        if (neighborLine == line)
-        ////        {
-        ////            continue;
-        ////        }
-
-        ////        var neighborFlowsOutward = neighborLine.EndpointIndexes[0] == endpointIndex;
-        ////        var neighborIsClockwise = neighborFlowsOutward != left;
-
-        ////        var neighborSide = neighborLine.Side(level, neighborIsClockwise);
-
-        ////        if (neighborSide == null)
-        ////        {
-        ////            continue;
-        ////        }
-
-        ////        neighboringSides.Add(neighborSide);
-        ////    }
-
-        ////    return neighboringSides;
-        ////}
-
         private static bool GetIsClockwise(Side side, Level level, Line line)
         {
             var clockwiseSide = line.Side(level, clockwiseSide: true);
@@ -182,7 +162,7 @@ namespace Weland.Extensions
             return side == clockwiseSide;
         }
 
-        private static short EndpointIndex(this Side side, Level level, Line line, bool left)
+        public static short EndpointIndex(this Side side, Level level, Line line, bool left)
         {
             return line.EndpointIndexes[GetIsClockwise(side, level, line) == left ? 0 : 1];
         }

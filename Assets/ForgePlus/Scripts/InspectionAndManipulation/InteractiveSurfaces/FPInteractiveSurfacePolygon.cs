@@ -258,7 +258,7 @@ namespace ForgePlus.LevelManipulation
             {
                 var adjacentPolygonIndex = ParentFPPolygon.WelandObject.AdjacentPolygonIndexes[i];
 
-                if (adjacentPolygonIndex < 0)
+                if (adjacentPolygonIndex < 0 || adjacentPolygonIndex == ParentFPPolygon.Index)
                 {
                     continue;
                 }

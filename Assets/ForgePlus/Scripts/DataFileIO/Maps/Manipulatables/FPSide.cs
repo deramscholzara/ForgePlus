@@ -26,9 +26,17 @@ namespace ForgePlus.LevelManipulation
         public GameObject MiddleSurface { get; private set; }
         public GameObject BottomSurface { get; private set; }
 
+        public FPInteractiveSurfaceSide PrimarySurface { get; private set; }
+        public FPInteractiveSurfaceSide SecondarySurface { get; private set; }
+        public FPInteractiveSurfaceSide TransparentSurface { get; private set; }
+
         public short PrimaryHighHeight { get; private set; }
         public short SecondaryHighHeight { get; private set; }
         public short TransparentHighHeight { get; private set; }
+
+        public short PrimaryLowHeight { get; private set; }
+        public short SecondaryLowHeight { get; private set; }
+        public short TransparentLowHeight { get; private set; }
 
         private readonly List<GameObject> selectionVisualizationIndicators = new List<GameObject>(4);
 
@@ -310,6 +318,9 @@ namespace ForgePlus.LevelManipulation
                 }
 
                 fpSide.PrimaryHighHeight = highHeight;
+                fpSide.PrimaryLowHeight = lowHeight;
+
+                fpSide.PrimarySurface = surface.GetComponent<FPInteractiveSurfaceSide>();
 
                 fpSide.TopSurface = surface;
             }
@@ -334,32 +345,38 @@ namespace ForgePlus.LevelManipulation
                     CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
                     var surface = BuildSurface(fpLevel,
-                                                   $"Side Middle ({sideIndex}) - ({typeDescriptor})",
-                                                   lowHeight,
-                                                   highHeight,
-                                                   line.EndpointIndexes[0],
-                                                   line.EndpointIndexes[1],
-                                                   isClockwise,
-                                                   fpSide,
-                                                   transferMode: side == null ? (short)0 : (sideDataSource == DataSources.Primary ? side.PrimaryTransferMode : side.TransparentTransferMode),
-                                                   sideDataSource: sideDataSource,
-                                                   isOpaqueSurface: isOpaqueSurface,
-                                                   facingPolygonIndex,
-                                                   isStaticBatchable: true,
-                                                   fpPlatform: null,
-                                                   hasLayeredTransparentSide,
-                                                   layeredTransparentSideTransferMode: hasLayeredTransparentSide ? side.TransparentTransferMode : (short)-1);
+                                               $"Side Middle ({sideIndex}) - ({typeDescriptor})",
+                                               lowHeight,
+                                               highHeight,
+                                               line.EndpointIndexes[0],
+                                               line.EndpointIndexes[1],
+                                               isClockwise,
+                                               fpSide,
+                                               transferMode: side == null ? (short)0 : (sideDataSource == DataSources.Primary ? side.PrimaryTransferMode : side.TransparentTransferMode),
+                                               sideDataSource: sideDataSource,
+                                               isOpaqueSurface: isOpaqueSurface,
+                                               facingPolygonIndex,
+                                               isStaticBatchable: true,
+                                               fpPlatform: null,
+                                               hasLayeredTransparentSide,
+                                               layeredTransparentSideTransferMode: hasLayeredTransparentSide ? side.TransparentTransferMode : (short)-1);
 
                     surface.transform.position = new Vector3(0f, (float)highHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, 0f);
 
                     if (sideDataSource == DataSources.Primary)
                     {
                         fpSide.PrimaryHighHeight = highHeight;
+                        fpSide.PrimaryLowHeight = lowHeight;
+
+                        fpSide.PrimarySurface = surface.GetComponent<FPInteractiveSurfaceSide>();
                     }
 
                     if (sideDataSource == DataSources.Transparent || hasLayeredTransparentSide)
                     {
                         fpSide.TransparentHighHeight = highHeight;
+                        fpSide.TransparentLowHeight = lowHeight;
+
+                        fpSide.TransparentSurface = surface.GetComponent<FPInteractiveSurfaceSide>();
                     }
 
                     fpSide.MiddleSurface = surface;
@@ -380,21 +397,21 @@ namespace ForgePlus.LevelManipulation
                 CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
 
                 var surface = BuildSurface(fpLevel,
-                                                $"Side Bottom ({sideIndex}) (Low - Source:{sideDataSource})",
-                                                lowHeight,
-                                                highHeight,
-                                                line.EndpointIndexes[0],
-                                                line.EndpointIndexes[1],
-                                                isClockwise,
-                                                fpSide,
-                                                side == null ? (short)0 : (sideDataSource == DataSources.Primary ? side.PrimaryTransferMode : side.SecondaryTransferMode),
-                                                sideDataSource,
-                                                isOpaqueSurface: true,
-                                                facingPolygonIndex,
-                                                isStaticBatchable: !isPartOfFloorPlatform,
-                                                fpPlatform: isPartOfFloorPlatform ? fpLevel.FPFloorFpPlatforms[platformIndex] : null,
-                                                hasLayeredTransparentSide: false,
-                                                layeredTransparentSideTransferMode: -1);
+                                           $"Side Bottom ({sideIndex}) (Low - Source:{sideDataSource})",
+                                           lowHeight,
+                                           highHeight,
+                                           line.EndpointIndexes[0],
+                                           line.EndpointIndexes[1],
+                                           isClockwise,
+                                           fpSide,
+                                           side == null ? (short)0 : (sideDataSource == DataSources.Primary ? side.PrimaryTransferMode : side.SecondaryTransferMode),
+                                           sideDataSource,
+                                           isOpaqueSurface: true,
+                                           facingPolygonIndex,
+                                           isStaticBatchable: !isPartOfFloorPlatform,
+                                           fpPlatform: isPartOfFloorPlatform ? fpLevel.FPFloorFpPlatforms[platformIndex] : null,
+                                           hasLayeredTransparentSide: false,
+                                           layeredTransparentSideTransferMode: -1);
 
                 if (isPartOfFloorPlatform)
                 {
@@ -410,10 +427,16 @@ namespace ForgePlus.LevelManipulation
                 if (sideDataSource == DataSources.Primary)
                 {
                     fpSide.PrimaryHighHeight = highHeight;
+                    fpSide.PrimaryLowHeight = lowHeight;
+
+                    fpSide.PrimarySurface = surface.GetComponent<FPInteractiveSurfaceSide>();
                 }
                 else
                 {
                     fpSide.SecondaryHighHeight = highHeight;
+                    fpSide.SecondaryLowHeight = lowHeight;
+
+                    fpSide.SecondarySurface = surface.GetComponent<FPInteractiveSurfaceSide>();
                 }
 
                 fpSide.BottomSurface = surface;
