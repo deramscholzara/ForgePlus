@@ -152,8 +152,28 @@ namespace ForgePlus.LevelManipulation
                     return;
             }
 
+            short newTransferMode = 0;
+            if (shapeDescriptor.UsesLandscapeCollection())
+            {
+                newTransferMode = 9;
+            }
+            else if (transferMode != 9)
+            {
+                newTransferMode = transferMode;
+            }
+
+            switch (surfaceType)
+            {
+                case DataSources.Ceiling:
+                    WelandObject.CeilingTransferMode = newTransferMode;
+                    break;
+                case DataSources.Floor:
+                    WelandObject.FloorTransferMode = newTransferMode;
+                    break;
+            }
+
             surfaceLight.SetShapeDescriptor(shapeDescriptor,
-                                            transferMode,
+                                            newTransferMode,
                                             isOpaqueSurface: true,
                                             WallsCollection.SurfaceTypes.Normal);
         }
