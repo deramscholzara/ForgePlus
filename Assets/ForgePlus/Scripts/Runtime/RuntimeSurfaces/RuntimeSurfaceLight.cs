@@ -92,7 +92,7 @@ namespace ForgePlus.LevelManipulation
             {
                 if (lastUnmergeBatchKey.HasValue)
                 {
-                    Debug.LogError($"Surface \"{name}\" is already unmerged and will not make a repeat UnmergeBatch call.", this);
+                    ////Debug.LogError($"Surface \"{name}\" is already unmerged and will not make a repeat UnmergeBatch call.", this);
                     return false;
                 }
 

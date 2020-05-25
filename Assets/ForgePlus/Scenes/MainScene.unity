@@ -8046,7 +8046,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Version: 2020-05-15-2'
+  m_text: 'Version: 2020-05-25-0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -12525,17 +12525,21 @@ MonoBehaviour:
     Hold Shift\r\n\n    Looking:\n        - Move mouse while holding RMB or Space\n\nUI
     Controls:\n    - Open/Close Menu: Tab or Escape\n    - Show/Hide All UI: ` (~
     key without Shift)\n\nSurface Dragging:\n    - You can drag on a surface to adjust
-    textures in Texture mode, when the Palette mode (right side) is set to Edit. 
-    With the surface selected in this mode, you can also use arrow keys to nudge
-    and snap it in 128th increments (classic pixel distance).\n\nHotkeys:\n    -
-    Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be
+    textures in Texture mode, when the Palette mode (right side) is set to Edit.\n       
+    - If you hold the control key while starting to drag (you can let go after the
+    drag starts) then contiguous surfaces with the same bitmap will also align to
+    the dragged surface.\n        - With the surface selected in this mode, you can
+    also use arrow keys to nudge and snap it in 128th increments (classic pixel distance).\n\nHotkeys:\n   
+    - Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be
     held):\n    - Invert Grid Snap Setting: alt/option\n    - In Texture > Edit Mode,
     you can select a surface (normal click) then alt-click a surface of the same
     geometry type (Polygon or Side) to align that surface's texture to the selected
     one.  SIdes must be neighbors, but polygons (ceilings and floors) can be anywhere. 
     The assigned textures are not required to be the same, and will not be updated
-    when aligning.\n\nPainting:\n    - In Texture > Paint Mode, you can click on
-    surfaces to assign the selected texture swatch to those surfaces."
+    when aligning.\n    - In Texture > Edit Mode, if you hold control while beginning
+    to drag on a surface, all contiguous surfaces with the same bitmap will also
+    be aligned to the dragged surface.\n\nPainting:\n    - In Texture > Paint Mode,
+    you can click on surfaces to assign the selected texture swatch to those surfaces."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

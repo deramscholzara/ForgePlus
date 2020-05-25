@@ -15,6 +15,18 @@ namespace ForgePlus.LevelManipulation
 {
     public class FPInteractiveSurfaceSide : FPInteractiveSurfaceBase
     {
+        private struct AlignmentGroupee
+        {
+            public FPSide SourceSide;
+            public FPSide.DataSources SourceDataSource;
+
+            public FPSide DestinationSide;
+            public FPSide.DataSources DestinationDataSource;
+            public bool DestinationFlowsOutward;
+            public bool DestinationIsLeftOfSource;
+            public FPInteractiveSurfaceSide DestinationSurface;
+        }
+
         private static Dialog_ObjectSelector SideDestinationSelectionDialog = null;
 
         public FPSide ParentFPSide = null;
@@ -26,6 +38,8 @@ namespace ForgePlus.LevelManipulation
 
         private UVPlanarDrag uvDragPlane;
         private bool endDragShouldRemergeBatch = false;
+
+        private List<AlignmentGroupee> alignmentGroup = new List<AlignmentGroupee>();
 
         public async override void OnValidatedPointerClick(PointerEventData eventData)
         {
@@ -103,12 +117,7 @@ namespace ForgePlus.LevelManipulation
                                 destinationDataSource = result.Value;
                             }
 
-                            var destinationUVChannel = 0;
-                            if (destinationDataSource == FPSide.DataSources.Transparent &&
-                                destinationIsLayered)
-                            {
-                                destinationUVChannel = 1;
-                            }
+                            var destinationUVChannel = (destinationDataSource == FPSide.DataSources.Transparent && destinationIsLayered) ? 1 : 0;
                             #endregion Alignment_DataSource_Destination
 
                             #region Alignment_DataSource_Source
@@ -157,70 +166,7 @@ namespace ForgePlus.LevelManipulation
                             }
                             #endregion Alignment_DataSource_Source
 
-                            short sourceX;
-                            short sourceY;
-                            short destinationHeight;
-                            short sourceHeight;
-
-                            switch (destinationDataSource)
-                            {
-                                case FPSide.DataSources.Primary:
-                                    destinationHeight = ParentFPSide.PrimaryHighHeight;
-                                    break;
-                                case FPSide.DataSources.Secondary:
-                                    destinationHeight = ParentFPSide.SecondaryHighHeight;
-                                    break;
-                                case FPSide.DataSources.Transparent:
-                                    destinationHeight = ParentFPSide.TransparentHighHeight;
-                                    break;
-                                default:
-                                    return;
-                            }
-
-                            switch (sourceDataSource)
-                            {
-                                case FPSide.DataSources.Primary:
-                                    sourceX = selectedSourceFPSide.WelandObject.Primary.X;
-                                    sourceY = selectedSourceFPSide.WelandObject.Primary.Y;
-
-                                    sourceHeight = selectedSourceFPSide.PrimaryHighHeight;
-
-                                    break;
-                                case FPSide.DataSources.Secondary:
-                                    sourceX = selectedSourceFPSide.WelandObject.Secondary.X;
-                                    sourceY = selectedSourceFPSide.WelandObject.Secondary.Y;
-
-                                    sourceHeight = selectedSourceFPSide.SecondaryHighHeight;
-
-                                    break;
-                                case FPSide.DataSources.Transparent:
-                                    sourceX = selectedSourceFPSide.WelandObject.Transparent.X;
-                                    sourceY = selectedSourceFPSide.WelandObject.Transparent.Y;
-
-                                    sourceHeight = selectedSourceFPSide.TransparentHighHeight;
-
-                                    break;
-                                default:
-                                    return;
-                            }
-
-                            short horizontalOffset = neighborFlowsOutward ? (short)0 : FPLevel.Instance.FPLines[ParentFPSide.WelandObject.LineIndex].WelandObject.Length;
-                            if (neighborIsLeft)
-                            {
-                                horizontalOffset *= -1;
-                            }
-
-                            horizontalOffset += neighborIsLeft ? (short)0 : FPLevel.Instance.FPLines[selectedSourceFPSide.WelandObject.LineIndex].WelandObject.Length;
-
-                            short newX = (short)(sourceX + horizontalOffset);
-                            short newY = (short)(sourceHeight - destinationHeight + sourceY);
-
-                            ParentFPSide.SetOffset(this,
-                                                    destinationDataSource,
-                                                    destinationUVChannel,
-                                                    newX,
-                                                    newY,
-                                                    rebatch: true);
+                            AlignDestinationToSource(selectedSourceFPSide, sourceDataSource, ParentFPSide, destinationDataSource, neighborFlowsOutward, neighborIsLeft, rebatch: true);
                         }
                     }
                     else
@@ -303,9 +249,22 @@ namespace ForgePlus.LevelManipulation
                 var textureWorldUp = Vector3.up;
 
                 uvDragPlane = new UVPlanarDrag(startingUVs,
-                                                startingPosition,
-                                                surfaceWorldNormal,
-                                                textureWorldUp);
+                                               startingPosition,
+                                               surfaceWorldNormal,
+                                               textureWorldUp);
+
+                if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+                {
+                    alignmentGroup.Clear();
+
+                    CollectSimilarContiguousAdjacentSurfaces(ParentFPSide, DataSource);
+
+                    for (var i = 0; i < alignmentGroup.Count; i++)
+                    {
+                        CollectSimilarContiguousAdjacentSurfaces(alignmentGroup[i].DestinationSide, alignmentGroup[i].DestinationDataSource);
+                    }
+                }
+
             }
             else
             {
@@ -335,6 +294,17 @@ namespace ForgePlus.LevelManipulation
                                        (short)newUVOffset.x,
                                        (short)newUVOffset.y,
                                        rebatch: false);
+
+                foreach (var alignmentGroupee in alignmentGroup)
+                {
+                    AlignDestinationToSource(alignmentGroupee.SourceSide,
+                                             alignmentGroupee.SourceDataSource,
+                                             alignmentGroupee.DestinationSide,
+                                             alignmentGroupee.DestinationDataSource,
+                                             alignmentGroupee.DestinationFlowsOutward,
+                                             alignmentGroupee.DestinationIsLeftOfSource,
+                                             rebatch: false);
+                }
             }
             else
             {
@@ -356,7 +326,14 @@ namespace ForgePlus.LevelManipulation
                 {
                     endDragShouldRemergeBatch = false;
                     GetComponent<RuntimeSurfaceLight>().MergeBatch();
+
+                    foreach (var alignmentGroupee in alignmentGroup)
+                    {
+                        alignmentGroupee.DestinationSurface.GetComponent<RuntimeSurfaceLight>().MergeBatch();
+                    }
                 }
+
+                alignmentGroup.Clear();
             }
             else
             {
@@ -389,7 +366,7 @@ namespace ForgePlus.LevelManipulation
                             uvChannel = 1;
                         }
 
-                        switch(destinationDataSource)
+                        switch (destinationDataSource)
                         {
                             case FPSide.DataSources.Primary:
                                 newX += (short)(Mathf.RoundToInt(ParentFPSide.WelandObject.Primary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
@@ -471,6 +448,225 @@ namespace ForgePlus.LevelManipulation
             }
 
             return (FPSide.DataSources)Enum.Parse(typeof(FPSide.DataSources), result);
+        }
+
+        private void AlignDestinationToSource(FPSide sourceSide, FPSide.DataSources sourceDataSource, FPSide destinationSide, FPSide.DataSources destinationDataSource, bool destinationFlowsOutward, bool destinationIsLeftOfSource, bool rebatch)
+        {
+            short sourceX;
+            short sourceY;
+            short destinationHeight;
+            short sourceHeight;
+            FPInteractiveSurfaceSide destinationSurface;
+
+            switch (destinationDataSource)
+            {
+                case FPSide.DataSources.Primary:
+                    destinationHeight = destinationSide.PrimaryHighHeight;
+                    destinationSurface = destinationSide.PrimarySurface;
+                    break;
+                case FPSide.DataSources.Secondary:
+                    destinationHeight = destinationSide.SecondaryHighHeight;
+                    destinationSurface = destinationSide.SecondarySurface;
+                    break;
+                case FPSide.DataSources.Transparent:
+                    destinationHeight = destinationSide.TransparentHighHeight;
+                    destinationSurface = destinationSide.TransparentSurface;
+                    break;
+                default:
+                    return;
+            }
+
+            switch (sourceDataSource)
+            {
+                case FPSide.DataSources.Primary:
+                    sourceX = sourceSide.WelandObject.Primary.X;
+                    sourceY = sourceSide.WelandObject.Primary.Y;
+
+                    sourceHeight = sourceSide.PrimaryHighHeight;
+
+                    break;
+                case FPSide.DataSources.Secondary:
+                    sourceX = sourceSide.WelandObject.Secondary.X;
+                    sourceY = sourceSide.WelandObject.Secondary.Y;
+
+                    sourceHeight = sourceSide.SecondaryHighHeight;
+
+                    break;
+                case FPSide.DataSources.Transparent:
+                    sourceX = sourceSide.WelandObject.Transparent.X;
+                    sourceY = sourceSide.WelandObject.Transparent.Y;
+
+                    sourceHeight = sourceSide.TransparentHighHeight;
+
+                    break;
+                default:
+                    return;
+            }
+
+            short horizontalOffset = destinationFlowsOutward ? (short)0 : FPLevel.Instance.FPLines[destinationSide.WelandObject.LineIndex].WelandObject.Length;
+            if (destinationIsLeftOfSource)
+            {
+                horizontalOffset *= -1;
+            }
+
+            horizontalOffset += destinationIsLeftOfSource ? (short)0 : FPLevel.Instance.FPLines[sourceSide.WelandObject.LineIndex].WelandObject.Length;
+
+            short newX = (short)(sourceX + horizontalOffset);
+            short newY = (short)(sourceHeight - destinationHeight + sourceY);
+
+            var destinationUVChannel = (destinationDataSource == FPSide.DataSources.Transparent && destinationSide.WelandObject.HasLayeredTransparentSide(FPLevel.Instance.Level)) ? 1 : 0;
+
+            destinationSide.SetOffset(destinationSurface,
+                                      destinationDataSource,
+                                      destinationUVChannel,
+                                      newX,
+                                      newY,
+                                      rebatch);
+        }
+
+        private void CollectSimilarContiguousAdjacentSurfaces(FPSide centralSide, FPSide.DataSources centralDataSource)
+        {
+            CollectSimilarContiguousAdjacentSurfaces(centralSide, centralDataSource, left: true);
+
+            CollectSimilarContiguousAdjacentSurfaces(centralSide, centralDataSource, left: false);
+        }
+
+        private void CollectSimilarContiguousAdjacentSurfaces(FPSide centralSide, FPSide.DataSources centralDataSource, bool left)
+        {
+            var centralLine = FPLevel.Instance.Level.Lines[centralSide.WelandObject.LineIndex];
+
+            var centralEndpointIndex = centralSide.WelandObject.EndpointIndex(FPLevel.Instance.Level, centralLine, left);
+            var neighborLines = FPLevel.Instance.Level.EndpointLines[centralEndpointIndex];
+
+            foreach (var neighborLine in neighborLines)
+            {
+                if (neighborLine == centralLine)
+                {
+                    continue;
+                }
+
+                var neighborFlowsOutward = neighborLine.EndpointIndexes[0] == centralEndpointIndex;
+                var neighborIsClockwise = neighborFlowsOutward != left;
+
+                var neighborSide = neighborLine.GetFPSide(FPLevel.Instance.Level, neighborIsClockwise);
+
+                if (neighborSide == null)
+                {
+                    continue;
+                }
+
+                if (CheckIfSimilarAndContiguous(centralSide, centralDataSource,
+                                                neighborSide, FPSide.DataSources.Primary,
+                                                neighborFlowsOutward, left,
+                                                out var alignmentGroupeePrimary) &&
+                    !alignmentGroup.Any(surface => surface.DestinationSurface == alignmentGroupeePrimary.DestinationSurface) &&
+                    alignmentGroupeePrimary.DestinationSurface != this)
+                {
+                    alignmentGroup.Add(alignmentGroupeePrimary);
+                }
+
+                if (CheckIfSimilarAndContiguous(centralSide, centralDataSource,
+                                                neighborSide, FPSide.DataSources.Secondary,
+                                                neighborFlowsOutward, left,
+                                                out var alignmentGroupeeSecondary) &&
+                    !alignmentGroup.Any(surface => surface.DestinationSurface == alignmentGroupeeSecondary.DestinationSurface) &&
+                    alignmentGroupeeSecondary.DestinationSurface != this)
+                {
+                    alignmentGroup.Add(alignmentGroupeeSecondary);
+                }
+
+                if (CheckIfSimilarAndContiguous(centralSide, centralDataSource,
+                                                neighborSide, FPSide.DataSources.Transparent,
+                                                neighborFlowsOutward, left,
+                                                out var alignmentGroupeeTransparent) &&
+                    !alignmentGroup.Any(surface => surface.DestinationSurface == alignmentGroupeeTransparent.DestinationSurface) &&
+                    alignmentGroupeeTransparent.DestinationSurface != this)
+                {
+                    alignmentGroup.Add(alignmentGroupeeTransparent);
+                }
+            }
+        }
+
+        private bool CheckIfSimilarAndContiguous(FPSide sourceSide, FPSide.DataSources sourceDataSource,
+                                                 FPSide destinationSide, FPSide.DataSources destinationDataSource,
+                                                 bool destinationFlowsOutward, bool destinationIsLeftOfSource,
+                                                 out AlignmentGroupee alignmentGroupee)
+        {
+            short sourceLowHeight = 0;
+            short sourceHighHeight = 0;
+            ShapeDescriptor sourceShapeDescriptor = ShapeDescriptor.Empty;
+
+            switch (sourceDataSource)
+            {
+                case FPSide.DataSources.Primary:
+                    sourceLowHeight = sourceSide.PrimaryLowHeight;
+                    sourceHighHeight = sourceSide.PrimaryHighHeight;
+                    sourceShapeDescriptor = sourceSide.WelandObject.Primary.Texture;
+                    break;
+                case FPSide.DataSources.Secondary:
+                    sourceLowHeight = sourceSide.SecondaryLowHeight;
+                    sourceHighHeight = sourceSide.SecondaryHighHeight;
+                    sourceShapeDescriptor = sourceSide.WelandObject.Secondary.Texture;
+                    break;
+                case FPSide.DataSources.Transparent:
+                    sourceLowHeight = sourceSide.TransparentLowHeight;
+                    sourceHighHeight = sourceSide.TransparentHighHeight;
+                    sourceShapeDescriptor = sourceSide.WelandObject.Transparent.Texture;
+                    break;
+            }
+
+            alignmentGroupee = new AlignmentGroupee();
+            alignmentGroupee.SourceSide = sourceSide;
+            alignmentGroupee.SourceDataSource = sourceDataSource;
+            alignmentGroupee.DestinationSide = destinationSide;
+            alignmentGroupee.DestinationDataSource = destinationDataSource;
+            alignmentGroupee.DestinationFlowsOutward = destinationFlowsOutward;
+            alignmentGroupee.DestinationIsLeftOfSource = destinationIsLeftOfSource;
+
+            switch (destinationDataSource)
+            {
+                case FPSide.DataSources.Primary:
+                    if (destinationSide.PrimarySurface &&
+                        sourceLowHeight <= destinationSide.PrimaryHighHeight &&
+                        destinationSide.PrimaryLowHeight <= sourceHighHeight &&
+                        destinationSide.WelandObject.Primary.Texture.Equals(sourceShapeDescriptor))
+                    {
+                        alignmentGroupee.DestinationSurface = destinationSide.PrimarySurface;
+                        alignmentGroupee.DestinationSurface.GetComponent<RuntimeSurfaceLight>().UnmergeBatch();
+                        return true;
+                    }
+
+                    break;
+
+                case FPSide.DataSources.Secondary:
+                    if (destinationSide.SecondarySurface &&
+                        sourceLowHeight <= destinationSide.SecondaryHighHeight &&
+                        destinationSide.SecondaryLowHeight <= sourceHighHeight &&
+                        destinationSide.WelandObject.Secondary.Texture.Equals(sourceShapeDescriptor))
+                    {
+                        alignmentGroupee.DestinationSurface = destinationSide.SecondarySurface;
+                        alignmentGroupee.DestinationSurface.GetComponent<RuntimeSurfaceLight>().UnmergeBatch();
+                        return true;
+                    }
+
+                    break;
+
+                case FPSide.DataSources.Transparent:
+                    if (destinationSide.TransparentSurface &&
+                        sourceLowHeight <= destinationSide.TransparentHighHeight &&
+                        destinationSide.TransparentLowHeight <= sourceHighHeight &&
+                        destinationSide.WelandObject.Transparent.Texture.Equals(sourceShapeDescriptor))
+                    {
+                        alignmentGroupee.DestinationSurface = destinationSide.TransparentSurface;
+                        alignmentGroupee.DestinationSurface.GetComponent<RuntimeSurfaceLight>().UnmergeBatch();
+                        return true;
+                    }
+
+                    break;
+            }
+
+            alignmentGroupee = new AlignmentGroupee();
+            return false;
         }
     }
 }
