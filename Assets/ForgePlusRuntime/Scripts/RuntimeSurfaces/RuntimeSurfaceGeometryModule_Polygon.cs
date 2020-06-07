@@ -171,6 +171,8 @@ namespace RuntimeCore.Entities.Geometry
 
                 platformComponent.PrepareForDestruction();
                 UnityEngine.Object.Destroy(platformComponent);
+
+                IsStaticBatchable = true;
             }
 
             var platform = GeometryUtilities.GetPlatformForPolygon(polygonEntity.ParentLevel.Level, polygonEntity.NativeObject);
@@ -193,6 +195,8 @@ namespace RuntimeCore.Entities.Geometry
                             polygonEntity.ParentLevel.FloorPlatforms[polygonEntity.NativeObject.Permutation] = runtimePlatform;
 
                             platformComponent = runtimePlatform;
+
+                            IsStaticBatchable = false;
                         }
                         break;
                     case LevelEntity_Polygon.DataSources.Ceiling:
@@ -209,6 +213,8 @@ namespace RuntimeCore.Entities.Geometry
                             polygonEntity.ParentLevel.CeilingPlatforms[polygonEntity.NativeObject.Permutation] = runtimePlatform;
 
                             platformComponent = runtimePlatform;
+
+                            IsStaticBatchable = false;
                         }
                         break;
 

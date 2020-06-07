@@ -19,15 +19,5 @@ namespace RuntimeCore.Constraints
         {
             ApplyConstraint();
         }
-
-        // If editing isn't possible, then the surface can just be hierarchically contstrained
-#if NO_EDITING
-        private void Start()
-        {
-            ApplyConstraint();
-            transform.SetParent(Parent, worldPositionStays: true);
-            Destroy(this);
-        }
-#endif
     }
 }

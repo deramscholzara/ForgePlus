@@ -147,6 +147,8 @@ namespace RuntimeCore.Entities.Geometry
 
             UnityEngine.Object.Destroy(platformConstraint);
 
+            IsStaticBatchable = true;
+
             var opposingPlatformIndex = sideEntity.NativeObject.GetOpposingPlatformIndex(sideEntity.ParentLevel.Level);
             if (opposingPlatformIndex < 0)
             {
@@ -158,13 +160,18 @@ namespace RuntimeCore.Entities.Geometry
                  dataSource == LevelEntity_Side.DataSources.Transparent))
             {
                 var opposingCeilingPlatform = sideEntity.ParentLevel.CeilingPlatforms[opposingPlatformIndex];
-                ConstrainSurfaceToPlatform(opposingCeilingPlatform, isFloorPlatform: false);
+                ConstrainSurfaceToPlatform(opposingCeilingPlatform,
+                                           constrainAbovePlatform: dataSource == LevelEntity_Side.DataSources.Primary);
+
+                IsStaticBatchable = false;
             }
             else if (sideEntity.ParentLevel.FloorPlatforms.ContainsKey(opposingPlatformIndex) &&
                      dataSource == LevelEntity_Side.DataSources.Secondary)
             {
                 var opposingFloorPlatform = sideEntity.ParentLevel.FloorPlatforms[opposingPlatformIndex];
-                ConstrainSurfaceToPlatform(opposingFloorPlatform, isFloorPlatform: true);
+                ConstrainSurfaceToPlatform(opposingFloorPlatform, constrainAbovePlatform: false);
+
+                IsStaticBatchable = false;
             }
         }
 
@@ -391,23 +398,37 @@ namespace RuntimeCore.Entities.Geometry
             SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
         }
 
-        private void ConstrainSurfaceToPlatform(LevelEntity_Platform platform, bool isFloorPlatform)
+        private void ConstrainSurfaceToPlatform(LevelEntity_Platform platform, bool constrainAbovePlatform)
         {
+            // If editing isn't possible, then the surface can just be hierarchically contstrained
+#if NO_EDITING
+            SurfaceRenderer.transform.SetParent(platform.transform);
+
+            if (constrainAbovePlatform)
+            {
+                SurfaceRenderer.transform.localPosition = new Vector3(
+                    0f,
+                    (HighElevation - LowElevation) / GeometryUtilities.WorldUnitIncrementsPerMeter,
+                    0f);
+            }
+            else
+            {
+                SurfaceRenderer.transform.localPosition = Vector3.zero;
+            }
+#else
             var constraint = SurfaceRenderer.gameObject.AddComponent<PlatformConstraint>();
             constraint.Parent = platform.transform;
 
-            // TODO: if this is for a non-edit runtime, it can just
-            //       reparent with these offsets instead of a constraint
-            if (isFloorPlatform)
-            {
-                constraint.WorldOffsetFromParent = Vector3.zero;
-            }
-            else
+            if (constrainAbovePlatform)
             {
                 constraint.WorldOffsetFromParent = new Vector3(
                     0f,
                     (HighElevation - LowElevation) / GeometryUtilities.WorldUnitIncrementsPerMeter,
                     0f);
+            }
+            else
+            {
+                constraint.WorldOffsetFromParent = Vector3.zero;
             }
 
             constraint.ApplyConstraint();
@@ -415,6 +436,7 @@ namespace RuntimeCore.Entities.Geometry
             platformConstraint = constraint;
 
             platform.BeginRuntimeStyleBehavior();
+#endif
         }
 
         private Vector2[] BuildUVs(short textureOffsetX, short textureOffsetY)
