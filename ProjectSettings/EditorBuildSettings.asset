@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/ForgePlus/Scenes/MainScene.unity
+    path: Assets/ForgePlusEditor/Scenes/MainScene.unity
     guid: 2822e59b9fd33914db202a3c12a19e79
   - enabled: 1
-    path: Assets/ForgePlus/GraphicsTech/Shaders/ShaderInclusionMaterials/ShaderInclusionScene.unity
+    path: Assets/ForgePlusEditor/GraphicsTech/Shaders/ShaderInclusionMaterials/ShaderInclusionScene.unity
     guid: 16ffd4329bee308408afefb89455a440
   m_configObjects: {}
