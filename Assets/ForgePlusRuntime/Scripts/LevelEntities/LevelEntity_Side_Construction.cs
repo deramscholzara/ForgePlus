@@ -39,29 +39,47 @@ namespace RuntimeCore.Entities.Geometry
             // Note: A null-side may still be created as an untextured side
             var side = sideIndex < level.Level.Sides.Count && sideIndex >= 0 ? level.Level.Sides[sideIndex] : null;
 
-            if (side == null)
-            {
-                return null; // TODO: should this stay this way?
-            }
-
-            var hasTransparentSide = (line.Flags & LineFlags.HasTransparentSide) != 0;
-
-            var facingPolygonIndex = side.PolygonIndex;
+            #region Facing_Elevations
+            var facingPolygonIndex = side == null ? (short)-1 : side.PolygonIndex;
 
             if (facingPolygonIndex < 0)
             {
                 return null;
             }
 
-            var opposingPolygonIndex = side.OpposingPolygonIndex(level.Level);
-
-            var hasOpposingPolygon = side.HasOpposingPolygon(level.Level);
-
             var facingPolygon = level.Level.Polygons[facingPolygonIndex];
-            var opposingPolygon = hasOpposingPolygon ? level.Level.Polygons[opposingPolygonIndex] : null;
 
             Platform facingPlatform;
             facingPlatform = GeometryUtilities.GetPlatformForPolygon(level.Level, facingPolygon);
+
+            var highestFacingCeiling = facingPolygon.CeilingHeight;
+            var lowestFacingFloor = facingPolygon.FloorHeight;
+
+            if (facingPlatform != null)
+            {
+                if (facingPlatform.ComesFromFloor && facingPlatform.ComesFromCeiling)
+                {
+                    var roundedMidpoint = (short)Mathf.RoundToInt((facingPlatform.RuntimeMinimumHeight(level.Level) + facingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
+
+                    highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, roundedMidpoint);
+                    lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, roundedMidpoint);
+                }
+                else if (facingPlatform.ComesFromFloor)
+                {
+                    lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, facingPlatform.RuntimeMinimumHeight(level.Level));
+                }
+                else if (facingPlatform.ComesFromCeiling)
+                {
+                    highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, facingPlatform.RuntimeMaximumHeight(level.Level));
+                }
+            }
+            #endregion Facing_Elevations
+
+            #region Opposing_Elevations
+            var opposingPolygonIndex = isClockwise ? line.CounterclockwisePolygonOwner : line.ClockwisePolygonOwner;
+            var hasOpposingPolygon = opposingPolygonIndex >= 0;
+
+            var opposingPolygon = hasOpposingPolygon ? level.Level.Polygons[opposingPolygonIndex] : null;
 
             Platform opposingPlatform = null;
             if (opposingPolygon != null)
@@ -69,75 +87,42 @@ namespace RuntimeCore.Entities.Geometry
                 opposingPlatform = GeometryUtilities.GetPlatformForPolygon(level.Level, opposingPolygon);
             }
 
-            var highestFacingCeiling = facingPolygon.CeilingHeight;
-            if (facingPlatform != null && facingPlatform.ComesFromCeiling)
-            {
-                if (facingPlatform.ComesFromFloor)
-                {
-                    // Split platform
-                    var roundedUpMidpoint = (short)Mathf.CeilToInt((facingPlatform.RuntimeMinimumHeight(level.Level) + facingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
-                    highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, roundedUpMidpoint);
-                }
-                else
-                {
-                    highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, facingPlatform.RuntimeMaximumHeight(level.Level));
-                }
-            }
-
-            var lowestFacingFloor = facingPolygon.FloorHeight;
-            if (facingPlatform != null && facingPlatform.ComesFromFloor)
-            {
-                if (facingPlatform.ComesFromCeiling)
-                {
-                    // Split platform
-                    var roundedDownMidpoint = (short)Mathf.FloorToInt((facingPlatform.RuntimeMinimumHeight(level.Level) + facingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
-                    lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, roundedDownMidpoint);
-                }
-                else
-                {
-                    lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, facingPlatform.RuntimeMinimumHeight(level.Level));
-                }
-            }
-
             var lowestOpposingCeiling = hasOpposingPolygon ? opposingPolygon.CeilingHeight : highestFacingCeiling;
-            var highestOpposingCeiling = hasOpposingPolygon ? opposingPolygon.CeilingHeight : highestFacingCeiling;
-            if (opposingPlatform != null && opposingPlatform.ComesFromCeiling)
-            {
-                if (opposingPlatform.ComesFromFloor)
-                {
-                    // Split platform
-                    var roundedDownMidpoint = (short)Mathf.FloorToInt((opposingPlatform.RuntimeMinimumHeight(level.Level) + opposingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
-                    lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, roundedDownMidpoint);
-                }
-                else
-                {
-                    lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, opposingPlatform.RuntimeMinimumHeight(level.Level));
-                }
-
-                highestOpposingCeiling = opposingPlatform.RuntimeMaximumHeight(level.Level);
-            }
+            var highestOpposingCeiling = lowestOpposingCeiling;
 
             var highestOpposingFloor = hasOpposingPolygon ? opposingPolygon.FloorHeight : lowestFacingFloor;
-            var lowestOpposingFloor = hasOpposingPolygon ? opposingPolygon.FloorHeight : lowestFacingFloor;
-            if (opposingPlatform != null && opposingPlatform.ComesFromFloor)
+            var lowestOpposingFloor = highestOpposingFloor;
+
+            if (opposingPlatform != null)
             {
-                if (opposingPlatform.ComesFromCeiling)
+                if (opposingPlatform.ComesFromFloor && opposingPlatform.ComesFromCeiling)
                 {
-                    // Split platform
-                    var roundedUpMidpoint = (short)Mathf.CeilToInt((opposingPlatform.RuntimeMinimumHeight(level.Level) + opposingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
-                    highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, roundedUpMidpoint);
+                    var roundedMidpoint = (short)Mathf.RoundToInt((opposingPlatform.RuntimeMinimumHeight(level.Level) + opposingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
+
+                    highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, roundedMidpoint);
+                    lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, roundedMidpoint);
                 }
-                else
+                else if (opposingPlatform.ComesFromFloor)
                 {
                     highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, opposingPlatform.RuntimeMaximumHeight(level.Level));
+                    lowestOpposingFloor = opposingPlatform.RuntimeMinimumHeight(level.Level);
                 }
-
-                lowestOpposingFloor = opposingPlatform.RuntimeMinimumHeight(level.Level);
+                else if (opposingPlatform.ComesFromCeiling)
+                {
+                    highestOpposingCeiling = opposingPlatform.RuntimeMaximumHeight(level.Level);
+                    lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, opposingPlatform.RuntimeMinimumHeight(level.Level));
+                }
             }
+            #endregion Opposing_Elevations
 
+            #region Exposure_Determination
             // Data-driven surface-exposure
-            var dataExpectsFullSide = side != null && side.Type == SideType.Full && !side.Primary.Texture.IsEmpty();
-            var dataExpectsTop = !dataExpectsFullSide && side != null && (side.Type == SideType.High || side.Type == SideType.Split);
+            var dataExpectsFullSide = side != null &&
+                                      side.Type == SideType.Full &&
+                                      !side.Primary.Texture.IsEmpty();
+            var dataExpectsTop = !dataExpectsFullSide &&
+                                 side != null &&
+                                 (side.Type == SideType.High || side.Type == SideType.Split);
 
             // Geometry-driven surface-exposure
             var exposesTop = !dataExpectsFullSide &&
@@ -145,7 +130,7 @@ namespace RuntimeCore.Entities.Geometry
                              highestFacingCeiling > lowestOpposingCeiling;
 
             var exposesMiddle = (!hasOpposingPolygon ||
-                                hasTransparentSide ||
+                                (line.Flags & LineFlags.HasTransparentSide) != 0 ||
                                 dataExpectsFullSide) &&
                                 highestFacingCeiling > lowestFacingFloor &&
                                 (highestOpposingCeiling > lowestOpposingFloor || dataExpectsFullSide);
@@ -153,7 +138,9 @@ namespace RuntimeCore.Entities.Geometry
             var exposesBottom = !dataExpectsFullSide &&
                                 hasOpposingPolygon &&
                                 highestOpposingFloor > lowestFacingFloor;
+            #endregion Exposure_Determination
 
+            #region Surface_Assembly
             LevelEntity_Side runtimeSide = null;
 
             if (exposesTop)
@@ -255,6 +242,7 @@ namespace RuntimeCore.Entities.Geometry
 
                 runtimeSide.BottomSurface = surface;
             }
+            #endregion Surface_Assembly
 
             return runtimeSide;
         }

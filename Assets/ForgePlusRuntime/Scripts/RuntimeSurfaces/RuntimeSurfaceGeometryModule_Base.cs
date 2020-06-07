@@ -8,6 +8,8 @@ namespace RuntimeCore.Entities.Geometry
     {
         public SurfaceBatchingManager.BatchKey BatchKey { get; protected set; }
 
+        public bool IsStaticBatchable { get; protected set; } = true;
+
         public Mesh SurfaceMesh { get; protected set; }
 
         public MeshRenderer SurfaceRenderer { get; protected set; }
@@ -22,7 +24,7 @@ namespace RuntimeCore.Entities.Geometry
         public abstract void ApplyPositionsAndTriangles();
 
         public abstract void ApplyTransformPosition();
-        
+
         public abstract void ApplyPlatform();
 
         public abstract void ApplyTextureOffset(bool innerLayer);

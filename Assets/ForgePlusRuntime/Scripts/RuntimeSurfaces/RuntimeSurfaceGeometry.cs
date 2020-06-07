@@ -6,14 +6,14 @@ namespace RuntimeCore.Entities.Geometry
 {
     public class RuntimeSurfaceGeometry : MonoBehaviour
     {
-        protected RuntimeSurfaceGeometryModule_Base geometryModule;
-
         public Mesh SurfaceMesh => geometryModule.SurfaceMesh;
-
+        
         public MeshRenderer SurfaceRenderer => geometryModule.SurfaceRenderer;
 
+        protected RuntimeSurfaceGeometryModule_Base geometryModule;
+
         public virtual void InitializeRuntimeSurface(
-            LevelEntity_GeometryBase entity,
+            LevelEntity_Polygon entity,
             LevelEntity_Polygon.DataSources dataSource)
         {
             if (geometryModule != null)
@@ -25,7 +25,7 @@ namespace RuntimeCore.Entities.Geometry
             gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
 
             geometryModule = new RuntimeSurfaceGeometryModule_Polygon(
-                entity as LevelEntity_Polygon,
+                entity,
                 dataSource,
                 mesh,
                 gameObject.AddComponent<MeshRenderer>());
@@ -34,7 +34,7 @@ namespace RuntimeCore.Entities.Geometry
         }
 
         public virtual void InitializeRuntimeSurface(
-            LevelEntity_GeometryBase entity,
+            LevelEntity_Side entity,
             LevelEntity_Side.DataSources dataSource)
         {
             if (geometryModule != null)
@@ -46,7 +46,7 @@ namespace RuntimeCore.Entities.Geometry
             gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
 
             geometryModule = new RuntimeSurfaceGeometryModule_Side(
-                entity as LevelEntity_Side,
+                entity,
                 dataSource,
                 mesh,
                 gameObject.AddComponent<MeshRenderer>());
@@ -148,11 +148,13 @@ namespace RuntimeCore.Entities.Geometry
 
             changeAction.Invoke();
 
-            // TODO: do not AddToBatches or MergeAllBatches if this is part of a platform
-            SurfaceBatchingManager.Instance.AddToBatches(geometryModule.BatchKey, this);
-            if (rebatchImmediately)
+            if (geometryModule.IsStaticBatchable)
             {
-                SurfaceBatchingManager.Instance.MergeAllBatches();
+                SurfaceBatchingManager.Instance.AddToBatches(geometryModule.BatchKey, this);
+                if (rebatchImmediately)
+                {
+                    SurfaceBatchingManager.Instance.MergeAllBatches();
+                }
             }
         }
     }
