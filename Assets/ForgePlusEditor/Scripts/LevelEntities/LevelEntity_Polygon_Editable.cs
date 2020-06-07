@@ -47,7 +47,6 @@ namespace RuntimeCore.Entities.Geometry
             InspectorPanel.Instance.AddInspector(inspector);
         }
 
-        // TODO: actually set these up to use the new entity system
         public void SetOffset(DataSources surfaceType, short x, short y, bool rebatch)
         {
             switch (surfaceType)
@@ -64,7 +63,7 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.CeilingOrigin.X = x;
                     NativeObject.CeilingOrigin.Y = y;
 
-                    CeilingSurface.ApplyTexture(rebatchImmediately: rebatch);
+                    CeilingSurface.ApplyTextureOffset(rebatchImmediately: rebatch);
 
                     break;
                 case DataSources.Floor:
@@ -79,7 +78,7 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.FloorOrigin.X = x;
                     NativeObject.FloorOrigin.Y = y;
                     
-                    FloorSurface.ApplyTexture(rebatchImmediately: rebatch);
+                    FloorSurface.ApplyTextureOffset(rebatchImmediately: rebatch);
 
                     break;
                 default:
