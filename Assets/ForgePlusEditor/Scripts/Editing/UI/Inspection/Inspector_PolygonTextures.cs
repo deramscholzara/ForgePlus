@@ -1,6 +1,5 @@
-﻿using ForgePlus.LevelManipulation;
+﻿using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Materials;
-using RuntimeCore.Entities.Geometry;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,21 +22,21 @@ namespace ForgePlus.Inspection
 
         public override void RefreshValuesInInspector()
         {
-            var fpPolygon = inspectedObject as LevelEntity_Polygon;
+            var polygon = inspectedObject as LevelEntity_Polygon;
 
-            Value_Id.text = fpPolygon.NativeIndex.ToString();
+            Value_Id.text = polygon.NativeIndex.ToString();
 
-            var floorTexture = MaterialGeneration_Geometry.GetTexture(fpPolygon.NativeObject.FloorTexture);
+            var floorTexture = MaterialGeneration_Geometry.GetTexture(polygon.NativeObject.FloorTexture);
             Value_Floor_Texture.texture = floorTexture ? floorTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-            Value_Floor_Offset.text = $"X: {fpPolygon.NativeObject.FloorOrigin.X}\nY: {fpPolygon.NativeObject.FloorOrigin.Y}";
-            Value_Floor_TransferMode.text = fpPolygon.NativeObject.FloorTransferMode.ToString();
-            Value_Floor_LightIndex.text = fpPolygon.NativeObject.FloorLight.ToString();
+            Value_Floor_Offset.text = $"X: {polygon.NativeObject.FloorOrigin.X}\nY: {polygon.NativeObject.FloorOrigin.Y}";
+            Value_Floor_TransferMode.text = polygon.NativeObject.FloorTransferMode.ToString();
+            Value_Floor_LightIndex.text = polygon.NativeObject.FloorLight.ToString();
 
-            var ceilingTexture = MaterialGeneration_Geometry.GetTexture(fpPolygon.NativeObject.CeilingTexture);
+            var ceilingTexture = MaterialGeneration_Geometry.GetTexture(polygon.NativeObject.CeilingTexture);
             Value_Ceiling_Texture.texture = ceilingTexture ? ceilingTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-            Value_Ceiling_Offset.text = $"X: {fpPolygon.NativeObject.CeilingOrigin.X}\nY: {fpPolygon.NativeObject.CeilingOrigin.Y}";
-            Value_Ceiling_TransferMode.text = fpPolygon.NativeObject.CeilingTransferMode.ToString();
-            Value_Ceiling_LightIndex.text = fpPolygon.NativeObject.CeilingLight.ToString();
+            Value_Ceiling_Offset.text = $"X: {polygon.NativeObject.CeilingOrigin.X}\nY: {polygon.NativeObject.CeilingOrigin.Y}";
+            Value_Ceiling_TransferMode.text = polygon.NativeObject.CeilingTransferMode.ToString();
+            Value_Ceiling_LightIndex.text = polygon.NativeObject.CeilingLight.ToString();
         }
     }
 }

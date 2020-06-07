@@ -1,9 +1,5 @@
-﻿using SimpleFileBrowser;
-using System.Collections;
+﻿using ForgePlus.LevelManipulation;
 using UnityEngine;
-using System;
-using ForgePlus.DataFileIO.Extensions;
-using ForgePlus.LevelManipulation;
 
 namespace ForgePlus.DataFileIO
 {

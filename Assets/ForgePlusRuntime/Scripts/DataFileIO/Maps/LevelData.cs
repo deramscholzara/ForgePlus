@@ -1,10 +1,10 @@
 ﻿using ForgePlus.Entities.Geometry;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
-using RuntimeCore.Materials;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
+using RuntimeCore.Materials;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,7 +29,7 @@ namespace ForgePlus.DataFileIO
         private readonly MapFile mapsFile;
 
         private Level level;
-        private LevelEntity_Level FPLevel;
+        private LevelEntity_Level runtimeLevel;
 
         public string LevelName { get; private set; }
 
@@ -80,7 +80,7 @@ namespace ForgePlus.DataFileIO
 
         public async Task OpenLevel()
         {
-            if (FPLevel)
+            if (runtimeLevel)
             {
                 // Already open, so exit
                 return;
@@ -108,15 +108,15 @@ namespace ForgePlus.DataFileIO
 
         public void CloseLevel()
         {
-            if (!FPLevel)
+            if (!runtimeLevel)
             {
                 // Not open, so exit
                 return;
             }
 
-            FPLevel.PrepareForDestruction();
+            runtimeLevel.PrepareForDestruction();
 
-            UnityEngine.Object.Destroy(FPLevel.gameObject);
+            UnityEngine.Object.Destroy(runtimeLevel.gameObject);
         }
 
         private async Task<DateTime> ChunkLoadYield(DateTime chunkLoadStartTime)
@@ -133,30 +133,30 @@ namespace ForgePlus.DataFileIO
 
         private async Task BuildLevel()
         {
-            var initializeFPLevelStartTime = DateTime.Now;
+            var initializeLevelStartTime = DateTime.Now;
 
-            FPLevel = new GameObject($"Level ({LevelName})").AddComponent<LevelEntity_Level>();
-            FPLevel.Level = level;
-            FPLevel.Index = (short)LevelIndex;
+            runtimeLevel = new GameObject($"Level ({LevelName})").AddComponent<LevelEntity_Level>();
+            runtimeLevel.Level = level;
+            runtimeLevel.Index = (short)LevelIndex;
 
-            FPLevel.FPPolygons = new Dictionary<short, LevelEntity_Polygon>();
-            FPLevel.FPLines = new Dictionary<short, LevelEntity_Line>();
-            FPLevel.FPSides = new Dictionary<short, LevelEntity_Side>();
-            FPLevel.FPLights = new Dictionary<short, LevelEntity_Light>();
-            FPLevel.FPMedias = new Dictionary<short, LevelEntity_Media>();
-            FPLevel.FPCeilingFpPlatforms = new Dictionary<short, LevelEntity_Platform>();
-            FPLevel.FPFloorFpPlatforms = new Dictionary<short, LevelEntity_Platform>();
-            FPLevel.FPMapObjects = new Dictionary<short, LevelEntity_MapObject>();
-            FPLevel.FPAnnotations = new Dictionary<short, LevelEntity_Annotation>();
+            runtimeLevel.Polygons = new Dictionary<short, LevelEntity_Polygon>();
+            runtimeLevel.Lines = new Dictionary<short, LevelEntity_Line>();
+            runtimeLevel.Sides = new Dictionary<short, LevelEntity_Side>();
+            runtimeLevel.Lights = new Dictionary<short, LevelEntity_Light>();
+            runtimeLevel.Medias = new Dictionary<short, LevelEntity_Media>();
+            runtimeLevel.CeilingPlatforms = new Dictionary<short, LevelEntity_Platform>();
+            runtimeLevel.FloorPlatforms = new Dictionary<short, LevelEntity_Platform>();
+            runtimeLevel.MapObjects = new Dictionary<short, LevelEntity_MapObject>();
+            runtimeLevel.Annotations = new Dictionary<short, LevelEntity_Annotation>();
 
-            FPLevel.FPInteractiveSurfacePolygons = new List<EditableSurface_Polygon>();
-            FPLevel.FPInteractiveSurfaceSides = new List<EditableSurface_Side>();
-            FPLevel.FPInteractiveSurfaceMedias = new List<EditableSurface_Media>();
+            runtimeLevel.EditableSurface_Polygons = new List<EditableSurface_Polygon>();
+            runtimeLevel.EditableSurface_Sides = new List<EditableSurface_Side>();
+            runtimeLevel.EditableSurface_Medias = new List<EditableSurface_Media>();
 
             // Clear out Walls Materials so it can be repopulated with the correct set
             MaterialGeneration_Geometry.ClearCollection();
 
-            Debug.Log($"--- LevelBuild: Initialized FPLevel in timespan: {DateTime.Now - initializeFPLevelStartTime}");
+            Debug.Log($"--- LevelBuild: Initialized Level in timespan: {DateTime.Now - initializeLevelStartTime}");
 
             await Task.Yield();
 
@@ -187,29 +187,29 @@ namespace ForgePlus.DataFileIO
             await Task.Yield();
 
             #region Initialization_Lights
-            var buildFPLightsStartTime = DateTime.Now;
+            var buildLightsStartTime = DateTime.Now;
 
             // Initialize Lights here so they are in proper index order
             for (var i = 0; i < level.Lights.Count; i++)
             {
-                FPLevel.FPLights[(short)i] = new LevelEntity_Light((short)i, level.Lights[i], FPLevel);
+                runtimeLevel.Lights[(short)i] = new LevelEntity_Light((short)i, level.Lights[i], runtimeLevel);
             }
 
-            Debug.Log($"--- LevelBuild: Built & started FPLights in timespan: {DateTime.Now - buildFPLightsStartTime}");
+            Debug.Log($"--- LevelBuild: Built & started Lights in timespan: {DateTime.Now - buildLightsStartTime}");
             #endregion Initialization_Lights
 
             await Task.Yield();
 
             #region Initialization_Medias
-            var buildFPMediasStartTime = DateTime.Now;
+            var buildMediasStartTime = DateTime.Now;
 
             // Initialize Medias here so they are in proper index order
             for (var i = 0; i < level.Medias.Count; i++)
             {
-                FPLevel.FPMedias[(short)i] = new LevelEntity_Media((short)i, level.Medias[i], FPLevel);
+                runtimeLevel.Medias[(short)i] = new LevelEntity_Media((short)i, level.Medias[i], runtimeLevel);
             }
 
-            Debug.Log($"--- LevelBuild: Built & started FPMedias in timespan: {DateTime.Now - buildFPMediasStartTime}");
+            Debug.Log($"--- LevelBuild: Built & started Medias in timespan: {DateTime.Now - buildMediasStartTime}");
             #endregion Initialization_Medias
 
             await Task.Yield();
@@ -220,7 +220,7 @@ namespace ForgePlus.DataFileIO
             var buildPolygonsStartTime = DateTime.Now;
 
             var polygonsGroupGO = new GameObject("Polygons");
-            polygonsGroupGO.transform.SetParent(FPLevel.transform);
+            polygonsGroupGO.transform.SetParent(runtimeLevel.transform);
 
             for (short polygonIndex = 0; polygonIndex < level.Polygons.Count; polygonIndex++)
             {
@@ -229,9 +229,9 @@ namespace ForgePlus.DataFileIO
                 var polygonRootGO = new GameObject($"Polygon ({polygonIndex})");
                 polygonRootGO.transform.SetParent(polygonsGroupGO.transform);
 
-                var fpPolygon = polygonRootGO.AddComponent<LevelEntity_Polygon>();
-                FPLevel.FPPolygons[polygonIndex] = fpPolygon;
-                fpPolygon.InitializeEntity(FPLevel, polygonIndex, polygon);
+                var runtimePolygon = polygonRootGO.AddComponent<LevelEntity_Polygon>();
+                runtimeLevel.Polygons[polygonIndex] = runtimePolygon;
+                runtimePolygon.InitializeEntity(runtimeLevel, polygonIndex, polygon);
 
                 chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
@@ -245,7 +245,7 @@ namespace ForgePlus.DataFileIO
             var buildSidesStartTime = DateTime.Now;
 
             var linesGroupGO = new GameObject("Lines");
-            linesGroupGO.transform.SetParent(FPLevel.transform);
+            linesGroupGO.transform.SetParent(runtimeLevel.transform);
 
             for (short lineIndex = 0; lineIndex < level.Lines.Count; lineIndex++)
             {
@@ -254,13 +254,13 @@ namespace ForgePlus.DataFileIO
 
                 var line = level.Lines[lineIndex];
 
-                var fpLine = lineRootGO.AddComponent<LevelEntity_Line>();
-                FPLevel.FPLines[lineIndex] = fpLine;
-                fpLine.NativeIndex = lineIndex;
-                fpLine.NativeObject = line;
-                fpLine.FPLevel = FPLevel;
+                var runtimeLine = lineRootGO.AddComponent<LevelEntity_Line>();
+                runtimeLevel.Lines[lineIndex] = runtimeLine;
+                runtimeLine.NativeIndex = lineIndex;
+                runtimeLine.NativeObject = line;
+                runtimeLine.ParentLevel = runtimeLevel;
 
-                fpLine.GenerateSurfaces();
+                runtimeLine.GenerateSurfaces();
 
                 chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
@@ -274,7 +274,7 @@ namespace ForgePlus.DataFileIO
             var buildObjectsStartTime = DateTime.Now;
 
             var mapObjectsGroupGO = new GameObject("MapObjects");
-            mapObjectsGroupGO.transform.SetParent(FPLevel.transform);
+            mapObjectsGroupGO.transform.SetParent(runtimeLevel.transform);
 
             for (short objectIndex = 0; objectIndex < level.Objects.Count; objectIndex++)
             {
@@ -283,13 +283,13 @@ namespace ForgePlus.DataFileIO
                 var mapObjectRootGO = new GameObject($"MapObject: {mapObject.Type} ({objectIndex})");
                 mapObjectRootGO.transform.SetParent(mapObjectsGroupGO.transform);
 
-                var fpMapObject = mapObjectRootGO.AddComponent<LevelEntity_MapObject>();
-                FPLevel.FPMapObjects[(short)objectIndex] = fpMapObject;
-                fpMapObject.NativeIndex = (short)objectIndex;
-                fpMapObject.NativeObject = mapObject;
-                fpMapObject.FPLevel = FPLevel;
+                var runtimeMapObject = mapObjectRootGO.AddComponent<LevelEntity_MapObject>();
+                runtimeLevel.MapObjects[(short)objectIndex] = runtimeMapObject;
+                runtimeMapObject.NativeIndex = (short)objectIndex;
+                runtimeMapObject.NativeObject = mapObject;
+                runtimeMapObject.ParentLevel = runtimeLevel;
 
-                fpMapObject.GenerateObject();
+                runtimeMapObject.GenerateObject();
 
                 chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
@@ -301,7 +301,7 @@ namespace ForgePlus.DataFileIO
 
             #region Annotations
             var annotationsGroupGO = new GameObject("Annotations");
-            annotationsGroupGO.transform.SetParent(FPLevel.transform);
+            annotationsGroupGO.transform.SetParent(runtimeLevel.transform);
 
             for (var i = 0; i < level.Annotations.Count; i++)
             {
@@ -309,16 +309,16 @@ namespace ForgePlus.DataFileIO
                 var annotationInstance = UnityEngine.Object.Instantiate(LevelEntity_Annotation.Prefab);
                 annotationInstance.NativeIndex = (short)i;
                 annotationInstance.NativeObject = annotation;
-                annotationInstance.FPLevel = FPLevel;
+                annotationInstance.ParentLevel = runtimeLevel;
 
                 annotationInstance.RefreshLabel();
 
-                var positionalHeight = (FPLevel.FPPolygons[annotation.PolygonIndex].NativeObject.FloorHeight + FPLevel.FPPolygons[annotation.PolygonIndex].NativeObject.CeilingHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                var positionalHeight = (runtimeLevel.Polygons[annotation.PolygonIndex].NativeObject.FloorHeight + runtimeLevel.Polygons[annotation.PolygonIndex].NativeObject.CeilingHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
                 annotationInstance.transform.position = new Vector3(annotation.X / GeometryUtilities.WorldUnitIncrementsPerMeter, positionalHeight, -annotation.Y / GeometryUtilities.WorldUnitIncrementsPerMeter);
 
                 annotationInstance.transform.SetParent(annotationsGroupGO.transform, worldPositionStays: true);
 
-                FPLevel.FPAnnotations[(short)i] = annotationInstance;
+                runtimeLevel.Annotations[(short)i] = annotationInstance;
             }
             #endregion Annotations
         }

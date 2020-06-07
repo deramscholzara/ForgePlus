@@ -1,7 +1,5 @@
 ﻿using ForgePlus.LevelManipulation;
 using RuntimeCore.Entities;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +9,7 @@ namespace ForgePlus.Palette
     [RequireComponent(typeof(Toggle))]
     public class Swatch_Light : MonoBehaviour
     {
-        public LevelEntity_Light FPLight;
+        public LevelEntity_Light RuntimeLight;
 
         [SerializeField]
         private TextMeshProUGUI label = null;
@@ -19,11 +17,11 @@ namespace ForgePlus.Palette
         [SerializeField]
         private Image lightPreview = null;
 
-        public void SetInitialValues(LevelEntity_Light fpLight, ToggleGroup toggleGroup)
+        public void SetInitialValues(LevelEntity_Light runtimeLight, ToggleGroup toggleGroup)
         {
-            FPLight = fpLight;
+            RuntimeLight = runtimeLight;
 
-            label.text = fpLight.NativeIndex.ToString();
+            label.text = runtimeLight.NativeIndex.ToString();
 
             var toggle = GetComponent<Toggle>();
             toggle.group = toggleGroup;
@@ -33,17 +31,17 @@ namespace ForgePlus.Palette
         {
             if (value)
             {
-                SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
+                SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
             }
             else
             {
-                SelectionManager.Instance.DeselectObject(FPLight, multiSelect: false);
+                SelectionManager.Instance.DeselectObject(RuntimeLight, multiSelect: false);
             }
         }
 
         private void Update()
         {
-            lightPreview.color = new Color(FPLight.CurrentGammaIntensity, FPLight.CurrentGammaIntensity, FPLight.CurrentGammaIntensity, 1f);
+            lightPreview.color = new Color(RuntimeLight.CurrentGammaIntensity, RuntimeLight.CurrentGammaIntensity, RuntimeLight.CurrentGammaIntensity, 1f);
         }
     }
 }

@@ -6,14 +6,15 @@ using Weland;
 
 namespace RuntimeCore.Entities.Geometry
 {
-    public class LevelEntity_Line : EditableSurface_Base, IManipulatable<Line>, ISelectionDisplayable, IInspectable
+    // TODO: Should inherit from LevelEntity_Base, and should have a separate EditableSurface component
+    public class LevelEntity_Line : EditableSurface_Base, ISelectionDisplayable, IInspectable
     {
         public short NativeIndex { get; set; }
         public Line NativeObject { get; set; }
         public LevelEntity_Side ClockwiseSide;
         public LevelEntity_Side CounterclockwiseSide;
 
-        public LevelEntity_Level FPLevel { private get; set; }
+        public LevelEntity_Level ParentLevel { private get; set; }
 
         public override void OnValidatedPointerClick(PointerEventData eventData)
         {
@@ -62,13 +63,13 @@ namespace RuntimeCore.Entities.Geometry
 
         public void GenerateSurfaces()
         {
-            ClockwiseSide = LevelEntity_Side.AssembleEntity(FPLevel, isClockwise: true, NativeObject);
+            ClockwiseSide = LevelEntity_Side.AssembleEntity(ParentLevel, isClockwise: true, NativeObject);
             if (ClockwiseSide)
             {
                 ClockwiseSide.transform.SetParent(transform);
             }
 
-            CounterclockwiseSide = LevelEntity_Side.AssembleEntity(FPLevel, isClockwise: false, NativeObject);
+            CounterclockwiseSide = LevelEntity_Side.AssembleEntity(ParentLevel, isClockwise: false, NativeObject);
             if (CounterclockwiseSide)
             {
                 CounterclockwiseSide.transform.SetParent(transform);

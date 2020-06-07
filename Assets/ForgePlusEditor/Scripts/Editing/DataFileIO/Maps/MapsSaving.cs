@@ -1,7 +1,6 @@
 ﻿#if !NO_EDITING
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO.Extensions;
-using ForgePlus.LevelManipulation;
 using RuntimeCore.Entities;
 using SimpleFileBrowser;
 using System;

@@ -7,7 +7,8 @@ using Weland;
 
 namespace RuntimeCore.Entities.MapObjects
 {
-    public class LevelEntity_MapObject : EditableSurface_Base, IManipulatable<MapObject>, ISelectionDisplayable, IInspectable
+    // TODO: Should inherit from LevelEntity_Base, and should have a separate EditableSurface component
+    public class LevelEntity_MapObject : EditableSurface_Base, ISelectionDisplayable, IInspectable
     {
         private readonly int selectedShaderPropertyId = Shader.PropertyToID("_Selected");
 
@@ -35,7 +36,7 @@ namespace RuntimeCore.Entities.MapObjects
         public short NativeIndex { get; set; }
         public MapObject NativeObject { get; set; }
 
-        public LevelEntity_Level FPLevel { private get; set; }
+        public LevelEntity_Level ParentLevel { private get; set; }
 
         public Placement Placement
         {
@@ -43,11 +44,11 @@ namespace RuntimeCore.Entities.MapObjects
             {
                 if (NativeObject.Type == ObjectType.Monster)
                 {
-                    return FPLevel.Level.MonsterPlacement[NativeObject.Index];
+                    return ParentLevel.Level.MonsterPlacement[NativeObject.Index];
                 }
                 else if (NativeObject.Type == ObjectType.Item)
                 {
-                    return FPLevel.Level.ItemPlacement[NativeObject.Index];
+                    return ParentLevel.Level.ItemPlacement[NativeObject.Index];
                 }
 
                 return null;
@@ -182,8 +183,8 @@ namespace RuntimeCore.Entities.MapObjects
             gameObject.AddComponent<MeshCollider>().convex = true;
 
             int elevation = NativeObject.FromCeiling ?
-                            FPLevel.Level.Polygons[NativeObject.PolygonIndex].CeilingHeight + NativeObject.Z :
-                            FPLevel.Level.Polygons[NativeObject.PolygonIndex].FloorHeight + NativeObject.Z;
+                            ParentLevel.Level.Polygons[NativeObject.PolygonIndex].CeilingHeight + NativeObject.Z :
+                            ParentLevel.Level.Polygons[NativeObject.PolygonIndex].FloorHeight + NativeObject.Z;
 
             if (NativeObject.FromCeiling)
             {

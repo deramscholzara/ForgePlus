@@ -1,5 +1,4 @@
-﻿using ForgePlus.LevelManipulation;
-using RuntimeCore.Entities.MapObjects;
+﻿using RuntimeCore.Entities.MapObjects;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,54 +33,54 @@ namespace ForgePlus.Inspection
 
         public override void RefreshValuesInInspector()
         {
-            var fpMapObject = inspectedObject as LevelEntity_MapObject;
+            var mapObject = inspectedObject as LevelEntity_MapObject;
 
-            Value_Id.text = fpMapObject.NativeIndex.ToString();
-            Value_Type.text = fpMapObject.NativeObject.Type.ToString();
+            Value_Id.text = mapObject.NativeIndex.ToString();
+            Value_Type.text = mapObject.NativeObject.Type.ToString();
 
-            switch (fpMapObject.NativeObject.Type)
+            switch (mapObject.NativeObject.Type)
             {
                 case Weland.ObjectType.Player:
-                    Value_Index.text = $"({fpMapObject.NativeObject.Index})";
+                    Value_Index.text = $"({mapObject.NativeObject.Index})";
                     break;
                 case Weland.ObjectType.Monster:
                     // TODO: Need to also inspect the Placement object "MonsterPlacement" from Weland.Level
-                    Value_Index.text = $"{(MonsterType)fpMapObject.NativeObject.Index} ({fpMapObject.NativeObject.Index})";
+                    Value_Index.text = $"{(MonsterType)mapObject.NativeObject.Index} ({mapObject.NativeObject.Index})";
                     break;
                 case Weland.ObjectType.Item:
                     // TODO: Need to also inspect the Placement object "ItemPlacement" from Weland.Level
-                    Value_Index.text = $"{(ItemType)fpMapObject.NativeObject.Index} ({fpMapObject.NativeObject.Index})";
+                    Value_Index.text = $"{(ItemType)mapObject.NativeObject.Index} ({mapObject.NativeObject.Index})";
                     break;
                 case Weland.ObjectType.Scenery:
-                    Value_Index.text = $"({fpMapObject.NativeObject.Index})";// Needs physics loaded?  Not sure why this isn't an enum in Weland - maybe I should make one...
+                    Value_Index.text = $"({mapObject.NativeObject.Index})";// Needs physics loaded?  Not sure why this isn't an enum in Weland - maybe I should make one...
                     break;
                 case Weland.ObjectType.Sound:
-                    Value_Index.text = $"({fpMapObject.NativeObject.Index})";
+                    Value_Index.text = $"({mapObject.NativeObject.Index})";
                     break;
                 case Weland.ObjectType.Goal:
-                    Value_Index.text = $"({fpMapObject.NativeObject.Index})";
+                    Value_Index.text = $"({mapObject.NativeObject.Index})";
                     break;
                 default:
                     Value_Index.text = "Invalid";
                     break;
             }
 
-            Value_PolygonIndex.text = fpMapObject.NativeObject.PolygonIndex.ToString();
+            Value_PolygonIndex.text = mapObject.NativeObject.PolygonIndex.ToString();
 
-            Value_Flags_Invisible.SetIsOnWithoutNotify(fpMapObject.NativeObject.Invisible);
-            Value_Flags_FromCeiling.SetIsOnWithoutNotify(fpMapObject.NativeObject.FromCeiling);
-            Value_Flags_Blind.SetIsOnWithoutNotify(fpMapObject.NativeObject.Blind);
-            Value_Flags_Deaf.SetIsOnWithoutNotify(fpMapObject.NativeObject.Deaf);
-            Value_Flags_NetworkOnly.SetIsOnWithoutNotify(fpMapObject.NativeObject.NetworkOnly);
-            Value_Flags_Floats.SetIsOnWithoutNotify(fpMapObject.NativeObject.Floats);
-            Value_Flags_OnPlatform.SetIsOnWithoutNotify(fpMapObject.NativeObject.OnPlatform);
+            Value_Flags_Invisible.SetIsOnWithoutNotify(mapObject.NativeObject.Invisible);
+            Value_Flags_FromCeiling.SetIsOnWithoutNotify(mapObject.NativeObject.FromCeiling);
+            Value_Flags_Blind.SetIsOnWithoutNotify(mapObject.NativeObject.Blind);
+            Value_Flags_Deaf.SetIsOnWithoutNotify(mapObject.NativeObject.Deaf);
+            Value_Flags_NetworkOnly.SetIsOnWithoutNotify(mapObject.NativeObject.NetworkOnly);
+            Value_Flags_Floats.SetIsOnWithoutNotify(mapObject.NativeObject.Floats);
+            Value_Flags_OnPlatform.SetIsOnWithoutNotify(mapObject.NativeObject.OnPlatform);
 
-            Value_Angle.text = fpMapObject.NativeObject.Facing.ToString();
-            Value_Position.text = $"X: {fpMapObject.NativeObject.X}\n" +
-                                        $"Y: {fpMapObject.NativeObject.Y}\n" +
-                                        $"Z: {fpMapObject.NativeObject.Z}";
+            Value_Angle.text = mapObject.NativeObject.Facing.ToString();
+            Value_Position.text = $"X: {mapObject.NativeObject.X}\n" +
+                                        $"Y: {mapObject.NativeObject.Y}\n" +
+                                        $"Z: {mapObject.NativeObject.Z}";
 
-            var placement = fpMapObject.Placement;
+            var placement = mapObject.Placement;
             if (placement == null)
             {
                 PlacementValuesRoot.SetActive(false);

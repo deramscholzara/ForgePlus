@@ -1,5 +1,4 @@
-﻿using ForgePlus.LevelManipulation;
-using RuntimeCore.Entities;
+﻿using RuntimeCore.Entities;
 using TMPro;
 
 namespace ForgePlus.Inspection
@@ -11,10 +10,10 @@ namespace ForgePlus.Inspection
 
         public override void RefreshValuesInInspector()
         {
-            var fpAnnotation = inspectedObject as LevelEntity_Annotation;
+            var annotation = inspectedObject as LevelEntity_Annotation;
 
-            Value_Id.text = fpAnnotation.NativeIndex.ToString();
-            Value_Text.text = fpAnnotation.NativeObject.Text;
+            Value_Id.text = annotation.NativeIndex.ToString();
+            Value_Text.text = annotation.NativeObject.Text;
         }
     }
 }

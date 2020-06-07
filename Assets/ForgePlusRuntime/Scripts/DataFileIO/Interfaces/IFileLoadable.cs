@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace ForgePlus.DataFileIO
+﻿namespace ForgePlus.DataFileIO
 {
     public interface IFileLoadable
     {

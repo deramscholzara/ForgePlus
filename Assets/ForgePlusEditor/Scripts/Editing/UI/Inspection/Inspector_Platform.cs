@@ -1,5 +1,4 @@
-﻿using ForgePlus.LevelManipulation;
-using RuntimeCore.Common;
+﻿using RuntimeCore.Common;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using TMPro;
@@ -50,67 +49,67 @@ namespace ForgePlus.Inspection
         public Toggle Simulation_IsActive;
         public Button Simulation_Obstruct;
 
-        private LevelEntity_Platform fpPlatform = null;
+        private LevelEntity_Platform platform = null;
 
         public override void RefreshValuesInInspector()
         {
-            fpPlatform = inspectedObject as LevelEntity_Platform;
+            platform = inspectedObject as LevelEntity_Platform;
 
-            Value_Id.text = fpPlatform.NativeIndex.ToString();
-            Value_Tag.text = fpPlatform.NativeObject.Tag.ToString();
-            Value_PolygonIndex.text = fpPlatform.NativeObject.PolygonIndex.ToString();
-            Value_Type.text = fpPlatform.NativeObject.Type.ToString();
-            Value_Speed.text = fpPlatform.NativeObject.Speed.ToString();
-            Value_Delay.text = fpPlatform.NativeObject.Delay.ToString();
-            Value_MaximumHeight.text = fpPlatform.NativeObject.RuntimeMaximumHeight(LevelEntity_Level.Instance.Level).ToString();
-            Value_MinimumHeight.text = fpPlatform.NativeObject.RuntimeMinimumHeight(LevelEntity_Level.Instance.Level).ToString();
-            Value_Flags_InitiallyActive.SetIsOnWithoutNotify(fpPlatform.NativeObject.InitiallyActive);
-            Value_Flags_InitiallyExtended.SetIsOnWithoutNotify(fpPlatform.NativeObject.InitiallyExtended);
-            Value_Flags_IsLocked.SetIsOnWithoutNotify(fpPlatform.NativeObject.IsLocked);
-            Value_Flags_IsPlayerControllable.SetIsOnWithoutNotify(fpPlatform.NativeObject.IsPlayerControllable);
-            Value_Flags_IsMonsterControllable.SetIsOnWithoutNotify(fpPlatform.NativeObject.IsMonsterControllable);
-            Value_Flags_CausesDamage.SetIsOnWithoutNotify(fpPlatform.NativeObject.CausesDamage);
-            Value_Flags_ReversesWhenObstructed.SetIsOnWithoutNotify(fpPlatform.NativeObject.ReversesDirectionWhenObstructed);
-            Value_Flags_DeactivatesAtEachLevel.SetIsOnWithoutNotify(fpPlatform.NativeObject.DeactivatesAtEachLevel);
-            Value_Flags_DeactivatesAtInitialLevel.SetIsOnWithoutNotify(fpPlatform.NativeObject.DeactivatesAtInitialLevel);
-            Value_Flags_ActivatesAdjacentOnActivation.SetIsOnWithoutNotify(fpPlatform.NativeObject.ActivatesAdjacentPlatformsWhenActivating);
-            Value_Flags_ActivatesAdjacentOnDeactivation.SetIsOnWithoutNotify(fpPlatform.NativeObject.ActivatesAdjacentPlatformsWhenDeactivating);
-            Value_Flags_DeactivatesAdjacentOnActivation.SetIsOnWithoutNotify(fpPlatform.NativeObject.DeactivatesAdjacentPlatformsWhenActivating);
-            Value_Flags_DeactivatesAdjacentOnDeactivation.SetIsOnWithoutNotify(fpPlatform.NativeObject.DeactivatesAdjacentPlatformsWhenDeactivating);
-            Value_Flags_ActivatesAdjacentAtEachLevel.SetIsOnWithoutNotify(fpPlatform.NativeObject.ActivatesAdjacantPlatformsAtEachLevel);
-            Value_Flags_DelaysBeforeActivation.SetIsOnWithoutNotify(fpPlatform.NativeObject.DelaysBeforeActivation);
-            Value_Flags_ActivatesOnlyOnce.SetIsOnWithoutNotify(fpPlatform.NativeObject.ActivatesOnlyOnce);
-            Value_Flags_ActivatesLight.SetIsOnWithoutNotify(fpPlatform.NativeObject.ActivatesLight);
-            Value_Flags_DeactivatesLight.SetIsOnWithoutNotify(fpPlatform.NativeObject.DeactivatesLight);
-            Value_Flags_CannotBeExternallyDeactivated.SetIsOnWithoutNotify(fpPlatform.NativeObject.CannotBeExternallyDeactivated);
-            Value_Flags_ContractsSlower.SetIsOnWithoutNotify(fpPlatform.NativeObject.ContractsSlower);
-            Value_Flags_UsesNativePolygonHeights.SetIsOnWithoutNotify(fpPlatform.NativeObject.UsesNativePolygonHeights);
-            Value_Flags_ExtendsFloorToCeiling.SetIsOnWithoutNotify(fpPlatform.NativeObject.ExtendsFloorToCeiling);
-            Value_Flags_ComesFromFloor.SetIsOnWithoutNotify(fpPlatform.NativeObject.ComesFromFloor);
-            Value_Flags_ComesFromCeiling.SetIsOnWithoutNotify(fpPlatform.NativeObject.ComesFromCeiling);
-            Value_Flags_DoesNotActivateParent.SetIsOnWithoutNotify(fpPlatform.NativeObject.DoesNotActivateParent);
-            Value_Flags_IsSecret.SetIsOnWithoutNotify(fpPlatform.NativeObject.IsSecret);
-            Value_Flags_IsDoor.SetIsOnWithoutNotify(fpPlatform.NativeObject.IsDoor);
+            Value_Id.text = platform.NativeIndex.ToString();
+            Value_Tag.text = platform.NativeObject.Tag.ToString();
+            Value_PolygonIndex.text = platform.NativeObject.PolygonIndex.ToString();
+            Value_Type.text = platform.NativeObject.Type.ToString();
+            Value_Speed.text = platform.NativeObject.Speed.ToString();
+            Value_Delay.text = platform.NativeObject.Delay.ToString();
+            Value_MaximumHeight.text = platform.NativeObject.RuntimeMaximumHeight(LevelEntity_Level.Instance.Level).ToString();
+            Value_MinimumHeight.text = platform.NativeObject.RuntimeMinimumHeight(LevelEntity_Level.Instance.Level).ToString();
+            Value_Flags_InitiallyActive.SetIsOnWithoutNotify(platform.NativeObject.InitiallyActive);
+            Value_Flags_InitiallyExtended.SetIsOnWithoutNotify(platform.NativeObject.InitiallyExtended);
+            Value_Flags_IsLocked.SetIsOnWithoutNotify(platform.NativeObject.IsLocked);
+            Value_Flags_IsPlayerControllable.SetIsOnWithoutNotify(platform.NativeObject.IsPlayerControllable);
+            Value_Flags_IsMonsterControllable.SetIsOnWithoutNotify(platform.NativeObject.IsMonsterControllable);
+            Value_Flags_CausesDamage.SetIsOnWithoutNotify(platform.NativeObject.CausesDamage);
+            Value_Flags_ReversesWhenObstructed.SetIsOnWithoutNotify(platform.NativeObject.ReversesDirectionWhenObstructed);
+            Value_Flags_DeactivatesAtEachLevel.SetIsOnWithoutNotify(platform.NativeObject.DeactivatesAtEachLevel);
+            Value_Flags_DeactivatesAtInitialLevel.SetIsOnWithoutNotify(platform.NativeObject.DeactivatesAtInitialLevel);
+            Value_Flags_ActivatesAdjacentOnActivation.SetIsOnWithoutNotify(platform.NativeObject.ActivatesAdjacentPlatformsWhenActivating);
+            Value_Flags_ActivatesAdjacentOnDeactivation.SetIsOnWithoutNotify(platform.NativeObject.ActivatesAdjacentPlatformsWhenDeactivating);
+            Value_Flags_DeactivatesAdjacentOnActivation.SetIsOnWithoutNotify(platform.NativeObject.DeactivatesAdjacentPlatformsWhenActivating);
+            Value_Flags_DeactivatesAdjacentOnDeactivation.SetIsOnWithoutNotify(platform.NativeObject.DeactivatesAdjacentPlatformsWhenDeactivating);
+            Value_Flags_ActivatesAdjacentAtEachLevel.SetIsOnWithoutNotify(platform.NativeObject.ActivatesAdjacantPlatformsAtEachLevel);
+            Value_Flags_DelaysBeforeActivation.SetIsOnWithoutNotify(platform.NativeObject.DelaysBeforeActivation);
+            Value_Flags_ActivatesOnlyOnce.SetIsOnWithoutNotify(platform.NativeObject.ActivatesOnlyOnce);
+            Value_Flags_ActivatesLight.SetIsOnWithoutNotify(platform.NativeObject.ActivatesLight);
+            Value_Flags_DeactivatesLight.SetIsOnWithoutNotify(platform.NativeObject.DeactivatesLight);
+            Value_Flags_CannotBeExternallyDeactivated.SetIsOnWithoutNotify(platform.NativeObject.CannotBeExternallyDeactivated);
+            Value_Flags_ContractsSlower.SetIsOnWithoutNotify(platform.NativeObject.ContractsSlower);
+            Value_Flags_UsesNativePolygonHeights.SetIsOnWithoutNotify(platform.NativeObject.UsesNativePolygonHeights);
+            Value_Flags_ExtendsFloorToCeiling.SetIsOnWithoutNotify(platform.NativeObject.ExtendsFloorToCeiling);
+            Value_Flags_ComesFromFloor.SetIsOnWithoutNotify(platform.NativeObject.ComesFromFloor);
+            Value_Flags_ComesFromCeiling.SetIsOnWithoutNotify(platform.NativeObject.ComesFromCeiling);
+            Value_Flags_DoesNotActivateParent.SetIsOnWithoutNotify(platform.NativeObject.DoesNotActivateParent);
+            Value_Flags_IsSecret.SetIsOnWithoutNotify(platform.NativeObject.IsSecret);
+            Value_Flags_IsDoor.SetIsOnWithoutNotify(platform.NativeObject.IsDoor);
 
-            Simulation_IsActive.onValueChanged.AddListener(delegate { fpPlatform.SetRuntimeActive(Simulation_IsActive.isOn); });
-            fpPlatform.OnInspectionStateChange += OnInspectionStateChange;
-            OnInspectionStateChange(fpPlatform);
+            Simulation_IsActive.onValueChanged.AddListener(delegate { platform.SetRuntimeActive(Simulation_IsActive.isOn); });
+            platform.OnInspectionStateChange += OnInspectionStateChange;
+            OnInspectionStateChange(platform);
 
-            Simulation_Obstruct.onClick.AddListener(delegate { fpPlatform.ObstructRuntimeBehavior(); });
+            Simulation_Obstruct.onClick.AddListener(delegate { platform.ObstructRuntimeBehavior(); });
         }
 
         public void PrepareForDestruction()
         {
-            fpPlatform.OnInspectionStateChange -= OnInspectionStateChange;
+            platform.OnInspectionStateChange -= OnInspectionStateChange;
 
-            foreach (var fpPlatform in LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values)
+            foreach (var runtimePlatform in LevelEntity_Level.Instance.CeilingPlatforms.Values)
             {
-                fpPlatform.BeginRuntimeStyleBehavior();
+                runtimePlatform.BeginRuntimeStyleBehavior();
             }
 
-            foreach (var fpPlatform in LevelEntity_Level.Instance.FPFloorFpPlatforms.Values)
+            foreach (var runtimePlatform in LevelEntity_Level.Instance.FloorPlatforms.Values)
             {
-                fpPlatform.BeginRuntimeStyleBehavior();
+                runtimePlatform.BeginRuntimeStyleBehavior();
             }
         }
 

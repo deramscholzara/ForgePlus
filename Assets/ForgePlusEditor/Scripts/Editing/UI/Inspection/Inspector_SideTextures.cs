@@ -1,12 +1,8 @@
-﻿using ForgePlus.LevelManipulation;
-using ForgePlus.LevelManipulation.Utilities;
+﻿using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Materials;
-using RuntimeCore.Entities.Geometry;
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Weland.Extensions;
 
 namespace ForgePlus.Inspection
 {
@@ -68,103 +64,5 @@ namespace ForgePlus.Inspection
             Value_Transparent_LightIndex.text =     hasTransparentData ? InspectedSide.NativeObject.TransparentLightsourceIndex.ToString() : "-";
             Value_Transparent_TransferMode.text =   hasTransparentData ? InspectedSide.NativeObject.TransparentTransferMode.ToString() : "-";
         }
-
-        ////public void Set_Value_Type(Weland.SideType value)
-        ////{
-        ////    InspectedSide.NativeObject.Type = value;
-        ////}
-
-        ////public void Set_Value_Primary_Offset_X(short value)
-        ////{
-        ////    InspectedSide.SetOffset(InspectedSide.PrimarySurface.GetComponent<FPInteractiveSurfaceSide>(),
-        ////                            LevelEntity_Side.DataSources.Primary,
-        ////                            x: value,
-        ////                            InspectedSide.NativeObject.Primary.Y,
-        ////                            rebatch: true);
-        ////}
-
-        ////public void Set_Value_Primary_Offset_Y(short value)
-        ////{
-        ////    InspectedSide.SetOffset(InspectedSide.PrimarySurface.GetComponent<FPInteractiveSurfaceSide>(),
-        ////                            LevelEntity_Side.DataSources.Primary,
-        ////                            InspectedSide.NativeObject.Primary.X,
-        ////                            y: value,
-        ////                            rebatch: true);
-        ////}
-
-        ////public void Set_Value_Primary_TransferMode(TransferModes value)
-        ////{
-        ////    inspectedSide.SetTransferMode(InspectedSide.PrimarySurface.GetComponent<RuntimeSurfaceLight>(),
-        ////                                  LevelEntity_Side.DataSources.Primary,
-        ////                                  value,
-        ////                                  InspectedSide.NativeObject.Primary.Texture);
-        ////}
-
-        ////public void Set_Value_Primary_LightIndex(short value)
-        ////{
-        ////    // TODO
-        ////}
-
-        ////public void Set_Value_Secondary_Offset_X(short value)
-        ////{
-        ////    InspectedSide.SetOffset(InspectedSide.SecondarySurface.GetComponent<FPInteractiveSurfaceSide>(),
-        ////                            LevelEntity_Side.DataSources.Secondary,
-        ////                            x: value,
-        ////                            InspectedSide.NativeObject.Secondary.Y,
-        ////                            rebatch: true);
-        ////}
-
-        ////public void Set_Value_Secondary_Offset_Y(short value)
-        ////{
-        ////    InspectedSide.SetOffset(InspectedSide.SecondarySurface.GetComponent<FPInteractiveSurfaceSide>(),
-        ////                            LevelEntity_Side.DataSources.Secondary,
-        ////                            InspectedSide.NativeObject.Secondary.X,
-        ////                            y: value,
-        ////                            rebatch: true);
-        ////}
-
-        ////public void Set_Value_Secondary_TransferMode(TransferModes value)
-        ////{
-        ////    inspectedSide.SetTransferMode(InspectedSide.PrimarySurface.GetComponent<RuntimeSurfaceLight>(),
-        ////                                  LevelEntity_Side.DataSources.Primary,
-        ////                                  value,
-        ////                                  InspectedSide.NativeObject.Primary.Texture);
-        ////}
-
-        ////public void Set_Value_Secondary_LightIndex(short value)
-        ////{
-        ////    // TODO
-        ////}
-
-        ////public void Set_Value_Transparent_Offset_X(short value)
-        ////{
-        ////    InspectedSide.SetOffset(InspectedSide.TransparentSurface.GetComponent<FPInteractiveSurfaceSide>(),
-        ////                            LevelEntity_Side.DataSources.Transparent,
-        ////                            x: value,
-        ////                            InspectedSide.NativeObject.Transparent.Y,
-        ////                            rebatch: true);
-        ////}
-
-        ////public void Set_Value_Transparent_Offset_Y(short value)
-        ////{
-        ////    InspectedSide.SetOffset(InspectedSide.TransparentSurface.GetComponent<FPInteractiveSurfaceSide>(),
-        ////                            LevelEntity_Side.DataSources.Transparent,
-        ////                            InspectedSide.NativeObject.Transparent.X,
-        ////                            y: value,
-        ////                            rebatch: true);
-        ////}
-
-        ////public void Set_Value_Transparent_TransferMode(TransferModes value)
-        ////{
-        ////    inspectedSide.SetTransferMode(InspectedSide.PrimarySurface.GetComponent<RuntimeSurfaceLight>(),
-        ////                                  LevelEntity_Side.DataSources.Primary,
-        ////                                  value,
-        ////                                  InspectedSide.NativeObject.Primary.Texture);
-        ////}
-
-        ////public void Set_Value_Transparent_LightIndex(short value)
-        ////{
-        ////    // TODO
-        ////}
     }
 }

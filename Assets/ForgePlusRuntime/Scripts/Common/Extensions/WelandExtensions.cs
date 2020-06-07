@@ -1,11 +1,6 @@
-﻿using ForgePlus.LevelManipulation;
-using ForgePlus.LevelManipulation.Utilities;
-using RuntimeCore.Entities;
+﻿using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Weland;
 
 namespace Weland.Extensions
 {
@@ -96,7 +91,7 @@ namespace Weland.Extensions
                 case LevelEntity_Side.DataSources.Transparent:
                     return !side.Transparent.Texture.IsEmpty();
                 default:
-                    throw new NotImplementedException($"FPSide DataSource \"{dataSource}\" is not implemented.");
+                    throw new NotImplementedException($"Side DataSource \"{dataSource}\" is not implemented.");
             }
         }
 
@@ -122,16 +117,16 @@ namespace Weland.Extensions
             return GetIsClockwise(side, level, line);
         }
 
-        public static LevelEntity_Side GetFPSide(this Line line, Level level, bool clockwiseSide)
+        public static LevelEntity_Side GetRuntimeSide(this Line line, Level level, bool clockwiseSide)
         {
             var sideIndex = clockwiseSide ? line.ClockwisePolygonSideIndex : line.CounterclockwisePolygonSideIndex;
 
-            if (sideIndex < 0 || !LevelEntity_Level.Instance.FPSides.ContainsKey(sideIndex))
+            if (sideIndex < 0 || !LevelEntity_Level.Instance.Sides.ContainsKey(sideIndex))
             {
                 return null;
             }
 
-            return LevelEntity_Level.Instance.FPSides[sideIndex];
+            return LevelEntity_Level.Instance.Sides[sideIndex];
         }
 
         private static Side Side(this Line line, Level level, bool clockwiseSide)

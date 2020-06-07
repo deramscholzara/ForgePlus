@@ -1,7 +1,5 @@
 ﻿using ForgePlus.LevelManipulation;
 using RuntimeCore.Entities.Geometry;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +9,7 @@ namespace ForgePlus.Palette
     [RequireComponent(typeof(Toggle))]
     public class Swatch_Media : MonoBehaviour
     {
-        public LevelEntity_Media FPMedia;
+        public LevelEntity_Media Media;
 
         [SerializeField]
         private TextMeshProUGUI label = null;
@@ -19,12 +17,12 @@ namespace ForgePlus.Palette
         [SerializeField]
         private TextMeshProUGUI label_Type = null;
 
-        public void SetInitialValues(LevelEntity_Media fpMedia, ToggleGroup toggleGroup)
+        public void SetInitialValues(LevelEntity_Media media, ToggleGroup toggleGroup)
         {
-            FPMedia = fpMedia;
+            Media = media;
 
-            label.text = fpMedia.NativeIndex.ToString();
-            label_Type.text = fpMedia.NativeObject.Type.ToString();
+            label.text = media.NativeIndex.ToString();
+            label_Type.text = media.NativeObject.Type.ToString();
 
             var toggle = GetComponent<Toggle>();
             toggle.group = toggleGroup;
@@ -34,11 +32,11 @@ namespace ForgePlus.Palette
         {
             if (value)
             {
-                SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
+                SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
             }
             else
             {
-                SelectionManager.Instance.DeselectObject(FPMedia, multiSelect: false);
+                SelectionManager.Instance.DeselectObject(Media, multiSelect: false);
             }
         }
     }

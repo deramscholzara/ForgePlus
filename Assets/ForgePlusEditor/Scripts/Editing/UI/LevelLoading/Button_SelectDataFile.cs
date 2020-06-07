@@ -1,8 +1,4 @@
-﻿using SimpleFileBrowser;
-using System.Collections;
-using UnityEngine;
-using System;
-using ForgePlus.DataFileIO.Extensions;
+﻿using UnityEngine;
 
 namespace ForgePlus.DataFileIO
 {

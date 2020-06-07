@@ -1,16 +1,16 @@
-﻿using Weland;
-using ForgePlus.Inspection;
+﻿using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation;
+using RuntimeCore.Common;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using RuntimeCore.Entities;
-using ForgePlus.LevelManipulation;
-using RuntimeCore.Common;
+using Weland;
 
 namespace RuntimeCore.Entities
 {
-    public class LevelEntity_Light : IManipulatable<Weland.Light>, IDestructionPreparable, ISelectable, IInspectable
+    // TODO: Should inherit from LevelEntity_Base, and should have a representative GameObject in the scene
+    public class LevelEntity_Light : IDestructionPreparable, ISelectable, IInspectable
     {
         public enum States
         {
@@ -31,7 +31,7 @@ namespace RuntimeCore.Entities
         public short NativeIndex { get; set; }
         public Weland.Light NativeObject { get; set; }
 
-        public LevelEntity_Level FPLevel { private get; set; }
+        public LevelEntity_Level ParentLevel { private get; set; }
 
         public float CurrentGammaIntensity { get; private set; }
 
@@ -65,18 +65,18 @@ namespace RuntimeCore.Entities
 
         private CancellationTokenSource lightPhaseCTS;
 
-        public LevelEntity_Light(short index, Weland.Light light, LevelEntity_Level fpLevel)
+        public LevelEntity_Light(short index, Weland.Light light, LevelEntity_Level level)
         {
             NativeIndex = index;
             NativeObject = light;
-            FPLevel = fpLevel;
+            ParentLevel = level;
 
             BeginRuntimeStyleBehavior();
         }
 
         public void SetSelectability(bool enabled)
         {
-            // Intentionally blank - no current reason to toggle this, as its selection comes from the palette or already-gated FPInteractiveSurface components
+            // Intentionally blank - no current reason to toggle this, as its selection comes from the palette or already-gated EditableSurface components
         }
 
         public void Inspect()
