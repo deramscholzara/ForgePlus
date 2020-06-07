@@ -16,7 +16,7 @@ namespace RuntimeCore.Entities.Geometry
 
         public void SetSelectability(bool enabled)
         {
-            // Intentionally empty - Selectability is handled in FPSurfacePolygon & the availability of SwitchFPLight buttons
+            // Intentionally empty - Selectability is handled in EditableSurface_Polygon
         }
 
         public void DisplaySelectionState(bool state)

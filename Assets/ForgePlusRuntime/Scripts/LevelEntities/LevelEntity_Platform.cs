@@ -11,7 +11,7 @@ using Weland.Extensions;
 
 namespace RuntimeCore.Entities.Geometry
 {
-    public class LevelEntity_Platform : MonoBehaviour, IManipulatable<Platform>, IDestructionPreparable, ISelectable, IInspectable
+    public class LevelEntity_Platform : LevelEntity_Base, IDestructionPreparable, ISelectable, IInspectable
     {
         public enum LinkedSurfaces
         {
@@ -32,12 +32,9 @@ namespace RuntimeCore.Entities.Geometry
         //       A button in the inspector "Impact"
         //       & "Stop Impact" - no "Stop Impact" if it reverses?
 
-        public short NativeIndex { get; set; }
-        public Platform NativeObject { get; set; }
+        public new Platform NativeObject => base.NativeObject as Platform;
 
-        public LevelEntity_Level FPLevel { private get; set; }
-
-        // TODO: Add this to IFPInspectable so it must be implemented in all inspectables
+        // TODO: Add this to IInspectable so it must be implemented in all inspectables
         public event Action<LevelEntity_Platform> OnInspectionStateChange;
 
         // TODO: Use this for checking "is active" state for toggling?
@@ -65,7 +62,7 @@ namespace RuntimeCore.Entities.Geometry
 
         public void SetSelectability(bool enabled)
         {
-            // Intentionally blank - no current reason to toggle this, as its selection comes from already-gated FPInteractiveSurface components
+            // Intentionally blank - no current reason to toggle this, as its selection comes from already-gated EditableSurface components
         }
 
         public void Inspect()
@@ -81,13 +78,9 @@ namespace RuntimeCore.Entities.Geometry
             DeactivateRuntimeBehavior();
         }
 
-        public void SetPlatform(short index, Platform platform, LevelEntity_Level fpLevel, LinkedSurfaces linkedSurface)
+        public override void InitializeEntity(LevelEntity_Level parentLevel, short nativeIndex, object nativeObject)
         {
-            NativeIndex = index;
-            NativeObject = platform;
-            FPLevel = fpLevel;
-
-            UpdatePlatformValues(linkedSurface);
+            base.InitializeEntity(parentLevel, nativeIndex, nativeObject);
         }
 
         public void UpdatePlatformValues(LinkedSurfaces linkedSurface)
@@ -96,8 +89,8 @@ namespace RuntimeCore.Entities.Geometry
             speed = (float)NativeObject.Speed / 30f;
             delay = (float)NativeObject.Delay / 30f;
 
-            var minimumHeight = NativeObject.RuntimeMinimumHeight(FPLevel.Level);
-            var maximumHeight = NativeObject.RuntimeMaximumHeight(FPLevel.Level);
+            var minimumHeight = NativeObject.RuntimeMinimumHeight(ParentLevel.Level);
+            var maximumHeight = NativeObject.RuntimeMaximumHeight(ParentLevel.Level);
 
             if (NativeObject.ComesFromFloor && NativeObject.ComesFromCeiling)
             {
@@ -161,14 +154,14 @@ namespace RuntimeCore.Entities.Geometry
                 {
                     if (NativeObject.ComesFromCeiling)
                     {
-                        FPLevel.FPCeilingFpPlatforms[NativeIndex].SetRuntimeActive(value, isRootActivation: false);
+                        ParentLevel.CeilingPlatforms[NativeIndex].SetRuntimeActive(value, isRootActivation: false);
                     }
                 }
                 else
                 {
                     if (NativeObject.ComesFromFloor)
                     {
-                        FPLevel.FPFloorFpPlatforms[NativeIndex].SetRuntimeActive(value, isRootActivation: false);
+                        ParentLevel.FloorPlatforms[NativeIndex].SetRuntimeActive(value, isRootActivation: false);
                     }
                 }
             }

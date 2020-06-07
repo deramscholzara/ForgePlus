@@ -45,133 +45,133 @@ namespace ForgePlus.LevelManipulation
                 switch (primaryMode)
                 {
                     case ModeManager.PrimaryModes.Geometry:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: true);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: true);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: true);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, false);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: true);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: true);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: true);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: true);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
                         // TODO: Make this true when media subfilter is available
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
                         break;
                     case ModeManager.PrimaryModes.Textures:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: true);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: true);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, false);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: true);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: true);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: false);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
                         break;
                     case ModeManager.PrimaryModes.Lights:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: true); // Shown in right-palette and just selects and inspects the light
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, false);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: true); // Shown in right-palette and just selects and inspects the light
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: true);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: true);
                         break;
                     case ModeManager.PrimaryModes.Media:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: true); // Shown in right-palette and just selects and inspects the media
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, false);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: true); // Shown in right-palette and just selects and inspects the media
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: true);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: true);
                         break;
                     case ModeManager.PrimaryModes.Platforms:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: true);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: true);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, false);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: true);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: true);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: false);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
                         break;
                     case ModeManager.PrimaryModes.Objects:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, true);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, false);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, true);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: false);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
                         break;
                     case ModeManager.PrimaryModes.Annotations:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, true);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, true);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: false);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
                         break;
                     case ModeManager.PrimaryModes.Level:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, false);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: true);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: false);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
 
                         // Select the level here, since there's no visual way to select it besides the mode button
                         if (LevelEntity_Level.Instance)
@@ -181,20 +181,20 @@ namespace ForgePlus.LevelManipulation
                         break;
                     case ModeManager.PrimaryModes.None:
                     default:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.FPPolygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.FPLines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.FPSides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.FPLights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.FPMedias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPCeilingFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FPFloorFpPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.FPMapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.FPAnnotations.Values, false);
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.FPInteractiveSurfacePolygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.FPInteractiveSurfaceSides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.FPInteractiveSurfaceMedias, enabled: false);
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
                         break;
                 }
             }

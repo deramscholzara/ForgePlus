@@ -32,15 +32,15 @@ namespace ForgePlus.Entities.Geometry
 
         private static Dialog_ObjectSelector SideDestinationSelectionDialog = null;
 
-        public LevelEntity_Side ParentFPSide = null;
+        public LevelEntity_Side ParentSide = null;
         public LevelEntity_Side.DataSources DataSource;
 
         // TODO: Get rid of these and just attain them on the fly instead of preloading
         //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
         public ShapeDescriptor surfaceShapeDescriptor = ShapeDescriptor.Empty;
-        public LevelEntity_Light FPLight = null;
-        public LevelEntity_Media FPMedia = null;
-        public LevelEntity_Platform FPPlatform = null;
+        public LevelEntity_Light RuntimeLight = null;
+        public LevelEntity_Media Media = null;
+        public LevelEntity_Platform Platform = null;
 
         private UVPlanarDrag uvDragPlane;
 
@@ -51,7 +51,7 @@ namespace ForgePlus.Entities.Geometry
             switch (ModeManager.Instance.PrimaryMode)
             {
                 case ModeManager.PrimaryModes.Geometry:
-                    SelectionManager.Instance.ToggleObjectSelection(ParentFPSide, multiSelect: false);
+                    SelectionManager.Instance.ToggleObjectSelection(ParentSide, multiSelect: false);
 
                     break;
                 case ModeManager.PrimaryModes.Textures:
@@ -61,7 +61,7 @@ namespace ForgePlus.Entities.Geometry
 
                         if (!selectedTexture.IsEmpty())
                         {
-                            var destinationIsLayered = ParentFPSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
+                            var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
                             var destinationDataSource = DataSource;
 
                             if (destinationIsLayered)
@@ -77,22 +77,22 @@ namespace ForgePlus.Entities.Geometry
                                 destinationDataSource = result.Value;
                             }
 
-                            ParentFPSide.SetShapeDescriptor(destinationDataSource, selectedTexture);
+                            ParentSide.SetShapeDescriptor(destinationDataSource, selectedTexture);
                         }
                     }
                     else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
                              Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                     {
                         var selectedSourceObject = SelectionManager.Instance.SelectedObject;
-                        var selectedSourceFPSide = (selectedSourceObject is LevelEntity_Side) ? selectedSourceObject as LevelEntity_Side : null;
+                        var selectedSourceSide = (selectedSourceObject is LevelEntity_Side) ? selectedSourceObject as LevelEntity_Side : null;
 
-                        if (!selectedSourceFPSide)
+                        if (!selectedSourceSide)
                         {
                             // There is no selection to use as a source, so exit
                             return;
                         }
 
-                        var destinationIsSource = selectedSourceFPSide == ParentFPSide;
+                        var destinationIsSource = selectedSourceSide == ParentSide;
 
                         // Assign defaults for when the destination is the source (instead of a neighbor).
                         // True for both of these means that there will be no offset difference from source to destination.
@@ -100,13 +100,13 @@ namespace ForgePlus.Entities.Geometry
                         var neighborIsLeft = true;
 
                         if (destinationIsSource ||
-                            selectedSourceFPSide.NativeObject.SideIsNeighbor(LevelEntity_Level.Instance.Level,
-                                                                             ParentFPSide.NativeObject,
+                            selectedSourceSide.NativeObject.SideIsNeighbor(LevelEntity_Level.Instance.Level,
+                                                                             ParentSide.NativeObject,
                                                                              out neighborFlowsOutward,
                                                                              out neighborIsLeft))
                         {
                             #region Alignment_DataSource_Destination
-                            var destinationIsLayered = ParentFPSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
+                            var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
                             var destinationDataSource = DataSource;
 
                             if (destinationIsLayered)
@@ -138,7 +138,7 @@ namespace ForgePlus.Entities.Geometry
 
                                 foreach (var dataSource in Enum.GetValues(typeof(LevelEntity_Side.DataSources)).Cast<LevelEntity_Side.DataSources>())
                                 {
-                                    if (selectedSourceFPSide.NativeObject.HasDataSource(dataSource) &&
+                                    if (selectedSourceSide.NativeObject.HasDataSource(dataSource) &&
                                         (!destinationIsSource || dataSource != DataSource))
                                     {
                                         sourceDataSourceOptions.Add(dataSource);
@@ -171,13 +171,13 @@ namespace ForgePlus.Entities.Geometry
                             }
                             #endregion Alignment_DataSource_Source
 
-                            AlignDestinationToSource(selectedSourceFPSide, sourceDataSource, ParentFPSide, destinationDataSource, neighborFlowsOutward, neighborIsLeft, rebatch: true);
+                            AlignDestinationToSource(selectedSourceSide, sourceDataSource, ParentSide, destinationDataSource, neighborFlowsOutward, neighborIsLeft, rebatch: true);
                         }
                     }
                     else
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(ParentFPSide, multiSelect: false);
-                        InputListener(ParentFPSide);
+                        SelectionManager.Instance.ToggleObjectSelection(ParentSide, multiSelect: false);
+                        InputListener(ParentSide);
 
                         if (!surfaceShapeDescriptor.IsEmpty())
                         {
@@ -187,21 +187,21 @@ namespace ForgePlus.Entities.Geometry
 
                     break;
                 case ModeManager.PrimaryModes.Lights:
-                    SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
-                    PaletteManager.Instance.SelectSwatchForLight(FPLight, invokeToggleEvents: false);
+                    SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
+                    PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
                     break;
                 case ModeManager.PrimaryModes.Media:
-                    if (FPMedia != null)
+                    if (Media != null)
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(FPMedia, invokeToggleEvents: false);
+                        SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
+                        PaletteManager.Instance.SelectSwatchForMedia(Media, invokeToggleEvents: false);
                     }
 
                     break;
                 case ModeManager.PrimaryModes.Platforms:
-                    if (FPPlatform != null)
+                    if (Platform != null)
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(FPPlatform, multiSelect: false);
+                        SelectionManager.Instance.ToggleObjectSelection(Platform, multiSelect: false);
                     }
 
                     break;
@@ -220,7 +220,7 @@ namespace ForgePlus.Entities.Geometry
             {
                 Vector2 startingUVs;
 
-                var destinationIsLayered = ParentFPSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
+                var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
                 var destinationDataSource = DataSource;
 
                 if (destinationIsLayered &&
@@ -228,20 +228,20 @@ namespace ForgePlus.Entities.Geometry
                 {
                     destinationDataSource = LevelEntity_Side.DataSources.Transparent;
 
-                    startingUVs = new Vector2(ParentFPSide.NativeObject.Transparent.X, ParentFPSide.NativeObject.Transparent.Y);
+                    startingUVs = new Vector2(ParentSide.NativeObject.Transparent.X, ParentSide.NativeObject.Transparent.Y);
                 }
                 else
                 {
                     switch (destinationDataSource)
                     {
                         case LevelEntity_Side.DataSources.Primary:
-                            startingUVs = new Vector2(ParentFPSide.NativeObject.Primary.X, ParentFPSide.NativeObject.Primary.Y);
+                            startingUVs = new Vector2(ParentSide.NativeObject.Primary.X, ParentSide.NativeObject.Primary.Y);
                             break;
                         case LevelEntity_Side.DataSources.Secondary:
-                            startingUVs = new Vector2(ParentFPSide.NativeObject.Secondary.X, ParentFPSide.NativeObject.Secondary.Y);
+                            startingUVs = new Vector2(ParentSide.NativeObject.Secondary.X, ParentSide.NativeObject.Secondary.Y);
                             break;
                         case LevelEntity_Side.DataSources.Transparent:
-                            startingUVs = new Vector2(ParentFPSide.NativeObject.Transparent.X, ParentFPSide.NativeObject.Transparent.Y);
+                            startingUVs = new Vector2(ParentSide.NativeObject.Transparent.X, ParentSide.NativeObject.Transparent.Y);
                             break;
                         default:
                             return;
@@ -262,7 +262,7 @@ namespace ForgePlus.Entities.Geometry
                 {
                     alignmentGroup.Clear();
 
-                    CollectSimilarContiguousAdjacentSurfaces(ParentFPSide, destinationDataSource);
+                    CollectSimilarContiguousAdjacentSurfaces(ParentSide, destinationDataSource);
 
                     for (var i = 0; i < alignmentGroup.Count; i++)
                     {
@@ -292,7 +292,7 @@ namespace ForgePlus.Entities.Geometry
 
                 var newUVOffset = uvDragPlane.UVDraggedPosition(pointerRay);
 
-                ParentFPSide.SetOffset(DataSource,
+                ParentSide.SetOffset(DataSource,
                                        (short)newUVOffset.x,
                                        (short)newUVOffset.y,
                                        rebatch: false);
@@ -348,7 +348,7 @@ namespace ForgePlus.Entities.Geometry
                 case ModeManager.PrimaryModes.Textures:
                     if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
                     {
-                        var destinationIsLayered = ParentFPSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
+                        var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
                         var destinationDataSource = DataSource;
 
                         var newX = (short)(-direction.x * GeometryUtilities.UnitsPerTextureOffetNudge);
@@ -363,25 +363,25 @@ namespace ForgePlus.Entities.Geometry
                         switch (destinationDataSource)
                         {
                             case LevelEntity_Side.DataSources.Primary:
-                                newX += (short)(Mathf.RoundToInt(ParentFPSide.NativeObject.Primary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentFPSide.NativeObject.Primary.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Primary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Primary.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
 
                                 break;
                             case LevelEntity_Side.DataSources.Secondary:
-                                newX += (short)(Mathf.RoundToInt(ParentFPSide.NativeObject.Secondary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentFPSide.NativeObject.Secondary.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Secondary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Secondary.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
 
                                 break;
                             case LevelEntity_Side.DataSources.Transparent:
-                                newX += (short)(Mathf.RoundToInt(ParentFPSide.NativeObject.Transparent.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentFPSide.NativeObject.Transparent.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Transparent.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Transparent.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
 
                                 break;
                             default:
                                 return;
                         }
 
-                        ParentFPSide.SetOffset(destinationDataSource,
+                        ParentSide.SetOffset(destinationDataSource,
                                                newX,
                                                newY,
                                                rebatch: true);
@@ -492,8 +492,8 @@ namespace ForgePlus.Entities.Geometry
             }
 
             short horizontalOffset = destinationIsLeftOfSource ?
-                                     (short)-LevelEntity_Level.Instance.FPLines[destinationSide.NativeObject.LineIndex].NativeObject.Length :
-                                     LevelEntity_Level.Instance.FPLines[sourceSide.NativeObject.LineIndex].NativeObject.Length;
+                                     (short)-LevelEntity_Level.Instance.Lines[destinationSide.NativeObject.LineIndex].NativeObject.Length :
+                                     LevelEntity_Level.Instance.Lines[sourceSide.NativeObject.LineIndex].NativeObject.Length;
 
             short newX = (short)(sourceX + horizontalOffset);
             short newY = (short)(sourceHeight - destinationHeight + sourceY);
@@ -528,7 +528,7 @@ namespace ForgePlus.Entities.Geometry
                 var neighborFlowsOutward = neighborLine.EndpointIndexes[0] == centralEndpointIndex;
                 var neighborIsClockwise = neighborFlowsOutward != left;
 
-                var neighborSide = neighborLine.GetFPSide(LevelEntity_Level.Instance.Level, neighborIsClockwise);
+                var neighborSide = neighborLine.GetRuntimeSide(LevelEntity_Level.Instance.Level, neighborIsClockwise);
 
                 if (neighborSide == null)
                 {

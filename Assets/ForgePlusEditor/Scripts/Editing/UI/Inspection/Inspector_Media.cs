@@ -1,5 +1,4 @@
-﻿using ForgePlus.LevelManipulation;
-using RuntimeCore.Entities.Geometry;
+﻿using RuntimeCore.Entities.Geometry;
 using TMPro;
 using UnityEngine.UI;
 
@@ -20,18 +19,18 @@ namespace ForgePlus.Inspection
 
         public override void RefreshValuesInInspector()
         {
-            var fpMedia = inspectedObject as LevelEntity_Media;
+            var media = inspectedObject as LevelEntity_Media;
 
-            Value_Id.text =                     fpMedia.NativeIndex.ToString();
-            Value_Type.text =                   fpMedia.NativeObject.Type.ToString();
-            Value_LowHeight.text =              fpMedia.NativeObject.Low.ToString();
-            Value_HighHeight.text =             fpMedia.NativeObject.High.ToString();
-            Value_FlowDirection.text =          fpMedia.NativeObject.Direction.ToString();
-            Value_FlowMagnitude.text =          fpMedia.NativeObject.CurrentMagnitude.ToString();
-            Value_LightIndex.text =             fpMedia.NativeObject.LightIndex.ToString();
-            Value_MinimumLightIntensity.text =  fpMedia.NativeObject.MinimumLightIntensity.ToString();
+            Value_Id.text =                     media.NativeIndex.ToString();
+            Value_Type.text =                   media.NativeObject.Type.ToString();
+            Value_LowHeight.text =              media.NativeObject.Low.ToString();
+            Value_HighHeight.text =             media.NativeObject.High.ToString();
+            Value_FlowDirection.text =          media.NativeObject.Direction.ToString();
+            Value_FlowMagnitude.text =          media.NativeObject.CurrentMagnitude.ToString();
+            Value_LightIndex.text =             media.NativeObject.LightIndex.ToString();
+            Value_MinimumLightIntensity.text =  media.NativeObject.MinimumLightIntensity.ToString();
 
-            Value_Flags_FloorObstructsSound.SetIsOnWithoutNotify(fpMedia.NativeObject.SoundObstructedByFloor);
+            Value_Flags_FloorObstructsSound.SetIsOnWithoutNotify(media.NativeObject.SoundObstructedByFloor);
         }
     }
 }

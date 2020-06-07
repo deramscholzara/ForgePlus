@@ -1,5 +1,4 @@
-﻿using ForgePlus.LevelManipulation;
-using RuntimeCore.Entities;
+﻿using RuntimeCore.Entities;
 using TMPro;
 using UnityEngine.UI;
 using Weland;
@@ -55,58 +54,58 @@ namespace ForgePlus.Inspection
 
         public override void RefreshValuesInInspector()
         {
-            var fpLight = inspectedObject as LevelEntity_Light;
+            var light = inspectedObject as LevelEntity_Light;
 
-            Value_Id.text = fpLight.NativeIndex.ToString();
-            Value_Tag.text = fpLight.NativeObject.TagIndex.ToString();
-            Value_Type.text = fpLight.NativeObject.Type.ToString();
-            Value_Phase.text = fpLight.NativeObject.Phase.ToString();
+            Value_Id.text = light.NativeIndex.ToString();
+            Value_Tag.text = light.NativeObject.TagIndex.ToString();
+            Value_Type.text = light.NativeObject.Type.ToString();
+            Value_Phase.text = light.NativeObject.Phase.ToString();
 
-            Value_Flags_StartsActive.SetIsOnWithoutNotify(fpLight.NativeObject.InitiallyActive);
-            Value_Flags_SlavedIntensities.SetIsOnWithoutNotify((fpLight.NativeObject.Flags & LightFlags.SlavedIntensities) != 0);
-            Value_Flags_CycleAllStates.SetIsOnWithoutNotify(fpLight.NativeObject.Stateless);
+            Value_Flags_StartsActive.SetIsOnWithoutNotify(light.NativeObject.InitiallyActive);
+            Value_Flags_SlavedIntensities.SetIsOnWithoutNotify((light.NativeObject.Flags & LightFlags.SlavedIntensities) != 0);
+            Value_Flags_CycleAllStates.SetIsOnWithoutNotify(light.NativeObject.Stateless);
 
             PopulateFunction(Value_PrimaryInactive_Function,
                              Value_PrimaryInactive_Period,
                              Value_PrimaryInactive_DeltaPeriod,
                              Value_PrimaryInactive_Intensity,
                              Value_PrimaryInactive_DeltaIntensity,
-                             fpLight.NativeObject.PrimaryInactive);
+                             light.NativeObject.PrimaryInactive);
 
             PopulateFunction(Value_PrimaryActive_Function,
                              Value_PrimaryActive_Period,
                              Value_PrimaryActive_DeltaPeriod,
                              Value_PrimaryActive_Intensity,
                              Value_PrimaryActive_DeltaIntensity,
-                             fpLight.NativeObject.PrimaryActive);
+                             light.NativeObject.PrimaryActive);
 
             PopulateFunction(Value_SecondaryActive_Function,
                              Value_SecondaryActive_Period,
                              Value_SecondaryActive_DeltaPeriod,
                              Value_SecondaryActive_Intensity,
                              Value_SecondaryActive_DeltaIntensity,
-                             fpLight.NativeObject.SecondaryActive);
+                             light.NativeObject.SecondaryActive);
 
             PopulateFunction(Value_BecomingInactive_Function,
                              Value_BecomingInactive_Period,
                              Value_BecomingInactive_DeltaPeriod,
                              Value_BecomingInactive_Intensity,
                              Value_BecomingInactive_DeltaIntensity,
-                             fpLight.NativeObject.BecomingInactive);
+                             light.NativeObject.BecomingInactive);
 
             PopulateFunction(Value_BecomingActive_Function,
                              Value_BecomingActive_Period,
                              Value_BecomingActive_DeltaPeriod,
                              Value_BecomingActive_Intensity,
                              Value_BecomingActive_DeltaIntensity,
-                             fpLight.NativeObject.BecomingActive);
+                             light.NativeObject.BecomingActive);
 
             PopulateFunction(Value_SecondaryInactive_Function,
                              Value_SecondaryInactive_Period,
                              Value_SecondaryInactive_DeltaPeriod,
                              Value_SecondaryInactive_Intensity,
                              Value_SecondaryInactive_DeltaIntensity,
-                             fpLight.NativeObject.SecondaryInactive);
+                             light.NativeObject.SecondaryInactive);
         }
 
         private void PopulateFunction(

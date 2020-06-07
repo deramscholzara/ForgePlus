@@ -1,7 +1,5 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RuntimeCore.Entities.Geometry

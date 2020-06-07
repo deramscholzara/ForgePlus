@@ -1,16 +1,11 @@
-﻿using ForgePlus.ApplicationGeneral;
-using RuntimeCore.Materials;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Weland;
-using Weland.Extensions;
-using System;
-using UnityEngine.Rendering;
+﻿using ForgePlus.Entities.Geometry;
 using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Constraints;
-using ForgePlus.LevelManipulation;
-using ForgePlus.Entities.Geometry;
+using RuntimeCore.Materials;
+using System;
+using UnityEngine;
+using UnityEngine.Rendering;
+using Weland.Extensions;
 
 namespace RuntimeCore.Entities.Geometry
 {
@@ -158,17 +153,17 @@ namespace RuntimeCore.Entities.Geometry
                 return;
             }
 
-            if (sideEntity.ParentLevel.FPCeilingFpPlatforms.ContainsKey(opposingPlatformIndex) &&
+            if (sideEntity.ParentLevel.CeilingPlatforms.ContainsKey(opposingPlatformIndex) &&
                 (dataSource == LevelEntity_Side.DataSources.Primary ||
                  dataSource == LevelEntity_Side.DataSources.Transparent))
             {
-                var opposingCeilingPlatform = sideEntity.ParentLevel.FPCeilingFpPlatforms[opposingPlatformIndex];
+                var opposingCeilingPlatform = sideEntity.ParentLevel.CeilingPlatforms[opposingPlatformIndex];
                 ConstrainSurfaceToPlatform(opposingCeilingPlatform, isFloorPlatform: false);
             }
-            else if (sideEntity.ParentLevel.FPFloorFpPlatforms.ContainsKey(opposingPlatformIndex) &&
+            else if (sideEntity.ParentLevel.FloorPlatforms.ContainsKey(opposingPlatformIndex) &&
                      dataSource == LevelEntity_Side.DataSources.Secondary)
             {
-                var opposingFloorPlatform = sideEntity.ParentLevel.FPFloorFpPlatforms[opposingPlatformIndex];
+                var opposingFloorPlatform = sideEntity.ParentLevel.FloorPlatforms[opposingPlatformIndex];
                 ConstrainSurfaceToPlatform(opposingFloorPlatform, isFloorPlatform: true);
             }
         }
@@ -268,15 +263,15 @@ namespace RuntimeCore.Entities.Geometry
                 switch (dataSource)
                 {
                     case LevelEntity_Side.DataSources.Primary:
-                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.FPLights[sideEntity.NativeObject.PrimaryLightsourceIndex];
+                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.PrimaryLightsourceIndex];
                         break;
 
                     case LevelEntity_Side.DataSources.Secondary:
-                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.FPLights[sideEntity.NativeObject.SecondaryLightsourceIndex];
+                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.SecondaryLightsourceIndex];
                         break;
 
                     case LevelEntity_Side.DataSources.Transparent:
-                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.FPLights[sideEntity.NativeObject.TransparentLightsourceIndex];
+                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.TransparentLightsourceIndex];
                         break;
 
                     default:
@@ -285,7 +280,7 @@ namespace RuntimeCore.Entities.Geometry
             }
             else
             {
-                modifiedBatchKey.layeredTransparentSideSourceLight = sideEntity.ParentLevel.FPLights[sideEntity.NativeObject.TransparentLightsourceIndex];
+                modifiedBatchKey.layeredTransparentSideSourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.TransparentLightsourceIndex];
             }
 
             BatchKey = modifiedBatchKey;
@@ -362,44 +357,44 @@ namespace RuntimeCore.Entities.Geometry
         {
             var nativeObject = sideEntity.NativeObject;
 
-            var fpSurfaceSide = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Side>();
-            fpSurfaceSide.ParentFPSide = sideEntity;
-            fpSurfaceSide.DataSource = dataSource;
-            fpSurfaceSide.FPPlatform = platformConstraint != null ? platformConstraint.Parent.GetComponent<LevelEntity_Platform>() : null;
+            var sideSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Side>();
+            sideSurface.ParentSide = sideEntity;
+            sideSurface.DataSource = dataSource;
+            sideSurface.Platform = platformConstraint != null ? platformConstraint.Parent.GetComponent<LevelEntity_Platform>() : null;
 
             var mediaIndex = sideEntity.ParentLevel.Level.Polygons[nativeObject.PolygonIndex].MediaIndex;
-            fpSurfaceSide.FPMedia = mediaIndex >= 0 ? sideEntity.ParentLevel.FPMedias[mediaIndex] : null;
+            sideSurface.Media = mediaIndex >= 0 ? sideEntity.ParentLevel.Medias[mediaIndex] : null;
 
             switch (dataSource)
             {
                 case LevelEntity_Side.DataSources.Primary:
-                    fpSurfaceSide.surfaceShapeDescriptor = nativeObject.Primary.Texture;
-                    fpSurfaceSide.FPLight = sideEntity.ParentLevel.FPLights[nativeObject.PrimaryLightsourceIndex];
+                    sideSurface.surfaceShapeDescriptor = nativeObject.Primary.Texture;
+                    sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[nativeObject.PrimaryLightsourceIndex];
                     break;
 
                 case LevelEntity_Side.DataSources.Secondary:
-                    fpSurfaceSide.surfaceShapeDescriptor = nativeObject.Secondary.Texture;
-                    fpSurfaceSide.FPLight = sideEntity.ParentLevel.FPLights[nativeObject.SecondaryLightsourceIndex];
+                    sideSurface.surfaceShapeDescriptor = nativeObject.Secondary.Texture;
+                    sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[nativeObject.SecondaryLightsourceIndex];
                     break;
 
                 case LevelEntity_Side.DataSources.Transparent:
-                    fpSurfaceSide.surfaceShapeDescriptor = nativeObject.Transparent.Texture;
-                    fpSurfaceSide.FPLight = sideEntity.ParentLevel.FPLights[nativeObject.TransparentLightsourceIndex];
+                    sideSurface.surfaceShapeDescriptor = nativeObject.Transparent.Texture;
+                    sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[nativeObject.TransparentLightsourceIndex];
                     break;
 
                 default:
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
 
-            sideEntity.ParentLevel.FPInteractiveSurfaceSides.Add(fpSurfaceSide);
+            sideEntity.ParentLevel.EditableSurface_Sides.Add(sideSurface);
 
             SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
         }
 
-        private void ConstrainSurfaceToPlatform(LevelEntity_Platform fpPlatform, bool isFloorPlatform)
+        private void ConstrainSurfaceToPlatform(LevelEntity_Platform platform, bool isFloorPlatform)
         {
             var constraint = SurfaceRenderer.gameObject.AddComponent<PlatformConstraint>();
-            constraint.Parent = fpPlatform.transform;
+            constraint.Parent = platform.transform;
 
             // TODO: if this is for a non-edit runtime, it can just
             //       reparent with these offsets instead of a constraint
@@ -419,7 +414,7 @@ namespace RuntimeCore.Entities.Geometry
 
             platformConstraint = constraint;
 
-            fpPlatform.BeginRuntimeStyleBehavior();
+            platform.BeginRuntimeStyleBehavior();
         }
 
         private Vector2[] BuildUVs(short textureOffsetX, short textureOffsetY)

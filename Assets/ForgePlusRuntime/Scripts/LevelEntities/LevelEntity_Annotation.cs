@@ -1,23 +1,22 @@
 ﻿using ForgePlus.Inspection;
-using ForgePlus.LevelManipulation.Utilities;
-using UnityEngine;
-using Weland;
-using TMPro;
-using System.Threading.Tasks;
-using UnityEngine.EventSystems;
-using RuntimeCore.Entities;
 using ForgePlus.LevelManipulation;
+using System.Threading.Tasks;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using Weland;
 
 namespace RuntimeCore.Entities
 {
-    public class LevelEntity_Annotation : EditableSurface_Base, IManipulatable<Annotation>, ISelectionDisplayable, IInspectable
+    // TODO: Should inherit from LevelEntity_Base, and should have a separate EditableSurface component
+    public class LevelEntity_Annotation : EditableSurface_Base, ISelectionDisplayable, IInspectable
     {
         private static LevelEntity_Annotation prefab;
 
         public short NativeIndex { get; set; }
         public Annotation NativeObject { get; set; }
 
-        public LevelEntity_Level FPLevel { private get; set; }
+        public LevelEntity_Level ParentLevel { private get; set; }
 
         [SerializeField]
         private TextMeshPro label = null;

@@ -13,15 +13,15 @@ namespace ForgePlus.LevelManipulation
 {
     public class EditableSurface_Polygon : EditableSurface_Base
     {
-        public LevelEntity_Polygon ParentFPPolygon = null;
+        public LevelEntity_Polygon ParentPolygon = null;
         public LevelEntity_Polygon.DataSources DataSource;
 
         // TODO: Get rid of these and just attain them on the fly instead of preloading
         //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
         public ShapeDescriptor surfaceShapeDescriptor = ShapeDescriptor.Empty;
-        public LevelEntity_Light FPLight = null;
-        public LevelEntity_Media FPMedia = null;
-        public LevelEntity_Platform FPPlatform = null;
+        public LevelEntity_Light RuntimeLight = null;
+        public LevelEntity_Media Media = null;
+        public LevelEntity_Platform Platform = null;
 
         private UVPlanarDrag uvDragPlane;
 
@@ -32,7 +32,7 @@ namespace ForgePlus.LevelManipulation
             switch (ModeManager.Instance.PrimaryMode)
             {
                 case ModeManager.PrimaryModes.Geometry:
-                    SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
+                    SelectionManager.Instance.ToggleObjectSelection(ParentPolygon, multiSelect: false);
 
                     break;
                 case ModeManager.PrimaryModes.Textures:
@@ -42,27 +42,27 @@ namespace ForgePlus.LevelManipulation
 
                         if (!selectedTexture.IsEmpty())
                         {
-                            ParentFPPolygon.SetShapeDescriptor(DataSource, selectedTexture);
+                            ParentPolygon.SetShapeDescriptor(DataSource, selectedTexture);
                         }
                     }
                     else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
                              Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
                     {
                         var selectedSourceObject = SelectionManager.Instance.SelectedObject;
-                        var selectedSourceFPPolygon = (selectedSourceObject is LevelEntity_Polygon) ? selectedSourceObject as LevelEntity_Polygon : null;
+                        var selectedSourcePolygon = (selectedSourceObject is LevelEntity_Polygon) ? selectedSourceObject as LevelEntity_Polygon : null;
 
-                        if (selectedSourceFPPolygon && selectedSourceFPPolygon != ParentFPPolygon)
+                        if (selectedSourcePolygon && selectedSourcePolygon != ParentPolygon)
                         {
-                            ParentFPPolygon.SetOffset(DataSource,
-                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourceFPPolygon.NativeObject.FloorOrigin.X : selectedSourceFPPolygon.NativeObject.CeilingOrigin.X,
-                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourceFPPolygon.NativeObject.FloorOrigin.Y : selectedSourceFPPolygon.NativeObject.CeilingOrigin.Y,
+                            ParentPolygon.SetOffset(DataSource,
+                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.FloorOrigin.X : selectedSourcePolygon.NativeObject.CeilingOrigin.X,
+                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.FloorOrigin.Y : selectedSourcePolygon.NativeObject.CeilingOrigin.Y,
                                                       rebatch: true);
                         }
                     }
                     else
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(ParentFPPolygon, multiSelect: false);
-                        InputListener(ParentFPPolygon);
+                        SelectionManager.Instance.ToggleObjectSelection(ParentPolygon, multiSelect: false);
+                        InputListener(ParentPolygon);
 
                         if (!surfaceShapeDescriptor.IsEmpty())
                         {
@@ -72,21 +72,21 @@ namespace ForgePlus.LevelManipulation
 
                     break;
                 case ModeManager.PrimaryModes.Lights:
-                    SelectionManager.Instance.ToggleObjectSelection(FPLight, multiSelect: false);
-                    PaletteManager.Instance.SelectSwatchForLight(FPLight, invokeToggleEvents: false);
+                    SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
+                    PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
                     break;
                 case ModeManager.PrimaryModes.Media:
-                    if (FPMedia != null)
+                    if (Media != null)
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(FPMedia, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(FPMedia, invokeToggleEvents: false);
+                        SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
+                        PaletteManager.Instance.SelectSwatchForMedia(Media, invokeToggleEvents: false);
                     }
 
                     break;
                 case ModeManager.PrimaryModes.Platforms:
-                    if (FPPlatform != null)
+                    if (Platform != null)
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(FPPlatform, multiSelect: false);
+                        SelectionManager.Instance.ToggleObjectSelection(Platform, multiSelect: false);
                     }
 
                     break;
@@ -105,8 +105,8 @@ namespace ForgePlus.LevelManipulation
             {
                 // Note: Polygon surfaces have swapped UVs, so swap them here
                 var startingUVs = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                  new Vector2(ParentFPPolygon.NativeObject.FloorOrigin.Y, ParentFPPolygon.NativeObject.FloorOrigin.X) :
-                                  new Vector2(ParentFPPolygon.NativeObject.CeilingOrigin.Y, ParentFPPolygon.NativeObject.CeilingOrigin.X);
+                                  new Vector2(ParentPolygon.NativeObject.FloorOrigin.Y, ParentPolygon.NativeObject.FloorOrigin.X) :
+                                  new Vector2(ParentPolygon.NativeObject.CeilingOrigin.Y, ParentPolygon.NativeObject.CeilingOrigin.X);
 
                 var startingPosition = eventData.pointerPressRaycast.worldPosition;
 
@@ -125,14 +125,14 @@ namespace ForgePlus.LevelManipulation
                     alignmentGroupedPolygons.Clear();
 
                     var commonElevation = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                          ParentFPPolygon.NativeObject.FloorHeight :
-                                          ParentFPPolygon.NativeObject.CeilingHeight;
+                                          ParentPolygon.NativeObject.FloorHeight :
+                                          ParentPolygon.NativeObject.CeilingHeight;
 
                     var commonShapeDescriptor = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                                ParentFPPolygon.NativeObject.FloorTexture :
-                                                ParentFPPolygon.NativeObject.CeilingTexture;
+                                                ParentPolygon.NativeObject.FloorTexture :
+                                                ParentPolygon.NativeObject.CeilingTexture;
 
-                    CollectSimilarAdjacentPolygons(ParentFPPolygon, commonElevation, commonShapeDescriptor);
+                    CollectSimilarAdjacentPolygons(ParentPolygon, commonElevation, commonShapeDescriptor);
                 }
             }
             else
@@ -158,7 +158,7 @@ namespace ForgePlus.LevelManipulation
                 var newUVOffset = uvDragPlane.UVDraggedPosition(pointerRay);
 
                 // Note: Polygon surfaces have swapped UVs, so swap them here
-                ParentFPPolygon.SetOffset(DataSource,
+                ParentPolygon.SetOffset(DataSource,
                                           (short)newUVOffset.y,
                                           (short)newUVOffset.x,
                                           rebatch: false);
@@ -214,13 +214,13 @@ namespace ForgePlus.LevelManipulation
                         var newX = (short)(direction.y * GeometryUtilities.UnitsPerTextureOffetNudge);
                         var newY = (short)(direction.x * GeometryUtilities.UnitsPerTextureOffetNudge);
 
-                        var originalX = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentFPPolygon.NativeObject.FloorOrigin.X : ParentFPPolygon.NativeObject.CeilingOrigin.X;
-                        var originalY = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentFPPolygon.NativeObject.FloorOrigin.Y : ParentFPPolygon.NativeObject.CeilingOrigin.Y;
+                        var originalX = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentPolygon.NativeObject.FloorOrigin.X : ParentPolygon.NativeObject.CeilingOrigin.X;
+                        var originalY = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentPolygon.NativeObject.FloorOrigin.Y : ParentPolygon.NativeObject.CeilingOrigin.Y;
 
                         newX += (short)(Mathf.Round(originalX / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
                         newY += (short)(Mathf.Round(originalY / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
 
-                        ParentFPPolygon.SetOffset(DataSource,
+                        ParentPolygon.SetOffset(DataSource,
                                                   newX,
                                                   newY,
                                                   rebatch: true);
@@ -236,14 +236,14 @@ namespace ForgePlus.LevelManipulation
         {
             for (var i = 0; i < Polygon.MaxVertexCount; i++)
             {
-                var adjacentPolygonIndex = ParentFPPolygon.NativeObject.AdjacentPolygonIndexes[i];
+                var adjacentPolygonIndex = ParentPolygon.NativeObject.AdjacentPolygonIndexes[i];
 
-                if (adjacentPolygonIndex < 0 || adjacentPolygonIndex == ParentFPPolygon.NativeIndex)
+                if (adjacentPolygonIndex < 0 || adjacentPolygonIndex == ParentPolygon.NativeIndex)
                 {
                     continue;
                 }
 
-                var adjacentPolygon = LevelEntity_Level.Instance.FPPolygons[adjacentPolygonIndex];
+                var adjacentPolygon = LevelEntity_Level.Instance.Polygons[adjacentPolygonIndex];
 
                 if (alignmentGroupedPolygons.Contains(adjacentPolygon))
                 {

@@ -15,19 +15,19 @@ namespace RuntimeCore.Entities
         public short Index = -1;
         public Level Level;
 
-        public Dictionary<short, LevelEntity_Polygon> FPPolygons;
-        public Dictionary<short, LevelEntity_Line> FPLines;
-        public Dictionary<short, LevelEntity_Side> FPSides;
-        public Dictionary<short, LevelEntity_Light> FPLights;
-        public Dictionary<short, LevelEntity_Media> FPMedias;
-        public Dictionary<short, LevelEntity_Platform> FPCeilingFpPlatforms;
-        public Dictionary<short, LevelEntity_Platform> FPFloorFpPlatforms;
-        public Dictionary<short, LevelEntity_MapObject> FPMapObjects;
-        public Dictionary<short, LevelEntity_Annotation> FPAnnotations;
+        public Dictionary<short, LevelEntity_Polygon> Polygons;
+        public Dictionary<short, LevelEntity_Line> Lines;
+        public Dictionary<short, LevelEntity_Side> Sides;
+        public Dictionary<short, LevelEntity_Light> Lights;
+        public Dictionary<short, LevelEntity_Media> Medias;
+        public Dictionary<short, LevelEntity_Platform> CeilingPlatforms;
+        public Dictionary<short, LevelEntity_Platform> FloorPlatforms;
+        public Dictionary<short, LevelEntity_MapObject> MapObjects;
+        public Dictionary<short, LevelEntity_Annotation> Annotations;
 
-        public List<EditableSurface_Polygon> FPInteractiveSurfacePolygons;
-        public List<EditableSurface_Side> FPInteractiveSurfaceSides;
-        public List<EditableSurface_Media> FPInteractiveSurfaceMedias;
+        public List<EditableSurface_Polygon> EditableSurface_Polygons;
+        public List<EditableSurface_Side> EditableSurface_Sides;
+        public List<EditableSurface_Media> EditableSurface_Medias;
 
         public void SetSelectability(bool enabled)
         {
@@ -44,24 +44,24 @@ namespace RuntimeCore.Entities
 
         public void PrepareForDestruction()
         {
-            foreach (var fpLight in FPLights.Values)
+            foreach (var light in Lights.Values)
             {
-                fpLight.PrepareForDestruction();
+                light.PrepareForDestruction();
             }
 
-            foreach (var fpMedia in FPMedias.Values)
+            foreach (var media in Medias.Values)
             {
-                fpMedia.PrepareForDestruction();
+                media.PrepareForDestruction();
             }
 
-            foreach (var fpPlatform in FPCeilingFpPlatforms.Values)
+            foreach (var platform in CeilingPlatforms.Values)
             {
-                fpPlatform.PrepareForDestruction();
+                platform.PrepareForDestruction();
             }
 
-            foreach (var fpPlatform in FPFloorFpPlatforms.Values)
+            foreach (var platform in FloorPlatforms.Values)
             {
-                fpPlatform.PrepareForDestruction();
+                platform.PrepareForDestruction();
             }
         }
     }

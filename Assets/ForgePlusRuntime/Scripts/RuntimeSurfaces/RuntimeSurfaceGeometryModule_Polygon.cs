@@ -1,10 +1,7 @@
-﻿using ForgePlus.ApplicationGeneral;
-using ForgePlus.LevelManipulation;
+﻿using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Materials;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -151,16 +148,16 @@ namespace RuntimeCore.Entities.Geometry
                 switch (dataSource)
                 {
                     case LevelEntity_Polygon.DataSources.Floor:
-                        if (polygonEntity.ParentLevel.FPFloorFpPlatforms.ContainsKey(platformComponent.NativeIndex))
+                        if (polygonEntity.ParentLevel.FloorPlatforms.ContainsKey(platformComponent.NativeIndex))
                         {
-                            polygonEntity.ParentLevel.FPFloorFpPlatforms.Remove(platformComponent.NativeIndex);
+                            polygonEntity.ParentLevel.FloorPlatforms.Remove(platformComponent.NativeIndex);
                         }
                         break;
 
                     case LevelEntity_Polygon.DataSources.Ceiling:
-                        if (polygonEntity.ParentLevel.FPCeilingFpPlatforms.ContainsKey(platformComponent.NativeIndex))
+                        if (polygonEntity.ParentLevel.CeilingPlatforms.ContainsKey(platformComponent.NativeIndex))
                         {
-                            polygonEntity.ParentLevel.FPCeilingFpPlatforms.Remove(platformComponent.NativeIndex);
+                            polygonEntity.ParentLevel.CeilingPlatforms.Remove(platformComponent.NativeIndex);
                         }
                         break;
 
@@ -185,33 +182,33 @@ namespace RuntimeCore.Entities.Geometry
                     case LevelEntity_Polygon.DataSources.Floor:
                         if (platform.ComesFromFloor)
                         {
-                            var fpPlatform = SurfaceRenderer.gameObject.AddComponent<LevelEntity_Platform>();
+                            var runtimePlatform = SurfaceRenderer.gameObject.AddComponent<LevelEntity_Platform>();
 
-                            fpPlatform.SetPlatform(
-                                polygonEntity.NativeObject.Permutation,
-                                platform,
+                            runtimePlatform.InitializeEntity(
                                 polygonEntity.ParentLevel,
-                                LevelEntity_Platform.LinkedSurfaces.Floor);
+                                polygonEntity.NativeObject.Permutation,
+                                platform);
+                            runtimePlatform.UpdatePlatformValues(LevelEntity_Platform.LinkedSurfaces.Floor);
 
-                            polygonEntity.ParentLevel.FPFloorFpPlatforms[polygonEntity.NativeObject.Permutation] = fpPlatform;
+                            polygonEntity.ParentLevel.FloorPlatforms[polygonEntity.NativeObject.Permutation] = runtimePlatform;
 
-                            platformComponent = fpPlatform;
+                            platformComponent = runtimePlatform;
                         }
                         break;
                     case LevelEntity_Polygon.DataSources.Ceiling:
                         if (platform.ComesFromCeiling)
                         {
-                            var fpPlatform = SurfaceRenderer.gameObject.AddComponent<LevelEntity_Platform>();
+                            var runtimePlatform = SurfaceRenderer.gameObject.AddComponent<LevelEntity_Platform>();
 
-                            fpPlatform.SetPlatform(
-                                polygonEntity.NativeObject.Permutation,
-                                platform,
+                            runtimePlatform.InitializeEntity(
                                 polygonEntity.ParentLevel,
-                                LevelEntity_Platform.LinkedSurfaces.Ceiling);
+                                polygonEntity.NativeObject.Permutation,
+                                platform);
+                            runtimePlatform.UpdatePlatformValues(LevelEntity_Platform.LinkedSurfaces.Ceiling);
 
-                            polygonEntity.ParentLevel.FPCeilingFpPlatforms[polygonEntity.NativeObject.Permutation] = fpPlatform;
+                            polygonEntity.ParentLevel.CeilingPlatforms[polygonEntity.NativeObject.Permutation] = runtimePlatform;
 
-                            platformComponent = fpPlatform;
+                            platformComponent = runtimePlatform;
                         }
                         break;
 
@@ -293,15 +290,15 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
-                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.FPLights[polygonEntity.NativeObject.FloorLight];
+                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.FloorLight];
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.FPLights[polygonEntity.NativeObject.CeilingLight];
+                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.CeilingLight];
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
-                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.FPLights[polygonEntity.NativeObject.MediaLight];
+                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.MediaLight];
                     return;
 
                 default:
@@ -321,7 +318,7 @@ namespace RuntimeCore.Entities.Geometry
 
                 if (mediaIndex >= 0)
                 {
-                    modifiedBatchKey.sourceMedia = polygonEntity.ParentLevel.FPMedias[mediaIndex];
+                    modifiedBatchKey.sourceMedia = polygonEntity.ParentLevel.Medias[mediaIndex];
                 }
                 else
                 {
@@ -412,45 +409,45 @@ namespace RuntimeCore.Entities.Geometry
         {
             var nativeObject = polygonEntity.NativeObject;
             var platformIndex = nativeObject.Type == PolygonType.Platform ? nativeObject.Permutation : (short)-1;
-            var media = (nativeObject.MediaIndex >= 0) ? polygonEntity.ParentLevel.FPMedias[nativeObject.MediaIndex] : null;
+            var media = (nativeObject.MediaIndex >= 0) ? polygonEntity.ParentLevel.Medias[nativeObject.MediaIndex] : null;
 
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    var ceilingPlatform = polygonEntity.ParentLevel.FPCeilingFpPlatforms.FirstOrDefault(entry => entry.Key == platformIndex).Value;
+                    var ceilingPlatform = polygonEntity.ParentLevel.CeilingPlatforms.FirstOrDefault(entry => entry.Key == platformIndex).Value;
 
                     var ceilingInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Polygon>();
-                    ceilingInteractiveSurface.ParentFPPolygon = polygonEntity;
+                    ceilingInteractiveSurface.ParentPolygon = polygonEntity;
                     ceilingInteractiveSurface.DataSource = dataSource;
                     ceilingInteractiveSurface.surfaceShapeDescriptor = nativeObject.CeilingTexture;
-                    ceilingInteractiveSurface.FPLight = polygonEntity.ParentLevel.FPLights[nativeObject.CeilingLight];
-                    ceilingInteractiveSurface.FPMedia = media;
-                    ceilingInteractiveSurface.FPPlatform = ceilingPlatform;
+                    ceilingInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.CeilingLight];
+                    ceilingInteractiveSurface.Media = media;
+                    ceilingInteractiveSurface.Platform = ceilingPlatform;
 
-                    polygonEntity.ParentLevel.FPInteractiveSurfacePolygons.Add(ceilingInteractiveSurface);
+                    polygonEntity.ParentLevel.EditableSurface_Polygons.Add(ceilingInteractiveSurface);
                     break;
 
                 case LevelEntity_Polygon.DataSources.Floor:
-                    var floorPlatform = polygonEntity.ParentLevel.FPFloorFpPlatforms.FirstOrDefault(entry => entry.Key == platformIndex).Value;
+                    var floorPlatform = polygonEntity.ParentLevel.FloorPlatforms.FirstOrDefault(entry => entry.Key == platformIndex).Value;
 
                     var floorInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Polygon>();
-                    floorInteractiveSurface.ParentFPPolygon = polygonEntity;
+                    floorInteractiveSurface.ParentPolygon = polygonEntity;
                     floorInteractiveSurface.DataSource = dataSource;
                     floorInteractiveSurface.surfaceShapeDescriptor = nativeObject.FloorTexture;
-                    floorInteractiveSurface.FPLight = polygonEntity.ParentLevel.FPLights[nativeObject.FloorLight];
-                    floorInteractiveSurface.FPMedia = media;
-                    floorInteractiveSurface.FPPlatform = floorPlatform;
+                    floorInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.FloorLight];
+                    floorInteractiveSurface.Media = media;
+                    floorInteractiveSurface.Platform = floorPlatform;
 
-                    polygonEntity.ParentLevel.FPInteractiveSurfacePolygons.Add(floorInteractiveSurface);
+                    polygonEntity.ParentLevel.EditableSurface_Polygons.Add(floorInteractiveSurface);
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
                     var mediaInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Media>();
-                    mediaInteractiveSurface.ParentFPPolygon = polygonEntity;
-                    mediaInteractiveSurface.FPLight = polygonEntity.ParentLevel.FPLights[nativeObject.MediaLight];
-                    mediaInteractiveSurface.FPMedia = media;
+                    mediaInteractiveSurface.Polygon = polygonEntity;
+                    mediaInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.MediaLight];
+                    mediaInteractiveSurface.Media = media;
 
-                    polygonEntity.ParentLevel.FPInteractiveSurfaceMedias.Add(mediaInteractiveSurface);
+                    polygonEntity.ParentLevel.EditableSurface_Medias.Add(mediaInteractiveSurface);
                     break;
 
                 default:

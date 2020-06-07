@@ -16,7 +16,7 @@ namespace RuntimeCore.Entities.Geometry
 
         public void SetSelectability(bool enabled)
         {
-            // Intentionally empty - Selectability is handled in FPSurfaceSide
+            // Intentionally empty - Selectability is handled in EditableSurface_Side
         }
 
         public void DisplaySelectionState(bool state)
@@ -116,7 +116,7 @@ namespace RuntimeCore.Entities.Geometry
 
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
             {
-                ParentLevel.FPLines[NativeObject.LineIndex].Inspect();
+                ParentLevel.Lines[NativeObject.LineIndex].Inspect();
             }
         }
 

@@ -1,12 +1,11 @@
-﻿using ForgePlus.LevelManipulation;
-using ForgePlus.LevelManipulation.Utilities;
-using Weland.Extensions;
+﻿using ForgePlus.LevelManipulation.Utilities;
 using UnityEngine;
 using Weland;
+using Weland.Extensions;
 
 namespace RuntimeCore.Entities.Geometry
 {
-    public partial class LevelEntity_Side : LevelEntity_GeometryBase, IManipulatable<Side>
+    public partial class LevelEntity_Side : LevelEntity_GeometryBase
     {
         public enum DataSources
         {
@@ -33,12 +32,12 @@ namespace RuntimeCore.Entities.Geometry
         public short SecondaryLowElevation { get; private set; }
         public short TransparentLowElevation { get; private set; }
 
-        public static LevelEntity_Side AssembleEntity(LevelEntity_Level fpLevel, bool isClockwise, Line line)
+        public static LevelEntity_Side AssembleEntity(LevelEntity_Level level, bool isClockwise, Line line)
         {
             var sideIndex = isClockwise ? line.ClockwisePolygonSideIndex : line.CounterclockwisePolygonSideIndex;
 
             // Note: A null-side may still be created as an untextured side
-            var side = sideIndex < fpLevel.Level.Sides.Count && sideIndex >= 0 ? fpLevel.Level.Sides[sideIndex] : null;
+            var side = sideIndex < level.Level.Sides.Count && sideIndex >= 0 ? level.Level.Sides[sideIndex] : null;
 
             if (side == null)
             {
@@ -54,20 +53,20 @@ namespace RuntimeCore.Entities.Geometry
                 return null;
             }
 
-            var opposingPolygonIndex = side.OpposingPolygonIndex(fpLevel.Level);
+            var opposingPolygonIndex = side.OpposingPolygonIndex(level.Level);
 
-            var hasOpposingPolygon = side.HasOpposingPolygon(fpLevel.Level);
+            var hasOpposingPolygon = side.HasOpposingPolygon(level.Level);
 
-            var facingPolygon = fpLevel.Level.Polygons[facingPolygonIndex];
-            var opposingPolygon = hasOpposingPolygon ? fpLevel.Level.Polygons[opposingPolygonIndex] : null;
+            var facingPolygon = level.Level.Polygons[facingPolygonIndex];
+            var opposingPolygon = hasOpposingPolygon ? level.Level.Polygons[opposingPolygonIndex] : null;
 
             Platform facingPlatform;
-            facingPlatform = GeometryUtilities.GetPlatformForPolygon(fpLevel.Level, facingPolygon);
+            facingPlatform = GeometryUtilities.GetPlatformForPolygon(level.Level, facingPolygon);
 
             Platform opposingPlatform = null;
             if (opposingPolygon != null)
             {
-                opposingPlatform = GeometryUtilities.GetPlatformForPolygon(fpLevel.Level, opposingPolygon);
+                opposingPlatform = GeometryUtilities.GetPlatformForPolygon(level.Level, opposingPolygon);
             }
 
             var highestFacingCeiling = facingPolygon.CeilingHeight;
@@ -76,12 +75,12 @@ namespace RuntimeCore.Entities.Geometry
                 if (facingPlatform.ComesFromFloor)
                 {
                     // Split platform
-                    var roundedUpMidpoint = (short)Mathf.CeilToInt((facingPlatform.RuntimeMinimumHeight(fpLevel.Level) + facingPlatform.RuntimeMaximumHeight(fpLevel.Level)) * 0.5f);
+                    var roundedUpMidpoint = (short)Mathf.CeilToInt((facingPlatform.RuntimeMinimumHeight(level.Level) + facingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
                     highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, roundedUpMidpoint);
                 }
                 else
                 {
-                    highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, facingPlatform.RuntimeMaximumHeight(fpLevel.Level));
+                    highestFacingCeiling = (short)Mathf.Max(highestFacingCeiling, facingPlatform.RuntimeMaximumHeight(level.Level));
                 }
             }
 
@@ -91,12 +90,12 @@ namespace RuntimeCore.Entities.Geometry
                 if (facingPlatform.ComesFromCeiling)
                 {
                     // Split platform
-                    var roundedDownMidpoint = (short)Mathf.FloorToInt((facingPlatform.RuntimeMinimumHeight(fpLevel.Level) + facingPlatform.RuntimeMaximumHeight(fpLevel.Level)) * 0.5f);
+                    var roundedDownMidpoint = (short)Mathf.FloorToInt((facingPlatform.RuntimeMinimumHeight(level.Level) + facingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
                     lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, roundedDownMidpoint);
                 }
                 else
                 {
-                    lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, facingPlatform.RuntimeMinimumHeight(fpLevel.Level));
+                    lowestFacingFloor = (short)Mathf.Min(lowestFacingFloor, facingPlatform.RuntimeMinimumHeight(level.Level));
                 }
             }
 
@@ -107,15 +106,15 @@ namespace RuntimeCore.Entities.Geometry
                 if (opposingPlatform.ComesFromFloor)
                 {
                     // Split platform
-                    var roundedDownMidpoint = (short)Mathf.FloorToInt((opposingPlatform.RuntimeMinimumHeight(fpLevel.Level) + opposingPlatform.RuntimeMaximumHeight(fpLevel.Level)) * 0.5f);
+                    var roundedDownMidpoint = (short)Mathf.FloorToInt((opposingPlatform.RuntimeMinimumHeight(level.Level) + opposingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
                     lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, roundedDownMidpoint);
                 }
                 else
                 {
-                    lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, opposingPlatform.RuntimeMinimumHeight(fpLevel.Level));
+                    lowestOpposingCeiling = (short)Mathf.Min(lowestOpposingCeiling, opposingPlatform.RuntimeMinimumHeight(level.Level));
                 }
 
-                highestOpposingCeiling = opposingPlatform.RuntimeMaximumHeight(fpLevel.Level);
+                highestOpposingCeiling = opposingPlatform.RuntimeMaximumHeight(level.Level);
             }
 
             var highestOpposingFloor = hasOpposingPolygon ? opposingPolygon.FloorHeight : lowestFacingFloor;
@@ -125,15 +124,15 @@ namespace RuntimeCore.Entities.Geometry
                 if (opposingPlatform.ComesFromCeiling)
                 {
                     // Split platform
-                    var roundedUpMidpoint = (short)Mathf.CeilToInt((opposingPlatform.RuntimeMinimumHeight(fpLevel.Level) + opposingPlatform.RuntimeMaximumHeight(fpLevel.Level)) * 0.5f);
+                    var roundedUpMidpoint = (short)Mathf.CeilToInt((opposingPlatform.RuntimeMinimumHeight(level.Level) + opposingPlatform.RuntimeMaximumHeight(level.Level)) * 0.5f);
                     highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, roundedUpMidpoint);
                 }
                 else
                 {
-                    highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, opposingPlatform.RuntimeMaximumHeight(fpLevel.Level));
+                    highestOpposingFloor = (short)Mathf.Max(highestOpposingFloor, opposingPlatform.RuntimeMaximumHeight(level.Level));
                 }
 
-                lowestOpposingFloor = opposingPlatform.RuntimeMinimumHeight(fpLevel.Level);
+                lowestOpposingFloor = opposingPlatform.RuntimeMinimumHeight(level.Level);
             }
 
             // Data-driven surface-exposure
@@ -155,7 +154,7 @@ namespace RuntimeCore.Entities.Geometry
                                 hasOpposingPolygon &&
                                 highestOpposingFloor > lowestFacingFloor;
 
-            LevelEntity_Side fpSide = null;
+            LevelEntity_Side runtimeSide = null;
 
             if (exposesTop)
             {
@@ -165,17 +164,17 @@ namespace RuntimeCore.Entities.Geometry
                 var highHeight = highestFacingCeiling;
                 var lowHeight = lowestOpposingCeiling;
 
-                CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
+                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level);
 
-                fpSide.PrimaryHighElevation = highHeight;
-                fpSide.PrimaryLowElevation = lowHeight;
+                runtimeSide.PrimaryHighElevation = highHeight;
+                runtimeSide.PrimaryLowElevation = lowHeight;
 
                 var surface = new GameObject($"Side Top ({sideIndex}) (High - Source:{sideDataSource})").AddComponent<RuntimeSurfaceGeometry>();
-                surface.transform.SetParent(fpSide.transform);
-                surface.InitializeRuntimeSurface(fpSide, sideDataSource);
+                surface.transform.SetParent(runtimeSide.transform);
+                surface.InitializeRuntimeSurface(runtimeSide, sideDataSource);
 
-                fpSide.PrimarySurface = surface;
-                fpSide.TopSurface = surface;
+                runtimeSide.PrimarySurface = surface;
+                runtimeSide.TopSurface = surface;
             }
 
             if (exposesMiddle)
@@ -183,41 +182,41 @@ namespace RuntimeCore.Entities.Geometry
                 // Primary if there's no opposing polygon or it's explicitly "full", Transparent otherwise
                 var sideDataSource = (!hasOpposingPolygon || dataExpectsFullSide) ? DataSources.Primary : DataSources.Transparent;
 
-                var hasLayeredTransparentSide = side.HasLayeredTransparentSide(fpLevel.Level);
+                var hasLayeredTransparentSide = side.HasLayeredTransparentSide(level.Level);
                 var highHeight = dataExpectsFullSide ? highestFacingCeiling : line.LowestAdjacentCeiling;
                 var lowHeight = dataExpectsFullSide ? lowestFacingFloor : line.HighestAdjacentFloor;
 
                 var typeDescriptor = hasOpposingPolygon ? $"Transparent - HasTransparentSide - Source:{sideDataSource}" : $"Full - Unopposed - Source:{sideDataSource}";
 
-                CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
+                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level);
 
                 if (sideDataSource == DataSources.Primary)
                 {
-                    fpSide.PrimaryHighElevation = highHeight;
-                    fpSide.PrimaryLowElevation = lowHeight;
+                    runtimeSide.PrimaryHighElevation = highHeight;
+                    runtimeSide.PrimaryLowElevation = lowHeight;
                 }
 
                 if (sideDataSource == DataSources.Transparent || hasLayeredTransparentSide)
                 {
-                    fpSide.TransparentHighElevation = highHeight;
-                    fpSide.TransparentLowElevation = lowHeight;
+                    runtimeSide.TransparentHighElevation = highHeight;
+                    runtimeSide.TransparentLowElevation = lowHeight;
                 }
 
                 var surface = new GameObject($"Side Middle ({sideIndex}) - ({typeDescriptor})").AddComponent<RuntimeSurfaceGeometry>();
-                surface.transform.SetParent(fpSide.transform);
-                surface.InitializeRuntimeSurface(fpSide, sideDataSource);
+                surface.transform.SetParent(runtimeSide.transform);
+                surface.InitializeRuntimeSurface(runtimeSide, sideDataSource);
 
                 if (sideDataSource == DataSources.Primary)
                 {
-                    fpSide.PrimarySurface = surface;
+                    runtimeSide.PrimarySurface = surface;
                 }
 
                 if (sideDataSource == DataSources.Transparent || hasLayeredTransparentSide)
                 {
-                    fpSide.TransparentSurface = surface;
+                    runtimeSide.TransparentSurface = surface;
                 }
 
-                fpSide.MiddleSurface = surface;
+                runtimeSide.MiddleSurface = surface;
             }
 
             if (exposesBottom)
@@ -228,48 +227,48 @@ namespace RuntimeCore.Entities.Geometry
                 var highHeight = highestOpposingFloor;
                 var lowHeight = lowestFacingFloor;
 
-                CreateSideRoot(ref fpSide, isClockwise, sideIndex, side, fpLevel);
+                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level);
 
                 if (sideDataSource == DataSources.Primary)
                 {
-                    fpSide.PrimaryHighElevation = highHeight;
-                    fpSide.PrimaryLowElevation = lowHeight;
+                    runtimeSide.PrimaryHighElevation = highHeight;
+                    runtimeSide.PrimaryLowElevation = lowHeight;
                 }
                 else
                 {
-                    fpSide.SecondaryHighElevation = highHeight;
-                    fpSide.SecondaryLowElevation = lowHeight;
+                    runtimeSide.SecondaryHighElevation = highHeight;
+                    runtimeSide.SecondaryLowElevation = lowHeight;
                 }
 
                 var surface = new GameObject($"Side Bottom ({sideIndex}) (Low - Source:{sideDataSource})").AddComponent<RuntimeSurfaceGeometry>();
-                surface.transform.SetParent(fpSide.transform);
-                surface.InitializeRuntimeSurface(fpSide, sideDataSource);
+                surface.transform.SetParent(runtimeSide.transform);
+                surface.InitializeRuntimeSurface(runtimeSide, sideDataSource);
 
                 if (sideDataSource == DataSources.Primary)
                 {
-                    fpSide.PrimarySurface = surface;
+                    runtimeSide.PrimarySurface = surface;
                 }
                 else
                 {
-                    fpSide.SecondarySurface = surface;
+                    runtimeSide.SecondarySurface = surface;
                 }
 
-                fpSide.BottomSurface = surface;
+                runtimeSide.BottomSurface = surface;
             }
 
-            return fpSide;
+            return runtimeSide;
         }
 
-        private static void CreateSideRoot(ref LevelEntity_Side fpSide, bool isClockwise, short sideIndex, Side side, LevelEntity_Level fpLevel)
+        private static void CreateSideRoot(ref LevelEntity_Side runtimeSide, bool isClockwise, short sideIndex, Side side, LevelEntity_Level parentLevel)
         {
-            if (!fpSide)
+            if (!runtimeSide)
             {
-                var fpSideGO = new GameObject(isClockwise ? $"Clockwise ({sideIndex})" : $"Counterclockwise ({sideIndex})");
-                fpSide = fpSideGO.AddComponent<LevelEntity_Side>();
+                var sideGO = new GameObject(isClockwise ? $"Clockwise ({sideIndex})" : $"Counterclockwise ({sideIndex})");
+                runtimeSide = sideGO.AddComponent<LevelEntity_Side>();
 
-                fpSide.InitializeEntity(fpLevel, sideIndex, side);
+                runtimeSide.InitializeEntity(parentLevel, sideIndex, side);
 
-                fpLevel.FPSides[sideIndex] = fpSide;
+                parentLevel.Sides[sideIndex] = runtimeSide;
             }
         }
     }

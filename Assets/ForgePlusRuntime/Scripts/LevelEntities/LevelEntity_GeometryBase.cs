@@ -1,12 +1,4 @@
-﻿using ForgePlus.Inspection;
-using ForgePlus.LevelManipulation.Utilities;
-using RuntimeCore.Materials;
-using System.Collections.Generic;
-using UnityEngine;
-using Weland;
-using Weland.Extensions;
-
-namespace RuntimeCore.Entities.Geometry
+﻿namespace RuntimeCore.Entities.Geometry
 {
     public abstract class LevelEntity_GeometryBase : LevelEntity_Base
     {

@@ -11,7 +11,8 @@ using Weland;
 
 namespace RuntimeCore.Entities.Geometry
 {
-    public class LevelEntity_Media : IManipulatable<Media>, IDestructionPreparable, ISelectable, IInspectable
+    // TODO: Should inherit from LevelEntity_Base, and should have a representative GameObject in the scene
+    public class LevelEntity_Media : IDestructionPreparable, ISelectable, IInspectable
     {
         private const float MagnitudeToWorldUnit = 1f / 40f; // Note: Not sure why this isn't 1/30 to match the tick rate.
 
@@ -22,7 +23,7 @@ namespace RuntimeCore.Entities.Geometry
         public short NativeIndex { get; set; }
         public Media NativeObject { get; set; }
 
-        public LevelEntity_Level FPLevel { private get; set; }
+        public LevelEntity_Level ParentLevel { private get; set; }
 
         public float CurrentHeight
         {
@@ -48,18 +49,18 @@ namespace RuntimeCore.Entities.Geometry
 
         private CancellationTokenSource synchronizationLoopCTS;
 
-        public LevelEntity_Media(short index, Media media, LevelEntity_Level fpLevel)
+        public LevelEntity_Media(short index, Media media, LevelEntity_Level level)
         {
             NativeIndex = index;
             NativeObject = media;
-            FPLevel = fpLevel;
+            ParentLevel = level;
 
             BeginRuntimeStyleBehavior();
         }
 
         public void SetSelectability(bool enabled)
         {
-            // Intentionally blank - no current reason to toggle this, as its selection comes from the palette or already-gated FPInteractiveSurface components
+            // Intentionally blank - no current reason to toggle this, as its selection comes from the palette or already-gated EditableSurface components
         }
 
         public void Inspect()
@@ -118,7 +119,7 @@ namespace RuntimeCore.Entities.Geometry
                 var lowHeight = (float)NativeObject.Low / GeometryUtilities.WorldUnitIncrementsPerMeter;
                 var highHeight = (float)NativeObject.High / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
-                var intensity = FPLevel.FPLights[NativeObject.LightIndex].CurrentLinearIntensity;
+                var intensity = ParentLevel.Lights[NativeObject.LightIndex].CurrentLinearIntensity;
                 intensity = Mathf.Max(intensity, (float)NativeObject.MinimumLightIntensity);
 
                 var currentHeight = Mathf.Lerp(lowHeight, highHeight, intensity);

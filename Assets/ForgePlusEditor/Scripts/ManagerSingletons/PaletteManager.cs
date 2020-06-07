@@ -1,8 +1,8 @@
 ﻿using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
-using RuntimeCore.Materials;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
+using RuntimeCore.Materials;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -58,15 +58,15 @@ namespace ForgePlus.Palette
             return activeToggle.GetComponent<Swatch_Texture>().ShapeDescriptor;
         }
 
-        public void SelectSwatchForLight(LevelEntity_Light fpLight, bool invokeToggleEvents = false)
+        public void SelectSwatchForLight(LevelEntity_Light light, bool invokeToggleEvents = false)
         {
-            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<Swatch_Light>().FPLight == fpLight);
+            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<Swatch_Light>().RuntimeLight == light);
             var matchingToggle = matchingSwatch.GetComponent<Toggle>();
 
             ActivateToggle(matchingToggle, invokeToggleEvents);
         }
 
-        public LevelEntity_Light GetSelectedFPLight()
+        public LevelEntity_Light GetSelectedLight()
         {
             var activeToggle = paletteToggleGroup.GetFirstActiveToggle();
 
@@ -75,12 +75,12 @@ namespace ForgePlus.Palette
                 return null;
             }
 
-            return activeToggle.GetComponent<Swatch_Light>().FPLight;
+            return activeToggle.GetComponent<Swatch_Light>().RuntimeLight;
         }
 
-        public void SelectSwatchForMedia(LevelEntity_Media fpMedia, bool invokeToggleEvents = false)
+        public void SelectSwatchForMedia(LevelEntity_Media media, bool invokeToggleEvents = false)
         {
-            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<Swatch_Media>().FPMedia == fpMedia);
+            var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<Swatch_Media>().Media == media);
             var matchingToggle = matchingSwatch.GetComponent<Toggle>();
 
             ActivateToggle(matchingToggle, invokeToggleEvents);
@@ -95,7 +95,7 @@ namespace ForgePlus.Palette
                 return null;
             }
 
-            return activeToggle.GetComponent<Swatch_Media>().FPMedia;
+            return activeToggle.GetComponent<Swatch_Media>().Media;
         }
 
         private void UpdatePaletteToMatchMode(ModeManager.PrimaryModes primaryMode)
@@ -172,10 +172,10 @@ namespace ForgePlus.Palette
                 case ModeManager.PrimaryModes.Lights:
                     paletteToggleGroup.allowSwitchOff = true;
 
-                    foreach (var fpLight in LevelEntity_Level.Instance.FPLights.Values)
+                    foreach (var light in LevelEntity_Level.Instance.Lights.Values)
                     {
                         var swatch = Instantiate(lightSwatchPrefab, swatchesParent);
-                        swatch.SetInitialValues(fpLight, paletteToggleGroup);
+                        swatch.SetInitialValues(light, paletteToggleGroup);
                         currentSwatches.Add(swatch.gameObject);
                     }
 
@@ -184,10 +184,10 @@ namespace ForgePlus.Palette
                 case ModeManager.PrimaryModes.Media:
                     paletteToggleGroup.allowSwitchOff = true;
 
-                    foreach (var fpMedia in LevelEntity_Level.Instance.FPMedias.Values)
+                    foreach (var media in LevelEntity_Level.Instance.Medias.Values)
                     {
                         var swatch = Instantiate(mediaSwatchPrefab, swatchesParent);
-                        swatch.SetInitialValues(fpMedia, paletteToggleGroup);
+                        swatch.SetInitialValues(media, paletteToggleGroup);
                         currentSwatches.Add(swatch.gameObject);
                     }
 

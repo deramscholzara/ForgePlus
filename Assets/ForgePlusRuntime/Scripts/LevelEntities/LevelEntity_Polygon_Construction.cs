@@ -1,10 +1,9 @@
-﻿using ForgePlus.LevelManipulation;
-using UnityEngine;
+﻿using UnityEngine;
 using Weland;
 
 namespace RuntimeCore.Entities.Geometry
 {
-    public partial class LevelEntity_Polygon : LevelEntity_GeometryBase, IManipulatable<Polygon>
+    public partial class LevelEntity_Polygon : LevelEntity_GeometryBase
     {
         public enum DataSources
         {
