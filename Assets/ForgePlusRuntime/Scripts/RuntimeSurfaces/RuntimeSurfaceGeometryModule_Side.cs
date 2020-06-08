@@ -5,6 +5,7 @@ using RuntimeCore.Materials;
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Weland;
 using Weland.Extensions;
 
 namespace RuntimeCore.Entities.Geometry
@@ -66,6 +67,11 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void AssembleSurface()
         {
+            if (sideEntity == null)
+            {
+                Debug.Log($"Null Side: {sideEntity.name}", sideEntity);
+            }
+
             ApplyPositionsAndTriangles();
             ApplyTransformPosition();
 
@@ -91,11 +97,10 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyPositionsAndTriangles()
         {
-            var line = sideEntity.ParentLevel.Level.Lines[sideEntity.NativeObject.LineIndex];
-            var isClockwise = sideEntity.NativeObject.IsClockwise(sideEntity.ParentLevel.Level);
+            var line = sideEntity.ParentLevel.Level.Lines[sideEntity.ParentLineIndex];
 
-            var endpointIndexA = isClockwise ? line.EndpointIndexes[0] : line.EndpointIndexes[1];
-            var endpointIndexB = isClockwise ? line.EndpointIndexes[1] : line.EndpointIndexes[0];
+            var endpointIndexA = sideEntity.IsClockwise ? line.EndpointIndexes[0] : line.EndpointIndexes[1];
+            var endpointIndexB = sideEntity.IsClockwise ? line.EndpointIndexes[1] : line.EndpointIndexes[0];
 
             var bottomPosition = (short)(LowElevation - HighElevation);
 
@@ -149,7 +154,21 @@ namespace RuntimeCore.Entities.Geometry
 
             IsStaticBatchable = true;
 
-            var opposingPlatformIndex = sideEntity.NativeObject.GetOpposingPlatformIndex(sideEntity.ParentLevel.Level);
+            var line = sideEntity.ParentLevel.Level.Lines[sideEntity.ParentLineIndex];
+
+            var opposingPolygonIndex = sideEntity.IsClockwise ? line.ClockwisePolygonOwner : line.CounterclockwisePolygonOwner;
+            if (opposingPolygonIndex < 0)
+            {
+                return;
+            }
+
+            var opposingPolygon = sideEntity.ParentLevel.Level.Polygons[opposingPolygonIndex];
+            if (opposingPolygon.Type != Weland.PolygonType.Platform)
+            {
+                return;
+            }
+
+            var opposingPlatformIndex = opposingPolygon.Permutation;
             if (opposingPlatformIndex < 0)
             {
                 return;
@@ -179,7 +198,11 @@ namespace RuntimeCore.Entities.Geometry
         {
             Vector2[] UVs;
 
-            if (innerLayer)
+            if (sideEntity.NativeObject == null)
+            {
+                UVs = BuildUVs(0, 0);
+            }
+            else if (innerLayer)
             {
                 switch (dataSource)
                 {
@@ -211,6 +234,11 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyTransferMode(bool innerLayer)
         {
+            if (sideEntity.NativeObject == null)
+            {
+                return;
+            }
+
             if (innerLayer)
             {
                 Color vertexColor;
@@ -265,7 +293,12 @@ namespace RuntimeCore.Entities.Geometry
         {
             var modifiedBatchKey = BatchKey;
 
-            if (innerLayer)
+            if (sideEntity.NativeObject == null)
+            {
+                modifiedBatchKey.sourceLight = null;
+                modifiedBatchKey.layeredTransparentSideSourceLight = null;
+            }
+            else if (innerLayer)
             {
                 switch (dataSource)
                 {
@@ -304,37 +337,46 @@ namespace RuntimeCore.Entities.Geometry
 
             var modifiedBatchKey = BatchKey;
 
-            if (innerLayer)
+            if (sideEntity.NativeObject == null)
+            {
+                modifiedBatchKey.sourceMaterial =
+                    MaterialGeneration_Geometry.GetMaterial(ShapeDescriptor.Empty,
+                                                            transferMode: 0,
+                                                            isOpaqueSurface: true,
+                                                            MaterialGeneration_Geometry.SurfaceTypes.Normal,
+                                                            incrementUsageCounter: false);
+            }
+            else if (innerLayer)
             {
                 switch (dataSource)
                 {
                     case LevelEntity_Side.DataSources.Primary:
                         modifiedBatchKey.sourceMaterial =
                             MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.Primary.Texture,
-                                                        sideEntity.NativeObject.PrimaryTransferMode,
-                                                        sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
-                                                        MaterialGeneration_Geometry.SurfaceTypes.Normal,
-                                                        incrementUsageCounter: true);
+                                                                    sideEntity.NativeObject.PrimaryTransferMode,
+                                                                    sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
+                                                                    MaterialGeneration_Geometry.SurfaceTypes.Normal,
+                                                                    incrementUsageCounter: true);
 
                         break;
 
                     case LevelEntity_Side.DataSources.Secondary:
                         modifiedBatchKey.sourceMaterial =
                             MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.Secondary.Texture,
-                                                        sideEntity.NativeObject.SecondaryTransferMode,
-                                                        sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
-                                                        MaterialGeneration_Geometry.SurfaceTypes.Normal,
-                                                        incrementUsageCounter: true);
+                                                                    sideEntity.NativeObject.SecondaryTransferMode,
+                                                                    sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
+                                                                    MaterialGeneration_Geometry.SurfaceTypes.Normal,
+                                                                    incrementUsageCounter: true);
 
                         break;
 
                     case LevelEntity_Side.DataSources.Transparent:
                         modifiedBatchKey.sourceMaterial =
                             MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.Transparent.Texture,
-                                                        sideEntity.NativeObject.TransparentTransferMode,
-                                                        sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
-                                                        MaterialGeneration_Geometry.SurfaceTypes.Normal,
-                                                        incrementUsageCounter: true);
+                                                                    sideEntity.NativeObject.TransparentTransferMode,
+                                                                    sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
+                                                                    MaterialGeneration_Geometry.SurfaceTypes.Normal,
+                                                                    incrementUsageCounter: true);
 
                         break;
 
@@ -346,10 +388,10 @@ namespace RuntimeCore.Entities.Geometry
             {
                 modifiedBatchKey.layeredTransparentSideSourceMaterial =
                     MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.Transparent.Texture,
-                                                sideEntity.NativeObject.TransparentTransferMode,
-                                                sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
-                                                MaterialGeneration_Geometry.SurfaceTypes.LayeredTransparentOuter,
-                                                incrementUsageCounter: true);
+                                                            sideEntity.NativeObject.TransparentTransferMode,
+                                                            sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
+                                                            MaterialGeneration_Geometry.SurfaceTypes.LayeredTransparentOuter,
+                                                            incrementUsageCounter: true);
             }
 
             BatchKey = modifiedBatchKey;
@@ -362,35 +404,45 @@ namespace RuntimeCore.Entities.Geometry
 
         protected override void ApplyInteractiveSurface()
         {
-            var nativeObject = sideEntity.NativeObject;
-
             var sideSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Side>();
             sideSurface.ParentSide = sideEntity;
             sideSurface.DataSource = dataSource;
             sideSurface.Platform = platformConstraint != null ? platformConstraint.Parent.GetComponent<LevelEntity_Platform>() : null;
 
-            var mediaIndex = sideEntity.ParentLevel.Level.Polygons[nativeObject.PolygonIndex].MediaIndex;
+            var line = sideEntity.ParentLevel.Level.Lines[sideEntity.ParentLineIndex];
+
+            var facingPolygonIndex = sideEntity.IsClockwise ? line.ClockwisePolygonOwner : line.CounterclockwisePolygonOwner;
+
+            var mediaIndex = sideEntity.ParentLevel.Level.Polygons[facingPolygonIndex].MediaIndex;
             sideSurface.Media = mediaIndex >= 0 ? sideEntity.ParentLevel.Medias[mediaIndex] : null;
 
-            switch (dataSource)
+            if (sideEntity.NativeObject == null)
             {
-                case LevelEntity_Side.DataSources.Primary:
-                    sideSurface.surfaceShapeDescriptor = nativeObject.Primary.Texture;
-                    sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[nativeObject.PrimaryLightsourceIndex];
-                    break;
+                sideSurface.surfaceShapeDescriptor = ShapeDescriptor.Empty;
+                sideSurface.RuntimeLight = null;
+            }
+            else
+            {
+                switch (dataSource)
+                {
+                    case LevelEntity_Side.DataSources.Primary:
+                        sideSurface.surfaceShapeDescriptor = sideEntity.NativeObject.Primary.Texture;
+                        sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.PrimaryLightsourceIndex];
+                        break;
 
-                case LevelEntity_Side.DataSources.Secondary:
-                    sideSurface.surfaceShapeDescriptor = nativeObject.Secondary.Texture;
-                    sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[nativeObject.SecondaryLightsourceIndex];
-                    break;
+                    case LevelEntity_Side.DataSources.Secondary:
+                        sideSurface.surfaceShapeDescriptor = sideEntity.NativeObject.Secondary.Texture;
+                        sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.SecondaryLightsourceIndex];
+                        break;
 
-                case LevelEntity_Side.DataSources.Transparent:
-                    sideSurface.surfaceShapeDescriptor = nativeObject.Transparent.Texture;
-                    sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[nativeObject.TransparentLightsourceIndex];
-                    break;
+                    case LevelEntity_Side.DataSources.Transparent:
+                        sideSurface.surfaceShapeDescriptor = sideEntity.NativeObject.Transparent.Texture;
+                        sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.TransparentLightsourceIndex];
+                        break;
 
-                default:
-                    throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
+                    default:
+                        throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
+                }
             }
 
             sideEntity.ParentLevel.EditableSurface_Sides.Add(sideSurface);
@@ -443,15 +495,25 @@ namespace RuntimeCore.Entities.Geometry
         {
             var uvs = new Vector2[4];
 
-            var lineLength = sideEntity.ParentLevel.Level.Lines[sideEntity.NativeObject.LineIndex].Length / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
-            var bottomPosition = (LowElevation - HighElevation) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
+            if (sideEntity.NativeObject == null)
+            {
+                uvs[0] = Vector2.zero;
+                uvs[1] = Vector2.zero;
+                uvs[2] = Vector2.zero;
+                uvs[3] = Vector2.zero;
+            }
+            else
+            {
+                var lineLength = sideEntity.ParentLevel.Level.Lines[sideEntity.NativeObject.LineIndex].Length / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
+                var bottomPosition = (LowElevation - HighElevation) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
 
-            var offset = new Vector2(textureOffsetX, -textureOffsetY) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
+                var offset = new Vector2(textureOffsetX, -textureOffsetY) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
 
-            uvs[0] = new Vector2(0f, bottomPosition) + offset;
-            uvs[1] = Vector2.zero + offset;
-            uvs[2] = new Vector2(lineLength, 0f) + offset;
-            uvs[3] = new Vector2(lineLength, bottomPosition) + offset;
+                uvs[0] = new Vector2(0f, bottomPosition) + offset;
+                uvs[1] = Vector2.zero + offset;
+                uvs[2] = new Vector2(lineLength, 0f) + offset;
+                uvs[3] = new Vector2(lineLength, bottomPosition) + offset;
+            }
 
             return uvs;
         }
@@ -486,6 +548,11 @@ namespace RuntimeCore.Entities.Geometry
 
         private void DecrementTextureUsage()
         {
+            if (sideEntity.NativeObject == null)
+            {
+                return;
+            }
+
             switch (dataSource)
             {
                 case LevelEntity_Side.DataSources.Primary:

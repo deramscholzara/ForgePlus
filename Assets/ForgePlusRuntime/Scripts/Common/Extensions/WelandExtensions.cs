@@ -6,25 +6,6 @@ namespace Weland.Extensions
 {
     public static class WelandExtensions
     {
-        public static short GetOpposingPlatformIndex(this Side side, Level level)
-        {
-            var opposingPolygonIndex = side.OpposingPolygonIndex(level);
-
-            if (opposingPolygonIndex < 0)
-            {
-                return -1;
-            }
-
-            var opposingPolygon = level.Polygons[opposingPolygonIndex];
-
-            if (opposingPolygon.Type != PolygonType.Platform)
-            {
-                return -1;
-            }
-
-            return opposingPolygon.Permutation;
-        }
-
         public static bool HasOpposingPolygon(this Side side, Level level)
         {
             var opposingPolygonIndex = side.OpposingPolygonIndex(level);
