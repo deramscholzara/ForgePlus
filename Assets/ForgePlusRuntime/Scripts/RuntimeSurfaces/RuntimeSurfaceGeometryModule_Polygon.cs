@@ -48,7 +48,7 @@ namespace RuntimeCore.Entities.Geometry
         public override void ApplyPositionsAndTriangles()
         {
             var positions = new Vector3[polygonEntity.NativeObject.VertexCount];
-            var triangles = new int[(polygonEntity.NativeObject.VertexCount - 2) * 3];
+            var triangles = new int[(polygonEntity.NativeObject.VertexCount - 2) * (dataSource == LevelEntity_Polygon.DataSources.Media ? 6 : 3)];
 
             // Using Collapsing Convex-Polygon Traversal for speediness reasons
             for (int earlyVertexIndex = 0, lateVertexIndex = polygonEntity.NativeObject.VertexCount - 1, currentTriangleIndex = 0;
@@ -75,6 +75,18 @@ namespace RuntimeCore.Entities.Geometry
 
                         currentTriangleIndex += 3;
 
+                        if (dataSource == LevelEntity_Polygon.DataSources.Media)
+                        {
+                            // Backside triangles for media
+                            AssignTriangle(earlyVertexIndex,
+                                           lateVertexIndex,
+                                           currentTriangleIndex,
+                                           triangles,
+                                           reverseOrder: true);
+
+                            currentTriangleIndex += 3;
+                        }
+
                         if (earlyVertexIndex + 1 < lateVertexIndex - 1)
                         {
                             // Vertex traversal is not about to intersect, so continue
@@ -86,6 +98,19 @@ namespace RuntimeCore.Entities.Geometry
                                            reverseOrder: dataSource == LevelEntity_Polygon.DataSources.Ceiling);
 
                             currentTriangleIndex += 3;
+
+                            if (dataSource == LevelEntity_Polygon.DataSources.Media)
+                            {
+                                // Backside triangles for media
+                                AssignTriangle(earlyVertexIndex,
+                                               lateVertexIndex,
+                                               currentTriangleIndex,
+                                               triangles,
+                                               isLateTriangle: true,
+                                               reverseOrder: true);
+
+                                currentTriangleIndex += 3;
+                            }
                         }
                     }
                 }

@@ -170,7 +170,16 @@ namespace ForgePlus.ApplicationGeneral
                 {
                     var dynamicMesh = surface.MakeStaticAndGetMesh();
                     mergedTriangles.AddRange(dynamicMesh.triangles.Select(triangleIndex => triangleIndex + mergedVertices.Count));
-                    mergedVertices.AddRange(dynamicMesh.vertices.Select(position => surface.SurfaceGeometry.transform.localToWorldMatrix.MultiplyPoint(position)));
+
+                    if (media != null)
+                    {
+                        mergedVertices.AddRange(dynamicMesh.vertices);
+                    }
+                    else
+                    {
+                        mergedVertices.AddRange(dynamicMesh.vertices.Select(position => surface.SurfaceGeometry.transform.localToWorldMatrix.MultiplyPoint(position)));
+                    }
+
                     mergedUVs.AddRange(dynamicMesh.uv);
 
                     if (sourceMaterials.Length > 1)
