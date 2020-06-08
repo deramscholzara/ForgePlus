@@ -1,4 +1,5 @@
 ﻿using ForgePlus.LevelManipulation.Utilities;
+using System;
 using UnityEngine;
 using Weland;
 using Weland.Extensions;
@@ -16,6 +17,10 @@ namespace RuntimeCore.Entities.Geometry
 
         public new Side NativeObject => base.NativeObject as Side;
 
+        // TODO: I don't really like that this needs to be here, but not sure how to set things up differently yet.
+        public short ParentLineIndex { get; private set; }
+        public bool IsClockwise { get; private set; }
+
         public RuntimeSurfaceGeometry TopSurface { get; private set; }
         public RuntimeSurfaceGeometry MiddleSurface { get; private set; }
         public RuntimeSurfaceGeometry BottomSurface { get; private set; }
@@ -32,15 +37,17 @@ namespace RuntimeCore.Entities.Geometry
         public short SecondaryLowElevation { get; private set; }
         public short TransparentLowElevation { get; private set; }
 
-        public static LevelEntity_Side AssembleEntity(LevelEntity_Level level, bool isClockwise, Line line)
+        public static LevelEntity_Side AssembleEntity(LevelEntity_Level level, bool isClockwise, short lineIndex)
         {
+            var line = level.Level.Lines[lineIndex];
+
             var sideIndex = isClockwise ? line.ClockwisePolygonSideIndex : line.CounterclockwisePolygonSideIndex;
 
             // Note: A null-side may still be created as an untextured side
             var side = sideIndex < level.Level.Sides.Count && sideIndex >= 0 ? level.Level.Sides[sideIndex] : null;
 
             #region Facing_Elevations
-            var facingPolygonIndex = side == null ? (short)-1 : side.PolygonIndex;
+            var facingPolygonIndex = isClockwise ? line.ClockwisePolygonOwner : line.CounterclockwisePolygonOwner;
 
             if (facingPolygonIndex < 0)
             {
@@ -151,7 +158,7 @@ namespace RuntimeCore.Entities.Geometry
                 var highHeight = highestFacingCeiling;
                 var lowHeight = lowestOpposingCeiling;
 
-                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level);
+                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level, lineIndex);
 
                 runtimeSide.PrimaryHighElevation = highHeight;
                 runtimeSide.PrimaryLowElevation = lowHeight;
@@ -175,7 +182,7 @@ namespace RuntimeCore.Entities.Geometry
 
                 var typeDescriptor = hasOpposingPolygon ? $"Transparent - HasTransparentSide - Source:{sideDataSource}" : $"Full - Unopposed - Source:{sideDataSource}";
 
-                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level);
+                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level, lineIndex);
 
                 if (sideDataSource == DataSources.Primary)
                 {
@@ -214,7 +221,7 @@ namespace RuntimeCore.Entities.Geometry
                 var highHeight = highestOpposingFloor;
                 var lowHeight = lowestFacingFloor;
 
-                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level);
+                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level, lineIndex);
 
                 if (sideDataSource == DataSources.Primary)
                 {
@@ -247,12 +254,22 @@ namespace RuntimeCore.Entities.Geometry
             return runtimeSide;
         }
 
-        private static void CreateSideRoot(ref LevelEntity_Side runtimeSide, bool isClockwise, short sideIndex, Side side, LevelEntity_Level parentLevel)
+        protected override void AssembleEntity()
+        {
+            if (!ParentLevel)
+            {
+                throw new Exception("Level Entities must be initialized before being assembled.");
+            }
+        }
+
+        private static void CreateSideRoot(ref LevelEntity_Side runtimeSide, bool isClockwise, short sideIndex, Side side, LevelEntity_Level parentLevel, short parentLineIndex)
         {
             if (!runtimeSide)
             {
                 var sideGO = new GameObject(isClockwise ? $"Clockwise ({sideIndex})" : $"Counterclockwise ({sideIndex})");
                 runtimeSide = sideGO.AddComponent<LevelEntity_Side>();
+                runtimeSide.ParentLineIndex = parentLineIndex;
+                runtimeSide.IsClockwise = isClockwise;
 
                 runtimeSide.InitializeEntity(parentLevel, sideIndex, side);
 

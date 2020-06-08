@@ -63,13 +63,13 @@ namespace RuntimeCore.Entities.Geometry
 
         public void GenerateSurfaces()
         {
-            ClockwiseSide = LevelEntity_Side.AssembleEntity(ParentLevel, isClockwise: true, NativeObject);
+            ClockwiseSide = LevelEntity_Side.AssembleEntity(ParentLevel, isClockwise: true, NativeIndex);
             if (ClockwiseSide)
             {
                 ClockwiseSide.transform.SetParent(transform);
             }
 
-            CounterclockwiseSide = LevelEntity_Side.AssembleEntity(ParentLevel, isClockwise: false, NativeObject);
+            CounterclockwiseSide = LevelEntity_Side.AssembleEntity(ParentLevel, isClockwise: false, NativeIndex);
             if (CounterclockwiseSide)
             {
                 CounterclockwiseSide.transform.SetParent(transform);
