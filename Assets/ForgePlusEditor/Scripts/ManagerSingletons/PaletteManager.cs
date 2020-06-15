@@ -262,6 +262,13 @@ namespace ForgePlus.Palette
                     }
 
                     break;
+                case ModeManager.PrimaryModes.Lights:
+                    foreach (var toggle in secondaryModeToggles)
+                    {
+                        toggle.interactable = toggle.GetComponent<Toggle_SelectSecondaryMode>().Mode != ModeManager.SecondaryModes.Editing;
+                    }
+
+                    break;
                 default:
                     foreach (var toggle in secondaryModeToggles)
                     {

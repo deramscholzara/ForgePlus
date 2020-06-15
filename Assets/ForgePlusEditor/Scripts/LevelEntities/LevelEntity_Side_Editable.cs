@@ -182,40 +182,34 @@ namespace RuntimeCore.Entities.Geometry
 
             switch (dataSource)
             {
-                case LevelEntity_Side.DataSources.Primary:
+                case DataSources.Primary:
                     if (shapeDescriptor.Equals(NativeObject.Primary.Texture))
                     {
                         // Texture is not different, so exit
                         return;
                     }
 
-                    MaterialGeneration_Geometry.DecrementTextureUsage(NativeObject.Primary.Texture);
-
                     NativeObject.Primary.Texture = shapeDescriptor;
                     transferMode = NativeObject.PrimaryTransferMode;
 
                     break;
-                case LevelEntity_Side.DataSources.Secondary:
+                case DataSources.Secondary:
                     if (shapeDescriptor.Equals(NativeObject.Secondary.Texture))
                     {
                         // Texture is not different, so exit
                         return;
                     }
 
-                    MaterialGeneration_Geometry.DecrementTextureUsage(NativeObject.Secondary.Texture);
-
                     NativeObject.Secondary.Texture = shapeDescriptor;
                     transferMode = NativeObject.SecondaryTransferMode;
 
                     break;
-                case LevelEntity_Side.DataSources.Transparent:
+                case DataSources.Transparent:
                     if (shapeDescriptor.Equals(NativeObject.Transparent.Texture))
                     {
                         // Texture is not different, so exit
                         return;
                     }
-
-                    MaterialGeneration_Geometry.DecrementTextureUsage(NativeObject.Transparent.Texture);
 
                     NativeObject.Transparent.Texture = shapeDescriptor;
                     transferMode = NativeObject.TransparentTransferMode;
@@ -249,6 +243,54 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.TransparentTransferMode = newTransferMode;
                     PrimarySurface.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
                     break;
+            }
+        }
+
+        public void SetLight(DataSources dataSource, short lightIndex)
+        {
+            switch (dataSource)
+            {
+                case DataSources.Primary:
+                    if (lightIndex == NativeObject.PrimaryLightsourceIndex ||
+                        NativeObject.Primary.Texture.UsesLandscapeCollection())
+                    {
+                        // Light is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.PrimaryLightsourceIndex = lightIndex;
+
+                    PrimarySurface.ApplyLight();
+
+                    break;
+                case DataSources.Secondary:
+                    if (lightIndex == NativeObject.SecondaryLightsourceIndex ||
+                        NativeObject.Secondary.Texture.UsesLandscapeCollection())
+                    {
+                        // Light is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.SecondaryLightsourceIndex = lightIndex;
+
+                    SecondarySurface.ApplyLight();
+
+                    break;
+                case DataSources.Transparent:
+                    if (lightIndex == NativeObject.TransparentLightsourceIndex ||
+                        NativeObject.Transparent.Texture.UsesLandscapeCollection())
+                    {
+                        // Light is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.TransparentLightsourceIndex = lightIndex;
+
+                    TransparentSurface.ApplyLight(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+
+                    break;
+                default:
+                    return;
             }
         }
     }

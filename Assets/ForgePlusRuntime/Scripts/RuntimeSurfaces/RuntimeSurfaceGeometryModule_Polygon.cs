@@ -222,6 +222,8 @@ namespace RuntimeCore.Entities.Geometry
                             platformComponent = runtimePlatform;
 
                             IsStaticBatchable = false;
+
+                            runtimePlatform.BeginRuntimeStyleBehavior();
                         }
                         break;
                     case LevelEntity_Polygon.DataSources.Ceiling:
@@ -240,6 +242,8 @@ namespace RuntimeCore.Entities.Geometry
                             platformComponent = runtimePlatform;
 
                             IsStaticBatchable = false;
+
+                            runtimePlatform.BeginRuntimeStyleBehavior();
                         }
                         break;
 

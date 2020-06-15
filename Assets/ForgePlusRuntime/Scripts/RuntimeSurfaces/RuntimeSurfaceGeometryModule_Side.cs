@@ -156,7 +156,10 @@ namespace RuntimeCore.Entities.Geometry
 
             var line = sideEntity.ParentLevel.Level.Lines[sideEntity.ParentLineIndex];
 
-            var opposingPolygonIndex = sideEntity.IsClockwise ? line.ClockwisePolygonOwner : line.CounterclockwisePolygonOwner;
+            var facingPolygonIndex = sideEntity.IsClockwise ? line.ClockwisePolygonOwner : line.CounterclockwisePolygonOwner;
+            var facingPolygon = sideEntity.ParentLevel.Level.Polygons[facingPolygonIndex];
+
+            var opposingPolygonIndex = sideEntity.IsClockwise ? line.CounterclockwisePolygonOwner : line.ClockwisePolygonOwner;
             if (opposingPolygonIndex < 0)
             {
                 return;
@@ -185,7 +188,9 @@ namespace RuntimeCore.Entities.Geometry
                 IsStaticBatchable = false;
             }
             else if (sideEntity.ParentLevel.FloorPlatforms.ContainsKey(opposingPlatformIndex) &&
-                     dataSource == LevelEntity_Side.DataSources.Secondary)
+                     (dataSource == LevelEntity_Side.DataSources.Secondary ||
+                       (dataSource == LevelEntity_Side.DataSources.Primary &&
+                        opposingPolygon.CeilingHeight >= facingPolygon.CeilingHeight)))
             {
                 var opposingFloorPlatform = sideEntity.ParentLevel.FloorPlatforms[opposingPlatformIndex];
                 ConstrainSurfaceToPlatform(opposingFloorPlatform, constrainAbovePlatform: false);
@@ -486,8 +491,6 @@ namespace RuntimeCore.Entities.Geometry
             constraint.ApplyConstraint();
 
             platformConstraint = constraint;
-
-            platform.BeginRuntimeStyleBehavior();
 #endif
         }
 
