@@ -145,19 +145,6 @@ namespace RuntimeCore.Entities.Geometry
         {
             switch (dataSource)
             {
-                case DataSources.Floor:
-                    if (lightIndex == NativeObject.FloorLight ||
-                        NativeObject.FloorTexture.UsesLandscapeCollection())
-                    {
-                        // Light is not different, so exit
-                        return;
-                    }
-
-                    NativeObject.FloorLight = lightIndex;
-
-                    FloorSurface.ApplyLight();
-
-                    break;
                 case DataSources.Ceiling:
                     if (lightIndex == NativeObject.CeilingLight ||
                         NativeObject.CeilingTexture.UsesLandscapeCollection())
@@ -169,6 +156,19 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.CeilingLight = lightIndex;
 
                     CeilingSurface.ApplyLight();
+
+                    break;
+                case DataSources.Floor:
+                    if (lightIndex == NativeObject.FloorLight ||
+                        NativeObject.FloorTexture.UsesLandscapeCollection())
+                    {
+                        // Light is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.FloorLight = lightIndex;
+
+                    FloorSurface.ApplyLight();
 
                     break;
                 default:
