@@ -72,8 +72,21 @@ namespace ForgePlus.LevelManipulation
 
                     break;
                 case ModeManager.PrimaryModes.Lights:
-                    SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
-                    PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
+                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
+                    {
+                        var selectedLight = PaletteManager.Instance.GetSelectedLight();
+
+                        if (selectedLight != null)
+                        {
+                            ParentPolygon.SetLight(DataSource, selectedLight.NativeIndex);
+                        }
+                    }
+                    else
+                    {
+                        SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
+                        PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
+                    }
+
                     break;
                 case ModeManager.PrimaryModes.Media:
                     if (Media != null)

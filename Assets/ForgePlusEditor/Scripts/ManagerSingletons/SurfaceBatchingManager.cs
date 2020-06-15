@@ -118,7 +118,7 @@ namespace ForgePlus.ApplicationGeneral
             {
                 if (!surfaces.Any(surface => surface.SurfaceGeometry == surfaceGeometry))
                 {
-                    Debug.LogError("Attempted removing surface from batch that did not contain it, this attempt will be ignored.");
+                    ////Debug.LogError("Attempted removing surface from batch that did not contain it, this attempt will be ignored.");
                     return surfaces.Count > 0;
                 }
 

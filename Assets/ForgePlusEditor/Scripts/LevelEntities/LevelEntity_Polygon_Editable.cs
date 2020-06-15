@@ -99,8 +99,6 @@ namespace RuntimeCore.Entities.Geometry
                         return;
                     }
 
-                    MaterialGeneration_Geometry.DecrementTextureUsage(NativeObject.CeilingTexture);
-
                     NativeObject.CeilingTexture = shapeDescriptor;
                     transferMode = NativeObject.CeilingTransferMode;
 
@@ -111,8 +109,6 @@ namespace RuntimeCore.Entities.Geometry
                         // Texture is not different, so exit
                         return;
                     }
-
-                    MaterialGeneration_Geometry.DecrementTextureUsage(NativeObject.FloorTexture);
 
                     NativeObject.FloorTexture = shapeDescriptor;
                     transferMode = NativeObject.FloorTransferMode;
@@ -142,6 +138,41 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.FloorTransferMode = newTransferMode;
                     FloorSurface.ApplyTexture();
                     break;
+            }
+        }
+
+        public void SetLight(DataSources dataSource, short lightIndex)
+        {
+            switch (dataSource)
+            {
+                case DataSources.Floor:
+                    if (lightIndex == NativeObject.FloorLight ||
+                        NativeObject.FloorTexture.UsesLandscapeCollection())
+                    {
+                        // Light is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.FloorLight = lightIndex;
+
+                    FloorSurface.ApplyLight();
+
+                    break;
+                case DataSources.Ceiling:
+                    if (lightIndex == NativeObject.CeilingLight ||
+                        NativeObject.CeilingTexture.UsesLandscapeCollection())
+                    {
+                        // Light is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.CeilingLight = lightIndex;
+
+                    CeilingSurface.ApplyLight();
+
+                    break;
+                default:
+                    return;
             }
         }
 

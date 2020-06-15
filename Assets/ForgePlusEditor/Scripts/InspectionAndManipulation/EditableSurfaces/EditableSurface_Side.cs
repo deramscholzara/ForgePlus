@@ -187,8 +187,37 @@ namespace ForgePlus.Entities.Geometry
 
                     break;
                 case ModeManager.PrimaryModes.Lights:
-                    SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
-                    PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
+                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
+                    {
+                        var selectedLight = PaletteManager.Instance.GetSelectedLight();
+
+                        if (selectedLight != null)
+                        {
+                            var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
+                            var destinationDataSource = DataSource;
+
+                            if (destinationIsLayered)
+                            {
+                                var result = await ShowLayerSourceDialog(isDestination: true);
+
+                                if (!result.HasValue)
+                                {
+                                    // Dialog was cancelled, so exit
+                                    return;
+                                }
+
+                                destinationDataSource = result.Value;
+                            }
+
+                            ParentSide.SetLight(destinationDataSource, selectedLight.NativeIndex);
+                        }
+                    }
+                    else
+                    {
+                        SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
+                        PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
+                    }
+
                     break;
                 case ModeManager.PrimaryModes.Media:
                     if (Media != null)
