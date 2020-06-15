@@ -237,11 +237,11 @@ namespace RuntimeCore.Entities.Geometry
                     break;
                 case LevelEntity_Side.DataSources.Secondary:
                     NativeObject.SecondaryTransferMode = newTransferMode;
-                    PrimarySurface.ApplyTexture();
+                    SecondarySurface.ApplyTexture();
                     break;
                 case LevelEntity_Side.DataSources.Transparent:
                     NativeObject.TransparentTransferMode = newTransferMode;
-                    PrimarySurface.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+                    TransparentSurface.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
                     break;
             }
         }
