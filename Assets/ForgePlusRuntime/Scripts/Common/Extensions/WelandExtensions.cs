@@ -24,11 +24,11 @@ namespace Weland.Extensions
         {
             var line = level.Lines[side.LineIndex];
 
-            return dataSource == LevelEntity_Side.DataSources.Primary ||
+            return !line.Transparent ||
+                   !side.HasOpposingPolygon(level) ||
                    dataSource == LevelEntity_Side.DataSources.Secondary ||
-                   side.Type == SideType.Full ||
-                   !line.Transparent ||
-                   !side.HasOpposingPolygon(level);
+                   (dataSource == LevelEntity_Side.DataSources.Primary &&
+                   side.Type != SideType.Full);
         }
 
         public static short RuntimeMinimumHeight(this Platform platform, Level level)
