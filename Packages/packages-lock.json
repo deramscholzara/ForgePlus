@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.unity.burst": {
+      "version": "1.2.3",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.mathematics": "1.1.0"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.ide.visualstudio": {
       "version": "2.0.2",
       "depth": 0,
@@ -7,8 +16,15 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.mathematics": {
+      "version": "1.1.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.render-pipelines.core": {
-      "version": "9.0.0-preview.13",
+      "version": "9.0.0-preview.60",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -17,12 +33,14 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.render-pipelines.universal": {
-      "version": "9.0.0-preview.14",
+      "version": "9.0.0-preview.55",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "9.0.0-preview.13",
-        "com.unity.shadergraph": "9.0.0-preview.14"
+        "com.unity.mathematics": "1.1.0",
+        "com.unity.burst": "1.2.3",
+        "com.unity.render-pipelines.core": "9.0.0-preview.60",
+        "com.unity.shadergraph": "9.0.0-preview.55"
       },
       "url": "https://packages.unity.com"
     },
@@ -34,17 +52,17 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.shadergraph": {
-      "version": "9.0.0-preview.14",
+      "version": "9.0.0-preview.55",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.render-pipelines.core": "9.0.0-preview.13",
-        "com.unity.searcher": "4.0.9"
+        "com.unity.render-pipelines.core": "9.0.0-preview.60",
+        "com.unity.searcher": "4.2.0"
       },
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "3.0.0-preview.13",
+      "version": "3.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -57,7 +75,8 @@
       "depth": 0,
       "source": "builtin",
       "dependencies": {
-        "com.unity.modules.ui": "1.0.0"
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0"
       }
     },
     "com.unity.modules.animation": {
