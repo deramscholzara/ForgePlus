@@ -196,9 +196,9 @@ namespace RuntimeCore.Entities.Geometry
 
                 platformComponent.PrepareForDestruction();
                 UnityEngine.Object.Destroy(platformComponent);
-
-                IsStaticBatchable = true;
             }
+
+            IsStaticBatchable = true;
 
             var platform = GeometryUtilities.GetPlatformForPolygon(polygonEntity.ParentLevel.Level, polygonEntity.NativeObject);
 

@@ -143,16 +143,16 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyPlatform()
         {
+            UnityEngine.Object.Destroy(platformConstraint);
+
+            IsStaticBatchable = true;
+
             if (sideEntity.NativeObject.HasLayeredTransparentSide(sideEntity.ParentLevel.Level))
             {
                 // Note: Layered transparent sides have no opposing platform to
                 //       attach to, because they have no opposing polygon.
                 return;
             }
-
-            UnityEngine.Object.Destroy(platformConstraint);
-
-            IsStaticBatchable = true;
 
             var line = sideEntity.ParentLevel.Level.Lines[sideEntity.ParentLineIndex];
 
