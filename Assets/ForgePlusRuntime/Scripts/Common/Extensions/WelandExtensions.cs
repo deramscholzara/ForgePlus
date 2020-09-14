@@ -48,7 +48,7 @@ namespace Weland.Extensions
 
         public static short RuntimeMaximumHeight(this Platform platform, Level level)
         {
-            if (platform.ExtendsFloorToCeiling)
+            if (platform.UsesNativePolygonHeights)
             {
                 return level.Polygons[platform.PolygonIndex].CeilingHeight;
             }
