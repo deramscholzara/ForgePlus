@@ -33,7 +33,7 @@ namespace Weland.Extensions
 
         public static short RuntimeMinimumHeight(this Platform platform, Level level)
         {
-            if (platform.ExtendsFloorToCeiling)
+            if (platform.UsesNativePolygonHeights)
             {
                 return level.Polygons[platform.PolygonIndex].FloorHeight;
             }
