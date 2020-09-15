@@ -16,6 +16,7 @@ namespace RuntimeCore.Entities.Geometry
         private readonly LevelEntity_Side.DataSources dataSource;
 
         private PlatformConstraint platformConstraint;
+        private short textureOffsetFromFacingCeilingPlatform = 0;
 
         private short LowElevation
         {
@@ -159,6 +160,31 @@ namespace RuntimeCore.Entities.Geometry
             var facingPolygonIndex = sideEntity.IsClockwise ? line.ClockwisePolygonOwner : line.CounterclockwisePolygonOwner;
             var facingPolygon = sideEntity.ParentLevel.Level.Polygons[facingPolygonIndex];
 
+            if (facingPolygon.Type == PolygonType.Platform)
+            {
+                var facingPlatformIndex = facingPolygon.Permutation;
+                if (facingPlatformIndex >= 0 &&
+                    sideEntity.ParentLevel.CeilingPlatforms.ContainsKey(facingPlatformIndex))
+                {
+                    var facingPlatform = sideEntity.ParentLevel.CeilingPlatforms[facingPlatformIndex];
+                    var facingPlatformLowHeight = facingPlatform.NativeObject.RuntimeMinimumHeight(sideEntity.ParentLevel.Level);
+
+                    // If the top of this Side Surface extends higher than the initial state of the Platform it is facing,
+                    // then the UVs need to be shifted down, as they should aligh to top-left of the initial visible area.
+                    // So this offset is determined here, then used later in the ApplyTextureOffset method.
+                    if (facingPlatform.NativeObject.InitiallyExtended &&
+                        HighElevation > facingPlatformLowHeight)
+                    {
+                        textureOffsetFromFacingCeilingPlatform = (short)(HighElevation - facingPlatformLowHeight);
+
+                        if (textureOffsetFromFacingCeilingPlatform < 0)
+                        {
+                            textureOffsetFromFacingCeilingPlatform = 0;
+                        }
+                    }
+                }
+            }
+
             var opposingPolygonIndex = sideEntity.IsClockwise ? line.CounterclockwisePolygonOwner : line.ClockwisePolygonOwner;
             if (opposingPolygonIndex < 0)
             {
@@ -166,7 +192,7 @@ namespace RuntimeCore.Entities.Geometry
             }
 
             var opposingPolygon = sideEntity.ParentLevel.Level.Polygons[opposingPolygonIndex];
-            if (opposingPolygon.Type != Weland.PolygonType.Platform)
+            if (opposingPolygon.Type != PolygonType.Platform)
             {
                 return;
             }
@@ -212,15 +238,15 @@ namespace RuntimeCore.Entities.Geometry
                 switch (dataSource)
                 {
                     case LevelEntity_Side.DataSources.Primary:
-                        UVs = BuildUVs(sideEntity.NativeObject.Primary.X, sideEntity.NativeObject.Primary.Y);
+                        UVs = BuildUVs(sideEntity.NativeObject.Primary.X, (short)(sideEntity.NativeObject.Primary.Y - textureOffsetFromFacingCeilingPlatform));
                         break;
 
                     case LevelEntity_Side.DataSources.Secondary:
-                        UVs = BuildUVs(sideEntity.NativeObject.Secondary.X, sideEntity.NativeObject.Secondary.Y);
+                        UVs = BuildUVs(sideEntity.NativeObject.Secondary.X, (short)(sideEntity.NativeObject.Secondary.Y - textureOffsetFromFacingCeilingPlatform));
                         break;
 
                     case LevelEntity_Side.DataSources.Transparent:
-                        UVs = BuildUVs(sideEntity.NativeObject.Transparent.X, sideEntity.NativeObject.Transparent.Y);
+                        UVs = BuildUVs(sideEntity.NativeObject.Transparent.X, (short)(sideEntity.NativeObject.Transparent.Y - textureOffsetFromFacingCeilingPlatform));
                         break;
 
                     default:
@@ -231,7 +257,7 @@ namespace RuntimeCore.Entities.Geometry
             }
             else
             {
-                UVs = BuildUVs(sideEntity.NativeObject.Transparent.X, sideEntity.NativeObject.Transparent.Y);
+                UVs = BuildUVs(sideEntity.NativeObject.Transparent.X, (short)(sideEntity.NativeObject.Transparent.Y + textureOffsetFromFacingCeilingPlatform));
 
                 SurfaceMesh.SetUVs(channel: 1, UVs);
             }
