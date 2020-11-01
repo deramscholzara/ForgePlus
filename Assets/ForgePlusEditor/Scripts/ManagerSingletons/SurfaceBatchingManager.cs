@@ -1,4 +1,5 @@
-﻿using ForgePlus.DataFileIO;
+﻿using System;
+using ForgePlus.DataFileIO;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System.Collections.Generic;
@@ -155,7 +156,9 @@ namespace ForgePlus.ApplicationGeneral
                     return;
                 }
 
-                mergeObject = new GameObject("Batched Surfaces");
+                var objectDescriptiveName =  $" - {String.Join(" - ", sourceMaterials.Select(entry => entry.name))}";
+                
+                mergeObject = new GameObject("Batched Surfaces" + objectDescriptiveName);
                 mergeObject.transform.SetParent(LevelEntity_Level.Instance.transform);
 
                 var mergedVertices = new List<Vector3>();
@@ -194,7 +197,7 @@ namespace ForgePlus.ApplicationGeneral
                 }
 
                 var mergedMesh = new Mesh();
-                mergedMesh.name = "Batched Mesh";
+                mergedMesh.name = "Batched Mesh" + objectDescriptiveName;
                 mergedMesh.SetVertices(mergedVertices);
                 mergedMesh.SetTriangles(mergedTriangles, submesh: 0);
 
@@ -275,9 +278,19 @@ namespace ForgePlus.ApplicationGeneral
 
                 uniqueMaterials[0] = new Material(key.sourceMaterial);
 
+                if (key.sourceLight != null)
+                {
+                    uniqueMaterials[0].name += $" Light({key.sourceLight.NativeIndex})";
+                }
+
                 if (key.layeredTransparentSideSourceMaterial)
                 {
                     uniqueMaterials[1] = new Material(key.layeredTransparentSideSourceMaterial);
+                    
+                    if (key.layeredTransparentSideSourceLight != null)
+                    {
+                        uniqueMaterials[1].name += $" Light({key.layeredTransparentSideSourceLight.NativeIndex})";
+                    }
                 }
 
                 SurfaceMaterials[key] = uniqueMaterials;
