@@ -261,6 +261,8 @@ namespace ForgePlus.ApplicationGeneral
         [SerializeField]
         private bool batchingEnabled = true;
 
+        [SerializeField] private bool ignoreLights = false;
+
         private readonly Dictionary<BatchKey, Material[]> SurfaceMaterials = new Dictionary<BatchKey, Material[]>();
         private readonly Dictionary<BatchKey, SurfaceBatch> StaticBatches = new Dictionary<BatchKey, SurfaceBatch>();
 
@@ -268,6 +270,12 @@ namespace ForgePlus.ApplicationGeneral
 
         public Material[] GetUniqueMaterials(BatchKey key)
         {
+            if (ignoreLights)
+            {
+                key.sourceLight = null;
+                key.layeredTransparentSideSourceLight = null;
+            }
+            
             if (SurfaceMaterials.ContainsKey(key))
             {
                 return SurfaceMaterials[key];
@@ -305,6 +313,12 @@ namespace ForgePlus.ApplicationGeneral
 
         public void AddToBatches(BatchKey key, RuntimeSurfaceGeometry surfaceGeometry)
         {
+            if (ignoreLights)
+            {
+                key.sourceLight = null;
+                key.layeredTransparentSideSourceLight = null;
+            }
+            
             if (!StaticBatches.ContainsKey(key))
             {
                 StaticBatches[key] = new SurfaceBatch(GetUniqueMaterials(key), key.sourceMedia);
