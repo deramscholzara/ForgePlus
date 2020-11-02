@@ -124,16 +124,17 @@ namespace RuntimeCore.Entities.Geometry
                     PrepareForDestruction();
                     Destroy(gameObject);
                 }
-                else if (rebatchImmediately)
+                else if (rebatchImmediately && SurfaceBatchingManager.Instance.GetBatchIsMerged(geometryModule.BatchKey))
                 {
                     SurfaceBatchingManager.Instance.MergeAllBatches();
                 }
             }
         }
 
-        protected void AssembleSurface(bool rebatchImmediately = true)
+        protected void AssembleSurface()
         {
-            ApplyChange(rebatchImmediately, () => geometryModule.AssembleSurface());
+            ApplyChange(rebatchImmediately: true,
+                        changeAction: () => geometryModule.AssembleSurface());
 
             // If editing isn't possible, then the surface should never need to be updated or rebuilt
 #if NO_EDITING
@@ -143,6 +144,8 @@ namespace RuntimeCore.Entities.Geometry
 
         protected void ApplyChange(bool rebatchImmediately, Action changeAction)
         {
+            rebatchImmediately &= SurfaceBatchingManager.Instance.GetBatchIsMerged(geometryModule.BatchKey);
+
             SurfaceBatchingManager.Instance.UnmergeBatch(geometryModule.BatchKey);
             SurfaceBatchingManager.Instance.RemoveFromBatches(geometryModule.BatchKey, this);
 

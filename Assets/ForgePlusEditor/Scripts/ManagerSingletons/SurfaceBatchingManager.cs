@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Weland;
 
 namespace ForgePlus.ApplicationGeneral
 {
@@ -88,7 +89,7 @@ namespace ForgePlus.ApplicationGeneral
                 this.media = media;
             }
 
-            public void AddSurface(RuntimeSurfaceGeometry surfaceGeometry)
+            public void AddSurface(RuntimeSurfaceGeometry surfaceGeometry, bool deleteOriginalObjects = false)
             {
                 if (surfaces.Any(surface => surface.SurfaceGeometry == surfaceGeometry))
                 {
@@ -106,7 +107,7 @@ namespace ForgePlus.ApplicationGeneral
 
                 if (isMerged)
                 {
-                    Merge();
+                    Merge(deleteOriginalObjects);
                 }
                 else if (media != null)
                 {
@@ -115,7 +116,7 @@ namespace ForgePlus.ApplicationGeneral
             }
 
             // Returns False if this StaticBatch is now empty, true otherwise
-            public bool RemoveSurface(RuntimeSurfaceGeometry surfaceGeometry)
+            public bool RemoveSurface(RuntimeSurfaceGeometry surfaceGeometry, bool deleteOriginalObjects = false)
             {
                 if (!surfaces.Any(surface => surface.SurfaceGeometry == surfaceGeometry))
                 {
@@ -133,7 +134,7 @@ namespace ForgePlus.ApplicationGeneral
 
                 if (isMerged)
                 {
-                    Merge();
+                    Merge(deleteOriginalObjects);
                 }
                 else if (media != null)
                 {
@@ -143,7 +144,7 @@ namespace ForgePlus.ApplicationGeneral
                 return surfaces.Count > 0;
             }
 
-            public void Merge()
+            public void Merge(bool deleteOriginalObjects = false)
             {
                 if (!BatchingEnabled)
                 {
@@ -181,6 +182,11 @@ namespace ForgePlus.ApplicationGeneral
                     else
                     {
                         mergedVertices.AddRange(dynamicMesh.vertices.Select(position => surface.SurfaceGeometry.transform.localToWorldMatrix.MultiplyPoint(position)));
+                    }
+
+                    if (deleteOriginalObjects)
+                    {
+                        DestroyImmediate(surface.SurfaceGeometry.gameObject);
                     }
 
                     mergedUVs.AddRange(dynamicMesh.uv);
@@ -261,7 +267,11 @@ namespace ForgePlus.ApplicationGeneral
         [SerializeField]
         private bool batchingEnabled = true;
 
-        [SerializeField] private bool ignoreLights = false;
+        [SerializeField]
+        private bool ignoreLights = false;
+        
+        [SerializeField]
+        private bool deleteOriginalObjects = false;
 
         private readonly Dictionary<BatchKey, Material[]> SurfaceMaterials = new Dictionary<BatchKey, Material[]>();
         private readonly Dictionary<BatchKey, SurfaceBatch> StaticBatches = new Dictionary<BatchKey, SurfaceBatch>();
@@ -351,6 +361,25 @@ namespace ForgePlus.ApplicationGeneral
             {
                 MergeBatch(key);
             }
+
+            if (deleteOriginalObjects)
+            {
+                foreach (var line in LevelEntity_Level.Instance.Lines.Values)
+                {
+                    if (line.GetComponentsInChildren<Renderer>().Length == 0)
+                    {
+                        Destroy(line.gameObject);
+                    }
+                }
+                
+                foreach (var polygon in LevelEntity_Level.Instance.Polygons.Values)
+                {
+                    if (polygon.GetComponentsInChildren<Renderer>().Length == 0)
+                    {
+                        Destroy(polygon.gameObject);
+                    }
+                }
+            }
         }
 
         public void UnmergeAllBatches()
@@ -374,7 +403,7 @@ namespace ForgePlus.ApplicationGeneral
         //       since MergeAllBatched only merges unmerged ones.
         private void MergeBatch(BatchKey key)
         {
-            StaticBatches[key].Merge();
+            StaticBatches[key].Merge(deleteOriginalObjects);
         }
 
         private bool GetBatchExists(BatchKey key)
@@ -384,6 +413,11 @@ namespace ForgePlus.ApplicationGeneral
 
         private void OnLevelOpened(string levelName)
         {
+            if (string.IsNullOrEmpty(levelName))
+            {
+                return;
+            }
+            
             if (batchingEnabled)
             {
                 MergeAllBatches();
