@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Weland
@@ -232,37 +233,19 @@ namespace Weland
 
         public Texture2D GetShape(byte ColorTableIndex, byte BitmapIndex)
         {
-            Bitmap bitmap = Type == CollectionType.Wall && BitmapIndex < (lowLevelShapeCount - 1) ? bitmaps[lowLevelShapes[BitmapIndex].BitmapIndex] : bitmaps[BitmapIndex];
-            ColorValue[] colorTable = colorTables[ColorTableIndex];
-            Color[] colors = new Color[colorTable.Length];
-            bool hasAlpha = false;
-
-            for (int i = 0; i < colorTable.Length; i++)
-            {
-                ColorValue color = colorTable[i];
-                colors[i].r = (float)color.Red / (float)ushort.MaxValue;
-                colors[i].g = (float)color.Green / (float)ushort.MaxValue;
-                colors[i].b = (float)color.Blue / (float)ushort.MaxValue;
-                if (colors[i].r != 0.0f || colors[i].g != 0.0f || colors[i].b != 1.0f)
-                {
-                    colors[i].a = 1;
-                }
-                else
-                {
-                    colors[i].a = 0;
-                }
-            }
-
-            Texture2D result;
-            for (int i = 0; i < bitmap.Data.Length; i++)
-            {
-                if (bitmap.Data[i] == 0)
-                {
-                    hasAlpha = true;
-                }
-            }
-
+            var bitmap = Type == CollectionType.Wall && BitmapIndex < (lowLevelShapeCount - 1) ? bitmaps[lowLevelShapes[BitmapIndex].BitmapIndex] : bitmaps[BitmapIndex];
+            
+            var colors = colorTables[ColorTableIndex].Select(color => new Color(
+                (float)color.Red / (float)ushort.MaxValue,
+                (float)color.Green / (float)ushort.MaxValue,
+                (float)color.Blue / (float)ushort.MaxValue)).ToArray();
+            
+            // The first color table entry always represents transparent pixels
+            colors[0].a = 0f;
+            
+            bool hasAlpha = bitmap.Data.Any(entry => entry == 0);
             bool isLandscape = Type == CollectionType.Wall && bitmap.Width > bitmap.Height;
+            Texture2D result;
 
             if (hasAlpha)
             {
