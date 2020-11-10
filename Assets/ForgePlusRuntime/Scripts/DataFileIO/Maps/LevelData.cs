@@ -162,8 +162,9 @@ namespace ForgePlus.DataFileIO
 
             #region Initialization_Textures
             var buildTexturesStartTime = DateTime.Now;
-
-            // Initialize Textures here so they are in proper index order
+            
+#if !NO_EDITING
+            // Initialize Textures here so they in proper index order for the texturing interface
             var landscapeShapeDescriptor = new ShapeDescriptor();
             // Note: Landscape collections in Shapes are respectively sequential to Landscape map info starting at 27
             landscapeShapeDescriptor.Collection = (byte)(level.Landscape + 27);
@@ -180,7 +181,8 @@ namespace ForgePlus.DataFileIO
                     break;
                 }
             }
-
+#endif
+            
             Debug.Log($"--- LevelBuild: Built Textures in timespan: {DateTime.Now - buildTexturesStartTime}");
             #endregion Initialization_Textures
 
