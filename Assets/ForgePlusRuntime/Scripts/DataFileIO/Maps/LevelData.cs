@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Scripting;
 using Weland;
 
 namespace ForgePlus.DataFileIO
@@ -133,6 +134,8 @@ namespace ForgePlus.DataFileIO
 
         private async Task BuildLevel()
         {
+            GarbageCollector.GCMode = GarbageCollector.Mode.Disabled;
+            
             var initializeLevelStartTime = DateTime.Now;
 
             runtimeLevel = new GameObject($"Level ({LevelName})").AddComponent<LevelEntity_Level>();
@@ -323,6 +326,8 @@ namespace ForgePlus.DataFileIO
                 runtimeLevel.Annotations[(short)i] = annotationInstance;
             }
             #endregion Annotations
+
+            GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
         }
 
         private async void LevelInitializationDebugTimer(DateTime startTime)
