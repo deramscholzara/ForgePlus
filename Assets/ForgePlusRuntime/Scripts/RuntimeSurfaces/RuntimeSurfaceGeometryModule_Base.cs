@@ -6,6 +6,9 @@ namespace RuntimeCore.Entities.Geometry
 {
     public abstract class RuntimeSurfaceGeometryModule_Base : IDestructionPreparable
     {
+        protected int lastTextureIndex;
+        protected int lastLightIndex;
+
         public SurfaceBatchingManager.BatchKey BatchKey { get; protected set; }
 
         public bool IsStaticBatchable { get; protected set; } = true;
