@@ -131,9 +131,9 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
-        protected void AssembleSurface()
+        private void AssembleSurface()
         {
-            ApplyChange(rebatchImmediately: true,
+            ApplyChange(rebatchImmediately: false,
                         changeAction: () => geometryModule.AssembleSurface());
 
             // If editing isn't possible, then the surface should never need to be updated or rebuilt
@@ -141,8 +141,8 @@ namespace RuntimeCore.Entities.Geometry
             Destroy(this);
 #endif
         }
-
-        protected void ApplyChange(bool rebatchImmediately, Action changeAction)
+        
+        private void ApplyChange(bool rebatchImmediately, Action changeAction)
         {
             rebatchImmediately &= SurfaceBatchingManager.Instance.GetBatchIsMerged(geometryModule.BatchKey);
 
