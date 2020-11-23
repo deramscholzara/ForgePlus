@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Scripting;
 using Weland;
 
 namespace ForgePlus.DataFileIO
@@ -134,7 +133,9 @@ namespace ForgePlus.DataFileIO
 
         private async Task BuildLevel()
         {
+#if !UNITY_EDITOR
             GarbageCollector.GCMode = GarbageCollector.Mode.Disabled;
+#endif
             
             var initializeLevelStartTime = DateTime.Now;
 
@@ -219,6 +220,10 @@ namespace ForgePlus.DataFileIO
 
             await Task.Yield();
 
+#if USE_TEXTURE_ARRAYS
+            MaterialGeneration_Geometry.TextureArraysArePopulating = true;
+#endif
+            
             var chunkLoadStartTime = DateTime.Now;
 
             #region Polygons_And_Media
@@ -274,6 +279,14 @@ namespace ForgePlus.DataFileIO
             #endregion Lines_And_Sides
 
             await Task.Yield();
+            
+#if USE_TEXTURE_ARRAYS
+            MaterialGeneration_Geometry.ApplyTextureArrays();
+            
+            MaterialGeneration_Geometry.TextureArraysArePopulating = false;
+
+            await Task.Yield();
+#endif
 
             #region Objects_And_Placements
             var buildObjectsStartTime = DateTime.Now;
@@ -327,7 +340,11 @@ namespace ForgePlus.DataFileIO
             }
             #endregion Annotations
 
+            await Task.Yield();
+
+#if !UNITY_EDITOR
             GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
+#endif
         }
 
         private async void LevelInitializationDebugTimer(DateTime startTime)

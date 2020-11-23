@@ -139,7 +139,6 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyTransformPosition()
         {
-
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
@@ -264,7 +263,7 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyTextureOffset(bool innerLayer = true)
         {
-            Vector2[] UVs;
+            Vector4[] UVs;
 
             switch (dataSource)
             {
@@ -283,7 +282,7 @@ namespace RuntimeCore.Entities.Geometry
                 default:
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
-
+            
             SurfaceMesh.SetUVs(channel: 0, UVs);
         }
 
@@ -298,7 +297,7 @@ namespace RuntimeCore.Entities.Geometry
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    vertexColor = GetTransferModeVertexColor(polygonEntity.NativeObject.FloorTransferMode);
+                    vertexColor = GetTransferModeVertexColor(polygonEntity.NativeObject.CeilingTransferMode);
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
@@ -326,19 +325,25 @@ namespace RuntimeCore.Entities.Geometry
             {
                 case LevelEntity_Polygon.DataSources.Floor:
                     modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.FloorLight];
+                    lastLightIndex = polygonEntity.NativeObject.FloorLight;
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
                     modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.CeilingLight];
+                    lastLightIndex = polygonEntity.NativeObject.CeilingLight;
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
                     modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.MediaLight];
-                    return;
+                    lastLightIndex = polygonEntity.NativeObject.MediaLight;
+                    break;
 
                 default:
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
+            
+            var UVs = SurfaceMesh.uv.Select(uv => new Vector4(uv.x, uv.y, lastLightIndex, lastTextureIndex)).ToArray();
+            SurfaceMesh.SetUVs(0, UVs);
 
             BatchKey = modifiedBatchKey;
         }
@@ -373,22 +378,46 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
+#if USE_TEXTURE_ARRAYS
+                    modifiedBatchKey.sourceShapeDescriptor = polygonEntity.NativeObject.FloorTexture;
+#endif
                     modifiedBatchKey.sourceMaterial =
-                        MaterialGeneration_Geometry.GetMaterial(polygonEntity.NativeObject.FloorTexture,
-                                                    polygonEntity.NativeObject.FloorTransferMode,
-                                                    isOpaqueSurface: true,
-                                                    MaterialGeneration_Geometry.SurfaceTypes.Normal,
-                                                    incrementUsageCounter: true);
+                        MaterialGeneration_Geometry.GetMaterial(
+                            polygonEntity.NativeObject.FloorTexture,
+                            polygonEntity.NativeObject.FloorTransferMode,
+                            isOpaqueSurface: true,
+                            MaterialGeneration_Geometry.SurfaceTypes.Normal,
+                            incrementUsageCounter: true);
+            
+#if USE_TEXTURE_ARRAYS
+                    lastTextureIndex = MaterialGeneration_Geometry.GetTextureArrayIndex(
+                        polygonEntity.NativeObject.FloorTexture,
+                        polygonEntity.NativeObject.FloorTransferMode,
+                        isOpaqueSurface: true,
+                        MaterialGeneration_Geometry.SurfaceTypes.Normal);
+#endif
 
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
+#if USE_TEXTURE_ARRAYS
+                    modifiedBatchKey.sourceShapeDescriptor = polygonEntity.NativeObject.CeilingTexture;
+#endif
                     modifiedBatchKey.sourceMaterial =
-                        MaterialGeneration_Geometry.GetMaterial(polygonEntity.NativeObject.CeilingTexture,
-                                                    polygonEntity.NativeObject.CeilingTransferMode,
-                                                    isOpaqueSurface: true,
-                                                    MaterialGeneration_Geometry.SurfaceTypes.Normal,
-                                                    incrementUsageCounter: true);
+                        MaterialGeneration_Geometry.GetMaterial(
+                            polygonEntity.NativeObject.CeilingTexture,
+                            polygonEntity.NativeObject.CeilingTransferMode,
+                            isOpaqueSurface: true,
+                            MaterialGeneration_Geometry.SurfaceTypes.Normal,
+                            incrementUsageCounter: true);
+            
+#if USE_TEXTURE_ARRAYS
+                    lastTextureIndex = MaterialGeneration_Geometry.GetTextureArrayIndex(
+                        polygonEntity.NativeObject.CeilingTexture,
+                        polygonEntity.NativeObject.CeilingTransferMode,
+                        isOpaqueSurface: true,
+                        MaterialGeneration_Geometry.SurfaceTypes.Normal);
+#endif
 
                     break;
 
@@ -418,19 +447,34 @@ namespace RuntimeCore.Entities.Geometry
                             mediaShapeDescriptor.Bitmap = 13;
                             break;
                     }
-
+                    
+#if USE_TEXTURE_ARRAYS
+                    modifiedBatchKey.sourceShapeDescriptor = mediaShapeDescriptor;
+#endif
                     modifiedBatchKey.sourceMaterial =
-                        MaterialGeneration_Geometry.GetMaterial(mediaShapeDescriptor,
-                                                    (short)TransferModes.Normal,
-                                                    isOpaqueSurface: true,
-                                                    MaterialGeneration_Geometry.SurfaceTypes.Media,
-                                                    incrementUsageCounter: false);
+                        MaterialGeneration_Geometry.GetMaterial(
+                            mediaShapeDescriptor,
+                            (short)TransferModes.Normal,
+                            isOpaqueSurface: true,
+                            MaterialGeneration_Geometry.SurfaceTypes.Media,
+                            incrementUsageCounter: false);
+            
+#if USE_TEXTURE_ARRAYS
+                    lastTextureIndex = MaterialGeneration_Geometry.GetTextureArrayIndex(
+                        mediaShapeDescriptor,
+                        (short) TransferModes.Normal,
+                        isOpaqueSurface: true,
+                        MaterialGeneration_Geometry.SurfaceTypes.Media);
+#endif
 
                     break;
 
                 default:
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
+            
+            var UVs = SurfaceMesh.uv.Select(uv => new Vector4(uv.x, uv.y, lastLightIndex, lastTextureIndex)).ToArray();
+            SurfaceMesh.SetUVs(0, UVs);
 
             BatchKey = modifiedBatchKey;
         }
@@ -522,9 +566,9 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
-        private Vector2[] BuildUVs(short textureOffsetX, short textureOffsetY)
+        private Vector4[] BuildUVs(short textureOffsetX, short textureOffsetY)
         {
-            var meshUVs = new Vector2[polygonEntity.NativeObject.VertexCount];
+            var meshUVs = new Vector4[polygonEntity.NativeObject.VertexCount];
 
             for (var i = 0; i < polygonEntity.NativeObject.VertexCount; i++)
             {
@@ -532,9 +576,11 @@ namespace RuntimeCore.Entities.Geometry
 
                 var u = -(vertexPosition.z * GeometryUtilities.MeterToWorldUnit);
                 var v = -(vertexPosition.x * GeometryUtilities.MeterToWorldUnit);
-                var floorOffset = new Vector2(textureOffsetY / GeometryUtilities.WorldUnitIncrementsPerWorldUnit,
-                                              -textureOffsetX / GeometryUtilities.WorldUnitIncrementsPerWorldUnit);
-                meshUVs[i] = new Vector2(u, v) + floorOffset;
+                var floorOffset = new Vector4(textureOffsetY / GeometryUtilities.WorldUnitIncrementsPerWorldUnit,
+                                              -textureOffsetX / GeometryUtilities.WorldUnitIncrementsPerWorldUnit,
+                                              0f,
+                                              0f);
+                meshUVs[i] = new Vector4(u, v, lastLightIndex, lastTextureIndex) + floorOffset;
             }
 
             return meshUVs;

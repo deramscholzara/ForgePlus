@@ -18,6 +18,23 @@ namespace ForgePlus.ApplicationGeneral
 #pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
 #pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
         {
+            // Note: Using Material instead of just ShapeDescriptor here,
+            // as it accounts for unique shaders used for the same texture.
+            // (such as a media texture applied to a wall vs actually applied to media)
+            public Material sourceMaterial;
+            public Material layeredTransparentSideSourceMaterial;
+            
+            public LevelEntity_Light sourceLight;
+            public LevelEntity_Light layeredTransparentSideSourceLight;
+            
+            public LevelEntity_Media sourceMedia;
+            
+#if USE_TEXTURE_ARRAYS
+            // Note: textures are always separated by material (shader) when not using Texture2DArrays
+            public ShapeDescriptor sourceShapeDescriptor;
+            public ShapeDescriptor layeredTransparentSideShapeDescriptor;
+#endif
+            
             public static bool operator ==(BatchKey a, BatchKey b)
             {
                 return !(a != b);
@@ -32,15 +49,6 @@ namespace ForgePlus.ApplicationGeneral
                        a.layeredTransparentSideSourceMaterial != b.layeredTransparentSideSourceMaterial ||
                        a.layeredTransparentSideSourceLight != b.layeredTransparentSideSourceLight;
             }
-
-            // Note: Using Material instead of ShapeDescriptor here,
-            // as it accounts for unique shaders used for the same texture.
-            // (such as a media texture applied to a wall vs actually applied to media)
-            public Material sourceMaterial;
-            public LevelEntity_Light sourceLight;
-            public LevelEntity_Media sourceMedia;
-            public Material layeredTransparentSideSourceMaterial;
-            public LevelEntity_Light layeredTransparentSideSourceLight;
         }
 
         private class SurfaceBatch
@@ -157,83 +165,98 @@ namespace ForgePlus.ApplicationGeneral
                     return;
                 }
 
-                var objectDescriptiveName =  $" - {String.Join(" - ", sourceMaterials.Select(entry => entry.name))}";
+                var objectDescriptiveName =  $" - {String.Join(" - ", sourceMaterials.Select(entry => entry.name).ToArray())}";
                 
                 mergeObject = new GameObject("Batched Surfaces" + objectDescriptiveName);
                 mergeObject.transform.SetParent(LevelEntity_Level.Instance.transform);
 
-                var mergedVertices = new List<Vector3>();
-                var mergedTriangles = new List<int>();
-                var mergedUVs = new List<Vector2>();
-                var mergedUV1s = new List<Vector2>();
-                var mergedUV2s = new List<Vector2>();
-                var mergedUV3s = new List<Vector2>();
-                var mergedColors = new List<Color>();
-
-                foreach (var surface in surfaces)
+                if (Instance.UseUnityStaticBatching && media == null)
                 {
-                    var dynamicMesh = surface.MakeStaticAndGetMesh();
-                    mergedTriangles.AddRange(dynamicMesh.triangles.Select(triangleIndex => triangleIndex + mergedVertices.Count));
+                    var objectsToBatch = surfaces.Select(surface => surface.SurfaceGeometry.gameObject).ToArray();
+                    StaticBatchingUtility.Combine(objectsToBatch, mergeObject);
+                }
+                else
+                {
+                    var mergedVertices = new List<Vector3>();
+                    var mergedTriangles = new List<int>();
+                    var mergedUVs = new List<Vector4>();
+                    var mergedUV1s = new List<Vector4>();
+                    var mergedUV2s = new List<Vector4>();
+                    var mergedColors = new List<Color>();
 
-                    if (media != null)
+                    foreach (var surface in surfaces)
                     {
-                        mergedVertices.AddRange(dynamicMesh.vertices);
-                    }
-                    else
-                    {
-                        mergedVertices.AddRange(dynamicMesh.vertices.Select(position => surface.SurfaceGeometry.transform.localToWorldMatrix.MultiplyPoint(position)));
+                        var dynamicMesh = surface.MakeStaticAndGetMesh();
+                        mergedTriangles.AddRange(dynamicMesh.triangles.Select(triangleIndex => triangleIndex + mergedVertices.Count));
+
+                        if (media != null)
+                        {
+                            mergedVertices.AddRange(dynamicMesh.vertices);
+                        }
+                        else
+                        {
+                            mergedVertices.AddRange(dynamicMesh.vertices.Select(position => surface.SurfaceGeometry.transform.localToWorldMatrix.MultiplyPoint(position)));
+                        }
+
+                        if (deleteOriginalObjects)
+                        {
+                            DestroyImmediate(surface.SurfaceGeometry.gameObject);
+                        }
+
+                        var uv0s = new List<Vector4>();
+                        dynamicMesh.GetUVs(0, uv0s);
+                        mergedUVs.AddRange(uv0s);
+
+                        if (sourceMaterials.Length > 1)
+                        {
+                            var uv1s = new List<Vector4>();
+                            dynamicMesh.GetUVs(1, uv1s);
+                            mergedUV1s.AddRange(uv1s);
+                            
+                            var uv2s = new List<Vector4>();
+                            dynamicMesh.GetUVs(2, uv2s);
+                            mergedUV2s.AddRange(uv2s);
+                        }
+
+                        mergedColors.AddRange(dynamicMesh.colors);
                     }
 
-                    if (deleteOriginalObjects)
-                    {
-                        DestroyImmediate(surface.SurfaceGeometry.gameObject);
-                    }
+                    var mergedMesh = new Mesh();
+                    mergedMesh.name = "Batched Mesh" + objectDescriptiveName;
+                    mergedMesh.SetVertices(mergedVertices);
+                    mergedMesh.SetTriangles(mergedTriangles, submesh: 0);
 
-                    mergedUVs.AddRange(dynamicMesh.uv);
+                    if (mergedVertices.Count != mergedUVs.Count)
+                    {
+                        Debug.Log($"{mergedVertices.Count} : {mergedUVs.Count}");
+                        foreach (var surface in surfaces)
+                        {
+                            Debug.Log(surface.SurfaceGeometry.gameObject, surface.SurfaceGeometry.gameObject);
+                        }
+                    }
+                    mergedMesh.SetUVs(channel: 0, uvs: mergedUVs);
 
                     if (sourceMaterials.Length > 1)
                     {
-                        // Mesh.uv2 is uv1 in shaders/channels, because Unity is afraid to break old code and fix this
-                        mergedUV1s.AddRange(dynamicMesh.uv2);
-                        mergedUV2s.AddRange(dynamicMesh.uv3);
-                        mergedUV3s.AddRange(dynamicMesh.uv4);
+                        mergedMesh.SetUVs(channel: 1, uvs: mergedUV1s);
+                        mergedMesh.SetUVs(channel: 2, uvs: mergedUV2s);
                     }
 
-                    mergedColors.AddRange(dynamicMesh.colors);
-                }
+                    mergedMesh.SetColors(mergedColors);
+                    mergedMesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
+                                                  MeshUpdateFlags.DontRecalculateBounds |
+                                                  MeshUpdateFlags.DontResetBoneBounds);
+                    mergedMesh.RecalculateTangents(MeshUpdateFlags.DontNotifyMeshUsers |
+                                                   MeshUpdateFlags.DontRecalculateBounds |
+                                                   MeshUpdateFlags.DontResetBoneBounds);
 
-                var mergedMesh = new Mesh();
-                mergedMesh.name = "Batched Mesh" + objectDescriptiveName;
-                mergedMesh.SetVertices(mergedVertices);
-                mergedMesh.SetTriangles(mergedTriangles, submesh: 0);
+                    mergeObject.AddComponent<MeshFilter>().sharedMesh = mergedMesh;
+                    mergeObject.AddComponent<MeshRenderer>().sharedMaterials = sourceMaterials;
 
-                if (mergedVertices.Count != mergedUVs.Count)
-                {
-                    Debug.Log($"{mergedVertices.Count} : {mergedUVs.Count}");
-                }
-                mergedMesh.SetUVs(channel: 0, uvs: mergedUVs);
-
-                if (sourceMaterials.Length > 1)
-                {
-                    mergedMesh.SetUVs(channel: 1, uvs: mergedUV1s);
-                    mergedMesh.SetUVs(channel: 2, uvs: mergedUV2s);
-                    mergedMesh.SetUVs(channel: 3, uvs: mergedUV3s);
-                }
-
-                mergedMesh.SetColors(mergedColors);
-                mergedMesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
-                                              MeshUpdateFlags.DontRecalculateBounds |
-                                              MeshUpdateFlags.DontResetBoneBounds);
-                mergedMesh.RecalculateTangents(MeshUpdateFlags.DontNotifyMeshUsers |
-                                               MeshUpdateFlags.DontRecalculateBounds |
-                                               MeshUpdateFlags.DontResetBoneBounds);
-
-                mergeObject.AddComponent<MeshFilter>().sharedMesh = mergedMesh;
-                mergeObject.AddComponent<MeshRenderer>().sharedMaterials = sourceMaterials;
-
-                if (media != null)
-                {
-                    media.SubscribeSurface(mergeObject.transform);
+                    if (media != null)
+                    {
+                        media.SubscribeSurface(mergeObject.transform);
+                    }
                 }
             }
 
@@ -264,11 +287,30 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        [Tooltip("Geometry is combined using Unity's Static Batching utilities instead of the usually-better Forge+ method.")]
+        public bool UseUnityStaticBatching = false;
+        
+        [Tooltip("Batching combines geometry with identical properties (lights, textures, shaders).")]
         [SerializeField]
         private bool batchingEnabled = true;
 
+        [Tooltip("For batching purposes, determines whether lights should be treated as distinct (enabled) or identical (disabled).")]
         [SerializeField]
-        private bool ignoreLights = false;
+        private bool separateLights = false;
+        // TODO: !!! - implement lights texture so that this being false by default makes sense with or without texture arrays.
+        // TODO: !!! - UV0.z is the main texture index, so UV1.z should be the layered texture index
+        // TODO: !!! - UV0.w and UV1.w should represent the lights for these layers, respectively.
+        
+#if USE_TEXTURE_ARRAYS
+        [Tooltip("For batching purposes, determines whether textures (bitmaps) should be treated as distinct (enabled) or identical (disabled).")]
+        [SerializeField]
+        private bool separateTextures = false;
+#endif
+        
+        [Tooltip("For batching purposes, determines whether shaders should be treated as distinct (enabled) or identical (disabled)." +
+                 "\nDistinct shaders include: Opaque, Transparent, Media, Landscape, and Unassigned.")]
+        [SerializeField]
+        private bool separateShaders = true;
         
         [SerializeField]
         private bool deleteOriginalObjects = false;
@@ -280,27 +322,70 @@ namespace ForgePlus.ApplicationGeneral
 
         public Material[] GetUniqueMaterials(BatchKey key)
         {
-            if (ignoreLights)
+            if (!separateLights)
             {
                 key.sourceLight = null;
                 key.layeredTransparentSideSourceLight = null;
             }
             
+#if USE_TEXTURE_ARRAYS
+            if (!separateTextures)
+            {
+                key.sourceShapeDescriptor = ShapeDescriptor.Empty;
+                key.layeredTransparentSideShapeDescriptor = ShapeDescriptor.Empty;
+            }
+#endif
+
+            var materialCount = key.layeredTransparentSideSourceMaterial ? 2 : 1;
+
+            if (!separateShaders)
+            {
+                key.sourceMaterial = null;
+                key.layeredTransparentSideSourceMaterial = null;
+            }
+            
             if (SurfaceMaterials.ContainsKey(key))
             {
-                return SurfaceMaterials[key];
+                if (separateShaders)
+                {
+                    return SurfaceMaterials[key];
+                }
+                
+                return materialCount == 2 ?
+                    new Material[]
+                    {
+                        SurfaceMaterials[key][0],
+                        SurfaceMaterials[key][0]
+                    } :
+                    SurfaceMaterials[key];
+            }
+            
+            Material[] uniqueMaterials = new Material[materialCount];
+
+#if USE_TEXTURE_ARRAYS
+            if (!separateLights &&
+                !separateTextures &&
+                separateShaders)
+            {
+                // Everything should be consolidated, so use the source materials directly
+                // TODO: !!! - This code becomes unnecessary once the arrays are properly reassigned (see notes below)
+                uniqueMaterials[0] = key.sourceMaterial;
+
+                if (materialCount == 2)
+                {
+                    uniqueMaterials[1] = key.layeredTransparentSideSourceMaterial;
+                }
             }
             else
+#endif
             {
-                Material[] uniqueMaterials = key.layeredTransparentSideSourceMaterial ? new Material[2] : new Material[1];
-
                 uniqueMaterials[0] = new Material(key.sourceMaterial);
-
+                
                 if (key.sourceLight != null)
                 {
                     uniqueMaterials[0].name += $" Light({key.sourceLight.NativeIndex})";
                 }
-
+                
                 if (key.layeredTransparentSideSourceMaterial)
                 {
                     uniqueMaterials[1] = new Material(key.layeredTransparentSideSourceMaterial);
@@ -310,23 +395,41 @@ namespace ForgePlus.ApplicationGeneral
                         uniqueMaterials[1].name += $" Light({key.layeredTransparentSideSourceLight.NativeIndex})";
                     }
                 }
-
-                SurfaceMaterials[key] = uniqueMaterials;
-
-                key.sourceLight?.SubscribeMaterial(uniqueMaterials[0]);
-                key.layeredTransparentSideSourceLight?.SubscribeMaterial(uniqueMaterials[1]);
-                key.sourceMedia?.SubscribeMaterial(uniqueMaterials[0]);
-
-                return uniqueMaterials;
+                
+#if USE_TEXTURE_ARRAYS
+                // TODO: !!! Need to make sure that the Texture2DArray gets reassigned when it changes
+                //       (such as on level load or if a new texture starts being used).
+                //       Doesn't matter if materials aren't being split (above), since the original material is used.
+#endif
             }
+            
+            SurfaceMaterials[key] = uniqueMaterials;
+            
+            key.sourceMedia?.SubscribeMaterial(uniqueMaterials[0]);
+            
+            return uniqueMaterials;
         }
 
         public void AddToBatches(BatchKey key, RuntimeSurfaceGeometry surfaceGeometry)
         {
-            if (ignoreLights)
+            if (!separateLights)
             {
                 key.sourceLight = null;
                 key.layeredTransparentSideSourceLight = null;
+            }
+            
+#if USE_TEXTURE_ARRAYS
+            if (!separateTextures)
+            {
+                key.sourceShapeDescriptor = ShapeDescriptor.Empty;
+                key.layeredTransparentSideShapeDescriptor = ShapeDescriptor.Empty;
+            }
+#endif
+
+            if (!separateShaders)
+            {
+                key.sourceMaterial = null;
+                key.layeredTransparentSideSourceMaterial = null;
             }
             
             if (!StaticBatches.ContainsKey(key))
