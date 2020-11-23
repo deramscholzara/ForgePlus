@@ -174,6 +174,7 @@ namespace RuntimeCore.Entities.MapObjects
             if (!MapObjectPlaceholderMaterial)
             {
                 MapObjectPlaceholderMaterial = new Material(Shader.Find("ForgePlus/MapObjectPlaceholder"));
+                MapObjectPlaceholderMaterial.enableInstancing = true;
                 MapObjectPlaceholderSelectedMaterial = new Material(MapObjectPlaceholderMaterial);
                 MapObjectPlaceholderSelectedMaterial.SetFloat(selectedShaderPropertyId, 1f);
             }

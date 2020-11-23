@@ -4,8 +4,11 @@ using RuntimeCore.Common;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using Weland;
+using Random = UnityEngine.Random;
 
 namespace RuntimeCore.Entities
 {
@@ -21,11 +24,13 @@ namespace RuntimeCore.Entities
             PrimaryInactive,
             SecondaryInactive,
         }
-
+        
+        public static readonly int lightIntensityGlobalPropertyId = Shader.PropertyToID("_LightIntensity");
+        public static Texture2D LightTexture { get; private set; }
+        
         // One "tick" = 1/30 seconds.  This is used to maintain classic flicker frequency.
         private const float mininumFlickerDuration = 1f / 30f;
-
-        private static readonly int lightIntensityPropertyId = Shader.PropertyToID("_LightIntensity");
+        
         private readonly AnimationCurve smoothLightCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
 
         public short NativeIndex { get; set; }
@@ -33,7 +38,7 @@ namespace RuntimeCore.Entities
 
         public LevelEntity_Level ParentLevel { private get; set; }
 
-        public float CurrentGammaIntensity { get; private set; }
+        public float CurrentDisplayIntensity { get; private set; }
 
         public float CurrentLinearIntensity
         {
@@ -45,13 +50,14 @@ namespace RuntimeCore.Entities
             {
                 currentLinearIntensity = value;
 
-                // Square to convert to gamma-space values (only needed if the project is in Linear space)
-                CurrentGammaIntensity = currentLinearIntensity * currentLinearIntensity;
-
-                foreach (var material in subscribedMaterials)
+                if (QualitySettings.activeColorSpace == ColorSpace.Linear)
                 {
-                    material.SetFloat(lightIntensityPropertyId, CurrentGammaIntensity);
+                    // Square to convert to gamma-space values (only needed if the project is in Linear space)
+                    CurrentDisplayIntensity = currentLinearIntensity * currentLinearIntensity;
                 }
+                
+                LightTexture.SetPixel(NativeIndex, 0, new Color(CurrentDisplayIntensity, 0f, 0f, 0f), 0);
+                LightTexture.Apply();
             }
         }
 
@@ -61,16 +67,28 @@ namespace RuntimeCore.Entities
         private short remainingPhaseOffset;
         private float remainingPhaseTime = 0f;
 
-        private List<Material> subscribedMaterials = new List<Material>();
-
         private CancellationTokenSource lightPhaseCTS;
 
         public LevelEntity_Light(short index, Weland.Light light, LevelEntity_Level level)
         {
+            if (!LightTexture)
+            {
+                LightTexture = new Texture2D(
+                    width: 256,
+                    height: 1,
+                    textureFormat: TextureFormat.R16,
+                    mipChain: false,
+                    linear: false);
+
+                LightTexture.wrapMode = TextureWrapMode.Clamp;
+                LightTexture.filterMode = FilterMode.Point;
+                Shader.SetGlobalTexture(lightIntensityGlobalPropertyId, LightTexture);
+            }
+            
             NativeIndex = index;
             NativeObject = light;
             ParentLevel = level;
-
+            
             BeginRuntimeStyleBehavior();
         }
 
@@ -91,18 +109,6 @@ namespace RuntimeCore.Entities
         {
             lightPhaseCTS?.Cancel();
             lightPhaseCTS = null;
-        }
-
-        public void SubscribeMaterial(Material material)
-        {
-            subscribedMaterials.Add(material);
-
-            material.SetFloat(lightIntensityPropertyId, CurrentGammaIntensity);
-        }
-
-        public void UnsubscribeMaterial(Material material)
-        {
-            subscribedMaterials.Remove(material);
         }
 
         public void BeginRuntimeStyleBehavior()

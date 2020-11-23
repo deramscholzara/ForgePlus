@@ -85,7 +85,7 @@ namespace Weland
             if (d.Bitmap < coll.BitmapCount && d.CLUT < coll.ColorTableCount)
             {
                 var shape = coll.GetShape(d.CLUT, d.Bitmap);
-                shape.name = $"CLUT({d.CLUT}) Bitmap({d.Bitmap})";
+                shape.name = $"CLUT({d.CLUT}) Bitmap({d.Bitmap}) Collection({d.Collection})";
                 return shape;
             }
             else
