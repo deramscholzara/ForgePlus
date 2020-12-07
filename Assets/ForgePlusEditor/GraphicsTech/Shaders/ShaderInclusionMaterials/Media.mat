@@ -29,5 +29,6 @@ Material:
     - _MediaDepth: 1
     - _MediaDirectionAngle: 25
     - _MediaFlowSpeed: 0
-    m_Colors: []
+    m_Colors:
+    - _SubMediaColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_BuildTextureStacks: []
