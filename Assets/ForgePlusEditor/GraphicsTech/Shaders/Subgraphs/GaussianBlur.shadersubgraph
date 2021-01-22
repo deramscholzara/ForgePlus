@@ -253,8 +253,8 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 192.00001525878907,
-            "y": -115.00000762939453,
+            "x": 193.0,
+            "y": -117.0,
             "width": 249.0,
             "height": 190.0
         }
@@ -287,7 +287,7 @@
     "m_SourceType": 1,
     "m_FunctionName": "Blur",
     "m_FunctionSource": "",
-    "m_FunctionBody": "BlurredColor = 0;\n\nhalf2 offsetOrigin = BlurSize * -0.5;\n\nAxialSamples = floor(AxialSamples);\n\nif (AxialSamples.x <= 1)\n{\n\tAxialSamples.x = 1;\n\toffsetOrigin.x = 0;\n}\n\nif (AxialSamples.y <= 1)\n{\n\tAxialSamples.y = 1;\n\toffsetOrigin.y = 0;\n}\n\nhalf2 sampleDelta = BlurSize / max(1, AxialSamples - 1);\n\nhalf x = 0;\nhalf y = 0;\n\nwhile (y < AxialSamples.y)\n{\n\tx = 0;\n\n\twhile (x < AxialSamples.x)\n\t{\n\t\tBlurredColor += SceneColor.Sample(Sampler, ScreenPosition + offsetOrigin + (half2(x, y) * sampleDelta));\n\t\t\n\t\tx++;\n\t}\n\t\n\ty++;\n}\n\nBlurredColor /= AxialSamples.x * AxialSamples.y;"
+    "m_FunctionBody": "BlurredColor = 0;\r\n\r\nhalf2 offsetOrigin = BlurSize * -0.5;\r\n\r\nAxialSamples = floor(AxialSamples);\r\n\r\nif (AxialSamples.x <= 1)\r\n{\r\n\tAxialSamples.x = 1;\r\n\toffsetOrigin.x = 0;\r\n}\r\n\r\nif (AxialSamples.y <= 1)\r\n{\r\n\tAxialSamples.y = 1;\r\n\toffsetOrigin.y = 0;\r\n}\r\n\r\nhalf2 sampleDelta = BlurSize / max(1, AxialSamples - 1);\r\n\r\nhalf x = 0;\r\nhalf y = 0;\r\n\r\nhalf sampleVolume = 0;\r\n\r\nwhile (y < AxialSamples.y)\r\n{\r\n\tx = 0;\r\n\r\n\twhile (x < AxialSamples.x)\r\n\t{\r\n\t\thalf2 offset = offsetOrigin + (half2(x, y) * sampleDelta);\r\n\t\t\r\n\t\thalf2 unitOffset = offset / offsetOrigin;\r\n\t\thalf gaussianWeight = (unitOffset.x * unitOffset.x) + (unitOffset.y * unitOffset.y);\r\n\t\tgaussianWeight = min(1, gaussianWeight);\r\n\t\tgaussianWeight = 1 - gaussianWeight;\r\n\t\tgaussianWeight *= gaussianWeight;\r\n\t\t\r\n\t\tBlurredColor += SceneColor.Sample(Sampler, ScreenPosition + offset) * gaussianWeight;\r\n\t\t\r\n\t\tsampleVolume += gaussianWeight;\r\n\t\t\r\n\t\tx++;\r\n\t}\r\n\t\r\n\ty++;\r\n}\r\n\r\nBlurredColor /= max(1, sampleVolume);"
 }
 
 {
@@ -622,8 +622,8 @@
     "m_GPUInstanced": false,
     "m_Hidden": false,
     "m_Value": {
-        "x": 1.0,
-        "y": 1.0,
+        "x": 9.0,
+        "y": 9.0,
         "z": 0.0,
         "w": 0.0
     }
