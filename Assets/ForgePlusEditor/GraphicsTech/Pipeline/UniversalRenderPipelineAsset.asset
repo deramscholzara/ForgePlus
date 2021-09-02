@@ -50,7 +50,7 @@ MonoBehaviour:
   m_SoftShadowsSupported: 0
   m_AdditionalLightsCookieResolution: 2048
   m_AdditionalLightsCookieFormat: 3
-  m_UseSRPBatcher: 0
+  m_UseSRPBatcher: 1
   m_SupportsDynamicBatching: 0
   m_MixedLightingSupported: 0
   m_SupportsLightLayers: 0
