@@ -39,29 +39,6 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
---- !u!114 &-3566204906915897025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f62c9c65cf3354c93be831c8bc075510, type: 3}
-  m_Name: ScreenSpaceAmbientOcclusion
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  m_Shader: {fileID: 4800000, guid: 0849e84e3d62649e8882e9d6f056a017, type: 3}
-  m_Settings:
-    Downsample: 0
-    AfterOpaque: 1
-    Source: 0
-    NormalSamples: 0
-    Intensity: 0.6
-    DirectLightingStrength: 1
-    Radius: 0.4
-    SampleCount: 4
 --- !u!114 &-662273094177211003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,17 +88,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de640fe3d0db1804a85f9fc8f5cadab6, type: 3}
-  m_Name: URPRenderer_Base
+  m_Name: URPRenderer_NoAmbientOcclusion
   m_EditorClassIdentifier: 
   debugShaders:
     debugReplacementPS: {fileID: 4800000, guid: cf852408f2e174538bcd9b7fda1c5ae7,
       type: 3}
   m_RendererFeatures:
-  - {fileID: -3566204906915897025}
   - {fileID: 7736890342098132390}
   - {fileID: -8452421458952617489}
   - {fileID: -662273094177211003}
-  m_RendererFeatureMap: 3fe1051f884b82cea6dde83ac6f45e6bef813d4777f7b28a85bd44352122cff6
+  m_RendererFeatureMap: a6dde83ac6f45e6bef813d4777f7b28a85bd44352122cff6
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   shaders:
