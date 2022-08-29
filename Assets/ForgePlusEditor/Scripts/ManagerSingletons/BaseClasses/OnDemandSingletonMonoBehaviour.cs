@@ -9,7 +9,7 @@ public abstract class OnDemandSingletonMonoBehaviour<T> : MonoBehaviour where T 
     {
         get
         {
-            if (!singletonHolder)
+            if (!singletonHolder && Application.isPlaying)
             {
                 singletonHolder = new GameObject("Singleton Holder");
             }

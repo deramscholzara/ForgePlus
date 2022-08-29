@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ForgePlus.DataFileIO;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
-using System.Collections.Generic;
-using System.Linq;
+using RuntimeCore.Materials;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Weland;
@@ -21,20 +22,58 @@ namespace ForgePlus.ApplicationGeneral
             // Note: Using Material instead of just ShapeDescriptor here,
             // as it accounts for unique shaders used for the same texture.
             // (such as a media texture applied to a wall vs actually applied to media)
-            public Material sourceMaterial;
-            public Material layeredTransparentSideSourceMaterial;
-            
-            public LevelEntity_Light sourceLight;
-            public LevelEntity_Light layeredTransparentSideSourceLight;
-            
-            public LevelEntity_Media sourceMedia;
-            
+            public Material _sourceMaterial;
+
+            public Material SourceMaterial
+            {
+                get => _sourceMaterial;
+                set { _sourceMaterial = SeparateShaders ? value : null; }
+            }
+
+            public Material _layeredTransparentSideSourceMaterial;
+
+            public Material LayeredTransparentSideSourceMaterial
+            {
+                get => _layeredTransparentSideSourceMaterial;
+                set { _layeredTransparentSideSourceMaterial = SeparateShaders ? value : null; }
+            }
+
+            private LevelEntity_Light _sourceLight;
+
+            public LevelEntity_Light SourceLight
+            {
+                get => _sourceLight;
+                set { _sourceLight = SeparateLights ? value : null; }
+            }
+
+            private LevelEntity_Light _layeredTransparentSideSourceLight;
+
+            public LevelEntity_Light LayeredTransparentSideSourceLight
+            {
+                get => _layeredTransparentSideSourceLight;
+                set { _layeredTransparentSideSourceLight = SeparateLights ? value : null; }
+            }
+
+            public LevelEntity_Media SourceMedia;
+
 #if USE_TEXTURE_ARRAYS
             // Note: textures are always separated by material (shader) when not using Texture2DArrays
-            public ShapeDescriptor sourceShapeDescriptor;
-            public ShapeDescriptor layeredTransparentSideShapeDescriptor;
+            private ShapeDescriptor _sourceShapeDescriptor;
+
+            public ShapeDescriptor SourceShapeDescriptor
+            {
+                get => _sourceShapeDescriptor;
+                set { _sourceShapeDescriptor = SeparateTextures ? value : ShapeDescriptor.Empty; }
+            }
+
+            private ShapeDescriptor _layeredTransparentSideShapeDescriptor;
+            public ShapeDescriptor LayeredTransparentSideShapeDescriptor
+            {
+                get => _layeredTransparentSideShapeDescriptor;
+                set { _layeredTransparentSideShapeDescriptor = SeparateTextures ? value : ShapeDescriptor.Empty; }
+            }
 #endif
-            
+
             public static bool operator ==(BatchKey a, BatchKey b)
             {
                 return !(a != b);
@@ -43,11 +82,11 @@ namespace ForgePlus.ApplicationGeneral
             public static bool operator !=(BatchKey a, BatchKey b)
             {
                 // Defining this as it's a slightly more efficient way to determine equality for this struct
-                return a.sourceMaterial != b.sourceMaterial ||
-                       a.sourceLight != b.sourceLight ||
-                       a.sourceMedia != b.sourceMedia ||
-                       a.layeredTransparentSideSourceMaterial != b.layeredTransparentSideSourceMaterial ||
-                       a.layeredTransparentSideSourceLight != b.layeredTransparentSideSourceLight;
+                return a.SourceMaterial != b.SourceMaterial ||
+                       a.SourceLight != b.SourceLight ||
+                       a.SourceMedia != b.SourceMedia ||
+                       a.LayeredTransparentSideSourceMaterial != b.LayeredTransparentSideSourceMaterial ||
+                       a.LayeredTransparentSideSourceLight != b.LayeredTransparentSideSourceLight;
             }
         }
 
@@ -83,10 +122,7 @@ namespace ForgePlus.ApplicationGeneral
 
             public bool IsMerged
             {
-                get
-                {
-                    return mergeObject != null;
-                }
+                get { return mergeObject != null; }
             }
 
             public SurfaceBatch(Material[] sourceMaterials, LevelEntity_Media media)
@@ -165,9 +201,9 @@ namespace ForgePlus.ApplicationGeneral
                     return;
                 }
 
-                var objectDescriptiveName =  $" - {String.Join(" - ", sourceMaterials.Select(entry => entry.name).ToArray())}";
-                
-                mergeObject = new GameObject("Batched Surfaces" + objectDescriptiveName);
+                var objectDescriptiveName = $" - {String.Join(" - ", sourceMaterials.Select(entry => entry.name).ToArray())}";
+
+                mergeObject = new GameObject($"Batched Surfaces{objectDescriptiveName}");
                 mergeObject.transform.SetParent(LevelEntity_Level.Instance.transform);
 
                 if (Instance.UseUnityStaticBatching && media == null)
@@ -212,7 +248,7 @@ namespace ForgePlus.ApplicationGeneral
                             var uv1s = new List<Vector4>();
                             dynamicMesh.GetUVs(1, uv1s);
                             mergedUV1s.AddRange(uv1s);
-                            
+
                             var uv2s = new List<Vector4>();
                             dynamicMesh.GetUVs(2, uv2s);
                             mergedUV2s.AddRange(uv2s);
@@ -234,6 +270,7 @@ namespace ForgePlus.ApplicationGeneral
                             Debug.Log(surface.SurfaceGeometry.gameObject, surface.SurfaceGeometry.gameObject);
                         }
                     }
+
                     mergedMesh.SetUVs(channel: 0, uvs: mergedUVs);
 
                     if (sourceMaterials.Length > 1)
@@ -287,33 +324,33 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        public static bool SeparateLights;
+        public static bool SeparateTextures;
+        public static bool SeparateShaders;
+
         [Tooltip("Geometry is combined using Unity's Static Batching utilities instead of the usually-better Forge+ method.")]
         public bool UseUnityStaticBatching = false;
-        
-        [Tooltip("Batching combines geometry with identical properties (lights, textures, shaders).")]
-        [SerializeField]
+
+        [Tooltip("Batching combines geometry with identical properties (lights, textures, shaders).")] [SerializeField]
         private bool batchingEnabled = true;
 
-        [Tooltip("For batching purposes, determines whether lights should be treated as distinct (enabled) or identical (disabled).")]
-        [SerializeField]
+        [Tooltip("For batching purposes, determines whether lights should be treated as distinct (enabled) or identical (disabled).")] [SerializeField]
         private bool separateLights = false;
         // TODO: !!! - implement lights texture so that this being false by default makes sense with or without texture arrays.
         // TODO: !!! - UV0.z is the main texture index, so UV1.z should be the layered texture index
         // TODO: !!! - UV0.w and UV1.w should represent the lights for these layers, respectively.
-        
+
 #if USE_TEXTURE_ARRAYS
-        [Tooltip("For batching purposes, determines whether textures (bitmaps) should be treated as distinct (enabled) or identical (disabled).")]
-        [SerializeField]
+        [Tooltip("For batching purposes, determines whether textures (bitmaps) should be treated as distinct (enabled) or identical (disabled).")] [SerializeField]
         private bool separateTextures = false;
 #endif
-        
+
         [Tooltip("For batching purposes, determines whether shaders should be treated as distinct (enabled) or identical (disabled)." +
                  "\nDistinct shaders include: Opaque, Transparent, Media, Landscape, and Unassigned.")]
         [SerializeField]
         private bool separateShaders = true;
-        
-        [SerializeField]
-        private bool deleteOriginalObjects = false;
+
+        [SerializeField] private bool deleteOriginalObjects = false;
 
         private readonly Dictionary<BatchKey, Material[]> SurfaceMaterials = new Dictionary<BatchKey, Material[]>();
         private readonly Dictionary<BatchKey, SurfaceBatch> StaticBatches = new Dictionary<BatchKey, SurfaceBatch>();
@@ -322,119 +359,65 @@ namespace ForgePlus.ApplicationGeneral
 
         public Material[] GetUniqueMaterials(BatchKey key)
         {
-            if (!separateLights)
-            {
-                key.sourceLight = null;
-                key.layeredTransparentSideSourceLight = null;
-            }
-            
-#if USE_TEXTURE_ARRAYS
-            if (!separateTextures)
-            {
-                key.sourceShapeDescriptor = ShapeDescriptor.Empty;
-                key.layeredTransparentSideShapeDescriptor = ShapeDescriptor.Empty;
-            }
-#endif
+            var materialCount = key.LayeredTransparentSideSourceMaterial ? 2 : 1;
 
-            var materialCount = key.layeredTransparentSideSourceMaterial ? 2 : 1;
-
-            if (!separateShaders)
-            {
-                key.sourceMaterial = null;
-                key.layeredTransparentSideSourceMaterial = null;
-            }
-            
             if (SurfaceMaterials.ContainsKey(key))
             {
                 if (separateShaders)
                 {
                     return SurfaceMaterials[key];
                 }
-                
-                return materialCount == 2 ?
-                    new Material[]
+
+                return materialCount == 2
+                    ? new Material[]
                     {
                         SurfaceMaterials[key][0],
                         SurfaceMaterials[key][0]
-                    } :
-                    SurfaceMaterials[key];
+                    }
+                    : SurfaceMaterials[key];
             }
-            
+
             Material[] uniqueMaterials = new Material[materialCount];
 
+            uniqueMaterials[0] = new Material(key.SourceMaterial);
 #if USE_TEXTURE_ARRAYS
-            if (!separateLights &&
-                !separateTextures &&
-                separateShaders)
-            {
-                // Everything should be consolidated, so use the source materials directly
-                // TODO: !!! - This code becomes unnecessary once the arrays are properly reassigned (see notes below)
-                uniqueMaterials[0] = key.sourceMaterial;
+            MaterialGeneration_Geometry.SubscribeUniqueMaterial(
+                uniqueMaterials[0],
+                key.SourceMaterial);
+#endif
 
-                if (materialCount == 2)
-                {
-                    uniqueMaterials[1] = key.layeredTransparentSideSourceMaterial;
-                }
-            }
-            else
-#endif
+            if (key.SourceLight != null)
             {
-                uniqueMaterials[0] = new Material(key.sourceMaterial);
-                
-                if (key.sourceLight != null)
-                {
-                    uniqueMaterials[0].name += $" Light({key.sourceLight.NativeIndex})";
-                }
-                
-                if (key.layeredTransparentSideSourceMaterial)
-                {
-                    uniqueMaterials[1] = new Material(key.layeredTransparentSideSourceMaterial);
-                    
-                    if (key.layeredTransparentSideSourceLight != null)
-                    {
-                        uniqueMaterials[1].name += $" Light({key.layeredTransparentSideSourceLight.NativeIndex})";
-                    }
-                }
-                
-#if USE_TEXTURE_ARRAYS
-                // TODO: !!! Need to make sure that the Texture2DArray gets reassigned when it changes
-                //       (such as on level load or if a new texture starts being used).
-                //       Doesn't matter if materials aren't being split (above), since the original material is used.
-#endif
+                uniqueMaterials[0].name += $" Light({key.SourceLight.NativeIndex})";
             }
-            
+
+            if (key.LayeredTransparentSideSourceMaterial)
+            {
+                uniqueMaterials[1] = new Material(key.LayeredTransparentSideSourceMaterial);
+#if USE_TEXTURE_ARRAYS
+                MaterialGeneration_Geometry.SubscribeUniqueMaterial(
+                    uniqueMaterials[1],
+                    key.LayeredTransparentSideSourceMaterial);
+#endif
+
+                if (key.LayeredTransparentSideSourceLight != null)
+                {
+                    uniqueMaterials[1].name += $" Light({key.LayeredTransparentSideSourceLight.NativeIndex})";
+                }
+            }
+
             SurfaceMaterials[key] = uniqueMaterials;
-            
-            key.sourceMedia?.SubscribeMaterial(uniqueMaterials[0]);
-            
+
+            key.SourceMedia?.SubscribeMaterial(uniqueMaterials[0]);
+
             return uniqueMaterials;
         }
 
         public void AddToBatches(BatchKey key, RuntimeSurfaceGeometry surfaceGeometry)
         {
-            if (!separateLights)
-            {
-                key.sourceLight = null;
-                key.layeredTransparentSideSourceLight = null;
-            }
-            
-#if USE_TEXTURE_ARRAYS
-            if (!separateTextures)
-            {
-                key.sourceShapeDescriptor = ShapeDescriptor.Empty;
-                key.layeredTransparentSideShapeDescriptor = ShapeDescriptor.Empty;
-            }
-#endif
-
-            if (!separateShaders)
-            {
-                key.sourceMaterial = null;
-                key.layeredTransparentSideSourceMaterial = null;
-            }
-            
             if (!StaticBatches.ContainsKey(key))
             {
-                StaticBatches[key] = new SurfaceBatch(GetUniqueMaterials(key), key.sourceMedia);
+                StaticBatches[key] = new SurfaceBatch(GetUniqueMaterials(key), key.SourceMedia);
             }
 
             StaticBatches[key].AddSurface(surfaceGeometry);
@@ -448,6 +431,14 @@ namespace ForgePlus.ApplicationGeneral
 
                 if (!occupied)
                 {
+#if USE_TEXTURE_ARRAYS
+                    var uniqueMaterials = SurfaceMaterials[key];
+                    foreach (var uniqueMaterial in uniqueMaterials)
+                    {
+                        MaterialGeneration_Geometry.UnsubscribeUniqueMaterial(uniqueMaterial);
+                    }
+#endif
+
                     StaticBatches.Remove(key);
                 }
             }
@@ -474,7 +465,7 @@ namespace ForgePlus.ApplicationGeneral
                         Destroy(line.gameObject);
                     }
                 }
-                
+
                 foreach (var polygon in LevelEntity_Level.Instance.Polygons.Values)
                 {
                     if (polygon.GetComponentsInChildren<Renderer>().Length == 0)
@@ -520,7 +511,7 @@ namespace ForgePlus.ApplicationGeneral
             {
                 return;
             }
-            
+
             if (batchingEnabled)
             {
                 MergeAllBatches();
@@ -537,6 +528,10 @@ namespace ForgePlus.ApplicationGeneral
         {
             MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
             MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
+
+            SeparateLights = separateLights;
+            SeparateTextures = separateTextures;
+            SeparateShaders = separateShaders;
         }
     }
 }

@@ -1,7 +1,5 @@
-using System;
-using System.Drawing;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -56,18 +54,12 @@ namespace Weland
 
         public short BitmapCount
         {
-            get
-            {
-                return bitmapCount;
-            }
+            get { return bitmapCount; }
         }
 
         public int ColorTableCount
         {
-            get
-            {
-                return colorTables.Count;
-            }
+            get { return colorTables.Count; }
         }
 
         short bitmapCount;
@@ -145,7 +137,7 @@ namespace Weland
             long origin = reader.BaseStream.Position;
 
             Version = reader.ReadInt16();
-            Type = (CollectionType)reader.ReadInt16();
+            Type = (CollectionType) reader.ReadInt16();
             Flags = reader.ReadUInt16();
             colorCount = reader.ReadInt16();
             colorTableCount = reader.ReadInt16();
@@ -169,6 +161,7 @@ namespace Weland
                 {
                     table[j].Load(reader);
                 }
+
                 colorTables.Add(table);
             }
 
@@ -234,15 +227,15 @@ namespace Weland
         public Texture2D GetShape(byte ColorTableIndex, byte BitmapIndex)
         {
             var bitmap = Type == CollectionType.Wall && BitmapIndex < (lowLevelShapeCount - 1) ? bitmaps[lowLevelShapes[BitmapIndex].BitmapIndex] : bitmaps[BitmapIndex];
-            
+
             var colors = colorTables[ColorTableIndex].Select(color => new Color(
-                (float)color.Red / (float)ushort.MaxValue,
-                (float)color.Green / (float)ushort.MaxValue,
-                (float)color.Blue / (float)ushort.MaxValue)).ToArray();
-            
+                (float) color.Red / (float) ushort.MaxValue,
+                (float) color.Green / (float) ushort.MaxValue,
+                (float) color.Blue / (float) ushort.MaxValue)).ToArray();
+
             // The first color table entry always represents transparent pixels
             colors[0].a = 0f;
-            
+
             bool hasAlpha = bitmap.Data.Any(entry => entry == 0);
             bool isLandscape = Type == CollectionType.Wall && bitmap.Width > bitmap.Height;
             Texture2D result;
@@ -270,7 +263,6 @@ namespace Weland
                     for (int y = 0; y < bitmap.Height; y++)
                     {
                         result.SetPixel(bitmap.Width - 1 - x, bitmap.Height - y - 1, colors[bitmap.Data[x * bitmap.Height + y]]);
-
                     }
                 }
             }
@@ -281,7 +273,6 @@ namespace Weland
                     for (int x = 0; x < bitmap.Width; x++)
                     {
                         result.SetPixel(bitmap.Width - 1 - x, bitmap.Height - y - 1, colors[bitmap.Data[x + y * bitmap.Width]]);
-
                     }
                 }
             }

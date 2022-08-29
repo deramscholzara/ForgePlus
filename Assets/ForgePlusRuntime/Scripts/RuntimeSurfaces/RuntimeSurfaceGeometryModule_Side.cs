@@ -341,25 +341,25 @@ namespace RuntimeCore.Entities.Geometry
 
             if (sideEntity.NativeObject == null)
             {
-                modifiedBatchKey.sourceLight = null;
-                modifiedBatchKey.layeredTransparentSideSourceLight = null;
+                modifiedBatchKey.SourceLight = null;
+                modifiedBatchKey.LayeredTransparentSideSourceLight = null;
             }
             else if (innerLayer)
             {
                 switch (dataSource)
                 {
                     case LevelEntity_Side.DataSources.Primary:
-                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.PrimaryLightsourceIndex];
+                        modifiedBatchKey.SourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.PrimaryLightsourceIndex];
                         lastLightIndex = sideEntity.NativeObject.PrimaryLightsourceIndex;
                         break;
 
                     case LevelEntity_Side.DataSources.Secondary:
-                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.SecondaryLightsourceIndex];
+                        modifiedBatchKey.SourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.SecondaryLightsourceIndex];
                         lastLightIndex = sideEntity.NativeObject.SecondaryLightsourceIndex;
                         break;
 
                     case LevelEntity_Side.DataSources.Transparent:
-                        modifiedBatchKey.sourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.TransparentLightsourceIndex];
+                        modifiedBatchKey.SourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.TransparentLightsourceIndex];
                         lastLightIndex = sideEntity.NativeObject.TransparentLightsourceIndex;
                         break;
 
@@ -369,7 +369,7 @@ namespace RuntimeCore.Entities.Geometry
             }
             else
             {
-                modifiedBatchKey.layeredTransparentSideSourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.TransparentLightsourceIndex];
+                modifiedBatchKey.LayeredTransparentSideSourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.TransparentLightsourceIndex];
                 lastLayeredTransparentSideLightIndex = sideEntity.NativeObject.TransparentLightsourceIndex;
             }
             
@@ -400,7 +400,7 @@ namespace RuntimeCore.Entities.Geometry
 
             if (sideEntity.NativeObject == null)
             {
-                modifiedBatchKey.sourceMaterial =
+                modifiedBatchKey.SourceMaterial =
                     MaterialGeneration_Geometry.GetMaterial(ShapeDescriptor.Empty,
                                                             transferMode: 0,
                                                             isOpaqueSurface: true,
@@ -413,9 +413,9 @@ namespace RuntimeCore.Entities.Geometry
                 {
                     case LevelEntity_Side.DataSources.Primary:
 #if USE_TEXTURE_ARRAYS
-                        modifiedBatchKey.sourceShapeDescriptor = sideEntity.NativeObject.Primary.Texture;
+                        modifiedBatchKey.SourceShapeDescriptor = sideEntity.NativeObject.Primary.Texture;
 #endif
-                        modifiedBatchKey.sourceMaterial =
+                        modifiedBatchKey.SourceMaterial =
                             MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.Primary.Texture,
                                                                     sideEntity.NativeObject.PrimaryTransferMode,
                                                                     sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
@@ -434,9 +434,9 @@ namespace RuntimeCore.Entities.Geometry
 
                     case LevelEntity_Side.DataSources.Secondary:
 #if USE_TEXTURE_ARRAYS
-                        modifiedBatchKey.sourceShapeDescriptor = sideEntity.NativeObject.Secondary.Texture;
+                        modifiedBatchKey.SourceShapeDescriptor = sideEntity.NativeObject.Secondary.Texture;
 #endif
-                        modifiedBatchKey.sourceMaterial =
+                        modifiedBatchKey.SourceMaterial =
                             MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.Secondary.Texture,
                                                                     sideEntity.NativeObject.SecondaryTransferMode,
                                                                     sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
@@ -456,9 +456,9 @@ namespace RuntimeCore.Entities.Geometry
                     case LevelEntity_Side.DataSources.Transparent:
                         
 #if USE_TEXTURE_ARRAYS
-                        modifiedBatchKey.sourceShapeDescriptor = sideEntity.NativeObject.Transparent.Texture;
+                        modifiedBatchKey.SourceShapeDescriptor = sideEntity.NativeObject.Transparent.Texture;
 #endif
-                        modifiedBatchKey.sourceMaterial =
+                        modifiedBatchKey.SourceMaterial =
                             MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.Transparent.Texture,
                                                                     sideEntity.NativeObject.TransparentTransferMode,
                                                                     sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
@@ -482,9 +482,9 @@ namespace RuntimeCore.Entities.Geometry
             else
             {
 #if USE_TEXTURE_ARRAYS
-                modifiedBatchKey.layeredTransparentSideShapeDescriptor = sideEntity.NativeObject.Transparent.Texture;
+                modifiedBatchKey.LayeredTransparentSideShapeDescriptor = sideEntity.NativeObject.Transparent.Texture;
 #endif
-                modifiedBatchKey.layeredTransparentSideSourceMaterial =
+                modifiedBatchKey.LayeredTransparentSideSourceMaterial =
                     MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.Transparent.Texture,
                                                             sideEntity.NativeObject.TransparentTransferMode,
                                                             sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),

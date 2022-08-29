@@ -324,17 +324,17 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
-                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.FloorLight];
+                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.FloorLight];
                     lastLightIndex = polygonEntity.NativeObject.FloorLight;
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.CeilingLight];
+                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.CeilingLight];
                     lastLightIndex = polygonEntity.NativeObject.CeilingLight;
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
-                    modifiedBatchKey.sourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.MediaLight];
+                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.MediaLight];
                     lastLightIndex = polygonEntity.NativeObject.MediaLight;
                     break;
 
@@ -358,11 +358,11 @@ namespace RuntimeCore.Entities.Geometry
 
                 if (mediaIndex >= 0)
                 {
-                    modifiedBatchKey.sourceMedia = polygonEntity.ParentLevel.Medias[mediaIndex];
+                    modifiedBatchKey.SourceMedia = polygonEntity.ParentLevel.Medias[mediaIndex];
                 }
                 else
                 {
-                    modifiedBatchKey.sourceMedia = null;
+                    modifiedBatchKey.SourceMedia = null;
                 }
 
                 BatchKey = modifiedBatchKey;
@@ -379,9 +379,9 @@ namespace RuntimeCore.Entities.Geometry
             {
                 case LevelEntity_Polygon.DataSources.Floor:
 #if USE_TEXTURE_ARRAYS
-                    modifiedBatchKey.sourceShapeDescriptor = polygonEntity.NativeObject.FloorTexture;
+                    modifiedBatchKey.SourceShapeDescriptor = polygonEntity.NativeObject.FloorTexture;
 #endif
-                    modifiedBatchKey.sourceMaterial =
+                    modifiedBatchKey.SourceMaterial =
                         MaterialGeneration_Geometry.GetMaterial(
                             polygonEntity.NativeObject.FloorTexture,
                             polygonEntity.NativeObject.FloorTransferMode,
@@ -401,9 +401,9 @@ namespace RuntimeCore.Entities.Geometry
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
 #if USE_TEXTURE_ARRAYS
-                    modifiedBatchKey.sourceShapeDescriptor = polygonEntity.NativeObject.CeilingTexture;
+                    modifiedBatchKey.SourceShapeDescriptor = polygonEntity.NativeObject.CeilingTexture;
 #endif
-                    modifiedBatchKey.sourceMaterial =
+                    modifiedBatchKey.SourceMaterial =
                         MaterialGeneration_Geometry.GetMaterial(
                             polygonEntity.NativeObject.CeilingTexture,
                             polygonEntity.NativeObject.CeilingTransferMode,
@@ -424,7 +424,7 @@ namespace RuntimeCore.Entities.Geometry
                 case LevelEntity_Polygon.DataSources.Media:
                     var mediaShapeDescriptor = new ShapeDescriptor((ushort)polygonEntity.NativeObject.FloorTexture);
 
-                    switch (BatchKey.sourceMedia.NativeObject.Type)
+                    switch (BatchKey.SourceMedia.NativeObject.Type)
                     {
                         case MediaType.Water:
                             mediaShapeDescriptor.Collection = 17;
@@ -449,9 +449,9 @@ namespace RuntimeCore.Entities.Geometry
                     }
                     
 #if USE_TEXTURE_ARRAYS
-                    modifiedBatchKey.sourceShapeDescriptor = mediaShapeDescriptor;
+                    modifiedBatchKey.SourceShapeDescriptor = mediaShapeDescriptor;
 #endif
-                    modifiedBatchKey.sourceMaterial =
+                    modifiedBatchKey.SourceMaterial =
                         MaterialGeneration_Geometry.GetMaterial(
                             mediaShapeDescriptor,
                             (short)TransferModes.Normal,
