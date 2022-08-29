@@ -16,7 +16,7 @@ namespace RuntimeCore.Materials
             Media,
             LayeredTransparentOuter,
         }
-        
+
 #if USE_TEXTURE_ARRAYS
         public struct Color24
         {
@@ -37,15 +37,15 @@ namespace RuntimeCore.Materials
             {
                 var texture = GetTexture(shapeDescriptor, returnPlaceholderIfNotFound: true);
                 // TODO: should unload this texture when done adding it to the array, if NO_EDITING
-                
+
                 Width = texture.width;
                 Height = texture.height;
                 Format = texture.format;
                 HasMipMaps = texture.mipmapCount > 1;
-                
+
                 // Treat all landscapes as part of the same collection,
                 // since it's not common to have over 255 landscape bitmaps total
-                ShapeCollection = shapeDescriptor.UsesLandscapeCollection() ? (uint)27 : shapeDescriptor.Collection;
+                ShapeCollection = shapeDescriptor.UsesLandscapeCollection() ? (uint) 27 : shapeDescriptor.Collection;
 
                 // Treat all medias as part of the same collection,
                 // since it's not common to have over 255 media bitmaps total,
@@ -66,7 +66,8 @@ namespace RuntimeCore.Materials
             private TextureFormat format;
             private bool hasMipLevels;
             private Dictionary<ShapeDescriptor, int> indicesByShapeDescriptor;
-            
+            private List<Material> uniqueMaterials;
+
             public Texture2DArrayCollection(
                 ShapeDescriptor firstShapeDescriptor,
                 Material sharedMaterial,
@@ -81,8 +82,26 @@ namespace RuntimeCore.Materials
                 this.format = format;
                 this.hasMipLevels = hasMipLevels;
                 indicesByShapeDescriptor = new Dictionary<ShapeDescriptor, int>();
-                
+
                 AddBitmap(firstShapeDescriptor);
+            }
+
+            public void SubscribeUniqueMaterial(Material material)
+            {
+                material.mainTexture = textureArray;
+
+                if (uniqueMaterials == null)
+                    uniqueMaterials = new List<Material>();
+
+                if (!uniqueMaterials.Contains(material))
+                    uniqueMaterials.Add(material);
+            }
+
+            public void UnsubscribeUniqueMaterial(Material material)
+            {
+                if (uniqueMaterials != null &&
+                    uniqueMaterials.Contains(material))
+                    uniqueMaterials.Remove(material);
             }
 
             public void AddBitmap(ShapeDescriptor shapeDescriptor)
@@ -104,7 +123,7 @@ namespace RuntimeCore.Materials
                 {
                     Object.Destroy(textureArray);
                 }
-                
+
                 // Build Expanded Texture Array
                 textureArray = new Texture2DArray(
                     width: width,
@@ -120,29 +139,34 @@ namespace RuntimeCore.Materials
                 foreach (var descriptorIndexPair in indicesByShapeDescriptor)
                 {
                     var texture = GetTexture(descriptorIndexPair.Key, returnPlaceholderIfNotFound: true);
-                    
+
                     for (var mipIndex = 0; mipIndex < texture.mipmapCount; mipIndex++)
                     {
                         if (texture.format == TextureFormat.ARGB32)
                         {
                             var textureMip = texture.GetPixelData<Color32>(mipIndex);
-                            textureArray.SetPixelData(textureMip, mipIndex,descriptorIndexPair.Value);
+                            textureArray.SetPixelData(textureMip, mipIndex, descriptorIndexPair.Value);
                         }
                         else
                         {
                             var textureMip = texture.GetPixelData<Color24>(mipIndex);
-                            textureArray.SetPixelData(textureMip, mipIndex,descriptorIndexPair.Value);
+                            textureArray.SetPixelData(textureMip, mipIndex, descriptorIndexPair.Value);
                         }
                     }
-                    
+
 #if NO_EDITING
                     // TODO: should unload "texture" when done adding it to the array, if NO_EDITING
 #endif
                 }
-                
+
                 textureArray.Apply();
 
                 SharedMaterial.mainTexture = textureArray;
+
+                foreach (var uniqueMaterial in uniqueMaterials)
+                {
+                    uniqueMaterial.mainTexture = textureArray;
+                }
             }
         }
 
@@ -180,7 +204,7 @@ namespace RuntimeCore.Materials
         private static readonly Texture2D GridTexture = Resources.Load<Texture2D>("Walls/Grid");
 
         private static readonly int mediaSubColorPropertyId = Shader.PropertyToID("_SubMediaColor");
-        
+
 #if USE_TEXTURE_ARRAYS
         private static readonly int textureArrayIndexPropertyId = Shader.PropertyToID("_TextureArrayIndex");
 #endif
@@ -190,7 +214,7 @@ namespace RuntimeCore.Materials
 
 #if USE_TEXTURE_ARRAYS
         private static readonly Dictionary<Texture2DArrayCollectionKey, Texture2DArrayCollection> Texture2DArrays = new Dictionary<Texture2DArrayCollectionKey, Texture2DArrayCollection>(14);
-        
+
         private static readonly Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> Texture2DArrayKeys = new Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey>(255);
         private static readonly Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> TransparentTexture2DArrayKeys = new Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey>(100);
         private static readonly Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> TransparentLayeredOuterTexture2DArrayKeys = new Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey>(100);
@@ -264,9 +288,9 @@ namespace RuntimeCore.Materials
                 var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
 
                 return GetTrackedMaterial(shapeDescriptor,
-                                          landscapeTransferMode,
-                                          isOpaqueSurface,
-                                          surfaceType);
+                    landscapeTransferMode,
+                    isOpaqueSurface,
+                    surfaceType);
             }
             else
             {
@@ -298,7 +322,7 @@ namespace RuntimeCore.Materials
 
 #if USE_TEXTURE_ARRAYS
             Texture2DArrays.Clear();
-            
+
             Texture2DArrayKeys.Clear();
             TransparentTexture2DArrayKeys.Clear();
             TransparentLayeredOuterTexture2DArrayKeys.Clear();
@@ -328,7 +352,7 @@ namespace RuntimeCore.Materials
                 array.Apply();
             }
         }
-        
+
         public static int GetTextureArrayIndex(
             ShapeDescriptor shapeDescriptor,
             short transferMode,
@@ -339,9 +363,9 @@ namespace RuntimeCore.Materials
             {
                 return 0;
             }
-            
+
             var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
-            
+
             var collectionKey =
                 GetTexture2DArrayKeyDictionary(
                         shapeDescriptor,
@@ -354,6 +378,28 @@ namespace RuntimeCore.Materials
 
             return collection.GetBitmapIndex(shapeDescriptor);
         }
+
+        public static void SubscribeUniqueMaterial(
+            Material uniqueMaterial,
+            Material sharedMaterial)
+        {
+            var matchingCollections =
+                Texture2DArrays.Values.Where(
+                    collection => collection.SharedMaterial == sharedMaterial);
+
+            foreach (var collection in matchingCollections)
+            {
+                collection.SubscribeUniqueMaterial(uniqueMaterial);
+            }
+        }
+
+        public static void UnsubscribeUniqueMaterial(Material uniqueMaterial)
+        {
+            foreach (var texture2DArray in Texture2DArrays.Values)
+            {
+                texture2DArray.UnsubscribeUniqueMaterial(uniqueMaterial);
+            }
+        }
 #else
         private static void ClearMaterials(IDictionary<ShapeDescriptor, Material> materials)
         {
@@ -365,7 +411,7 @@ namespace RuntimeCore.Materials
             }
         }
 #endif
-        
+
 #if USE_TEXTURE_ARRAYS
         private static Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> GetTexture2DArrayKeyDictionary(
             ShapeDescriptor shapeDescriptor,
@@ -429,7 +475,7 @@ namespace RuntimeCore.Materials
 
             var texture2DArrayCollectionKey = new Texture2DArrayCollectionKey(shapeDescriptor, surfaceType == SurfaceTypes.Media);
             collectionKeyDictionary[shapeDescriptor] = texture2DArrayCollectionKey;
-                
+
             if (Texture2DArrays.ContainsKey(texture2DArrayCollectionKey))
             {
                 var texture2DArrayCollection = Texture2DArrays[texture2DArrayCollectionKey];
@@ -437,11 +483,11 @@ namespace RuntimeCore.Materials
                 return texture2DArrayCollection.SharedMaterial;
             }
 #endif
-                
+
             var textureToUse = GetTexture(shapeDescriptor, returnPlaceholderIfNotFound: true);
-                
+
             Material material;
-            
+
             if (surfaceType == SurfaceTypes.Media)
             {
 #if USE_TEXTURE_ARRAYS
@@ -489,11 +535,11 @@ namespace RuntimeCore.Materials
                     }
                 }
             }
-                
+
 #if USE_TEXTURE_ARRAYS
             material.name = $"Collection({shapeDescriptor.Collection}) Bitmap({shapeDescriptor.Bitmap})";
             material.enableInstancing = true;
-                    
+
             var newTexture2DArrayCollection = new Texture2DArrayCollection(
                 shapeDescriptor,
                 material,
@@ -501,13 +547,13 @@ namespace RuntimeCore.Materials
                 textureToUse.height,
                 textureToUse.format,
                 textureToUse.mipmapCount > 0);
-                
+
             Texture2DArrays[texture2DArrayCollectionKey] = newTexture2DArrayCollection;
 #endif
 
             return material;
         }
-        
+
 #if !USE_TEXTURE_ARRAYS
         private static Material GetTrackedMaterial(ShapeDescriptor shapeDescriptor, Texture2D textureToUse, Shader shaderToUse, IDictionary<ShapeDescriptor, Material> trackedMaterials)
         {

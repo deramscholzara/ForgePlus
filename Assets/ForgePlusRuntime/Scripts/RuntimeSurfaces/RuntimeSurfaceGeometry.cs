@@ -103,13 +103,13 @@ namespace RuntimeCore.Entities.Geometry
         public void ApplyMedia(bool rebatchImmediately = true)
         {
             if (geometryModule is RuntimeSurfaceGeometryModule_Polygon &&
-                geometryModule.BatchKey.sourceMedia != null)
+                geometryModule.BatchKey.SourceMedia != null)
             {
                 ApplyChange(rebatchImmediately: false, () =>
                 {
                     geometryModule.ApplyMedia();
 
-                    if (geometryModule.BatchKey.sourceMedia == null)
+                    if (geometryModule.BatchKey.SourceMedia == null)
                     {
                         return;
                     }
@@ -119,7 +119,7 @@ namespace RuntimeCore.Entities.Geometry
                     }
                 });
 
-                if (geometryModule.BatchKey.sourceMedia == null)
+                if (geometryModule.BatchKey.SourceMedia == null)
                 {
                     PrepareForDestruction();
                     Destroy(gameObject);
