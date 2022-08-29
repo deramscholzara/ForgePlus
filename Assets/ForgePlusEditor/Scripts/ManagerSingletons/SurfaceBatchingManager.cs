@@ -178,6 +178,7 @@ namespace ForgePlus.ApplicationGeneral
 
                 if (isMerged)
                 {
+                    // Re-Merge if it was merged prior to this removal
                     Merge(deleteOriginalObjects);
                 }
                 else if (media != null)
@@ -311,6 +312,7 @@ namespace ForgePlus.ApplicationGeneral
                 }
 
                 Destroy(mergeObject);
+                mergeObject = null;
 
                 foreach (var surface in surfaces)
                 {
