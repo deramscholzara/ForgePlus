@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Scripting;
 using Weland;
 
 namespace ForgePlus.DataFileIO
@@ -136,12 +137,12 @@ namespace ForgePlus.DataFileIO
 #if !UNITY_EDITOR
             GarbageCollector.GCMode = GarbageCollector.Mode.Disabled;
 #endif
-            
+
             var initializeLevelStartTime = DateTime.Now;
 
             runtimeLevel = new GameObject($"Level ({LevelName})").AddComponent<LevelEntity_Level>();
             runtimeLevel.Level = level;
-            runtimeLevel.Index = (short)LevelIndex;
+            runtimeLevel.Index = (short) LevelIndex;
 
             runtimeLevel.Polygons = new Dictionary<short, LevelEntity_Polygon>();
             runtimeLevel.Lines = new Dictionary<short, LevelEntity_Line>();
@@ -165,57 +166,63 @@ namespace ForgePlus.DataFileIO
             await Task.Yield();
 
             #region Initialization_Textures
+
             var buildTexturesStartTime = DateTime.Now;
-            
+
 #if !NO_EDITING
             // Initialize Textures here so they in proper index order for the texturing interface
             var landscapeShapeDescriptor = new ShapeDescriptor();
             // Note: Landscape collections in Shapes are respectively sequential to Landscape map info starting at 27
-            landscapeShapeDescriptor.Collection = (byte)(level.Landscape + 27);
+            landscapeShapeDescriptor.Collection = (byte) (level.Landscape + 27);
             MaterialGeneration_Geometry.GetTexture(landscapeShapeDescriptor, returnPlaceholderIfNotFound: false);
 
             var wallShapeDescriptor = new ShapeDescriptor();
             // Note: Walls collections in Shapes are respectively sequential to Environment map info starting at 17
-            wallShapeDescriptor.Collection = (byte)(level.Environment + 17);
+            wallShapeDescriptor.Collection = (byte) (level.Environment + 17);
             for (var i = 0; i < 256; i++)
             {
-                wallShapeDescriptor.Bitmap = (byte)i;
+                wallShapeDescriptor.Bitmap = (byte) i;
                 if (!MaterialGeneration_Geometry.GetTexture(wallShapeDescriptor, returnPlaceholderIfNotFound: false))
                 {
                     break;
                 }
             }
 #endif
-            
+
             Debug.Log($"--- LevelBuild: Built Textures in timespan: {DateTime.Now - buildTexturesStartTime}");
+
             #endregion Initialization_Textures
 
             await Task.Yield();
 
             #region Initialization_Lights
+
             var buildLightsStartTime = DateTime.Now;
 
             // Initialize Lights here so they are in proper index order
             for (var i = 0; i < level.Lights.Count; i++)
             {
-                runtimeLevel.Lights[(short)i] = new LevelEntity_Light((short)i, level.Lights[i], runtimeLevel);
+                runtimeLevel.Lights[(short) i] = new LevelEntity_Light((short) i, level.Lights[i], runtimeLevel);
             }
 
             Debug.Log($"--- LevelBuild: Built & started Lights in timespan: {DateTime.Now - buildLightsStartTime}");
+
             #endregion Initialization_Lights
 
             await Task.Yield();
 
             #region Initialization_Medias
+
             var buildMediasStartTime = DateTime.Now;
 
             // Initialize Medias here so they are in proper index order
             for (var i = 0; i < level.Medias.Count; i++)
             {
-                runtimeLevel.Medias[(short)i] = new LevelEntity_Media((short)i, level.Medias[i], runtimeLevel);
+                runtimeLevel.Medias[(short) i] = new LevelEntity_Media((short) i, level.Medias[i], runtimeLevel);
             }
 
             Debug.Log($"--- LevelBuild: Built & started Medias in timespan: {DateTime.Now - buildMediasStartTime}");
+
             #endregion Initialization_Medias
 
             await Task.Yield();
@@ -223,10 +230,11 @@ namespace ForgePlus.DataFileIO
 #if USE_TEXTURE_ARRAYS
             MaterialGeneration_Geometry.TextureArraysArePopulating = true;
 #endif
-            
+
             var chunkLoadStartTime = DateTime.Now;
 
             #region Polygons_And_Media
+
             var buildPolygonsStartTime = DateTime.Now;
 
             var polygonsGroupGO = new GameObject("Polygons");
@@ -247,11 +255,13 @@ namespace ForgePlus.DataFileIO
             }
 
             Debug.Log($"--- LevelBuild: Built Polygons, Medias, & Platforms in timespan: {DateTime.Now - buildPolygonsStartTime}");
+
             #endregion Polygons_And_Media
 
             await Task.Yield();
 
             #region Lines_And_Sides
+
             var buildSidesStartTime = DateTime.Now;
 
             var linesGroupGO = new GameObject("Lines");
@@ -276,19 +286,21 @@ namespace ForgePlus.DataFileIO
             }
 
             Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
+
             #endregion Lines_And_Sides
 
             await Task.Yield();
-            
+
 #if USE_TEXTURE_ARRAYS
             MaterialGeneration_Geometry.ApplyTextureArrays();
-            
+
             MaterialGeneration_Geometry.TextureArraysArePopulating = false;
 
             await Task.Yield();
 #endif
 
             #region Objects_And_Placements
+
             var buildObjectsStartTime = DateTime.Now;
 
             var mapObjectsGroupGO = new GameObject("MapObjects");
@@ -302,8 +314,8 @@ namespace ForgePlus.DataFileIO
                 mapObjectRootGO.transform.SetParent(mapObjectsGroupGO.transform);
 
                 var runtimeMapObject = mapObjectRootGO.AddComponent<LevelEntity_MapObject>();
-                runtimeLevel.MapObjects[(short)objectIndex] = runtimeMapObject;
-                runtimeMapObject.NativeIndex = (short)objectIndex;
+                runtimeLevel.MapObjects[(short) objectIndex] = runtimeMapObject;
+                runtimeMapObject.NativeIndex = (short) objectIndex;
                 runtimeMapObject.NativeObject = mapObject;
                 runtimeMapObject.ParentLevel = runtimeLevel;
 
@@ -313,11 +325,13 @@ namespace ForgePlus.DataFileIO
             }
 
             Debug.Log($"--- LevelBuild: Built Objects in timespan: {DateTime.Now - buildObjectsStartTime}");
+
             #endregion Objects_And_Placements
 
             await Task.Yield();
 
             #region Annotations
+
             var annotationsGroupGO = new GameObject("Annotations");
             annotationsGroupGO.transform.SetParent(runtimeLevel.transform);
 
@@ -325,7 +339,7 @@ namespace ForgePlus.DataFileIO
             {
                 var annotation = level.Annotations[i];
                 var annotationInstance = UnityEngine.Object.Instantiate(LevelEntity_Annotation.Prefab);
-                annotationInstance.NativeIndex = (short)i;
+                annotationInstance.NativeIndex = (short) i;
                 annotationInstance.NativeObject = annotation;
                 annotationInstance.ParentLevel = runtimeLevel;
 
@@ -336,8 +350,9 @@ namespace ForgePlus.DataFileIO
 
                 annotationInstance.transform.SetParent(annotationsGroupGO.transform, worldPositionStays: true);
 
-                runtimeLevel.Annotations[(short)i] = annotationInstance;
+                runtimeLevel.Annotations[(short) i] = annotationInstance;
             }
+
             #endregion Annotations
 
             await Task.Yield();
