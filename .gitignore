@@ -58,6 +58,8 @@ sysinfo.txt
 crashlytics-build.properties
 
 # Project-specific ignores
-/Assets/Test Textures/
-/Assets/Test Textures.meta
+Assets/Test Textures/
+Assets/Test Textures.meta
 .DS_Store
+Assets/MML_Plugins/
+Assets/MML_Plugins.meta
