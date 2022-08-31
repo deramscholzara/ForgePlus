@@ -233,8 +233,7 @@ namespace RuntimeCore.Materials
 
         public static Texture2D GetTexture(ShapeDescriptor shapeDescriptor, bool returnPlaceholderIfNotFound = false)
         {
-            if (PluginLoading_Texture.Instance.PluginSupportEnabled &&
-                PluginLoading_Texture.Instance.TextureLookup.ContainsKey(shapeDescriptor))
+            if (PluginLoading_Texture.Instance.TextureLookup.ContainsKey(shapeDescriptor))
             {
                 if (PluginLoading_Texture.Instance.TextureLookup[shapeDescriptor].MainTexture)
                     return PluginLoading_Texture.Instance.TextureLookup[shapeDescriptor].MainTexture;
@@ -441,7 +440,8 @@ namespace RuntimeCore.Materials
             }
             else
             {
-                if (isOpaqueSurface ||
+                if ((isOpaqueSurface &&
+                     surfaceType != SurfaceTypes.LayeredTransparentOuter) ||
                     (textureToUse.format != TextureFormat.ARGB32 &&
                      textureToUse.format != TextureFormat.DXT5))
                 {
@@ -524,7 +524,8 @@ namespace RuntimeCore.Materials
             }
             else
             {
-                if (isOpaqueSurface ||
+                if ((isOpaqueSurface &&
+                     surfaceType != SurfaceTypes.LayeredTransparentOuter) ||
                     (textureToUse.format != TextureFormat.ARGB32 &&
                      textureToUse.format != TextureFormat.DXT5))
                 {
