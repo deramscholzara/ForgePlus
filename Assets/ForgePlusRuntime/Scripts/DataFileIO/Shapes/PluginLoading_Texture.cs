@@ -10,13 +10,15 @@ public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Textur
 {
     public Dictionary<ShapeDescriptor, PluginTextureSet> TextureLookup = new Dictionary<ShapeDescriptor, PluginTextureSet>();
 
-    public bool PluginSupportEnabled = true;
+    [SerializeField] private bool PluginSupportEnabled = true;
 
     // TODO: Make this load plugins data, but not the actual textures
     // TODO: Make plugin texture loading on-demand based on loaded plugin data,
     //       similar to ShapesLoading.Instance.GetShape
     private void Start()
     {
+        if (!PluginSupportEnabled) return;
+
         var dataPathRoot = new DirectoryInfo(Path.Join(Application.dataPath, "MML_Plugins"));
 
         // Load all plugin XML data

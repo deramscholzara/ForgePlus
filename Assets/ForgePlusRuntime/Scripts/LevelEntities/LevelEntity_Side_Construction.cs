@@ -125,8 +125,7 @@ namespace RuntimeCore.Entities.Geometry
             #region Exposure_Determination
             // Data-driven surface-exposure
             var dataExpectsFullSide = side != null &&
-                                      side.Type == SideType.Full &&
-                                      !side.Primary.Texture.IsEmpty();
+                                      side.Type == SideType.Full;
             var dataExpectsTop = !dataExpectsFullSide &&
                                  side != null &&
                                  (side.Type == SideType.High || side.Type == SideType.Split);
@@ -174,7 +173,7 @@ namespace RuntimeCore.Entities.Geometry
             if (exposesMiddle)
             {
                 // Primary if there's no opposing polygon or it's explicitly "full", Transparent otherwise
-                var sideDataSource = (!hasOpposingPolygon || dataExpectsFullSide) ? DataSources.Primary : DataSources.Transparent;
+                var sideDataSource = (!hasOpposingPolygon) ? DataSources.Primary : DataSources.Transparent;
 
                 var hasLayeredTransparentSide = side.HasLayeredTransparentSide(level.Level);
                 var highHeight = dataExpectsFullSide ? highestFacingCeiling : line.LowestAdjacentCeiling;
