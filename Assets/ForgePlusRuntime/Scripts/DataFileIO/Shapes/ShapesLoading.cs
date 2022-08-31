@@ -8,10 +8,7 @@ namespace ForgePlus.DataFileIO
     {
         protected override DataFileTypes DataFileType
         {
-            get
-            {
-                return DataFileTypes.Shapes;
-            }
+            get { return DataFileTypes.Shapes; }
         }
 
         public override void UnloadFile()

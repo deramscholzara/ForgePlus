@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ForgePlus.LevelManipulation.Utilities;
 using UnityEngine;
 
 namespace Weland
@@ -283,7 +284,18 @@ namespace Weland
             }
 
             result.filterMode = FilterMode.Point;
-            result.Apply();
+
+            if (MathUtilities.IsPowerOfTwo(result.width) &&
+                MathUtilities.IsPowerOfTwo(result.height))
+            {
+                result.Apply(updateMipmaps: true, makeNoLongerReadable: false);
+                result.Compress(highQuality: true);
+                result.Apply(updateMipmaps: false, makeNoLongerReadable: true);
+            }
+            else
+            {
+                result.Apply(updateMipmaps: true, makeNoLongerReadable: true);
+            }
 
             return result;
         }

@@ -4766,6 +4766,7 @@ GameObject:
   - component: {fileID: 792520107}
   - component: {fileID: 792520108}
   - component: {fileID: 792520109}
+  - component: {fileID: 792520110}
   m_Layer: 0
   m_Name: Singletons
   m_TagString: Untagged
@@ -4858,6 +4859,19 @@ MonoBehaviour:
   separateTextures: 0
   separateShaders: 1
   deleteOriginalObjects: 0
+--- !u!114 &792520110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792520104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b583b8255bdd71449bba4a2c6c14886a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PluginSupportEnabled: 1
 --- !u!1 &793160945 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5965558954833741974, guid: f5d92cab146ca0242ac5c3ba3f421ffc,

@@ -532,7 +532,9 @@ namespace ForgePlus.ApplicationGeneral
             MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
 
             SeparateLights = separateLights;
+#if USE_TEXTURE_ARRAYS
             SeparateTextures = separateTextures;
+#endif
             SeparateShaders = separateShaders;
         }
     }

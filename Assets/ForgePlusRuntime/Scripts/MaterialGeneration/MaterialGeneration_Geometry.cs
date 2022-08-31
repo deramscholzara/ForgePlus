@@ -1,6 +1,7 @@
 ﻿using ForgePlus.DataFileIO;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using Weland;
@@ -32,8 +33,9 @@ namespace RuntimeCore.Materials
             public readonly bool HasMipMaps;
             public readonly uint ShapeCollection;
             public readonly bool UsedForMedia;
+            public readonly bool IsForOpaqueSurface;
 
-            public Texture2DArrayCollectionKey(ShapeDescriptor shapeDescriptor, bool usedForMedia)
+            public Texture2DArrayCollectionKey(ShapeDescriptor shapeDescriptor, bool usedForMedia, bool isForOpaqueSurface)
             {
                 var texture = GetTexture(shapeDescriptor, returnPlaceholderIfNotFound: true);
                 // TODO: should unload this texture when done adding it to the array, if NO_EDITING
@@ -55,6 +57,8 @@ namespace RuntimeCore.Materials
                 {
                     ShapeCollection = byte.MaxValue + 1;
                 }
+
+                IsForOpaqueSurface = isForOpaqueSurface;
             }
         }
 
@@ -139,27 +143,19 @@ namespace RuntimeCore.Materials
                 foreach (var descriptorIndexPair in indicesByShapeDescriptor)
                 {
                     var texture = GetTexture(descriptorIndexPair.Key, returnPlaceholderIfNotFound: true);
+                    textureArray.filterMode = texture.filterMode;
 
                     for (var mipIndex = 0; mipIndex < texture.mipmapCount; mipIndex++)
                     {
-                        if (texture.format == TextureFormat.ARGB32)
-                        {
-                            var textureMip = texture.GetPixelData<Color32>(mipIndex);
-                            textureArray.SetPixelData(textureMip, mipIndex, descriptorIndexPair.Value);
-                        }
-                        else
-                        {
-                            var textureMip = texture.GetPixelData<Color24>(mipIndex);
-                            textureArray.SetPixelData(textureMip, mipIndex, descriptorIndexPair.Value);
-                        }
+                        Graphics.CopyTexture(
+                            texture, 0, mipIndex,
+                            textureArray, descriptorIndexPair.Value, mipIndex);
                     }
 
 #if NO_EDITING
                     // TODO: should unload "texture" when done adding it to the array, if NO_EDITING
 #endif
                 }
-
-                textureArray.Apply();
 
                 SharedMaterial.mainTexture = textureArray;
 
@@ -209,6 +205,8 @@ namespace RuntimeCore.Materials
         private static readonly int textureArrayIndexPropertyId = Shader.PropertyToID("_TextureArrayIndex");
 #endif
 
+        // TODO: Convert Textures to use TextureSet (renamed from PluginTextureSet)
+        //       and make PluginLoading_Texture use this.Textures instead of its "TextureLookup"
         private static readonly Dictionary<ShapeDescriptor, Texture2D> Textures = new Dictionary<ShapeDescriptor, Texture2D>(255);
         private static readonly Dictionary<ShapeDescriptor, int> TextureUsageCounter = new Dictionary<ShapeDescriptor, int>();
 
@@ -235,28 +233,34 @@ namespace RuntimeCore.Materials
 
         public static Texture2D GetTexture(ShapeDescriptor shapeDescriptor, bool returnPlaceholderIfNotFound = false)
         {
-            Texture2D textureToUse;
-            if (Textures.ContainsKey(shapeDescriptor))
+            if (PluginLoading_Texture.Instance.PluginSupportEnabled &&
+                PluginLoading_Texture.Instance.TextureLookup.ContainsKey(shapeDescriptor))
             {
-                textureToUse = Textures[shapeDescriptor];
+                if (PluginLoading_Texture.Instance.TextureLookup[shapeDescriptor].MainTexture)
+                    return PluginLoading_Texture.Instance.TextureLookup[shapeDescriptor].MainTexture;
+            }
+            else if (Textures.ContainsKey(shapeDescriptor))
+            {
+                return Textures[shapeDescriptor];
             }
             else
             {
-                textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
+                var textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
 
                 if (textureToUse)
                 {
                     textureToUse.name = $"Collection({shapeDescriptor.Collection}) Bitmap({shapeDescriptor.Bitmap})";
                     Textures[shapeDescriptor] = textureToUse;
                 }
+                else if (returnPlaceholderIfNotFound)
+                {
+                    textureToUse = GridTexture;
+                }
+
+                return textureToUse;
             }
 
-            if (textureToUse == null && returnPlaceholderIfNotFound)
-            {
-                textureToUse = GridTexture;
-            }
-
-            return textureToUse;
+            return null;
         }
 
         public static bool GetTextureIsInUse(ShapeDescriptor shapeDescriptor)
@@ -340,6 +344,10 @@ namespace RuntimeCore.Materials
             {
                 Object.Destroy(Textures[texturesKey]);
             }
+
+            // TODO: Make plugin texture loading on-demand based on loaded plugin data,
+            //       similar to ShapesLoading.Instance.GetShape (see PluginLoading_Textures notes),
+            //       then TextureLookup, or Textures (using TextureSet) can safely be destroyed and cleared here.
 
             Textures.Clear();
         }
@@ -434,7 +442,8 @@ namespace RuntimeCore.Materials
             else
             {
                 if (isOpaqueSurface ||
-                    textureToUse.format != TextureFormat.ARGB32)
+                    (textureToUse.format != TextureFormat.ARGB32 &&
+                     textureToUse.format != TextureFormat.DXT5))
                 {
                     return Texture2DArrayKeys;
                 }
@@ -472,8 +481,19 @@ namespace RuntimeCore.Materials
                 var texture2DArrayCollection = Texture2DArrays[collectionKey];
                 return texture2DArrayCollection.SharedMaterial;
             }
+#endif
 
-            var texture2DArrayCollectionKey = new Texture2DArrayCollectionKey(shapeDescriptor, surfaceType == SurfaceTypes.Media);
+            var textureToUse = GetTexture(shapeDescriptor, returnPlaceholderIfNotFound: true);
+
+#if USE_TEXTURE_ARRAYS
+            // TODO: Figure out why transparent surfaces are using the normal opaque shader
+            //       load Poor Yorick and look at the waterfall near the start... 
+
+            var texture2DArrayCollectionKey = new Texture2DArrayCollectionKey(
+                shapeDescriptor,
+                surfaceType == SurfaceTypes.Media,
+                isOpaqueSurface ||
+                (textureToUse.format != TextureFormat.ARGB32 && textureToUse.format != TextureFormat.DXT5));
             collectionKeyDictionary[shapeDescriptor] = texture2DArrayCollectionKey;
 
             if (Texture2DArrays.ContainsKey(texture2DArrayCollectionKey))
@@ -483,8 +503,6 @@ namespace RuntimeCore.Materials
                 return texture2DArrayCollection.SharedMaterial;
             }
 #endif
-
-            var textureToUse = GetTexture(shapeDescriptor, returnPlaceholderIfNotFound: true);
 
             Material material;
 
@@ -507,7 +525,8 @@ namespace RuntimeCore.Materials
             else
             {
                 if (isOpaqueSurface ||
-                    textureToUse.format != TextureFormat.ARGB32)
+                    (textureToUse.format != TextureFormat.ARGB32 &&
+                     textureToUse.format != TextureFormat.DXT5))
                 {
 #if USE_TEXTURE_ARRAYS
                     material = new Material(OpaqueWithAlphaAlphaNormalShader);
