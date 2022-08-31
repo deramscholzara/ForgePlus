@@ -25,6 +25,22 @@ Note for Mac: decompressing with the standard Archive Utility will corrupt the a
 https://www.keka.io/en/
 
 
+--- USING PLUGINS ---
+
+Forge+ currently supports the "normal" textures of HD XML/MML texture plugins from Aleph One.
+
+ - Install plugins simply by placing them in the "MML_Plugins" folder inside the Forge+ data folder
+    - "Forge+_Data" on Windows/Linux
+    - "Forge+.app/Contents" on Mac OS X
+    - "<project folder>/Assets" in Unity Editor on any platform)
+ - Plugin folders should be structured the same way they are for Aleph One
+ - Currently supports all .png files and .dds files in these formats:
+    - DXT1
+    - DXT5
+    - BGR8
+ - Plugins are all loaded alphanumerically, so if you have multiple plugins replacing the same bitmap, then the plugin labeled alphanumerically later will yield the final loaded result.
+
+
 --- BUILDING YOUR OWN COPY ---
 
 To build your own copy, you'll need to:
