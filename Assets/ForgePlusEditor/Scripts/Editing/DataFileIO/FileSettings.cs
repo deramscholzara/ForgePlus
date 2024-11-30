@@ -1,6 +1,6 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO.Extensions;
-using SimpleFileBrowser;
+using SFB;
 using System;
 using System.IO;
 using UnityEngine;
@@ -37,10 +37,7 @@ namespace ForgePlus.DataFileIO
                 ////value.Invoke(DataFileTypes.Sounds, GetFilePath(DataFileTypes.Sounds));
                 ////value.Invoke(DataFileTypes.Images, GetFilePath(DataFileTypes.Images));
             }
-            remove
-            {
-                OnPathChanged_Sender -= value;
-            }
+            remove { OnPathChanged_Sender -= value; }
         }
 
         public void ShowSelectionBrowser(DataFileTypes type)
@@ -98,27 +95,34 @@ namespace ForgePlus.DataFileIO
             UpdateFilePath(type, filePath: string.Empty, loadFile: false);
         }
 
-        private async void ShowSelectionBrowserCoroutine(DataFileTypes type)
+        private void ShowSelectionBrowserCoroutine(DataFileTypes type)
         {
             UIBlocking.Instance.Block();
 
-            FileBrowser.SetFilters(showAllFilesFilter: true, new FileBrowser.Filter(type.ToString(), type.FileExtensionWithPeriod()));
-            FileBrowser.SetDefaultFilter(type.FileExtensionWithPeriod());
-
             var initialDirectory = GetFilePath(type);
-            initialDirectory = string.IsNullOrEmpty(initialDirectory) ? Environment.GetFolderPath(Environment.SpecialFolder.Desktop) : Path.GetDirectoryName(initialDirectory);
+            initialDirectory = string.IsNullOrEmpty(initialDirectory)
+                ? Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+                : Path.GetDirectoryName(initialDirectory);
 
-            await FileBrowser.WaitForLoadDialog(
-                folderMode: false,
-                initialPath: initialDirectory,
+            StandaloneFileBrowser.OpenFilePanelAsync(
                 title: $"Choose {type} file",
-                loadButtonText: "Load");
+                directory: initialDirectory,
+                type.FileExtension(),
+                multiselect: false,
+                cb: openPaths => HandleSelectionBrowserResponse(openPaths, type));
 
-            if (FileBrowser.Success)
+            UIBlocking.Instance.Unblock();
+        }
+
+        private void HandleSelectionBrowserResponse(string[] openPaths, DataFileTypes type)
+        {
+            if (openPaths.Length > 0)
             {
-                var path = FileBrowser.Result;
-
-                UpdateFilePath(type, filePath: path, loadFile: true);
+                var openPath = openPaths[0];
+                if (!string.IsNullOrEmpty(openPath) && !string.IsNullOrWhiteSpace(openPath))
+                {
+                    UpdateFilePath(type, filePath: openPath, loadFile: true);
+                }
             }
 
             UIBlocking.Instance.Unblock();
