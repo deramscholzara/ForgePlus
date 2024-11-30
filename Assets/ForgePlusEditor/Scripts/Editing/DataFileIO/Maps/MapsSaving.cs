@@ -2,10 +2,11 @@
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO.Extensions;
 using RuntimeCore.Entities;
-using SimpleFileBrowser;
+using SFB;
 using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Weland;
 
 namespace ForgePlus.DataFileIO
@@ -19,28 +20,27 @@ namespace ForgePlus.DataFileIO
             ShowSelectionBrowserCoroutine();
         }
 
-        private async void ShowSelectionBrowserCoroutine()
+        private void ShowSelectionBrowserCoroutine()
         {
             UIBlocking.Instance.Block();
 
             var type = DataFileTypes.Maps;
-
-            FileBrowser.SetFilters(showAllFilesFilter: false, new FileBrowser.Filter(type.ToString(), type.FileExtensionWithPeriod()));
-            FileBrowser.SetDefaultFilter(type.FileExtensionWithPeriod());
-
             var initialPath = FileSettings.Instance.GetFilePath(type);
             var initialDirectory = Path.GetDirectoryName(initialPath);
-
-            await FileBrowser.WaitForSaveDialog(
-                folderMode: false,
-                initialPath: initialDirectory,
-                initialFileName: LevelEntity_Level.Instance.Level.Name,
+            
+            StandaloneFileBrowser.SaveFilePanelAsync(
                 title: $"Choose {type} save location",
-                saveButtonText: "Save");
+                directory: initialDirectory,
+                defaultName: LevelEntity_Level.Instance.Level.Name,
+                type.FileExtension(),
+                cb: savePath => HandleSelectionBrowserResponse(savePath, type));
+        }
 
-            if (FileBrowser.Success)
+        private void HandleSelectionBrowserResponse(string savePath, DataFileTypes type)
+        {
+            if (!string.IsNullOrEmpty(savePath) && !string.IsNullOrWhiteSpace(savePath))
             {
-                var path = FileBrowser.Result;
+                var path = savePath;
                 path = path.Replace(type.FileExtensionWithPeriod().ToLower(), type.FileExtensionWithPeriod());
 
                 try

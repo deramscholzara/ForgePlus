@@ -38,7 +38,7 @@ namespace ForgePlus.DataFileIO
             }
             else
             {
-                filePathDisplayText.text = path;
+                filePathDisplayText.text = path.Replace("\\", "\\\\");
 
                 unloadButton.gameObject.SetActive(true);
             }

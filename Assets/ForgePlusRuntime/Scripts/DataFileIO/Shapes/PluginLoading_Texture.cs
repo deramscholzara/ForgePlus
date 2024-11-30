@@ -8,7 +8,8 @@ using Weland;
 
 public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Texture>
 {
-    public Dictionary<ShapeDescriptor, PluginTextureSet> TextureLookup = new Dictionary<ShapeDescriptor, PluginTextureSet>();
+    public Dictionary<ShapeDescriptor, PluginTextureSet> TextureLookup =
+        new Dictionary<ShapeDescriptor, PluginTextureSet>();
 
     [SerializeField] private bool PluginSupportEnabled = true;
 
@@ -20,6 +21,12 @@ public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Textur
         if (!PluginSupportEnabled) return;
 
         var dataPathRoot = new DirectoryInfo(Path.Join(Application.dataPath, "MML_Plugins"));
+
+        if (!dataPathRoot.Exists)
+        {
+            // no plugin directory exists, so silently do not attempt to load any plugins.
+            return;
+        }
 
         // Load all plugin XML data
         var xmlFiles = dataPathRoot.GetFiles("*.xml", SearchOption.AllDirectories);
@@ -57,11 +64,12 @@ public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Textur
                             // Store mappings for loading
                             var textureSet = new PluginTextureSet();
                             if (!string.IsNullOrEmpty(texture.NormalImage))
-                                textureSet.MainTexture = LoadTextureAtPath(Path.Join(mmlFile.DirectoryName, texture.NormalImage));
+                                textureSet.MainTexture =
+                                    LoadTextureAtPath(Path.Join(mmlFile.DirectoryName, texture.NormalImage));
 
                             var shapeDescriptor = new ShapeDescriptor();
-                            shapeDescriptor.Collection = (byte) texture.Collection;
-                            shapeDescriptor.Bitmap = (byte) texture.Bitmap;
+                            shapeDescriptor.Collection = (byte)texture.Collection;
+                            shapeDescriptor.Bitmap = (byte)texture.Bitmap;
                             shapeDescriptor.CLUT = 0;
                             TextureLookup[shapeDescriptor] = textureSet;
                         }
@@ -126,7 +134,8 @@ public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Textur
         byte ddsSizeCheck = ddsBytes[4];
         if (ddsSizeCheck != 124)
         {
-            Debug.LogError("Invalid DDS DXTn texture. Unable to read"); //this header byte should be 124 for DDS image files
+            Debug.LogError(
+                "Invalid DDS DXTn texture. Unable to read"); //this header byte should be 124 for DDS image files
             return null;
         }
 
@@ -156,7 +165,8 @@ public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Textur
             dstTextureFormat = TextureFormat.RGBA32;
         }
 
-        var flippedTexture = new Texture2D(texture.width, texture.height, dstTextureFormat, mipChain: true, linear: false);
+        var flippedTexture =
+            new Texture2D(texture.width, texture.height, dstTextureFormat, mipChain: true, linear: false);
         for (var y = 0; y < texture.height; y++)
         {
             for (var x = 0; x < texture.width; x++)
