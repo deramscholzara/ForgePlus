@@ -1,6 +1,5 @@
 ﻿using RuntimeCore.Materials;
 using UnityEngine;
-using Weland;
 
 namespace ForgePlus.DataFileIO
 {
@@ -14,11 +13,22 @@ namespace ForgePlus.DataFileIO
         public override void UnloadFile()
         {
             MaterialGeneration_Geometry.ClearCollection();
+            MaterialGeneration_Sprites.ClearCollection();
+
+            data?.Close();
 
             base.UnloadFile();
         }
 
-        public Texture2D GetShape(ShapeDescriptor shapeDescriptor)
+        // Loads the file if it isn't already, for Aleph One's shapes accessors
+        public bool TryLoadFile()
+        {
+            LoadFile(forceReload: false);
+
+            return data != null;
+        }
+
+        public Texture2D GetShape(ushort shapeDescriptor)
         {
             LoadFile(forceReload: false);
 
@@ -29,6 +39,13 @@ namespace ForgePlus.DataFileIO
             }
 
             return data.GetShape(shapeDescriptor);
+        }
+
+        public bool IsWallCollection(short collection)
+        {
+            LoadFile(forceReload: false);
+
+            return data != null && data.IsWallCollection(collection);
         }
     }
 }

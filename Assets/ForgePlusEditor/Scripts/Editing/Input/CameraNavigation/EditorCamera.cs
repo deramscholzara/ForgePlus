@@ -1,4 +1,5 @@
 ﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.LevelManipulation;
 using UnityEngine;
 
 namespace ForgePlus.CameraNavigation
@@ -16,6 +17,7 @@ namespace ForgePlus.CameraNavigation
         private const KeyCode turbo = KeyCode.LeftShift;
         private const KeyCode rotateA = KeyCode.Space;
         private const KeyCode rotateB = KeyCode.Mouse1;
+        private const KeyCode frameSelected = KeyCode.F;
 
         [SerializeField]
         private float maxVelocity = 5f;
@@ -32,8 +34,47 @@ namespace ForgePlus.CameraNavigation
         [SerializeField]
         private float decelerationPerSecond = 40f;
 
+        [SerializeField]
+        private float framingDuration = 0.25f;
+
         private Vector3 currentVelocityVector = Vector3.zero;
         private int blockerCount = 0;
+
+        private bool isFraming = false;
+        private Vector3 framingStartPosition;
+        private Vector3 framingTargetPosition;
+        private float framingStartTime;
+
+        public void FrameSelected()
+        {
+            if (!SelectionFramingBounds.TryGetBounds(SelectionManager.Instance.Selection, out var bounds))
+            {
+                return;
+            }
+
+            var camera = GetComponent<Camera>();
+
+            // Fit the bounds' enclosing sphere into the narrower of the two fields of view
+            var halfVerticalFieldOfView = camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
+            var halfHorizontalFieldOfView = Mathf.Atan(Mathf.Tan(halfVerticalFieldOfView) * camera.aspect);
+            var distance = bounds.extents.magnitude / Mathf.Sin(Mathf.Min(halfVerticalFieldOfView, halfHorizontalFieldOfView));
+
+            framingTargetPosition = bounds.center - transform.forward * distance;
+            currentVelocityVector = Vector3.zero;
+
+            if (!isActiveAndEnabled || framingDuration <= 0f)
+            {
+                // Not navigating (such as while a menu is open), so there's no Update to animate in
+                transform.position = framingTargetPosition;
+                isFraming = false;
+
+                return;
+            }
+
+            framingStartPosition = transform.position;
+            framingStartTime = Time.time;
+            isFraming = true;
+        }
 
         public void OnInputBlockerChanged(bool isBlocking)
         {
@@ -63,10 +104,47 @@ namespace ForgePlus.CameraNavigation
             blockerCount++;
         }
 
+        private void OnDisable()
+        {
+            if (isFraming)
+            {
+                transform.position = framingTargetPosition;
+                isFraming = false;
+            }
+        }
+
         private void Update()
         {
+            #region Framing
+            if (Hotkeys.GetKeyDown(frameSelected))
+            {
+                FrameSelected();
+            }
+
+            if (isFraming)
+            {
+                if (HasNavigationInput())
+                {
+                    isFraming = false;
+                }
+                else
+                {
+                    var progress = Mathf.Clamp01((Time.time - framingStartTime) / framingDuration);
+
+                    transform.position = Vector3.Lerp(framingStartPosition, framingTargetPosition, Mathf.SmoothStep(0f, 1f, progress));
+
+                    if (progress >= 1f)
+                    {
+                        isFraming = false;
+                    }
+
+                    return;
+                }
+            }
+            #endregion Framing
+
             #region Movement
-            var isTurboMode = Input.GetKey(turbo);
+            var isTurboMode = Hotkeys.GetKey(turbo);
             var acceleration = isTurboMode ? turboAccelerationPerSecond : accelerationPerSecond;
             acceleration *= Time.deltaTime;
             var maxVelocity = isTurboMode ? maxTurboVelocity : this.maxVelocity;
@@ -90,7 +168,7 @@ namespace ForgePlus.CameraNavigation
             #endregion Movement
 
             #region Looking
-            if (Input.GetKey(rotateA) || Input.GetKey(rotateB))
+            if (Hotkeys.GetKey(rotateA) || Input.GetKey(rotateB))
             {
                 var eulerRotation = transform.eulerAngles;
 
@@ -112,8 +190,8 @@ namespace ForgePlus.CameraNavigation
 
         private void UpdateVelocityAxis(ref float axialVelocity, KeyCode positiveKey, KeyCode negativeKey, float acceleration, float maxVelocity)
         {
-            bool hasPositiveInput = Input.GetKey(positiveKey);
-            bool hasNegativeInput = Input.GetKey(negativeKey);
+            bool hasPositiveInput = Hotkeys.GetKey(positiveKey);
+            bool hasNegativeInput = Hotkeys.GetKey(negativeKey);
 
             // If neither or both inputs is active, consider it to be no input
             var inputIsZero = (!hasPositiveInput && !hasNegativeInput) || (hasPositiveInput && hasNegativeInput);
@@ -160,6 +238,18 @@ namespace ForgePlus.CameraNavigation
         private float GetScaledDeceleration(float deceleration, float absoluteAxialVelocity)
         {
             return Mathf.Max(deceleration, deceleration * absoluteAxialVelocity / this.maxVelocity);
+        }
+
+        private bool HasNavigationInput()
+        {
+            return Hotkeys.GetKey(forward) ||
+                   Hotkeys.GetKey(backward) ||
+                   Hotkeys.GetKey(left) ||
+                   Hotkeys.GetKey(right) ||
+                   Hotkeys.GetKey(up) ||
+                   Hotkeys.GetKey(down) ||
+                   Hotkeys.GetKey(rotateA) ||
+                   Input.GetKey(rotateB);
         }
     }
 }

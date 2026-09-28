@@ -2,7 +2,7 @@
 using ForgePlus.LevelManipulation;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weland;
+using AlephOne;
 
 namespace RuntimeCore.Entities.Geometry
 {
@@ -10,7 +10,7 @@ namespace RuntimeCore.Entities.Geometry
     public class LevelEntity_Line : EditableSurface_Base, ISelectionDisplayable, IInspectable
     {
         public short NativeIndex { get; set; }
-        public Line NativeObject { get; set; }
+        public line_data NativeObject { get; set; }
         public LevelEntity_Side ClockwiseSide;
         public LevelEntity_Side CounterclockwiseSide;
 

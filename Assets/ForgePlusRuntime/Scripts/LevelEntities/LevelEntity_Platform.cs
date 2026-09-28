@@ -6,12 +6,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using Weland;
-using Weland.Extensions;
+using AlephOne;
+using static AlephOne.platforms;
+using static AlephOne.map;
 
 namespace RuntimeCore.Entities.Geometry
 {
-    public class LevelEntity_Platform : LevelEntity_Base, IDestructionPreparable, ISelectable, IInspectable
+    public partial class LevelEntity_Platform : LevelEntity_Base, IDestructionPreparable, ISelectable, IInspectable
     {
         public enum LinkedSurfaces
         {
@@ -32,7 +33,7 @@ namespace RuntimeCore.Entities.Geometry
         //       A button in the inspector "Impact"
         //       & "Stop Impact" - no "Stop Impact" if it reverses?
 
-        public new Platform NativeObject => base.NativeObject as Platform;
+        public new platform_data NativeObject => base.NativeObject as platform_data;
 
         // TODO: Add this to IInspectable so it must be implemented in all inspectables
         public event Action<LevelEntity_Platform> OnInspectionStateChange;
@@ -42,6 +43,7 @@ namespace RuntimeCore.Entities.Geometry
 
         private LinkedSurfaces linkedSurface;
         private float speed = 1f;
+        private float contractingSpeed = 1f;
         private float delay = 1f;
         private float extendedPosition = 0f;
         private float contractedPosition = 1f;
@@ -51,6 +53,14 @@ namespace RuntimeCore.Entities.Geometry
         private States currentState = States.Contracted;
 
         private float remainingStateTime = 0f;
+
+        public float CurrentHeightInWorldUnitIncrements
+        {
+            get
+            {
+                return currentPosition * GeometryUtilities.WorldUnitIncrementsPerMeter;
+            }
+        }
 
         public bool IsRuntimeActive
         {
@@ -86,47 +96,33 @@ namespace RuntimeCore.Entities.Geometry
         public void UpdatePlatformValues(LinkedSurfaces linkedSurface)
         {
             this.linkedSurface = linkedSurface;
-            speed = (float)NativeObject.Speed / 30f;
-            delay = (float)NativeObject.Delay / 30f;
 
-            var minimumHeight = NativeObject.RuntimeMinimumHeight(ParentLevel.Level);
-            var maximumHeight = NativeObject.RuntimeMaximumHeight(ParentLevel.Level);
+            // Platforms contracting slower move a quarter of their speed, rounded down (platforms.cpp: update_platforms)
+            speed = GetSpeedInMetersPerSecond(NativeObject.speed);
+            contractingSpeed = GetSpeedInMetersPerSecond(PLATFORM_CONTRACTS_SLOWER(NativeObject.static_flags) ? (short)(NativeObject.speed >> 2) : NativeObject.speed);
 
-            if (NativeObject.ComesFromFloor && NativeObject.ComesFromCeiling)
+            delay = (float)NativeObject.delay / TICKS_PER_SECOND;
+
+            // A platform that goes both ways already meets at the midpoint in its extrema (platforms.cpp: calculate_platform_extrema)
+            if (linkedSurface == LinkedSurfaces.Floor)
             {
-                extendedPosition = (float)(maximumHeight + minimumHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
-
-                if (linkedSurface == LinkedSurfaces.Floor)
-                {
-                    contractedPosition = (float)minimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                }
-                else
-                {
-                    contractedPosition = (float)maximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                }
+                extendedPosition = (float)NativeObject.maximum_floor_height / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                contractedPosition = (float)NativeObject.minimum_floor_height / GeometryUtilities.WorldUnitIncrementsPerMeter;
             }
             else
             {
-                if (linkedSurface == LinkedSurfaces.Floor)
-                {
-                    extendedPosition = (float)maximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                    contractedPosition = (float)minimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                }
-                else
-                {
-                    extendedPosition = (float)minimumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                    contractedPosition = (float)maximumHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                }
+                extendedPosition = (float)NativeObject.minimum_ceiling_height / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                contractedPosition = (float)NativeObject.maximum_ceiling_height / GeometryUtilities.WorldUnitIncrementsPerMeter;
             }
         }
 
         public void BeginRuntimeStyleBehavior()
         {
-            currentState = NativeObject.InitiallyExtended ? States.Extended : States.Contracted;
+            currentState = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? States.Extended : States.Contracted;
 
-            currentPosition = NativeObject.InitiallyExtended ? extendedPosition : contractedPosition;
+            currentPosition = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? extendedPosition : contractedPosition;
 
-            if (NativeObject.InitiallyActive)
+            if (PLATFORM_IS_INITIALLY_ACTIVE(NativeObject.static_flags))
             {
                 ActivateRuntimeBehavior();
             }
@@ -152,14 +148,14 @@ namespace RuntimeCore.Entities.Geometry
                 // Activate opposed platform if this is a split platform
                 if (linkedSurface == LinkedSurfaces.Floor)
                 {
-                    if (NativeObject.ComesFromCeiling)
+                    if (PLATFORM_COMES_FROM_CEILING(NativeObject.static_flags))
                     {
                         ParentLevel.CeilingPlatforms[NativeIndex].SetRuntimeActive(value, isRootActivation: false);
                     }
                 }
                 else
                 {
-                    if (NativeObject.ComesFromFloor)
+                    if (PLATFORM_COMES_FROM_FLOOR(NativeObject.static_flags))
                     {
                         ParentLevel.FloorPlatforms[NativeIndex].SetRuntimeActive(value, isRootActivation: false);
                     }
@@ -172,7 +168,7 @@ namespace RuntimeCore.Entities.Geometry
             if (IsRuntimeActive)
             {
                 if (currentState == States.Extending &&
-                    NativeObject.ReversesDirectionWhenObstructed)
+                    PLATFORM_REVERSES_DIRECTION_WHEN_OBSTRUCTED(NativeObject.static_flags))
                 {
                     BeginState(States.Contracting, loop: false);
                 }
@@ -216,7 +212,7 @@ namespace RuntimeCore.Entities.Geometry
 
             currentState = state;
 
-            if (!loop && NativeObject.DelaysBeforeActivation &&
+            if (!loop && PLATFORM_DELAYS_BEFORE_ACTIVATION(NativeObject.static_flags) &&
                 (state == States.Extended || state == States.Contracted))
             {
                 // TODO: Should this also delay if reactivating during the Extending and Contracting states?
@@ -257,7 +253,7 @@ namespace RuntimeCore.Entities.Geometry
                         {
                             currentState = States.Extended;
 
-                            if (NativeObject.DeactivatesAtEachLevel || (NativeObject.InitiallyExtended && NativeObject.DeactivatesAtInitialLevel))
+                            if (PLATFORM_DEACTIVATES_AT_EACH_LEVEL(NativeObject.static_flags) || (PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) && PLATFORM_DEACTIVATES_AT_INITIAL_LEVEL(NativeObject.static_flags)))
                             {
                                 DeactivateRuntimeBehavior();
                                 return;
@@ -280,14 +276,7 @@ namespace RuntimeCore.Entities.Geometry
 
                         break;
                     case States.Contracting:
-                        if (NativeObject.ContractsSlower)
-                        {
-                            await Move(cancellationToken, speed * 0.25f, contractedPosition);
-                        }
-                        else
-                        {
-                            await Move(cancellationToken, speed, contractedPosition);
-                        }
+                        await Move(cancellationToken, contractingSpeed, contractedPosition);
 
                         if (cancellationToken.IsCancellationRequested)
                         {
@@ -302,7 +291,7 @@ namespace RuntimeCore.Entities.Geometry
                         {
                             currentState = States.Contracted;
 
-                            if (NativeObject.DeactivatesAtEachLevel || (!NativeObject.InitiallyExtended && NativeObject.DeactivatesAtInitialLevel))
+                            if (PLATFORM_DEACTIVATES_AT_EACH_LEVEL(NativeObject.static_flags) || (!PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) && PLATFORM_DEACTIVATES_AT_INITIAL_LEVEL(NativeObject.static_flags)))
                             {
                                 DeactivateRuntimeBehavior();
                                 return;
@@ -334,6 +323,23 @@ namespace RuntimeCore.Entities.Geometry
 
         private async Task Move(CancellationToken cancellationToken, float speed, float targetPosition)
         {
+            if (currentPosition == targetPosition)
+            {
+                // Already there, so there's no time to spend moving
+                return;
+            }
+
+            if (speed <= 0f)
+            {
+                // Aleph One keeps a platform with no speed moving without it getting anywhere (platforms.cpp: update_platforms)
+                while (!cancellationToken.IsCancellationRequested && Application.isPlaying)
+                {
+                    await Task.Yield();
+                }
+
+                return;
+            }
+
             var duration = Mathf.Abs(currentPosition - targetPosition) / speed;
             var endTime = Time.realtimeSinceStartup + duration;
 
@@ -357,6 +363,11 @@ namespace RuntimeCore.Entities.Geometry
             currentPosition = targetPosition;
 
             remainingStateTime = GetStateOffsetRealTimeSinceStartup() - endTime;
+        }
+
+        private static float GetSpeedInMetersPerSecond(short worldDistancePerTick)
+        {
+            return (float)worldDistancePerTick * TICKS_PER_SECOND / GeometryUtilities.WorldUnitIncrementsPerMeter;
         }
 
         private float GetStateOffsetRealTimeSinceStartup()

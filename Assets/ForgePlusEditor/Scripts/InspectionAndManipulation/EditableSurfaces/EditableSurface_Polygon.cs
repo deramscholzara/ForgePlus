@@ -1,4 +1,6 @@
-﻿using ForgePlus.ApplicationGeneral;
+﻿using AlephOne;
+using ForgePlus.ApplicationGeneral;
+using ForgePlus.Extensions;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Palette;
@@ -7,7 +9,6 @@ using RuntimeCore.Entities.Geometry;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weland;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -18,7 +19,7 @@ namespace ForgePlus.LevelManipulation
 
         // TODO: Get rid of these and just attain them on the fly instead of preloading
         //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
-        public ShapeDescriptor surfaceShapeDescriptor = ShapeDescriptor.Empty;
+        public ushort surfaceShapeDescriptor = cstypes.UNONE;
         public LevelEntity_Light RuntimeLight = null;
         public LevelEntity_Media Media = null;
         public LevelEntity_Platform Platform = null;
@@ -40,7 +41,7 @@ namespace ForgePlus.LevelManipulation
                     {
                         var selectedTexture = PaletteManager.Instance.GetSelectedTexture();
 
-                        if (!selectedTexture.IsEmpty())
+                        if (!selectedTexture.IsEmptyShapeDescriptor())
                         {
                             ParentPolygon.SetShapeDescriptor(DataSource, selectedTexture);
                         }
@@ -54,8 +55,8 @@ namespace ForgePlus.LevelManipulation
                         if (selectedSourcePolygon && selectedSourcePolygon != ParentPolygon)
                         {
                             ParentPolygon.SetOffset(DataSource,
-                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.FloorOrigin.X : selectedSourcePolygon.NativeObject.CeilingOrigin.X,
-                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.FloorOrigin.Y : selectedSourcePolygon.NativeObject.CeilingOrigin.Y,
+                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.floor_origin.x : selectedSourcePolygon.NativeObject.ceiling_origin.x,
+                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.floor_origin.y : selectedSourcePolygon.NativeObject.ceiling_origin.y,
                                                       rebatch: true);
                         }
                     }
@@ -64,7 +65,7 @@ namespace ForgePlus.LevelManipulation
                         SelectionManager.Instance.ToggleObjectSelection(ParentPolygon, multiSelect: false);
                         InputListener(ParentPolygon);
 
-                        if (!surfaceShapeDescriptor.IsEmpty())
+                        if (!surfaceShapeDescriptor.IsEmptyShapeDescriptor())
                         {
                             PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
                         }
@@ -118,8 +119,8 @@ namespace ForgePlus.LevelManipulation
             {
                 // Note: Polygon surfaces have swapped UVs, so swap them here
                 var startingUVs = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                  new Vector2(ParentPolygon.NativeObject.FloorOrigin.Y, ParentPolygon.NativeObject.FloorOrigin.X) :
-                                  new Vector2(ParentPolygon.NativeObject.CeilingOrigin.Y, ParentPolygon.NativeObject.CeilingOrigin.X);
+                                  new Vector2(ParentPolygon.NativeObject.floor_origin.y, ParentPolygon.NativeObject.floor_origin.x) :
+                                  new Vector2(ParentPolygon.NativeObject.ceiling_origin.y, ParentPolygon.NativeObject.ceiling_origin.x);
 
                 var startingPosition = eventData.pointerPressRaycast.worldPosition;
 
@@ -138,12 +139,12 @@ namespace ForgePlus.LevelManipulation
                     alignmentGroupedPolygons.Clear();
 
                     var commonElevation = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                          ParentPolygon.NativeObject.FloorHeight :
-                                          ParentPolygon.NativeObject.CeilingHeight;
+                                          ParentPolygon.NativeObject.floor_height :
+                                          ParentPolygon.NativeObject.ceiling_height;
 
                     var commonShapeDescriptor = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                                ParentPolygon.NativeObject.FloorTexture :
-                                                ParentPolygon.NativeObject.CeilingTexture;
+                                                ParentPolygon.NativeObject.floor_texture :
+                                                ParentPolygon.NativeObject.ceiling_texture;
 
                     CollectSimilarAdjacentPolygons(ParentPolygon, commonElevation, commonShapeDescriptor);
                 }
@@ -227,8 +228,8 @@ namespace ForgePlus.LevelManipulation
                         var newX = (short)(direction.y * GeometryUtilities.UnitsPerTextureOffetNudge);
                         var newY = (short)(direction.x * GeometryUtilities.UnitsPerTextureOffetNudge);
 
-                        var originalX = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentPolygon.NativeObject.FloorOrigin.X : ParentPolygon.NativeObject.CeilingOrigin.X;
-                        var originalY = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentPolygon.NativeObject.FloorOrigin.Y : ParentPolygon.NativeObject.CeilingOrigin.Y;
+                        var originalX = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentPolygon.NativeObject.floor_origin.x : ParentPolygon.NativeObject.ceiling_origin.x;
+                        var originalY = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentPolygon.NativeObject.floor_origin.y : ParentPolygon.NativeObject.ceiling_origin.y;
 
                         newX += (short)(Mathf.Round(originalX / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
                         newY += (short)(Mathf.Round(originalY / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
@@ -245,11 +246,11 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        private void CollectSimilarAdjacentPolygons(LevelEntity_Polygon centralPolygon, short commonElevation, ShapeDescriptor commonShapeDescriptor)
+        private void CollectSimilarAdjacentPolygons(LevelEntity_Polygon centralPolygon, short commonElevation, ushort commonShapeDescriptor)
         {
-            for (var i = 0; i < Polygon.MaxVertexCount; i++)
+            for (var i = 0; i < map.MAXIMUM_VERTICES_PER_POLYGON; i++)
             {
-                var adjacentPolygonIndex = ParentPolygon.NativeObject.AdjacentPolygonIndexes[i];
+                var adjacentPolygonIndex = ParentPolygon.NativeObject.adjacent_polygon_indexes[i];
 
                 if (adjacentPolygonIndex < 0 || adjacentPolygonIndex == ParentPolygon.NativeIndex)
                 {
@@ -264,8 +265,8 @@ namespace ForgePlus.LevelManipulation
                 }
 
                 var adjacentElevation = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                        adjacentPolygon.NativeObject.FloorHeight :
-                                        adjacentPolygon.NativeObject.CeilingHeight;
+                                        adjacentPolygon.NativeObject.floor_height :
+                                        adjacentPolygon.NativeObject.ceiling_height;
 
                 if (adjacentElevation != commonElevation)
                 {
@@ -273,8 +274,8 @@ namespace ForgePlus.LevelManipulation
                 }
 
                 var adjacentShapeDescriptor = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                              adjacentPolygon.NativeObject.FloorTexture :
-                                              adjacentPolygon.NativeObject.CeilingTexture;
+                                              adjacentPolygon.NativeObject.floor_texture :
+                                              adjacentPolygon.NativeObject.ceiling_texture;
 
                 if (!adjacentShapeDescriptor.Equals(commonShapeDescriptor))
                 {

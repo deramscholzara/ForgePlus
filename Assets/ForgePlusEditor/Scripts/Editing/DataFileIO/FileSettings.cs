@@ -31,9 +31,9 @@ namespace ForgePlus.DataFileIO
                 OnPathChanged_Sender += value;
                 value.Invoke(DataFileTypes.Maps, GetFilePath(DataFileTypes.Maps));
                 value.Invoke(DataFileTypes.Shapes, GetFilePath(DataFileTypes.Shapes));
+                value.Invoke(DataFileTypes.Physics, GetFilePath(DataFileTypes.Physics));
 
                 // TODO: uncomment these when ready for them.
-                ////value.Invoke(DataFileTypes.Physics, GetFilePath(DataFileTypes.Physics));
                 ////value.Invoke(DataFileTypes.Sounds, GetFilePath(DataFileTypes.Sounds));
                 ////value.Invoke(DataFileTypes.Images, GetFilePath(DataFileTypes.Images));
             }
@@ -82,7 +82,7 @@ namespace ForgePlus.DataFileIO
                     ShapesLoading.Instance.UnloadFile();
                     break;
                 case DataFileTypes.Physics:
-                    Debug.LogWarning("Physics unloading not yet supported.");
+                    PhysicsLoading.Instance.UnloadFile();
                     break;
                 case DataFileTypes.Sounds:
                     Debug.LogWarning("Sounds unloading not yet supported.");
@@ -144,7 +144,7 @@ namespace ForgePlus.DataFileIO
                     ShapesLoading.Instance.LoadFile();
                     break;
                 case DataFileTypes.Physics:
-                    Debug.LogWarning("Physics loading not yet supported.");
+                    PhysicsLoading.Instance.LoadFile();
                     break;
                 case DataFileTypes.Sounds:
                     Debug.LogWarning("Sounds loading not yet supported.");

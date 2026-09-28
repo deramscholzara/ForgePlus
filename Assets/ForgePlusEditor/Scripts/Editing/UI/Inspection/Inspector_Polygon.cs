@@ -1,4 +1,5 @@
-﻿using RuntimeCore.Entities.Geometry;
+﻿using ForgePlus.Extensions;
+using RuntimeCore.Entities.Geometry;
 using TMPro;
 
 namespace ForgePlus.Inspection
@@ -33,27 +34,27 @@ namespace ForgePlus.Inspection
             var polygon = inspectedObject as LevelEntity_Polygon;
 
             Value_Id.text = polygon.NativeIndex.ToString();
-            Value_Type.text = polygon.NativeObject.Type.ToString();
-            Value_Permutation.text = polygon.NativeObject.Permutation.ToString();
+            Value_Type.text = AlephOneNames.PolygonType(polygon.NativeObject.type);
+            Value_Permutation.text = polygon.NativeObject.permutation.ToString();
 
-            Value_MediaIndex.text = polygon.NativeObject.MediaIndex.ToString();
-            Value_MediaLight.text = polygon.NativeObject.MediaLight.ToString();
+            Value_MediaIndex.text = polygon.NativeObject.media_index.ToString();
+            Value_MediaLight.text = polygon.NativeObject.media_lightsource_index.ToString();
 
-            Value_AmbientSound.text = polygon.NativeObject.AmbientSound.ToString();
-            Value_RandomSound.text = polygon.NativeObject.RandomSound.ToString();
+            Value_AmbientSound.text = polygon.NativeObject.ambient_sound_image_index.ToString();
+            Value_RandomSound.text = polygon.NativeObject.random_sound_image_index.ToString();
 
-            Value_Floor_Height.text = polygon.NativeObject.FloorHeight.ToString();
-            Value_Floor_LightIndex.text = polygon.NativeObject.FloorLight.ToString();
+            Value_Floor_Height.text = polygon.NativeObject.floor_height.ToString();
+            Value_Floor_LightIndex.text = polygon.NativeObject.floor_lightsource_index.ToString();
 
-            Value_Ceiling_Height.text = polygon.NativeObject.CeilingHeight.ToString();
-            Value_Ceiling_LightIndex.text = polygon.NativeObject.CeilingLight.ToString();
+            Value_Ceiling_Height.text = polygon.NativeObject.ceiling_height.ToString();
+            Value_Ceiling_LightIndex.text = polygon.NativeObject.ceiling_lightsource_index.ToString();
 
-            Value_VertexCount.text = polygon.NativeObject.VertexCount.ToString();
+            Value_VertexCount.text = polygon.NativeObject.vertex_count.ToString();
 
             var endpointIndices = string.Empty;
-            for (var i = 0; i < polygon.NativeObject.VertexCount; i++)
+            for (var i = 0; i < polygon.NativeObject.vertex_count; i++)
             {
-                var index = polygon.NativeObject.EndpointIndexes[i].ToString();
+                var index = polygon.NativeObject.endpoint_indexes[i].ToString();
 
                 if (i == 0)
                 {
@@ -68,9 +69,9 @@ namespace ForgePlus.Inspection
             Value_VertexIndices.text = endpointIndices;
 
             var lineIndices = string.Empty;
-            for (var i = 0; i < polygon.NativeObject.VertexCount; i++)
+            for (var i = 0; i < polygon.NativeObject.vertex_count; i++)
             {
-                var index = polygon.NativeObject.LineIndexes[i].ToString();
+                var index = polygon.NativeObject.line_indexes[i].ToString();
 
                 if (i == 0)
                 {
@@ -85,9 +86,9 @@ namespace ForgePlus.Inspection
             Value_LineIndices.text = lineIndices;
 
             var sideIndices = string.Empty;
-            for (var i = 0; i < polygon.NativeObject.VertexCount; i++)
+            for (var i = 0; i < polygon.NativeObject.vertex_count; i++)
             {
-                var index = polygon.NativeObject.SideIndexes[i] < 0 ? "- no side -" : polygon.NativeObject.SideIndexes[i].ToString();
+                var index = polygon.NativeObject.side_indexes[i] < 0 ? "- no side -" : polygon.NativeObject.side_indexes[i].ToString();
 
                 if (i == 0)
                 {
@@ -102,9 +103,9 @@ namespace ForgePlus.Inspection
             Value_SideIndices.text = sideIndices;
 
             var adjacentPolygonIndices = string.Empty;
-            for (var i = 0; i < polygon.NativeObject.VertexCount; i++)
+            for (var i = 0; i < polygon.NativeObject.vertex_count; i++)
             {
-                var index = polygon.NativeObject.AdjacentPolygonIndexes[i] < 0 ? "- no polygon -" : polygon.NativeObject.AdjacentPolygonIndexes[i].ToString();
+                var index = polygon.NativeObject.adjacent_polygon_indexes[i] < 0 ? "- no polygon -" : polygon.NativeObject.adjacent_polygon_indexes[i].ToString();
 
                 if (i == 0)
                 {
@@ -118,7 +119,7 @@ namespace ForgePlus.Inspection
 
             Value_SideIndices.text = adjacentPolygonIndices;
 
-            Value_FirstObjectIndex.text = polygon.NativeObject.FirstObjectIndex.ToString();
+            Value_FirstObjectIndex.text = polygon.NativeObject.first_object.ToString();
         }
     }
 }

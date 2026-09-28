@@ -1,4 +1,5 @@
-﻿using ForgePlus.LevelManipulation;
+﻿using ForgePlus.Extensions;
+using ForgePlus.LevelManipulation;
 using RuntimeCore.Entities.Geometry;
 using TMPro;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace ForgePlus.Palette
             Media = media;
 
             label.text = media.NativeIndex.ToString();
-            label_Type.text = media.NativeObject.Type.ToString();
+            label_Type.text = AlephOneNames.MediaType(media.NativeObject.type);
 
             var toggle = GetComponent<Toggle>();
             toggle.group = toggleGroup;

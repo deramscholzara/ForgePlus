@@ -3,7 +3,7 @@ using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using System.Collections.Generic;
 using UnityEngine;
-using Weland;
+using AlephOne;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
 using RuntimeCore.Common;
@@ -13,7 +13,8 @@ namespace RuntimeCore.Entities
     public class LevelEntity_Level : SingletonMonoBehaviour<LevelEntity_Level>, IDestructionPreparable, ISelectable, IInspectable
     {
         public short Index = -1;
-        public Level Level;
+        [System.NonSerialized]
+        public MapLevel Level;
 
         public Dictionary<short, LevelEntity_Polygon> Polygons;
         public Dictionary<short, LevelEntity_Line> Lines;
@@ -24,6 +25,8 @@ namespace RuntimeCore.Entities
         public Dictionary<short, LevelEntity_Platform> FloorPlatforms;
         public Dictionary<short, LevelEntity_MapObject> MapObjects;
         public Dictionary<short, LevelEntity_Annotation> Annotations;
+
+        public List<short>[] EndpointLines;
 
         public List<EditableSurface_Polygon> EditableSurface_Polygons;
         public List<EditableSurface_Side> EditableSurface_Sides;

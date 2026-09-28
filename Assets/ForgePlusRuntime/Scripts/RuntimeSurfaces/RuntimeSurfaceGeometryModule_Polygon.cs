@@ -5,7 +5,8 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Weland;
+using AlephOne;
+using ForgePlus.Extensions;
 
 namespace RuntimeCore.Entities.Geometry
 {
@@ -47,11 +48,11 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyPositionsAndTriangles()
         {
-            var positions = new Vector3[polygonEntity.NativeObject.VertexCount];
-            var triangles = new int[(polygonEntity.NativeObject.VertexCount - 2) * (dataSource == LevelEntity_Polygon.DataSources.Media ? 6 : 3)];
+            var positions = new Vector3[polygonEntity.NativeObject.vertex_count];
+            var triangles = new int[(polygonEntity.NativeObject.vertex_count - 2) * (dataSource == LevelEntity_Polygon.DataSources.Media ? 6 : 3)];
 
             // Using Collapsing Convex-Polygon Traversal for speediness reasons
-            for (int earlyVertexIndex = 0, lateVertexIndex = polygonEntity.NativeObject.VertexCount - 1, currentTriangleIndex = 0;
+            for (int earlyVertexIndex = 0, lateVertexIndex = polygonEntity.NativeObject.vertex_count - 1, currentTriangleIndex = 0;
                  earlyVertexIndex <= lateVertexIndex;
                  earlyVertexIndex++, lateVertexIndex--)
             {
@@ -63,7 +64,7 @@ namespace RuntimeCore.Entities.Geometry
                     AssignVertexPosition(lateVertexIndex, polygonEntity.NativeObject, positions);
 
                     // Note: only need to rebuild triangles if the vertex count changed
-                    if (polygonEntity.NativeObject.VertexCount != SurfaceMesh.vertexCount &&
+                    if (polygonEntity.NativeObject.vertex_count != SurfaceMesh.vertexCount &&
                         earlyVertexIndex + 1 < lateVertexIndex)
                     {
                         // Vertex-traversal is not on the final vertices, so continue
@@ -116,7 +117,7 @@ namespace RuntimeCore.Entities.Geometry
                 }
             }
 
-            var vertexCountChanged = polygonEntity.NativeObject.VertexCount != SurfaceMesh.vertexCount;
+            var vertexCountChanged = polygonEntity.NativeObject.vertex_count != SurfaceMesh.vertexCount;
 
             SurfaceMesh.SetVertices(positions);
 
@@ -144,14 +145,14 @@ namespace RuntimeCore.Entities.Geometry
                 case LevelEntity_Polygon.DataSources.Floor:
                     SurfaceRenderer.transform.position = new Vector3(
                         0f,
-                        polygonEntity.NativeObject.FloorHeight / GeometryUtilities.WorldUnitIncrementsPerMeter,
+                        polygonEntity.NativeObject.floor_height / GeometryUtilities.WorldUnitIncrementsPerMeter,
                         0f);
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
                     SurfaceRenderer.transform.position = new Vector3(
                         0f,
-                        polygonEntity.NativeObject.CeilingHeight / GeometryUtilities.WorldUnitIncrementsPerMeter,
+                        polygonEntity.NativeObject.ceiling_height / GeometryUtilities.WorldUnitIncrementsPerMeter,
                         0f);
                     break;
 
@@ -199,24 +200,24 @@ namespace RuntimeCore.Entities.Geometry
 
             IsStaticBatchable = true;
 
-            var platform = GeometryUtilities.GetPlatformForPolygon(polygonEntity.ParentLevel.Level, polygonEntity.NativeObject);
+            var platform = polygonEntity.NativeObject.GetPlatform(polygonEntity.ParentLevel.Level);
 
             if (platform != null)
             {
                 switch (dataSource)
                 {
                     case LevelEntity_Polygon.DataSources.Floor:
-                        if (platform.ComesFromFloor)
+                        if (platforms.PLATFORM_COMES_FROM_FLOOR(platform.static_flags))
                         {
                             var runtimePlatform = SurfaceRenderer.gameObject.AddComponent<LevelEntity_Platform>();
 
                             runtimePlatform.InitializeEntity(
                                 polygonEntity.ParentLevel,
-                                polygonEntity.NativeObject.Permutation,
+                                polygonEntity.NativeObject.permutation,
                                 platform);
                             runtimePlatform.UpdatePlatformValues(LevelEntity_Platform.LinkedSurfaces.Floor);
 
-                            polygonEntity.ParentLevel.FloorPlatforms[polygonEntity.NativeObject.Permutation] = runtimePlatform;
+                            polygonEntity.ParentLevel.FloorPlatforms[polygonEntity.NativeObject.permutation] = runtimePlatform;
 
                             platformComponent = runtimePlatform;
 
@@ -226,17 +227,17 @@ namespace RuntimeCore.Entities.Geometry
                         }
                         break;
                     case LevelEntity_Polygon.DataSources.Ceiling:
-                        if (platform.ComesFromCeiling)
+                        if (platforms.PLATFORM_COMES_FROM_CEILING(platform.static_flags))
                         {
                             var runtimePlatform = SurfaceRenderer.gameObject.AddComponent<LevelEntity_Platform>();
 
                             runtimePlatform.InitializeEntity(
                                 polygonEntity.ParentLevel,
-                                polygonEntity.NativeObject.Permutation,
+                                polygonEntity.NativeObject.permutation,
                                 platform);
                             runtimePlatform.UpdatePlatformValues(LevelEntity_Platform.LinkedSurfaces.Ceiling);
 
-                            polygonEntity.ParentLevel.CeilingPlatforms[polygonEntity.NativeObject.Permutation] = runtimePlatform;
+                            polygonEntity.ParentLevel.CeilingPlatforms[polygonEntity.NativeObject.permutation] = runtimePlatform;
 
                             platformComponent = runtimePlatform;
 
@@ -268,11 +269,11 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
-                    UVs = BuildUVs(polygonEntity.NativeObject.FloorOrigin.X, polygonEntity.NativeObject.FloorOrigin.Y);
+                    UVs = BuildUVs(polygonEntity.NativeObject.floor_origin.x, polygonEntity.NativeObject.floor_origin.y);
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    UVs = BuildUVs(polygonEntity.NativeObject.CeilingOrigin.X, polygonEntity.NativeObject.CeilingOrigin.Y);
+                    UVs = BuildUVs(polygonEntity.NativeObject.ceiling_origin.x, polygonEntity.NativeObject.ceiling_origin.y);
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
@@ -293,11 +294,11 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
-                    vertexColor = GetTransferModeVertexColor(polygonEntity.NativeObject.FloorTransferMode);
+                    vertexColor = GetTransferModeVertexColor(polygonEntity.NativeObject.floor_transfer_mode);
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    vertexColor = GetTransferModeVertexColor(polygonEntity.NativeObject.CeilingTransferMode);
+                    vertexColor = GetTransferModeVertexColor(polygonEntity.NativeObject.ceiling_transfer_mode);
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
@@ -308,8 +309,8 @@ namespace RuntimeCore.Entities.Geometry
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
 
-            var vertexColors = new Color[polygonEntity.NativeObject.VertexCount];
-            for (var i = 0; i < polygonEntity.NativeObject.VertexCount; i++)
+            var vertexColors = new Color[polygonEntity.NativeObject.vertex_count];
+            for (var i = 0; i < polygonEntity.NativeObject.vertex_count; i++)
             {
                 vertexColors[i] = vertexColor;
             }
@@ -324,18 +325,18 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
-                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.FloorLight];
-                    lastLightIndex = polygonEntity.NativeObject.FloorLight;
+                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.floor_lightsource_index];
+                    lastLightIndex = polygonEntity.NativeObject.floor_lightsource_index;
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.CeilingLight];
-                    lastLightIndex = polygonEntity.NativeObject.CeilingLight;
+                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.ceiling_lightsource_index];
+                    lastLightIndex = polygonEntity.NativeObject.ceiling_lightsource_index;
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
-                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.MediaLight];
-                    lastLightIndex = polygonEntity.NativeObject.MediaLight;
+                    modifiedBatchKey.SourceLight = polygonEntity.ParentLevel.Lights[polygonEntity.NativeObject.media_lightsource_index];
+                    lastLightIndex = polygonEntity.NativeObject.media_lightsource_index;
                     break;
 
                 default:
@@ -354,7 +355,7 @@ namespace RuntimeCore.Entities.Geometry
             {
                 var modifiedBatchKey = BatchKey;
 
-                var mediaIndex = polygonEntity.NativeObject.MediaIndex;
+                var mediaIndex = polygonEntity.NativeObject.media_index;
 
                 if (mediaIndex >= 0)
                 {
@@ -379,20 +380,20 @@ namespace RuntimeCore.Entities.Geometry
             {
                 case LevelEntity_Polygon.DataSources.Floor:
 #if USE_TEXTURE_ARRAYS
-                    modifiedBatchKey.SourceShapeDescriptor = polygonEntity.NativeObject.FloorTexture;
+                    modifiedBatchKey.SourceShapeDescriptor = polygonEntity.NativeObject.floor_texture;
 #endif
                     modifiedBatchKey.SourceMaterial =
                         MaterialGeneration_Geometry.GetMaterial(
-                            polygonEntity.NativeObject.FloorTexture,
-                            polygonEntity.NativeObject.FloorTransferMode,
+                            polygonEntity.NativeObject.floor_texture,
+                            polygonEntity.NativeObject.floor_transfer_mode,
                             isOpaqueSurface: true,
                             MaterialGeneration_Geometry.SurfaceTypes.Normal,
                             incrementUsageCounter: true);
             
 #if USE_TEXTURE_ARRAYS
                     lastTextureIndex = MaterialGeneration_Geometry.GetTextureArrayIndex(
-                        polygonEntity.NativeObject.FloorTexture,
-                        polygonEntity.NativeObject.FloorTransferMode,
+                        polygonEntity.NativeObject.floor_texture,
+                        polygonEntity.NativeObject.floor_transfer_mode,
                         isOpaqueSurface: true,
                         MaterialGeneration_Geometry.SurfaceTypes.Normal);
 #endif
@@ -401,20 +402,20 @@ namespace RuntimeCore.Entities.Geometry
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
 #if USE_TEXTURE_ARRAYS
-                    modifiedBatchKey.SourceShapeDescriptor = polygonEntity.NativeObject.CeilingTexture;
+                    modifiedBatchKey.SourceShapeDescriptor = polygonEntity.NativeObject.ceiling_texture;
 #endif
                     modifiedBatchKey.SourceMaterial =
                         MaterialGeneration_Geometry.GetMaterial(
-                            polygonEntity.NativeObject.CeilingTexture,
-                            polygonEntity.NativeObject.CeilingTransferMode,
+                            polygonEntity.NativeObject.ceiling_texture,
+                            polygonEntity.NativeObject.ceiling_transfer_mode,
                             isOpaqueSurface: true,
                             MaterialGeneration_Geometry.SurfaceTypes.Normal,
                             incrementUsageCounter: true);
             
 #if USE_TEXTURE_ARRAYS
                     lastTextureIndex = MaterialGeneration_Geometry.GetTextureArrayIndex(
-                        polygonEntity.NativeObject.CeilingTexture,
-                        polygonEntity.NativeObject.CeilingTransferMode,
+                        polygonEntity.NativeObject.ceiling_texture,
+                        polygonEntity.NativeObject.ceiling_transfer_mode,
                         isOpaqueSurface: true,
                         MaterialGeneration_Geometry.SurfaceTypes.Normal);
 #endif
@@ -422,31 +423,11 @@ namespace RuntimeCore.Entities.Geometry
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
-                    var mediaShapeDescriptor = new ShapeDescriptor((ushort)polygonEntity.NativeObject.FloorTexture);
-
-                    switch (BatchKey.SourceMedia.NativeObject.Type)
-                    {
-                        case MediaType.Water:
-                            mediaShapeDescriptor.Collection = 17;
-                            mediaShapeDescriptor.Bitmap = 19;
-                            break;
-                        case MediaType.Lava:
-                            mediaShapeDescriptor.Collection = 18;
-                            mediaShapeDescriptor.Bitmap = 12;
-                            break;
-                        case MediaType.Goo:
-                            mediaShapeDescriptor.Collection = 21;
-                            mediaShapeDescriptor.Bitmap = 5;
-                            break;
-                        case MediaType.Sewage:
-                            mediaShapeDescriptor.Collection = 19;
-                            mediaShapeDescriptor.Bitmap = 13;
-                            break;
-                        case MediaType.Jjaro:
-                            mediaShapeDescriptor.Collection = 20;
-                            mediaShapeDescriptor.Bitmap = 13;
-                            break;
-                    }
+                    // A media's texture comes from its type's definition (media.cpp: new_media / update_medias)
+                    var mediaDefinition = AlephOne.media.get_media_definition(BatchKey.SourceMedia.NativeObject.type);
+                    var mediaShapeDescriptor = mediaDefinition != null ?
+                                               shape_descriptors.BUILD_DESCRIPTOR(mediaDefinition.collection, mediaDefinition.shape) :
+                                               cstypes.UNONE;
                     
 #if USE_TEXTURE_ARRAYS
                     modifiedBatchKey.SourceShapeDescriptor = mediaShapeDescriptor;
@@ -487,8 +468,8 @@ namespace RuntimeCore.Entities.Geometry
         protected override void ApplyInteractiveSurface()
         {
             var nativeObject = polygonEntity.NativeObject;
-            var platformIndex = nativeObject.Type == PolygonType.Platform ? nativeObject.Permutation : (short)-1;
-            var media = (nativeObject.MediaIndex >= 0) ? polygonEntity.ParentLevel.Medias[nativeObject.MediaIndex] : null;
+            var platformIndex = nativeObject.type == map._polygon_is_platform ? nativeObject.permutation : (short)-1;
+            var media = (nativeObject.media_index >= 0) ? polygonEntity.ParentLevel.Medias[nativeObject.media_index] : null;
 
             switch (dataSource)
             {
@@ -498,8 +479,8 @@ namespace RuntimeCore.Entities.Geometry
                     var ceilingInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Polygon>();
                     ceilingInteractiveSurface.ParentPolygon = polygonEntity;
                     ceilingInteractiveSurface.DataSource = dataSource;
-                    ceilingInteractiveSurface.surfaceShapeDescriptor = nativeObject.CeilingTexture;
-                    ceilingInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.CeilingLight];
+                    ceilingInteractiveSurface.surfaceShapeDescriptor = nativeObject.ceiling_texture;
+                    ceilingInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.ceiling_lightsource_index];
                     ceilingInteractiveSurface.Media = media;
                     ceilingInteractiveSurface.Platform = ceilingPlatform;
 
@@ -512,8 +493,8 @@ namespace RuntimeCore.Entities.Geometry
                     var floorInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Polygon>();
                     floorInteractiveSurface.ParentPolygon = polygonEntity;
                     floorInteractiveSurface.DataSource = dataSource;
-                    floorInteractiveSurface.surfaceShapeDescriptor = nativeObject.FloorTexture;
-                    floorInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.FloorLight];
+                    floorInteractiveSurface.surfaceShapeDescriptor = nativeObject.floor_texture;
+                    floorInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.floor_lightsource_index];
                     floorInteractiveSurface.Media = media;
                     floorInteractiveSurface.Platform = floorPlatform;
 
@@ -523,7 +504,7 @@ namespace RuntimeCore.Entities.Geometry
                 case LevelEntity_Polygon.DataSources.Media:
                     var mediaInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Media>();
                     mediaInteractiveSurface.Polygon = polygonEntity;
-                    mediaInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.MediaLight];
+                    mediaInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.media_lightsource_index];
                     mediaInteractiveSurface.Media = media;
 
                     polygonEntity.ParentLevel.EditableSurface_Medias.Add(mediaInteractiveSurface);
@@ -536,9 +517,9 @@ namespace RuntimeCore.Entities.Geometry
             SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
         }
 
-        private void AssignVertexPosition(int vertexIndex, Polygon polygon, Vector3[] vertexPositions)
+        private void AssignVertexPosition(int vertexIndex, polygon_data polygon, Vector3[] vertexPositions)
         {
-            var endpointIndex = polygon.EndpointIndexes[vertexIndex];
+            var endpointIndex = polygon.endpoint_indexes[vertexIndex];
 
             vertexPositions[vertexIndex] = GeometryUtilities.GetMeshVertex(polygonEntity.ParentLevel.Level, endpointIndex);
         }
@@ -568,11 +549,11 @@ namespace RuntimeCore.Entities.Geometry
 
         private Vector4[] BuildUVs(short textureOffsetX, short textureOffsetY)
         {
-            var meshUVs = new Vector4[polygonEntity.NativeObject.VertexCount];
+            var meshUVs = new Vector4[polygonEntity.NativeObject.vertex_count];
 
-            for (var i = 0; i < polygonEntity.NativeObject.VertexCount; i++)
+            for (var i = 0; i < polygonEntity.NativeObject.vertex_count; i++)
             {
-                var vertexPosition = GeometryUtilities.GetMeshVertex(polygonEntity.ParentLevel.Level, polygonEntity.NativeObject.EndpointIndexes[i]);
+                var vertexPosition = GeometryUtilities.GetMeshVertex(polygonEntity.ParentLevel.Level, polygonEntity.NativeObject.endpoint_indexes[i]);
 
                 var u = -(vertexPosition.z * GeometryUtilities.MeterToWorldUnit);
                 var v = -(vertexPosition.x * GeometryUtilities.MeterToWorldUnit);
@@ -619,10 +600,10 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
-                    MaterialGeneration_Geometry.DecrementTextureUsage(polygonEntity.NativeObject.FloorTexture);
+                    MaterialGeneration_Geometry.DecrementTextureUsage(polygonEntity.NativeObject.floor_texture);
                     break;
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    MaterialGeneration_Geometry.DecrementTextureUsage(polygonEntity.NativeObject.CeilingTexture);
+                    MaterialGeneration_Geometry.DecrementTextureUsage(polygonEntity.NativeObject.ceiling_texture);
                     break;
                 case LevelEntity_Polygon.DataSources.Media:
                     // Media surfaces do not increment texture usage when calling WallsCollection.GetMaterial()

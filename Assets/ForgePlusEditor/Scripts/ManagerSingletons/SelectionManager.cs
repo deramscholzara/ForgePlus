@@ -36,6 +36,14 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        public IReadOnlyList<ISelectable> Selection
+        {
+            get
+            {
+                return SelectedObjects;
+            }
+        }
+
         public void UpdateSelectionToMatchMode(ModeManager.PrimaryModes primaryMode)
         {
             DeselectAll();

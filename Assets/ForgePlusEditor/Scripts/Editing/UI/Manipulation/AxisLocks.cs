@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ForgePlus.ApplicationGeneral;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ForgePlus.LevelManipulation
@@ -48,12 +49,12 @@ namespace ForgePlus.LevelManipulation
 
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.X))
+            if (Hotkeys.GetKeyDown(KeyCode.X))
             {
                 x.isOn = !x.isOn;
             }
 
-            if (Input.GetKeyDown(KeyCode.Y))
+            if (Hotkeys.GetKeyDown(KeyCode.Y))
             {
                 y.isOn = !y.isOn;
             }

@@ -4,8 +4,8 @@ using System.Linq;
 using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
-using Weland;
-using Weland.Extensions;
+using AlephOne;
+using ForgePlus.Extensions;
 
 namespace RuntimeCore.Materials
 {
@@ -35,7 +35,7 @@ namespace RuntimeCore.Materials
             public readonly bool UsedForMedia;
             public readonly bool IsForOpaqueSurface;
 
-            public Texture2DArrayCollectionKey(ShapeDescriptor shapeDescriptor, bool usedForMedia, bool isForOpaqueSurface)
+            public Texture2DArrayCollectionKey(ushort shapeDescriptor, bool usedForMedia, bool isForOpaqueSurface)
             {
                 var texture = GetTexture(shapeDescriptor, returnPlaceholderIfNotFound: true);
                 // TODO: should unload this texture when done adding it to the array, if NO_EDITING
@@ -47,7 +47,7 @@ namespace RuntimeCore.Materials
 
                 // Treat all landscapes as part of the same collection,
                 // since it's not common to have over 255 landscape bitmaps total
-                ShapeCollection = shapeDescriptor.UsesLandscapeCollection() ? (uint) 27 : shapeDescriptor.Collection;
+                ShapeCollection = shapeDescriptor.UsesLandscapeCollection() ? (uint) shape_descriptors._collection_landscape1 : (uint) shapeDescriptor.GetCollection();
 
                 // Treat all medias as part of the same collection,
                 // since it's not common to have over 255 media bitmaps total,
@@ -69,11 +69,11 @@ namespace RuntimeCore.Materials
             private int width, height;
             private TextureFormat format;
             private bool hasMipLevels;
-            private Dictionary<ShapeDescriptor, int> indicesByShapeDescriptor;
+            private Dictionary<ushort, int> indicesByShapeDescriptor;
             private List<Material> uniqueMaterials;
 
             public Texture2DArrayCollection(
-                ShapeDescriptor firstShapeDescriptor,
+                ushort firstShapeDescriptor,
                 Material sharedMaterial,
                 int width,
                 int height,
@@ -85,7 +85,7 @@ namespace RuntimeCore.Materials
                 this.height = height;
                 this.format = format;
                 this.hasMipLevels = hasMipLevels;
-                indicesByShapeDescriptor = new Dictionary<ShapeDescriptor, int>();
+                indicesByShapeDescriptor = new Dictionary<ushort, int>();
 
                 AddBitmap(firstShapeDescriptor);
             }
@@ -108,7 +108,7 @@ namespace RuntimeCore.Materials
                     uniqueMaterials.Remove(material);
             }
 
-            public void AddBitmap(ShapeDescriptor shapeDescriptor)
+            public void AddBitmap(ushort shapeDescriptor)
             {
                 if (!indicesByShapeDescriptor.ContainsKey(shapeDescriptor))
                 {
@@ -116,7 +116,7 @@ namespace RuntimeCore.Materials
                 }
             }
 
-            public int GetBitmapIndex(ShapeDescriptor shapeDescriptor)
+            public int GetBitmapIndex(ushort shapeDescriptor)
             {
                 return indicesByShapeDescriptor[shapeDescriptor];
             }
@@ -207,31 +207,31 @@ namespace RuntimeCore.Materials
 
         // TODO: Convert Textures to use TextureSet (renamed from PluginTextureSet)
         //       and make PluginLoading_Texture use this.Textures instead of its "TextureLookup"
-        private static readonly Dictionary<ShapeDescriptor, Texture2D> Textures = new Dictionary<ShapeDescriptor, Texture2D>(255);
-        private static readonly Dictionary<ShapeDescriptor, int> TextureUsageCounter = new Dictionary<ShapeDescriptor, int>();
+        private static readonly Dictionary<ushort, Texture2D> Textures = new Dictionary<ushort, Texture2D>(255);
+        private static readonly Dictionary<ushort, int> TextureUsageCounter = new Dictionary<ushort, int>();
 
 #if USE_TEXTURE_ARRAYS
         private static readonly Dictionary<Texture2DArrayCollectionKey, Texture2DArrayCollection> Texture2DArrays = new Dictionary<Texture2DArrayCollectionKey, Texture2DArrayCollection>(14);
 
-        private static readonly Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> Texture2DArrayKeys = new Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey>(255);
-        private static readonly Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> TransparentTexture2DArrayKeys = new Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey>(100);
-        private static readonly Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> TransparentLayeredOuterTexture2DArrayKeys = new Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey>(100);
-        private static readonly Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> LandscapeTexture2DArrayKeys = new Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey>(4);
-        private static readonly Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> MediaTexture2DArrayKeys = new Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey>(5);
+        private static readonly Dictionary<ushort, Texture2DArrayCollectionKey> Texture2DArrayKeys = new Dictionary<ushort, Texture2DArrayCollectionKey>(255);
+        private static readonly Dictionary<ushort, Texture2DArrayCollectionKey> TransparentTexture2DArrayKeys = new Dictionary<ushort, Texture2DArrayCollectionKey>(100);
+        private static readonly Dictionary<ushort, Texture2DArrayCollectionKey> TransparentLayeredOuterTexture2DArrayKeys = new Dictionary<ushort, Texture2DArrayCollectionKey>(100);
+        private static readonly Dictionary<ushort, Texture2DArrayCollectionKey> LandscapeTexture2DArrayKeys = new Dictionary<ushort, Texture2DArrayCollectionKey>(4);
+        private static readonly Dictionary<ushort, Texture2DArrayCollectionKey> MediaTexture2DArrayKeys = new Dictionary<ushort, Texture2DArrayCollectionKey>(5);
 #else
-        private static readonly Dictionary<ShapeDescriptor, Material> Materials = new Dictionary<ShapeDescriptor, Material>(255);
-        private static readonly Dictionary<ShapeDescriptor, Material> TransparentMaterials = new Dictionary<ShapeDescriptor, Material>(100);
-        private static readonly Dictionary<ShapeDescriptor, Material> TransparentLayeredOuterMaterials = new Dictionary<ShapeDescriptor, Material>(100);
-        private static readonly Dictionary<ShapeDescriptor, Material> LandscapeMaterials = new Dictionary<ShapeDescriptor, Material>(4);
-        private static readonly Dictionary<ShapeDescriptor, Material> MediaMaterials = new Dictionary<ShapeDescriptor, Material>(5);
+        private static readonly Dictionary<ushort, Material> Materials = new Dictionary<ushort, Material>(255);
+        private static readonly Dictionary<ushort, Material> TransparentMaterials = new Dictionary<ushort, Material>(100);
+        private static readonly Dictionary<ushort, Material> TransparentLayeredOuterMaterials = new Dictionary<ushort, Material>(100);
+        private static readonly Dictionary<ushort, Material> LandscapeMaterials = new Dictionary<ushort, Material>(4);
+        private static readonly Dictionary<ushort, Material> MediaMaterials = new Dictionary<ushort, Material>(5);
 #endif
 
-        public static IDictionary<ShapeDescriptor, Texture2D> GetAllLoadedTextures()
+        public static IDictionary<ushort, Texture2D> GetAllLoadedTextures()
         {
             return Textures;
         }
 
-        public static Texture2D GetTexture(ShapeDescriptor shapeDescriptor, bool returnPlaceholderIfNotFound = false)
+        public static Texture2D GetTexture(ushort shapeDescriptor, bool returnPlaceholderIfNotFound = false)
         {
             if (PluginLoading_Texture.Instance.TextureLookup.ContainsKey(shapeDescriptor))
             {
@@ -248,7 +248,7 @@ namespace RuntimeCore.Materials
 
                 if (textureToUse)
                 {
-                    textureToUse.name = $"Collection({shapeDescriptor.Collection}) Bitmap({shapeDescriptor.Bitmap})";
+                    textureToUse.name = $"Collection({shapeDescriptor.GetCollection()}) Bitmap({shapeDescriptor.GetShape()})";
                     Textures[shapeDescriptor] = textureToUse;
                 }
                 else if (returnPlaceholderIfNotFound)
@@ -262,19 +262,19 @@ namespace RuntimeCore.Materials
             return null;
         }
 
-        public static bool GetTextureIsInUse(ShapeDescriptor shapeDescriptor)
+        public static bool GetTextureIsInUse(ushort shapeDescriptor)
         {
             return TextureUsageCounter.ContainsKey(shapeDescriptor);
         }
 
         public static Material GetMaterial(
-            ShapeDescriptor shapeDescriptor,
+            ushort shapeDescriptor,
             short transferMode,
             bool isOpaqueSurface,
             SurfaceTypes surfaceType,
             bool incrementUsageCounter)
         {
-            if (!shapeDescriptor.IsEmpty())
+            if (!shapeDescriptor.IsEmptyShapeDescriptor())
             {
                 if (TextureUsageCounter.ContainsKey(shapeDescriptor))
                 {
@@ -301,9 +301,9 @@ namespace RuntimeCore.Materials
             }
         }
 
-        public static void DecrementTextureUsage(ShapeDescriptor shapeDescriptor)
+        public static void DecrementTextureUsage(ushort shapeDescriptor)
         {
-            if (shapeDescriptor.IsEmpty())
+            if (shapeDescriptor.IsEmptyShapeDescriptor())
             {
                 return;
             }
@@ -361,12 +361,12 @@ namespace RuntimeCore.Materials
         }
 
         public static int GetTextureArrayIndex(
-            ShapeDescriptor shapeDescriptor,
+            ushort shapeDescriptor,
             short transferMode,
             bool isOpaqueSurface,
             SurfaceTypes surfaceType)
         {
-            if (shapeDescriptor.IsEmpty())
+            if (shapeDescriptor.IsEmptyShapeDescriptor())
             {
                 return 0;
             }
@@ -408,7 +408,7 @@ namespace RuntimeCore.Materials
             }
         }
 #else
-        private static void ClearMaterials(IDictionary<ShapeDescriptor, Material> materials)
+        private static void ClearMaterials(IDictionary<ushort, Material> materials)
         {
             // Don't actually clear the Materials list,
             // just clear their textures so the Materials can be reused
@@ -420,13 +420,13 @@ namespace RuntimeCore.Materials
 #endif
 
 #if USE_TEXTURE_ARRAYS
-        private static Dictionary<ShapeDescriptor, Texture2DArrayCollectionKey> GetTexture2DArrayKeyDictionary(
-            ShapeDescriptor shapeDescriptor,
+        private static Dictionary<ushort, Texture2DArrayCollectionKey> GetTexture2DArrayKeyDictionary(
+            ushort shapeDescriptor,
             bool landscapeTransferMode,
             bool isOpaqueSurface,
             SurfaceTypes surfaceType)
         {
-            // TODO: where textures are -first- loaded, populate a Dictionary<ShapeDescriptor, TextureFormat>
+            // TODO: where textures are -first- loaded, populate a Dictionary<ushort, TextureFormat>
             //    so this can be looked up without loading a texture (important for NO_EDITING)
             var textureToUse = GetTexture(shapeDescriptor, returnPlaceholderIfNotFound: true);
 
@@ -463,7 +463,7 @@ namespace RuntimeCore.Materials
 #endif
 
         private static Material GetTrackedMaterial(
-            ShapeDescriptor shapeDescriptor,
+            ushort shapeDescriptor,
             bool landscapeTransferMode,
             bool isOpaqueSurface,
             SurfaceTypes surfaceType)
@@ -557,7 +557,7 @@ namespace RuntimeCore.Materials
             }
 
 #if USE_TEXTURE_ARRAYS
-            material.name = $"Collection({shapeDescriptor.Collection}) Bitmap({shapeDescriptor.Bitmap})";
+            material.name = $"Collection({shapeDescriptor.GetCollection()}) Bitmap({shapeDescriptor.GetShape()})";
             material.enableInstancing = true;
 
             var newTexture2DArrayCollection = new Texture2DArrayCollection(
@@ -575,7 +575,7 @@ namespace RuntimeCore.Materials
         }
 
 #if !USE_TEXTURE_ARRAYS
-        private static Material GetTrackedMaterial(ShapeDescriptor shapeDescriptor, Texture2D textureToUse, Shader shaderToUse, IDictionary<ShapeDescriptor, Material> trackedMaterials)
+        private static Material GetTrackedMaterial(ushort shapeDescriptor, Texture2D textureToUse, Shader shaderToUse, IDictionary<ushort, Material> trackedMaterials)
         {
             Material material;
             if (trackedMaterials.ContainsKey(shapeDescriptor))
@@ -604,7 +604,7 @@ namespace RuntimeCore.Materials
             if (material.mainTexture != textureToUse)
             {
                 material.mainTexture = textureToUse;
-                material.name = $"Collection({shapeDescriptor.Collection}) Bitmap({shapeDescriptor.Bitmap})";
+                material.name = $"Collection({shapeDescriptor.GetCollection()}) Bitmap({shapeDescriptor.GetShape()})";
             }
 
             return material;

@@ -10,7 +10,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Scripting;
-using Weland;
+using AlephOne;
+using ForgePlus.Extensions;
 
 namespace ForgePlus.DataFileIO
 {
@@ -25,16 +26,16 @@ namespace ForgePlus.DataFileIO
 
         private readonly TimeSpan chunkLoadMaxTime = TimeSpan.FromSeconds(1.0 / 20); // aim for ~20 fps
 
-        public readonly int LevelIndex;
+        public int LevelIndex { get; private set; }
 
-        private readonly MapFile mapsFile;
+        private readonly MapsFile mapsFile;
 
-        private Level level;
+        private MapLevel level;
         private LevelEntity_Level runtimeLevel;
 
         public string LevelName { get; private set; }
 
-        public LevelData(int levelIndex, MapFile mapsFile)
+        public LevelData(int levelIndex, MapsFile mapsFile)
         {
             LevelIndex = levelIndex;
             this.mapsFile = mapsFile;
@@ -50,10 +51,9 @@ namespace ForgePlus.DataFileIO
 
             UnloadData();
 
-            level = new Level();
-            level.Load(mapsFile.Directory[LevelIndex]);
+            level = mapsFile.LoadLevel(LevelIndex);
 
-            LevelName = level.Name;
+            LevelName = level.GetLevelName();
 
             return;
         }
@@ -71,12 +71,12 @@ namespace ForgePlus.DataFileIO
             level = null;
         }
 
-        public Wadfile.DirectoryEntry GetSaveWad()
+        public void SaveAsSingleLevelFile(string savePath)
         {
-            level.AssurePlayerStart();
-            // TODO: Need to re-add Player MapObjects if there were none
+            mapsFile.SaveAsSingleLevelFile(level, savePath);
 
-            return level.Save();
+            // The saved file holds only this level, and it's now the loaded map file
+            LevelIndex = 0;
         }
 
         public async Task OpenLevel()
@@ -95,6 +95,8 @@ namespace ForgePlus.DataFileIO
 
                 Debug.Log($"--- LevelLoad: Loaded level data in timespan: {DateTime.Now - loadDataStartTime}");
             }
+
+            PhysicsLoading.Instance.SetLevel(level);
 
             var buildStartTime = DateTime.Now;
 
@@ -118,6 +120,8 @@ namespace ForgePlus.DataFileIO
             runtimeLevel.PrepareForDestruction();
 
             UnityEngine.Object.Destroy(runtimeLevel.gameObject);
+
+            PhysicsLoading.Instance.ClearLevel();
         }
 
         private async Task<DateTime> ChunkLoadYield(DateTime chunkLoadStartTime)
@@ -153,6 +157,7 @@ namespace ForgePlus.DataFileIO
             runtimeLevel.FloorPlatforms = new Dictionary<short, LevelEntity_Platform>();
             runtimeLevel.MapObjects = new Dictionary<short, LevelEntity_MapObject>();
             runtimeLevel.Annotations = new Dictionary<short, LevelEntity_Annotation>();
+            runtimeLevel.EndpointLines = level.BuildEndpointLines();
 
             runtimeLevel.EditableSurface_Polygons = new List<EditableSurface_Polygon>();
             runtimeLevel.EditableSurface_Sides = new List<EditableSurface_Side>();
@@ -171,20 +176,30 @@ namespace ForgePlus.DataFileIO
 
 #if !NO_EDITING
             // Initialize Textures here so they in proper index order for the texturing interface
-            var landscapeShapeDescriptor = new ShapeDescriptor();
-            // Note: Landscape collections in Shapes are respectively sequential to Landscape map info starting at 27
-            landscapeShapeDescriptor.Collection = (byte) (level.Landscape + 27);
+            // Aleph One uses the landscape collection selected by the level's song index (map.cpp: mark_map_collections)
+            var landscapeShapeDescriptor = AlephOneExtensions.BuildShapeDescriptor(shape_descriptors._collection_landscape1 + level.static_world.song_index, shape: 0);
             MaterialGeneration_Geometry.GetTexture(landscapeShapeDescriptor, returnPlaceholderIfNotFound: false);
 
-            var wallShapeDescriptor = new ShapeDescriptor();
-            // Note: Walls collections in Shapes are respectively sequential to Environment map info starting at 17
-            wallShapeDescriptor.Collection = (byte) (level.Environment + 17);
-            for (var i = 0; i < 256; i++)
+            // ...and the wall collections of its environment (map.cpp: mark_environment_collections)
+            var environmentCode = level.static_world.environment_code;
+            if (environmentCode >= 0 && environmentCode < map.NUMBER_OF_ENVIRONMENTS)
             {
-                wallShapeDescriptor.Bitmap = (byte) i;
-                if (!MaterialGeneration_Geometry.GetTexture(wallShapeDescriptor, returnPlaceholderIfNotFound: false))
+                for (var environmentCollectionIndex = 0; environmentCollectionIndex < map.NUMBER_OF_ENV_COLLECTIONS; environmentCollectionIndex++)
                 {
-                    break;
+                    var collection = map.Environments[environmentCode, environmentCollectionIndex];
+                    if (collection == cstypes.NONE || !ShapesLoading.Instance.IsWallCollection(collection))
+                    {
+                        continue;
+                    }
+
+                    for (var shape = 0; shape < shape_descriptors.MAXIMUM_SHAPES_PER_COLLECTION; shape++)
+                    {
+                        var wallShapeDescriptor = AlephOneExtensions.BuildShapeDescriptor(collection, shape);
+                        if (!MaterialGeneration_Geometry.GetTexture(wallShapeDescriptor, returnPlaceholderIfNotFound: false))
+                        {
+                            break;
+                        }
+                    }
                 }
             }
 #endif
@@ -200,9 +215,9 @@ namespace ForgePlus.DataFileIO
             var buildLightsStartTime = DateTime.Now;
 
             // Initialize Lights here so they are in proper index order
-            for (var i = 0; i < level.Lights.Count; i++)
+            for (var i = 0; i < level.LightList.Count; i++)
             {
-                runtimeLevel.Lights[(short) i] = new LevelEntity_Light((short) i, level.Lights[i], runtimeLevel);
+                runtimeLevel.Lights[(short) i] = new LevelEntity_Light((short) i, level.LightList[i].static_data, runtimeLevel);
             }
 
             Debug.Log($"--- LevelBuild: Built & started Lights in timespan: {DateTime.Now - buildLightsStartTime}");
@@ -216,9 +231,9 @@ namespace ForgePlus.DataFileIO
             var buildMediasStartTime = DateTime.Now;
 
             // Initialize Medias here so they are in proper index order
-            for (var i = 0; i < level.Medias.Count; i++)
+            for (var i = 0; i < level.MediaList.Count; i++)
             {
-                runtimeLevel.Medias[(short) i] = new LevelEntity_Media((short) i, level.Medias[i], runtimeLevel);
+                runtimeLevel.Medias[(short) i] = new LevelEntity_Media((short) i, level.MediaList[i], runtimeLevel);
             }
 
             Debug.Log($"--- LevelBuild: Built & started Medias in timespan: {DateTime.Now - buildMediasStartTime}");
@@ -240,9 +255,9 @@ namespace ForgePlus.DataFileIO
             var polygonsGroupGO = new GameObject("Polygons");
             polygonsGroupGO.transform.SetParent(runtimeLevel.transform);
 
-            for (short polygonIndex = 0; polygonIndex < level.Polygons.Count; polygonIndex++)
+            for (short polygonIndex = 0; polygonIndex < level.PolygonList.Count; polygonIndex++)
             {
-                var polygon = level.Polygons[polygonIndex];
+                var polygon = level.PolygonList[polygonIndex];
 
                 var polygonRootGO = new GameObject($"Polygon ({polygonIndex})");
                 polygonRootGO.transform.SetParent(polygonsGroupGO.transform);
@@ -267,12 +282,12 @@ namespace ForgePlus.DataFileIO
             var linesGroupGO = new GameObject("Lines");
             linesGroupGO.transform.SetParent(runtimeLevel.transform);
 
-            for (short lineIndex = 0; lineIndex < level.Lines.Count; lineIndex++)
+            for (short lineIndex = 0; lineIndex < level.LineList.Count; lineIndex++)
             {
                 GameObject lineRootGO = new GameObject($"Line ({lineIndex})");
                 lineRootGO.transform.SetParent(linesGroupGO.transform);
 
-                var line = level.Lines[lineIndex];
+                var line = level.LineList[lineIndex];
 
                 var runtimeLine = lineRootGO.AddComponent<LevelEntity_Line>();
                 runtimeLevel.Lines[lineIndex] = runtimeLine;
@@ -306,11 +321,11 @@ namespace ForgePlus.DataFileIO
             var mapObjectsGroupGO = new GameObject("MapObjects");
             mapObjectsGroupGO.transform.SetParent(runtimeLevel.transform);
 
-            for (short objectIndex = 0; objectIndex < level.Objects.Count; objectIndex++)
+            for (short objectIndex = 0; objectIndex < level.SavedObjectList.Count; objectIndex++)
             {
-                var mapObject = level.Objects[objectIndex];
+                var mapObject = level.SavedObjectList[objectIndex];
 
-                var mapObjectRootGO = new GameObject($"MapObject: {mapObject.Type} ({objectIndex})");
+                var mapObjectRootGO = new GameObject($"MapObject: {mapObject.GetTypeName()} ({objectIndex})");
                 mapObjectRootGO.transform.SetParent(mapObjectsGroupGO.transform);
 
                 var runtimeMapObject = mapObjectRootGO.AddComponent<LevelEntity_MapObject>();
@@ -335,9 +350,9 @@ namespace ForgePlus.DataFileIO
             var annotationsGroupGO = new GameObject("Annotations");
             annotationsGroupGO.transform.SetParent(runtimeLevel.transform);
 
-            for (var i = 0; i < level.Annotations.Count; i++)
+            for (var i = 0; i < level.MapAnnotationList.Count; i++)
             {
-                var annotation = level.Annotations[i];
+                var annotation = level.MapAnnotationList[i];
                 var annotationInstance = UnityEngine.Object.Instantiate(LevelEntity_Annotation.Prefab);
                 annotationInstance.NativeIndex = (short) i;
                 annotationInstance.NativeObject = annotation;
@@ -345,8 +360,8 @@ namespace ForgePlus.DataFileIO
 
                 annotationInstance.RefreshLabel();
 
-                var positionalHeight = (runtimeLevel.Polygons[annotation.PolygonIndex].NativeObject.FloorHeight + runtimeLevel.Polygons[annotation.PolygonIndex].NativeObject.CeilingHeight) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                annotationInstance.transform.position = new Vector3(annotation.X / GeometryUtilities.WorldUnitIncrementsPerMeter, positionalHeight, -annotation.Y / GeometryUtilities.WorldUnitIncrementsPerMeter);
+                var positionalHeight = (runtimeLevel.Polygons[annotation.polygon_index].NativeObject.floor_height + runtimeLevel.Polygons[annotation.polygon_index].NativeObject.ceiling_height) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                annotationInstance.transform.position = new Vector3(annotation.location.x / GeometryUtilities.WorldUnitIncrementsPerMeter, positionalHeight, -annotation.location.y / GeometryUtilities.WorldUnitIncrementsPerMeter);
 
                 annotationInstance.transform.SetParent(annotationsGroupGO.transform, worldPositionStays: true);
 
@@ -364,7 +379,7 @@ namespace ForgePlus.DataFileIO
 
         private async void LevelInitializationDebugTimer(DateTime startTime)
         {
-            // Yield 2 times, to ensure we hit the frame after initialization ocurred
+            // Yield 2 times, to ensure we hit the frame after initialization occurred
             // (meaning Awake(), Start(), OnEnabled(), etc. all ran)
             await Task.Yield();
             await Task.Yield();

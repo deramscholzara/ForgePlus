@@ -1,12 +1,11 @@
 ﻿#if !NO_EDITING
+using ForgePlus.Extensions;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Materials;
 using System.Collections.Generic;
 using UnityEngine;
-using Weland;
-using Weland.Extensions;
 
 namespace RuntimeCore.Entities.Geometry
 {
@@ -30,7 +29,7 @@ namespace RuntimeCore.Entities.Geometry
             {
                 foreach (var indicator in selectionVisualizationIndicators)
                 {
-                    Destroy(indicator);
+                    GeometryUtilities.DestroySurfaceSelectionIndicator(indicator);
                 }
 
                 selectionVisualizationIndicators.Clear();
@@ -52,31 +51,31 @@ namespace RuntimeCore.Entities.Geometry
             switch (surfaceType)
             {
                 case DataSources.Ceiling:
-                    if (NativeObject.CeilingTransferMode == 9 ||
-                        NativeObject.CeilingTexture.UsesLandscapeCollection() ||
-                        NativeObject.CeilingTexture.IsEmpty())
+                    if (NativeObject.ceiling_transfer_mode == 9 ||
+                        NativeObject.ceiling_texture.UsesLandscapeCollection() ||
+                        NativeObject.ceiling_texture.IsEmptyShapeDescriptor())
                     {
                         // Don't adjust UVs for landscape surfaces.
                         return;
                     }
 
-                    NativeObject.CeilingOrigin.X = x;
-                    NativeObject.CeilingOrigin.Y = y;
+                    NativeObject.ceiling_origin.x = x;
+                    NativeObject.ceiling_origin.y = y;
 
                     CeilingSurface.ApplyTextureOffset(rebatchImmediately: rebatch);
 
                     break;
                 case DataSources.Floor:
-                    if (NativeObject.FloorTransferMode == 9 ||
-                        NativeObject.FloorTexture.UsesLandscapeCollection() ||
-                        NativeObject.FloorTexture.IsEmpty())
+                    if (NativeObject.floor_transfer_mode == 9 ||
+                        NativeObject.floor_texture.UsesLandscapeCollection() ||
+                        NativeObject.floor_texture.IsEmptyShapeDescriptor())
                     {
                         // Don't adjust UVs for landscape surfaces.
                         return;
                     }
 
-                    NativeObject.FloorOrigin.X = x;
-                    NativeObject.FloorOrigin.Y = y;
+                    NativeObject.floor_origin.x = x;
+                    NativeObject.floor_origin.y = y;
                     
                     FloorSurface.ApplyTextureOffset(rebatchImmediately: rebatch);
 
@@ -86,32 +85,32 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
-        public void SetShapeDescriptor(DataSources surfaceType, ShapeDescriptor shapeDescriptor)
+        public void SetShapeDescriptor(DataSources surfaceType, ushort shapeDescriptor)
         {
             short transferMode;
 
             switch (surfaceType)
             {
                 case DataSources.Ceiling:
-                    if (shapeDescriptor.Equals(NativeObject.CeilingTexture))
+                    if (shapeDescriptor.Equals(NativeObject.ceiling_texture))
                     {
                         // Texture is not different, so exit
                         return;
                     }
 
-                    NativeObject.CeilingTexture = shapeDescriptor;
-                    transferMode = NativeObject.CeilingTransferMode;
+                    NativeObject.ceiling_texture = shapeDescriptor;
+                    transferMode = NativeObject.ceiling_transfer_mode;
 
                     break;
                 case DataSources.Floor:
-                    if (shapeDescriptor.Equals(NativeObject.FloorTexture))
+                    if (shapeDescriptor.Equals(NativeObject.floor_texture))
                     {
                         // Texture is not different, so exit
                         return;
                     }
 
-                    NativeObject.FloorTexture = shapeDescriptor;
-                    transferMode = NativeObject.FloorTransferMode;
+                    NativeObject.floor_texture = shapeDescriptor;
+                    transferMode = NativeObject.floor_transfer_mode;
 
                     break;
                 default:
@@ -131,11 +130,11 @@ namespace RuntimeCore.Entities.Geometry
             switch (surfaceType)
             {
                 case DataSources.Ceiling:
-                    NativeObject.CeilingTransferMode = newTransferMode;
+                    NativeObject.ceiling_transfer_mode = newTransferMode;
                     CeilingSurface.ApplyTexture();
                     break;
                 case DataSources.Floor:
-                    NativeObject.FloorTransferMode = newTransferMode;
+                    NativeObject.floor_transfer_mode = newTransferMode;
                     FloorSurface.ApplyTexture();
                     break;
             }
@@ -146,27 +145,27 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case DataSources.Ceiling:
-                    if (lightIndex == NativeObject.CeilingLight ||
-                        NativeObject.CeilingTexture.UsesLandscapeCollection())
+                    if (lightIndex == NativeObject.ceiling_lightsource_index ||
+                        NativeObject.ceiling_texture.UsesLandscapeCollection())
                     {
                         // Light is not different, so exit
                         return;
                     }
 
-                    NativeObject.CeilingLight = lightIndex;
+                    NativeObject.ceiling_lightsource_index = lightIndex;
 
                     CeilingSurface.ApplyLight();
 
                     break;
                 case DataSources.Floor:
-                    if (lightIndex == NativeObject.FloorLight ||
-                        NativeObject.FloorTexture.UsesLandscapeCollection())
+                    if (lightIndex == NativeObject.floor_lightsource_index ||
+                        NativeObject.floor_texture.UsesLandscapeCollection())
                     {
                         // Light is not different, so exit
                         return;
                     }
 
-                    NativeObject.FloorLight = lightIndex;
+                    NativeObject.floor_lightsource_index = lightIndex;
 
                     FloorSurface.ApplyLight();
 
@@ -178,29 +177,9 @@ namespace RuntimeCore.Entities.Geometry
 
         private void CreateSelectionIndicators(RuntimeSurfaceGeometry surface, bool isfloor)
         {
-            var vertices = surface.GetComponent<MeshCollider>().sharedMesh.vertices;
+            var vertices = surface.GetComponent<MeshFilter>().sharedMesh.vertices;
 
-            var localToWorldMatrix = surface.transform.localToWorldMatrix;
-
-            for (var i = 0; i < vertices.Length; i++)
-            {
-                var currentVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i]);
-                Vector3 previousVertexWorldPosition;
-                Vector3 nextVertexWorldPosition;
-
-                if (isfloor)
-                {
-                    previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
-                    nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
-                }
-                else
-                {
-                    previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i < vertices.Length - 1 ? i + 1 : 0]);
-                    nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i >= 1 ? i - 1 : vertices.Length - 1]);
-                }
-
-                selectionVisualizationIndicators.Add(GeometryUtilities.CreateSurfaceSelectionIndicator($"Vertex ({i})", surface.transform, currentVertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition));
-            }
+            selectionVisualizationIndicators.AddRange(GeometryUtilities.FitSurfaceSelectionIndicators("Vertex", surface.transform, vertices, isCeiling: !isfloor));
         }
     }
 }
