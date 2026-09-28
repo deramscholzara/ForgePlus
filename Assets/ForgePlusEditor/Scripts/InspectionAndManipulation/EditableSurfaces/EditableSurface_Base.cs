@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using ForgePlus.ApplicationGeneral;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -70,25 +71,25 @@ namespace ForgePlus.LevelManipulation
                 var inputDirection = Vector2.zero;
                 var directionalInputReceived = false;
 
-                if (Input.GetKeyDown(KeyCode.UpArrow))
+                if (Hotkeys.GetKeyDown(KeyCode.UpArrow))
                 {
                     inputDirection.y += 1f;
                     directionalInputReceived = true;
                 }
                 
-                if (Input.GetKeyDown(KeyCode.DownArrow))
+                if (Hotkeys.GetKeyDown(KeyCode.DownArrow))
                 {
                     inputDirection.y -= 1f;
                     directionalInputReceived = true;
                 }
 
-                if (Input.GetKeyDown(KeyCode.RightArrow))
+                if (Hotkeys.GetKeyDown(KeyCode.RightArrow))
                 {
                     inputDirection.x += 1f;
                     directionalInputReceived = true;
                 }
                 
-                if (Input.GetKeyDown(KeyCode.LeftArrow))
+                if (Hotkeys.GetKeyDown(KeyCode.LeftArrow))
                 {
                     inputDirection.x -= 1f;
                     directionalInputReceived = true;

@@ -35,7 +35,8 @@ namespace RuntimeCore.Entities.Geometry
 
         public virtual void InitializeRuntimeSurface(
             LevelEntity_Side entity,
-            LevelEntity_Side.DataSources dataSource)
+            LevelEntity_Side.DataSources dataSource,
+            LevelEntity_Side.Sections section)
         {
             if (geometryModule != null)
             {
@@ -48,6 +49,7 @@ namespace RuntimeCore.Entities.Geometry
             geometryModule = new RuntimeSurfaceGeometryModule_Side(
                 entity,
                 dataSource,
+                section,
                 mesh,
                 gameObject.AddComponent<MeshRenderer>());
 

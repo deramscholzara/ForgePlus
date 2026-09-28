@@ -1,4 +1,6 @@
-﻿using ForgePlus.ApplicationGeneral;
+﻿using AlephOne;
+using ForgePlus.ApplicationGeneral;
+using ForgePlus.Extensions;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
@@ -11,8 +13,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weland;
-using Weland.Extensions;
 
 namespace ForgePlus.Entities.Geometry
 {
@@ -37,7 +37,7 @@ namespace ForgePlus.Entities.Geometry
 
         // TODO: Get rid of these and just attain them on the fly instead of preloading
         //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
-        public ShapeDescriptor surfaceShapeDescriptor = ShapeDescriptor.Empty;
+        public ushort surfaceShapeDescriptor = cstypes.UNONE;
         public LevelEntity_Light RuntimeLight = null;
         public LevelEntity_Media Media = null;
         public LevelEntity_Platform Platform = null;
@@ -59,7 +59,7 @@ namespace ForgePlus.Entities.Geometry
                     {
                         var selectedTexture = PaletteManager.Instance.GetSelectedTexture();
 
-                        if (!selectedTexture.IsEmpty())
+                        if (!selectedTexture.IsEmptyShapeDescriptor())
                         {
                             var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
                             var destinationDataSource = DataSource;
@@ -100,7 +100,7 @@ namespace ForgePlus.Entities.Geometry
                         var neighborIsLeft = true;
 
                         if (destinationIsSource ||
-                            selectedSourceSide.NativeObject.SideIsNeighbor(LevelEntity_Level.Instance.Level,
+                            selectedSourceSide.NativeObject.SideIsNeighbor(LevelEntity_Level.Instance,
                                                                              ParentSide.NativeObject,
                                                                              out neighborFlowsOutward,
                                                                              out neighborIsLeft))
@@ -179,7 +179,7 @@ namespace ForgePlus.Entities.Geometry
                         SelectionManager.Instance.ToggleObjectSelection(ParentSide, multiSelect: false);
                         InputListener(ParentSide);
 
-                        if (!surfaceShapeDescriptor.IsEmpty())
+                        if (!surfaceShapeDescriptor.IsEmptyShapeDescriptor())
                         {
                             PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
                         }
@@ -257,20 +257,20 @@ namespace ForgePlus.Entities.Geometry
                 {
                     destinationDataSource = LevelEntity_Side.DataSources.Transparent;
 
-                    startingUVs = new Vector2(ParentSide.NativeObject.Transparent.X, ParentSide.NativeObject.Transparent.Y);
+                    startingUVs = new Vector2(ParentSide.NativeObject.transparent_texture.x0, ParentSide.NativeObject.transparent_texture.y0);
                 }
                 else
                 {
                     switch (destinationDataSource)
                     {
                         case LevelEntity_Side.DataSources.Primary:
-                            startingUVs = new Vector2(ParentSide.NativeObject.Primary.X, ParentSide.NativeObject.Primary.Y);
+                            startingUVs = new Vector2(ParentSide.NativeObject.primary_texture.x0, ParentSide.NativeObject.primary_texture.y0);
                             break;
                         case LevelEntity_Side.DataSources.Secondary:
-                            startingUVs = new Vector2(ParentSide.NativeObject.Secondary.X, ParentSide.NativeObject.Secondary.Y);
+                            startingUVs = new Vector2(ParentSide.NativeObject.secondary_texture.x0, ParentSide.NativeObject.secondary_texture.y0);
                             break;
                         case LevelEntity_Side.DataSources.Transparent:
-                            startingUVs = new Vector2(ParentSide.NativeObject.Transparent.X, ParentSide.NativeObject.Transparent.Y);
+                            startingUVs = new Vector2(ParentSide.NativeObject.transparent_texture.x0, ParentSide.NativeObject.transparent_texture.y0);
                             break;
                         default:
                             return;
@@ -392,18 +392,18 @@ namespace ForgePlus.Entities.Geometry
                         switch (destinationDataSource)
                         {
                             case LevelEntity_Side.DataSources.Primary:
-                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Primary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Primary.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.primary_texture.x0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.primary_texture.y0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
 
                                 break;
                             case LevelEntity_Side.DataSources.Secondary:
-                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Secondary.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Secondary.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.secondary_texture.x0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.secondary_texture.y0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
 
                                 break;
                             case LevelEntity_Side.DataSources.Transparent:
-                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Transparent.X / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.Transparent.Y / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.transparent_texture.x0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.transparent_texture.y0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
 
                                 break;
                             default:
@@ -496,22 +496,22 @@ namespace ForgePlus.Entities.Geometry
             switch (sourceDataSource)
             {
                 case LevelEntity_Side.DataSources.Primary:
-                    sourceX = sourceSide.NativeObject.Primary.X;
-                    sourceY = sourceSide.NativeObject.Primary.Y;
+                    sourceX = sourceSide.NativeObject.primary_texture.x0;
+                    sourceY = sourceSide.NativeObject.primary_texture.y0;
 
                     sourceHeight = sourceSide.PrimaryHighElevation;
 
                     break;
                 case LevelEntity_Side.DataSources.Secondary:
-                    sourceX = sourceSide.NativeObject.Secondary.X;
-                    sourceY = sourceSide.NativeObject.Secondary.Y;
+                    sourceX = sourceSide.NativeObject.secondary_texture.x0;
+                    sourceY = sourceSide.NativeObject.secondary_texture.y0;
 
                     sourceHeight = sourceSide.SecondaryHighElevation;
 
                     break;
                 case LevelEntity_Side.DataSources.Transparent:
-                    sourceX = sourceSide.NativeObject.Transparent.X;
-                    sourceY = sourceSide.NativeObject.Transparent.Y;
+                    sourceX = sourceSide.NativeObject.transparent_texture.x0;
+                    sourceY = sourceSide.NativeObject.transparent_texture.y0;
 
                     sourceHeight = sourceSide.TransparentHighElevation;
 
@@ -521,8 +521,8 @@ namespace ForgePlus.Entities.Geometry
             }
 
             short horizontalOffset = destinationIsLeftOfSource ?
-                                     (short)-LevelEntity_Level.Instance.Lines[destinationSide.NativeObject.LineIndex].NativeObject.Length :
-                                     LevelEntity_Level.Instance.Lines[sourceSide.NativeObject.LineIndex].NativeObject.Length;
+                                     (short)-LevelEntity_Level.Instance.Lines[destinationSide.NativeObject.line_index].NativeObject.length :
+                                     LevelEntity_Level.Instance.Lines[sourceSide.NativeObject.line_index].NativeObject.length;
 
             short newX = (short)(sourceX + horizontalOffset);
             short newY = (short)(sourceHeight - destinationHeight + sourceY);
@@ -542,22 +542,24 @@ namespace ForgePlus.Entities.Geometry
 
         private void CollectSimilarContiguousAdjacentSurfaces(LevelEntity_Side centralSide, LevelEntity_Side.DataSources centralDataSource, bool left)
         {
-            var centralLine = LevelEntity_Level.Instance.Level.Lines[centralSide.NativeObject.LineIndex];
+            var centralLine = LevelEntity_Level.Instance.Level.LineList[centralSide.NativeObject.line_index];
 
-            var centralEndpointIndex = centralSide.NativeObject.EndpointIndex(LevelEntity_Level.Instance.Level, centralLine, left);
-            var neighborLines = LevelEntity_Level.Instance.Level.EndpointLines[centralEndpointIndex];
+            var centralEndpointIndex = centralSide.NativeObject.EndpointIndex(centralLine, left);
+            var neighborLineIndexes = LevelEntity_Level.Instance.EndpointLines[centralEndpointIndex];
 
-            foreach (var neighborLine in neighborLines)
+            foreach (var neighborLineIndex in neighborLineIndexes)
             {
+                var neighborLine = LevelEntity_Level.Instance.Level.LineList[neighborLineIndex];
+
                 if (neighborLine == centralLine)
                 {
                     continue;
                 }
 
-                var neighborFlowsOutward = neighborLine.EndpointIndexes[0] == centralEndpointIndex;
+                var neighborFlowsOutward = neighborLine.endpoint_indexes[0] == centralEndpointIndex;
                 var neighborIsClockwise = neighborFlowsOutward != left;
 
-                var neighborSide = neighborLine.GetRuntimeSide(LevelEntity_Level.Instance.Level, neighborIsClockwise);
+                var neighborSide = neighborLine.GetRuntimeSide(neighborIsClockwise);
 
                 if (neighborSide == null)
                 {
@@ -603,24 +605,24 @@ namespace ForgePlus.Entities.Geometry
         {
             short sourceLowHeight = 0;
             short sourceHighHeight = 0;
-            ShapeDescriptor sourceShapeDescriptor = ShapeDescriptor.Empty;
+            ushort sourceShapeDescriptor = cstypes.UNONE;
 
             switch (sourceDataSource)
             {
                 case LevelEntity_Side.DataSources.Primary:
                     sourceLowHeight = sourceSide.PrimaryLowElevation;
                     sourceHighHeight = sourceSide.PrimaryHighElevation;
-                    sourceShapeDescriptor = sourceSide.NativeObject.Primary.Texture;
+                    sourceShapeDescriptor = sourceSide.NativeObject.primary_texture.texture;
                     break;
                 case LevelEntity_Side.DataSources.Secondary:
                     sourceLowHeight = sourceSide.SecondaryLowElevation;
                     sourceHighHeight = sourceSide.SecondaryHighElevation;
-                    sourceShapeDescriptor = sourceSide.NativeObject.Secondary.Texture;
+                    sourceShapeDescriptor = sourceSide.NativeObject.secondary_texture.texture;
                     break;
                 case LevelEntity_Side.DataSources.Transparent:
                     sourceLowHeight = sourceSide.TransparentLowElevation;
                     sourceHighHeight = sourceSide.TransparentHighElevation;
-                    sourceShapeDescriptor = sourceSide.NativeObject.Transparent.Texture;
+                    sourceShapeDescriptor = sourceSide.NativeObject.transparent_texture.texture;
                     break;
             }
 
@@ -638,7 +640,7 @@ namespace ForgePlus.Entities.Geometry
                     if (destinationSide.PrimarySurface &&
                         sourceLowHeight <= destinationSide.PrimaryHighElevation &&
                         destinationSide.PrimaryLowElevation <= sourceHighHeight &&
-                        destinationSide.NativeObject.Primary.Texture.Equals(sourceShapeDescriptor))
+                        destinationSide.NativeObject.primary_texture.texture.Equals(sourceShapeDescriptor))
                     {
                         alignmentGroupee.DestinationSurface = destinationSide.PrimarySurface;
                         return true;
@@ -650,7 +652,7 @@ namespace ForgePlus.Entities.Geometry
                     if (destinationSide.SecondarySurface &&
                         sourceLowHeight <= destinationSide.SecondaryHighElevation &&
                         destinationSide.SecondaryLowElevation <= sourceHighHeight &&
-                        destinationSide.NativeObject.Secondary.Texture.Equals(sourceShapeDescriptor))
+                        destinationSide.NativeObject.secondary_texture.texture.Equals(sourceShapeDescriptor))
                     {
                         alignmentGroupee.DestinationSurface = destinationSide.SecondarySurface;
                         return true;
@@ -662,7 +664,7 @@ namespace ForgePlus.Entities.Geometry
                     if (destinationSide.TransparentSurface &&
                         sourceLowHeight <= destinationSide.TransparentHighElevation &&
                         destinationSide.TransparentLowElevation <= sourceHighHeight &&
-                        destinationSide.NativeObject.Transparent.Texture.Equals(sourceShapeDescriptor))
+                        destinationSide.NativeObject.transparent_texture.texture.Equals(sourceShapeDescriptor))
                     {
                         alignmentGroupee.DestinationSurface = destinationSide.TransparentSurface;
                         return true;

@@ -3,11 +3,11 @@ using RuntimeCore.Entities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Weland;
+using ForgePlus.Extensions;
 
 namespace ForgePlus.DataFileIO
 {
-    public partial class MapsLoading : FileLoadingBase<MapsLoading, MapsData, MapFile>
+    public partial class MapsLoading : FileLoadingBase<MapsLoading, MapsData, MapsFile>
     {
         private event Action<string> OnLevelOpened_Sender;
 
@@ -17,7 +17,7 @@ namespace ForgePlus.DataFileIO
             {
                 OnLevelOpened_Sender += value;
 
-                value.Invoke(LevelEntity_Level.Instance ? LevelEntity_Level.Instance.Level.Name : null);
+                value.Invoke(LevelEntity_Level.Instance ? LevelEntity_Level.Instance.Level.GetLevelName() : null);
             }
             remove
             {
@@ -72,7 +72,7 @@ namespace ForgePlus.DataFileIO
 
             await data.OpenLevel(levelIndex);
 
-            OnLevelOpened_Sender?.Invoke(LevelEntity_Level.Instance.Level.Name);
+            OnLevelOpened_Sender?.Invoke(LevelEntity_Level.Instance.Level.GetLevelName());
 
             UIBlocking.Instance.Unblock();
         }

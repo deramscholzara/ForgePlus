@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AlephOne;
 using ForgePlus.DataFileIO;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Materials;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Weland;
 
 namespace ForgePlus.ApplicationGeneral
 {
@@ -58,19 +58,19 @@ namespace ForgePlus.ApplicationGeneral
 
 #if USE_TEXTURE_ARRAYS
             // Note: textures are always separated by material (shader) when not using Texture2DArrays
-            private ShapeDescriptor _sourceShapeDescriptor;
+            private ushort _sourceShapeDescriptor;
 
-            public ShapeDescriptor SourceShapeDescriptor
+            public ushort SourceShapeDescriptor
             {
                 get => _sourceShapeDescriptor;
-                set { _sourceShapeDescriptor = SeparateTextures ? value : ShapeDescriptor.Empty; }
+                set { _sourceShapeDescriptor = SeparateTextures ? value : cstypes.UNONE; }
             }
 
-            private ShapeDescriptor _layeredTransparentSideShapeDescriptor;
-            public ShapeDescriptor LayeredTransparentSideShapeDescriptor
+            private ushort _layeredTransparentSideShapeDescriptor;
+            public ushort LayeredTransparentSideShapeDescriptor
             {
                 get => _layeredTransparentSideShapeDescriptor;
-                set { _layeredTransparentSideShapeDescriptor = SeparateTextures ? value : ShapeDescriptor.Empty; }
+                set { _layeredTransparentSideShapeDescriptor = SeparateTextures ? value : cstypes.UNONE; }
             }
 #endif
 

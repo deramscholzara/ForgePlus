@@ -1,7 +1,7 @@
-﻿using RuntimeCore.Entities.Geometry;
+﻿using AlephOne;
+using RuntimeCore.Entities.Geometry;
 using TMPro;
 using UnityEngine.UI;
-using Weland;
 
 namespace ForgePlus.Inspection
 {
@@ -32,22 +32,22 @@ namespace ForgePlus.Inspection
 
             Value_Id.text = line.NativeIndex.ToString();
 
-            Value_Flags_Solid.SetIsOnWithoutNotify((line.NativeObject.Flags & LineFlags.Solid) != 0);
-            Value_Flags_HasTransparentSide.SetIsOnWithoutNotify((line.NativeObject.Flags & LineFlags.HasTransparentSide) != 0);
-            Value_Flags_Transparent.SetIsOnWithoutNotify((line.NativeObject.Flags & LineFlags.Transparent) != 0);
-            Value_Flags_Landscape.SetIsOnWithoutNotify((line.NativeObject.Flags & LineFlags.Landscape) != 0);
-            Value_Flags_VariableElevation.SetIsOnWithoutNotify((line.NativeObject.Flags & LineFlags.VariableElevation) != 0);
-            Value_Flags_Elevation.SetIsOnWithoutNotify((line.NativeObject.Flags & LineFlags.Elevation) != 0);
+            Value_Flags_Solid.SetIsOnWithoutNotify(map.LINE_IS_SOLID(line.NativeObject));
+            Value_Flags_HasTransparentSide.SetIsOnWithoutNotify(map.LINE_HAS_TRANSPARENT_SIDE(line.NativeObject));
+            Value_Flags_Transparent.SetIsOnWithoutNotify(map.LINE_IS_TRANSPARENT(line.NativeObject));
+            Value_Flags_Landscape.SetIsOnWithoutNotify(map.LINE_IS_LANDSCAPED(line.NativeObject));
+            Value_Flags_VariableElevation.SetIsOnWithoutNotify(map.LINE_IS_VARIABLE_ELEVATION(line.NativeObject));
+            Value_Flags_Elevation.SetIsOnWithoutNotify(map.LINE_IS_ELEVATION(line.NativeObject));
 
-            Value_Clockwise_Side_Index.text = line.NativeObject.ClockwisePolygonSideIndex.ToString();
-            Value_Clockwise_Polygon_Index.text = line.NativeObject.ClockwisePolygonOwner.ToString();
+            Value_Clockwise_Side_Index.text = line.NativeObject.clockwise_polygon_side_index.ToString();
+            Value_Clockwise_Polygon_Index.text = line.NativeObject.clockwise_polygon_owner.ToString();
 
-            Value_CounterClockwise_Side_Index.text = line.NativeObject.CounterclockwisePolygonSideIndex.ToString();
-            Value_CounterClockwise_Polygon_Index.text = line.NativeObject.CounterclockwisePolygonOwner.ToString();
+            Value_CounterClockwise_Side_Index.text = line.NativeObject.counterclockwise_polygon_side_index.ToString();
+            Value_CounterClockwise_Polygon_Index.text = line.NativeObject.counterclockwise_polygon_owner.ToString();
 
-            Value_Length.text = line.NativeObject.Length.ToString();
-            Value_HighestFloorHeight.text = line.NativeObject.HighestAdjacentFloor.ToString();
-            Value_LowestCeilingHeight.text = line.NativeObject.LowestAdjacentCeiling.ToString();
+            Value_Length.text = line.NativeObject.length.ToString();
+            Value_HighestFloorHeight.text = line.NativeObject.highest_adjacent_floor.ToString();
+            Value_LowestCeilingHeight.text = line.NativeObject.lowest_adjacent_ceiling.ToString();
         }
     }
 }

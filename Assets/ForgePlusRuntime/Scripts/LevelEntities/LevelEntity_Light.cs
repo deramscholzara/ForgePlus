@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
-using Weland;
+using AlephOne;
+using static AlephOne.lightsource;
+using ForgePlus.Extensions;
 using Random = UnityEngine.Random;
 
 namespace RuntimeCore.Entities
@@ -34,7 +36,7 @@ namespace RuntimeCore.Entities
         private readonly AnimationCurve smoothLightCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
 
         public short NativeIndex { get; set; }
-        public Weland.Light NativeObject { get; set; }
+        public static_light_data NativeObject { get; set; }
 
         public LevelEntity_Level ParentLevel { private get; set; }
 
@@ -69,7 +71,7 @@ namespace RuntimeCore.Entities
 
         private CancellationTokenSource lightPhaseCTS;
 
-        public LevelEntity_Light(short index, Weland.Light light, LevelEntity_Level level)
+        public LevelEntity_Light(short index, static_light_data light, LevelEntity_Level level)
         {
             if (!LightTexture)
             {
@@ -113,14 +115,14 @@ namespace RuntimeCore.Entities
 
         public void BeginRuntimeStyleBehavior()
         {
-            if (NativeObject.InitiallyActive)
+            if (LIGHT_IS_INITIALLY_ACTIVE(NativeObject))
             {
-                CurrentLinearIntensity = (float)NativeObject.PrimaryActive.Intensity;
+                CurrentLinearIntensity = AlephOneExtensions.FixedToFloat(NativeObject.primary_active.intensity);
                 BeginPhase(States.PrimaryActive, loop: false);
             }
             else
             {
-                CurrentLinearIntensity = (float)NativeObject.PrimaryInactive.Intensity;
+                CurrentLinearIntensity = AlephOneExtensions.FixedToFloat(NativeObject.primary_inactive.intensity);
                 BeginPhase(States.PrimaryInactive, loop: false);
             }
         }
@@ -129,10 +131,13 @@ namespace RuntimeCore.Entities
         {
             lightPhaseCTS?.Cancel();
 
-            lightPhaseCTS = new CancellationTokenSource();
-            var cancellationToken = lightPhaseCTS.Token;
+            // Each phase loop cancels only its own token source: the field may be replaced by a newer loop,
+            // or cleared by PrepareForDestruction, while this one is awaiting
+            var phaseCTS = new CancellationTokenSource();
+            lightPhaseCTS = phaseCTS;
+            var cancellationToken = phaseCTS.Token;
 
-            remainingPhaseOffset = NativeObject.Phase;
+            remainingPhaseOffset = NativeObject.phase;
 
             if (loop)
             {
@@ -151,7 +156,7 @@ namespace RuntimeCore.Entities
                 switch (currentState)
                 {
                     case States.BecomingActive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.BecomingActive);
+                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.becoming_active);
 
                         if (!loop)
                         {
@@ -160,34 +165,34 @@ namespace RuntimeCore.Entities
 
                         break;
                     case States.PrimaryActive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.PrimaryActive);
+                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.primary_active);
 
                         if (!loop)
                         {
-                            if (NativeObject.Stateless ||
-                                (NativeObject.SecondaryActive.Period > 0 &&
-                                 (NativeObject.SecondaryActive.LightingFunction != LightingFunction.Constant ||
-                                  NativeObject.SecondaryActive.Intensity != NativeObject.PrimaryActive.Intensity)))
+                            if (LIGHT_IS_STATELESS(NativeObject) ||
+                                (NativeObject.secondary_active.period > 0 &&
+                                 (NativeObject.secondary_active.function != _constant_lighting_function ||
+                                  NativeObject.secondary_active.intensity != NativeObject.primary_active.intensity)))
                             {
                                 // Only go to the second phase if it has a lasting duration
                                 // and if it's not constant at the same intensity as the primary phase.
                                 currentState = States.SecondaryActive;
                             }
-                            else if (NativeObject.PrimaryInactive.LightingFunction == LightingFunction.Constant)
+                            else if (NativeObject.primary_inactive.function == _constant_lighting_function)
                             {
                                 // If there's no second phase, and the primary phase is constant,
                                 // then there's no reason to keep updating lighting values.
-                                lightPhaseCTS.Cancel();
+                                phaseCTS.Cancel();
                             }
                         }
 
                         break;
                     case States.SecondaryActive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.SecondaryActive);
+                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.secondary_active);
 
                         if (!loop)
                         {
-                            if (NativeObject.Stateless)
+                            if (LIGHT_IS_STATELESS(NativeObject))
                             {
                                 currentState = States.BecomingInactive;
                             }
@@ -199,7 +204,7 @@ namespace RuntimeCore.Entities
 
                         break;
                     case States.BecomingInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.BecomingInactive);
+                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.becoming_inactive);
 
                         if (!loop)
                         {
@@ -208,34 +213,34 @@ namespace RuntimeCore.Entities
 
                         break;
                     case States.PrimaryInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.PrimaryInactive);
+                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.primary_inactive);
 
                         if (!loop)
                         {
-                            if (NativeObject.Stateless ||
-                                (NativeObject.SecondaryInactive.Period > 0 &&
-                                 (NativeObject.SecondaryInactive.LightingFunction != LightingFunction.Constant ||
-                                  NativeObject.SecondaryInactive.Intensity != NativeObject.PrimaryInactive.Intensity)))
+                            if (LIGHT_IS_STATELESS(NativeObject) ||
+                                (NativeObject.secondary_inactive.period > 0 &&
+                                 (NativeObject.secondary_inactive.function != _constant_lighting_function ||
+                                  NativeObject.secondary_inactive.intensity != NativeObject.primary_inactive.intensity)))
                             {
                                 // Only go to the second phase if it has a lasting duration
                                 // and if it's not constant at the same intensity as the primary phase.
                                 currentState = States.SecondaryInactive;
                             }
-                            else if (NativeObject.PrimaryInactive.LightingFunction == LightingFunction.Constant)
+                            else if (NativeObject.primary_inactive.function == _constant_lighting_function)
                             {
                                 // If there's no second phase, and the primary phase is constant,
                                 // then there's no reason to keep updating lighting values.
-                                lightPhaseCTS.Cancel();
+                                phaseCTS.Cancel();
                             }
                         }
 
                         break;
                     case States.SecondaryInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.SecondaryInactive);
+                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.secondary_inactive);
 
                         if (!loop)
                         {
-                            if (NativeObject.Stateless)
+                            if (LIGHT_IS_STATELESS(NativeObject))
                             {
                                 currentState = States.BecomingActive;
                             }
@@ -252,13 +257,13 @@ namespace RuntimeCore.Entities
             }
         }
 
-        private async Task RunIntensityPhaseFunction(CancellationToken cancellationToken, Weland.Light.Function lightingFunction)
+        private async Task RunIntensityPhaseFunction(CancellationToken cancellationToken, lighting_function_specification lightingFunction)
         {
             var functionPhaseOffset = 0f;
 
             if (remainingPhaseOffset > 0)
             {
-                remainingPhaseOffset -= (short)(lightingFunction.Period);
+                remainingPhaseOffset -= (short)(lightingFunction.period);
 
                 if (remainingPhaseOffset > 0)
                 {
@@ -269,7 +274,7 @@ namespace RuntimeCore.Entities
                 {
                     // Note: This adds any remaining offset, which will be <= 0,
                     //       because Phase is intended to be a "backwards" shift through time
-                    functionPhaseOffset = (float)(lightingFunction.Period + remainingPhaseOffset) / 30f;
+                    functionPhaseOffset = (float)(lightingFunction.period + remainingPhaseOffset) / 30f;
                 }
             }
 
@@ -277,24 +282,24 @@ namespace RuntimeCore.Entities
 
             // Note: Clamps the randomized phase to no less than 1 tick
             //       to ensure all phases run for at least 1 tick.
-            var duration = Mathf.Max(1, ((int)lightingFunction.Period + Random.Range(-lightingFunction.DeltaPeriod, lightingFunction.DeltaPeriod))) / 30f;
+            var duration = Mathf.Max(1, ((int)lightingFunction.period + Random.Range(-lightingFunction.delta_period, lightingFunction.delta_period))) / 30f;
 
-            switch (lightingFunction.LightingFunction)
+            switch (lightingFunction.function)
             {
-                case LightingFunction.Constant:
-                    await ConstantIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, (float)lightingFunction.Intensity);
+                case _constant_lighting_function:
+                    await ConstantIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, AlephOneExtensions.FixedToFloat(lightingFunction.intensity));
                     return;
-                case LightingFunction.Linear:
-                    await LinearIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, (float)lightingFunction.Intensity, (float)lightingFunction.DeltaIntensity);
+                case _linear_lighting_function:
+                    await LinearIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, AlephOneExtensions.FixedToFloat(lightingFunction.intensity), AlephOneExtensions.FixedToFloat(lightingFunction.delta_intensity));
                     return;
-                case LightingFunction.Smooth:
-                    await SmoothIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, (float)lightingFunction.Intensity, (float)lightingFunction.DeltaIntensity);
+                case _smooth_lighting_function:
+                    await SmoothIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, AlephOneExtensions.FixedToFloat(lightingFunction.intensity), AlephOneExtensions.FixedToFloat(lightingFunction.delta_intensity));
                     return;
-                case LightingFunction.Flicker:
-                    await FlickerIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, (float)lightingFunction.Intensity, (float)lightingFunction.DeltaIntensity);
+                case _flicker_lighting_function:
+                    await FlickerIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, AlephOneExtensions.FixedToFloat(lightingFunction.intensity), AlephOneExtensions.FixedToFloat(lightingFunction.delta_intensity));
                     return;
                 default:
-                    throw new System.NotImplementedException($"Lighting Function: {lightingFunction.LightingFunction}");
+                    throw new System.NotImplementedException($"Lighting Function: {lightingFunction.function}");
             }
         }
 

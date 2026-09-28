@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using ForgePlus.Extensions;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Weland;
 
 namespace ForgePlus.DataFileIO
 {
-    public class MapsData : FileDataBase<MapFile>
+    public class MapsData : FileDataBase<MapsFile>
     {
         private LevelData currentlyOpenLevel;
 
@@ -16,7 +16,7 @@ namespace ForgePlus.DataFileIO
             {
                 LoadData();
 
-                return file == null ? null : file.Overlays.Select(item => item.Value.LevelName).ToArray();
+                return file == null ? null : file.Levels.Select(level => level.GetLevelName()).ToArray();
             }
         }
 
@@ -47,13 +47,7 @@ namespace ForgePlus.DataFileIO
                 throw new IOException($"Tried saving Level with no LevelData loaded.");
             }
 
-            file.Directory.Clear();
-            file.Directory[0] = currentlyOpenLevel.GetSaveWad();
-            file.Save(savePath);
-
-            var levelOverlay = file.Overlays[currentlyOpenLevel.LevelIndex];
-            file.Overlays.Clear();
-            file.Overlays[currentlyOpenLevel.LevelIndex] = levelOverlay;
+            currentlyOpenLevel.SaveAsSingleLevelFile(savePath);
         }
     }
 }

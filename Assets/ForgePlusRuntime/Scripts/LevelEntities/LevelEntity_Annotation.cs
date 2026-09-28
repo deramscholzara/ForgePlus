@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Weland;
+using AlephOne;
+using ForgePlus.Extensions;
 
 namespace RuntimeCore.Entities
 {
@@ -14,7 +15,7 @@ namespace RuntimeCore.Entities
         private static LevelEntity_Annotation prefab;
 
         public short NativeIndex { get; set; }
-        public Annotation NativeObject { get; set; }
+        public map_annotation NativeObject { get; set; }
 
         public LevelEntity_Level ParentLevel { private get; set; }
 
@@ -90,7 +91,7 @@ namespace RuntimeCore.Entities
 
         public async void RefreshLabel()
         {
-            label.text = NativeObject.Text;
+            label.text = NativeObject.GetText();
 
             // Wait two frames so the content size fitter has time to update to the new text size
             await Task.Yield();

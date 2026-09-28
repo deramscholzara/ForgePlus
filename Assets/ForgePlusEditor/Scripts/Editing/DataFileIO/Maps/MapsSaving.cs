@@ -1,17 +1,17 @@
 ﻿#if !NO_EDITING
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO.Extensions;
+using ForgePlus.Extensions;
 using RuntimeCore.Entities;
 using SFB;
 using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Rendering;
-using Weland;
 
 namespace ForgePlus.DataFileIO
 {
-    public partial class MapsLoading : FileLoadingBase<MapsLoading, MapsData, MapFile>
+    public partial class MapsLoading : FileLoadingBase<MapsLoading, MapsData, MapsFile>
     {
         public event Action OnSaveCompleted;
 
@@ -31,7 +31,7 @@ namespace ForgePlus.DataFileIO
             StandaloneFileBrowser.SaveFilePanelAsync(
                 title: $"Choose {type} save location",
                 directory: initialDirectory,
-                defaultName: LevelEntity_Level.Instance.Level.Name,
+                defaultName: LevelEntity_Level.Instance.Level.GetLevelName(),
                 type.FileExtension(),
                 cb: savePath => HandleSelectionBrowserResponse(savePath, type));
         }

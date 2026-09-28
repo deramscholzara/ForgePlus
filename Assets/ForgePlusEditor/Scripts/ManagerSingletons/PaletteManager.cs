@@ -1,4 +1,6 @@
-﻿using ForgePlus.DataFileIO;
+﻿using AlephOne;
+using ForgePlus.DataFileIO;
+using ForgePlus.Extensions;
 using ForgePlus.LevelManipulation;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
@@ -7,8 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using Weland;
-using Weland.Extensions;
 
 namespace ForgePlus.Palette
 {
@@ -38,7 +38,7 @@ namespace ForgePlus.Palette
         private readonly List<GameObject> currentSwatches = new List<GameObject>();
         private readonly List<GameObject> currentLayoutHelpers = new List<GameObject>();
 
-        public void SelectSwatchForTexture(ShapeDescriptor shapeDescriptor, bool invokeToggleEvents = false)
+        public void SelectSwatchForTexture(ushort shapeDescriptor, bool invokeToggleEvents = false)
         {
             var matchingSwatch = currentSwatches.First(swatch => swatch.GetComponent<Swatch_Texture>().ShapeDescriptor.Equals(shapeDescriptor));
             var matchingToggle = matchingSwatch.GetComponent<Toggle>();
@@ -46,13 +46,13 @@ namespace ForgePlus.Palette
             ActivateToggle(matchingToggle, invokeToggleEvents);
         }
 
-        public ShapeDescriptor GetSelectedTexture()
+        public ushort GetSelectedTexture()
         {
             var activeToggle = paletteToggleGroup.GetFirstActiveToggle();
 
             if (!activeToggle)
             {
-                return ShapeDescriptor.Empty;
+                return cstypes.UNONE;
             }
 
             return activeToggle.GetComponent<Swatch_Texture>().ShapeDescriptor;
@@ -119,11 +119,11 @@ namespace ForgePlus.Palette
                     paletteToggleGroup.allowSwitchOff = false;
 
                     var loadedTextureEntries = MaterialGeneration_Geometry.GetAllLoadedTextures().ToList();
-                    loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.Collection == entryB.Key.Collection ?
-                                                                   entryA.Key.Bitmap.CompareTo(entryB.Key.Bitmap) :
+                    loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.GetCollection() == entryB.Key.GetCollection() ?
+                                                                   entryA.Key.GetShape().CompareTo(entryB.Key.GetShape()) :
                                                                    ((entryA.Key.UsesLandscapeCollection() || entryB.Key.UsesLandscapeCollection()) ?
-                                                                    -entryA.Key.Collection.CompareTo(entryB.Key.Collection) :
-                                                                    entryA.Key.Collection.CompareTo(entryB.Key.Collection))));
+                                                                    -entryA.Key.GetCollection().CompareTo(entryB.Key.GetCollection()) :
+                                                                    entryA.Key.GetCollection().CompareTo(entryB.Key.GetCollection()))));
 
                     GameObject currentHorizontalHelper = null;
                     var activatedFirstSwatch = false;

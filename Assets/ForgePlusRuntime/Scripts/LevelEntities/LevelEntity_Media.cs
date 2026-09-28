@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using Weland;
+using AlephOne;
+using ForgePlus.Extensions;
 
 
 namespace RuntimeCore.Entities.Geometry
@@ -21,7 +22,7 @@ namespace RuntimeCore.Entities.Geometry
         private static readonly int mediaDepthPropertyId = Shader.PropertyToID("_MediaDepth");
 
         public short NativeIndex { get; set; }
-        public Media NativeObject { get; set; }
+        public media_data NativeObject { get; set; }
 
         public LevelEntity_Level ParentLevel { private get; set; }
 
@@ -49,7 +50,7 @@ namespace RuntimeCore.Entities.Geometry
 
         private CancellationTokenSource synchronizationLoopCTS;
 
-        public LevelEntity_Media(short index, Media media, LevelEntity_Level level)
+        public LevelEntity_Media(short index, media_data media, LevelEntity_Level level)
         {
             NativeIndex = index;
             NativeObject = media;
@@ -116,11 +117,11 @@ namespace RuntimeCore.Entities.Geometry
 
             while (!cancellationToken.IsCancellationRequested && Application.isPlaying)
             {
-                var lowHeight = (float)NativeObject.Low / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                var highHeight = (float)NativeObject.High / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                var lowHeight = (float)NativeObject.low / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                var highHeight = (float)NativeObject.high / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
-                var intensity = ParentLevel.Lights[NativeObject.LightIndex].CurrentLinearIntensity;
-                intensity = Mathf.Max(intensity, (float)NativeObject.MinimumLightIntensity);
+                var intensity = ParentLevel.Lights[NativeObject.light_index].CurrentLinearIntensity;
+                intensity = Mathf.Max(intensity, AlephOneExtensions.FixedToFloat(NativeObject.minimum_light_intensity));
 
                 var currentHeight = Mathf.Lerp(lowHeight, highHeight, intensity);
 
@@ -134,10 +135,10 @@ namespace RuntimeCore.Entities.Geometry
         {
             if (material)
             {
-                if (NativeObject.CurrentMagnitude != 0)
+                if (NativeObject.current_magnitude != 0)
                 {
-                    material.SetFloat(mediaDirectionPropertyId, (float)NativeObject.Direction);
-                    material.SetFloat(mediaSpeedPropertyId, (float)NativeObject.CurrentMagnitude * MagnitudeToWorldUnit);
+                    material.SetFloat(mediaDirectionPropertyId, AlephOneExtensions.AngleToDegrees(NativeObject.current_direction));
+                    material.SetFloat(mediaSpeedPropertyId, (float)NativeObject.current_magnitude * MagnitudeToWorldUnit);
                 }
                 else
                 {
@@ -145,21 +146,21 @@ namespace RuntimeCore.Entities.Geometry
                     material.SetFloat(mediaSpeedPropertyId, 0f);
                 }
 
-                switch (NativeObject.Type)
+                switch (NativeObject.type)
                 {
-                    case MediaType.Water:
+                    case media._media_water:
                         material.SetFloat(mediaDepthPropertyId, 6f);
                         break;
-                    case MediaType.Lava:
+                    case media._media_lava:
                         material.SetFloat(mediaDepthPropertyId, 0.01f);
                         break;
-                    case MediaType.Goo:
+                    case media._media_goo:
                         material.SetFloat(mediaDepthPropertyId, 1f);
                         break;
-                    case MediaType.Sewage:
+                    case media._media_sewage:
                         material.SetFloat(mediaDepthPropertyId, 1f);
                         break;
-                    case MediaType.Jjaro:
+                    case media._media_jjaro:
                         material.SetFloat(mediaDepthPropertyId, 1.25f);
                         break;
                 }

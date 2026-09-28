@@ -38,7 +38,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             foreach (var key in currentKeys)
             {
-                if (Input.GetKeyDown(key))
+                if (Hotkeys.GetKeyDown(key))
                 {
                     thisCanvas.enabled = !thisCanvas.enabled;
                 }

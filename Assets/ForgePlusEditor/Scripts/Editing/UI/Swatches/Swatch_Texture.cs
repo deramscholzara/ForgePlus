@@ -1,17 +1,17 @@
-﻿using ForgePlus.LevelManipulation;
+﻿using ForgePlus.Extensions;
+using ForgePlus.LevelManipulation;
 using RuntimeCore.Materials;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Weland;
 
 namespace ForgePlus.Palette
 {
     [RequireComponent(typeof(Toggle))]
     public class Swatch_Texture : MonoBehaviour
     {
-        public ShapeDescriptor ShapeDescriptor;
+        public ushort ShapeDescriptor;
 
         [SerializeField]
         private TextMeshProUGUI label = null;
@@ -22,11 +22,11 @@ namespace ForgePlus.Palette
         [SerializeField]
         private GameObject usageIndicator = null;
 
-        public void SetInitialValues(KeyValuePair<ShapeDescriptor, Texture2D> textureEntry, ToggleGroup toggleGroup)
+        public void SetInitialValues(KeyValuePair<ushort, Texture2D> textureEntry, ToggleGroup toggleGroup)
         {
             ShapeDescriptor = textureEntry.Key;
 
-            label.text = $"C: {ShapeDescriptor.Collection} B: {ShapeDescriptor.Bitmap}";
+            label.text = $"C: {ShapeDescriptor.GetCollection()} B: {ShapeDescriptor.GetShape()}";
             texturePreview.texture = textureEntry.Value;
             texturePreview.GetComponent<AspectRatioFitter>().aspectRatio = (float)texturePreview.texture.width / (float)texturePreview.texture.height;
 

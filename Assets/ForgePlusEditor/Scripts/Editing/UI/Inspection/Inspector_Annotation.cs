@@ -1,4 +1,5 @@
-﻿using RuntimeCore.Entities;
+﻿using ForgePlus.Extensions;
+using RuntimeCore.Entities;
 using TMPro;
 
 namespace ForgePlus.Inspection
@@ -13,7 +14,7 @@ namespace ForgePlus.Inspection
             var annotation = inspectedObject as LevelEntity_Annotation;
 
             Value_Id.text = annotation.NativeIndex.ToString();
-            Value_Text.text = annotation.NativeObject.Text;
+            Value_Text.text = annotation.NativeObject.GetText();
         }
     }
 }

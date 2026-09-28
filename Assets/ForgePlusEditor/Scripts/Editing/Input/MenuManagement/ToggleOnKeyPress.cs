@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ForgePlus.ApplicationGeneral;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace ForgePlus.CommonUI
@@ -22,7 +23,7 @@ namespace ForgePlus.CommonUI
         {
             foreach (var key in keys)
             {
-                if (Input.GetKeyDown(key))
+                if (Hotkeys.GetKeyDown(key))
                 {
                     toggle.isOn = !toggle.isOn;
                 }

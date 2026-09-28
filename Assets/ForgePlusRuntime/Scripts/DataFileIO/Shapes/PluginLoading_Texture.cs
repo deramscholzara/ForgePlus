@@ -1,15 +1,16 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using ForgePlus.LevelManipulation.Utilities;
 using UnityEngine;
-using Weland;
+using AlephOne;
+using ForgePlus.Extensions;
 
 public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Texture>
 {
-    public Dictionary<ShapeDescriptor, PluginTextureSet> TextureLookup =
-        new Dictionary<ShapeDescriptor, PluginTextureSet>();
+    public Dictionary<ushort, PluginTextureSet> TextureLookup =
+        new Dictionary<ushort, PluginTextureSet>();
 
     [SerializeField] private bool PluginSupportEnabled = true;
 
@@ -67,10 +68,7 @@ public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Textur
                                 textureSet.MainTexture =
                                     LoadTextureAtPath(Path.Join(mmlFile.DirectoryName, texture.NormalImage));
 
-                            var shapeDescriptor = new ShapeDescriptor();
-                            shapeDescriptor.Collection = (byte)texture.Collection;
-                            shapeDescriptor.Bitmap = (byte)texture.Bitmap;
-                            shapeDescriptor.CLUT = 0;
+                            var shapeDescriptor = AlephOneExtensions.BuildShapeDescriptor((int) texture.Collection, (int) texture.Bitmap, clut: 0);
                             TextureLookup[shapeDescriptor] = textureSet;
                         }
                     }

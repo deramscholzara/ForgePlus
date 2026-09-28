@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using Weland;
+using AlephOne;
 
 namespace RuntimeCore.Entities.Geometry
 {
@@ -16,7 +16,7 @@ namespace RuntimeCore.Entities.Geometry
         public RuntimeSurfaceGeometry FloorSurface;
         public RuntimeSurfaceGeometry MediaSurface;
 
-        public new Polygon NativeObject => base.NativeObject as Polygon;
+        public new polygon_data NativeObject => base.NativeObject as polygon_data;
 
         protected override void AssembleEntity()
         {
@@ -32,7 +32,7 @@ namespace RuntimeCore.Entities.Geometry
             CeilingSurface.InitializeRuntimeSurface(this, DataSources.Ceiling);
             ceilingRoot.transform.SetParent(transform);
 
-            if (NativeObject.MediaIndex >= 0)
+            if (NativeObject.media_index >= 0)
             {
                 var mediaRoot = new GameObject($"Media (polygon: {NativeIndex})");
                 MediaSurface = mediaRoot.AddComponent<RuntimeSurfaceGeometry>();
