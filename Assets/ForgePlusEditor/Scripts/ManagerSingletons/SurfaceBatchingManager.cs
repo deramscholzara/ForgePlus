@@ -6,18 +6,16 @@ using ForgePlus.DataFileIO;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Materials;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace ForgePlus.ApplicationGeneral
 {
-    public class SurfaceBatchingManager : SingletonMonoBehaviour<SurfaceBatchingManager>
+    [AutoStaticsCleanup]
+    public partial class SurfaceBatchingManager : SingletonMonoBehaviour<SurfaceBatchingManager>
     {
-#pragma warning disable CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
-#pragma warning disable CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
-        public struct BatchKey
-#pragma warning restore CS0661 // Type defines operator == or operator != but does not override Object.GetHashCode()
-#pragma warning restore CS0660 // Type defines operator == or operator != but does not override Object.Equals(object o)
+        public struct BatchKey : IEquatable<BatchKey>
         {
             // Note: Using Material instead of just ShapeDescriptor here,
             // as it accounts for unique shaders used for the same texture.
@@ -74,19 +72,42 @@ namespace ForgePlus.ApplicationGeneral
             }
 #endif
 
+            // Batches are dictionary keys, so these avoid the reflection-based default struct equality
+            public bool Equals(BatchKey other)
+            {
+                return _sourceMaterial == other._sourceMaterial &&
+                       _layeredTransparentSideSourceMaterial == other._layeredTransparentSideSourceMaterial &&
+                       _sourceLight == other._sourceLight &&
+                       _layeredTransparentSideSourceLight == other._layeredTransparentSideSourceLight &&
+#if USE_TEXTURE_ARRAYS
+                       _sourceShapeDescriptor == other._sourceShapeDescriptor &&
+                       _layeredTransparentSideShapeDescriptor == other._layeredTransparentSideShapeDescriptor &&
+#endif
+                       SourceMedia == other.SourceMedia;
+            }
+
+            public override bool Equals(object obj)
+            {
+                return obj is BatchKey other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+#if USE_TEXTURE_ARRAYS
+                return HashCode.Combine(_sourceMaterial, _layeredTransparentSideSourceMaterial, _sourceLight, _layeredTransparentSideSourceLight, SourceMedia, _sourceShapeDescriptor, _layeredTransparentSideShapeDescriptor);
+#else
+                return HashCode.Combine(_sourceMaterial, _layeredTransparentSideSourceMaterial, _sourceLight, _layeredTransparentSideSourceLight, SourceMedia);
+#endif
+            }
+
             public static bool operator ==(BatchKey a, BatchKey b)
             {
-                return !(a != b);
+                return a.Equals(b);
             }
 
             public static bool operator !=(BatchKey a, BatchKey b)
             {
-                // Defining this as it's a slightly more efficient way to determine equality for this struct
-                return a.SourceMaterial != b.SourceMaterial ||
-                       a.SourceLight != b.SourceLight ||
-                       a.SourceMedia != b.SourceMedia ||
-                       a.LayeredTransparentSideSourceMaterial != b.LayeredTransparentSideSourceMaterial ||
-                       a.LayeredTransparentSideSourceLight != b.LayeredTransparentSideSourceLight;
+                return !a.Equals(b);
             }
         }
 
@@ -116,6 +137,7 @@ namespace ForgePlus.ApplicationGeneral
 
             private Material[] sourceMaterials;
             private List<Surface> surfaces;
+            private Dictionary<RuntimeSurfaceGeometry, Surface> surfacesByGeometry;
             private GameObject mergeObject;
 
             private LevelEntity_Media media;
@@ -129,13 +151,14 @@ namespace ForgePlus.ApplicationGeneral
             {
                 this.sourceMaterials = sourceMaterials;
                 surfaces = new List<Surface>();
+                surfacesByGeometry = new Dictionary<RuntimeSurfaceGeometry, Surface>();
                 mergeObject = null;
                 this.media = media;
             }
 
             public void AddSurface(RuntimeSurfaceGeometry surfaceGeometry, bool deleteOriginalObjects = false)
             {
-                if (surfaces.Any(surface => surface.SurfaceGeometry == surfaceGeometry))
+                if (surfacesByGeometry.ContainsKey(surfaceGeometry))
                 {
                     Debug.LogError("Attempted adding surface to batch multiple times, this attempt will be ignored.");
                     return;
@@ -147,7 +170,9 @@ namespace ForgePlus.ApplicationGeneral
                     Unmerge();
                 }
 
-                surfaces.Add(new Surface(surfaceGeometry));
+                var surface = new Surface(surfaceGeometry);
+                surfaces.Add(surface);
+                surfacesByGeometry.Add(surfaceGeometry, surface);
 
                 if (isMerged)
                 {
@@ -162,7 +187,7 @@ namespace ForgePlus.ApplicationGeneral
             // Returns False if this StaticBatch is now empty, true otherwise
             public bool RemoveSurface(RuntimeSurfaceGeometry surfaceGeometry, bool deleteOriginalObjects = false)
             {
-                if (!surfaces.Any(surface => surface.SurfaceGeometry == surfaceGeometry))
+                if (!surfacesByGeometry.TryGetValue(surfaceGeometry, out var surface))
                 {
                     ////Debug.LogError("Attempted removing surface from batch that did not contain it, this attempt will be ignored.");
                     return surfaces.Count > 0;
@@ -174,7 +199,8 @@ namespace ForgePlus.ApplicationGeneral
                     Unmerge();
                 }
 
-                surfaces.Remove(surfaces.First(surface => surface.SurfaceGeometry == surfaceGeometry));
+                surfaces.Remove(surface);
+                surfacesByGeometry.Remove(surfaceGeometry);
 
                 if (isMerged)
                 {

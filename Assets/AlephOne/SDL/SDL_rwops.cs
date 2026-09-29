@@ -2,6 +2,7 @@
 // Reads past the end give zeros (SDL_ReadBE16/32) or a short count (SDL_RWread), writes and seeks
 // that fail give a short count and -1, and SDL_RWFromFile gives NULL for a file it can't open.
 using System;
+using System.Buffers.Binary;
 using System.IO;
 
 namespace AlephOne
@@ -32,8 +33,9 @@ namespace AlephOne
         {
             try
             {
+                // Files being read are read into memory once, since Aleph One reads them a few bytes at a time
                 return new SDL_RWops(mode == "rb" ?
-                    new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read) :
+                    new MemoryStream(File.ReadAllBytes(file), writable: false) :
                     new FileStream(file, FileMode.Create, FileAccess.ReadWrite, FileShare.Read));
             }
             catch (Exception)
@@ -85,25 +87,7 @@ namespace AlephOne
                 return 0;
             }
 
-            int read_total = 0;
-            try
-            {
-                while (read_total < total)
-                {
-                    int read = context.stream.Read(ptr, ptr_offset + read_total, (int) (total - read_total));
-                    if (read <= 0)
-                    {
-                        break;
-                    }
-
-                    read_total += read;
-                }
-            }
-            catch (IOException)
-            {
-            }
-
-            return read_total / size;
+            return ReadUpTo(context, ptr.AsSpan(ptr_offset, (int) total)) / size;
         }
 
         // size_t SDL_RWwrite(SDL_RWops *context, const void *ptr, size_t size, size_t num), ptr being ptr[ptr_offset]
@@ -128,16 +112,41 @@ namespace AlephOne
 
         public static ushort SDL_ReadBE16(SDL_RWops src)
         {
-            var b = new byte[2];
-            SDL_RWread(src, b, 0, 1, 2);
-            return (ushort) ((b[0] << 8) | b[1]);
+            Span<byte> value = stackalloc byte[2];
+            ReadUpTo(src, value);
+            return BinaryPrimitives.ReadUInt16BigEndian(value);
         }
 
         public static uint SDL_ReadBE32(SDL_RWops src)
         {
-            var b = new byte[4];
-            SDL_RWread(src, b, 0, 1, 4);
-            return ((uint) b[0] << 24) | ((uint) b[1] << 16) | ((uint) b[2] << 8) | b[3];
+            Span<byte> value = stackalloc byte[4];
+            ReadUpTo(src, value);
+            return BinaryPrimitives.ReadUInt32BigEndian(value);
+        }
+
+        // Fills as much of the buffer as the stream has, returning how much that was
+        // (so SDL_ReadBE16/32, reading into zeroed buffers, read zeros past the end)
+        private static int ReadUpTo(SDL_RWops context, Span<byte> buffer)
+        {
+            int read_total = 0;
+            try
+            {
+                while (read_total < buffer.Length)
+                {
+                    int read = context.stream.Read(buffer.Slice(read_total));
+                    if (read <= 0)
+                    {
+                        break;
+                    }
+
+                    read_total += read;
+                }
+            }
+            catch (IOException)
+            {
+            }
+
+            return read_total;
         }
     }
 }

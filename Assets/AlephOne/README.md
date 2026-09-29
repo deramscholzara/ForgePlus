@@ -54,8 +54,9 @@ These are stated here once, instead of in the files.
   - The current map file (`set_map_file()`) and physics file (`set_physics_file()`) are parameters.
 
   Other state stays global as in Aleph One (the shapes file and its collections, the flood map, the
-  temporary index lists of `map_constructors`), so the port loads one thing at a time: it isn't
-  thread-safe.
+  temporary index lists of `map_constructors`), so only work that doesn't change it can run on other
+  threads: ForgePlus builds a level's `PhysicsModel` on a worker thread, and decodes the loaded shapes'
+  bitmaps in parallel, which is why the last error (`game_errors`) is kept per thread.
 - **Pointers.** A pointer into a buffer is the array and an offset (`byte *buffer` is `buffer,
   buffer_offset`; a bitmap's `pixel8 *row_addresses[]` are offsets into `bitmap_definition.pixels`).
   An output pointer is `out`, or `ref` where Aleph One leaves it unchanged on failure. `out` parameters
@@ -93,6 +94,11 @@ These are stated here once, instead of in the files.
     `MapLevel.loaded_wad` and saved as they were.
   - `game_wad.get_level_directory()`, and `game_wad.process_map_wad_physics()`, which is the physics
     section of `process_map_wad()` on its own.
+  - `[NoAutoStaticsCleanup]` on every type with statics. Unity's analyzers require each such type to say
+    whether Unity should reset its statics when Play mode starts without a domain reload; the port
+    says no with its own copy of the attribute (`CSeries/NoAutoStaticsCleanupAttribute.cs`), and
+    ForgePlus resets the loaded shapes and last error itself.
+  - `game_errors` keeps its last error per thread.
   - The deviations: `new_media()` keeps a medium as loaded (it doesn't mark the slot used or update the
     medium, which would change what is saved), platforms keep their polygons' native heights,
     `process_map_wad()` pads a short map info chunk with zeros, and `load_shapes_patch()` stops at the

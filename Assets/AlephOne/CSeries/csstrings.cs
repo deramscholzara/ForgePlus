@@ -4,9 +4,11 @@
 // take and return C# strings. Mac Roman input is a C string: it stops at the first NUL.
 using System.Collections.Generic;
 using System.Text;
+using Unity.Scripting.LifecycleManagement;
 
 namespace AlephOne
 {
+    [NoAutoStaticsCleanup]
     public static class csstrings
     {
         // from ftp://ftp.unicode.org/Public/MAPPINGS/VENDORS/APPLE/ROMAN.TXT

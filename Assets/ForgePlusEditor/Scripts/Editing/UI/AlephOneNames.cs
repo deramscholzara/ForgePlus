@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Unity.Scripting.LifecycleManagement;
 
 namespace ForgePlus.Extensions
 {
     // Display names taken from the names of Aleph One's own constants (polygon type 5 is "platform", from _polygon_is_platform)
+    [NoAutoStaticsCleanup]
     public static class AlephOneNames
     {
         // Civilians keep their prefix in their names ("civilian crew", not "crew")
@@ -107,11 +109,12 @@ namespace ForgePlus.Extensions
         {
             var names = new Dictionary<long, string>();
 
-            foreach (var field in constantsClass.GetFields(BindingFlags.Public | BindingFlags.Static))
+            // In declaration order (reflection doesn't guarantee any order), so the first alias of a value wins
+            foreach (var field in constantsClass.GetFields(BindingFlags.Public | BindingFlags.Static).OrderBy(field => field.MetadataToken))
             {
                 var constantName = field.Name;
 
-                if (!field.IsLiteral || constantName.StartsWith("NUMBER_OF"))
+                if (!field.IsLiteral || constantName.StartsWith("NUMBER_OF", StringComparison.Ordinal))
                 {
                     continue;
                 }
@@ -123,8 +126,8 @@ namespace ForgePlus.Extensions
                 }
                 else
                 {
-                    matches = prefixes.Any(prefix => constantName.StartsWith(prefix)) &&
-                              !excludedPrefixes.Any(prefix => constantName.StartsWith(prefix));
+                    matches = prefixes.Any(prefix => constantName.StartsWith(prefix, StringComparison.Ordinal)) &&
+                              !excludedPrefixes.Any(prefix => constantName.StartsWith(prefix, StringComparison.Ordinal));
                 }
 
                 if (!matches)
@@ -148,7 +151,7 @@ namespace ForgePlus.Extensions
         {
             var name = constantName;
 
-            var prefix = prefixes.Where(p => name.StartsWith(p)).OrderByDescending(p => p.Length).FirstOrDefault();
+            var prefix = prefixes.Where(p => name.StartsWith(p, StringComparison.Ordinal)).OrderByDescending(p => p.Length).FirstOrDefault();
             if (prefix != null && prefix != CivilianPrefix)
             {
                 name = name.Substring(prefix.Length);
@@ -158,7 +161,7 @@ namespace ForgePlus.Extensions
                 name = name.TrimStart('_');
             }
 
-            if (!string.IsNullOrEmpty(suffix) && name.EndsWith(suffix))
+            if (!string.IsNullOrEmpty(suffix) && name.EndsWith(suffix, StringComparison.Ordinal))
             {
                 name = name.Substring(0, name.Length - suffix.Length);
             }

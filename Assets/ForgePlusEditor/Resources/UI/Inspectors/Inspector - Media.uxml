@@ -1,0 +1,43 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <!-- Bound to Inspector_Media -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Media" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Type">
+            <ui:AttributeOverrides element-name="label" text="Type:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="LowHeight">
+            <ui:AttributeOverrides element-name="label" text="Low Height:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="HighHeight">
+            <ui:AttributeOverrides element-name="label" text="High Height:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FlowDirection">
+            <ui:AttributeOverrides element-name="label" text="Flow Direction:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FlowMagnitude">
+            <ui:AttributeOverrides element-name="label" text="Flow Magnitude:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="LightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="MinimumLightIntensity">
+            <ui:AttributeOverrides element-name="label" text="Minimum Light Intensity:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Flags" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="FloorObstructsSound">
+            <ui:AttributeOverrides element-name="flag" text="Floor Obstructs Sound" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

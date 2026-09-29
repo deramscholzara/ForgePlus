@@ -8,6 +8,7 @@
 // commented out in Aleph One and aren't ported.
 using System;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 using static AlephOne.csmacros;
 using static AlephOne.cstypes;
@@ -20,6 +21,7 @@ using static AlephOne.world;
 
 namespace AlephOne
 {
+    [NoAutoStaticsCleanup]
     public static class map_constructors
     {
         /*

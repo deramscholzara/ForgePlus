@@ -20,7 +20,9 @@ namespace ForgePlus.LevelManipulation
         // TODO: Get rid of these and just attain them on the fly instead of preloading
         //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
         public ushort surfaceShapeDescriptor = cstypes.UNONE;
+        [System.NonSerialized]
         public LevelEntity_Light RuntimeLight = null;
+        [System.NonSerialized]
         public LevelEntity_Media Media = null;
         public LevelEntity_Platform Platform = null;
 
@@ -47,7 +49,7 @@ namespace ForgePlus.LevelManipulation
                         }
                     }
                     else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
-                             Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+                             ForgePlusInput.Editing.AlignToSelection.IsPressed())
                     {
                         var selectedSourceObject = SelectionManager.Instance.SelectedObject;
                         var selectedSourcePolygon = (selectedSourceObject is LevelEntity_Polygon) ? selectedSourceObject as LevelEntity_Polygon : null;
@@ -67,7 +69,7 @@ namespace ForgePlus.LevelManipulation
 
                         if (!surfaceShapeDescriptor.IsEmptyShapeDescriptor())
                         {
-                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
+                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor);
                         }
                     }
 
@@ -85,7 +87,7 @@ namespace ForgePlus.LevelManipulation
                     else
                     {
                         SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
+                        PaletteManager.Instance.SelectSwatchForLight(RuntimeLight);
                     }
 
                     break;
@@ -93,7 +95,7 @@ namespace ForgePlus.LevelManipulation
                     if (Media != null)
                     {
                         SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(Media, invokeToggleEvents: false);
+                        PaletteManager.Instance.SelectSwatchForMedia(Media);
                     }
 
                     break;
@@ -134,7 +136,7 @@ namespace ForgePlus.LevelManipulation
                                                surfaceWorldNormal,
                                                textureWorldUp);
 
-                if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+                if (ForgePlusInput.Editing.AlignContiguous.IsPressed())
                 {
                     alignmentGroupedPolygons.Clear();
 

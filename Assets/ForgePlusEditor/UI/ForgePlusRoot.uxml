@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!--
+        The screen's layout. It only holds slots, which ForgePlusUI fills with panels (each its own asset, under
+        Resources/UI/Panels) while they apply, and the overlays that block input and show dialogs.
+    -->
+    <ui:VisualElement name="root" class="fp-root" picking-mode="Ignore">
+        <ui:VisualElement name="header-slot" class="fp-slot fp-header-slot" picking-mode="Ignore" />
+        <ui:VisualElement name="frame" class="fp-frame" picking-mode="Ignore">
+            <ui:VisualElement name="left-column" class="fp-column fp-column--left" picking-mode="Ignore">
+                <ui:VisualElement name="visualization-slot" class="fp-slot" picking-mode="Ignore" />
+                <ui:VisualElement name="inspector-slot" class="fp-slot fp-slot--fill" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement class="fp-flexible-space" picking-mode="Ignore" />
+            <ui:VisualElement name="menu-slot" class="fp-slot fp-menu-slot" picking-mode="Ignore" />
+            <ui:VisualElement class="fp-flexible-space" picking-mode="Ignore" />
+            <ui:VisualElement name="right-column" class="fp-column fp-column--right" picking-mode="Ignore">
+                <ui:VisualElement name="mode-settings" class="fp-box fp-box--padded fp-mode-settings">
+                    <ui:VisualElement name="tool-modes-slot" class="fp-slot" picking-mode="Ignore" />
+                    <ui:VisualElement name="view-options-slot" class="fp-slot" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:VisualElement name="palette-slot" class="fp-slot fp-slot--fill" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="manipulation-slot" class="fp-slot fp-manipulation-slot" picking-mode="Ignore" />
+        <ui:Label name="level-name" class="fp-faint-text fp-level-name" picking-mode="Ignore" />
+        <ui:VisualElement name="input-blocker" class="fp-input-blocker" picking-mode="Ignore">
+            <ui:VisualElement class="fp-input-blocker__fill" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement name="dialog-layer" class="fp-dialog-layer" />
+    </ui:VisualElement>
+</ui:UXML>

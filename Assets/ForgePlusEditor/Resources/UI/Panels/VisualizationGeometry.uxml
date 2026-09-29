@@ -1,0 +1,29 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
+    <!-- Geometry mode's visualization options (placeholders, which don't filter anything yet) -->
+    <ui:VisualElement class="fp-visualization" picking-mode="Ignore">
+        <ui:VisualElement class="fp-box fp-box--padded fp-visualization__options">
+            <ui:RadioButtonGroup name="visualization" value="0" class="fp-radio-group fp-visualization__grid">
+                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__everything fp-visualization__everything--in-grid">
+                    <ui:AttributeOverrides element-name="control" text="Show Everything" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
+                    <ui:AttributeOverrides element-name="control" text="Polygons" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right">
+                    <ui:AttributeOverrides element-name="control" text="Lines" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
+                    <ui:AttributeOverrides element-name="control" text="Sides" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right">
+                    <ui:AttributeOverrides element-name="control" text="Vertices" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
+                    <ui:AttributeOverrides element-name="control" text="Media" />
+                </ui:Instance>
+            </ui:RadioButtonGroup>
+        </ui:VisualElement>
+        <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
+    </ui:VisualElement>
+</ui:UXML>

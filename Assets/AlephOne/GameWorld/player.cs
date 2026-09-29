@@ -3,6 +3,7 @@
 //
 // Not ported: player_data and everything that runs players in a game, and MML parsing of player
 // settings.
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.weapons;
 
 namespace AlephOne
@@ -20,6 +21,7 @@ namespace AlephOne
         public short[] firing_torsos = new short[PLAYER_TORSO_SHAPE_COUNT]; /* NONE, ..., double pistols */
     }
 
+    [NoAutoStaticsCleanup]
     public static class player
     {
         /* ---------- constants (player.h) */

@@ -1,0 +1,284 @@
+/* The screen's layout: the header, the three columns between it and the manipulation bar, and the overlays */
+
+.fp-slot {
+    flex-shrink: 0;
+}
+
+/* A slot whose panel takes the rest of its column */
+.fp-slot--fill {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+/* Panels fill the slots they're loaded into, except where the slot sizes to its panel */
+.fp-slot--fill > .fp-panel,
+.fp-header-slot > .fp-panel,
+.fp-menu-slot > .fp-panel,
+.fp-menu__content > .fp-panel {
+    flex-grow: 1;
+}
+
+/* ---------- Header ---------- */
+
+.fp-header-slot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: var(--fp-control-height);
+}
+
+.fp-header {
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: stretch;
+}
+
+.fp-header__menu {
+    width: 100px;
+}
+
+.fp-header__modes {
+    flex-shrink: 0;
+}
+
+.fp-header__mode {
+    width: 100px;
+    margin-right: 5px;
+}
+
+.fp-header__mode--last {
+    margin-right: 0;
+}
+
+.fp-header__actions {
+    flex-direction: row;
+    flex-shrink: 0;
+}
+
+.fp-header__action {
+    width: 100px;
+    margin-left: 5px;
+}
+
+/* ---------- Columns ---------- */
+
+.fp-frame {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 65px;
+    bottom: 40px;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.fp-column {
+    flex-shrink: 0;
+}
+
+.fp-column--left {
+    width: 300px;
+}
+
+.fp-column--right {
+    width: 250px;
+}
+
+.fp-flexible-space {
+    flex-grow: 1;
+    min-width: 10px;
+}
+
+/* Its panels are loaded at runtime, so it's hidden until they are (it would be an empty box otherwise) */
+.fp-mode-settings {
+    flex-shrink: 0;
+    display: none;
+}
+
+.fp-mode-settings--loaded {
+    display: flex;
+}
+
+/* The inspector column's box, and its visualization options above it */
+.fp-inspector-column {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+.fp-visualization {
+    flex-shrink: 0;
+}
+
+.fp-visualization__options {
+    flex-shrink: 0;
+}
+
+.fp-visualization__everything {
+    height: var(--fp-short-control-height);
+}
+
+.fp-visualization__everything--in-grid {
+    width: 100%;
+    height: 35px;
+    padding-bottom: 5px;
+}
+
+.fp-visualization__grid #contentContainer {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.fp-visualization__type {
+    width: 50%;
+    height: var(--fp-short-control-height);
+    padding-bottom: 5px;
+}
+
+.fp-visualization__type--left {
+    padding-right: 2.5px;
+}
+
+.fp-visualization__type--right {
+    padding-left: 2.5px;
+}
+
+/* Tool modes and view options, in the right column's first box */
+.fp-tool-modes {
+    height: var(--fp-control-height);
+}
+
+.fp-tool-modes__mode {
+    flex-grow: 1;
+    flex-basis: 0;
+    margin-right: 5px;
+}
+
+.fp-tool-modes__mode--last {
+    margin-right: 0;
+}
+
+.fp-view-option {
+    height: var(--fp-short-control-height);
+    margin-bottom: 5px;
+    flex-shrink: 0;
+}
+
+.fp-view-option--last {
+    margin-bottom: 0;
+}
+
+.fp-separator--spaced {
+    margin: 5px 0;
+}
+
+/* ---------- Manipulation bar ---------- */
+
+.fp-manipulation-slot {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--fp-control-height);
+    align-items: center;
+}
+
+.fp-manipulation {
+    flex-direction: row;
+    height: var(--fp-control-height);
+}
+
+.fp-manipulation > * {
+    margin-right: 10px;
+}
+
+.fp-manipulation > .fp-manipulation--last {
+    margin-right: 0;
+}
+
+.fp-manipulation__frame {
+    width: 140px;
+}
+
+.fp-manipulation__axis {
+    width: 50px;
+}
+
+.fp-manipulation__snap {
+    width: 100px;
+}
+
+.fp-text-16 .unity-toggle__text {
+    font-size: 16px;
+}
+
+.fp-text-20 .unity-toggle__text {
+    font-size: 20px;
+}
+
+/* ---------- Level name ---------- */
+
+.fp-level-name {
+    position: absolute;
+    right: 10px;
+    bottom: 7px;
+    margin: 0;
+    padding: 0;
+    -unity-text-align: lower-right;
+    white-space: nowrap;
+}
+
+/* ---------- Overlays ---------- */
+
+/* Faded in while something (such as loading or a file browser) blocks input */
+.fp-input-blocker {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-width: 20px;
+    border-color: var(--fp-blocker-border);
+    opacity: 0;
+    display: none;
+}
+
+.fp-input-blocker__fill {
+    flex-grow: 1;
+    background-color: var(--fp-blocker-fill);
+}
+
+.fp-dialog-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.fp-dialog {
+    width: 300px;
+    padding-bottom: 5px;
+}
+
+.fp-dialog > * {
+    margin-bottom: 5px;
+}
+
+.fp-dialog__header {
+    height: 30px;
+    margin: 0 0 5px 0;
+    background-color: var(--fp-control);
+    color: var(--fp-control-text);
+    font-size: 18px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.fp-dialog__option {
+    height: var(--fp-short-control-height);
+    margin: 0 5px 5px 5px;
+}

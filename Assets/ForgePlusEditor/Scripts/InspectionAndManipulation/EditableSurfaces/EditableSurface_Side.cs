@@ -30,15 +30,15 @@ namespace ForgePlus.Entities.Geometry
             public RuntimeSurfaceGeometry DestinationSurface;
         }
 
-        private static Dialog_ObjectSelector SideDestinationSelectionDialog = null;
-
         public LevelEntity_Side ParentSide = null;
         public LevelEntity_Side.DataSources DataSource;
 
         // TODO: Get rid of these and just attain them on the fly instead of preloading
         //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
         public ushort surfaceShapeDescriptor = cstypes.UNONE;
+        [System.NonSerialized]
         public LevelEntity_Light RuntimeLight = null;
+        [System.NonSerialized]
         public LevelEntity_Media Media = null;
         public LevelEntity_Platform Platform = null;
 
@@ -81,7 +81,7 @@ namespace ForgePlus.Entities.Geometry
                         }
                     }
                     else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
-                             Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+                             ForgePlusInput.Editing.AlignToSelection.IsPressed())
                     {
                         var selectedSourceObject = SelectionManager.Instance.SelectedObject;
                         var selectedSourceSide = (selectedSourceObject is LevelEntity_Side) ? selectedSourceObject as LevelEntity_Side : null;
@@ -181,7 +181,7 @@ namespace ForgePlus.Entities.Geometry
 
                         if (!surfaceShapeDescriptor.IsEmptyShapeDescriptor())
                         {
-                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor, invokeToggleEvents: false);
+                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor);
                         }
                     }
 
@@ -215,7 +215,7 @@ namespace ForgePlus.Entities.Geometry
                     else
                     {
                         SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
+                        PaletteManager.Instance.SelectSwatchForLight(RuntimeLight);
                     }
 
                     break;
@@ -223,7 +223,7 @@ namespace ForgePlus.Entities.Geometry
                     if (Media != null)
                     {
                         SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(Media, invokeToggleEvents: false);
+                        PaletteManager.Instance.SelectSwatchForMedia(Media);
                     }
 
                     break;
@@ -253,7 +253,7 @@ namespace ForgePlus.Entities.Geometry
                 var destinationDataSource = DataSource;
 
                 if (destinationIsLayered &&
-                    (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+                    ForgePlusInput.Editing.TargetOuterLayer.IsPressed())
                 {
                     destinationDataSource = LevelEntity_Side.DataSources.Transparent;
 
@@ -287,7 +287,7 @@ namespace ForgePlus.Entities.Geometry
                                                surfaceWorldNormal,
                                                textureWorldUp);
 
-                if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+                if (ForgePlusInput.Editing.AlignContiguous.IsPressed())
                 {
                     alignmentGroup.Clear();
 
@@ -384,7 +384,7 @@ namespace ForgePlus.Entities.Geometry
                         var newY = (short)(direction.y * GeometryUtilities.UnitsPerTextureOffetNudge);
 
                         if (destinationIsLayered &&
-                            (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt)))
+                            ForgePlusInput.Editing.TargetOuterLayer.IsPressed())
                         {
                             destinationDataSource = LevelEntity_Side.DataSources.Transparent;
                         }
@@ -422,13 +422,13 @@ namespace ForgePlus.Entities.Geometry
             }
         }
 
+        private static string DataSourceDialogTitle(bool isDestination)
+        {
+            return isDestination ? "Select Destination..." : "Select Source...";
+        }
+
         private async Task<LevelEntity_Side.DataSources?> ShowLayerSourceDialog(bool isDestination)
         {
-            if (!SideDestinationSelectionDialog)
-            {
-                SideDestinationSelectionDialog = Resources.Load<Dialog_ObjectSelector>($"Dialogs/Dialog - Side {(isDestination ? "Destination" : "Source")} Selection");
-            }
-
             var dialogOptions = new List<string>()
                                 {
                                     LevelEntity_Side.DataSources.Primary.ToString(),
@@ -441,7 +441,7 @@ namespace ForgePlus.Entities.Geometry
                                     "Outer"
                                 };
 
-            var result = await DialogManager.Instance.DisplayQueuedDialog(SideDestinationSelectionDialog,
+            var result = await DialogManager.Instance.DisplayQueuedDialog(DataSourceDialogTitle(isDestination),
                                                                           dialogOptions,
                                                                           dialogOptionLabels);
 
@@ -455,12 +455,7 @@ namespace ForgePlus.Entities.Geometry
 
         private async Task<LevelEntity_Side.DataSources?> ShowVariableDataSourceDialog(List<string> dialogOptions, bool isDestination)
         {
-            if (!SideDestinationSelectionDialog)
-            {
-                SideDestinationSelectionDialog = Resources.Load<Dialog_ObjectSelector>($"Dialogs/Dialog - Side {(isDestination ? "Destination" : "Source")} Selection");
-            }
-
-            var result = await DialogManager.Instance.DisplayQueuedDialog(SideDestinationSelectionDialog,
+            var result = await DialogManager.Instance.DisplayQueuedDialog(DataSourceDialogTitle(isDestination),
                                                                           dialogOptions);
 
             if (result == null)

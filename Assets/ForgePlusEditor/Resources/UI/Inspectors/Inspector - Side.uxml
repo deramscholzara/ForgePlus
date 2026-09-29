@@ -1,0 +1,91 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
+    <!-- Bound to Inspector_Side -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Side" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Type">
+            <ui:AttributeOverrides element-name="label" text="Type:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Control Panel" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="ControlPanelType">
+            <ui:AttributeOverrides element-name="label" text="Type:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="ControlPanelPermutation">
+            <ui:AttributeOverrides element-name="label" text="Target ID:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Flags" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="InitiallyActive">
+            <ui:AttributeOverrides element-name="flag" text="Initially Active" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="IsRepairSwitch">
+            <ui:AttributeOverrides element-name="flag" text="Is Repair Switch" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="CanBeDestroyed">
+            <ui:AttributeOverrides element-name="flag" text="Can Be Destroyed" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="LightedMustBeAbove75Percent">
+            <ui:AttributeOverrides element-name="flag" text="Light Must Be &gt; 75%" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ProjectilesOnly">
+            <ui:AttributeOverrides element-name="flag" text="Projectiles Only" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+        <ui:Instance template="Flag" name="IsControlPanel">
+            <ui:AttributeOverrides element-name="flag" text="Is Control Panel" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="IsDestructiveSwitch">
+            <ui:AttributeOverrides element-name="flag" text="Is Destructive Switch" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Dirty">
+            <ui:AttributeOverrides element-name="flag" text="Dirty                  ( ͡° ͜ʖ ͡°)" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Primary Surface" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Secondary Surface" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Transparent Surface" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="TransparentLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Foldout">
+            <ui:Instance template="Row" name="PolygonIndex">
+                <ui:AttributeOverrides element-name="label" text="Polygon ID:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="LineIndex">
+                <ui:AttributeOverrides element-name="label" text="Line ID:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="AmbientDelta">
+                <ui:AttributeOverrides element-name="label" text="Ambient Delta:" />
+            </ui:Instance>
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

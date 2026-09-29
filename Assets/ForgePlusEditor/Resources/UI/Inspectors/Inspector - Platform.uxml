@@ -1,0 +1,136 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- Bound to Inspector_Platform; SimulationActive is the one editable flag -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Platform" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Tag">
+            <ui:AttributeOverrides element-name="label" text="Tag:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Type">
+            <ui:AttributeOverrides element-name="label" text="Type:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Speed">
+            <ui:AttributeOverrides element-name="label" text="Speed:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Delay">
+            <ui:AttributeOverrides element-name="label" text="Delay:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="MaximumHeight">
+            <ui:AttributeOverrides element-name="label" text="Maximum Height:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="MinimumHeight">
+            <ui:AttributeOverrides element-name="label" text="Minimum Height:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Simulation Actions" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="SimulationActive">
+            <ui:AttributeOverrides element-name="flag" text="Active" />
+        </ui:Instance>
+        <ui:Instance template="Button" name="obstruct" class="fp-inspector-action">
+            <ui:AttributeOverrides element-name="control" text="Obstruct Extension" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Flags" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="InitiallyActive">
+            <ui:AttributeOverrides element-name="flag" text="Initially Active" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="InitiallyExtended">
+            <ui:AttributeOverrides element-name="flag" text="Initially Extended" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="IsLocked">
+            <ui:AttributeOverrides element-name="flag" text="Is Locked" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="IsPlayerControllable">
+            <ui:AttributeOverrides element-name="flag" text="Is Player Controllable" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="IsMonsterControllable">
+            <ui:AttributeOverrides element-name="flag" text="Is Monster Controllable" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="CausesDamage">
+            <ui:AttributeOverrides element-name="flag" text="Causes Damage" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ReversesWhenObstructed">
+            <ui:AttributeOverrides element-name="flag" text="Reverses When Obstructed" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="DeactivatesAtEachLevel">
+            <ui:AttributeOverrides element-name="flag" text="Deactivates At Each Level" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="DeactivatesAtInitialLevel">
+            <ui:AttributeOverrides element-name="flag" text="Deactivates At Initial Level" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ActivatesAdjacentOnActivation">
+            <ui:AttributeOverrides element-name="flag" text="Activates Adjacent on Activation" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ActivatesAdjacentOnDeactivation">
+            <ui:AttributeOverrides element-name="flag" text="Activates Adjacent on Deactivation" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="DeactivatesAdjacentOnActivation">
+            <ui:AttributeOverrides element-name="flag" text="Deactivates Adjacent on Activation" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="DeactivatesAdjacentOnDeactivation">
+            <ui:AttributeOverrides element-name="flag" text="Deactivates Adjacent on Deactivation" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ActivatesAdjacentAtEachLevel">
+            <ui:AttributeOverrides element-name="flag" text="Activates Adjacent at Each Level" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="DelaysBeforeActivation">
+            <ui:AttributeOverrides element-name="flag" text="Delays Before Activation" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ActivatesOnlyOnce">
+            <ui:AttributeOverrides element-name="flag" text="Activates Only Once" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ActivatesLight">
+            <ui:AttributeOverrides element-name="flag" text="Activates Light" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="DeactivatesLight">
+            <ui:AttributeOverrides element-name="flag" text="Deactivates Light" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="CannotBeExternallyDeactivated">
+            <ui:AttributeOverrides element-name="flag" text="Can't Be Externally Deactivated" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ContractsSlower">
+            <ui:AttributeOverrides element-name="flag" text="Contracts Slower" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="UsesNativePolygonHeights">
+            <ui:AttributeOverrides element-name="flag" text="Uses Native Polygon Heights" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ExtendsFloorToCeiling">
+            <ui:AttributeOverrides element-name="flag" text="Extends Floor To Ceiling" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ComesFromFloor">
+            <ui:AttributeOverrides element-name="flag" text="Comes From Floor" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ComesFromCeiling">
+            <ui:AttributeOverrides element-name="flag" text="Comes From Ceiling" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="DoesNotActivateParent">
+            <ui:AttributeOverrides element-name="flag" text="Does Not Activate Parent" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="IsSecret">
+            <ui:AttributeOverrides element-name="flag" text="Is Secret" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="IsDoor">
+            <ui:AttributeOverrides element-name="flag" text="Is Door" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Foldout">
+            <ui:Instance template="Row" name="PolygonIndex">
+                <ui:AttributeOverrides element-name="label" text="Polygon Index:" />
+            </ui:Instance>
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

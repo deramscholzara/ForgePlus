@@ -3,10 +3,12 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace SFB {
 
+    [NoAutoStaticsCleanup]
     public class StandaloneFileBrowserLinux : IStandaloneFileBrowser {
         
         private static Action<string[]> _openFileCb;

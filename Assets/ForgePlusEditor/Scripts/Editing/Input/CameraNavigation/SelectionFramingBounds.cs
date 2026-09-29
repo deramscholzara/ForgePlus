@@ -3,11 +3,13 @@ using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace ForgePlus.CameraNavigation
 {
     // The world-space bounds that framing fits into the camera's view
+    [NoAutoStaticsCleanup]
     public static class SelectionFramingBounds
     {
         // Selections with no size (such as a point) are framed as if they were this big (in meters)
@@ -31,7 +33,7 @@ namespace ForgePlus.CameraNavigation
             return hasBounds;
         }
 
-        private static bool TryGetBounds(ISelectable selectable, out Bounds bounds)
+        public static bool TryGetBounds(ISelectable selectable, out Bounds bounds)
         {
             bounds = default;
             var hasBounds = false;

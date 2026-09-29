@@ -55,7 +55,7 @@ namespace ForgePlus.DataFileIO
             base.UnloadFile();
         }
 
-        public async void OpenLevel(int levelIndex = 0)
+        public void OpenLevel(int levelIndex = 0)
         {
             UIBlocking.Instance.Block();
 
@@ -70,7 +70,7 @@ namespace ForgePlus.DataFileIO
 
             CloseLevel();
 
-            await data.OpenLevel(levelIndex);
+            data.OpenLevel(levelIndex);
 
             OnLevelOpened_Sender?.Invoke(LevelEntity_Level.Instance.Level.GetLevelName());
 

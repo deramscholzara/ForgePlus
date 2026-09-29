@@ -1,38 +1,31 @@
-﻿using TMPro;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+﻿using ForgePlus.UI;
+using UnityEngine.InputSystem;
 
 namespace ForgePlus.ApplicationGeneral
 {
+    // Reads ForgePlusInput's actions, except while a text field has focus (when the keys are for typing)
     public static class Hotkeys
     {
-        public static bool GetKey(KeyCode key)
+        public static bool IsPressed(InputAction action)
         {
-            return Input.GetKey(key) && !IsTypingInInputField();
+            return action.IsPressed() && !IsTypingInInputField();
         }
 
-        public static bool GetKeyDown(KeyCode key)
+        public static bool WasPressed(InputAction action)
         {
-            return Input.GetKeyDown(key) && !IsTypingInInputField();
+            return action.WasPressedThisFrame() && !IsTypingInInputField();
         }
 
-        public static bool IsTypingInInputField()
+        public static float ReadAxis(InputAction action)
         {
-            var selectedGameObject = EventSystem.current ? EventSystem.current.currentSelectedGameObject : null;
-            if (!selectedGameObject)
-            {
-                return false;
-            }
+            return IsTypingInInputField() ? 0f : action.ReadValue<float>();
+        }
 
-            var tmpInputField = selectedGameObject.GetComponent<TMP_InputField>();
-            if (tmpInputField && tmpInputField.isFocused)
-            {
-                return true;
-            }
+        private static bool IsTypingInInputField()
+        {
+            var ui = ForgePlusUI.Instance;
 
-            var inputField = selectedGameObject.GetComponent<InputField>();
-            return inputField && inputField.isFocused;
+            return ui && ui.IsEditingText;
         }
     }
 }

@@ -4,7 +4,6 @@ using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Common;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using AlephOne;
 using ForgePlus.Extensions;
@@ -66,9 +65,7 @@ namespace RuntimeCore.Entities.Geometry
 
         public void Inspect()
         {
-            var inspectorPrefab = Resources.Load<Inspector_Media>("Inspectors/Inspector - Media");
-            var inspector = Object.Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = new Inspector_Media(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
 
@@ -127,7 +124,7 @@ namespace RuntimeCore.Entities.Geometry
 
                 CurrentHeight = currentHeight;
 
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
             }
         }
 

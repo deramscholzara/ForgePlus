@@ -7,6 +7,7 @@ using RuntimeCore.Entities.MapObjects;
 using RuntimeCore.Materials;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -23,8 +24,6 @@ namespace ForgePlus.DataFileIO
             Secondary,
             Transparent,
         }
-
-        private readonly TimeSpan chunkLoadMaxTime = TimeSpan.FromSeconds(1.0 / 20); // aim for ~20 fps
 
         public int LevelIndex { get; private set; }
 
@@ -79,7 +78,7 @@ namespace ForgePlus.DataFileIO
             LevelIndex = 0;
         }
 
-        public async Task OpenLevel()
+        public void OpenLevel()
         {
             if (runtimeLevel)
             {
@@ -93,14 +92,22 @@ namespace ForgePlus.DataFileIO
 
                 LoadData();
 
-                Debug.Log($"--- LevelLoad: Loaded level data in timespan: {DateTime.Now - loadDataStartTime}");
+                var levelName = level.GetLevelName();
+                if (string.IsNullOrWhiteSpace(levelName))
+                {
+                    levelName = "[unnamed]";
+                }
+
+                Debug.Log($"--- LevelLoad: Loaded level data in timespan: {DateTime.Now - loadDataStartTime}\n--- Level Name: {levelName}");
             }
 
-            PhysicsLoading.Instance.SetLevel(level);
+            // Pure data work that the build doesn't need right away runs on worker threads alongside it
+            var levelPhysics = PhysicsLoading.Instance.BuildLevelModelAsync(level);
+            var endpointLines = Task.Run(() => level.BuildEndpointLines());
 
             var buildStartTime = DateTime.Now;
 
-            await BuildLevel();
+            BuildLevel(levelPhysics, endpointLines);
 
             Debug.Log($"--- LevelBuild: Built full level from data in total timespan: {DateTime.Now - buildStartTime}");
 
@@ -124,21 +131,11 @@ namespace ForgePlus.DataFileIO
             PhysicsLoading.Instance.ClearLevel();
         }
 
-        private async Task<DateTime> ChunkLoadYield(DateTime chunkLoadStartTime)
+        // Results are waited for directly (rather than awaited), so the build never gives up a frame
+        private void BuildLevel(Task<LoadedPhysicsModel> levelPhysics, Task<List<short>[]> endpointLines)
         {
-            if (DateTime.Now - chunkLoadStartTime >= chunkLoadMaxTime)
-            {
-                await Task.Yield();
-
-                chunkLoadStartTime = DateTime.Now;
-            }
-
-            return chunkLoadStartTime;
-        }
-
-        private async Task BuildLevel()
-        {
-#if !UNITY_EDITOR
+            // CoreCLR players can't change the garbage collector's mode
+#if !UNITY_EDITOR && !ENABLE_CORECLR
             GarbageCollector.GCMode = GarbageCollector.Mode.Disabled;
 #endif
 
@@ -157,7 +154,6 @@ namespace ForgePlus.DataFileIO
             runtimeLevel.FloorPlatforms = new Dictionary<short, LevelEntity_Platform>();
             runtimeLevel.MapObjects = new Dictionary<short, LevelEntity_MapObject>();
             runtimeLevel.Annotations = new Dictionary<short, LevelEntity_Annotation>();
-            runtimeLevel.EndpointLines = level.BuildEndpointLines();
 
             runtimeLevel.EditableSurface_Polygons = new List<EditableSurface_Polygon>();
             runtimeLevel.EditableSurface_Sides = new List<EditableSurface_Side>();
@@ -168,8 +164,6 @@ namespace ForgePlus.DataFileIO
 
             Debug.Log($"--- LevelBuild: Initialized Level in timespan: {DateTime.Now - initializeLevelStartTime}");
 
-            await Task.Yield();
-
             #region Initialization_Textures
 
             var buildTexturesStartTime = DateTime.Now;
@@ -177,10 +171,13 @@ namespace ForgePlus.DataFileIO
 #if !NO_EDITING
             // Initialize Textures here so they in proper index order for the texturing interface
             // Aleph One uses the landscape collection selected by the level's song index (map.cpp: mark_map_collections)
-            var landscapeShapeDescriptor = AlephOneExtensions.BuildShapeDescriptor(shape_descriptors._collection_landscape1 + level.static_world.song_index, shape: 0);
-            MaterialGeneration_Geometry.GetTexture(landscapeShapeDescriptor, returnPlaceholderIfNotFound: false);
+            var shapeDescriptors = new List<ushort>
+            {
+                AlephOneExtensions.BuildShapeDescriptor(shape_descriptors._collection_landscape1 + level.static_world.song_index, shape: 0),
+            };
 
-            // ...and the wall collections of its environment (map.cpp: mark_environment_collections)
+            // ...and the wall collections of its environment (map.cpp: mark_environment_collections),
+            // each up to its first missing shape
             var environmentCode = level.static_world.environment_code;
             if (environmentCode >= 0 && environmentCode < map.NUMBER_OF_ENVIRONMENTS)
             {
@@ -194,21 +191,22 @@ namespace ForgePlus.DataFileIO
 
                     for (var shape = 0; shape < shape_descriptors.MAXIMUM_SHAPES_PER_COLLECTION; shape++)
                     {
-                        var wallShapeDescriptor = AlephOneExtensions.BuildShapeDescriptor(collection, shape);
-                        if (!MaterialGeneration_Geometry.GetTexture(wallShapeDescriptor, returnPlaceholderIfNotFound: false))
-                        {
-                            break;
-                        }
+                        shapeDescriptors.Add(AlephOneExtensions.BuildShapeDescriptor(collection, shape));
                     }
                 }
             }
+
+            MaterialGeneration_Geometry.LoadTextures(shapeDescriptors);
 #endif
 
             Debug.Log($"--- LevelBuild: Built Textures in timespan: {DateTime.Now - buildTexturesStartTime}");
 
             #endregion Initialization_Textures
 
-            await Task.Yield();
+            // The objects' sprites need the level's physics, and their pixel work then runs on worker threads
+            // while the lights, media, polygons and sides are built
+            PhysicsLoading.Instance.ApplyLevelModel(level, levelPhysics.GetAwaiter().GetResult());
+            MaterialGeneration_Sprites.PrepareSprites(level.SavedObjectList.Select(MapObjectSpriteDefinitions.GetDefinition));
 
             #region Initialization_Lights
 
@@ -224,8 +222,6 @@ namespace ForgePlus.DataFileIO
 
             #endregion Initialization_Lights
 
-            await Task.Yield();
-
             #region Initialization_Medias
 
             var buildMediasStartTime = DateTime.Now;
@@ -240,13 +236,9 @@ namespace ForgePlus.DataFileIO
 
             #endregion Initialization_Medias
 
-            await Task.Yield();
-
 #if USE_TEXTURE_ARRAYS
             MaterialGeneration_Geometry.TextureArraysArePopulating = true;
 #endif
-
-            var chunkLoadStartTime = DateTime.Now;
 
             #region Polygons_And_Media
 
@@ -265,15 +257,11 @@ namespace ForgePlus.DataFileIO
                 var runtimePolygon = polygonRootGO.AddComponent<LevelEntity_Polygon>();
                 runtimeLevel.Polygons[polygonIndex] = runtimePolygon;
                 runtimePolygon.InitializeEntity(runtimeLevel, polygonIndex, polygon);
-
-                chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
 
             Debug.Log($"--- LevelBuild: Built Polygons, Medias, & Platforms in timespan: {DateTime.Now - buildPolygonsStartTime}");
 
             #endregion Polygons_And_Media
-
-            await Task.Yield();
 
             #region Lines_And_Sides
 
@@ -296,22 +284,16 @@ namespace ForgePlus.DataFileIO
                 runtimeLine.ParentLevel = runtimeLevel;
 
                 runtimeLine.GenerateSurfaces();
-
-                chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
 
             Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
 
             #endregion Lines_And_Sides
 
-            await Task.Yield();
-
 #if USE_TEXTURE_ARRAYS
             MaterialGeneration_Geometry.ApplyTextureArrays();
 
             MaterialGeneration_Geometry.TextureArraysArePopulating = false;
-
-            await Task.Yield();
 #endif
 
             #region Objects_And_Placements
@@ -335,15 +317,11 @@ namespace ForgePlus.DataFileIO
                 runtimeMapObject.ParentLevel = runtimeLevel;
 
                 runtimeMapObject.GenerateObject();
-
-                chunkLoadStartTime = await ChunkLoadYield(chunkLoadStartTime);
             }
 
             Debug.Log($"--- LevelBuild: Built Objects in timespan: {DateTime.Now - buildObjectsStartTime}");
 
             #endregion Objects_And_Placements
-
-            await Task.Yield();
 
             #region Annotations
 
@@ -370,20 +348,21 @@ namespace ForgePlus.DataFileIO
 
             #endregion Annotations
 
-            await Task.Yield();
+            // Only editing uses these, so they're the last thing the build waits for
+            runtimeLevel.EndpointLines = endpointLines.GetAwaiter().GetResult();
 
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && !ENABLE_CORECLR
             GarbageCollector.GCMode = GarbageCollector.Mode.Enabled;
 #endif
         }
 
         private async void LevelInitializationDebugTimer(DateTime startTime)
         {
-            // Yield 2 times, to ensure we hit the frame after initialization occurred
+            // Wait a few frames, to ensure we hit the frame after initialization occurred
             // (meaning Awake(), Start(), OnEnabled(), etc. all ran)
-            await Task.Yield();
-            await Task.Yield();
-            await Task.Yield();
+            await Awaitable.NextFrameAsync();
+            await Awaitable.NextFrameAsync();
+            await Awaitable.NextFrameAsync();
 
             Debug.Log($"--- LevelLoad: Initialized level in timespan: {DateTime.Now - startTime}");
         }

@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- The current mode's tool modes (only those it can use), added by ToolModesPanel -->
+    <ui:VisualElement picking-mode="Ignore">
+        <ui:RadioButtonGroup name="tool-modes" class="fp-radio-group fp-radio-row fp-tool-modes" />
+        <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
+    </ui:VisualElement>
+</ui:UXML>

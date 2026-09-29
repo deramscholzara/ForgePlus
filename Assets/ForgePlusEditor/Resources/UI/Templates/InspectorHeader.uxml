@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Label name="label" text="Header" class="fp-inspector-header fp-template" />
+</ui:UXML>

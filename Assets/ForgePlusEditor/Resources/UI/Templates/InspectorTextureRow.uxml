@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- An instance is named after the inspector property its texture shows -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Texture:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area">
+            <ui:Image name="texture" class="fp-inspector-texture" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

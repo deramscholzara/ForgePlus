@@ -1,12 +1,17 @@
 ﻿using ForgePlus.DataFileIO;
+using ForgePlus.Jobs;
 using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Entities.MapObjects;
 using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using AlephOne;
 
 namespace RuntimeCore.Materials
 {
+    // Resets its own statics (see ResetStatics), since pending sprites hold native memory that must be disposed
+    [NoAutoStaticsCleanup]
     public class MaterialGeneration_Sprites
     {
         public class DirectionalSprite
@@ -29,8 +34,8 @@ namespace RuntimeCore.Materials
             public int Width;
             public int Height;
 
-            // Bottom row first, with mirroring applied
-            public Color32[] Pixels;
+            // Bottom row first, with mirroring applied (written by a scheduled conversion job)
+            public NativeArray<Color32> Pixels;
 
             // Relative to the sprite's origin, in world unit increments.
             // Aleph One doesn't flip these for mirrored shapes (RenderPlaceObjs.cpp).
@@ -66,6 +71,20 @@ namespace RuntimeCore.Materials
             public float PixelsPerWorldUnit;
         }
 
+        // A sprite whose pixel jobs are scheduled (or that failed), waiting for Finish to make its material
+        private class PendingSprite
+        {
+            public SpriteDefinition Definition;
+            public string FailureMessage;
+
+            public int ViewCount;
+            public SpriteLayout Layout;
+            public int CanvasWidth;
+            public int CanvasHeight;
+            public NativeArray<Color32>[] Canvases;
+            public PixelJobs.PixelBatch Batch;
+        }
+
         private const string SpriteMaterialResourcePath = "Materials/Sprite";
         private const int MaximumCanvasDimension = 2048;
 
@@ -73,6 +92,7 @@ namespace RuntimeCore.Materials
         private static readonly int ViewCountPropertyId = Shader.PropertyToID("_ViewCount");
 
         private static readonly Dictionary<string, DirectionalSprite> SpritesByKey = new Dictionary<string, DirectionalSprite>();
+        private static readonly Dictionary<string, PendingSprite> PendingSprites = new Dictionary<string, PendingSprite>();
 
         private static Material spriteMaterialTemplate;
 
@@ -88,7 +108,18 @@ namespace RuntimeCore.Materials
                 return sprite;
             }
 
-            sprite = BuildSprite(definition);
+            if (!PendingSprites.TryGetValue(definition.Key, out var pendingSprite))
+            {
+                if (!ShapesLoading.Instance.TryLoadFile())
+                {
+                    return null;
+                }
+
+                pendingSprite = PrepareSprite(definition);
+            }
+
+            PendingSprites.Remove(definition.Key);
+            sprite = FinishSprite(pendingSprite);
 
             // Failures are cached too, so missing shapes aren't rebuilt for every object that uses them
             SpritesByKey[definition.Key] = sprite;
@@ -96,8 +127,32 @@ namespace RuntimeCore.Materials
             return sprite;
         }
 
+        // Schedules the pixel work for these sprites on worker threads, so it runs while other things load.
+        // Each is finished (its texture and material made) when GetSprite first asks for it.
+        public static void PrepareSprites(IEnumerable<SpriteDefinition> definitions)
+        {
+            if (!ShapesLoading.Instance.TryLoadFile())
+            {
+                return;
+            }
+
+            foreach (var definition in definitions)
+            {
+                if (definition == null ||
+                    SpritesByKey.ContainsKey(definition.Key) ||
+                    PendingSprites.ContainsKey(definition.Key))
+                {
+                    continue;
+                }
+
+                PendingSprites[definition.Key] = PrepareSprite(definition);
+            }
+        }
+
         public static void ClearCollection()
         {
+            DisposePendingSprites();
+
             foreach (var sprite in SpritesByKey.Values)
             {
                 if (sprite == null)
@@ -112,30 +167,80 @@ namespace RuntimeCore.Materials
             SpritesByKey.Clear();
         }
 
-        private static DirectionalSprite BuildSprite(SpriteDefinition definition)
+        // For Fast Enter Play Mode, where statics survive between Play sessions
+        // (the previous session's sprites are left for Unity to unload)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
         {
-            if (!ShapesLoading.Instance.TryLoadFile())
+            DisposePendingSprites();
+
+            SpritesByKey.Clear();
+            spriteMaterialTemplate = null;
+        }
+
+        private static void DisposePendingSprites()
+        {
+            foreach (var pendingSprite in PendingSprites.Values)
             {
-                return null;
+                pendingSprite.Batch?.Dispose();
             }
 
-            var viewCount = GetSpriteViewCount(definition.Layers[0]);
+            PendingSprites.Clear();
+        }
 
-            if (viewCount <= 0)
+        private static PendingSprite PrepareSprite(SpriteDefinition definition)
+        {
+            var pendingSprite = new PendingSprite
             {
-                Debug.LogWarning($"Sprite \"{definition.Key}\" was not found in the loaded shapes file.");
-                return null;
+                Definition = definition,
+                ViewCount = GetSpriteViewCount(definition.Layers[0]),
+            };
+
+            if (pendingSprite.ViewCount <= 0)
+            {
+                pendingSprite.FailureMessage = $"Sprite \"{definition.Key}\" was not found in the loaded shapes file.";
+                return pendingSprite;
             }
 
-            var layout = LayOutSprite(definition.Layers, viewCount);
+            pendingSprite.Batch = new PixelJobs.PixelBatch();
+            pendingSprite.Layout = LayOutSprite(definition.Layers, pendingSprite.ViewCount, pendingSprite.Batch);
 
+            var layout = pendingSprite.Layout;
             if (layout.PixelsPerWorldUnit <= 0f || layout.Right <= layout.Left || layout.Top <= layout.Bottom)
             {
-                Debug.LogWarning($"Sprite \"{definition.Key}\" has no drawable frames in the loaded shapes file.");
+                pendingSprite.FailureMessage = $"Sprite \"{definition.Key}\" has no drawable frames in the loaded shapes file.";
+                pendingSprite.Batch.Dispose();
+                pendingSprite.Batch = null;
+                return pendingSprite;
+            }
+
+            ScheduleViews(pendingSprite);
+
+            return pendingSprite;
+        }
+
+        private static DirectionalSprite FinishSprite(PendingSprite pendingSprite)
+        {
+            if (pendingSprite.FailureMessage != null)
+            {
+                Debug.LogWarning(pendingSprite.FailureMessage);
                 return null;
             }
 
-            var views = ComposeViews(layout, viewCount, definition.Key);
+            var definition = pendingSprite.Definition;
+            var layout = pendingSprite.Layout;
+
+            Texture2DArray views;
+            try
+            {
+                pendingSprite.Batch.Complete();
+
+                views = CreateViews(pendingSprite);
+            }
+            finally
+            {
+                pendingSprite.Batch.Dispose();
+            }
 
             var worldToMeters = definition.Scale / GeometryUtilities.WorldUnitIncrementsPerMeter;
             var bounds = Rect.MinMaxRect(
@@ -144,10 +249,10 @@ namespace RuntimeCore.Materials
                 layout.Right * worldToMeters,
                 layout.Top * worldToMeters);
 
-            return new DirectionalSprite(CreateMaterial(views, viewCount), bounds);
+            return new DirectionalSprite(CreateMaterial(views, pendingSprite.ViewCount), bounds);
         }
 
-        private static SpriteLayout LayOutSprite(SpriteLayer[] layers, int viewCount)
+        private static SpriteLayout LayOutSprite(SpriteLayer[] layers, int viewCount, PixelJobs.PixelBatch batch)
         {
             var layout = new SpriteLayout();
             layout.PlacedFramesByView = new List<PlacedFrame>[viewCount];
@@ -163,7 +268,7 @@ namespace RuntimeCore.Materials
                 {
                     var layerView = GetSpriteViewCount(layer) == viewCount ? view : 0;
 
-                    if (!TryGetSpriteFrame(layer, layerView, frame: 0, out var frame))
+                    if (!TryGetSpriteFrame(layer, layerView, frame: 0, batch, out var frame))
                     {
                         continue;
                     }
@@ -208,54 +313,52 @@ namespace RuntimeCore.Materials
             return layout;
         }
 
-        private static Texture2DArray ComposeViews(SpriteLayout layout, int viewCount, string key)
+        private static void ScheduleViews(PendingSprite pendingSprite)
         {
+            var layout = pendingSprite.Layout;
             var canvasWidth = Mathf.Clamp(Mathf.CeilToInt((layout.Right - layout.Left) * layout.PixelsPerWorldUnit), 1, MaximumCanvasDimension);
             var canvasHeight = Mathf.Clamp(Mathf.CeilToInt((layout.Top - layout.Bottom) * layout.PixelsPerWorldUnit), 1, MaximumCanvasDimension);
 
-            var views = new Texture2DArray(canvasWidth, canvasHeight, viewCount, TextureFormat.RGBA32, mipChain: false)
+            pendingSprite.CanvasWidth = canvasWidth;
+            pendingSprite.CanvasHeight = canvasHeight;
+            pendingSprite.Canvases = new NativeArray<Color32>[pendingSprite.ViewCount];
+
+            for (var view = 0; view < pendingSprite.ViewCount; view++)
             {
-                name = $"Sprite Views ({key})",
+                var placedFrames = layout.PlacedFramesByView[view];
+                var canvasFrames = new PixelJobs.CanvasFrame[placedFrames.Count];
+
+                for (var i = 0; i < placedFrames.Count; i++)
+                {
+                    var placedFrame = placedFrames[i];
+                    var frame = placedFrame.Frame;
+
+                    canvasFrames[i] = new PixelJobs.CanvasFrame
+                    {
+                        Pixels = frame.Pixels,
+                        Width = frame.Width,
+                        Height = frame.Height,
+                        StartX = Mathf.RoundToInt((frame.WorldLeft + placedFrame.OffsetX - layout.Left) * layout.PixelsPerWorldUnit),
+                        StartY = Mathf.RoundToInt((frame.WorldBottom + placedFrame.OffsetY - layout.Bottom) * layout.PixelsPerWorldUnit),
+                    };
+                }
+
+                pendingSprite.Canvases[view] = pendingSprite.Batch.ScheduleComposite(canvasWidth, canvasHeight, canvasFrames);
+            }
+        }
+
+        private static Texture2DArray CreateViews(PendingSprite pendingSprite)
+        {
+            var views = new Texture2DArray(pendingSprite.CanvasWidth, pendingSprite.CanvasHeight, pendingSprite.ViewCount, TextureFormat.RGBA32, mipChain: false)
+            {
+                name = $"Sprite Views ({pendingSprite.Definition.Key})",
                 filterMode = FilterMode.Point,
                 wrapMode = TextureWrapMode.Clamp,
             };
 
-            for (var view = 0; view < viewCount; view++)
+            for (var view = 0; view < pendingSprite.ViewCount; view++)
             {
-                var canvas = new Color32[canvasWidth * canvasHeight];
-
-                foreach (var placedFrame in layout.PlacedFramesByView[view])
-                {
-                    var frame = placedFrame.Frame;
-                    var startX = Mathf.RoundToInt((frame.WorldLeft + placedFrame.OffsetX - layout.Left) * layout.PixelsPerWorldUnit);
-                    var startY = Mathf.RoundToInt((frame.WorldBottom + placedFrame.OffsetY - layout.Bottom) * layout.PixelsPerWorldUnit);
-
-                    for (var y = 0; y < frame.Height; y++)
-                    {
-                        var canvasY = startY + y;
-                        if (canvasY < 0 || canvasY >= canvasHeight)
-                        {
-                            continue;
-                        }
-
-                        for (var x = 0; x < frame.Width; x++)
-                        {
-                            var canvasX = startX + x;
-                            if (canvasX < 0 || canvasX >= canvasWidth)
-                            {
-                                continue;
-                            }
-
-                            var pixel = frame.Pixels[x + y * frame.Width];
-                            if (pixel.a > 0)
-                            {
-                                canvas[canvasX + canvasY * canvasWidth] = pixel;
-                            }
-                        }
-                    }
-                }
-
-                views.SetPixels32(canvas, view);
+                views.SetPixelData(pendingSprite.Canvases[view], mipLevel: 0, element: view);
             }
 
             views.Apply(updateMipmaps: false, makeNoLongerReadable: true);
@@ -294,7 +397,7 @@ namespace RuntimeCore.Materials
         }
 
         // Resolved as Aleph One does (map.cpp: get_object_shape_and_transfer_mode)
-        private static bool TryGetSpriteFrame(SpriteLayer layer, int view, int frame, out SpriteFrame spriteFrame)
+        private static bool TryGetSpriteFrame(SpriteLayer layer, int view, int frame, PixelJobs.PixelBatch batch, out SpriteFrame spriteFrame)
         {
             spriteFrame = default;
 
@@ -318,15 +421,18 @@ namespace RuntimeCore.Materials
             }
 
             var information = shapes.extended_get_shape_information(layer.Collection, lowLevelShapeIndex);
-            var bitmap = IndexedShapeBitmap.Decode(layer.Collection, layer.CLUT, lowLevelShape.bitmap_index, information.flags);
-            if (bitmap == null)
+            using (var bitmap = IndexedShapeBitmap.Decode(layer.Collection, layer.CLUT, lowLevelShape.bitmap_index, information.flags))
             {
-                return false;
+                if (bitmap == null)
+                {
+                    return false;
+                }
+
+                spriteFrame.Width = bitmap.Width;
+                spriteFrame.Height = bitmap.Height;
+                spriteFrame.Pixels = batch.ScheduleColorConversion(bitmap, bitmap.GetPalette32());
             }
 
-            spriteFrame.Width = bitmap.Width;
-            spriteFrame.Height = bitmap.Height;
-            spriteFrame.Pixels = bitmap.GetPixels32(bitmap.GetPalette32());
             spriteFrame.WorldLeft = information.world_left;
             spriteFrame.WorldRight = information.world_right;
             spriteFrame.WorldTop = information.world_top;

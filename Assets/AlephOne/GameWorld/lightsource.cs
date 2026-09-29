@@ -4,6 +4,7 @@
 // lighting functions, get_light_intensity) and switching them (set_light_status,
 // set_tagged_light_statuses, get_light_status).
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 using static AlephOne.csmacros;
 using static AlephOne.cstypes;
@@ -131,6 +132,7 @@ namespace AlephOne
         public short[] unused = new short[5];
     }
 
+    [NoAutoStaticsCleanup]
     public static class lightsource
     {
         /* ---------- constants */

@@ -1,16 +1,19 @@
-﻿using ForgePlus.Entities.Geometry;
+﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.Entities.Geometry;
 using ForgePlus.Inspection;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
 using System;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
-    public class SelectionManager : SingletonMonoBehaviour<SelectionManager>
+    [AutoStaticsCleanup]
+    public partial class SelectionManager : SingletonMonoBehaviour<SelectionManager>
     {
         // TODO: Add selection subfilters here
 
@@ -18,6 +21,8 @@ namespace ForgePlus.LevelManipulation
         public static int SelectionIndicatorLayer;
 
         public event Action OnClickEmptySpace;
+
+        public event Action OnSelectionChanged;
 
         private readonly List<ISelectable> SelectedObjects = new List<ISelectable>(500);
 
@@ -250,6 +255,8 @@ namespace ForgePlus.LevelManipulation
                     // 3. Inspect selection
                     (selection as IInspectable).Inspect();
                 }
+
+                OnSelectionChanged?.Invoke();
             }
         }
 
@@ -295,6 +302,8 @@ namespace ForgePlus.LevelManipulation
                     // 3. Inspect selection
                     (selection as IInspectable).Inspect();
                 }
+
+                OnSelectionChanged?.Invoke();
             }
         }
 
@@ -313,6 +322,8 @@ namespace ForgePlus.LevelManipulation
 
             // 2. Update actual selection list
             SelectedObjects.Clear();
+
+            OnSelectionChanged?.Invoke();
         }
 
         private void SetSelectability<T>(T selectable, bool enabled) where T : ISelectable
@@ -347,8 +358,7 @@ namespace ForgePlus.LevelManipulation
         private void Update()
         {
             // Handling for when the user clicks on empty space
-            if (Input.GetMouseButtonDown(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            if (ForgePlusInput.Editing.Select.WasPressedThisFrame())
             {
                 if (!EventSystem.current.IsPointerOverGameObject())
                 {
@@ -356,8 +366,7 @@ namespace ForgePlus.LevelManipulation
                 }
             }
 
-            if (Input.GetMouseButtonUp(0) ||
-                (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Ended))
+            if (ForgePlusInput.Editing.Select.WasReleasedThisFrame())
             {
                 if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
                 {

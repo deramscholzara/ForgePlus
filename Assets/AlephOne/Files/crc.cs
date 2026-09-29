@@ -1,8 +1,10 @@
 ﻿// Port of Aleph One: Source_Files/Files/crc.h, crc.cpp
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 
 namespace AlephOne
 {
+    [NoAutoStaticsCleanup]
     public static class crc
     {
         private const int TABLE_SIZE = 256;

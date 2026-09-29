@@ -1,42 +1,110 @@
-﻿using RuntimeCore.Entities.Geometry;
-using RuntimeCore.Materials;
-using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using AlephOne;
+using RuntimeCore.Entities.Geometry;
+using Unity.Properties;
 
 namespace ForgePlus.Inspection
 {
-    public class Inspector_PolygonTextures : Inspector_Base
+    public class Inspector_PolygonTextures : Inspector_Base<LevelEntity_Polygon>
     {
-        public TextMeshProUGUI Value_Id;
-
-        public RawImage Value_Floor_Texture;
-        public TextMeshProUGUI Value_Floor_Offset;
-        public TextMeshProUGUI Value_Floor_TransferMode;
-        public TextMeshProUGUI Value_Floor_LightIndex;
-
-        public RawImage Value_Ceiling_Texture;
-        public TextMeshProUGUI Value_Ceiling_Offset;
-        public TextMeshProUGUI Value_Ceiling_TransferMode;
-        public TextMeshProUGUI Value_Ceiling_LightIndex;
-
-        public override void RefreshValuesInInspector()
+        public Inspector_PolygonTextures(LevelEntity_Polygon polygon) : base(polygon)
         {
-            var polygon = inspectedObject as LevelEntity_Polygon;
+        }
 
-            Value_Id.text = polygon.NativeIndex.ToString();
+        protected override string LayoutPath
+        {
+            get
+            {
+                return "UI/Inspectors/Inspector - Polygon Textures";
+            }
+        }
 
-            var floorTexture = MaterialGeneration_Geometry.GetTexture(polygon.NativeObject.floor_texture);
-            Value_Floor_Texture.texture = floorTexture ? floorTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-            Value_Floor_Offset.text = $"X: {polygon.NativeObject.floor_origin.x}\nY: {polygon.NativeObject.floor_origin.y}";
-            Value_Floor_TransferMode.text = polygon.NativeObject.floor_transfer_mode.ToString();
-            Value_Floor_LightIndex.text = polygon.NativeObject.floor_lightsource_index.ToString();
+        private polygon_data Polygon
+        {
+            get
+            {
+                return Entity.NativeObject;
+            }
+        }
 
-            var ceilingTexture = MaterialGeneration_Geometry.GetTexture(polygon.NativeObject.ceiling_texture);
-            Value_Ceiling_Texture.texture = ceilingTexture ? ceilingTexture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-            Value_Ceiling_Offset.text = $"X: {polygon.NativeObject.ceiling_origin.x}\nY: {polygon.NativeObject.ceiling_origin.y}";
-            Value_Ceiling_TransferMode.text = polygon.NativeObject.ceiling_transfer_mode.ToString();
-            Value_Ceiling_LightIndex.text = polygon.NativeObject.ceiling_lightsource_index.ToString();
+        [CreateProperty]
+        public string Id
+        {
+            get
+            {
+                return Entity.NativeIndex.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public UnityEngine.Texture FloorTexture
+        {
+            get
+            {
+                return TextureOrPlaceholder(Polygon.floor_texture);
+            }
+        }
+
+        [CreateProperty]
+        public string FloorOffset
+        {
+            get
+            {
+                return $"X: {Polygon.floor_origin.x}\nY: {Polygon.floor_origin.y}";
+            }
+        }
+
+        [CreateProperty]
+        public string FloorTransferMode
+        {
+            get
+            {
+                return Polygon.floor_transfer_mode.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string FloorLightIndex
+        {
+            get
+            {
+                return Polygon.floor_lightsource_index.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public UnityEngine.Texture CeilingTexture
+        {
+            get
+            {
+                return TextureOrPlaceholder(Polygon.ceiling_texture);
+            }
+        }
+
+        [CreateProperty]
+        public string CeilingOffset
+        {
+            get
+            {
+                return $"X: {Polygon.ceiling_origin.x}\nY: {Polygon.ceiling_origin.y}";
+            }
+        }
+
+        [CreateProperty]
+        public string CeilingTransferMode
+        {
+            get
+            {
+                return Polygon.ceiling_transfer_mode.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string CeilingLightIndex
+        {
+            get
+            {
+                return Polygon.ceiling_lightsource_index.ToString();
+            }
         }
     }
 }

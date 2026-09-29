@@ -1,13 +1,25 @@
-﻿using AlephOne;
+﻿using System;
+using System.Buffers;
+using System.Buffers.Binary;
+using AlephOne;
 
 namespace ForgePlus.DataFileIO
 {
     // A loaded collection's bitmap, decoded as Aleph One draws it (get_shape_surface), top row first.
     // Palette maps raw indexes to CLUT colors, as update_color_environment does (null where there's none).
-    public sealed class IndexedShapeBitmap
+    // Indexes is pooled, so it can be longer than PixelCount, and is returned to the pool on Dispose.
+    public sealed class IndexedShapeBitmap : IDisposable
     {
         public int Width { get; private set; }
         public int Height { get; private set; }
+
+        public int PixelCount
+        {
+            get
+            {
+                return Width * Height;
+            }
+        }
 
         // [y * Width + x]
         public byte[] Indexes { get; private set; }
@@ -40,7 +52,10 @@ namespace ForgePlus.DataFileIO
 
             var width = (int) bitmap.width;
             var height = (int) bitmap.height;
-            var indexes = new byte[width * height];
+            var indexes = ArrayPool<byte>.Shared.Rent(width * height);
+
+            // Pixels outside a run's first and last are index 0
+            Array.Clear(indexes, 0, width * height);
 
             var columnOrder = (bitmap.flags & textures._COLUMN_ORDER_BIT) != 0;
             var xMirrored = (mirrorFlags & collection_definition._X_MIRRORED_BIT) != 0;
@@ -58,8 +73,8 @@ namespace ForgePlus.DataFileIO
                 if (bitmap.bytes_per_row == cstypes.NONE)
                 {
                     // Big-endian first and last
-                    first = (pixels[read] << 8) | pixels[read + 1];
-                    last = (pixels[read + 2] << 8) | pixels[read + 3];
+                    first = BinaryPrimitives.ReadUInt16BigEndian(pixels.AsSpan(read, 2));
+                    last = BinaryPrimitives.ReadUInt16BigEndian(pixels.AsSpan(read + 2, 2));
                     read += 4;
                 }
                 else
@@ -101,6 +116,15 @@ namespace ForgePlus.DataFileIO
                 Colors = colors,
                 Palette = palette,
             };
+        }
+
+        public void Dispose()
+        {
+            if (Indexes != null)
+            {
+                ArrayPool<byte>.Shared.Return(Indexes);
+                Indexes = null;
+            }
         }
     }
 }

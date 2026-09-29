@@ -1,0 +1,115 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <!-- Bound to Inspector_Level -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Level Info" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Name" class="fp-inspector-row--vertical">
+            <ui:AttributeOverrides element-name="label" text="Name:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Environment">
+            <ui:AttributeOverrides element-name="label" text="Environment:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Landscape">
+            <ui:AttributeOverrides element-name="label" text="Landscape:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Game Type Flags" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="SinglePlayer">
+            <ui:AttributeOverrides element-name="flag" text="Single Player" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Cooperative">
+            <ui:AttributeOverrides element-name="flag" text="Cooperative" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+        <ui:Instance template="Flag" name="Carnage">
+            <ui:AttributeOverrides element-name="flag" text="Carnage" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="KillTheOneWithTheBall">
+            <ui:AttributeOverrides element-name="flag" text="Kill the One w/the Ball" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="MonarchOfTheHill">
+            <ui:AttributeOverrides element-name="flag" text="Monarch of the Hill" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Defense">
+            <ui:AttributeOverrides element-name="flag" text="Defense" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Rugby">
+            <ui:AttributeOverrides element-name="flag" text="Rugby" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="CaptureTheFlag">
+            <ui:AttributeOverrides element-name="flag" text="Capture the Flag" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Environment Flags" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Vacuum">
+            <ui:AttributeOverrides element-name="flag" text="Vacuum" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Magnetic">
+            <ui:AttributeOverrides element-name="flag" text="Magnetic" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Rebellion">
+            <ui:AttributeOverrides element-name="flag" text="Rebellion" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="LowGravity">
+            <ui:AttributeOverrides element-name="flag" text="Low Gravity" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Extermination">
+            <ui:AttributeOverrides element-name="flag" text="Extermination" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Exploration">
+            <ui:AttributeOverrides element-name="flag" text="Exploration" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Retrieval">
+            <ui:AttributeOverrides element-name="flag" text="Retrieval" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Repair">
+            <ui:AttributeOverrides element-name="flag" text="Repair" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Rescue">
+            <ui:AttributeOverrides element-name="flag" text="Rescue" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="M1 Environment Flags" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="TerminalPause">
+            <ui:AttributeOverrides element-name="flag" text="Terminal Pause" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1Rebellion">
+            <ui:AttributeOverrides element-name="flag" text="Rebellion" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1Exploration">
+            <ui:AttributeOverrides element-name="flag" text="Exploration" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1Repair">
+            <ui:AttributeOverrides element-name="flag" text="Repair" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1Rescue">
+            <ui:AttributeOverrides element-name="flag" text="Rescue" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1Glue">
+            <ui:AttributeOverrides element-name="flag" text="Glue" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1Ouch">
+            <ui:AttributeOverrides element-name="flag" text="Ouch" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1HasMusic">
+            <ui:AttributeOverrides element-name="flag" text="Has Music" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1WeaponsStyle">
+            <ui:AttributeOverrides element-name="flag" text="Weapons Style" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="M1ActivationRange">
+            <ui:AttributeOverrides element-name="flag" text="Activation Range" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

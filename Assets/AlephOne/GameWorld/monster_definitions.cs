@@ -1,4 +1,5 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/monster_definitions.h
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csmacros;
 using static AlephOne.cstypes;
 using static AlephOne.effects;
@@ -86,6 +87,7 @@ namespace AlephOne
         }
     }
 
+    [NoAutoStaticsCleanup]
     public static class monster_definitions
     {
         /* ---------- macros */

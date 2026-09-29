@@ -2,11 +2,13 @@
 //
 // Not ported: everything that places, animates or damages scenery in a game, and MML parsing of
 // scenery.
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csmacros;
 using static AlephOne.shape_descriptors;
 
 namespace AlephOne
 {
+    [NoAutoStaticsCleanup]
     public static partial class scenery
     {
         /* ---------- constants */

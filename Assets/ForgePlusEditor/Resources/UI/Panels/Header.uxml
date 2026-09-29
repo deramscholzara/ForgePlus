@@ -1,0 +1,47 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
+    <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
+    <ui:VisualElement class="fp-header" picking-mode="Ignore">
+        <ui:Instance template="Toggle" name="menu" class="fp-header__menu">
+            <ui:AttributeOverrides element-name="control" text="Menu" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
+        <!-- In the order of ModeManager.PrimaryModes -->
+        <ui:RadioButtonGroup name="primary-modes" class="fp-radio-group fp-radio-row fp-header__modes">
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="Geometry" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="Textures" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="Lights" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="Media" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="Platforms" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="Objects" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="Annotations" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode fp-header__mode--last">
+                <ui:AttributeOverrides element-name="control" text="Level" />
+            </ui:Instance>
+        </ui:RadioButtonGroup>
+        <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
+        <ui:VisualElement class="fp-header__actions" picking-mode="Ignore">
+            <ui:Instance template="Button" name="save" class="fp-header__action">
+                <ui:AttributeOverrides element-name="control" text="Save Level" />
+            </ui:Instance>
+            <ui:Instance template="Button" name="quit" class="fp-header__action">
+                <ui:AttributeOverrides element-name="control" text="Quit" />
+            </ui:Instance>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -4,6 +4,7 @@
 // (initialize_control_panels_for_level, update_control_panels, change_device_state, update_action_key,
 // untoggled_repair_switches_on_level, assume_correct_switch_position, try_and_toggle_control_panel,
 // line_side_has_control_panel, find_action_key_target, ...), control_panel_settings, and MML parsing.
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csmacros;
 using static AlephOne.cstypes;
 using static AlephOne.items;
@@ -41,6 +42,7 @@ namespace AlephOne
         }
     }
 
+    [NoAutoStaticsCleanup]
     public static class devices
     {
         /* ---------- constants */

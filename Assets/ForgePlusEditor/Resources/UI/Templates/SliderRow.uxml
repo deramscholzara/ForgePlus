@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Slider name="control" label="Label" low-value="0" high-value="1" class="fp-slider fp-template" />
+</ui:UXML>

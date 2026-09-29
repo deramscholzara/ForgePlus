@@ -8,6 +8,8 @@ using UnityEngine.Rendering.Universal;
 
 namespace ForgePlus.ApplicationGeneral
 {
+    // Early, so it's ready before the settings UI binds to it
+    [DefaultExecutionOrder(-100)]
     public class SettingsManager : SingletonMonoBehaviour<SettingsManager>
     {
         public VolumeProfile effectsDisabledVolumeProfile;
@@ -22,6 +24,9 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_ClipPlatformSides = "Settings_ClipPlatformSides";
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
+
+        // The name of the setting (its property) that changed, which SettingsViewModel's properties share
+        public event Action<string> OnSettingChanged;
 
         private event Action OnObjectVisibilityChanged_Sender;
         public event Action OnObjectVisibilityChanged
@@ -55,6 +60,8 @@ namespace ForgePlus.ApplicationGeneral
                 {
                     Screen.fullScreen = value;
                 }
+
+                OnSettingChanged?.Invoke(nameof(IsFullScreen));
             }
         }
 
@@ -69,6 +76,8 @@ namespace ForgePlus.ApplicationGeneral
                 PlayerPrefs.SetFloat(PlayerPrefsSettingsKey_MinimumLight, value);
 
                 Shader.SetGlobalFloat(minimumLightPropertyId, value);
+
+                OnSettingChanged?.Invoke(nameof(MinimumLight));
             }
         }
 
@@ -87,6 +96,8 @@ namespace ForgePlus.ApplicationGeneral
                     profileComponent.active = !value;
                     mainCamera.UpdateVolumeStack();
                 }
+
+                OnSettingChanged?.Invoke(nameof(AmbientOcclusionEnabled));
             }
         }
 
@@ -105,6 +116,8 @@ namespace ForgePlus.ApplicationGeneral
                     profileComponent.active = !value;
                     mainCamera.UpdateVolumeStack();
                 }
+
+                OnSettingChanged?.Invoke(nameof(BloomEnabled));
             }
         }
 
@@ -123,6 +136,8 @@ namespace ForgePlus.ApplicationGeneral
                     profileComponent.active = !value;
                     mainCamera.UpdateVolumeStack();
                 }
+
+                OnSettingChanged?.Invoke(nameof(ColorCorrectionEnabled));
             }
         }
 
@@ -141,6 +156,8 @@ namespace ForgePlus.ApplicationGeneral
                     profileComponent.active = !value;
                     mainCamera.UpdateVolumeStack();
                 }
+
+                OnSettingChanged?.Invoke(nameof(VignetteEnabled));
             }
         }
 
@@ -155,6 +172,8 @@ namespace ForgePlus.ApplicationGeneral
                 PlayerPrefs.SetInt(PlayerPrefsSettingsKey_ClipPlatformSides, value ? 1 : 0);
 
                 PlatformSideClipping.ClippingEnabled = value;
+
+                OnSettingChanged?.Invoke(nameof(ClipPlatformSidesEnabled));
             }
         }
 
@@ -169,6 +188,8 @@ namespace ForgePlus.ApplicationGeneral
                 objectIconsEnabled = value;
 
                 ApplyObjectVisibility();
+
+                OnSettingChanged?.Invoke(nameof(ObjectIconsEnabled));
             }
         }
 
@@ -192,6 +213,8 @@ namespace ForgePlus.ApplicationGeneral
                 spritePreviewsEnabled = value;
 
                 ApplyObjectVisibility();
+
+                OnSettingChanged?.Invoke(nameof(SpritePreviewsEnabled));
             }
         }
 

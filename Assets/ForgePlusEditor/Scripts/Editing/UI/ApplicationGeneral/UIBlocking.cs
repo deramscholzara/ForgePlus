@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ForgePlus.ApplicationGeneral
 {
+    // Fades in the UI's input blocker (which stops clicks reaching the UI and the level) while something is blocking input
+    [RequireComponent(typeof(UIDocument))]
     public class UIBlocking : SingletonMonoBehaviour<UIBlocking>
     {
         public Action<bool> OnChanged;
@@ -19,19 +21,29 @@ namespace ForgePlus.ApplicationGeneral
         private float fadeDuration = 1f / 3f;
 
         [SerializeField]
-        private CanvasGroup blockerCanvasGroup = null;
+        private float unblockedOpacity = 0f;
 
         [SerializeField]
-        private float unblockedAlpha = 0f;
-
-        [SerializeField]
-        private float blockedAlpha = 0.8f;
+        private float blockedOpacity = 0.8f;
 
         private int currentBlockingCount = 0;
-
         private float fadePosition = 0f;
-
         private CancellationTokenSource fadeCTS;
+        private VisualElement blocker;
+
+        // The document's tree is built when it's enabled, so it's found when it's first needed
+        private VisualElement Blocker
+        {
+            get
+            {
+                if (blocker == null)
+                {
+                    blocker = GetComponent<UIDocument>().rootVisualElement.Q("input-blocker");
+                }
+
+                return blocker;
+            }
+        }
 
         public async void Block()
         {
@@ -45,8 +57,8 @@ namespace ForgePlus.ApplicationGeneral
 
             OnChanged?.Invoke(true);
 
-            blockerCanvasGroup.gameObject.SetActive(true);
-            blockerCanvasGroup.blocksRaycasts = true;
+            Blocker.style.display = DisplayStyle.Flex;
+            Blocker.pickingMode = PickingMode.Position;
 
             fadeCTS = new CancellationTokenSource();
             try
@@ -71,7 +83,7 @@ namespace ForgePlus.ApplicationGeneral
 
             OnChanged?.Invoke(false);
 
-            blockerCanvasGroup.blocksRaycasts = false;
+            Blocker.pickingMode = PickingMode.Ignore;
 
             fadeCTS = new CancellationTokenSource();
             try
@@ -83,17 +95,17 @@ namespace ForgePlus.ApplicationGeneral
                 return;
             }
 
-            blockerCanvasGroup.gameObject.SetActive(false);
+            Blocker.style.display = DisplayStyle.None;
         }
 
-        private async Task Fade(FadeDirection direction, CancellationToken cancellationToken)
+        private async Awaitable Fade(FadeDirection direction, CancellationToken cancellationToken)
         {
             var deltaDuration = fadeDuration * (direction == FadeDirection.In ? 1f - fadePosition : fadePosition);
             var endTime = Time.realtimeSinceStartup + deltaDuration;
 
             while (Time.realtimeSinceStartup < endTime)
             {
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
 
                 if (!Application.isPlaying)
                 {
@@ -103,7 +115,6 @@ namespace ForgePlus.ApplicationGeneral
                 cancellationToken.ThrowIfCancellationRequested();
 
                 var timeRemaining = endTime - Time.realtimeSinceStartup;
-
                 fadePosition = timeRemaining / fadeDuration;
 
                 if (direction == FadeDirection.In)
@@ -111,7 +122,7 @@ namespace ForgePlus.ApplicationGeneral
                     fadePosition = 1f - fadePosition;
                 }
 
-                blockerCanvasGroup.alpha = Mathf.Lerp(unblockedAlpha, blockedAlpha, fadePosition);
+                Blocker.style.opacity = Mathf.Lerp(unblockedOpacity, blockedOpacity, fadePosition);
             }
 
             fadePosition = Mathf.Clamp01(fadePosition);

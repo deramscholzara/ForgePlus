@@ -1,0 +1,105 @@
+/* The palette: textures, lights or media for the current mode */
+
+.fp-palette {
+    flex-grow: 1;
+}
+
+.fp-palette__box {
+    flex-grow: 1;
+    padding: 10px;
+}
+
+/* Textures sit two to a row, and landscapes (which are wide) get a row each */
+.fp-palette__swatches--textures {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.fp-swatch-slot {
+    width: 50%;
+}
+
+/* The pair splits the 5px gap between them */
+.fp-swatch-slot--left {
+    padding-right: 2.5px;
+}
+
+.fp-swatch-slot--right {
+    padding-left: 2.5px;
+}
+
+.fp-swatch-slot--full {
+    width: 100%;
+}
+
+/* Swatches are toggles with their own content drawn over them */
+.fp-swatch {
+    height: var(--fp-short-control-height);
+}
+
+.fp-swatch--texture {
+    height: 80px;
+}
+
+.fp-swatch__content {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    color: var(--fp-control-text);
+    -unity-font-style: bold;
+}
+
+.fp-root .fp-swatch--texture > .unity-toggle__input > .unity-toggle__checkmark {
+    margin-bottom: 20px;
+}
+
+.fp-swatch__texture-label {
+    left: 5px;
+    right: 5px;
+    bottom: 4px;
+    height: 15px;
+    font-size: 12px;
+    -unity-text-align: lower-left;
+    white-space: nowrap;
+}
+
+.fp-swatch__preview {
+    left: 35px;
+    right: 5px;
+    top: 5px;
+    bottom: 20px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.fp-swatch__in-use {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5px;
+    background-color: var(--fp-in-use);
+}
+
+.fp-swatch__index {
+    left: 35px;
+    top: 5px;
+    bottom: 5px;
+    -unity-text-align: middle-left;
+}
+
+.fp-swatch__light-preview {
+    left: 60px;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
+}
+
+.fp-swatch__media-type {
+    left: 80px;
+    right: 5px;
+    top: 5px;
+    bottom: 5px;
+    -unity-text-align: middle-left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

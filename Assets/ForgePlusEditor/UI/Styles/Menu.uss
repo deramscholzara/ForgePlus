@@ -1,0 +1,144 @@
+/* The menu (opened from the header) and its tabs: Files, Inputs and Settings */
+
+.fp-menu-slot {
+    width: 800px;
+    min-width: 300px;
+    flex-shrink: 1;
+}
+
+.fp-menu {
+    flex-grow: 1;
+}
+
+.fp-menu__tabs {
+    height: var(--fp-control-height);
+    flex-shrink: 0;
+    margin-bottom: 5px;
+}
+
+.fp-menu__tab {
+    width: 100px;
+    margin-right: 5px;
+}
+
+.fp-menu__content {
+    flex-grow: 1;
+}
+
+
+/* ---------- Files ---------- */
+
+.fp-files__selection {
+    min-height: 255px;
+    height: 255px;
+    flex-shrink: 0;
+    margin-bottom: 5px;
+}
+
+.fp-files__levels {
+    flex-grow: 1;
+    margin: 5px 0;
+}
+
+.fp-files__actions {
+    flex-direction: row;
+    height: var(--fp-control-height);
+    flex-shrink: 0;
+}
+
+.fp-files__load {
+    width: 100px;
+}
+
+.fp-path-selector {
+    flex-shrink: 0;
+}
+
+.fp-path-selector__heading {
+    margin-bottom: 2px;
+}
+
+.fp-path-selector__row {
+    flex-direction: row;
+    height: var(--fp-control-height);
+}
+
+.fp-path-selector__button {
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.fp-path-selector__path {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+/* The level list is a ListView whose items look like toggles, with the selected item's indicator filled */
+.fp-level-list .unity-collection-view__item,
+.fp-level-list .unity-collection-view__item:hover,
+.fp-level-list .unity-collection-view__item--selected,
+.fp-level-list .unity-collection-view__item--selected:hover {
+    background-color: rgba(0, 0, 0, 0);
+    padding: 0;
+}
+
+.fp-level-list .unity-collection-view__item:focus {
+    border-width: 0;
+}
+
+.fp-level-item {
+    flex-direction: row;
+    height: var(--fp-control-height);
+    margin-bottom: 5px;
+    background-color: var(--fp-control);
+}
+
+.fp-level-item:hover {
+    background-color: var(--fp-control-hover);
+}
+
+.fp-level-item__indicator {
+    width: 35px;
+    flex-shrink: 0;
+    background-color: var(--fp-indicator-frame);
+    border-color: var(--fp-indicator-frame);
+}
+
+.fp-level-item__label {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0 5px;
+    color: var(--fp-control-text);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* ---------- Inputs ---------- */
+
+.fp-inputs__text {
+    font-size: 20px;
+    color: var(--fp-text-bright);
+    white-space: normal;
+    margin: 0;
+}
+
+/* ---------- Settings ---------- */
+
+.fp-settings__options {
+    flex-grow: 1;
+    padding: 5px;
+}
+
+.fp-setting {
+    height: var(--fp-control-height);
+}
+
+.fp-settings__version {
+    height: 30px;
+    flex-shrink: 0;
+    margin: 0;
+    -unity-text-align: lower-center;
+}

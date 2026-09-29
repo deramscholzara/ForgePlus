@@ -16,14 +16,23 @@ namespace RuntimeCore.Entities
         [System.NonSerialized]
         public MapLevel Level;
 
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_Polygon> Polygons;
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_Line> Lines;
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_Side> Sides;
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_Light> Lights;
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_Media> Medias;
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_Platform> CeilingPlatforms;
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_Platform> FloorPlatforms;
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_MapObject> MapObjects;
+        [System.NonSerialized]
         public Dictionary<short, LevelEntity_Annotation> Annotations;
 
         public List<short>[] EndpointLines;
@@ -39,9 +48,7 @@ namespace RuntimeCore.Entities
 
         public void Inspect()
         {
-            var inspectorPrefab = Resources.Load<Inspector_Level>("Inspectors/Inspector - Level");
-            var inspector = Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = new Inspector_Level(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
 

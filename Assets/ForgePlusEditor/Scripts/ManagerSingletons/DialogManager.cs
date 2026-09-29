@@ -1,75 +1,67 @@
-﻿using System.Collections.Generic;
+﻿using ForgePlus.UI;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ForgePlus.ApplicationGeneral
 {
+    // Shows dialogs one at a time, in the order they're asked for, over the rest of the UI (which is blocked meanwhile)
+    [RequireComponent(typeof(UIDocument))]
     public class DialogManager : SingletonMonoBehaviour<DialogManager>
     {
-        private class QueuedDialog
+        private readonly List<object> dialogQueue = new List<object>();
+
+        private PanelSlot dialogSlot;
+
+        private PanelSlot DialogSlot
         {
-            public Dialog_Base DialogPrefab { get; private set; }
-
-            public IList<string> VariableOptions { get; private set; }
-
-            public IList<string> VariableOptionLabels { get; private set; }
-
-            public QueuedDialog(Dialog_Base dialogPrefab, IList<string> variableOptions, IList<string> variableOptionLabels)
+            get
             {
-                DialogPrefab = dialogPrefab;
-                VariableOptions = variableOptions;
-                VariableOptionLabels = variableOptionLabels;
-            }
+                if (dialogSlot == null)
+                {
+                    dialogSlot = new PanelSlot(GetComponent<UIDocument>().rootVisualElement.Q("dialog-layer"));
+                }
 
-            public async Task<string> Display(Transform parent)
-            {
-                var result = await DialogPrefab.Display(parent, VariableOptions, VariableOptionLabels);
-
-                return result;
+                return dialogSlot;
             }
         }
 
-        private readonly List<QueuedDialog> dialogQueue = new List<QueuedDialog>();
-
-        public async Task<string> DisplayQueuedDialog(Dialog_Base dialogPrefab, IList<string> variableOptions, IList<string> variableOptionLabels = null)
+        // The chosen option, or null if the dialog was cancelled
+        public async Task<string> DisplayQueuedDialog(string title, IList<string> options, IList<string> optionLabels = null)
         {
-            if (dialogPrefab == null)
-            {
-                Debug.LogError("Attempting to display null dialog - attempt will be ignored.");
-                return null;
-            }
-
             if (dialogQueue.Count == 0)
             {
                 UIBlocking.Instance.Block();
-                gameObject.SetActive(true);
             }
 
-            var queuedDialog = new QueuedDialog(dialogPrefab, variableOptions, variableOptionLabels);
-
+            var queuedDialog = new object();
             dialogQueue.Add(queuedDialog);
 
             while (dialogQueue[0] != queuedDialog)
             {
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
             }
 
-            var result = await queuedDialog.Display(parent: transform);
+            var dialog = new ObjectSelectorDialog(title, options, optionLabels);
+            DialogSlot.Show(dialog);
 
+            var result = await dialog.Selection;
+
+            DialogSlot.Hide();
             dialogQueue.Remove(queuedDialog);
 
             if (dialogQueue.Count == 0)
             {
-                gameObject.SetActive(false);
                 UIBlocking.Instance.Unblock();
             }
 
             return result;
         }
 
-        private void Start()
+        private void OnDestroy()
         {
-            gameObject.SetActive(false);
+            dialogSlot?.Hide();
         }
     }
 }

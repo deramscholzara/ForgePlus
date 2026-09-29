@@ -6,6 +6,7 @@
 // platform_is_at_initial_state, get_platform_moving_sound, adjust_platform_for_media, platform sounds,
 // and MML parsing.
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 using static AlephOne.csmacros;
 using static AlephOne.cstypes;
@@ -92,6 +93,7 @@ namespace AlephOne
         }
     }
 
+    [NoAutoStaticsCleanup]
     public static class platforms
     {
         /* ---------- constants */

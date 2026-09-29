@@ -2,8 +2,10 @@
 
 using System;
 using System.Runtime.InteropServices;
+using Unity.Scripting.LifecycleManagement;
 
 namespace SFB {
+    [NoAutoStaticsCleanup]
     public class StandaloneFileBrowserMac : IStandaloneFileBrowser {
         private static Action<string[]> _openFileCb;
         private static Action<string[]> _openFolderCb;

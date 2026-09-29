@@ -1,24 +1,17 @@
-﻿using ForgePlus.ApplicationGeneral;
+﻿using AlephOne;
+using ForgePlus.ApplicationGeneral;
+using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
+using ForgePlus.UI;
+using RuntimeCore.Entities;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace ForgePlus.CameraNavigation
 {
     [RequireComponent(typeof(Camera))]
     public class EditorCamera : MonoBehaviour
     {
-        // TODO: Convert this to use Unity's new input system.
-        private const KeyCode forward = KeyCode.W;
-        private const KeyCode backward = KeyCode.S;
-        private const KeyCode left = KeyCode.A;
-        private const KeyCode right = KeyCode.D;
-        private const KeyCode up = KeyCode.E;
-        private const KeyCode down = KeyCode.Q;
-        private const KeyCode turbo = KeyCode.LeftShift;
-        private const KeyCode rotateA = KeyCode.Space;
-        private const KeyCode rotateB = KeyCode.Mouse1;
-        private const KeyCode frameSelected = KeyCode.F;
-
         [SerializeField]
         private float maxVelocity = 5f;
 
@@ -37,6 +30,10 @@ namespace ForgePlus.CameraNavigation
         [SerializeField]
         private float framingDuration = 0.25f;
 
+        // How far each notch of the mouse wheel moves the camera forward or back, in meters
+        [SerializeField]
+        private float wheelMoveDistancePerNotch = 0.5f;
+
         private Vector3 currentVelocityVector = Vector3.zero;
         private int blockerCount = 0;
 
@@ -47,11 +44,72 @@ namespace ForgePlus.CameraNavigation
 
         public void FrameSelected()
         {
-            if (!SelectionFramingBounds.TryGetBounds(SelectionManager.Instance.Selection, out var bounds))
+            if (SelectionFramingBounds.TryGetBounds(SelectionManager.Instance.Selection, out var bounds))
+            {
+                Frame(bounds);
+            }
+        }
+
+        public void OnInputBlockerChanged(bool isBlocking)
+        {
+            if (isBlocking)
+            {
+                blockerCount++;
+
+                // There's no navigating to animate the framing in while blocked
+                if (isFraming)
+                {
+                    FinishFraming();
+                }
+            }
+            else
+            {
+                blockerCount--;
+            }
+        }
+
+        private bool IsNavigationBlocked
+        {
+            get
+            {
+                return blockerCount > 0;
+            }
+        }
+
+        // Frames the level's first player spawn, or polygon 0 if it has no player spawns
+        private void OnLevelOpened(string levelName)
+        {
+            var level = LevelEntity_Level.Instance;
+            if (!level)
             {
                 return;
             }
 
+            ISelectable target = null;
+            var firstSpawnIndex = short.MaxValue;
+
+            foreach (var mapObject in level.MapObjects)
+            {
+                if (mapObject.Value.NativeObject.type == map._saved_player && mapObject.Key < firstSpawnIndex)
+                {
+                    firstSpawnIndex = mapObject.Key;
+                    target = mapObject.Value;
+                }
+            }
+
+            if (target == null && level.Polygons.TryGetValue(0, out var firstPolygon))
+            {
+                target = firstPolygon;
+            }
+
+            if (target != null && SelectionFramingBounds.TryGetBounds(target, out var bounds))
+            {
+                Frame(bounds);
+            }
+        }
+
+        private void Frame(Bounds bounds)
+        {
             var camera = GetComponent<Camera>();
 
             // Fit the bounds' enclosing sphere into the narrower of the two fields of view
@@ -62,11 +120,10 @@ namespace ForgePlus.CameraNavigation
             framingTargetPosition = bounds.center - transform.forward * distance;
             currentVelocityVector = Vector3.zero;
 
-            if (!isActiveAndEnabled || framingDuration <= 0f)
+            if (IsNavigationBlocked || framingDuration <= 0f)
             {
-                // Not navigating (such as while a menu is open), so there's no Update to animate in
-                transform.position = framingTargetPosition;
-                isFraming = false;
+                // Not navigating (such as while a menu is open), so there's nothing to animate in
+                FinishFraming();
 
                 return;
             }
@@ -76,54 +133,38 @@ namespace ForgePlus.CameraNavigation
             isFraming = true;
         }
 
-        public void OnInputBlockerChanged(bool isBlocking)
+        private void FinishFraming()
         {
-            if (isBlocking)
-            {
-                blockerCount++;
-
-                enabled = false;
-            }
-            else
-            {
-                blockerCount--;
-
-                if (blockerCount <= 0)
-                {
-                    enabled = true;
-                }
-            }
+            transform.position = framingTargetPosition;
+            isFraming = false;
         }
 
         private void Start()
         {
             UIBlocking.Instance.OnChanged += OnInputBlockerChanged;
-
-            // Start this disabled because the menu starts active
-            enabled = false;
-            blockerCount++;
-        }
-
-        private void OnDisable()
-        {
-            if (isFraming)
-            {
-                transform.position = framingTargetPosition;
-                isFraming = false;
-            }
+            MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
         }
 
         private void Update()
         {
+            var wheelNotches = GetWheelMoveInput();
+
+            // While blocked (such as by the menu), only the wheel moves the camera
+            if (IsNavigationBlocked)
+            {
+                MoveByWheel(wheelNotches);
+                return;
+            }
+
             #region Framing
-            if (Hotkeys.GetKeyDown(frameSelected))
+            if (Hotkeys.WasPressed(ForgePlusInput.Camera.FrameSelected))
             {
                 FrameSelected();
             }
 
             if (isFraming)
             {
-                if (HasNavigationInput())
+                if (HasNavigationInput(wheelNotches))
                 {
                     isFraming = false;
                 }
@@ -144,14 +185,14 @@ namespace ForgePlus.CameraNavigation
             #endregion Framing
 
             #region Movement
-            var isTurboMode = Hotkeys.GetKey(turbo);
+            var isTurboMode = Hotkeys.IsPressed(ForgePlusInput.Camera.Turbo);
             var acceleration = isTurboMode ? turboAccelerationPerSecond : accelerationPerSecond;
             acceleration *= Time.deltaTime;
             var maxVelocity = isTurboMode ? maxTurboVelocity : this.maxVelocity;
 
-            UpdateVelocityAxis(ref currentVelocityVector.x, right, left, acceleration, maxVelocity);
-            UpdateVelocityAxis(ref currentVelocityVector.y, up, down, acceleration, maxVelocity);
-            UpdateVelocityAxis(ref currentVelocityVector.z, forward, backward, acceleration, maxVelocity);
+            UpdateVelocityAxis(ref currentVelocityVector.x, Hotkeys.ReadAxis(ForgePlusInput.Camera.Strafe), acceleration, maxVelocity);
+            UpdateVelocityAxis(ref currentVelocityVector.y, Hotkeys.ReadAxis(ForgePlusInput.Camera.Elevate), acceleration, maxVelocity);
+            UpdateVelocityAxis(ref currentVelocityVector.z, Hotkeys.ReadAxis(ForgePlusInput.Camera.Advance), acceleration, maxVelocity);
 
             var worldVelocityVector = (transform.right * currentVelocityVector.x) +
                                       (Vector3.up * currentVelocityVector.y) +
@@ -168,13 +209,14 @@ namespace ForgePlus.CameraNavigation
             #endregion Movement
 
             #region Looking
-            if (Hotkeys.GetKey(rotateA) || Input.GetKey(rotateB))
+            if (Hotkeys.IsPressed(ForgePlusInput.Camera.EnableLook))
             {
                 var eulerRotation = transform.eulerAngles;
+                var look = ForgePlusInput.Camera.Look.ReadValue<Vector2>();
 
-                eulerRotation.y += Input.GetAxis("Mouse X") * 1f;
+                eulerRotation.y += look.x;
 
-                eulerRotation.x -= Input.GetAxis("Mouse Y") * 1f;
+                eulerRotation.x -= look.y;
 
                 if (eulerRotation.x > 180f)
                 {
@@ -186,28 +228,25 @@ namespace ForgePlus.CameraNavigation
                 transform.eulerAngles = eulerRotation;
             }
             #endregion Looking
+
+            MoveByWheel(wheelNotches);
         }
 
-        private void UpdateVelocityAxis(ref float axialVelocity, KeyCode positiveKey, KeyCode negativeKey, float acceleration, float maxVelocity)
+        // The input is an axis action's value (0 while neither or both of its keys are held)
+        private void UpdateVelocityAxis(ref float axialVelocity, float input, float acceleration, float maxVelocity)
         {
-            bool hasPositiveInput = Hotkeys.GetKey(positiveKey);
-            bool hasNegativeInput = Hotkeys.GetKey(negativeKey);
-
-            // If neither or both inputs is active, consider it to be no input
-            var inputIsZero = (!hasPositiveInput && !hasNegativeInput) || (hasPositiveInput && hasNegativeInput);
-
             var axialVelocityDirection = Mathf.Sign(axialVelocity);
             var deceleration = decelerationPerSecond * Time.deltaTime;
 
-            if (inputIsZero ||
-                (hasPositiveInput && axialVelocity < 0f) ||
-                (hasNegativeInput && axialVelocity > 0f))
+            if (input == 0f ||
+                (input > 0f && axialVelocity < 0f) ||
+                (input < 0f && axialVelocity > 0f))
             {
                 // Deceleration
                 // (if there's no input, or if velocity is currently opposed to the input direction)
                 axialVelocity -= axialVelocityDirection * GetScaledDeceleration(deceleration, Mathf.Abs(axialVelocity));
 
-                if (inputIsZero &&
+                if (input == 0f &&
                     ((axialVelocityDirection > 0f && axialVelocity < 0f) ||
                      (axialVelocityDirection < 0f && axialVelocity > 0f)))
                 {
@@ -216,9 +255,9 @@ namespace ForgePlus.CameraNavigation
                     axialVelocity = 0f;
                 }
             }
-            else if (hasPositiveInput || hasNegativeInput)
+            else
             {
-                var inputDirection = hasPositiveInput ? 1f : -1f;
+                var inputDirection = Mathf.Sign(input);
 
                 // Accelerate
                 axialVelocity += inputDirection * acceleration;
@@ -240,16 +279,38 @@ namespace ForgePlus.CameraNavigation
             return Mathf.Max(deceleration, deceleration * absoluteAxialVelocity / this.maxVelocity);
         }
 
-        private bool HasNavigationInput()
+        private bool HasNavigationInput(float wheelNotches)
         {
-            return Hotkeys.GetKey(forward) ||
-                   Hotkeys.GetKey(backward) ||
-                   Hotkeys.GetKey(left) ||
-                   Hotkeys.GetKey(right) ||
-                   Hotkeys.GetKey(up) ||
-                   Hotkeys.GetKey(down) ||
-                   Hotkeys.GetKey(rotateA) ||
-                   Input.GetKey(rotateB);
+            return Hotkeys.ReadAxis(ForgePlusInput.Camera.Strafe) != 0f ||
+                   Hotkeys.ReadAxis(ForgePlusInput.Camera.Elevate) != 0f ||
+                   Hotkeys.ReadAxis(ForgePlusInput.Camera.Advance) != 0f ||
+                   Hotkeys.IsPressed(ForgePlusInput.Camera.EnableLook) ||
+                   wheelNotches != 0f;
+        }
+
+        private void MoveByWheel(float wheelNotches)
+        {
+            transform.position += transform.forward * (wheelNotches * wheelMoveDistancePerNotch);
+        }
+
+        // The wheel's notches this frame, unless the pointer that scrolled is over the UI (which the wheel scrolls instead)
+        private float GetWheelMoveInput()
+        {
+            var wheelMoveAction = ForgePlusInput.Camera.WheelMove;
+            var notches = Hotkeys.ReadAxis(wheelMoveAction);
+            if (notches == 0f)
+            {
+                return 0f;
+            }
+
+            var pointer = wheelMoveAction.activeControl?.device as Pointer;
+            var ui = ForgePlusUI.Instance;
+            if (pointer != null && ui && ui.IsPointerOverUI(pointer.position.ReadValue()))
+            {
+                return 0f;
+            }
+
+            return notches;
         }
     }
 }

@@ -11,4 +11,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ForgePlusEditor/GraphicsTech/Shaders/ShaderInclusionMaterials/ShaderInclusionScene.unity
     guid: 16ffd4329bee308408afefb89455a440
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 7044c1c4b6fb19344b9511d32cbb4967, type: 3}

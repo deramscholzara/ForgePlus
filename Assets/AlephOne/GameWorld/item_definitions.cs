@@ -1,4 +1,5 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/item_definitions.h
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.cstypes;
 using static AlephOne.map;
 using static AlephOne.shape_descriptors;
@@ -41,6 +42,7 @@ namespace AlephOne
         }
     }
 
+    [NoAutoStaticsCleanup]
     public static partial class items
     {
         /* ---------- globals */

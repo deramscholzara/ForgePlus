@@ -9,6 +9,7 @@ using ForgePlus.Extensions;
 
 public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Texture>
 {
+    [System.NonSerialized]
     public Dictionary<ushort, PluginTextureSet> TextureLookup =
         new Dictionary<ushort, PluginTextureSet>();
 
@@ -92,7 +93,7 @@ public class PluginLoading_Texture : SingletonMonoBehaviour<PluginLoading_Textur
         {
             loadedTexture = LoadTextureDXT(fileBytes, Path.GetFileNameWithoutExtension(path));
 
-            var projectPath = path.Substring(path.IndexOf("\\Assets\\") + 1);
+            var projectPath = path.Substring(path.IndexOf("\\Assets\\", StringComparison.Ordinal) + 1);
         }
         else if (extension.Equals(".png", StringComparison.OrdinalIgnoreCase))
         {

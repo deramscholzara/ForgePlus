@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Label name="label" text="Subheader" class="fp-inspector-subheader fp-template" />
+</ui:UXML>

@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A titled list of options (buttons added by ObjectSelectorDialog) -->
+    <ui:VisualElement class="fp-box fp-dialog">
+        <ui:Label name="title" text="Select..." class="fp-dialog__header" />
+        <ui:VisualElement name="options" />
+    </ui:VisualElement>
+</ui:UXML>

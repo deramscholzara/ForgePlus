@@ -1,0 +1,38 @@
+/* Shared colors and sizes, used by every other style sheet */
+:root {
+    --fp-panel-background: rgba(13, 13, 13, 0.9);
+    --fp-separator: rgba(26, 26, 26, 0.9);
+
+    --fp-control: rgb(230, 230, 230);
+    --fp-control-hover: rgb(255, 255, 255);
+    --fp-control-pressed: rgb(200, 200, 200);
+    --fp-control-disabled: rgba(200, 200, 200, 0.5);
+    --fp-control-text: rgb(51, 51, 51);
+
+    --fp-indicator-frame: rgb(178, 178, 178);
+    --fp-indicator-on: rgb(128, 128, 128);
+
+    --fp-text-light: rgb(230, 230, 230);
+    --fp-text-bright: rgb(255, 255, 255);
+    --fp-text-faint: rgba(255, 255, 255, 0.6);
+
+    --fp-readout: rgb(51, 51, 51);
+    --fp-header: rgb(50, 50, 50);
+    --fp-subheader: rgba(50, 50, 50, 0.8);
+    --fp-label-area: rgb(26, 26, 26);
+    --fp-value-area: rgb(178, 178, 178);
+    --fp-value-text: rgb(0, 0, 0);
+    --fp-slider-background: rgb(255, 255, 255);
+
+    --fp-scrollbar: rgb(13, 13, 13);
+    --fp-scrollbar-handle: rgb(50, 50, 50);
+
+    --fp-in-use: rgb(0, 255, 0);
+
+    --fp-blocker-fill: rgba(0, 0, 0, 0.8);
+    --fp-blocker-border: rgba(85, 0, 0, 0.97);
+
+    --fp-control-height: 40px;
+    --fp-short-control-height: 30px;
+    --fp-flag-height: 20px;
+}

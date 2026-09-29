@@ -1,8 +1,11 @@
 ﻿// Port of Aleph One: Source_Files/Misc/game_errors.h, game_errors.cpp
+using System;
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 
 namespace AlephOne
 {
+    [NoAutoStaticsCleanup]
     public static class game_errors
     {
         // types
@@ -21,8 +24,10 @@ namespace AlephOne
         public const short errUnsyncOnLevelChange = 7;
         public const short NUMBER_OF_GAME_ERRORS = 8;
 
-        private static short last_type = systemError;
-        private static short last_error = errNone;
+        // ForgePlus: per thread, since ForgePlus runs some loading on worker threads
+        // (both start as systemError/errNone, which are 0)
+        [ThreadStatic] private static short last_type;
+        [ThreadStatic] private static short last_error;
 
         public static void set_game_error(short type, short error_code)
         {

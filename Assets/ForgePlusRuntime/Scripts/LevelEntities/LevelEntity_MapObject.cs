@@ -3,6 +3,7 @@ using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Materials;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using AlephOne;
@@ -11,7 +12,8 @@ using ForgePlus.Extensions;
 namespace RuntimeCore.Entities.MapObjects
 {
     // TODO: Should inherit from LevelEntity_Base, and should have a separate EditableSurface component
-    public class LevelEntity_MapObject : EditableSurface_Base, ISelectionDisplayable, IInspectable
+    [AutoStaticsCleanup]
+    public partial class LevelEntity_MapObject : EditableSurface_Base, ISelectionDisplayable, IInspectable
     {
         private readonly int selectedShaderPropertyId = Shader.PropertyToID("_Selected");
 
@@ -142,9 +144,7 @@ namespace RuntimeCore.Entities.MapObjects
 
         public void Inspect()
         {
-            var inspectorPrefab = Resources.Load<Inspector_MapObject>("Inspectors/Inspector - MapObject");
-            var inspector = Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = new Inspector_MapObject(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
 

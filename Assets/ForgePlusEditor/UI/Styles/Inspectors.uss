@@ -1,0 +1,138 @@
+/* Inspectors: a header, then rows of labeled values, read-only flags, subheaders and foldouts */
+
+.fp-inspector {
+    flex-shrink: 0;
+    margin-bottom: 5px;
+}
+
+.fp-inspector-header {
+    height: 28px;
+    margin: 0;
+    padding: 0 5px;
+    background-color: var(--fp-header);
+    color: var(--fp-text-light);
+    font-size: 22px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.fp-inspector-subheader {
+    height: 18px;
+    margin: 0;
+    padding: 0 5px;
+    background-color: var(--fp-subheader);
+    color: var(--fp-text-light);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* A label on the left (or above, in a vertical row's instance) and its value */
+.fp-inspector-row {
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.fp-inspector-row--vertical > .fp-inspector-row {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.fp-inspector-row__label {
+    width: 85px;
+    min-width: 85px;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    background-color: var(--fp-label-area);
+    color: var(--fp-text-light);
+    -unity-text-align: upper-right;
+    white-space: normal;
+}
+
+.fp-inspector-row__value-area {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 105px;
+    padding-left: 5px;
+    background-color: var(--fp-value-area);
+}
+
+.fp-inspector-row--vertical .fp-inspector-row__value-area {
+    align-self: stretch;
+}
+
+.fp-inspector-value {
+    margin: 0;
+    padding: 0;
+    color: var(--fp-value-text);
+    -unity-text-align: upper-left;
+    white-space: normal;
+}
+
+.fp-inspector-texture {
+    width: 170px;
+    height: 170px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.fp-inspector-flag {
+    height: var(--fp-flag-height);
+}
+
+.fp-inspector-action {
+    height: var(--fp-short-control-height);
+}
+
+/* The foldout's header looks like a subheader, with a small indicator that fills while it's open */
+.fp-inspector-foldout {
+    margin: 0;
+    padding: 0;
+}
+
+.fp-inspector-foldout > .unity-foldout__toggle {
+    height: 18px;
+    margin: 0 0 5px 0;
+    padding: 0;
+    background-color: var(--fp-subheader);
+}
+
+.fp-inspector-foldout > .unity-foldout__toggle > .unity-toggle__input {
+    flex-grow: 1;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.fp-root .fp-inspector-foldout > .unity-foldout__toggle > .unity-toggle__input > .unity-foldout__checkmark {
+    width: 15px;
+    height: auto;
+    align-self: stretch;
+    margin: 0;
+    background-image: none;
+    background-color: var(--fp-indicator-frame);
+    border-color: var(--fp-indicator-frame);
+    border-width: 0;
+    rotate: none;
+}
+
+.fp-inspector-foldout .unity-foldout__text {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0 5px;
+    color: var(--fp-text-light);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.fp-inspector-foldout > .unity-foldout__content {
+    margin: 0;
+    padding: 0;
+}

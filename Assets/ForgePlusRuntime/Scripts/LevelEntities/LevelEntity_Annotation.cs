@@ -1,7 +1,7 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
-using System.Threading.Tasks;
 using TMPro;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using AlephOne;
@@ -10,7 +10,8 @@ using ForgePlus.Extensions;
 namespace RuntimeCore.Entities
 {
     // TODO: Should inherit from LevelEntity_Base, and should have a separate EditableSurface component
-    public class LevelEntity_Annotation : EditableSurface_Base, ISelectionDisplayable, IInspectable
+    [AutoStaticsCleanup]
+    public partial class LevelEntity_Annotation : EditableSurface_Base, ISelectionDisplayable, IInspectable
     {
         private static LevelEntity_Annotation prefab;
 
@@ -83,9 +84,7 @@ namespace RuntimeCore.Entities
 
         public void Inspect()
         {
-            var inspectorPrefab = Resources.Load<Inspector_Annotation>("Inspectors/Inspector - Annotation");
-            var inspector = Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = new Inspector_Annotation(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
 
@@ -94,8 +93,8 @@ namespace RuntimeCore.Entities
             label.text = NativeObject.GetText();
 
             // Wait two frames so the content size fitter has time to update to the new text size
-            await Task.Yield();
-            await Task.Yield();
+            await Awaitable.NextFrameAsync();
+            await Awaitable.NextFrameAsync();
 
             var labelTransform = label.transform as RectTransform;
             selectionCollider.size = new Vector3(labelTransform.sizeDelta.x, labelTransform.sizeDelta.y, 0.01f);

@@ -106,11 +106,9 @@ namespace RuntimeCore.Entities.Geometry
 
         public void Inspect()
         {
-            var inspectorPrefab = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
-                                  Resources.Load<Inspector_Base>("Inspectors/Inspector - Side") :
-                                  Resources.Load<Inspector_Base>("Inspectors/Inspector - Side Textures");
-            var inspector = Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
+                            (Inspector_Base)new Inspector_Side(this) :
+                            new Inspector_SideTextures(this);
             InspectorPanel.Instance.AddInspector(inspector);
 
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)

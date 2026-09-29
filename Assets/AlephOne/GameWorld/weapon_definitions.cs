@@ -1,4 +1,5 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/weapon_definitions.h
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.cstypes;
 using static AlephOne.items;
 using static AlephOne.map;
@@ -91,6 +92,7 @@ namespace AlephOne
         }
     }
 
+    [NoAutoStaticsCleanup]
     public static class weapon_definitions
     {
         /* TEMPORARY!!! */

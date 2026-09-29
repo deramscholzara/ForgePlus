@@ -2,6 +2,8 @@
 //
 // Map loading reads film_profile.m1_object_unused, and the redundant-data code reads
 // adjacent_polygons_always_intersect, long_distance_physics and m1_platform_flood.
+using Unity.Scripting.LifecycleManagement;
+
 namespace AlephOne
 {
     // Film profiles tell Aleph One exactly how to behave when playing back films
@@ -118,6 +120,7 @@ namespace AlephOne
     }
 
     // FilmProfile.cpp
+    [NoAutoStaticsCleanup]
     public static class FilmProfileGlobals
     {
         private static readonly FilmProfile alephone1_11 = new FilmProfile
