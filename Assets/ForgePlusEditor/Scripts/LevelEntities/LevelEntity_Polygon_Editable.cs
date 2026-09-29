@@ -38,11 +38,9 @@ namespace RuntimeCore.Entities.Geometry
 
         public void Inspect()
         {
-            var inspectorPrefab = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
-                                  Resources.Load<Inspector_Base>("Inspectors/Inspector - Polygon") :
-                                  Resources.Load<Inspector_Base>("Inspectors/Inspector - Polygon Textures");
-            var inspector = Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
+                            (Inspector_Base)new Inspector_Polygon(this) :
+                            new Inspector_PolygonTextures(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
 

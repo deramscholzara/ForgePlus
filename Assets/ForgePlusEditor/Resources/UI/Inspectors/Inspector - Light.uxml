@@ -1,0 +1,151 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <!-- Bound to Inspector_Light -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Light" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Tag">
+            <ui:AttributeOverrides element-name="label" text="Tag:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Type">
+            <ui:AttributeOverrides element-name="label" text="Type:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Phase">
+            <ui:AttributeOverrides element-name="label" text="Phase:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Flags" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="StartsActive">
+            <ui:AttributeOverrides element-name="flag" text="Starts Active" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="SlavedIntensities">
+            <ui:AttributeOverrides element-name="flag" text="Slaved Intensities" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="CycleAllStates">
+            <ui:AttributeOverrides element-name="flag" text="Cycle All States" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="State: Becoming Active" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingActiveFunction">
+            <ui:AttributeOverrides element-name="label" text="Style:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingActivePeriod">
+            <ui:AttributeOverrides element-name="label" text="Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingActiveDeltaPeriod">
+            <ui:AttributeOverrides element-name="label" text="Δ Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingActiveIntensity">
+            <ui:AttributeOverrides element-name="label" text="&lt;i&gt;O&lt;/i&gt;(Intensity):" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingActiveDeltaIntensity">
+            <ui:AttributeOverrides element-name="label" text="Δ Intensity:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="State: Primary Active" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryActiveFunction">
+            <ui:AttributeOverrides element-name="label" text="Style:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryActivePeriod">
+            <ui:AttributeOverrides element-name="label" text="Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryActiveDeltaPeriod">
+            <ui:AttributeOverrides element-name="label" text="Δ Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryActiveIntensity">
+            <ui:AttributeOverrides element-name="label" text="&lt;i&gt;O&lt;/i&gt;(Intensity):" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryActiveDeltaIntensity">
+            <ui:AttributeOverrides element-name="label" text="Δ Intensity:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="State: Secondary Active" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryActiveFunction">
+            <ui:AttributeOverrides element-name="label" text="Style:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryActivePeriod">
+            <ui:AttributeOverrides element-name="label" text="Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryActiveDeltaPeriod">
+            <ui:AttributeOverrides element-name="label" text="Δ Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryActiveIntensity">
+            <ui:AttributeOverrides element-name="label" text="&lt;i&gt;O&lt;/i&gt;(Intensity):" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryActiveDeltaIntensity">
+            <ui:AttributeOverrides element-name="label" text="Δ Intensity:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="State: Becoming Inactive" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingInactiveFunction">
+            <ui:AttributeOverrides element-name="label" text="Style:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingInactivePeriod">
+            <ui:AttributeOverrides element-name="label" text="Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingInactiveDeltaPeriod">
+            <ui:AttributeOverrides element-name="label" text="Δ Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingInactiveIntensity">
+            <ui:AttributeOverrides element-name="label" text="&lt;i&gt;O&lt;/i&gt;(Intensity):" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="BecomingInactiveDeltaIntensity">
+            <ui:AttributeOverrides element-name="label" text="Δ Intensity:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="State: Primary Inactive" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryInactiveFunction">
+            <ui:AttributeOverrides element-name="label" text="Style:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryInactivePeriod">
+            <ui:AttributeOverrides element-name="label" text="Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryInactiveDeltaPeriod">
+            <ui:AttributeOverrides element-name="label" text="Δ Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryInactiveIntensity">
+            <ui:AttributeOverrides element-name="label" text="&lt;i&gt;O&lt;/i&gt;(Intensity):" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryInactiveDeltaIntensity">
+            <ui:AttributeOverrides element-name="label" text="Δ Intensity:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="State: Secondary Inactive" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryInactiveFunction">
+            <ui:AttributeOverrides element-name="label" text="Style:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryInactivePeriod">
+            <ui:AttributeOverrides element-name="label" text="Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryInactiveDeltaPeriod">
+            <ui:AttributeOverrides element-name="label" text="Δ Period:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryInactiveIntensity">
+            <ui:AttributeOverrides element-name="label" text="&lt;i&gt;O&lt;/i&gt;(Intensity):" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryInactiveDeltaIntensity">
+            <ui:AttributeOverrides element-name="label" text="Δ Intensity:" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

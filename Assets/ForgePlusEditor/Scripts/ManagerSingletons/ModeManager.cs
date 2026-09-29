@@ -1,5 +1,7 @@
 ﻿using ForgePlus.DataFileIO;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -54,6 +56,10 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        private readonly SecondaryModes[] allSecondaryModes = { SecondaryModes.Selection, SecondaryModes.Painting, SecondaryModes.Editing };
+        private readonly SecondaryModes[] selectionAndPainting = { SecondaryModes.Selection, SecondaryModes.Painting };
+        private readonly SecondaryModes[] selectionOnly = { SecondaryModes.Selection };
+
         private PrimaryModes primaryMode = PrimaryModes.Geometry;
         private SecondaryModes secondaryMode = SecondaryModes.Selection;
 
@@ -68,6 +74,12 @@ namespace ForgePlus.LevelManipulation
                 if (primaryMode != value)
                 {
                     primaryMode = value;
+
+                    // Falls back to selection when the new mode can't use the current secondary mode
+                    if (secondaryMode != SecondaryModes.None && !IsAvailable(secondaryMode))
+                    {
+                        SecondaryMode = SecondaryModes.Selection;
+                    }
 
                     OnPrimaryModeChanged_Sender?.Invoke(primaryMode);
                 }
@@ -96,39 +108,27 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        #region UI_Event_Methods
-        public void SetSecondaryToNone(bool shouldSet)
+        // The secondary modes the current primary mode can use (Selection is always one of them)
+        public IReadOnlyList<SecondaryModes> AvailableSecondaryModes
         {
-            if (shouldSet)
+            get
             {
-                SecondaryMode = SecondaryModes.None;
+                switch (primaryMode)
+                {
+                    case PrimaryModes.Textures:
+                        return allSecondaryModes;
+                    case PrimaryModes.Lights:
+                        return selectionAndPainting;
+                    default:
+                        return selectionOnly;
+                }
             }
         }
 
-        public void SetSecondaryToSelection(bool shouldSet)
+        private bool IsAvailable(SecondaryModes mode)
         {
-            if (shouldSet)
-            {
-                SecondaryMode = SecondaryModes.Selection;
-            }
+            return AvailableSecondaryModes.Contains(mode);
         }
-
-        public void SetSecondaryToPainting(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                SecondaryMode = SecondaryModes.Painting;
-            }
-        }
-
-        public void SetSecondaryToEditing(bool shouldSet)
-        {
-            if (shouldSet)
-            {
-                SecondaryMode = SecondaryModes.Editing;
-            }
-        }
-        #endregion UI_Event_Methods
 
         private void OnLevelOpened(string levelName)
         {

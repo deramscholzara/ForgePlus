@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Button name="control" text="Button" class="fp-button fp-template" />
+</ui:UXML>

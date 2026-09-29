@@ -1,125 +1,196 @@
-﻿using ForgePlus.Extensions;
+﻿using AlephOne;
+using ForgePlus.Extensions;
 using RuntimeCore.Entities.Geometry;
-using TMPro;
+using System;
+using Unity.Properties;
 
 namespace ForgePlus.Inspection
 {
-    public class Inspector_Polygon : Inspector_Base
+    public class Inspector_Polygon : Inspector_Base<LevelEntity_Polygon>
     {
-        public TextMeshProUGUI Value_Id;
-        public TextMeshProUGUI Value_Type;
-        public TextMeshProUGUI Value_Permutation;
-
-        public TextMeshProUGUI Value_MediaIndex;
-        public TextMeshProUGUI Value_MediaLight;
-
-        public TextMeshProUGUI Value_AmbientSound;
-        public TextMeshProUGUI Value_RandomSound;
-
-        public TextMeshProUGUI Value_Floor_Height;
-        public TextMeshProUGUI Value_Floor_LightIndex;
-
-        public TextMeshProUGUI Value_Ceiling_Height;
-        public TextMeshProUGUI Value_Ceiling_LightIndex;
-
-        public TextMeshProUGUI Value_VertexCount;
-        public TextMeshProUGUI Value_VertexIndices;
-        public TextMeshProUGUI Value_LineIndices;
-        public TextMeshProUGUI Value_SideIndices;
-        public TextMeshProUGUI Value_FirstObjectIndex;
-        public TextMeshProUGUI Value_AdjacentPolygonIndices;
-
-        public override void RefreshValuesInInspector()
+        public Inspector_Polygon(LevelEntity_Polygon polygon) : base(polygon)
         {
-            var polygon = inspectedObject as LevelEntity_Polygon;
+        }
 
-            Value_Id.text = polygon.NativeIndex.ToString();
-            Value_Type.text = AlephOneNames.PolygonType(polygon.NativeObject.type);
-            Value_Permutation.text = polygon.NativeObject.permutation.ToString();
-
-            Value_MediaIndex.text = polygon.NativeObject.media_index.ToString();
-            Value_MediaLight.text = polygon.NativeObject.media_lightsource_index.ToString();
-
-            Value_AmbientSound.text = polygon.NativeObject.ambient_sound_image_index.ToString();
-            Value_RandomSound.text = polygon.NativeObject.random_sound_image_index.ToString();
-
-            Value_Floor_Height.text = polygon.NativeObject.floor_height.ToString();
-            Value_Floor_LightIndex.text = polygon.NativeObject.floor_lightsource_index.ToString();
-
-            Value_Ceiling_Height.text = polygon.NativeObject.ceiling_height.ToString();
-            Value_Ceiling_LightIndex.text = polygon.NativeObject.ceiling_lightsource_index.ToString();
-
-            Value_VertexCount.text = polygon.NativeObject.vertex_count.ToString();
-
-            var endpointIndices = string.Empty;
-            for (var i = 0; i < polygon.NativeObject.vertex_count; i++)
+        protected override string LayoutPath
+        {
+            get
             {
-                var index = polygon.NativeObject.endpoint_indexes[i].ToString();
+                return "UI/Inspectors/Inspector - Polygon";
+            }
+        }
 
-                if (i == 0)
-                {
-                    endpointIndices += index;
-                }
-                else
-                {
-                    endpointIndices += $"\n{index}";
-                }
+        private polygon_data Polygon
+        {
+            get
+            {
+                return Entity.NativeObject;
+            }
+        }
+
+        [CreateProperty]
+        public string Id
+        {
+            get
+            {
+                return Entity.NativeIndex.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string Type
+        {
+            get
+            {
+                return AlephOneNames.PolygonType(Polygon.type);
+            }
+        }
+
+        [CreateProperty]
+        public string Permutation
+        {
+            get
+            {
+                return Polygon.permutation.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string MediaIndex
+        {
+            get
+            {
+                return Polygon.media_index.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string MediaLight
+        {
+            get
+            {
+                return Polygon.media_lightsource_index.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string AmbientSound
+        {
+            get
+            {
+                return Polygon.ambient_sound_image_index.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string RandomSound
+        {
+            get
+            {
+                return Polygon.random_sound_image_index.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string FloorHeight
+        {
+            get
+            {
+                return Polygon.floor_height.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string FloorLightIndex
+        {
+            get
+            {
+                return Polygon.floor_lightsource_index.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string CeilingHeight
+        {
+            get
+            {
+                return Polygon.ceiling_height.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string CeilingLightIndex
+        {
+            get
+            {
+                return Polygon.ceiling_lightsource_index.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string VertexCount
+        {
+            get
+            {
+                return Polygon.vertex_count.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string VertexIndices
+        {
+            get
+            {
+                return Lines(Polygon.endpoint_indexes, index => index.ToString());
+            }
+        }
+
+        [CreateProperty]
+        public string LineIndices
+        {
+            get
+            {
+                return Lines(Polygon.line_indexes, index => index.ToString());
+            }
+        }
+
+        [CreateProperty]
+        public string SideIndices
+        {
+            get
+            {
+                return Lines(Polygon.side_indexes, index => index < 0 ? "- no side -" : index.ToString());
+            }
+        }
+
+        [CreateProperty]
+        public string AdjacentPolygonIndices
+        {
+            get
+            {
+                return Lines(Polygon.adjacent_polygon_indexes, index => index < 0 ? "- no polygon -" : index.ToString());
+            }
+        }
+
+        [CreateProperty]
+        public string FirstObjectIndex
+        {
+            get
+            {
+                return Polygon.first_object.ToString();
+            }
+        }
+
+        // One of the polygon's vertices' values per line
+        private string Lines(short[] values, Func<short, string> format)
+        {
+            var lines = new string[Polygon.vertex_count];
+            for (var i = 0; i < lines.Length; i++)
+            {
+                lines[i] = format(values[i]);
             }
 
-            Value_VertexIndices.text = endpointIndices;
-
-            var lineIndices = string.Empty;
-            for (var i = 0; i < polygon.NativeObject.vertex_count; i++)
-            {
-                var index = polygon.NativeObject.line_indexes[i].ToString();
-
-                if (i == 0)
-                {
-                    lineIndices += index;
-                }
-                else
-                {
-                    lineIndices += $"\n{index}";
-                }
-            }
-
-            Value_LineIndices.text = lineIndices;
-
-            var sideIndices = string.Empty;
-            for (var i = 0; i < polygon.NativeObject.vertex_count; i++)
-            {
-                var index = polygon.NativeObject.side_indexes[i] < 0 ? "- no side -" : polygon.NativeObject.side_indexes[i].ToString();
-
-                if (i == 0)
-                {
-                    sideIndices += index;
-                }
-                else
-                {
-                    sideIndices += $"\n{index}";
-                }
-            }
-
-            Value_SideIndices.text = sideIndices;
-
-            var adjacentPolygonIndices = string.Empty;
-            for (var i = 0; i < polygon.NativeObject.vertex_count; i++)
-            {
-                var index = polygon.NativeObject.adjacent_polygon_indexes[i] < 0 ? "- no polygon -" : polygon.NativeObject.adjacent_polygon_indexes[i].ToString();
-
-                if (i == 0)
-                {
-                    adjacentPolygonIndices += index;
-                }
-                else
-                {
-                    adjacentPolygonIndices += $"\n{index}";
-                }
-            }
-
-            Value_SideIndices.text = adjacentPolygonIndices;
-
-            Value_FirstObjectIndex.text = polygon.NativeObject.first_object.ToString();
+            return string.Join("\n", lines);
         }
     }
 }

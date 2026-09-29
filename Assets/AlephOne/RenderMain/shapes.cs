@@ -10,6 +10,7 @@
 // has no resource forks). The Marathon 1 RLE conversion is ported.
 using System;
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.collection_definition;
 using static AlephOne.csalerts;
 using static AlephOne.cstypes;
@@ -24,6 +25,7 @@ using static AlephOne.textures;
 
 namespace AlephOne
 {
+    [NoAutoStaticsCleanup]
     public static class shapes
     {
         /* ---------- constants */

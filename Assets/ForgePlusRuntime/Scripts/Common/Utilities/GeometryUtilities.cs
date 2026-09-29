@@ -1,4 +1,5 @@
 ﻿using AlephOne;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace ForgePlus.LevelManipulation.Utilities
@@ -18,7 +19,8 @@ namespace ForgePlus.LevelManipulation.Utilities
         WanderFast = 20,
     }
 
-    public static class GeometryUtilities
+    [AutoStaticsCleanup]
+    public static partial class GeometryUtilities
     {
         // Used for converting between world-unit (WU) "increments" and meters.
         // One WU is 1024 "increments", and we want a WU to convert to 2 meters, so we use 512 as the conversion ratio.
@@ -28,7 +30,21 @@ namespace ForgePlus.LevelManipulation.Utilities
 
         public const float UnitsPerTextureOffetNudge = WorldUnitIncrementsPerWorldUnit / 128f;
 
-        private static readonly Material SelectionIndicatorMaterial = new Material(Shader.Find("ForgePlus/GeometrySelectionIndicator"));
+        // Recreated when destroyed, such as at the end of a Play session
+        private static Material selectionIndicatorMaterial;
+
+        private static Material SelectionIndicatorMaterial
+        {
+            get
+            {
+                if (!selectionIndicatorMaterial)
+                {
+                    selectionIndicatorMaterial = new Material(Shader.Find("ForgePlus/GeometrySelectionIndicator"));
+                }
+
+                return selectionIndicatorMaterial;
+            }
+        }
 
         public static Vector3 GetMeshVertex(MapLevel level, int endpointIndex, short height = 0)
         {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ForgePlus.DataFileIO
 {
@@ -20,13 +19,13 @@ namespace ForgePlus.DataFileIO
             }
         }
 
-        public async Task OpenLevel(int levelIndex)
+        public void OpenLevel(int levelIndex)
         {
             LoadData();
 
             currentlyOpenLevel = new LevelData(levelIndex, file);
 
-            await currentlyOpenLevel.OpenLevel();
+            currentlyOpenLevel.OpenLevel();
         }
 
         public void CloseAndUnloadCurrentLevel()

@@ -4,6 +4,7 @@
 // StreamPointer stands in for that pointer: a buffer plus a position that each call advances.
 // Packed data is big-endian (PACKED_DATA_IS_BIG_ENDIAN), which is Aleph One's default.
 using System;
+using System.Buffers.Binary;
 
 namespace AlephOne
 {
@@ -23,6 +24,14 @@ namespace AlephOne
         {
             Position += count;
         }
+
+        // The next count bytes, and S += count
+        public Span<byte> Take(int count)
+        {
+            var span = Buffer.AsSpan(Position, count);
+            Position += count;
+            return span;
+        }
     }
 
     public static class Packing
@@ -35,30 +44,22 @@ namespace AlephOne
 
         public static void StreamToValue(StreamPointer Stream, out ushort Value)
         {
-            var S = Stream.Buffer;
-            var p = Stream.Position;
-            Value = (ushort) ((S[p] << 8) | S[p + 1]);
-            Stream.Position += 2;
+            Value = BinaryPrimitives.ReadUInt16BigEndian(Stream.Take(2));
         }
 
         public static void StreamToValue(StreamPointer Stream, out short Value)
         {
-            StreamToValue(Stream, out ushort UValue);
-            Value = unchecked((short) UValue);
+            Value = BinaryPrimitives.ReadInt16BigEndian(Stream.Take(2));
         }
 
         public static void StreamToValue(StreamPointer Stream, out uint Value)
         {
-            var S = Stream.Buffer;
-            var p = Stream.Position;
-            Value = ((uint) S[p] << 24) | ((uint) S[p + 1] << 16) | ((uint) S[p + 2] << 8) | S[p + 3];
-            Stream.Position += 4;
+            Value = BinaryPrimitives.ReadUInt32BigEndian(Stream.Take(4));
         }
 
         public static void StreamToValue(StreamPointer Stream, out int Value)
         {
-            StreamToValue(Stream, out uint UValue);
-            Value = unchecked((int) UValue);
+            Value = BinaryPrimitives.ReadInt32BigEndian(Stream.Take(4));
         }
 
         public static void ValueToStream(StreamPointer Stream, byte Value)
@@ -68,84 +69,82 @@ namespace AlephOne
 
         public static void ValueToStream(StreamPointer Stream, ushort Value)
         {
-            var S = Stream.Buffer;
-            var p = Stream.Position;
-            S[p] = (byte) (Value >> 8);
-            S[p + 1] = (byte) Value;
-            Stream.Position += 2;
+            BinaryPrimitives.WriteUInt16BigEndian(Stream.Take(2), Value);
         }
 
         public static void ValueToStream(StreamPointer Stream, short Value)
         {
-            ValueToStream(Stream, unchecked((ushort) Value));
+            BinaryPrimitives.WriteInt16BigEndian(Stream.Take(2), Value);
         }
 
         public static void ValueToStream(StreamPointer Stream, uint Value)
         {
-            var S = Stream.Buffer;
-            var p = Stream.Position;
-            S[p] = (byte) (Value >> 24);
-            S[p + 1] = (byte) (Value >> 16);
-            S[p + 2] = (byte) (Value >> 8);
-            S[p + 3] = (byte) Value;
-            Stream.Position += 4;
+            BinaryPrimitives.WriteUInt32BigEndian(Stream.Take(4), Value);
         }
 
         public static void ValueToStream(StreamPointer Stream, int Value)
         {
-            ValueToStream(Stream, unchecked((uint) Value));
+            BinaryPrimitives.WriteInt32BigEndian(Stream.Take(4), Value);
         }
 
+        // ForgePlus: the lists are read and written in one pass over their bytes, rather than a StreamToValue or
+        // ValueToStream per element (the result is the same)
         public static void StreamToList(StreamPointer Stream, short[] List, int Count)
         {
-            for (int k = 0; k < Count; k++) StreamToValue(Stream, out List[k]);
+            var S = Stream.Take(Count * 2);
+            for (int k = 0; k < Count; k++) List[k] = BinaryPrimitives.ReadInt16BigEndian(S.Slice(k * 2));
         }
 
         public static void StreamToList(StreamPointer Stream, ushort[] List, int Count)
         {
-            for (int k = 0; k < Count; k++) StreamToValue(Stream, out List[k]);
+            var S = Stream.Take(Count * 2);
+            for (int k = 0; k < Count; k++) List[k] = BinaryPrimitives.ReadUInt16BigEndian(S.Slice(k * 2));
         }
 
         public static void StreamToList(StreamPointer Stream, int[] List, int Count)
         {
-            for (int k = 0; k < Count; k++) StreamToValue(Stream, out List[k]);
+            var S = Stream.Take(Count * 4);
+            for (int k = 0; k < Count; k++) List[k] = BinaryPrimitives.ReadInt32BigEndian(S.Slice(k * 4));
         }
 
         public static void StreamToList(StreamPointer Stream, uint[] List, int Count)
         {
-            for (int k = 0; k < Count; k++) StreamToValue(Stream, out List[k]);
+            var S = Stream.Take(Count * 4);
+            for (int k = 0; k < Count; k++) List[k] = BinaryPrimitives.ReadUInt32BigEndian(S.Slice(k * 4));
         }
 
         public static void ListToStream(StreamPointer Stream, short[] List, int Count)
         {
-            for (int k = 0; k < Count; k++) ValueToStream(Stream, List[k]);
+            var S = Stream.Take(Count * 2);
+            for (int k = 0; k < Count; k++) BinaryPrimitives.WriteInt16BigEndian(S.Slice(k * 2), List[k]);
         }
 
         public static void ListToStream(StreamPointer Stream, ushort[] List, int Count)
         {
-            for (int k = 0; k < Count; k++) ValueToStream(Stream, List[k]);
+            var S = Stream.Take(Count * 2);
+            for (int k = 0; k < Count; k++) BinaryPrimitives.WriteUInt16BigEndian(S.Slice(k * 2), List[k]);
         }
 
         public static void ListToStream(StreamPointer Stream, int[] List, int Count)
         {
-            for (int k = 0; k < Count; k++) ValueToStream(Stream, List[k]);
+            var S = Stream.Take(Count * 4);
+            for (int k = 0; k < Count; k++) BinaryPrimitives.WriteInt32BigEndian(S.Slice(k * 4), List[k]);
         }
 
         public static void ListToStream(StreamPointer Stream, uint[] List, int Count)
         {
-            for (int k = 0; k < Count; k++) ValueToStream(Stream, List[k]);
+            var S = Stream.Take(Count * 4);
+            for (int k = 0; k < Count; k++) BinaryPrimitives.WriteUInt32BigEndian(S.Slice(k * 4), List[k]);
         }
 
         public static void StreamToBytes(StreamPointer Stream, byte[] Bytes, int Count)
         {
-            Buffer.BlockCopy(Stream.Buffer, Stream.Position, Bytes, 0, Count);
-            Stream.Position += Count;
+            Stream.Take(Count).CopyTo(Bytes);
         }
 
         public static void BytesToStream(StreamPointer Stream, byte[] Bytes, int Count)
         {
-            Buffer.BlockCopy(Bytes, 0, Stream.Buffer, Stream.Position, Count);
-            Stream.Position += Count;
+            Bytes.AsSpan(0, Count).CopyTo(Stream.Take(Count));
         }
     }
 }

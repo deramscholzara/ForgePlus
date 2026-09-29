@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using Unity.Scripting.LifecycleManagement;
+using UnityEngine;
 
 namespace RuntimeCore.Entities.Geometry
 {
     // Trims a side next to a platform to what Aleph One would draw for the platform's current height, every frame.
     // Runs after PlatformConstraint has moved the surface, as the trimmed geometry is relative to its transform.
+    [AutoStaticsCleanup]
     [DefaultExecutionOrder(1000)]
-    public class PlatformSideClipping : MonoBehaviour
+    public partial class PlatformSideClipping : MonoBehaviour
     {
         private static bool clippingEnabled = true;
 

@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A read-only flag; an instance is named after the inspector property it shows -->
+    <ui:Toggle name="flag" text="Flag" class="fp-toggle fp-toggle--flag fp-inspector-flag fp-template" />
+</ui:UXML>

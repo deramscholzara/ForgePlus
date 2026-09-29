@@ -1,0 +1,47 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="TextureRow" src="../Templates/InspectorTextureRow.uxml" />
+    <!-- Bound to Inspector_PolygonTextures -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Polygon Textures" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Floor" />
+        </ui:Instance>
+        <ui:Instance template="TextureRow" name="FloorTexture">
+            <ui:AttributeOverrides element-name="label" text="Texture:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FloorOffset">
+            <ui:AttributeOverrides element-name="label" text="Offset:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FloorTransferMode">
+            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FloorLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Ceiling" />
+        </ui:Instance>
+        <ui:Instance template="TextureRow" name="CeilingTexture">
+            <ui:AttributeOverrides element-name="label" text="Texture:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="CeilingOffset">
+            <ui:AttributeOverrides element-name="label" text="Offset:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="CeilingTransferMode">
+            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="CeilingLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light:" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,83 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
+    <!-- Bound to Inspector_MapObject -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Object" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Type">
+            <ui:AttributeOverrides element-name="label" text="Type:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Subtype">
+            <ui:AttributeOverrides element-name="label" text="Subtype:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Angle">
+            <ui:AttributeOverrides element-name="label" text="Angle:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Position">
+            <ui:AttributeOverrides element-name="label" text="Position:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Flags" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Invisible">
+            <ui:AttributeOverrides element-name="flag" text="Invisible" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="FromCeiling">
+            <ui:AttributeOverrides element-name="flag" text="From Ceiling" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Blind">
+            <ui:AttributeOverrides element-name="flag" text="Blind" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Deaf">
+            <ui:AttributeOverrides element-name="flag" text="Deaf" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="NetworkOnly">
+            <ui:AttributeOverrides element-name="flag" text="Network Only" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Floats">
+            <ui:AttributeOverrides element-name="flag" text="Floats" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="OnPlatform">
+            <ui:AttributeOverrides element-name="flag" text="On Platform" />
+        </ui:Instance>
+        <ui:VisualElement name="Placement">
+            <ui:VisualElement class="fp-space" />
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="Placement" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PlacementInitialCount">
+                <ui:AttributeOverrides element-name="label" text="Initial Count:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PlacementMinimumCount">
+                <ui:AttributeOverrides element-name="label" text="Min Count:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PlacementMaximumCount">
+                <ui:AttributeOverrides element-name="label" text="Max Count:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PlacementRandomCount">
+                <ui:AttributeOverrides element-name="label" text="Random Count:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PlacementRandomChance">
+                <ui:AttributeOverrides element-name="label" text="Random Chance:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PlacementRandomLocation">
+                <ui:AttributeOverrides element-name="label" text="Use Random Location:" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Foldout">
+            <ui:Instance template="Row" name="PolygonIndex">
+                <ui:AttributeOverrides element-name="label" text="Polygon ID:" />
+            </ui:Instance>
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

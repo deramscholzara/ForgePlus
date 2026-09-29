@@ -41,7 +41,7 @@ namespace ForgePlus.DataFileIO
             if (!string.IsNullOrEmpty(savePath) && !string.IsNullOrWhiteSpace(savePath))
             {
                 var path = savePath;
-                path = path.Replace(type.FileExtensionWithPeriod().ToLower(), type.FileExtensionWithPeriod());
+                path = path.Replace(type.FileExtensionWithPeriod().ToLowerInvariant(), type.FileExtensionWithPeriod());
 
                 try
                 {

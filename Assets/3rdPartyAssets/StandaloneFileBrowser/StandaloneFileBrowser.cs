@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using Unity.Scripting.LifecycleManagement;
 
 namespace SFB {
     public struct ExtensionFilter {
@@ -11,6 +12,7 @@ namespace SFB {
         }
     }
 
+    [NoAutoStaticsCleanup]
     public class StandaloneFileBrowser {
         private static IStandaloneFileBrowser _platformWrapper = null;
 

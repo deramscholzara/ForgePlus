@@ -1,20 +1,39 @@
 ﻿using ForgePlus.Extensions;
 using RuntimeCore.Entities;
-using TMPro;
+using Unity.Properties;
 
 namespace ForgePlus.Inspection
 {
-    public class Inspector_Annotation : Inspector_Base
+    public class Inspector_Annotation : Inspector_Base<LevelEntity_Annotation>
     {
-        public TextMeshProUGUI Value_Id;
-        public TextMeshProUGUI Value_Text;
-
-        public override void RefreshValuesInInspector()
+        public Inspector_Annotation(LevelEntity_Annotation annotation) : base(annotation)
         {
-            var annotation = inspectedObject as LevelEntity_Annotation;
+        }
 
-            Value_Id.text = annotation.NativeIndex.ToString();
-            Value_Text.text = annotation.NativeObject.GetText();
+        protected override string LayoutPath
+        {
+            get
+            {
+                return "UI/Inspectors/Inspector - Annotation";
+            }
+        }
+
+        [CreateProperty]
+        public string Id
+        {
+            get
+            {
+                return Entity.NativeIndex.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string Text
+        {
+            get
+            {
+                return Entity.NativeObject.GetText();
+            }
         }
     }
 }

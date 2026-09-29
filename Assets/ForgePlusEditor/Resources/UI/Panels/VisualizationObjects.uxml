@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
+    <!-- Object mode's visualization options (placeholders, which don't filter anything yet) -->
+    <ui:VisualElement class="fp-visualization" picking-mode="Ignore">
+        <ui:VisualElement class="fp-box fp-box--padded fp-visualization__options">
+            <ui:RadioButtonGroup name="visualization" value="0" class="fp-radio-group">
+                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__everything">
+                    <ui:AttributeOverrides element-name="control" text="Show Everything" />
+                </ui:Instance>
+            </ui:RadioButtonGroup>
+        </ui:VisualElement>
+        <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
+    </ui:VisualElement>
+</ui:UXML>

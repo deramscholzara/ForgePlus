@@ -1,110 +1,367 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.UI;
 using RuntimeCore.Common;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
-using TMPro;
-using UnityEngine.UI;
+using Unity.Properties;
+using UnityEngine.UIElements;
 
 namespace ForgePlus.Inspection
 {
-    public class Inspector_Platform : Inspector_Base, IDestructionPreparable
+    public class Inspector_Platform : Inspector_Base<LevelEntity_Platform>, IDestructionPreparable
     {
-        public TextMeshProUGUI Value_Id;
-        public TextMeshProUGUI Value_Tag;
-        public TextMeshProUGUI Value_PolygonIndex;
-        public TextMeshProUGUI Value_Type;
-        public TextMeshProUGUI Value_Speed;
-        public TextMeshProUGUI Value_Delay;
-        public TextMeshProUGUI Value_MaximumHeight;
-        public TextMeshProUGUI Value_MinimumHeight;
-
-        public Toggle Value_Flags_InitiallyActive;
-        public Toggle Value_Flags_InitiallyExtended;
-        public Toggle Value_Flags_IsLocked;
-        public Toggle Value_Flags_IsPlayerControllable;
-        public Toggle Value_Flags_IsMonsterControllable;
-        public Toggle Value_Flags_CausesDamage;
-        public Toggle Value_Flags_ReversesWhenObstructed;
-        public Toggle Value_Flags_DeactivatesAtEachLevel;
-        public Toggle Value_Flags_DeactivatesAtInitialLevel;
-        public Toggle Value_Flags_ActivatesAdjacentOnActivation;
-        public Toggle Value_Flags_ActivatesAdjacentOnDeactivation;
-        public Toggle Value_Flags_DeactivatesAdjacentOnActivation;
-        public Toggle Value_Flags_DeactivatesAdjacentOnDeactivation;
-        public Toggle Value_Flags_ActivatesAdjacentAtEachLevel;
-        public Toggle Value_Flags_DelaysBeforeActivation;
-        public Toggle Value_Flags_ActivatesOnlyOnce;
-        public Toggle Value_Flags_ActivatesLight;
-        public Toggle Value_Flags_DeactivatesLight;
-        public Toggle Value_Flags_CannotBeExternallyDeactivated;
-        public Toggle Value_Flags_ContractsSlower;
-        public Toggle Value_Flags_UsesNativePolygonHeights;
-        public Toggle Value_Flags_ExtendsFloorToCeiling;
-        public Toggle Value_Flags_ComesFromFloor;
-        public Toggle Value_Flags_ComesFromCeiling;
-        public Toggle Value_Flags_DoesNotActivateParent;
-        public Toggle Value_Flags_IsSecret;
-        public Toggle Value_Flags_IsDoor;
-
-        public Toggle Simulation_IsActive;
-        public Button Simulation_Obstruct;
-
-        private LevelEntity_Platform platform = null;
-
-        public override void RefreshValuesInInspector()
+        public Inspector_Platform(LevelEntity_Platform platform) : base(platform)
         {
-            platform = inspectedObject as LevelEntity_Platform;
+        }
 
-            Value_Id.text = platform.NativeIndex.ToString();
-            Value_Tag.text = platform.NativeObject.tag.ToString();
-            Value_PolygonIndex.text = platform.NativeObject.polygon_index.ToString();
-            Value_Type.text = AlephOneNames.PlatformType(platform.NativeObject.type);
-            Value_Speed.text = platform.NativeObject.speed.ToString();
-            Value_Delay.text = platform.NativeObject.delay.ToString();
-            Value_MaximumHeight.text = $"Floor: {platform.NativeObject.maximum_floor_height}  Ceiling: {platform.NativeObject.maximum_ceiling_height}";
-            Value_MinimumHeight.text = $"Floor: {platform.NativeObject.minimum_floor_height}  Ceiling: {platform.NativeObject.minimum_ceiling_height}";
+        protected override string LayoutPath
+        {
+            get
+            {
+                return "UI/Inspectors/Inspector - Platform";
+            }
+        }
 
-            var staticFlags = platform.NativeObject.static_flags;
-            Value_Flags_InitiallyActive.SetIsOnWithoutNotify(platforms.PLATFORM_IS_INITIALLY_ACTIVE(staticFlags));
-            Value_Flags_InitiallyExtended.SetIsOnWithoutNotify(platforms.PLATFORM_IS_INITIALLY_EXTENDED(staticFlags));
-            Value_Flags_IsLocked.SetIsOnWithoutNotify(platforms.PLATFORM_IS_LOCKED(staticFlags));
-            Value_Flags_IsPlayerControllable.SetIsOnWithoutNotify(platforms.PLATFORM_IS_PLAYER_CONTROLLABLE(staticFlags));
-            Value_Flags_IsMonsterControllable.SetIsOnWithoutNotify(platforms.PLATFORM_IS_MONSTER_CONTROLLABLE(staticFlags));
-            Value_Flags_CausesDamage.SetIsOnWithoutNotify(platforms.PLATFORM_CAUSES_DAMAGE(staticFlags));
-            Value_Flags_ReversesWhenObstructed.SetIsOnWithoutNotify(platforms.PLATFORM_REVERSES_DIRECTION_WHEN_OBSTRUCTED(staticFlags));
-            Value_Flags_DeactivatesAtEachLevel.SetIsOnWithoutNotify(platforms.PLATFORM_DEACTIVATES_AT_EACH_LEVEL(staticFlags));
-            Value_Flags_DeactivatesAtInitialLevel.SetIsOnWithoutNotify(platforms.PLATFORM_DEACTIVATES_AT_INITIAL_LEVEL(staticFlags));
-            Value_Flags_ActivatesAdjacentOnActivation.SetIsOnWithoutNotify(platforms.PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_WHEN_ACTIVATING(staticFlags));
-            Value_Flags_ActivatesAdjacentOnDeactivation.SetIsOnWithoutNotify(platforms.PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_WHEN_DEACTIVATING(staticFlags));
-            Value_Flags_DeactivatesAdjacentOnActivation.SetIsOnWithoutNotify(platforms.PLATFORM_DEACTIVATES_ADJACENT_PLATFORMS_WHEN_ACTIVATING(staticFlags));
-            Value_Flags_DeactivatesAdjacentOnDeactivation.SetIsOnWithoutNotify(platforms.PLATFORM_DEACTIVATES_ADJACENT_PLATFORMS_WHEN_DEACTIVATING(staticFlags));
-            Value_Flags_ActivatesAdjacentAtEachLevel.SetIsOnWithoutNotify(platforms.PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_AT_EACH_LEVEL(staticFlags));
-            Value_Flags_DelaysBeforeActivation.SetIsOnWithoutNotify(platforms.PLATFORM_DELAYS_BEFORE_ACTIVATION(staticFlags));
-            Value_Flags_ActivatesOnlyOnce.SetIsOnWithoutNotify(platforms.PLATFORM_ACTIVATES_ONLY_ONCE(staticFlags));
-            Value_Flags_ActivatesLight.SetIsOnWithoutNotify(platforms.PLATFORM_ACTIVATES_LIGHT(staticFlags));
-            Value_Flags_DeactivatesLight.SetIsOnWithoutNotify(platforms.PLATFORM_DEACTIVATES_LIGHT(staticFlags));
-            Value_Flags_CannotBeExternallyDeactivated.SetIsOnWithoutNotify(platforms.PLATFORM_CANNOT_BE_EXTERNALLY_DEACTIVATED(staticFlags));
-            Value_Flags_ContractsSlower.SetIsOnWithoutNotify(platforms.PLATFORM_CONTRACTS_SLOWER(staticFlags));
-            Value_Flags_UsesNativePolygonHeights.SetIsOnWithoutNotify(platforms.PLATFORM_USES_NATIVE_POLYGON_HEIGHTS(staticFlags));
-            Value_Flags_ExtendsFloorToCeiling.SetIsOnWithoutNotify(platforms.PLATFORM_EXTENDS_FLOOR_TO_CEILING(staticFlags));
-            Value_Flags_ComesFromFloor.SetIsOnWithoutNotify(platforms.PLATFORM_COMES_FROM_FLOOR(staticFlags));
-            Value_Flags_ComesFromCeiling.SetIsOnWithoutNotify(platforms.PLATFORM_COMES_FROM_CEILING(staticFlags));
-            Value_Flags_DoesNotActivateParent.SetIsOnWithoutNotify(platforms.PLATFORM_DOES_NOT_ACTIVATE_PARENT(staticFlags));
-            Value_Flags_IsSecret.SetIsOnWithoutNotify(platforms.PLATFORM_IS_SECRET(staticFlags));
-            Value_Flags_IsDoor.SetIsOnWithoutNotify(platforms.PLATFORM_IS_DOOR(staticFlags));
+        private uint StaticFlags
+        {
+            get
+            {
+                return Entity.NativeObject.static_flags;
+            }
+        }
 
-            Simulation_IsActive.onValueChanged.AddListener(delegate { platform.SetRuntimeActive(Simulation_IsActive.isOn); });
-            platform.OnInspectionStateChange += OnInspectionStateChange;
-            OnInspectionStateChange(platform);
+        [CreateProperty]
+        public string Id
+        {
+            get
+            {
+                return Entity.NativeIndex.ToString();
+            }
+        }
 
-            Simulation_Obstruct.onClick.AddListener(delegate { platform.ObstructRuntimeBehavior(); });
+        [CreateProperty]
+        public string Tag
+        {
+            get
+            {
+                return Entity.NativeObject.tag.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string PolygonIndex
+        {
+            get
+            {
+                return Entity.NativeObject.polygon_index.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string Type
+        {
+            get
+            {
+                return AlephOneNames.PlatformType(Entity.NativeObject.type);
+            }
+        }
+
+        [CreateProperty]
+        public string Speed
+        {
+            get
+            {
+                return Entity.NativeObject.speed.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string Delay
+        {
+            get
+            {
+                return Entity.NativeObject.delay.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string MaximumHeight
+        {
+            get
+            {
+                return $"Floor: {Entity.NativeObject.maximum_floor_height}  Ceiling: {Entity.NativeObject.maximum_ceiling_height}";
+            }
+        }
+
+        [CreateProperty]
+        public string MinimumHeight
+        {
+            get
+            {
+                return $"Floor: {Entity.NativeObject.minimum_floor_height}  Ceiling: {Entity.NativeObject.minimum_ceiling_height}";
+            }
+        }
+
+        // The simulation's state, which (unlike the flags) can be changed here
+        [CreateProperty]
+        public bool SimulationActive
+        {
+            get
+            {
+                return Entity.IsRuntimeActive;
+            }
+            set
+            {
+                Entity.SetRuntimeActive(value);
+            }
+        }
+
+        [CreateProperty]
+        public bool InitiallyActive
+        {
+            get
+            {
+                return platforms.PLATFORM_IS_INITIALLY_ACTIVE(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool InitiallyExtended
+        {
+            get
+            {
+                return platforms.PLATFORM_IS_INITIALLY_EXTENDED(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsLocked
+        {
+            get
+            {
+                return platforms.PLATFORM_IS_LOCKED(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsPlayerControllable
+        {
+            get
+            {
+                return platforms.PLATFORM_IS_PLAYER_CONTROLLABLE(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsMonsterControllable
+        {
+            get
+            {
+                return platforms.PLATFORM_IS_MONSTER_CONTROLLABLE(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool CausesDamage
+        {
+            get
+            {
+                return platforms.PLATFORM_CAUSES_DAMAGE(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ReversesWhenObstructed
+        {
+            get
+            {
+                return platforms.PLATFORM_REVERSES_DIRECTION_WHEN_OBSTRUCTED(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool DeactivatesAtEachLevel
+        {
+            get
+            {
+                return platforms.PLATFORM_DEACTIVATES_AT_EACH_LEVEL(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool DeactivatesAtInitialLevel
+        {
+            get
+            {
+                return platforms.PLATFORM_DEACTIVATES_AT_INITIAL_LEVEL(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ActivatesAdjacentOnActivation
+        {
+            get
+            {
+                return platforms.PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_WHEN_ACTIVATING(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ActivatesAdjacentOnDeactivation
+        {
+            get
+            {
+                return platforms.PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_WHEN_DEACTIVATING(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool DeactivatesAdjacentOnActivation
+        {
+            get
+            {
+                return platforms.PLATFORM_DEACTIVATES_ADJACENT_PLATFORMS_WHEN_ACTIVATING(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool DeactivatesAdjacentOnDeactivation
+        {
+            get
+            {
+                return platforms.PLATFORM_DEACTIVATES_ADJACENT_PLATFORMS_WHEN_DEACTIVATING(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ActivatesAdjacentAtEachLevel
+        {
+            get
+            {
+                return platforms.PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_AT_EACH_LEVEL(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool DelaysBeforeActivation
+        {
+            get
+            {
+                return platforms.PLATFORM_DELAYS_BEFORE_ACTIVATION(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ActivatesOnlyOnce
+        {
+            get
+            {
+                return platforms.PLATFORM_ACTIVATES_ONLY_ONCE(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ActivatesLight
+        {
+            get
+            {
+                return platforms.PLATFORM_ACTIVATES_LIGHT(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool DeactivatesLight
+        {
+            get
+            {
+                return platforms.PLATFORM_DEACTIVATES_LIGHT(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool CannotBeExternallyDeactivated
+        {
+            get
+            {
+                return platforms.PLATFORM_CANNOT_BE_EXTERNALLY_DEACTIVATED(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ContractsSlower
+        {
+            get
+            {
+                return platforms.PLATFORM_CONTRACTS_SLOWER(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool UsesNativePolygonHeights
+        {
+            get
+            {
+                return platforms.PLATFORM_USES_NATIVE_POLYGON_HEIGHTS(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ExtendsFloorToCeiling
+        {
+            get
+            {
+                return platforms.PLATFORM_EXTENDS_FLOOR_TO_CEILING(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ComesFromFloor
+        {
+            get
+            {
+                return platforms.PLATFORM_COMES_FROM_FLOOR(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool ComesFromCeiling
+        {
+            get
+            {
+                return platforms.PLATFORM_COMES_FROM_CEILING(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool DoesNotActivateParent
+        {
+            get
+            {
+                return platforms.PLATFORM_DOES_NOT_ACTIVATE_PARENT(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsSecret
+        {
+            get
+            {
+                return platforms.PLATFORM_IS_SECRET(StaticFlags);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsDoor
+        {
+            get
+            {
+                return platforms.PLATFORM_IS_DOOR(StaticFlags);
+            }
         }
 
         public void PrepareForDestruction()
         {
-            platform.OnInspectionStateChange -= OnInspectionStateChange;
-
             foreach (var runtimePlatform in LevelEntity_Level.Instance.CeilingPlatforms.Values)
             {
                 runtimePlatform.BeginRuntimeStyleBehavior();
@@ -116,11 +373,27 @@ namespace ForgePlus.Inspection
             }
         }
 
+        protected override void OnLoaded()
+        {
+            base.OnLoaded();
+
+            var simulationActive = Root.Find<Toggle>(nameof(SimulationActive));
+            simulationActive.SetEnabled(true);
+            simulationActive.BindValue(this, nameof(SimulationActive));
+
+            Root.Find<Button>("obstruct").clicked += Entity.ObstructRuntimeBehavior;
+
+            Entity.OnInspectionStateChange += OnInspectionStateChange;
+        }
+
+        protected override void OnUnloading()
+        {
+            Entity.OnInspectionStateChange -= OnInspectionStateChange;
+        }
+
         private void OnInspectionStateChange(LevelEntity_Platform platform)
         {
-            // TODO: Make this update everything that is display - a full refresh.
-
-            Simulation_IsActive.SetIsOnWithoutNotify(platform.IsRuntimeActive);
+            RefreshValuesInInspector();
         }
     }
 }

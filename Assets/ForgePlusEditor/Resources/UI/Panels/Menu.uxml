@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
+    <!-- The selected tab's panel (Resources/UI/Panels/*Tab) is loaded into the tab slot -->
+    <ui:VisualElement class="fp-menu" picking-mode="Ignore">
+        <ui:RadioButtonGroup name="tabs" class="fp-radio-group fp-radio-row fp-menu__tabs">
+            <ui:Instance template="RadioToggle" class="fp-menu__tab">
+                <ui:AttributeOverrides element-name="control" text="Files" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-menu__tab">
+                <ui:AttributeOverrides element-name="control" text="Inputs" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-menu__tab">
+                <ui:AttributeOverrides element-name="control" text="Settings" />
+            </ui:Instance>
+        </ui:RadioButtonGroup>
+        <ui:VisualElement name="tab-slot" class="fp-menu__content" picking-mode="Ignore" />
+    </ui:VisualElement>
+</ui:UXML>

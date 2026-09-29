@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Toggle name="control" class="fp-toggle fp-toggle--wide-short fp-swatch fp-swatch--texture fp-template">
+        <ui:Image name="preview" picking-mode="Ignore" class="fp-swatch__content fp-swatch__preview" />
+        <ui:Label name="label" text="C: 00 B: 00" picking-mode="Ignore" class="fp-swatch__content fp-swatch__texture-label" />
+        <ui:VisualElement name="in-use" picking-mode="Ignore" class="fp-swatch__content fp-swatch__in-use" />
+    </ui:Toggle>
+</ui:UXML>

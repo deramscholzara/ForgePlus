@@ -1,12 +1,15 @@
 ﻿using AlephOne;
 using System;
+using System.Threading.Tasks;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace ForgePlus.DataFileIO
 {
     // Chooses the physics model as Aleph One does: the open level's embedded physics if it has any,
     // otherwise the selected physics file's, otherwise the engine's built-in definitions
-    public class PhysicsLoading : FileLoadingBase<PhysicsLoading, PhysicsData, PhysicsFile>
+    [AutoStaticsCleanup]
+    public partial class PhysicsLoading : FileLoadingBase<PhysicsLoading, PhysicsData, PhysicsFile>
     {
         private static LoadedPhysicsModel engineDefaults;
 
@@ -76,9 +79,21 @@ namespace ForgePlus.DataFileIO
             }
         }
 
-        public void SetLevel(MapLevel level)
+        // Builds the level's physics on a worker thread, for ApplyLevelModel to make it the open level's.
+        // (The selected physics file is loaded first, here on the main thread.)
+        public Task<LoadedPhysicsModel> BuildLevelModelAsync(MapLevel level)
         {
-            SetLevel(level, SelectedFileModel);
+            var physicsFileModel = SelectedFileModel;
+
+            return Task.Run(() => LoadedPhysicsModel.ForLevel(level, physicsFileModel));
+        }
+
+        public void ApplyLevelModel(MapLevel level, LoadedPhysicsModel levelModel)
+        {
+            openLevel = level;
+            openLevelModel = levelModel;
+
+            LogLevelModel();
         }
 
         public void ClearLevel()
@@ -110,9 +125,11 @@ namespace ForgePlus.DataFileIO
 
         private void SetLevel(MapLevel level, LoadedPhysicsModel physicsFileModel)
         {
-            openLevel = level;
-            openLevelModel = LoadedPhysicsModel.ForLevel(level, physicsFileModel);
+            ApplyLevelModel(level, LoadedPhysicsModel.ForLevel(level, physicsFileModel));
+        }
 
+        private void LogLevelModel()
+        {
             Debug.Log($"--- Physics: using {openLevelModel.Source}{(openLevelModel.FilePath != null ? $" ({openLevelModel.FilePath})" : string.Empty)}");
         }
 
@@ -135,7 +152,7 @@ namespace ForgePlus.DataFileIO
         {
             if (openLevel != null)
             {
-                SetLevel(openLevel);
+                SetLevel(openLevel, SelectedFileModel);
             }
         }
 

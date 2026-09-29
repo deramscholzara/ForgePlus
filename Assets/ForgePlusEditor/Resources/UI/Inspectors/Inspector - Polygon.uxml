@@ -1,0 +1,82 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
+    <!-- Bound to Inspector_Polygon -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Polygon" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Type">
+            <ui:AttributeOverrides element-name="label" text="Type:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Permutation">
+            <ui:AttributeOverrides element-name="label" text="Permutation:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Floor" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FloorHeight">
+            <ui:AttributeOverrides element-name="label" text="Height:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FloorLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Ceiling" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="CeilingHeight">
+            <ui:AttributeOverrides element-name="label" text="Height:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="CeilingLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Media" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="MediaIndex">
+            <ui:AttributeOverrides element-name="label" text="Index:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="MediaLight">
+            <ui:AttributeOverrides element-name="label" text="Light:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Sounds" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="AmbientSound">
+            <ui:AttributeOverrides element-name="label" text="Ambient:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="RandomSound">
+            <ui:AttributeOverrides element-name="label" text="Random:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Foldout">
+            <ui:Instance template="Row" name="VertexCount">
+                <ui:AttributeOverrides element-name="label" text="Vertex Count:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="VertexIndices">
+                <ui:AttributeOverrides element-name="label" text="Vertex Indices:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="LineIndices">
+                <ui:AttributeOverrides element-name="label" text="Line Indices:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="SideIndices">
+                <ui:AttributeOverrides element-name="label" text="Side Indices:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="FirstObjectIndex">
+                <ui:AttributeOverrides element-name="label" text="First Object Index:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="AdjacentPolygonIndices">
+                <ui:AttributeOverrides element-name="label" text="Adjacent Polygon Indices:" />
+            </ui:Instance>
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

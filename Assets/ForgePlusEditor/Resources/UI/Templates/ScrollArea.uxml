@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A vertical scroll area; an instance's children go into its content -->
+    <ui:ScrollView name="control" mode="Vertical" horizontal-scroller-visibility="Hidden" content-container="control" class="fp-scroll fp-template" />
+</ui:UXML>

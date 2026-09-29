@@ -1,4 +1,5 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/projectile_definitions.h
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.cstypes;
 using static AlephOne.effects;
 using static AlephOne.map;
@@ -39,6 +40,7 @@ namespace AlephOne
         }
     }
 
+    [NoAutoStaticsCleanup]
     public static class projectile_definitions
     {
         /* ---------- constants */

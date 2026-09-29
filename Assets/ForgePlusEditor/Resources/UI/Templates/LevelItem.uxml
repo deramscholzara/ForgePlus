@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- An item in the level list, which shows its indicator filled while it's selected -->
+    <ui:VisualElement class="fp-level-item fp-template">
+        <ui:VisualElement class="fp-level-item__indicator" />
+        <ui:Label name="label" text="Level Name" class="fp-level-item__label" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -55,9 +55,7 @@ namespace RuntimeCore.Entities.Geometry
 
         public void Inspect()
         {
-            var inspectorPrefab = Resources.Load<Inspector_Line>("Inspectors/Inspector - Line");
-            var inspector = Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = new Inspector_Line(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
 

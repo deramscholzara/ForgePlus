@@ -26,20 +26,5 @@ namespace ForgePlus.DataFileIO
 
             return palette;
         }
-
-        public static Color32[] GetPixels32(this IndexedShapeBitmap bitmap, Color32[] palette)
-        {
-            var pixels = new Color32[bitmap.Width * bitmap.Height];
-            for (var y = 0; y < bitmap.Height; y++)
-            {
-                for (var x = 0; x < bitmap.Width; x++)
-                {
-                    // Unity textures are bottom-up
-                    pixels[(bitmap.Height - 1 - y) * bitmap.Width + x] = palette[bitmap.Indexes[y * bitmap.Width + x]];
-                }
-            }
-
-            return pixels;
-        }
     }
 }

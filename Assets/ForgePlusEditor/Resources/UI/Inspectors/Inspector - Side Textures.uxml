@@ -1,0 +1,66 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="TextureRow" src="../Templates/InspectorTextureRow.uxml" />
+    <!-- Bound to Inspector_SideTextures -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Side Textures" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Type">
+            <ui:AttributeOverrides element-name="label" text="Type:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Primary Surface" />
+        </ui:Instance>
+        <ui:Instance template="TextureRow" name="PrimaryTexture">
+            <ui:AttributeOverrides element-name="label" text="Texture:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryOffset">
+            <ui:AttributeOverrides element-name="label" text="Offset:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryTransferMode">
+            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="PrimaryLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Secondary Surface" />
+        </ui:Instance>
+        <ui:Instance template="TextureRow" name="SecondaryTexture">
+            <ui:AttributeOverrides element-name="label" text="Texture:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryOffset">
+            <ui:AttributeOverrides element-name="label" text="Offset:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryTransferMode">
+            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="SecondaryLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Transparent Surface" />
+        </ui:Instance>
+        <ui:Instance template="TextureRow" name="TransparentTexture">
+            <ui:AttributeOverrides element-name="label" text="Texture:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="TransparentOffset">
+            <ui:AttributeOverrides element-name="label" text="Offset:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="TransparentTransferMode">
+            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="TransparentLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

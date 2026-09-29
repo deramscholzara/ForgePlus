@@ -1,6 +1,4 @@
 ﻿using ForgePlus.ApplicationGeneral;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -14,8 +12,6 @@ namespace ForgePlus.LevelManipulation
         IDragHandler
     {
         protected bool isSelectable = false;
-
-        private CancellationTokenSource inputListenerCancellationTokenSource;
 
         public abstract void OnValidatedPointerClick(PointerEventData eventData);
         public abstract void OnValidatedBeginDrag(PointerEventData eventData);
@@ -71,25 +67,25 @@ namespace ForgePlus.LevelManipulation
                 var inputDirection = Vector2.zero;
                 var directionalInputReceived = false;
 
-                if (Hotkeys.GetKeyDown(KeyCode.UpArrow))
+                if (Hotkeys.WasPressed(ForgePlusInput.Editing.NudgeUp))
                 {
                     inputDirection.y += 1f;
                     directionalInputReceived = true;
                 }
                 
-                if (Hotkeys.GetKeyDown(KeyCode.DownArrow))
+                if (Hotkeys.WasPressed(ForgePlusInput.Editing.NudgeDown))
                 {
                     inputDirection.y -= 1f;
                     directionalInputReceived = true;
                 }
 
-                if (Hotkeys.GetKeyDown(KeyCode.RightArrow))
+                if (Hotkeys.WasPressed(ForgePlusInput.Editing.NudgeRight))
                 {
                     inputDirection.x += 1f;
                     directionalInputReceived = true;
                 }
                 
-                if (Hotkeys.GetKeyDown(KeyCode.LeftArrow))
+                if (Hotkeys.WasPressed(ForgePlusInput.Editing.NudgeLeft))
                 {
                     inputDirection.x -= 1f;
                     directionalInputReceived = true;
@@ -100,7 +96,7 @@ namespace ForgePlus.LevelManipulation
                     OnDirectionalInputDown(inputDirection);
                 }
 
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
             }
         }
     }

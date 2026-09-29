@@ -4,7 +4,6 @@ using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Common;
 using System;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using AlephOne;
 using static AlephOne.platforms;
@@ -77,9 +76,7 @@ namespace RuntimeCore.Entities.Geometry
 
         public void Inspect()
         {
-            var inspectorPrefab = Resources.Load<Inspector_Platform>("Inspectors/Inspector - Platform");
-            var inspector = UnityEngine.Object.Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = new Inspector_Platform(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
 
@@ -303,14 +300,14 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
-        private async Task Hold(CancellationToken cancellationToken, float duration, float holdPosition)
+        private async Awaitable Hold(CancellationToken cancellationToken, float duration, float holdPosition)
         {
             currentPosition = holdPosition;
 
             var endTime = Time.realtimeSinceStartup + duration;
             while (GetStateOffsetRealTimeSinceStartup() < endTime)
             {
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
 
                 if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
                 {
@@ -321,7 +318,7 @@ namespace RuntimeCore.Entities.Geometry
             remainingStateTime = GetStateOffsetRealTimeSinceStartup() - endTime;
         }
 
-        private async Task Move(CancellationToken cancellationToken, float speed, float targetPosition)
+        private async Awaitable Move(CancellationToken cancellationToken, float speed, float targetPosition)
         {
             if (currentPosition == targetPosition)
             {
@@ -334,7 +331,7 @@ namespace RuntimeCore.Entities.Geometry
                 // Aleph One keeps a platform with no speed moving without it getting anywhere (platforms.cpp: update_platforms)
                 while (!cancellationToken.IsCancellationRequested && Application.isPlaying)
                 {
-                    await Task.Yield();
+                    await Awaitable.NextFrameAsync();
                 }
 
                 return;
@@ -352,7 +349,7 @@ namespace RuntimeCore.Entities.Geometry
 
                 currentPosition = Mathf.Lerp(targetPosition, startingPosition, remainingProgress);
 
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
 
                 if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
                 {

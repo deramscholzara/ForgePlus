@@ -1,0 +1,32 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
+    <ui:Template name="SliderRow" src="../Templates/SliderRow.uxml" />
+    <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <ui:VisualElement class="fp-grow" picking-mode="Ignore">
+        <ui:VisualElement class="fp-box fp-settings__options">
+            <ui:Instance template="ScrollArea" class="fp-grow fp-scroll--spaced">
+                <ui:Instance template="Toggle" name="full-screen" class="fp-toggle--wide fp-setting">
+                    <ui:AttributeOverrides element-name="control" text="Full-Screen" />
+                </ui:Instance>
+                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <ui:Instance template="SliderRow" name="minimum-light" class="fp-setting">
+                    <ui:AttributeOverrides element-name="control" label="Minimum Light" />
+                </ui:Instance>
+                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <ui:Instance template="Toggle" name="bloom" class="fp-toggle--wide fp-setting">
+                    <ui:AttributeOverrides element-name="control" text="Bloom" />
+                </ui:Instance>
+                <ui:Instance template="Toggle" name="vignette" class="fp-toggle--wide fp-setting">
+                    <ui:AttributeOverrides element-name="control" text="Vignette" />
+                </ui:Instance>
+                <ui:Instance template="Toggle" name="color-adjustment" class="fp-toggle--wide fp-setting">
+                    <ui:AttributeOverrides element-name="control" text="Color Adjustment" />
+                </ui:Instance>
+                <ui:Instance template="Toggle" name="ambient-occlusion" class="fp-toggle--wide fp-setting">
+                    <ui:AttributeOverrides element-name="control" text="Ambient Occlusion" />
+                </ui:Instance>
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:Label text="Version: 2020-09-14-0" class="fp-faint-text fp-settings__version" />
+    </ui:VisualElement>
+</ui:UXML>

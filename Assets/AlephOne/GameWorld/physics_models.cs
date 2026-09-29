@@ -1,4 +1,5 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/physics_models.h
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.cstypes;
 using static AlephOne.world;
 
@@ -30,6 +31,7 @@ namespace AlephOne
         }
     }
 
+    [NoAutoStaticsCleanup]
     public static class physics_models
     {
         /* ---------- constants */

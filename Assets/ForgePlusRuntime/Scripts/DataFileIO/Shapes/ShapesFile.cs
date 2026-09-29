@@ -1,7 +1,13 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.Jobs;
 using ForgePlus.LevelManipulation.Utilities;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using Unity.Collections;
+using Unity.Jobs.LowLevel.Unsafe;
 using UnityEngine;
 
 namespace ForgePlus.DataFileIO
@@ -56,8 +62,77 @@ namespace ForgePlus.DataFileIO
             return definition != null && definition.type == collection_definition._wall_collection;
         }
 
+        // A wall, floor, ceiling, media or landscape texture's bitmap and colors, decoded and ready to become a texture
+        public sealed class PreparedShape : IDisposable
+        {
+            public ushort ShapeDescriptor;
+            public IndexedShapeBitmap Bitmap;
+            public Color32[] Palette;
+            public bool IsLandscape;
+            public TextureFormat Format;
+            public bool HasMipmaps;
+
+            public void Dispose()
+            {
+                Bitmap.Dispose();
+            }
+        }
+
         // A wall, floor, ceiling, media or landscape texture, or null if the collection, CLUT or shape doesn't exist
         public Texture2D GetShape(ushort shapeDescriptor)
+        {
+            using (var shape = PrepareShape(shapeDescriptor))
+            {
+                return shape == null ? null : CreateTextures(new[] { shape })[0];
+            }
+        }
+
+        // Decodes these shapes on worker threads (they only read the loaded shapes), with null for each that doesn't exist.
+        // The caller disposes them.
+        public static PreparedShape[] PrepareShapes(IReadOnlyList<ushort> shapeDescriptors)
+        {
+            var preparedShapes = new PreparedShape[shapeDescriptors.Count];
+
+            Parallel.For(0, shapeDescriptors.Count, new ParallelOptions { MaxDegreeOfParallelism = JobsUtility.JobWorkerCount }, i =>
+            {
+                preparedShapes[i] = PrepareShape(shapeDescriptors[i]);
+            });
+
+            return preparedShapes;
+        }
+
+        // Converts all of their pixels in one batch of jobs (null for null shapes)
+        public static Texture2D[] CreateTextures(IReadOnlyList<PreparedShape> preparedShapes)
+        {
+            var textures = new Texture2D[preparedShapes.Count];
+
+            using (var batch = new PixelJobs.PixelBatch())
+            {
+                var pixels = new NativeArray<byte>[preparedShapes.Count];
+                for (var i = 0; i < preparedShapes.Count; i++)
+                {
+                    var shape = preparedShapes[i];
+                    if (shape != null)
+                    {
+                        pixels[i] = batch.ScheduleConversion(shape.Bitmap, shape.Palette, shape.IsLandscape, shape.Format);
+                    }
+                }
+
+                batch.Complete();
+
+                for (var i = 0; i < preparedShapes.Count; i++)
+                {
+                    if (preparedShapes[i] != null)
+                    {
+                        textures[i] = CreateTexture(preparedShapes[i], pixels[i]);
+                    }
+                }
+            }
+
+            return textures;
+        }
+
+        private static PreparedShape PrepareShape(ushort shapeDescriptor)
         {
             var collection = (short) shapeDescriptor.GetCollection();
             var clut = (short) shapeDescriptor.GetCLUT();
@@ -98,35 +173,34 @@ namespace ForgePlus.DataFileIO
             }
 
             var hasAlpha = false;
-            for (var i = 0; i < bitmap.Indexes.Length && !hasAlpha; i++)
+            for (var i = 0; i < bitmap.PixelCount && !hasAlpha; i++)
             {
                 hasAlpha = palette[bitmap.Indexes[i]].a == 0;
             }
 
+            return new PreparedShape
+            {
+                ShapeDescriptor = shapeDescriptor,
+                Bitmap = bitmap,
+                Palette = palette,
+                IsLandscape = isLandscape,
+                Format = hasAlpha ? TextureFormat.ARGB32 : TextureFormat.RGB24,
+                HasMipmaps = hasAlpha || !isLandscape,
+            };
+        }
+
+        private static Texture2D CreateTexture(PreparedShape shape, NativeArray<byte> pixels)
+        {
+            var bitmap = shape.Bitmap;
+
             // Walls are stored as runs (columns); landscapes' runs are lines of sky, so they're rotated into rows
-            var textureWidth = isLandscape ? bitmap.Height : bitmap.Width;
-            var textureHeight = isLandscape ? bitmap.Width : bitmap.Height;
+            var textureWidth = shape.IsLandscape ? bitmap.Height : bitmap.Width;
+            var textureHeight = shape.IsLandscape ? bitmap.Width : bitmap.Height;
 
-            Texture2D result;
-            if (hasAlpha)
-            {
-                result = new Texture2D(textureWidth, textureHeight, TextureFormat.ARGB32, mipChain: true);
-            }
-            else if (isLandscape)
-            {
-                result = new Texture2D(textureWidth, textureHeight, TextureFormat.RGB24, mipChain: false);
-            }
-            else
-            {
-                result = new Texture2D(textureWidth, textureHeight, TextureFormat.RGB24, mipChain: true);
-            }
+            var result = new Texture2D(textureWidth, textureHeight, shape.Format, shape.HasMipmaps);
+            result.SetPixelData(pixels, mipLevel: 0);
 
-            result.name = $"CLUT({clut}) Bitmap({shape}) Collection({collection})";
-
-            result.SetPixels32(isLandscape ? GetLandscapePixels(bitmap, palette) : bitmap.GetPixels32(palette));
-
-
-            if (isLandscape)
+            if (shape.IsLandscape)
             {
                 result.wrapModeV = TextureWrapMode.Clamp;
             }
@@ -146,22 +220,6 @@ namespace ForgePlus.DataFileIO
             }
 
             return result;
-        }
-
-        private static Color32[] GetLandscapePixels(IndexedShapeBitmap bitmap, Color32[] palette)
-        {
-            // Run x becomes texture row x, and element y becomes column (width - 1 - y)
-            var textureWidth = bitmap.Height;
-            var pixels = new Color32[bitmap.Width * bitmap.Height];
-            for (var y = 0; y < bitmap.Height; y++)
-            {
-                for (var x = 0; x < bitmap.Width; x++)
-                {
-                    pixels[x * textureWidth + (textureWidth - 1 - y)] = palette[bitmap.Indexes[y * bitmap.Width + x]];
-                }
-            }
-
-            return pixels;
         }
     }
 }

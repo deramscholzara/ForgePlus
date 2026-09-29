@@ -1,6 +1,7 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/flood_map.h, flood_map.cpp
 //
 // Not ported: choose_random_flood_node() and the pathfinding.cpp prototypes.
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 using static AlephOne.cstypes;
 using static AlephOne.map;
@@ -13,6 +14,7 @@ namespace AlephOne
     // with _flagged_breadth_first, caller_data is an int[1]
     public delegate int cost_proc_ptr(MapLevel level, short source_polygon_index, short line_index, short destination_polygon_index, object caller_data);
 
+    [NoAutoStaticsCleanup]
     public static class flood_map
     {
         /* ---------- constants */

@@ -4,6 +4,7 @@
 // get_media_sound, get_media_damage, get_media_submerged_fade_effect, get_media_collection,
 // IsMediaDangerous, media_in_environment), and MML parsing.
 using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 using static AlephOne.csmacros;
 using static AlephOne.Packing;
@@ -44,6 +45,7 @@ namespace AlephOne
         }
     }
 
+    [NoAutoStaticsCleanup]
     public static partial class media
     {
         /* ---------- constants */

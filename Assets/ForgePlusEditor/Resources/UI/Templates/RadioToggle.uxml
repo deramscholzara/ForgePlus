@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A toggle that belongs to the RadioButtonGroup it's placed in -->
+    <ui:RadioButton name="control" text="Option" class="fp-toggle fp-template" />
+</ui:UXML>

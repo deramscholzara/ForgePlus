@@ -1,0 +1,53 @@
+﻿using UnityEngine.UIElements;
+
+namespace ForgePlus.UI
+{
+    public class MenuPanel : UIPanel
+    {
+        private PanelSlot tabSlot;
+
+        protected override string LayoutPath
+        {
+            get
+            {
+                return "UI/Panels/Menu";
+            }
+        }
+
+        protected override void OnLoaded()
+        {
+            var editor = ForgePlusUI.Instance.Editor;
+
+            Root.Find<RadioButtonGroup>("tabs").BindValue(editor, nameof(EditorViewModel.MenuTabIndex));
+
+            tabSlot = new PanelSlot(Root.Q("tab-slot"));
+
+            editor.OnMenuTabChanged += ShowSelectedTab;
+            ShowSelectedTab();
+        }
+
+        protected override void OnUnloading()
+        {
+            ForgePlusUI.Instance.Editor.OnMenuTabChanged -= ShowSelectedTab;
+
+            tabSlot.Hide();
+            tabSlot = null;
+        }
+
+        private void ShowSelectedTab()
+        {
+            switch (ForgePlusUI.Instance.Editor.MenuTabIndex)
+            {
+                case 0:
+                    tabSlot.Show<FilesTabPanel>();
+                    break;
+                case 1:
+                    tabSlot.Show(new LayoutPanel("UI/Panels/InputsTab"));
+                    break;
+                case 2:
+                    tabSlot.Show<SettingsTabPanel>();
+                    break;
+            }
+        }
+    }
+}

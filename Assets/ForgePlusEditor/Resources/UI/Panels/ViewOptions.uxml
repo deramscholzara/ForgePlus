@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
+    <ui:VisualElement picking-mode="Ignore">
+        <!-- A placeholder, which doesn't change anything yet -->
+        <ui:Instance template="Toggle" name="visualization-effect" class="fp-toggle--wide-short fp-view-option">
+            <ui:AttributeOverrides element-name="control" text="Visualization Effect" value="false" />
+        </ui:Instance>
+        <ui:Instance template="Toggle" name="object-icons" class="fp-toggle--wide-short fp-view-option">
+            <ui:AttributeOverrides element-name="control" text="Object Icons" />
+        </ui:Instance>
+        <ui:Instance template="Toggle" name="sprite-previews" class="fp-toggle--wide-short fp-view-option">
+            <ui:AttributeOverrides element-name="control" text="Sprite Previews" />
+        </ui:Instance>
+        <ui:Instance template="Toggle" name="clip-platform-sides" class="fp-toggle--wide-short fp-view-option fp-view-option--last">
+            <ui:AttributeOverrides element-name="control" text="Clip Platform Sides" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

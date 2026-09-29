@@ -1,4 +1,7 @@
-﻿public abstract class OnDemandSingleton<T> where T : class, new()
+﻿using Unity.Scripting.LifecycleManagement;
+
+[AutoStaticsCleanup]
+public abstract partial class OnDemandSingleton<T> where T : class, new()
 {
     private static T instance;
 

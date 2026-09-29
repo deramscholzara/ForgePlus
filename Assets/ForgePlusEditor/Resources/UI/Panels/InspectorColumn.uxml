@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <!-- Inspectors (each its own asset, under Resources/UI/Inspectors) are loaded into the scroll area -->
+    <ui:VisualElement class="fp-box fp-inspector-column">
+        <ui:Instance template="ScrollArea" name="inspectors" class="fp-grow" />
+    </ui:VisualElement>
+</ui:UXML>

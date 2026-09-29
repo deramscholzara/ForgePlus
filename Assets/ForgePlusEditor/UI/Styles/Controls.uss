@@ -1,0 +1,365 @@
+/* Buttons, toggles, radio toggles, sliders, scroll areas, separators and text styles */
+
+.fp-root {
+    flex-grow: 1;
+    -unity-font-definition: url("project://database/Assets/ForgePlusEditor/UI/Settings/LiberationSans%20UI%20Font.asset");
+    font-size: 14px;
+    color: var(--fp-text-light);
+}
+
+/* Templates wrap their control in a TemplateContainer, which the control fills */
+.fp-template {
+    flex-grow: 1;
+}
+
+.fp-grow {
+    flex-grow: 1;
+}
+
+/* Children stacked 5px apart */
+.fp-scroll--spaced .unity-scroll-view__content-container > *,
+.fp-inspector > *,
+.fp-inspector-foldout .unity-foldout__content > *,
+.fp-palette__swatches > * {
+    margin-bottom: 5px;
+    flex-shrink: 0;
+}
+
+/* ---------- Boxes and separators ---------- */
+
+.fp-box {
+    background-color: var(--fp-panel-background);
+}
+
+.fp-box--padded {
+    padding: 10px;
+}
+
+.fp-separator {
+    background-color: var(--fp-separator);
+    flex-shrink: 0;
+}
+
+.fp-separator--horizontal {
+    height: 5px;
+}
+
+.fp-separator--vertical {
+    width: 5px;
+}
+
+.fp-space {
+    height: 5px;
+    flex-shrink: 0;
+}
+
+/* ---------- Text ---------- */
+
+.fp-heading {
+    font-size: 22px;
+    -unity-font-style: bold;
+    color: var(--fp-text-light);
+    margin: 0;
+    padding: 0;
+}
+
+.fp-faint-text {
+    font-size: 24px;
+    color: var(--fp-text-faint);
+}
+
+.fp-readout {
+    background-color: var(--fp-readout);
+    color: var(--fp-text-light);
+    -unity-text-align: middle-left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding: 0 12px 0 8px;
+    margin: 0;
+}
+
+/* ---------- Buttons ---------- */
+
+.fp-button {
+    margin: 0;
+    padding: 0 5px;
+    border-width: 0;
+    border-radius: 0;
+    background-color: var(--fp-control);
+    color: var(--fp-control-text);
+    font-size: 14px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.fp-button:hover {
+    background-color: var(--fp-control-hover);
+}
+
+.fp-button:active,
+.fp-button:hover:active {
+    background-color: var(--fp-control-pressed);
+}
+
+.fp-button:focus {
+    border-width: 0;
+}
+
+.fp-button:disabled {
+    background-color: var(--fp-control-disabled);
+    opacity: 1;
+}
+
+/* ---------- Toggles (a box with an indicator bar on its left, filled when on) ----------
+   Used for Toggle and RadioButton, which share their structure */
+
+/* The indicator's width comes from --fp-indicator-width (10px unless a variant class sets it) */
+.fp-toggle {
+    margin: 0;
+    flex-grow: 1;
+}
+
+.fp-toggle > .unity-toggle__input,
+.fp-toggle > .unity-radio-button__input {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: stretch;
+    background-color: var(--fp-control);
+    border-width: 0;
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.fp-toggle:hover > .unity-toggle__input,
+.fp-toggle:hover > .unity-radio-button__input {
+    background-color: var(--fp-control-hover);
+}
+
+.fp-toggle:active > .unity-toggle__input,
+.fp-toggle:active > .unity-radio-button__input {
+    background-color: var(--fp-control-pressed);
+}
+
+.fp-toggle:disabled > .unity-toggle__input,
+.fp-toggle:disabled > .unity-radio-button__input {
+    background-color: var(--fp-control-disabled);
+}
+
+.fp-toggle:disabled {
+    opacity: 1;
+}
+
+.fp-toggle:focus > .unity-toggle__input,
+.fp-toggle:focus > .unity-radio-button__input {
+    border-width: 0;
+}
+
+/* The indicator: the frame's color, with the filled part drawn inside a frame-colored border.
+   Prefixed with .fp-root to outrank the default theme's checked-state images. */
+.fp-root .fp-toggle > .unity-toggle__input > .unity-toggle__checkmark,
+.fp-root .fp-toggle > .unity-radio-button__input > .unity-radio-button__checkmark-background {
+    width: var(--fp-indicator-width, 10px);
+    height: auto;
+    align-self: stretch;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 0;
+    background-image: none;
+    background-color: var(--fp-indicator-frame);
+    border-color: var(--fp-indicator-frame);
+}
+
+/* The theme draws a tick on checkmarks in some states (such as focused and checked), so they never get an image.
+   Selected by name, which outranks the theme's state selectors however many classes and states they combine. */
+.fp-root .fp-toggle #unity-checkmark,
+.fp-root .fp-inspector-foldout #unity-checkmark {
+    background-image: none;
+}
+
+/* The radio button's dot, which RadioButton shows and hides with an inline display style */
+.fp-root .fp-toggle .unity-radio-button__checkmark-background > #unity-checkmark {
+    visibility: hidden;
+}
+
+/* Every indicator's on state: toggles', foldouts' and the level list's selected item's */
+.fp-root .fp-toggle:checked > .unity-toggle__input > .unity-toggle__checkmark,
+.fp-root .fp-toggle > .unity-toggle__input:checked > .unity-toggle__checkmark,
+.fp-root .fp-toggle:checked > .unity-radio-button__input > .unity-radio-button__checkmark-background,
+.fp-root .fp-toggle > .unity-radio-button__input:checked > .unity-radio-button__checkmark-background,
+.fp-root .fp-inspector-foldout > .unity-foldout__toggle:checked > .unity-toggle__input > .unity-foldout__checkmark,
+.fp-root .fp-inspector-foldout > .unity-foldout__toggle > .unity-toggle__input:checked > .unity-foldout__checkmark,
+.unity-collection-view__item--selected .fp-level-item__indicator {
+    background-image: none;
+    background-color: var(--fp-indicator-on);
+    border-top-width: 5px;
+    border-bottom-width: 5px;
+    border-right-width: 5px;
+}
+
+.fp-toggle .unity-toggle__text,
+.fp-toggle .unity-radio-button__text {
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin: 0;
+    padding: 0 5px;
+    color: var(--fp-control-text);
+    font-size: 14px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    overflow: hidden;
+}
+
+.fp-toggle--wide-short {
+    --fp-indicator-width: 30px;
+}
+
+.fp-toggle--wide {
+    --fp-indicator-width: 35px;
+}
+
+.fp-toggle--flag {
+    --fp-indicator-width: 20px;
+}
+
+.fp-toggle--wide-short .unity-toggle__text,
+.fp-toggle--wide-short .unity-radio-button__text,
+.fp-toggle--wide .unity-toggle__text,
+.fp-toggle--wide .unity-radio-button__text,
+.fp-toggle--flag .unity-toggle__text {
+    -unity-text-align: middle-left;
+}
+
+.fp-toggle--flag .unity-toggle__text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Radio groups hold their buttons (template instances) in their content container, in a column or (fp-radio-row) a row */
+.fp-radio-group {
+    margin: 0;
+    padding: 0;
+}
+
+.fp-radio-group > .unity-base-field__input {
+    flex-grow: 1;
+}
+
+.fp-radio-group #contentContainer {
+    flex-grow: 1;
+}
+
+.fp-radio-group #choicesContentContainer {
+    display: none;
+}
+
+.fp-radio-row #contentContainer {
+    flex-direction: row;
+}
+
+.fp-radio-row > .unity-base-field__label {
+    display: none;
+}
+
+/* ---------- Slider (a labeled row) ---------- */
+
+.fp-slider {
+    flex-grow: 1;
+    margin: 0;
+    padding: 5px;
+    background-color: var(--fp-slider-background);
+}
+
+.fp-slider > .unity-base-field__label {
+    min-width: 150px;
+    width: 150px;
+    margin: 0;
+    padding: 0;
+    color: var(--fp-control-text);
+    font-size: 14px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+.fp-slider .unity-base-slider__input {
+    flex-grow: 1;
+}
+
+.fp-slider .unity-base-slider__drag-container {
+    flex-grow: 1;
+}
+
+.fp-slider .unity-base-slider__tracker {
+    background-color: var(--fp-indicator-frame);
+    border-width: 0;
+    border-radius: 0;
+    height: 50%;
+    top: 25%;
+    margin: 0;
+}
+
+.fp-slider .unity-base-slider__dragger {
+    background-color: var(--fp-indicator-on);
+    border-width: 0;
+    border-radius: 0;
+    width: 30px;
+    height: 100%;
+    top: 0;
+    margin: 0;
+}
+
+.fp-slider .unity-base-slider__dragger-border {
+    display: none;
+}
+
+/* ---------- Scroll areas ---------- */
+
+.fp-scroll {
+    flex-grow: 1;
+}
+
+.fp-scroll .unity-scroller--vertical {
+    width: 20px;
+    min-width: 20px;
+    margin-left: 5px;
+    background-color: var(--fp-scrollbar);
+    border-width: 0;
+}
+
+.fp-scroll .unity-scroller--vertical > .unity-scroller__low-button,
+.fp-scroll .unity-scroller--vertical > .unity-scroller__high-button {
+    display: none;
+}
+
+.fp-scroll .unity-scroller--vertical > .unity-scroller__slider {
+    margin: 0;
+    flex-grow: 1;
+}
+
+.fp-scroll .unity-scroller--vertical .unity-base-slider__tracker {
+    background-color: var(--fp-scrollbar);
+    border-width: 0;
+}
+
+.fp-scroll .unity-scroller--vertical .unity-base-slider__dragger {
+    background-color: var(--fp-scrollbar-handle);
+    border-width: 0;
+    border-radius: 0;
+    width: 20px;
+    left: 0;
+    margin: 0;
+}
+
+.fp-scroll .unity-scroller--vertical .unity-base-slider__dragger-border {
+    display: none;
+}
+
+.fp-scroll--wide-spaced .unity-scroll-view__content-container > * {
+    margin-bottom: 15px;
+    flex-shrink: 0;
+}

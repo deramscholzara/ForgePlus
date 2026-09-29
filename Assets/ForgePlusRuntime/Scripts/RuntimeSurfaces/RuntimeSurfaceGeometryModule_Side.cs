@@ -4,6 +4,7 @@ using RuntimeCore.Constraints;
 using RuntimeCore.Materials;
 using System;
 using System.Linq;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using AlephOne;
@@ -11,6 +12,7 @@ using ForgePlus.Extensions;
 
 namespace RuntimeCore.Entities.Geometry
 {
+    [NoAutoStaticsCleanup]
     public class RuntimeSurfaceGeometryModule_Side : RuntimeSurfaceGeometryModule_Base
     {
         // Initial heights are those the level's texture offsets are relative to

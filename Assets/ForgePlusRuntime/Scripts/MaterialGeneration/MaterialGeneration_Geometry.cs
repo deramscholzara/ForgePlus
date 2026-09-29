@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Collections;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
 using AlephOne;
@@ -9,7 +10,8 @@ using ForgePlus.Extensions;
 
 namespace RuntimeCore.Materials
 {
-    public class MaterialGeneration_Geometry
+    [AutoStaticsCleanup]
+    public partial class MaterialGeneration_Geometry
     {
         public enum SurfaceTypes
         {
@@ -171,38 +173,51 @@ namespace RuntimeCore.Materials
 
         // Normal
 #if USE_TEXTURE_ARRAYS
-        private static readonly Shader OpaqueWithAlphaAlphaNormalShader = Shader.Find("ForgePlus/OpaqueWithAlphaNormal(Arrays)");
-        private static readonly Shader TransparentNormalShader = Shader.Find("ForgePlus/TransparentNormal(Arrays)");
-        private static readonly Shader TransparentNormalLayeredOuterShader = Shader.Find("ForgePlus/TransparentNormalLayeredOuter(Arrays)");
+        [NoAutoStaticsCleanup] private static readonly Shader OpaqueWithAlphaAlphaNormalShader = Shader.Find("ForgePlus/OpaqueWithAlphaNormal(Arrays)");
+        [NoAutoStaticsCleanup] private static readonly Shader TransparentNormalShader = Shader.Find("ForgePlus/TransparentNormal(Arrays)");
+        [NoAutoStaticsCleanup] private static readonly Shader TransparentNormalLayeredOuterShader = Shader.Find("ForgePlus/TransparentNormalLayeredOuter(Arrays)");
 #else
-        private static readonly Shader OpaqueWithAlphaAlphaNormalShader = Shader.Find("ForgePlus/OpaqueWithAlphaNormal");
-        private static readonly Shader TransparentNormalShader = Shader.Find("ForgePlus/TransparentNormal");
-        private static readonly Shader TransparentNormalLayeredOuterShader = Shader.Find("ForgePlus/TransparentNormalLayeredOuter");
+        [NoAutoStaticsCleanup] private static readonly Shader OpaqueWithAlphaAlphaNormalShader = Shader.Find("ForgePlus/OpaqueWithAlphaNormal");
+        [NoAutoStaticsCleanup] private static readonly Shader TransparentNormalShader = Shader.Find("ForgePlus/TransparentNormal");
+        [NoAutoStaticsCleanup] private static readonly Shader TransparentNormalLayeredOuterShader = Shader.Find("ForgePlus/TransparentNormalLayeredOuter");
 #endif
 
         // Landscape
 #if USE_TEXTURE_ARRAYS
-        private static readonly Shader OpaqueLandscapeShader = Shader.Find("ForgePlus/OpaqueLandscape(Arrays)");
+        [NoAutoStaticsCleanup] private static readonly Shader OpaqueLandscapeShader = Shader.Find("ForgePlus/OpaqueLandscape(Arrays)");
 #else
-        private static readonly Shader OpaqueLandscapeShader = Shader.Find("ForgePlus/OpaqueLandscape");
+        [NoAutoStaticsCleanup] private static readonly Shader OpaqueLandscapeShader = Shader.Find("ForgePlus/OpaqueLandscape");
 #endif
 
         // Media (could be Normal, but I like the added ripple effect)
 #if USE_TEXTURE_ARRAYS
-        private static readonly Shader MediaShader = Shader.Find("ForgePlus/Media(Arrays)");
+        [NoAutoStaticsCleanup] private static readonly Shader MediaShader = Shader.Find("ForgePlus/Media(Arrays)");
 #else
-        private static readonly Shader MediaShader = Shader.Find("ForgePlus/Media");
+        [NoAutoStaticsCleanup] private static readonly Shader MediaShader = Shader.Find("ForgePlus/Media");
 #endif
 
-        // No assignment
-        private static readonly Material UnassignedMaterial = new Material(Shader.Find("ForgePlus/Unassigned"));
+        // No assignment (recreated when destroyed, such as at the end of a Play session)
+        private static Material unassignedMaterial;
 
-        private static readonly Texture2D GridTexture = Resources.Load<Texture2D>("Walls/Grid");
+        private static Material UnassignedMaterial
+        {
+            get
+            {
+                if (!unassignedMaterial)
+                {
+                    unassignedMaterial = new Material(Shader.Find("ForgePlus/Unassigned"));
+                }
 
-        private static readonly int mediaSubColorPropertyId = Shader.PropertyToID("_SubMediaColor");
+                return unassignedMaterial;
+            }
+        }
+
+        [NoAutoStaticsCleanup] private static readonly Texture2D GridTexture = Resources.Load<Texture2D>("Walls/Grid");
+
+        [NoAutoStaticsCleanup] private static readonly int mediaSubColorPropertyId = Shader.PropertyToID("_SubMediaColor");
 
 #if USE_TEXTURE_ARRAYS
-        private static readonly int textureArrayIndexPropertyId = Shader.PropertyToID("_TextureArrayIndex");
+        [NoAutoStaticsCleanup] private static readonly int textureArrayIndexPropertyId = Shader.PropertyToID("_TextureArrayIndex");
 #endif
 
         // TODO: Convert Textures to use TextureSet (renamed from PluginTextureSet)
@@ -233,33 +248,111 @@ namespace RuntimeCore.Materials
 
         public static Texture2D GetTexture(ushort shapeDescriptor, bool returnPlaceholderIfNotFound = false)
         {
-            if (PluginLoading_Texture.Instance.TextureLookup.ContainsKey(shapeDescriptor))
+            if (TryGetLoadedTexture(shapeDescriptor, out var loadedTexture))
             {
-                if (PluginLoading_Texture.Instance.TextureLookup[shapeDescriptor].MainTexture)
-                    return PluginLoading_Texture.Instance.TextureLookup[shapeDescriptor].MainTexture;
+                return loadedTexture;
             }
-            else if (Textures.ContainsKey(shapeDescriptor))
-            {
-                return Textures[shapeDescriptor];
-            }
-            else
-            {
-                var textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
 
-                if (textureToUse)
+            var textureToUse = ShapesLoading.Instance.GetShape(shapeDescriptor);
+
+            if (textureToUse)
+            {
+                AddTexture(shapeDescriptor, textureToUse);
+            }
+            else if (returnPlaceholderIfNotFound)
+            {
+                textureToUse = GridTexture;
+            }
+
+            return textureToUse;
+        }
+
+        // Loads these textures in order, as GetTexture would one at a time, but decodes their shapes in parallel and
+        // converts their pixels together. A collection's shapes are numbered from 0, so it stops at its first missing texture.
+        public static void LoadTextures(IReadOnlyList<ushort> shapeDescriptors)
+        {
+            if (!ShapesLoading.Instance.TryLoadFile())
+            {
+                return;
+            }
+
+            // Parallel to shapeDescriptors (null for textures that are already loaded, and for missing shapes)
+            var preparedShapes = new ShapesFile.PreparedShape[shapeDescriptors.Count];
+            var indexesToPrepare = Enumerable.Range(0, shapeDescriptors.Count).Where(i => !TryGetLoadedTexture(shapeDescriptors[i], out _)).ToList();
+            var prepared = ShapesFile.PrepareShapes(indexesToPrepare.Select(i => shapeDescriptors[i]).ToList());
+            for (var i = 0; i < prepared.Length; i++)
+            {
+                preparedShapes[indexesToPrepare[i]] = prepared[i];
+            }
+
+            try
+            {
+                var shapesToCreate = new List<ShapesFile.PreparedShape>();
+                var descriptorsToCreate = new HashSet<ushort>();
+                var stoppedCollections = new HashSet<int>();
+
+                for (var i = 0; i < shapeDescriptors.Count; i++)
                 {
-                    textureToUse.name = $"Collection({shapeDescriptor.GetCollection()}) Bitmap({shapeDescriptor.GetShape()})";
-                    Textures[shapeDescriptor] = textureToUse;
-                }
-                else if (returnPlaceholderIfNotFound)
-                {
-                    textureToUse = GridTexture;
+                    var shapeDescriptor = shapeDescriptors[i];
+                    var collection = shapeDescriptor.GetCollection();
+                    if (stoppedCollections.Contains(collection))
+                    {
+                        continue;
+                    }
+
+                    bool found;
+                    if (TryGetLoadedTexture(shapeDescriptor, out var loadedTexture))
+                    {
+                        found = loadedTexture;
+                    }
+                    else
+                    {
+                        var preparedShape = preparedShapes[i];
+                        found = preparedShape != null;
+
+                        if (found && descriptorsToCreate.Add(shapeDescriptor))
+                        {
+                            shapesToCreate.Add(preparedShape);
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        stoppedCollections.Add(collection);
+                    }
                 }
 
-                return textureToUse;
+                var textures = ShapesFile.CreateTextures(shapesToCreate);
+                for (var i = 0; i < textures.Length; i++)
+                {
+                    AddTexture(shapesToCreate[i].ShapeDescriptor, textures[i]);
+                }
+            }
+            finally
+            {
+                foreach (var preparedShape in preparedShapes)
+                {
+                    preparedShape?.Dispose();
+                }
+            }
+        }
+
+        // Plugin textures take precedence (their main texture can be missing, which counts as loaded but null)
+        private static bool TryGetLoadedTexture(ushort shapeDescriptor, out Texture2D texture)
+        {
+            if (PluginLoading_Texture.Instance.TextureLookup.TryGetValue(shapeDescriptor, out var textureSet))
+            {
+                texture = textureSet.MainTexture ? textureSet.MainTexture : null;
+                return true;
             }
 
-            return null;
+            return Textures.TryGetValue(shapeDescriptor, out texture);
+        }
+
+        private static void AddTexture(ushort shapeDescriptor, Texture2D texture)
+        {
+            texture.name = $"Collection({shapeDescriptor.GetCollection()}) Bitmap({shapeDescriptor.GetShape()})";
+            Textures[shapeDescriptor] = texture;
         }
 
         public static bool GetTextureIsInUse(ushort shapeDescriptor)

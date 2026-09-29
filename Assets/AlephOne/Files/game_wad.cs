@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 using static AlephOne.cstypes;
 using static AlephOne.editor;
@@ -26,6 +27,7 @@ using static AlephOne.wad;
 
 namespace AlephOne
 {
+    [NoAutoStaticsCleanup]
     public static class game_wad
     {
         // game_wad.h

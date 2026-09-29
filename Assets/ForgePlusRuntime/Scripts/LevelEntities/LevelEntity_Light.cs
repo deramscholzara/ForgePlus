@@ -3,9 +3,9 @@ using ForgePlus.LevelManipulation;
 using RuntimeCore.Common;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Mathematics;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using AlephOne;
 using static AlephOne.lightsource;
@@ -15,7 +15,8 @@ using Random = UnityEngine.Random;
 namespace RuntimeCore.Entities
 {
     // TODO: Should inherit from LevelEntity_Base, and should have a representative GameObject in the scene
-    public class LevelEntity_Light : IDestructionPreparable, ISelectable, IInspectable
+    [AutoStaticsCleanup]
+    public partial class LevelEntity_Light : IDestructionPreparable, ISelectable, IInspectable
     {
         public enum States
         {
@@ -101,9 +102,7 @@ namespace RuntimeCore.Entities
 
         public void Inspect()
         {
-            var inspectorPrefab = Resources.Load<Inspector_Light>("Inspectors/Inspector - Light");
-            var inspector = Object.Instantiate(inspectorPrefab);
-            inspector.PopulateValues(this);
+            var inspector = new Inspector_Light(this);
             InspectorPanel.Instance.AddInspector(inspector);
         }
 
@@ -257,7 +256,7 @@ namespace RuntimeCore.Entities
             }
         }
 
-        private async Task RunIntensityPhaseFunction(CancellationToken cancellationToken, lighting_function_specification lightingFunction)
+        private async Awaitable RunIntensityPhaseFunction(CancellationToken cancellationToken, lighting_function_specification lightingFunction)
         {
             var functionPhaseOffset = 0f;
 
@@ -303,7 +302,7 @@ namespace RuntimeCore.Entities
             }
         }
 
-        private async Task ConstantIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity)
+        private async Awaitable ConstantIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity)
         {
             intensity = Mathf.Clamp01(intensity);
 
@@ -313,7 +312,7 @@ namespace RuntimeCore.Entities
 
             while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
             {
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
 
                 if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
                 {
@@ -324,7 +323,7 @@ namespace RuntimeCore.Entities
             remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
         }
 
-        private async Task LinearIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
+        private async Awaitable LinearIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
         {
             intensity = Mathf.Clamp01(intensity);
 
@@ -340,7 +339,7 @@ namespace RuntimeCore.Entities
 
                 CurrentLinearIntensity = Mathf.Lerp(targetIntensity, startingIntensity, remainingProgress);
 
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
 
                 if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
                 {
@@ -351,7 +350,7 @@ namespace RuntimeCore.Entities
             remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
         }
 
-        private async Task SmoothIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
+        private async Awaitable SmoothIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
         {
             intensity = Mathf.Clamp01(intensity);
 
@@ -367,7 +366,7 @@ namespace RuntimeCore.Entities
 
                 CurrentLinearIntensity = Mathf.Lerp(startingIntensity, targetIntensity, smoothLightCurve.Evaluate(elapsedProgress));
 
-                await Task.Yield();
+                await Awaitable.NextFrameAsync();
 
                 if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
                 {
@@ -378,7 +377,7 @@ namespace RuntimeCore.Entities
             remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
         }
 
-        private async Task FlickerIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
+        private async Awaitable FlickerIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
         {
             intensity = Mathf.Clamp01(intensity);
 
@@ -406,7 +405,7 @@ namespace RuntimeCore.Entities
                 var flickerEndTime = Time.realtimeSinceStartup + mininumFlickerDuration;
                 while (Time.realtimeSinceStartup < flickerEndTime && GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
                 {
-                    await Task.Yield();
+                    await Awaitable.NextFrameAsync();
 
                     if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
                     {

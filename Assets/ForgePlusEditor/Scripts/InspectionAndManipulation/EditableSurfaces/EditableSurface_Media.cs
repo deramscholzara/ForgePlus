@@ -8,11 +8,13 @@ namespace ForgePlus.LevelManipulation
 {
     public class EditableSurface_Media : EditableSurface_Base
     {
+        [System.NonSerialized]
         public LevelEntity_Media Media = null;
 
         // TODO: Get rid of these and just attain them on the fly instead of preloading
         //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
         public LevelEntity_Polygon Polygon = null;
+        [System.NonSerialized]
         public LevelEntity_Light RuntimeLight = null;
 
         public override void OnValidatedPointerClick(PointerEventData eventData)
@@ -24,13 +26,13 @@ namespace ForgePlus.LevelManipulation
                     break;
                 case ModeManager.PrimaryModes.Lights:
                     SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
-                    PaletteManager.Instance.SelectSwatchForLight(RuntimeLight, invokeToggleEvents: false);
+                    PaletteManager.Instance.SelectSwatchForLight(RuntimeLight);
                     break;
                 case ModeManager.PrimaryModes.Media:
                     if (Media != null)
                     {
                         SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(Media, invokeToggleEvents: false);
+                        PaletteManager.Instance.SelectSwatchForMedia(Media);
                     }
 
                     break;

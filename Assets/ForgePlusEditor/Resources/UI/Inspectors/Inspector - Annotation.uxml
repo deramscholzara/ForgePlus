@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <!-- Bound to Inspector_Annotation -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Annotation" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id">
+            <ui:AttributeOverrides element-name="label" text="ID:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Text" class="fp-inspector-row--vertical">
+            <ui:AttributeOverrides element-name="label" text="Text:" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

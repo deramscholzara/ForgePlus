@@ -1,0 +1,30 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <ui:Template name="PathSelector" src="../Templates/PathSelector.uxml" />
+    <ui:VisualElement class="fp-grow" picking-mode="Ignore">
+        <ui:VisualElement class="fp-box fp-box--padded fp-files__selection">
+            <ui:Instance template="ScrollArea" class="fp-grow fp-scroll--wide-spaced">
+                <ui:Instance template="PathSelector" name="maps">
+                    <ui:AttributeOverrides element-name="heading" text="Maps" />
+                </ui:Instance>
+                <ui:Instance template="PathSelector" name="shapes">
+                    <ui:AttributeOverrides element-name="heading" text="Shapes" />
+                </ui:Instance>
+                <ui:Instance template="PathSelector" name="physics">
+                    <ui:AttributeOverrides element-name="heading" text="Physics" />
+                </ui:Instance>
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+        <ui:VisualElement class="fp-box fp-box--padded fp-files__levels">
+            <ui:ListView name="levels" fixed-item-height="45" selection-type="Single" class="fp-scroll fp-level-list" />
+        </ui:VisualElement>
+        <ui:VisualElement class="fp-files__actions" picking-mode="Ignore">
+            <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
+            <ui:Instance template="Button" name="load" class="fp-files__load">
+                <ui:AttributeOverrides element-name="control" text="Load Level" />
+            </ui:Instance>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

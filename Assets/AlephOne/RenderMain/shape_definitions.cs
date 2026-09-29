@@ -1,4 +1,6 @@
 ﻿// Port of Aleph One: Source_Files/RenderMain/shape_definitions.h
+using Unity.Scripting.LifecycleManagement;
+
 namespace AlephOne
 {
     /* ---------- structures */
@@ -17,6 +19,7 @@ namespace AlephOne
         public byte[] shading_tables = new byte[0];
     }
 
+    [NoAutoStaticsCleanup]
     public static class shape_definitions
     {
         public const int SIZEOF_collection_header = 32;
