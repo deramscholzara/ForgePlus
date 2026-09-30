@@ -481,6 +481,7 @@ MonoBehaviour:
   turboAccelerationPerSecond: 30
   decelerationPerSecond: 40
   framingDuration: 0.25
+  wheelMoveDistancePerNotch: 0.5
 --- !u!114 &1061089426
 MonoBehaviour:
   m_ObjectHideFlags: 0
