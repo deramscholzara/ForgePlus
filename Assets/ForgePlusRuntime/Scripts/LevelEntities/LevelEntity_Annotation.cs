@@ -1,5 +1,6 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
+using ForgePlus.LevelManipulation.Utilities;
 using TMPro;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
@@ -121,6 +122,18 @@ namespace RuntimeCore.Entities
 
             var labelTransform = label.transform as RectTransform;
             selectionCollider.size = new Vector3(labelTransform.sizeDelta.x, labelTransform.sizeDelta.y, 0.01f);
+        }
+
+        // At its location, halfway between its polygon's floor and ceiling
+        public void RefreshPosition()
+        {
+            var height = 0f;
+            if (ParentLevel.Polygons.TryGetValue(NativeObject.polygon_index, out var polygon))
+            {
+                height = (polygon.NativeObject.floor_height + polygon.NativeObject.ceiling_height) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
+            }
+
+            transform.position = new Vector3(NativeObject.location.x / GeometryUtilities.WorldUnitIncrementsPerMeter, height, -NativeObject.location.y / GeometryUtilities.WorldUnitIncrementsPerMeter);
         }
 
         private void OnEnable()

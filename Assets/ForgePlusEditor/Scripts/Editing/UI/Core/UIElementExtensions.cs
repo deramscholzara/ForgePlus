@@ -1,4 +1,5 @@
-﻿using Unity.Properties;
+﻿using ForgePlus.Extensions;
+using Unity.Properties;
 using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
@@ -16,6 +17,20 @@ namespace ForgePlus.UI
             }
 
             return element?.Q<T>();
+        }
+
+        // Whether the element is part of a text or number field (such as its input, or the text in it)
+        public static bool IsInTextInputField(this VisualElement element)
+        {
+            for (; element != null; element = element.parent)
+            {
+                if (element.ClassListContains(TextInputBaseField<string>.ussClassName))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         // Keeps an element's property in step with a data source's property, pushed by the source's change notifications
@@ -52,19 +67,15 @@ namespace ForgePlus.UI
             return binding;
         }
 
-        // Binds an inspector layout's rows, text fields, textures and flags (template instances named after the source's
-        // properties) to the source, the text fields and flags read-only
+        // Binds an inspector layout's rows, text and number fields, textures and flags (template instances named after
+        // the source's properties) to the source, the flags read-only
         public static void BindInspectorFields(this VisualElement root, object dataSource)
         {
             root.Query<Label>(className: "fp-inspector-value").ForEach(value => BindToInstanceName(value, "text", dataSource));
             root.Query<Image>(className: "fp-inspector-texture").ForEach(texture => BindToInstanceName(texture, "image", dataSource));
 
-            root.Query<TextField>(className: "fp-inspector-text-field").ForEach(field =>
-            {
-                field.isReadOnly = true;
-                field.GetFirstAncestorOfType<TemplateContainer>().SetEnabled(false);
-                BindToInstanceName(field, "value", dataSource);
-            });
+            root.Query<TextField>(className: "fp-inspector-text-field").ForEach(field => BindInspectorField(field, dataSource));
+            root.Query<IntegerField>(className: "fp-inspector-text-field").ForEach(field => BindInspectorField(field, dataSource));
 
             root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag =>
             {
@@ -73,9 +84,36 @@ namespace ForgePlus.UI
             });
         }
 
+        // A field edits its source property while the property has a setter, and is grayed out (read-only) until then
+        private static void BindInspectorField<TValue>(TextInputBaseField<TValue> field, object dataSource)
+        {
+            var row = field.GetFirstAncestorOfType<TemplateContainer>();
+            var isEditable = dataSource.GetType().GetProperty(row.name)?.GetSetMethod() != null;
+
+            field.isReadOnly = !isEditable;
+            row.SetEnabled(isEditable);
+            field.Bind("value", dataSource, row.name, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
+        }
+
         private static void BindToInstanceName(VisualElement element, string elementProperty, object dataSource)
         {
             element.Bind(elementProperty, dataSource, element.GetFirstAncestorOfType<TemplateContainer>().name);
+        }
+
+        // Limits a text field to text Aleph One can store in the buffer and draw: typing a character it can't is
+        // ignored, and pasted text loses such characters when it's set (by the field's source)
+        public static void LimitToMacRomanText(this TextField field, int maximumLength)
+        {
+            field.maxLength = maximumLength;
+
+            field.RegisterCallback<KeyDownEvent>(keyDownEvent =>
+            {
+                // Control characters (such as backspace and return) are edits and navigation, not text
+                if (keyDownEvent.character >= ' ' && !AlephOneExtensions.IsDrawableMacRomanCharacter(keyDownEvent.character))
+                {
+                    keyDownEvent.StopImmediatePropagation();
+                }
+            }, TrickleDown.TrickleDown);
         }
 
         // Lets clicks through the gaps in layout-only elements (template wrappers and radio groups' containers)

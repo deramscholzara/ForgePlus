@@ -337,9 +337,7 @@ namespace ForgePlus.DataFileIO
                 annotationInstance.ParentLevel = runtimeLevel;
 
                 annotationInstance.RefreshLabel();
-
-                var positionalHeight = (runtimeLevel.Polygons[annotation.polygon_index].NativeObject.floor_height + runtimeLevel.Polygons[annotation.polygon_index].NativeObject.ceiling_height) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                annotationInstance.transform.position = new Vector3(annotation.location.x / GeometryUtilities.WorldUnitIncrementsPerMeter, positionalHeight, -annotation.location.y / GeometryUtilities.WorldUnitIncrementsPerMeter);
+                annotationInstance.RefreshPosition();
 
                 annotationInstance.transform.SetParent(annotationsGroupGO.transform, worldPositionStays: true);
 

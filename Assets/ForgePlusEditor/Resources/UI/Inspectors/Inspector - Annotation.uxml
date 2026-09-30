@@ -3,6 +3,7 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="TextFieldRow" src="../Templates/InspectorTextFieldRow.uxml" />
+    <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
     <!-- Bound to Inspector_Annotation -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -21,13 +22,13 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Position" />
         </ui:Instance>
-        <ui:Instance template="Row" name="LocationX">
+        <ui:Instance template="IntegerFieldRow" name="LocationX">
             <ui:AttributeOverrides element-name="label" text="X:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="LocationY">
+        <ui:Instance template="IntegerFieldRow" name="LocationY">
             <ui:AttributeOverrides element-name="label" text="Y:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="PolygonIndex">
+        <ui:Instance template="IntegerFieldRow" name="PolygonIndex">
             <ui:AttributeOverrides element-name="label" text="Polygon:" />
         </ui:Instance>
     </ui:VisualElement>

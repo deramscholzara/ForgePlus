@@ -1,4 +1,6 @@
-﻿using ForgePlus.Extensions;
+﻿using AlephOne;
+using ForgePlus.Extensions;
+using ForgePlus.UI;
 using RuntimeCore.Entities;
 using Unity.Properties;
 using UnityEngine.UIElements;
@@ -28,12 +30,17 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Aleph One draws it on one line, in Mac Roman
         [CreateProperty]
         public string Text
         {
             get
             {
                 return Entity.NativeObject.GetText();
+            }
+            set
+            {
+                Edit(annotation => annotation.SetText(value));
             }
         }
 
@@ -48,21 +55,40 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Where the map draws the text's lower left, in world units
         [CreateProperty]
-        public string LocationX
+        public int LocationX
         {
             get
             {
-                return Entity.NativeObject.location.x.ToString();
+                return Entity.NativeObject.location.x;
+            }
+            set
+            {
+                Edit(annotation => annotation.SetLocation(new world_point2d(ClampToShort(value), annotation.NativeObject.location.y)));
             }
         }
 
         [CreateProperty]
-        public string LocationY
+        public int LocationY
         {
             get
             {
-                return Entity.NativeObject.location.y.ToString();
+                return Entity.NativeObject.location.y;
+            }
+            set
+            {
+                Edit(annotation => annotation.SetLocation(new world_point2d(annotation.NativeObject.location.x, ClampToShort(value))));
+            }
+        }
+
+        // The map only shows the annotation once this polygon is on it
+        [CreateProperty]
+        public int PolygonIndex
+        {
+            get
+            {
+                return Entity.NativeObject.polygon_index;
             }
         }
 
@@ -70,17 +96,7 @@ namespace ForgePlus.Inspection
         {
             base.OnLoaded();
 
-            Root.Q("Type").SetEnabled(false);
-        }
-
-        // The map only shows the annotation once this polygon is on it
-        [CreateProperty]
-        public string PolygonIndex
-        {
-            get
-            {
-                return Entity.NativeObject.polygon_index.ToString();
-            }
+            Root.Find<TextField>(nameof(Text)).LimitToMacRomanText(Entity.NativeObject.text.MacRomanTextCapacity());
         }
     }
 }

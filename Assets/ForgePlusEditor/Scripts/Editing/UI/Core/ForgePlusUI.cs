@@ -41,22 +41,12 @@ namespace ForgePlus.UI
             }
         }
 
-        // Whether a text field has focus (so hotkeys are typed instead)
+        // Whether a text or number field has focus (so hotkeys are typed instead)
         public bool IsEditingText
         {
             get
             {
-                var focusedElement = root?.focusController?.focusedElement as VisualElement;
-
-                for (var element = focusedElement; element != null; element = element.parent)
-                {
-                    if (element.ClassListContains(TextField.ussClassName))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
+                return (root?.focusController?.focusedElement as VisualElement).IsInTextInputField();
             }
         }
 

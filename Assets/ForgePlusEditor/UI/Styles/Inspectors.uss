@@ -96,7 +96,7 @@
     white-space: normal;
 }
 
-/* A text field in a row's value area, looking like the row's value */
+/* A text or number field in a row's value area, looking like the row's value (its border only shows focus) */
 .fp-inspector-text-field {
     margin: 0;
     padding: 0;
@@ -105,7 +105,8 @@
 .fp-inspector-text-field > .unity-base-text-field__input {
     margin: 0;
     padding: 0;
-    border-width: 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
     border-radius: 0;
     background-color: rgba(0, 0, 0, 0);
     color: var(--fp-value-text);

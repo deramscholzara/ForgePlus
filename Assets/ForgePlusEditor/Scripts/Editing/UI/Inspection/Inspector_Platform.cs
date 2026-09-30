@@ -379,6 +379,8 @@ namespace ForgePlus.Inspection
 
         protected override void OnUnloading()
         {
+            base.OnUnloading();
+
             Entity.OnInspectionStateChange -= OnInspectionStateChange;
         }
 

@@ -61,7 +61,7 @@ namespace ForgePlus.UI
                     var inspector = new Inspector_Annotation(annotation);
                     inspector.Load(scrollView.contentContainer);
                     inspector.Root.AddToClassList("fp-annotation");
-                    inspector.Root.RegisterCallback<ClickEvent>(clickEvent => Focus(annotation));
+                    inspector.Root.RegisterCallback<ClickEvent>(clickEvent => OnEntryClicked(annotation, clickEvent));
 
                     entries.Add(new KeyValuePair<LevelEntity_Annotation, Inspector_Annotation>(annotation, inspector));
                 }
@@ -79,6 +79,17 @@ namespace ForgePlus.UI
             }
 
             entries.Clear();
+        }
+
+        // Clicking in a field of the selected annotation (to edit it) leaves the camera where it is
+        private static void OnEntryClicked(LevelEntity_Annotation annotation, ClickEvent clickEvent)
+        {
+            if ((clickEvent.target as VisualElement).IsInTextInputField() &&SelectionManager.Instance.GetIsSelected(annotation))
+            {
+                return;
+            }
+
+            Focus(annotation);
         }
 
         private static void Focus(LevelEntity_Annotation annotation)
