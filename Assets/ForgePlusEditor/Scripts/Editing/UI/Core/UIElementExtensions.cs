@@ -76,6 +76,7 @@ namespace ForgePlus.UI
 
             root.Query<TextField>(className: "fp-inspector-text-field").ForEach(field => BindInspectorField(field, dataSource));
             root.Query<IntegerField>(className: "fp-inspector-text-field").ForEach(field => BindInspectorField(field, dataSource));
+            root.Query<DropdownField>(className: "fp-inspector-dropdown").ForEach(dropdown => BindInspectorDropdown(dropdown, dataSource));
 
             root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag =>
             {
@@ -88,11 +89,40 @@ namespace ForgePlus.UI
         private static void BindInspectorField<TValue>(TextInputBaseField<TValue> field, object dataSource)
         {
             var row = field.GetFirstAncestorOfType<TemplateContainer>();
-            var isEditable = dataSource.GetType().GetProperty(row.name)?.GetSetMethod() != null;
+            var isEditable = BindEditability(row, dataSource);
 
             field.isReadOnly = !isEditable;
-            row.SetEnabled(isEditable);
             field.Bind("value", dataSource, row.name, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
+        }
+
+        // A dropdown chooses from its source's <Name>Choices, as a field edits its source property
+        private static void BindInspectorDropdown(DropdownField dropdown, object dataSource)
+        {
+            var row = dropdown.GetFirstAncestorOfType<TemplateContainer>();
+            var isEditable = BindEditability(row, dataSource);
+
+            dropdown.Bind("choices", dataSource, row.name + "Choices");
+            dropdown.Bind("value", dataSource, row.name, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
+        }
+
+        // A row is enabled while its source property has a setter, and (for a property that can only sometimes be edited,
+        // such as one that needs a data file to know what's valid) while the source's Is<Name>Editable property is true
+        private static bool BindEditability(TemplateContainer row, object dataSource)
+        {
+            var sourceType = dataSource.GetType();
+            var hasSetter = sourceType.GetProperty(row.name)?.GetSetMethod() != null;
+            var editabilityProperty = $"Is{row.name}Editable";
+
+            if (hasSetter && sourceType.GetProperty(editabilityProperty) != null)
+            {
+                row.BindEnabled(dataSource, editabilityProperty);
+            }
+            else
+            {
+                row.SetEnabled(hasSetter);
+            }
+
+            return hasSetter;
         }
 
         private static void BindToInstanceName(VisualElement element, string elementProperty, object dataSource)

@@ -118,6 +118,33 @@
     color: var(--fp-value-text-disabled);
 }
 
+/* A dropdown in a row's value area, looking like the row's value (its border only shows focus) */
+.fp-inspector-dropdown {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.fp-inspector-dropdown > .unity-base-popup-field__input {
+    margin: 0;
+    padding: 0 2px 0 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+}
+
+.fp-root .fp-inspector-dropdown:focus > .unity-base-popup-field__input {
+    border-color: var(--fp-focus);
+}
+
+.fp-inspector-row:disabled .fp-inspector-dropdown,
+.fp-inspector-row:disabled .fp-inspector-dropdown > .unity-base-popup-field__input {
+    opacity: 1;
+    color: var(--fp-value-text-disabled);
+}
+
 /* An annotation in the annotations list, which is selected by clicking it */
 .fp-annotation {
     border-width: 2px;

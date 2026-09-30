@@ -1,8 +1,10 @@
 ﻿using AlephOne;
+using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
 using ForgePlus.UI;
 using RuntimeCore.Entities.MapObjects;
 using System;
+using System.Collections.Generic;
 using Unity.Properties;
 using UnityEngine.UIElements;
 
@@ -67,6 +69,81 @@ namespace ForgePlus.Inspection
                     default:
                         return "Invalid";
                 }
+            }
+        }
+
+        // A sound object's subtype is its sound, shown as a choice instead
+        [CreateProperty]
+        public bool IsSoundSource
+        {
+            get
+            {
+                return NativeObject.type == map._saved_sound_source;
+            }
+        }
+
+        [CreateProperty]
+        public bool IsNotSoundSource
+        {
+            get
+            {
+                return !IsSoundSource;
+            }
+        }
+
+        // A sound object's index is an ambient sound code (Aleph One's table of them names a sound in the sounds file).
+        // Only the sounds the loaded sounds file has can be chosen, so without one it can't be edited.
+        [CreateProperty]
+        public string Sound
+        {
+            get
+            {
+                return AmbientSoundChoice(NativeObject.index);
+            }
+            set
+            {
+                for (short ambientSound = 0; ambientSound < SoundManagerEnums.NUMBER_OF_AMBIENT_SOUND_DEFINITIONS; ambientSound++)
+                {
+                    if (AmbientSoundChoice(ambientSound) == value)
+                    {
+                        Edit(mapObject => mapObject.NativeObject.index = ambientSound);
+                        return;
+                    }
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> SoundChoices
+        {
+            get
+            {
+                var choices = new List<string>();
+
+                for (short ambientSound = 0; ambientSound < SoundManagerEnums.NUMBER_OF_AMBIENT_SOUND_DEFINITIONS; ambientSound++)
+                {
+                    if (ambientSound == NativeObject.index || SoundsLoading.Instance.HasAmbientSound(ambientSound))
+                    {
+                        choices.Add(AmbientSoundChoice(ambientSound));
+                    }
+                }
+
+                // One the engine has no sound for is still shown (as its number)
+                if (!choices.Contains(Sound))
+                {
+                    choices.Insert(0, Sound);
+                }
+
+                return choices;
+            }
+        }
+
+        [CreateProperty]
+        public bool IsSoundEditable
+        {
+            get
+            {
+                return SoundsLoading.Instance.IsLoaded;
             }
         }
 
@@ -231,6 +308,31 @@ namespace ForgePlus.Inspection
             base.OnLoaded();
 
             Root.Q("Placement").BindEnabled(this, nameof(HasPlacement));
+            Root.Q(nameof(Subtype)).BindShown(this, nameof(IsNotSoundSource));
+            Root.Q(nameof(Sound)).BindShown(this, nameof(IsSoundSource));
+
+            // Which sounds can be chosen, and whether they can be, depends on the sounds file
+            SoundsLoading.Instance.OnDataLoadCompleted += OnSoundsLoadCompleted;
+        }
+
+        protected override void OnUnloading()
+        {
+            base.OnUnloading();
+
+            SoundsLoading.Instance.OnDataLoadCompleted -= OnSoundsLoadCompleted;
+        }
+
+        private void OnSoundsLoadCompleted(bool isLoaded)
+        {
+            RefreshValuesInInspector();
+        }
+
+        // "Waterfall (6)", or just the number for a code the engine has no sound for
+        private static string AmbientSoundChoice(short ambientSound)
+        {
+            var name = AlephOneNames.AmbientSound(ambientSound);
+
+            return name == ambientSound.ToString() ? $"({ambientSound})" : $"{name} ({ambientSound})";
         }
     }
 }

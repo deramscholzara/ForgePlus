@@ -28,6 +28,7 @@ namespace ForgePlus.UI
             BindDataFile("maps", DataFileTypes.Maps);
             BindDataFile("shapes", DataFileTypes.Shapes);
             BindDataFile("physics", DataFileTypes.Physics);
+            BindDataFile("sounds", DataFileTypes.Sounds);
 
             var levelItemTemplate = LoadTemplate("LevelItem");
 

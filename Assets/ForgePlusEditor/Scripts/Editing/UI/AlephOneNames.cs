@@ -100,6 +100,16 @@ namespace ForgePlus.Extensions
             return GetName(typeof(monsters), type, prefixes: new[] { "_monster_", CivilianPrefix }, excludedPrefixes: excludedPrefixes);
         }
 
+        public static string AmbientSound(short ambientSound)
+        {
+            return GetName(typeof(SoundManagerEnums), ambientSound, prefixes: new[] { "_ambient_snd_" });
+        }
+
+        public static string RandomSound(short randomSound)
+        {
+            return GetName(typeof(SoundManagerEnums), randomSound, prefixes: new[] { "_random_snd_" });
+        }
+
         public static string ItemType(short type)
         {
             return GetName(typeof(items), type, prefixes: new[] { "_i_" });
