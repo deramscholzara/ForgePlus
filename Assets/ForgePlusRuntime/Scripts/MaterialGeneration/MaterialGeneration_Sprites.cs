@@ -7,6 +7,7 @@ using Unity.Collections;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using AlephOne;
+using Rect = UnityEngine.Rect;
 
 namespace RuntimeCore.Materials
 {

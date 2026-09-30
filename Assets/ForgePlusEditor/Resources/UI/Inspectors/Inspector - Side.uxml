@@ -51,9 +51,6 @@
         <ui:Instance template="Flag" name="IsDestructiveSwitch">
             <ui:AttributeOverrides element-name="flag" text="Is Destructive Switch" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="Dirty">
-            <ui:AttributeOverrides element-name="flag" text="Dirty                  ( ͡° ͜ʖ ͡°)" />
-        </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Primary Surface" />
@@ -77,12 +74,6 @@
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Foldout">
-            <ui:Instance template="Row" name="PolygonIndex">
-                <ui:AttributeOverrides element-name="label" text="Polygon ID:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="LineIndex">
-                <ui:AttributeOverrides element-name="label" text="Line ID:" />
-            </ui:Instance>
             <ui:Instance template="Row" name="AmbientDelta">
                 <ui:AttributeOverrides element-name="label" text="Ambient Delta:" />
             </ui:Instance>

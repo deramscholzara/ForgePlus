@@ -24,6 +24,9 @@ namespace AlephOne
         public static int SET_FLAG(int obj, int flag, bool value) { return ((value) ? ((obj) | (flag)) : ((obj) & ~(flag))); }
         public static uint SET_FLAG(uint obj, uint flag, bool value) { return ((value) ? ((obj) | (flag)) : ((obj) & ~(flag))); }
 
+        public static short RECTANGLE_WIDTH(Rect rectptr) { return (short) ((rectptr).right - (rectptr).left); }
+        public static short RECTANGLE_HEIGHT(Rect rectptr) { return (short) ((rectptr).bottom - (rectptr).top); }
+
         /*
             LP addition: template class for doing bounds checking when accessing an array;
             it uses an array, an index value, and an intended number of members for that array.

@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using AlephOne;
 using ForgePlus.Extensions;
+using Rect = UnityEngine.Rect;
 
 namespace RuntimeCore.Entities.MapObjects
 {

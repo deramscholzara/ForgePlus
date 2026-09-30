@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <!-- What a terminal's text styles are made of: its faces and colors (by index), in the order a style gives them
+         (added by the panel) -->
+    <ui:VisualElement class="fp-palette" picking-mode="Ignore">
+        <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
+        <ui:VisualElement class="fp-box fp-palette__box">
+            <ui:Instance template="ScrollArea" class="fp-grow">
+                <ui:VisualElement class="fp-inspector">
+                    <ui:Instance template="Header">
+                        <ui:AttributeOverrides element-name="label" text="Text Styles" />
+                    </ui:Instance>
+                    <ui:Instance template="Subheader">
+                        <ui:AttributeOverrides element-name="label" text="Faces" />
+                    </ui:Instance>
+                    <ui:VisualElement name="faces" class="fp-inspector" />
+                    <ui:VisualElement class="fp-space" />
+                    <ui:Instance template="Subheader">
+                        <ui:AttributeOverrides element-name="label" text="Colors" />
+                    </ui:Instance>
+                    <ui:VisualElement name="colors" class="fp-inspector" />
+                </ui:VisualElement>
+            </ui:Instance>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

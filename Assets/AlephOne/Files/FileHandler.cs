@@ -1,6 +1,6 @@
-﻿// Port of Aleph One: Source_Files/Files/FileHandler.h, FileHandler.cpp (data files only)
+﻿// Port of Aleph One: Source_Files/Files/FileHandler.h, FileHandler.cpp (data and resource files)
 //
-// Not ported: resource forks, directories, zip files, text files and dialogs.
+// Not ported: directories, zip files, text files and dialogs.
 using System;
 using System.IO;
 using static AlephOne.resource_manager;
@@ -110,6 +110,142 @@ namespace AlephOne
         public SDL_RWops GetRWops() { return f; }
     }
 
+    /*
+        Abstraction for loaded resources;
+        this object will release that resource when it finishes.
+    */
+    public class LoadedResource
+    {
+        public byte[] p; // Pointer to resource data
+        public int size; // Size of data
+
+        public LoadedResource()
+        {
+            p = null;
+            size = 0;
+        }
+
+        // Resource loaded?
+        public bool IsLoaded()
+        {
+            return p != null;
+        }
+
+        // Unloads the resource
+        public void Unload()
+        {
+            if (p != null)
+            {
+                p = null;
+                size = 0;
+            }
+        }
+
+        // Get size of loaded resource
+        public int GetLength()
+        {
+            return size;
+        }
+
+        // Get pointer (always present)
+        public byte[] GetPointer(bool DoDetach = false)
+        {
+            byte[] ret = p;
+            if (DoDetach)
+                Detach();
+            return ret;
+        }
+
+        // Make resource from raw resource data; the caller gives up ownership
+        // of the pointed to memory block
+        public void SetData(byte[] data, int length)
+        {
+            Unload();
+            p = data;
+            size = length;
+        }
+
+        // Detaches an allocated resource from this object
+        // (keep private to avoid memory leaks)
+        private void Detach()
+        {
+            p = null;
+            size = 0;
+        }
+    }
+
+    /*
+        Abstraction for opened resource files:
+        it does opening, setting, and closing of such files;
+        also getting "LoadedResource" objects that return pointers
+    */
+    public class OpenedResourceFile
+    {
+        internal SDL_RWops f; // File handle
+        private SDL_RWops saved_f;
+        private int err; // Error code
+
+        public OpenedResourceFile()
+        {
+            f = null;
+            saved_f = null;
+            err = 0;
+        }
+
+        public bool Push()
+        {
+            saved_f = cur_res_file();
+            if (saved_f != f)
+                use_res_file(f);
+            err = 0;
+            return true;
+        }
+
+        public bool Pop()
+        {
+            if (f != saved_f)
+                use_res_file(saved_f);
+            err = 0;
+            return true;
+        }
+
+        public bool Check(uint Type, short ID)
+        {
+            Push();
+            bool result = has_1_resource(Type, ID);
+            err = result ? 0 : FileSpecifier.unknown_filesystem_error; // ENOENT
+            Pop();
+            return result;
+        }
+
+        public bool Get(uint Type, short ID, LoadedResource Rsrc)
+        {
+            Push();
+            bool success = get_1_resource(Type, ID, Rsrc);
+            err = success ? 0 : FileSpecifier.unknown_filesystem_error; // ENOENT
+            Pop();
+            return success;
+        }
+
+        public bool IsOpen()
+        {
+            return f != null;
+        }
+
+        public bool Close()
+        {
+            if (f != null)
+            {
+                close_res_file(f);
+                f = null;
+                err = 0;
+            }
+            return true;
+        }
+
+        public int GetError() { return err; }
+    }
+
     public class FileSpecifier
     {
         // Returned by .GetError() for unknown errors
@@ -199,6 +335,21 @@ namespace AlephOne
             }
             SDL_RWseek(f, 0, SEEK_SET);
             return true;
+        }
+
+        // Open resource file
+        public bool Open(OpenedResourceFile OFile, bool Writable = false)
+        {
+            OFile.Close();
+
+            OFile.f = open_res_file(this);
+            err = OFile.f != null ? 0 : unknown_filesystem_error;
+            if (OFile.f == null)
+            {
+                return false;
+            }
+            else
+                return true;
         }
 
         public bool Delete()

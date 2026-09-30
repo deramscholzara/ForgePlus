@@ -63,8 +63,29 @@
     background-color: var(--fp-value-area);
 }
 
+/* Above its value, a label can be as wide as its text */
+.fp-inspector-row--vertical .fp-inspector-row__label {
+    width: auto;
+}
+
 .fp-inspector-row--vertical .fp-inspector-row__value-area {
     align-self: stretch;
+}
+
+/* A row that doesn't apply (such as to the selected object) is grayed out, not hidden, at full opacity (which the
+   default theme lowers for disabled elements) */
+.fp-inspector-row:disabled > .fp-inspector-row__label {
+    color: var(--fp-text-faint);
+    opacity: 1;
+}
+
+.fp-inspector-row:disabled > .fp-inspector-row__value-area {
+    background-color: var(--fp-value-area-disabled);
+}
+
+.fp-inspector-row:disabled .fp-inspector-value {
+    color: var(--fp-value-text-disabled);
+    opacity: 1;
 }
 
 .fp-inspector-value {

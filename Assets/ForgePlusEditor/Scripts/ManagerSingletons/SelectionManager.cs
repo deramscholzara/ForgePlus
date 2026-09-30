@@ -192,6 +192,7 @@ namespace ForgePlus.LevelManipulation
                             SelectObject(LevelEntity_Level.Instance, multiSelect: false);
                         }
                         break;
+                    case ModeManager.PrimaryModes.Terminals:
                     case ModeManager.PrimaryModes.None:
                     default:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);

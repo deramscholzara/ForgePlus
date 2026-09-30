@@ -2,7 +2,6 @@
     <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
-    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
     <!-- Bound to Inspector_Polygon -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -56,27 +55,6 @@
         </ui:Instance>
         <ui:Instance template="Row" name="RandomSound">
             <ui:AttributeOverrides element-name="label" text="Random:" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Foldout">
-            <ui:Instance template="Row" name="VertexCount">
-                <ui:AttributeOverrides element-name="label" text="Vertex Count:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="VertexIndices">
-                <ui:AttributeOverrides element-name="label" text="Vertex Indices:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="LineIndices">
-                <ui:AttributeOverrides element-name="label" text="Line Indices:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="SideIndices">
-                <ui:AttributeOverrides element-name="label" text="Side Indices:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="FirstObjectIndex">
-                <ui:AttributeOverrides element-name="label" text="First Object Index:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="AdjacentPolygonIndices">
-                <ui:AttributeOverrides element-name="label" text="Adjacent Polygon Indices:" />
-            </ui:Instance>
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

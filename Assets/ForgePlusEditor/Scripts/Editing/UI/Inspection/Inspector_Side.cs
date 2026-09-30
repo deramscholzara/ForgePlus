@@ -46,24 +46,6 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string LineIndex
-        {
-            get
-            {
-                return Side.line_index.ToString();
-            }
-        }
-
-        [CreateProperty]
-        public string PolygonIndex
-        {
-            get
-            {
-                return Side.polygon_index.ToString();
-            }
-        }
-
-        [CreateProperty]
         public string AmbientDelta
         {
             get
@@ -132,15 +114,6 @@ namespace ForgePlus.Inspection
             get
             {
                 return csmacros.TEST_FLAG(Side.flags, map._side_is_lighted_switch);
-            }
-        }
-
-        [CreateProperty]
-        public bool Dirty
-        {
-            get
-            {
-                return map.SIDE_IS_DIRTY(Side);
             }
         }
 

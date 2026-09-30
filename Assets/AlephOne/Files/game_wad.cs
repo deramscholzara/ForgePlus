@@ -3,9 +3,9 @@
 // Not ported (the running game, saved games, networking, Lua, MML and level scripts, the UI):
 // set_map_file/use_map_file, new_game, goto_level, load_game_from_file, revert_game, save_game_file,
 // build_save_game_wad, build_meta_game_wad, get_dynamic_data_from_save/_wad, get_player_data_from_wad,
-// the net functions, and in process_map_wad the restoring_game path, scenery, terminals, shapes and
-// sounds patches, MMLS/LUAS/Lua state, music and ephemera. Chunks that aren't loaded are kept with the
-// level (MapLevel.loaded_wad) and saved as they were.
+// the net functions, and in process_map_wad the restoring_game path, scenery, shapes and sounds patches,
+// MMLS/LUAS/Lua state, music and ephemera. Chunks that aren't loaded are kept with the level
+// (MapLevel.loaded_wad) and saved as they were, and so are the terminals, which are loaded but not packed.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -713,6 +713,12 @@ namespace AlephOne
             // dynamic_world->ambient_sound_image_count= count;
         }
 
+        private static void load_terminal_data(MapLevel level, byte[] data, int length)
+        {
+            /* I would really like it if I could get these into computer_interface.c statically */
+            computer_interface.unpack_map_terminal_data(level, new StreamPointer(data ?? new byte[0]), length);
+        }
+
         private static void load_random_sound_images(MapLevel level, byte[] data, int count)
         {
             // assert(count>=0 &&count<=MAXIMUM_RANDOM_SOUND_IMAGES_PER_MAP);
@@ -934,7 +940,8 @@ namespace AlephOne
             load_placement_data(level, new StreamPointer(data, MAXIMUM_OBJECT_TYPES * SIZEOF_object_frequency_definition), new StreamPointer(data));
 
             /* Extract the terminal data. */
-            // load_terminal_data(data, data_length);
+            data = extract_type_from_wad(wad, TERMINAL_DATA_TAG, out data_length);
+            load_terminal_data(level, data, data_length);
 
             /* Extract the media definitions */
             {

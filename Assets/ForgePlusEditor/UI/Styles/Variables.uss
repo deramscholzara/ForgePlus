@@ -22,12 +22,16 @@
     --fp-label-area: rgb(26, 26, 26);
     --fp-value-area: rgb(178, 178, 178);
     --fp-value-text: rgb(0, 0, 0);
+    --fp-value-area-disabled: rgb(100, 100, 100);
+    --fp-value-text-disabled: rgb(170, 170, 170);
     --fp-slider-background: rgb(255, 255, 255);
 
     --fp-scrollbar: rgb(13, 13, 13);
     --fp-scrollbar-handle: rgb(50, 50, 50);
 
     --fp-in-use: rgb(0, 255, 0);
+
+    --fp-terminal-black: rgb(0, 0, 0);
 
     --fp-blocker-fill: rgba(0, 0, 0, 0.8);
     --fp-blocker-border: rgba(85, 0, 0, 0.97);

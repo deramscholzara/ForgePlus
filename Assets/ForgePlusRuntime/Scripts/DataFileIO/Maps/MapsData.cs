@@ -28,6 +28,11 @@ namespace ForgePlus.DataFileIO
             currentlyOpenLevel.OpenLevel();
         }
 
+        public void CloseFile()
+        {
+            file?.Close();
+        }
+
         public void CloseAndUnloadCurrentLevel()
         {
             if (currentlyOpenLevel == null)

@@ -18,6 +18,17 @@ namespace ForgePlus.DataFileIO
             {
                 throw new IOException($"\"{fileName}\" is not a readable Marathon map file ({DescribeGameError()}).");
             }
+
+            // As Aleph One's set_map_file does, for the terminals' pictures (with its default 32-bit interface)
+            ScenarioPictures.Clear();
+            screen.interface_bit_depth = 32;
+            images.set_scenario_images_file(File);
+        }
+
+        public void Close()
+        {
+            ScenarioPictures.Clear();
+            images.unset_scenario_images_file();
         }
 
         public MapLevel LoadLevel(int levelIndex)

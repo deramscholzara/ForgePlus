@@ -3,7 +3,6 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
-    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
     <!-- Bound to Inspector_Line -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -19,52 +18,8 @@
         <ui:Instance template="Flag" name="Solid">
             <ui:AttributeOverrides element-name="flag" text="Solid" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="HasTransparentSide">
-            <ui:AttributeOverrides element-name="flag" text="Has Transparent Side" />
-        </ui:Instance>
         <ui:Instance template="Flag" name="Transparent">
             <ui:AttributeOverrides element-name="flag" text="Is Transparent" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Landscape">
-            <ui:AttributeOverrides element-name="flag" text="Landscape" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="VariableElevation">
-            <ui:AttributeOverrides element-name="flag" text="Variable Elevation" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Elevation">
-            <ui:AttributeOverrides element-name="flag" text="Elevation" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Foldout">
-            <ui:Instance template="Row" name="Length">
-                <ui:AttributeOverrides element-name="label" text="Length:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="HighestFloorHeight">
-                <ui:AttributeOverrides element-name="label" text="Highest Floor Height:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="LowestCeilingHeight">
-                <ui:AttributeOverrides element-name="label" text="Lowest Ceiling Height:" />
-            </ui:Instance>
-            <ui:VisualElement class="fp-space" />
-            <ui:Instance template="Subheader">
-                <ui:AttributeOverrides element-name="label" text="Clockwise" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="ClockwiseSideIndex">
-                <ui:AttributeOverrides element-name="label" text="Side ID:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="ClockwisePolygonIndex">
-                <ui:AttributeOverrides element-name="label" text="Polygon ID:" />
-            </ui:Instance>
-            <ui:VisualElement class="fp-space" />
-            <ui:Instance template="Subheader">
-                <ui:AttributeOverrides element-name="label" text="Counterclockwise" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="CounterclockwiseSideIndex">
-                <ui:AttributeOverrides element-name="label" text="Side ID:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="CounterclockwisePolygonIndex">
-                <ui:AttributeOverrides element-name="label" text="Polygon ID:" />
-            </ui:Instance>
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

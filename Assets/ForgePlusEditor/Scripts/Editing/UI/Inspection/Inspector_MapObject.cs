@@ -176,7 +176,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasPlacement ? Entity.Placement.initial_count.ToString() : string.Empty;
+                return HasPlacement ? Entity.Placement.initial_count.ToString() : "-";
             }
         }
 
@@ -185,7 +185,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasPlacement ? Entity.Placement.minimum_count.ToString() : string.Empty;
+                return HasPlacement ? Entity.Placement.minimum_count.ToString() : "-";
             }
         }
 
@@ -194,7 +194,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasPlacement ? Entity.Placement.maximum_count.ToString() : string.Empty;
+                return HasPlacement ? Entity.Placement.maximum_count.ToString() : "-";
             }
         }
 
@@ -203,7 +203,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasPlacement ? Entity.Placement.random_count.ToString() : string.Empty;
+                return HasPlacement ? Entity.Placement.random_count.ToString() : "-";
             }
         }
 
@@ -213,7 +213,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasPlacement ? $"{Math.Round(Entity.Placement.random_chance * 100.0 / ushort.MaxValue)} %" : string.Empty;
+                return HasPlacement ? $"{Math.Round(Entity.Placement.random_chance * 100.0 / ushort.MaxValue)} %" : "-";
             }
         }
 
@@ -222,7 +222,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasPlacement ? csmacros.TEST_FLAG(Entity.Placement.flags, map._reappears_in_random_location).ToString() : string.Empty;
+                return HasPlacement ? csmacros.TEST_FLAG(Entity.Placement.flags, map._reappears_in_random_location).ToString() : "-";
             }
         }
 
@@ -230,7 +230,7 @@ namespace ForgePlus.Inspection
         {
             base.OnLoaded();
 
-            Root.Q("Placement").BindShown(this, nameof(HasPlacement));
+            Root.Q("Placement").BindEnabled(this, nameof(HasPlacement));
         }
     }
 }

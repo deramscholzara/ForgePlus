@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- The page being read; its screen is filled by the terminal panel, in terminal coordinates scaled to fit -->
+    <ui:VisualElement class="fp-terminal" picking-mode="Ignore">
+        <ui:VisualElement name="screen" class="fp-terminal__screen" picking-mode="Ignore" />
+        <ui:VisualElement class="fp-box fp-terminal__actions">
+            <ui:Instance template="Button" name="back" class="fp-terminal__action">
+                <ui:AttributeOverrides element-name="control" text="Back" />
+            </ui:Instance>
+            <ui:Label name="page" class="fp-terminal__caption" />
+            <ui:Instance template="Button" name="next" class="fp-terminal__action">
+                <ui:AttributeOverrides element-name="control" text="Next" />
+            </ui:Instance>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

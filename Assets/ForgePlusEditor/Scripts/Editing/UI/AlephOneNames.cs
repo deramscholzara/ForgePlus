@@ -66,6 +66,32 @@ namespace ForgePlus.Extensions
             return GetName(typeof(map), panelClass, prefixes: new[] { "_panel_is_" });
         }
 
+        public static string TerminalGroupType(short type)
+        {
+            var candidates = new[]
+            {
+                "_logon_group",
+                "_unfinished_group",
+                "_success_group",
+                "_failure_group",
+                "_information_group",
+                "_end_group",
+                "_interlevel_teleport_group",
+                "_intralevel_teleport_group",
+                "_checkpoint_group",
+                "_sound_group",
+                "_movie_group",
+                "_track_group",
+                "_pict_group",
+                "_logoff_group",
+                "_camera_group",
+                "_static_group",
+                "_tag_group",
+            };
+
+            return GetName(typeof(computer_interface), type, suffix: "_group", candidates: candidates);
+        }
+
         // Monster flags share the monster type prefix
         public static string MonsterType(short type)
         {

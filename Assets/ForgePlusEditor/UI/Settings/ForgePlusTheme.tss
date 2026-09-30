@@ -6,3 +6,4 @@
 @import url("../Styles/Menu.uss");
 @import url("../Styles/Inspectors.uss");
 @import url("../Styles/Palette.uss");
+@import url("../Styles/Terminals.uss");

@@ -52,6 +52,8 @@ namespace ForgePlus.DataFileIO
         {
             CloseLevel();
 
+            data?.CloseFile();
+
             base.UnloadFile();
         }
 

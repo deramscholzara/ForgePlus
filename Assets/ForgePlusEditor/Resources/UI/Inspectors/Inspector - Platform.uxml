@@ -3,7 +3,6 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
-    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
     <ui:Template name="Button" src="../Templates/Button.uxml" />
     <!-- Bound to Inspector_Platform; SimulationActive is the one editable flag -->
     <ui:VisualElement class="fp-inspector">
@@ -125,12 +124,6 @@
         </ui:Instance>
         <ui:Instance template="Flag" name="IsDoor">
             <ui:AttributeOverrides element-name="flag" text="Is Door" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Foldout">
-            <ui:Instance template="Row" name="PolygonIndex">
-                <ui:AttributeOverrides element-name="label" text="Polygon Index:" />
-            </ui:Instance>
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

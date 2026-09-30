@@ -1,7 +1,6 @@
 ﻿using ForgePlus.Extensions;
 using ForgePlus.UI;
 using RuntimeCore.Materials;
-using Unity.Properties;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -26,14 +25,7 @@ namespace ForgePlus.Inspection
 
         protected override void OnLoaded()
         {
-            Root.Query<Label>(className: "fp-inspector-value").ForEach(value => BindToInstanceProperty(value, "text"));
-            Root.Query<Image>(className: "fp-inspector-texture").ForEach(texture => BindToInstanceProperty(texture, "image"));
-
-            Root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag =>
-            {
-                flag.SetEnabled(false);
-                BindToInstanceProperty(flag, "value");
-            });
+            Root.BindInspectorFields(this);
         }
 
         protected static UnityEngine.Texture TextureOrPlaceholder(ushort shapeDescriptor)
@@ -41,11 +33,6 @@ namespace ForgePlus.Inspection
             var texture = shapeDescriptor.IsEmptyShapeDescriptor() ? null : MaterialGeneration_Geometry.GetTexture(shapeDescriptor);
 
             return texture ? texture : Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder");
-        }
-
-        private void BindToInstanceProperty(VisualElement element, string elementProperty)
-        {
-            element.Bind(elementProperty, this, element.GetFirstAncestorOfType<TemplateContainer>().name);
         }
     }
 
