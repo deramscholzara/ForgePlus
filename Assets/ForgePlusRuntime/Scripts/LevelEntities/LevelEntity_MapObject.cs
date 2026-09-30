@@ -5,7 +5,6 @@ using RuntimeCore.Materials;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using AlephOne;
 using ForgePlus.Extensions;
 using Rect = UnityEngine.Rect;
@@ -98,22 +97,22 @@ namespace RuntimeCore.Entities.MapObjects
             }
         }
 
-        public override void OnValidatedPointerClick(PointerEventData eventData)
+        public override void OnValidatedPointerClick(WorldPointerEventData eventData)
         {
             SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
         }
 
-        public override void OnValidatedBeginDrag(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedDrag(PointerEventData eventData)
+        public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedEndDrag(PointerEventData eventData)
+        public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }

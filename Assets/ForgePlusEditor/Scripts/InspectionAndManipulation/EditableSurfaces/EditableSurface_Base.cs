@@ -2,51 +2,48 @@
 using ForgePlus.Palette;
 using RuntimeCore.Entities.Geometry;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
+    // Something in the level that the pointer can click and drag (WorldPointer), while it's selectable
     public abstract class EditableSurface_Base : MonoBehaviour,
         ISelectable,
-        IPointerClickHandler,
-        IBeginDragHandler,
-        IEndDragHandler,
-        IDragHandler
+        IWorldPointerHandler
     {
         protected bool isSelectable = false;
 
-        public abstract void OnValidatedPointerClick(PointerEventData eventData);
-        public abstract void OnValidatedBeginDrag(PointerEventData eventData);
-        public abstract void OnValidatedDrag(PointerEventData eventData);
-        public abstract void OnValidatedEndDrag(PointerEventData eventData);
+        public abstract void OnValidatedPointerClick(WorldPointerEventData eventData);
+        public abstract void OnValidatedBeginDrag(WorldPointerEventData eventData);
+        public abstract void OnValidatedDrag(WorldPointerEventData eventData);
+        public abstract void OnValidatedEndDrag(WorldPointerEventData eventData);
 
-        public void OnPointerClick(PointerEventData eventData)
+        public void OnWorldPointerClick(WorldPointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && !eventData.dragging && isSelectable)
+            if (!eventData.IsDragging && isSelectable)
             {
                 OnValidatedPointerClick(eventData);
             }
         }
 
-        public void OnBeginDrag(PointerEventData eventData)
+        public void OnWorldPointerBeginDrag(WorldPointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
+            if (isSelectable)
             {
                 OnValidatedBeginDrag(eventData);
             }
         }
 
-        public void OnDrag(PointerEventData eventData)
+        public void OnWorldPointerDrag(WorldPointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
+            if (isSelectable)
             {
                 OnValidatedDrag(eventData);
             }
         }
 
-        public void OnEndDrag(PointerEventData eventData)
+        public void OnWorldPointerEndDrag(WorldPointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && isSelectable)
+            if (isSelectable)
             {
                 OnValidatedEndDrag(eventData);
             }

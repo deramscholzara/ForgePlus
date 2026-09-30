@@ -3,7 +3,6 @@ using ForgePlus.Palette;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -28,7 +27,7 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        public override void OnValidatedPointerClick(PointerEventData eventData)
+        public override void OnValidatedPointerClick(WorldPointerEventData eventData)
         {
             switch (ModeManager.Instance.PrimaryMode)
             {
@@ -50,17 +49,17 @@ namespace ForgePlus.LevelManipulation
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
-        public override void OnValidatedBeginDrag(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedDrag(PointerEventData eventData)
+        public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedEndDrag(PointerEventData eventData)
+        public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }

@@ -29,6 +29,9 @@ namespace ForgePlus.UI
 
         public EditorViewModel Editor { get; private set; }
 
+        // Name tags for points in the level (annotations), behind the panels
+        public WorldLabels WorldLabels { get; private set; }
+
         public SettingsViewModel Settings { get; private set; }
 
         public TerminalsViewModel Terminals { get; private set; }
@@ -68,6 +71,8 @@ namespace ForgePlus.UI
         {
             root = GetComponent<UIDocument>().rootVisualElement;
             root.pickingMode = PickingMode.Ignore;
+
+            WorldLabels = new WorldLabels(root);
 
             Editor = new EditorViewModel();
             Settings = new SettingsViewModel();
@@ -118,6 +123,12 @@ namespace ForgePlus.UI
             Editor?.Dispose();
             Settings?.Dispose();
             Terminals?.Dispose();
+        }
+
+        // After the camera moves (in its Update)
+        private void LateUpdate()
+        {
+            WorldLabels?.UpdatePositions();
         }
 
         private void Update()

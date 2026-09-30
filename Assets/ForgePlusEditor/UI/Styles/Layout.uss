@@ -282,3 +282,31 @@
     height: var(--fp-short-control-height);
     margin: 0 5px 5px 5px;
 }
+
+/* ---------- Name tags in the level (WorldLabels) ---------- */
+
+/* Behind every panel, covering the view */
+.fp-world-labels {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Centered on its point in the level, at the UI's largest text size */
+.fp-world-label {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    translate: -50% -50%;
+    font-size: 24px;
+    color: var(--fp-annotation);
+    white-space: nowrap;
+    -unity-text-align: middle-center;
+}
+
+.fp-world-label--selected {
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: var(--fp-text-bright);
+}

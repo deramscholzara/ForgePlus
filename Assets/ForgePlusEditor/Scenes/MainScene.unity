@@ -128,30 +128,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 434421338}
-  - component: {fileID: 434421337}
   - component: {fileID: 434421339}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: WorldPointer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &434421337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 434421335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 10
 --- !u!4 &434421338
 Transform:
   m_ObjectHideFlags: 0
@@ -176,28 +160,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 434421335}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Script: {fileID: 11500000, guid: 9637b77a7ec84fd4289d47b34fbd0f38, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.UI.InputSystemUIInputModule
-  m_SendPointerHoverToParent: 1
-  m_MoveRepeatDelay: 0.5
-  m_MoveRepeatRate: 0.1
-  m_XRTrackingOrigin: {fileID: 0}
-  m_ActionsAsset: {fileID: -944628639613478452, guid: 7044c1c4b6fb19344b9511d32cbb4967, type: 3}
-  m_PointAction: {fileID: -8056909091780044032, guid: 7044c1c4b6fb19344b9511d32cbb4967, type: 3}
-  m_MoveAction: {fileID: 0}
-  m_SubmitAction: {fileID: 0}
-  m_CancelAction: {fileID: 0}
-  m_LeftClickAction: {fileID: 8056856818456041789, guid: 7044c1c4b6fb19344b9511d32cbb4967, type: 3}
-  m_MiddleClickAction: {fileID: 0}
-  m_RightClickAction: {fileID: 0}
-  m_ScrollWheelAction: {fileID: 4502412055082496612, guid: 7044c1c4b6fb19344b9511d32cbb4967, type: 3}
-  m_TrackedDevicePositionAction: {fileID: 0}
-  m_TrackedDeviceOrientationAction: {fileID: 0}
-  m_DeselectOnBackgroundClick: 1
-  m_PointerBehavior: 0
-  m_CursorLockBehavior: 0
-  m_ScrollDeltaPerTick: 6
+  m_EditorClassIdentifier: Assembly-CSharp::ForgePlus.LevelManipulation.WorldPointer
 --- !u!1 &792520104
 GameObject:
   m_ObjectHideFlags: 0
@@ -337,7 +302,6 @@ GameObject:
   - component: {fileID: 1061089420}
   - component: {fileID: 1061089423}
   - component: {fileID: 1061089425}
-  - component: {fileID: 1061089426}
   m_Layer: 0
   m_Name: EditorModeCamera
   m_TagString: MainCamera
@@ -482,22 +446,6 @@ MonoBehaviour:
   decelerationPerSecond: 40
   framingDuration: 0.25
   wheelMoveDistancePerNotch: 0.5
---- !u!114 &1061089426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1061089419}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EventMask:
-    serializedVersion: 2
-    m_Bits: 1073741825
-  m_MaxRayIntersections: 0
 --- !u!1 &1360784487
 GameObject:
   m_ObjectHideFlags: 0

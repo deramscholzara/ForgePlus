@@ -1,7 +1,6 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using AlephOne;
 
 namespace RuntimeCore.Entities.Geometry
@@ -16,23 +15,23 @@ namespace RuntimeCore.Entities.Geometry
 
         public LevelEntity_Level ParentLevel { private get; set; }
 
-        public override void OnValidatedPointerClick(PointerEventData eventData)
+        public override void OnValidatedPointerClick(WorldPointerEventData eventData)
         {
             // TODO: Implement this
             throw new System.NotImplementedException();
         }
 
-        public override void OnValidatedBeginDrag(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedDrag(PointerEventData eventData)
+        public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedEndDrag(PointerEventData eventData)
+        public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }

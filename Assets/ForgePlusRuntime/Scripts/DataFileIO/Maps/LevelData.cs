@@ -334,7 +334,7 @@ namespace ForgePlus.DataFileIO
             for (var i = 0; i < level.MapAnnotationList.Count; i++)
             {
                 var annotation = level.MapAnnotationList[i];
-                var annotationInstance = UnityEngine.Object.Instantiate(LevelEntity_Annotation.Prefab);
+                var annotationInstance = new GameObject($"Annotation ({i})").AddComponent<LevelEntity_Annotation>();
                 annotationInstance.NativeIndex = (short) i;
                 annotationInstance.NativeObject = annotation;
                 annotationInstance.ParentLevel = runtimeLevel;

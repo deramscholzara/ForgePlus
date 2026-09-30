@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -26,7 +25,6 @@ namespace ForgePlus.LevelManipulation
 
         private readonly List<ISelectable> SelectedObjects = new List<ISelectable>(500);
 
-        private bool selectionEventStartedOverEmptiness = false;
 
         public ISelectable SelectedObject
         {
@@ -388,33 +386,28 @@ namespace ForgePlus.LevelManipulation
             SelectionIndicatorLayer = LayerMask.NameToLayer("SelectionVisualization");
 
             ModeManager.Instance.OnPrimaryModeChanged += UpdateSelectionToMatchMode;
+            WorldPointer.Instance.OnClickEmptySpace += OnPointerClickEmptySpace;
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            // Handling for when the user clicks on empty space
-            if (ForgePlusInput.Editing.Select.WasPressedThisFrame())
+            var worldPointer = WorldPointer.Instance;
+            if (worldPointer)
             {
-                if (!EventSystem.current.IsPointerOverGameObject())
-                {
-                    selectionEventStartedOverEmptiness = true;
-                }
+                worldPointer.OnClickEmptySpace -= OnPointerClickEmptySpace;
+            }
+        }
+
+        // Clicking nothing (no UI, and nothing in the level) deselects everything (except in Level mode, where the level
+        // is always selected)
+        private void OnPointerClickEmptySpace()
+        {
+            if (ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Level)
+            {
+                DeselectAll();
             }
 
-            if (ForgePlusInput.Editing.Select.WasReleasedThisFrame())
-            {
-                if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
-                {
-                    if (ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Level)
-                    {
-                        DeselectAll();
-                    }
-
-                    OnClickEmptySpace?.Invoke();
-                }
-
-                selectionEventStartedOverEmptiness = false;
-            }
+            OnClickEmptySpace?.Invoke();
         }
     }
 }

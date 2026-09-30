@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace ForgePlus.Entities.Geometry
 {
@@ -57,7 +56,7 @@ namespace ForgePlus.Entities.Geometry
 
         private List<AlignmentGroupee> alignmentGroup = new List<AlignmentGroupee>();
 
-        public async override void OnValidatedPointerClick(PointerEventData eventData)
+        public async override void OnValidatedPointerClick(WorldPointerEventData eventData)
         {
             switch (ModeManager.Instance.PrimaryMode)
             {
@@ -261,7 +260,7 @@ namespace ForgePlus.Entities.Geometry
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
-        public override void OnValidatedBeginDrag(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
@@ -296,9 +295,9 @@ namespace ForgePlus.Entities.Geometry
                     }
                 }
 
-                var startingPosition = eventData.pointerPressRaycast.worldPosition;
+                var startingPosition = eventData.PressWorldPosition;
 
-                var surfaceWorldNormal = eventData.pointerCurrentRaycast.worldNormal;
+                var surfaceWorldNormal = eventData.PressWorldNormal;
                 var textureWorldUp = Vector3.up;
 
                 uvDragPlane = new UVPlanarDrag(startingUVs,
@@ -326,14 +325,14 @@ namespace ForgePlus.Entities.Geometry
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
-        public override void OnValidatedDrag(PointerEventData eventData)
+        public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
             {
-                var screenPosition = new Vector3(eventData.pointerCurrentRaycast.screenPosition.x,
-                                                 eventData.pointerCurrentRaycast.screenPosition.y,
+                var screenPosition = new Vector3(eventData.Position.x,
+                                                 eventData.Position.y,
                                                  0f);
 
                 var pointerRay = Camera.main.ScreenPointToRay(screenPosition);
@@ -364,7 +363,7 @@ namespace ForgePlus.Entities.Geometry
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
-        public override void OnValidatedEndDrag(PointerEventData eventData)
+        public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&

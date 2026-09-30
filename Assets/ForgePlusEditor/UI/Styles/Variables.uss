@@ -45,4 +45,7 @@
 
     /* What only Aleph One supports (not the original Marathon 2 and Infinity) is marked in this */
     --fp-aleph-one: rgb(230, 150, 30);
+
+    /* Annotations' name tags in the level (the green they were drawn in before) */
+    --fp-annotation: rgb(0, 179, 0);
 }
