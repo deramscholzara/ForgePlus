@@ -11,6 +11,7 @@ namespace ForgePlus.UI
 
         private VisualElement swatchesContainer;
         private VisualTreeAsset swatchTemplate;
+        private ScrollView scrollView;
 
         protected override string LayoutPath
         {
@@ -21,6 +22,24 @@ namespace ForgePlus.UI
         }
 
         protected abstract string SwatchTemplateName { get; }
+
+        // The header above the swatches, saying what they are (none, if they speak for themselves)
+        protected virtual string Header
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        // Whether the selected swatch is scrolled into view (for long palettes whose selection follows the level's)
+        protected virtual bool ScrollsToSelection
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         // PaletteManager may not have changed its swatches for a new mode yet, so each palette shows only its own kind
         protected abstract bool Shows(PaletteManager.Swatch swatch);
@@ -35,7 +54,12 @@ namespace ForgePlus.UI
 
         protected override void OnLoaded()
         {
+            scrollView = Root.Find<ScrollView>("swatches");
             swatchesContainer = Root.Q("swatches-container");
+
+            var header = Root.Q("header");
+            header.style.display = Header == null ? DisplayStyle.None : DisplayStyle.Flex;
+            header.Q<Label>("label").text = Header;
             swatchTemplate = LoadTemplate(SwatchTemplateName);
 
             PaletteManager.Instance.OnSwatchesChanged += Rebuild;
@@ -103,7 +127,15 @@ namespace ForgePlus.UI
 
             foreach (var swatchToggle in swatchToggles)
             {
-                swatchToggle.Value.SetValueWithoutNotify(swatchToggle.Key == selectedSwatch);
+                var isSelected = swatchToggle.Key == selectedSwatch;
+                swatchToggle.Value.SetValueWithoutNotify(isSelected);
+
+                if (isSelected && ScrollsToSelection)
+                {
+                    // After layout, so a swatch that was just added has a position to scroll to
+                    var toggle = swatchToggle.Value;
+                    scrollView.schedule.Execute(() => scrollView.ScrollTo(toggle));
+                }
             }
         }
     }

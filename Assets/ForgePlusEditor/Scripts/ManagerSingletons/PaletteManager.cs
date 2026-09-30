@@ -21,6 +21,7 @@ namespace ForgePlus.Palette
             public Texture2D Texture;
             public LevelEntity_Light Light;
             public LevelEntity_Media Media;
+            public LevelEntity_Polygon Polygon;
 
             public bool IsLandscape
             {
@@ -80,6 +81,12 @@ namespace ForgePlus.Palette
             return SelectedSwatch?.Media;
         }
 
+        // The swatch of the polygon the selected annotation is linked to (none, for no polygon)
+        public void SelectSwatchForPolygon(LevelEntity_Polygon polygon)
+        {
+            Select(polygon ? swatches.FirstOrDefault(swatch => swatch.Polygon == polygon) : null, updateLevelSelection: false);
+        }
+
         // Selects the swatch, or deselects it if it was selected and the palette allows that
         public void Click(Swatch swatch)
         {
@@ -120,12 +127,23 @@ namespace ForgePlus.Palette
             OnSelectionChanged?.Invoke();
         }
 
-        // Textures clear the level's selection (for painting), and lights and media select their object
+        // Textures clear the level's selection (for painting), lights and media select their object, and polygons
+        // become the selected annotation's
         private void UpdateLevelSelection(Swatch swatch, bool isSelected)
         {
             if (swatch.Texture)
             {
                 SelectionManager.Instance.DeselectAll();
+                return;
+            }
+
+            if (swatch.Polygon)
+            {
+                if (isSelected)
+                {
+                    LevelEntity_Annotation.LinkSelectedAnnotation(swatch.Polygon);
+                }
+
                 return;
             }
 
@@ -212,6 +230,14 @@ namespace ForgePlus.Palette
                         //       - Goals
                         break;
                     case ModeManager.PrimaryModes.Annotations:
+                        // An annotation is always linked to a polygon, so its polygon can be changed but not cleared
+                        allowSwitchOff = false;
+
+                        foreach (var polygon in LevelEntity_Level.Instance.Polygons.OrderBy(pair => pair.Key).Select(pair => pair.Value))
+                        {
+                            swatches.Add(new Swatch { Polygon = polygon });
+                        }
+
                         break;
                     case ModeManager.PrimaryModes.Level:
                         break;
@@ -240,6 +266,17 @@ namespace ForgePlus.Palette
         {
             ModeManager.Instance.OnPrimaryModeChanged += UpdatePaletteToMatchMode;
             SelectionManager.Instance.OnClickEmptySpace += OnClickEmptySpace;
+            SelectionManager.Instance.OnSelectionChanged += OnLevelSelectionChanged;
+        }
+
+        // The polygon palette shows the selected annotation's polygon
+        private void OnLevelSelectionChanged()
+        {
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Annotations)
+            {
+                var annotation = LevelEntity_Annotation.SelectedAnnotation;
+                SelectSwatchForPolygon(annotation ? annotation.LinkedPolygon : null);
+            }
         }
 
         private void OnClickEmptySpace()

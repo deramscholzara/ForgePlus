@@ -234,6 +234,14 @@ namespace ForgePlus.Entities.Geometry
                     }
 
                     break;
+                case ModeManager.PrimaryModes.Annotations:
+                    // A side is its polygon's
+                    if (LevelEntity_Level.Instance.Polygons.TryGetValue(ParentSide.NativeObject.polygon_index, out var sidePolygon))
+                    {
+                        LevelEntity_Annotation.ClickPolygon(sidePolygon);
+                    }
+
+                    break;
                 default:
                     Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
                     return;

@@ -11,6 +11,14 @@ namespace ForgePlus.UI
     {
         private readonly List<KeyValuePair<LevelEntity_Light, VisualElement>> previews = new List<KeyValuePair<LevelEntity_Light, VisualElement>>();
 
+        protected override string Header
+        {
+            get
+            {
+                return "Lights";
+            }
+        }
+
         protected override string SwatchTemplateName
         {
             get

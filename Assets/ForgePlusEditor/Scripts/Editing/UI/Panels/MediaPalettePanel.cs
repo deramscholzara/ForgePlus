@@ -6,6 +6,14 @@ namespace ForgePlus.UI
 {
     public class MediaPalettePanel : PalettePanel
     {
+        protected override string Header
+        {
+            get
+            {
+                return "Media";
+            }
+        }
+
         protected override string SwatchTemplateName
         {
             get

@@ -2,6 +2,7 @@
 using ForgePlus.Extensions;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
+using RuntimeCore.Entities.Geometry;
 using Unity.Properties;
 using UnityEngine.UIElements;
 
@@ -82,13 +83,27 @@ namespace ForgePlus.Inspection
             }
         }
 
-        // The map only shows the annotation once this polygon is on it
+        // The map only shows the annotation once this polygon is on it. A number that isn't a polygon's is reverted.
         [CreateProperty]
         public int PolygonIndex
         {
             get
             {
                 return Entity.NativeObject.polygon_index;
+            }
+            set
+            {
+                var isPolygonIndex = value >= short.MinValue && value <= short.MaxValue;
+                LevelEntity_Polygon polygon = null;
+
+                if (isPolygonIndex && LevelEntity_Level.Instance.Polygons.TryGetValue((short) value, out polygon))
+                {
+                    Edit(annotation => annotation.SetPolygon(polygon));
+                }
+                else
+                {
+                    RefreshInspectorsOf(Entity);
+                }
             }
         }
 

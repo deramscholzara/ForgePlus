@@ -106,6 +106,10 @@ namespace ForgePlus.LevelManipulation
                     }
 
                     break;
+                case ModeManager.PrimaryModes.Annotations:
+                    LevelEntity_Annotation.ClickPolygon(ParentPolygon);
+
+                    break;
                 default:
                     Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
                     return;

@@ -166,8 +166,9 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, true);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
+                        // Clicking a polygon's surfaces links the selected annotation to it
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
                         SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
                         break;
                     case ModeManager.PrimaryModes.Level:

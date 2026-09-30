@@ -1,6 +1,7 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
+using RuntimeCore.Entities.Geometry;
 using TMPro;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
@@ -26,6 +27,15 @@ namespace RuntimeCore.Entities
 
         [SerializeField]
         private BoxCollider selectionCollider = null;
+
+        // The polygon whose appearance on Aleph One's map shows the annotation (null if its index isn't a polygon's)
+        public LevelEntity_Polygon LinkedPolygon
+        {
+            get
+            {
+                return ParentLevel.Polygons.TryGetValue(NativeObject.polygon_index, out var polygon) ? polygon : null;
+            }
+        }
 
         public static LevelEntity_Annotation Prefab
         {
@@ -89,7 +99,8 @@ namespace RuntimeCore.Entities
         // its floor, ceiling and sides
         private void DisplayPolygonSelectionState(bool state)
         {
-            if (!ParentLevel.Polygons.TryGetValue(NativeObject.polygon_index, out var polygon))
+            var polygon = LinkedPolygon;
+            if (!polygon)
             {
                 return;
             }
@@ -128,7 +139,8 @@ namespace RuntimeCore.Entities
         public void RefreshPosition()
         {
             var height = 0f;
-            if (ParentLevel.Polygons.TryGetValue(NativeObject.polygon_index, out var polygon))
+            var polygon = LinkedPolygon;
+            if (polygon)
             {
                 height = (polygon.NativeObject.floor_height + polygon.NativeObject.ceiling_height) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
             }
