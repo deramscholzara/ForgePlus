@@ -133,6 +133,13 @@ namespace ForgePlus.Extensions
             return shape_descriptors.BUILD_DESCRIPTOR(shape_descriptors.BUILD_COLLECTION(collection, clut), shape);
         }
 
+        // Big landscapes are drawn as landscapes (Aleph One's OpenGL renderer handles both alike; the original engine only
+        // draws the first on surfaces)
+        public static bool IsLandscapeTransferMode(short transferMode)
+        {
+            return transferMode == map._xfer_landscape || transferMode == map._xfer_big_landscape;
+        }
+
         public static bool UsesLandscapeCollection(this ushort shapeDescriptor)
         {
             var collection = shapeDescriptor.GetCollection();

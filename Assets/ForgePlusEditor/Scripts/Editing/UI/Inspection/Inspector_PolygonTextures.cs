@@ -1,5 +1,7 @@
 ﻿using AlephOne;
+using ForgePlus.Extensions;
 using RuntimeCore.Entities.Geometry;
+using System.Collections.Generic;
 using Unity.Properties;
 
 namespace ForgePlus.Inspection
@@ -58,8 +60,34 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Polygon.floor_transfer_mode.ToString();
+                return TransferModeChoices.Choice(Polygon.floor_transfer_mode);
             }
+            set
+            {
+                if (TransferModeChoices.TryParse(value, out var transferMode))
+                {
+                    Edit(polygon => polygon.SetTransferMode(LevelEntity_Polygon.DataSources.Floor, transferMode));
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> FloorTransferModeChoices
+        {
+            get { return TransferModeChoices.All; }
+        }
+
+        [CreateProperty]
+        public List<string> FloorTransferModeUnavailableChoices
+        {
+            get { return TransferModeChoices.Unavailable; }
+        }
+
+        // A surface with no texture isn't drawn
+        [CreateProperty]
+        public bool IsFloorTransferModeEditable
+        {
+            get { return !Polygon.floor_texture.IsEmptyShapeDescriptor(); }
         }
 
         [CreateProperty]
@@ -94,8 +122,34 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Polygon.ceiling_transfer_mode.ToString();
+                return TransferModeChoices.Choice(Polygon.ceiling_transfer_mode);
             }
+            set
+            {
+                if (TransferModeChoices.TryParse(value, out var transferMode))
+                {
+                    Edit(polygon => polygon.SetTransferMode(LevelEntity_Polygon.DataSources.Ceiling, transferMode));
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> CeilingTransferModeChoices
+        {
+            get { return TransferModeChoices.All; }
+        }
+
+        [CreateProperty]
+        public List<string> CeilingTransferModeUnavailableChoices
+        {
+            get { return TransferModeChoices.Unavailable; }
+        }
+
+        // A surface with no texture isn't drawn
+        [CreateProperty]
+        public bool IsCeilingTransferModeEditable
+        {
+            get { return !Polygon.ceiling_texture.IsEmptyShapeDescriptor(); }
         }
 
         [CreateProperty]

@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
 using RuntimeCore.Entities.Geometry;
+using System.Collections.Generic;
 using Unity.Properties;
 
 namespace ForgePlus.Inspection
@@ -68,8 +69,34 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasData(Side.primary_texture) ? Side.primary_transfer_mode.ToString() : "-";
+                return HasData(Side.primary_texture) ? TransferModeChoices.Choice(Side.primary_transfer_mode) : "-";
             }
+            set
+            {
+                if (TransferModeChoices.TryParse(value, out var transferMode))
+                {
+                    Edit(side => side.SetTransferMode(LevelEntity_Side.DataSources.Primary, transferMode));
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> PrimaryTransferModeChoices
+        {
+            get { return TransferModeChoices.All; }
+        }
+
+        [CreateProperty]
+        public List<string> PrimaryTransferModeUnavailableChoices
+        {
+            get { return TransferModeChoices.Unavailable; }
+        }
+
+        // A surface with no texture isn't drawn
+        [CreateProperty]
+        public bool IsPrimaryTransferModeEditable
+        {
+            get { return HasData(Side.primary_texture); }
         }
 
         [CreateProperty]
@@ -104,8 +131,34 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasData(Side.secondary_texture) ? Side.secondary_transfer_mode.ToString() : "-";
+                return HasData(Side.secondary_texture) ? TransferModeChoices.Choice(Side.secondary_transfer_mode) : "-";
             }
+            set
+            {
+                if (TransferModeChoices.TryParse(value, out var transferMode))
+                {
+                    Edit(side => side.SetTransferMode(LevelEntity_Side.DataSources.Secondary, transferMode));
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> SecondaryTransferModeChoices
+        {
+            get { return TransferModeChoices.All; }
+        }
+
+        [CreateProperty]
+        public List<string> SecondaryTransferModeUnavailableChoices
+        {
+            get { return TransferModeChoices.Unavailable; }
+        }
+
+        // A surface with no texture isn't drawn
+        [CreateProperty]
+        public bool IsSecondaryTransferModeEditable
+        {
+            get { return HasData(Side.secondary_texture); }
         }
 
         [CreateProperty]
@@ -140,8 +193,34 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return HasData(Side.transparent_texture) ? Side.transparent_transfer_mode.ToString() : "-";
+                return HasData(Side.transparent_texture) ? TransferModeChoices.Choice(Side.transparent_transfer_mode) : "-";
             }
+            set
+            {
+                if (TransferModeChoices.TryParse(value, out var transferMode))
+                {
+                    Edit(side => side.SetTransferMode(LevelEntity_Side.DataSources.Transparent, transferMode));
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> TransparentTransferModeChoices
+        {
+            get { return TransferModeChoices.All; }
+        }
+
+        [CreateProperty]
+        public List<string> TransparentTransferModeUnavailableChoices
+        {
+            get { return TransferModeChoices.Unavailable; }
+        }
+
+        // A surface with no texture isn't drawn
+        [CreateProperty]
+        public bool IsTransparentTransferModeEditable
+        {
+            get { return HasData(Side.transparent_texture); }
         }
 
         [CreateProperty]

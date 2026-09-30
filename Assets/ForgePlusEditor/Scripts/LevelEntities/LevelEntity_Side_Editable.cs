@@ -123,7 +123,7 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case DataSources.Primary:
-                    if (NativeObject.primary_transfer_mode == 9 ||
+                    if (AlephOneExtensions.IsLandscapeTransferMode(NativeObject.primary_transfer_mode) ||
                         NativeObject.primary_texture.texture.UsesLandscapeCollection() ||
                         NativeObject.primary_texture.texture.IsEmptyShapeDescriptor())
                     {
@@ -138,7 +138,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     break;
                 case DataSources.Secondary:
-                    if (NativeObject.secondary_transfer_mode == 9 ||
+                    if (AlephOneExtensions.IsLandscapeTransferMode(NativeObject.secondary_transfer_mode) ||
                         NativeObject.secondary_texture.texture.UsesLandscapeCollection() ||
                         NativeObject.secondary_texture.texture.IsEmptyShapeDescriptor())
                     {
@@ -153,7 +153,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     break;
                 case DataSources.Transparent:
-                    if (NativeObject.transparent_transfer_mode == 9 ||
+                    if (AlephOneExtensions.IsLandscapeTransferMode(NativeObject.transparent_transfer_mode) ||
                         NativeObject.transparent_texture.texture.UsesLandscapeCollection() ||
                         NativeObject.transparent_texture.texture.IsEmptyShapeDescriptor())
                     {
@@ -219,9 +219,10 @@ namespace RuntimeCore.Entities.Geometry
             short newTransferMode = 0;
             if (shapeDescriptor.UsesLandscapeCollection())
             {
-                newTransferMode = 9;
+                // A landscape texture is drawn as a landscape (keeping a big landscape's mode)
+                newTransferMode = AlephOneExtensions.IsLandscapeTransferMode(transferMode) ? transferMode : AlephOne.map._xfer_landscape;
             }
-            else if (transferMode != 9)
+            else if (!AlephOneExtensions.IsLandscapeTransferMode(transferMode))
             {
                 newTransferMode = transferMode;
             }
@@ -239,6 +240,36 @@ namespace RuntimeCore.Entities.Geometry
                 case LevelEntity_Side.DataSources.Transparent:
                     NativeObject.transparent_transfer_mode = newTransferMode;
                     TransparentSurface.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+                    break;
+            }
+        }
+
+        // The material depends on the transfer mode too (a landscape's is its own), besides how the texture moves
+        public void SetTransferMode(DataSources dataSource, short transferMode)
+        {
+            if (transferMode == NativeObject.GetTransferMode(dataSource))
+            {
+                // Transfer mode is not different, so exit
+                return;
+            }
+
+            switch (dataSource)
+            {
+                case DataSources.Primary:
+                    NativeObject.primary_transfer_mode = transferMode;
+                    PrimarySurface.ApplyTexture();
+                    PrimarySurface.ApplyTransferMode();
+                    break;
+                case DataSources.Secondary:
+                    NativeObject.secondary_transfer_mode = transferMode;
+                    SecondarySurface.ApplyTexture();
+                    SecondarySurface.ApplyTransferMode();
+                    break;
+                case DataSources.Transparent:
+                    var innerLayer = !NativeObject.HasLayeredTransparentSide(ParentLevel.Level);
+                    NativeObject.transparent_transfer_mode = transferMode;
+                    TransparentSurface.ApplyTexture(innerLayer);
+                    TransparentSurface.ApplyTransferMode(innerLayer);
                     break;
             }
         }

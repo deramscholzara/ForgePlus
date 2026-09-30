@@ -2,6 +2,7 @@
     <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="TextureRow" src="../Templates/InspectorTextureRow.uxml" />
     <!-- Bound to Inspector_SideTextures -->
     <ui:VisualElement class="fp-inspector">
@@ -24,7 +25,7 @@
         <ui:Instance template="Row" name="PrimaryOffset">
             <ui:AttributeOverrides element-name="label" text="Offset:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="PrimaryTransferMode">
+        <ui:Instance template="DropdownRow" name="PrimaryTransferMode">
             <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
         </ui:Instance>
         <ui:Instance template="Row" name="PrimaryLightIndex">
@@ -40,7 +41,7 @@
         <ui:Instance template="Row" name="SecondaryOffset">
             <ui:AttributeOverrides element-name="label" text="Offset:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="SecondaryTransferMode">
+        <ui:Instance template="DropdownRow" name="SecondaryTransferMode">
             <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
         </ui:Instance>
         <ui:Instance template="Row" name="SecondaryLightIndex">
@@ -56,7 +57,7 @@
         <ui:Instance template="Row" name="TransparentOffset">
             <ui:AttributeOverrides element-name="label" text="Offset:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="TransparentTransferMode">
+        <ui:Instance template="DropdownRow" name="TransparentTransferMode">
             <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
         </ui:Instance>
         <ui:Instance template="Row" name="TransparentLightIndex">

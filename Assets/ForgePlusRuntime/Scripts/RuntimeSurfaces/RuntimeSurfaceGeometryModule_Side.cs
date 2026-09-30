@@ -461,13 +461,17 @@ namespace RuntimeCore.Entities.Geometry
                 }
 
                 SurfaceMesh.SetColors(vertexColors);
+                ApplyTransferModeEffects(map._xfer_normal, innerLayer: true);
 
                 return;
             }
 
             if (innerLayer)
             {
-                var vertexColor = GetTransferModeVertexColor(sideEntity.NativeObject.GetTransferMode(dataSource));
+                var transferMode = sideEntity.NativeObject.GetTransferMode(dataSource);
+                ApplyTransferModeEffects(transferMode, innerLayer: true);
+
+                var vertexColor = GetTransferModeVertexColor(transferMode);
 
                 var vertexColors = new Color[4];
                 for (var i = 0; i < 4; i++)
@@ -479,6 +483,8 @@ namespace RuntimeCore.Entities.Geometry
             }
             else
             {
+                ApplyTransferModeEffects(sideEntity.NativeObject.transparent_transfer_mode, innerLayer: false);
+
                 var vertexColor = GetTransferModeVertexColor(sideEntity.NativeObject.transparent_transfer_mode);
 
                 var uv2 = new Vector4[4];

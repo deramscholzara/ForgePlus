@@ -1,4 +1,6 @@
 ﻿using ForgePlus.Extensions;
+using System;
+using System.Collections.Generic;
 using Unity.Properties;
 using UnityEngine.UIElements;
 
@@ -112,20 +114,22 @@ namespace ForgePlus.UI
             dropdown.Bind("choices", dataSource, row.name + "Choices");
             dropdown.Bind("value", dataSource, row.name, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
 
-            dropdown.OpensMenuToFitChoices();
+            // Choices the source lists as unavailable are shown, but can't be chosen
+            var unavailableChoices = dataSource.GetType().GetProperty(row.name + "UnavailableChoices");
+            dropdown.OpensMenuToFitChoices(unavailableChoices != null ? () => unavailableChoices.GetValue(dataSource) as ICollection<string> : null);
         }
 
         // A dropdown's menu (drawn over the whole UI) is as wide as the dropdown at least, and wider when its choices need
         // it (rather than always matching the dropdown, which cuts off choices in narrow panels). Replaces the menu the
         // dropdown opens itself, which is only ever as wide as it is.
-        public static void OpensMenuToFitChoices(this DropdownField dropdown)
+        public static void OpensMenuToFitChoices(this DropdownField dropdown, Func<ICollection<string>> getUnavailableChoices = null)
         {
             dropdown.RegisterCallback<PointerDownEvent>(pointerDownEvent =>
             {
                 if (pointerDownEvent.button == 0)
                 {
                     pointerDownEvent.StopImmediatePropagation();
-                    ShowChoicesMenu(dropdown);
+                    ShowChoicesMenu(dropdown, getUnavailableChoices);
                 }
             }, TrickleDown.TrickleDown);
 
@@ -133,17 +137,25 @@ namespace ForgePlus.UI
             dropdown.RegisterCallback<NavigationSubmitEvent>(submitEvent =>
             {
                 submitEvent.StopImmediatePropagation();
-                ShowChoicesMenu(dropdown);
+                ShowChoicesMenu(dropdown, getUnavailableChoices);
             }, TrickleDown.TrickleDown);
         }
 
-        private static void ShowChoicesMenu(DropdownField dropdown)
+        private static void ShowChoicesMenu(DropdownField dropdown, Func<ICollection<string>> getUnavailableChoices)
         {
             var menu = new GenericDropdownMenu();
+            var unavailableChoices = getUnavailableChoices?.Invoke();
 
             foreach (var choice in dropdown.choices)
             {
-                menu.AddItem(choice, choice == dropdown.value, () => dropdown.value = choice);
+                if (unavailableChoices != null && unavailableChoices.Contains(choice))
+                {
+                    menu.AddDisabledItem(choice, choice == dropdown.value);
+                }
+                else
+                {
+                    menu.AddItem(choice, choice == dropdown.value, () => dropdown.value = choice);
+                }
             }
 
             var input = dropdown.Q(className: DropdownField.inputUssClassName) ?? dropdown;

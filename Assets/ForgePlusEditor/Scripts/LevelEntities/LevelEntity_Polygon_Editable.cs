@@ -49,7 +49,7 @@ namespace RuntimeCore.Entities.Geometry
             switch (surfaceType)
             {
                 case DataSources.Ceiling:
-                    if (NativeObject.ceiling_transfer_mode == 9 ||
+                    if (AlephOneExtensions.IsLandscapeTransferMode(NativeObject.ceiling_transfer_mode) ||
                         NativeObject.ceiling_texture.UsesLandscapeCollection() ||
                         NativeObject.ceiling_texture.IsEmptyShapeDescriptor())
                     {
@@ -64,7 +64,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     break;
                 case DataSources.Floor:
-                    if (NativeObject.floor_transfer_mode == 9 ||
+                    if (AlephOneExtensions.IsLandscapeTransferMode(NativeObject.floor_transfer_mode) ||
                         NativeObject.floor_texture.UsesLandscapeCollection() ||
                         NativeObject.floor_texture.IsEmptyShapeDescriptor())
                     {
@@ -118,9 +118,10 @@ namespace RuntimeCore.Entities.Geometry
             short newTransferMode = 0;
             if (shapeDescriptor.UsesLandscapeCollection())
             {
-                newTransferMode = 9;
+                // A landscape texture is drawn as a landscape (keeping a big landscape's mode)
+                newTransferMode = AlephOneExtensions.IsLandscapeTransferMode(transferMode) ? transferMode : AlephOne.map._xfer_landscape;
             }
-            else if (transferMode != 9)
+            else if (!AlephOneExtensions.IsLandscapeTransferMode(transferMode))
             {
                 newTransferMode = transferMode;
             }
@@ -134,6 +135,36 @@ namespace RuntimeCore.Entities.Geometry
                 case DataSources.Floor:
                     NativeObject.floor_transfer_mode = newTransferMode;
                     FloorSurface.ApplyTexture();
+                    break;
+            }
+        }
+
+        // The material depends on the transfer mode too (a landscape's is its own), besides how the texture moves
+        public void SetTransferMode(DataSources dataSource, short transferMode)
+        {
+            switch (dataSource)
+            {
+                case DataSources.Ceiling:
+                    if (transferMode == NativeObject.ceiling_transfer_mode)
+                    {
+                        // Transfer mode is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.ceiling_transfer_mode = transferMode;
+                    CeilingSurface.ApplyTexture();
+                    CeilingSurface.ApplyTransferMode();
+                    break;
+                case DataSources.Floor:
+                    if (transferMode == NativeObject.floor_transfer_mode)
+                    {
+                        // Transfer mode is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.floor_transfer_mode = transferMode;
+                    FloorSurface.ApplyTexture();
+                    FloorSurface.ApplyTransferMode();
                     break;
             }
         }

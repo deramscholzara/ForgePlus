@@ -245,6 +245,7 @@ namespace ForgePlus.ApplicationGeneral
                     var mergedUVs = new List<Vector4>();
                     var mergedUV1s = new List<Vector4>();
                     var mergedUV2s = new List<Vector4>();
+                    var mergedUV3s = new List<Vector4>();
                     var mergedColors = new List<Color>();
 
                     foreach (var surface in surfaces)
@@ -281,6 +282,22 @@ namespace ForgePlus.ApplicationGeneral
                             mergedUV2s.AddRange(uv2s);
                         }
 
+                        // Transfer mode effects (see RuntimeSurfaceGeometryModule_Base), which surfaces without transfer modes
+                        // (media) don't have
+                        var uv3s = new List<Vector4>();
+                        dynamicMesh.GetUVs(3, uv3s);
+                        if (uv3s.Count != dynamicMesh.vertexCount)
+                        {
+                            var defaults = RuntimeSurfaceGeometryModule_Base.DefaultTransferModeEffects;
+                            uv3s.Clear();
+                            for (var i = 0; i < dynamicMesh.vertexCount; i++)
+                            {
+                                uv3s.Add(new Vector4(defaults.x, defaults.y, defaults.x, defaults.y));
+                            }
+                        }
+
+                        mergedUV3s.AddRange(uv3s);
+
                         mergedColors.AddRange(dynamicMesh.colors);
                     }
 
@@ -306,6 +323,7 @@ namespace ForgePlus.ApplicationGeneral
                         mergedMesh.SetUVs(channel: 2, uvs: mergedUV2s);
                     }
 
+                    mergedMesh.SetUVs(channel: 3, uvs: mergedUV3s);
                     mergedMesh.SetColors(mergedColors);
                     mergedMesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
                                                   MeshUpdateFlags.DontRecalculateBounds |

@@ -73,6 +73,32 @@ namespace RuntimeCore.Materials
             private bool hasMipLevels;
             private Dictionary<ushort, int> indicesByShapeDescriptor;
             private List<Material> uniqueMaterials;
+            private Material landscapeMaterial;
+
+            // The collection's textures drawn as landscapes, from the same array (and so at the same indices), for surfaces
+            // in a landscape transfer mode whose textures aren't landscapes
+            public Material LandscapeMaterial
+            {
+                get
+                {
+                    if (!landscapeMaterial)
+                    {
+                        landscapeMaterial = new Material(OpaqueLandscapeShader)
+                        {
+                            name = $"{SharedMaterial.name} (Landscape)",
+                            enableInstancing = true,
+                            mainTexture = textureArray,
+                        };
+                    }
+
+                    return landscapeMaterial;
+                }
+            }
+
+            public bool UsesMaterial(Material material)
+            {
+                return material == SharedMaterial || (landscapeMaterial && material == landscapeMaterial);
+            }
 
             public Texture2DArrayCollection(
                 ushort firstShapeDescriptor,
@@ -160,6 +186,11 @@ namespace RuntimeCore.Materials
                 }
 
                 SharedMaterial.mainTexture = textureArray;
+
+                if (landscapeMaterial)
+                {
+                    landscapeMaterial.mainTexture = textureArray;
+                }
 
                 foreach (var uniqueMaterial in uniqueMaterials)
                 {
@@ -381,7 +412,7 @@ namespace RuntimeCore.Materials
                     TextureUsageCounter[shapeDescriptor] = 1;
                 }
 
-                var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
+                var landscapeTransferMode = AlephOneExtensions.IsLandscapeTransferMode(transferMode) || shapeDescriptor.UsesLandscapeCollection();
 
                 return GetTrackedMaterial(shapeDescriptor,
                     landscapeTransferMode,
@@ -464,12 +495,12 @@ namespace RuntimeCore.Materials
                 return 0;
             }
 
-            var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
-
+            // A texture is in its own array whether or not it's drawn as a landscape (landscape transfer modes only change the
+            // material), so its index is the same either way
             var collectionKey =
                 GetTexture2DArrayKeyDictionary(
                         shapeDescriptor,
-                        landscapeTransferMode: landscapeTransferMode,
+                        landscapeTransferMode: shapeDescriptor.UsesLandscapeCollection(),
                         isOpaqueSurface: isOpaqueSurface,
                         surfaceType)
                     [shapeDescriptor];
@@ -485,7 +516,7 @@ namespace RuntimeCore.Materials
         {
             var matchingCollections =
                 Texture2DArrays.Values.Where(
-                    collection => collection.SharedMaterial == sharedMaterial);
+                    collection => collection.UsesMaterial(sharedMaterial));
 
             foreach (var collection in matchingCollections)
             {
@@ -562,9 +593,14 @@ namespace RuntimeCore.Materials
             SurfaceTypes surfaceType)
         {
 #if USE_TEXTURE_ARRAYS
+            // A texture is in its own array whatever its transfer mode. Drawn as a landscape (though it isn't one), it uses that
+            // array's landscape material, which draws the same array (so the surface's mesh points at the same texture in it).
+            var isLandscapeTexture = shapeDescriptor.UsesLandscapeCollection();
+            var usesLandscapeMaterial = landscapeTransferMode && !isLandscapeTexture && surfaceType != SurfaceTypes.Media;
+
             var collectionKeyDictionary = GetTexture2DArrayKeyDictionary(
                 shapeDescriptor,
-                landscapeTransferMode: landscapeTransferMode,
+                landscapeTransferMode: isLandscapeTexture,
                 isOpaqueSurface: isOpaqueSurface,
                 surfaceType);
 
@@ -572,7 +608,7 @@ namespace RuntimeCore.Materials
             {
                 var collectionKey = collectionKeyDictionary[shapeDescriptor];
                 var texture2DArrayCollection = Texture2DArrays[collectionKey];
-                return texture2DArrayCollection.SharedMaterial;
+                return usesLandscapeMaterial ? texture2DArrayCollection.LandscapeMaterial : texture2DArrayCollection.SharedMaterial;
             }
 #endif
 
@@ -593,7 +629,7 @@ namespace RuntimeCore.Materials
             {
                 var texture2DArrayCollection = Texture2DArrays[texture2DArrayCollectionKey];
                 texture2DArrayCollection.AddBitmap(shapeDescriptor);
-                return texture2DArrayCollection.SharedMaterial;
+                return usesLandscapeMaterial ? texture2DArrayCollection.LandscapeMaterial : texture2DArrayCollection.SharedMaterial;
             }
 #endif
 
@@ -607,7 +643,12 @@ namespace RuntimeCore.Materials
                 material = GetTrackedMaterial(shapeDescriptor, textureToUse, MediaShader, MediaMaterials);
 #endif
             }
+            // (With texture arrays, only a landscape texture's own array draws landscapes, and others have a landscape material)
+#if USE_TEXTURE_ARRAYS
+            else if (isLandscapeTexture)
+#else
             else if (landscapeTransferMode)
+#endif
             {
 #if USE_TEXTURE_ARRAYS
                 material = new Material(OpaqueLandscapeShader);
@@ -662,6 +703,11 @@ namespace RuntimeCore.Materials
                 textureToUse.mipmapCount > 0);
 
             Texture2DArrays[texture2DArrayCollectionKey] = newTexture2DArrayCollection;
+
+            if (usesLandscapeMaterial)
+            {
+                return newTexture2DArrayCollection.LandscapeMaterial;
+            }
 #endif
 
             return material;

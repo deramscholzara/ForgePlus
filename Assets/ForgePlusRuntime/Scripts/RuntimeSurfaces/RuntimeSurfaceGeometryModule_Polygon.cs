@@ -289,16 +289,16 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyTransferMode(bool innerLayer = true)
         {
-            Color vertexColor;
+            short transferMode;
 
             switch (dataSource)
             {
                 case LevelEntity_Polygon.DataSources.Floor:
-                    vertexColor = GetTransferModeVertexColor(polygonEntity.NativeObject.floor_transfer_mode);
+                    transferMode = polygonEntity.NativeObject.floor_transfer_mode;
                     break;
 
                 case LevelEntity_Polygon.DataSources.Ceiling:
-                    vertexColor = GetTransferModeVertexColor(polygonEntity.NativeObject.ceiling_transfer_mode);
+                    transferMode = polygonEntity.NativeObject.ceiling_transfer_mode;
                     break;
 
                 case LevelEntity_Polygon.DataSources.Media:
@@ -309,6 +309,7 @@ namespace RuntimeCore.Entities.Geometry
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
 
+            var vertexColor = GetTransferModeVertexColor(transferMode);
             var vertexColors = new Color[polygonEntity.NativeObject.vertex_count];
             for (var i = 0; i < polygonEntity.NativeObject.vertex_count; i++)
             {
@@ -316,6 +317,8 @@ namespace RuntimeCore.Entities.Geometry
             }
 
             SurfaceMesh.SetColors(vertexColors);
+
+            ApplyTransferModeEffects(transferMode, innerLayer: true);
         }
 
         public override void ApplyLight(bool innerLayer = true)
