@@ -119,6 +119,7 @@ namespace ForgePlus.LevelManipulation
                     case PrimaryModes.Textures:
                         return allSecondaryModes;
                     case PrimaryModes.Lights:
+                    case PrimaryModes.Media:
                         return selectionAndPainting;
                     default:
                         return selectionOnly;

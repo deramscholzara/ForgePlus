@@ -54,7 +54,7 @@ namespace ForgePlus.UI
 
         protected override bool Shows(PaletteManager.Swatch swatch)
         {
-            return swatch.Polygon != null;
+            return swatch.Kind == PaletteManager.SwatchKinds.Polygon;
         }
 
         protected override void FillSwatch(TemplateContainer instance, PaletteManager.Swatch swatch)

@@ -29,6 +29,17 @@ namespace RuntimeCore.Entities.Geometry
         public short ParentLineIndex { get; private set; }
         public bool IsClockwise { get; private set; }
 
+        // The polygon the side faces into (its line's polygon on the side's side)
+        public LevelEntity_Polygon FacingPolygon
+        {
+            get
+            {
+                var facingPolygonIndex = get_line_data(ParentLevel.Level, ParentLineIndex).GetPolygonOwner(IsClockwise);
+
+                return ParentLevel.Polygons.TryGetValue(facingPolygonIndex, out var polygon) ? polygon : null;
+            }
+        }
+
         public RuntimeSurfaceGeometry TopSurface { get; private set; }
         public RuntimeSurfaceGeometry MiddleSurface { get; private set; }
         public RuntimeSurfaceGeometry BottomSurface { get; private set; }

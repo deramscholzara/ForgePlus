@@ -33,14 +33,25 @@ namespace ForgePlus.Entities.Geometry
         public LevelEntity_Side ParentSide = null;
         public LevelEntity_Side.DataSources DataSource;
 
-        // TODO: Get rid of these and just attain them on the fly instead of preloading
-        //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
-        public ushort surfaceShapeDescriptor = cstypes.UNONE;
-        [System.NonSerialized]
-        public LevelEntity_Light RuntimeLight = null;
-        [System.NonSerialized]
-        public LevelEntity_Media Media = null;
         public LevelEntity_Platform Platform = null;
+
+        // Read from the side each time, so they follow what's painted onto it (a surface with no side data has no
+        // texture or light)
+        public ushort SurfaceShapeDescriptor
+        {
+            get
+            {
+                return ParentSide.NativeObject != null ? ParentSide.NativeObject.GetTexture(DataSource).texture : cstypes.UNONE;
+            }
+        }
+
+        public LevelEntity_Light RuntimeLight
+        {
+            get
+            {
+                return ParentSide.NativeObject != null ? ParentSide.ParentLevel.Lights[ParentSide.NativeObject.GetLightsourceIndex(DataSource)] : null;
+            }
+        }
 
         private UVPlanarDrag uvDragPlane;
 
@@ -57,9 +68,9 @@ namespace ForgePlus.Entities.Geometry
                 case ModeManager.PrimaryModes.Textures:
                     if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
                     {
-                        var selectedTexture = PaletteManager.Instance.GetSelectedTexture();
-
-                        if (!selectedTexture.IsEmptyShapeDescriptor())
+                        // A surface with no side data has nowhere to store a texture
+                        if (ParentSide.NativeObject != null &&
+                            PaletteManager.Instance.TryGetSelectedTexture(out var selectedTexture))
                         {
                             var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
                             var destinationDataSource = DataSource;
@@ -179,10 +190,8 @@ namespace ForgePlus.Entities.Geometry
                         SelectionManager.Instance.ToggleObjectSelection(ParentSide, multiSelect: false);
                         InputListener(ParentSide);
 
-                        if (!surfaceShapeDescriptor.IsEmptyShapeDescriptor())
-                        {
-                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor);
-                        }
+                        // An unassigned surface selects "None"
+                        PaletteManager.Instance.SelectSwatchForTexture(SurfaceShapeDescriptor);
                     }
 
                     break;
@@ -220,10 +229,10 @@ namespace ForgePlus.Entities.Geometry
 
                     break;
                 case ModeManager.PrimaryModes.Media:
-                    if (Media != null)
+                    // A side is the polygon's it faces into
+                    if (ParentSide.FacingPolygon)
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(Media);
+                        ClickPolygonInMediaMode(ParentSide.FacingPolygon);
                     }
 
                     break;
@@ -235,10 +244,10 @@ namespace ForgePlus.Entities.Geometry
 
                     break;
                 case ModeManager.PrimaryModes.Annotations:
-                    // A side is its polygon's
-                    if (LevelEntity_Level.Instance.Polygons.TryGetValue(ParentSide.NativeObject.polygon_index, out var sidePolygon))
+                    // A side is the polygon's it faces into
+                    if (ParentSide.FacingPolygon)
                     {
-                        LevelEntity_Annotation.ClickPolygon(sidePolygon);
+                        LevelEntity_Annotation.ClickPolygon(ParentSide.FacingPolygon);
                     }
 
                     break;

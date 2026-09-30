@@ -42,7 +42,7 @@ namespace ForgePlus.UI
 
         protected override bool Shows(PaletteManager.Swatch swatch)
         {
-            return swatch.Light != null;
+            return swatch.Kind == PaletteManager.SwatchKinds.Light;
         }
 
         protected override void FillSwatch(TemplateContainer instance, PaletteManager.Swatch swatch)

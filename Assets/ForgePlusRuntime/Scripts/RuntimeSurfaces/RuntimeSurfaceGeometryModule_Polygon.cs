@@ -469,7 +469,6 @@ namespace RuntimeCore.Entities.Geometry
         {
             var nativeObject = polygonEntity.NativeObject;
             var platformIndex = nativeObject.type == map._polygon_is_platform ? nativeObject.permutation : (short)-1;
-            var media = (nativeObject.media_index >= 0) ? polygonEntity.ParentLevel.Medias[nativeObject.media_index] : null;
 
             switch (dataSource)
             {
@@ -479,9 +478,6 @@ namespace RuntimeCore.Entities.Geometry
                     var ceilingInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Polygon>();
                     ceilingInteractiveSurface.ParentPolygon = polygonEntity;
                     ceilingInteractiveSurface.DataSource = dataSource;
-                    ceilingInteractiveSurface.surfaceShapeDescriptor = nativeObject.ceiling_texture;
-                    ceilingInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.ceiling_lightsource_index];
-                    ceilingInteractiveSurface.Media = media;
                     ceilingInteractiveSurface.Platform = ceilingPlatform;
 
                     polygonEntity.ParentLevel.EditableSurface_Polygons.Add(ceilingInteractiveSurface);
@@ -493,9 +489,6 @@ namespace RuntimeCore.Entities.Geometry
                     var floorInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Polygon>();
                     floorInteractiveSurface.ParentPolygon = polygonEntity;
                     floorInteractiveSurface.DataSource = dataSource;
-                    floorInteractiveSurface.surfaceShapeDescriptor = nativeObject.floor_texture;
-                    floorInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.floor_lightsource_index];
-                    floorInteractiveSurface.Media = media;
                     floorInteractiveSurface.Platform = floorPlatform;
 
                     polygonEntity.ParentLevel.EditableSurface_Polygons.Add(floorInteractiveSurface);
@@ -504,8 +497,6 @@ namespace RuntimeCore.Entities.Geometry
                 case LevelEntity_Polygon.DataSources.Media:
                     var mediaInteractiveSurface = SurfaceRenderer.gameObject.AddComponent<EditableSurface_Media>();
                     mediaInteractiveSurface.Polygon = polygonEntity;
-                    mediaInteractiveSurface.RuntimeLight = polygonEntity.ParentLevel.Lights[nativeObject.media_lightsource_index];
-                    mediaInteractiveSurface.Media = media;
 
                     polygonEntity.ParentLevel.EditableSurface_Medias.Add(mediaInteractiveSurface);
                     break;

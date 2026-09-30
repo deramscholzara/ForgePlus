@@ -71,8 +71,7 @@ namespace ForgePlus.LevelManipulation
 
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        // TODO: Make this true when media subfilter is available
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
                         break;
                     case ModeManager.PrimaryModes.Textures:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: true);
@@ -88,7 +87,7 @@ namespace ForgePlus.LevelManipulation
 
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
                         break;
                     case ModeManager.PrimaryModes.Lights:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
@@ -104,7 +103,7 @@ namespace ForgePlus.LevelManipulation
 
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: true);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
                         break;
                     case ModeManager.PrimaryModes.Media:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
@@ -120,7 +119,7 @@ namespace ForgePlus.LevelManipulation
 
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: true);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
                         break;
                     case ModeManager.PrimaryModes.Platforms:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
@@ -136,7 +135,7 @@ namespace ForgePlus.LevelManipulation
 
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
                         break;
                     case ModeManager.PrimaryModes.Objects:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
@@ -152,7 +151,7 @@ namespace ForgePlus.LevelManipulation
 
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
                         break;
                     case ModeManager.PrimaryModes.Annotations:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
@@ -169,7 +168,7 @@ namespace ForgePlus.LevelManipulation
                         // Clicking a polygon's surfaces links the selected annotation to it
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
                         break;
                     case ModeManager.PrimaryModes.Level:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
@@ -185,7 +184,7 @@ namespace ForgePlus.LevelManipulation
 
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
 
                         // Select the level here, since there's no visual way to select it besides the mode button
                         if (LevelEntity_Level.Instance)
@@ -209,7 +208,7 @@ namespace ForgePlus.LevelManipulation
 
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
                         break;
                 }
             }
@@ -326,6 +325,20 @@ namespace ForgePlus.LevelManipulation
             SelectedObjects.Clear();
 
             OnSelectionChanged?.Invoke();
+        }
+
+        // Makes a surface made while in a mode (such as by painting media) as selectable as the mode's other surfaces
+        public void MatchSelectabilityToMode(EditableSurface_Media surface)
+        {
+            surface.SetSelectability(MediaSurfacesAreSelectable(ModeManager.Instance.PrimaryMode));
+        }
+
+        // Media surfaces are clicked in the modes that act on their light or media (otherwise clicks pass through them
+        // to the floor)
+        // TODO: Include geometry mode when a media subfilter is available
+        private static bool MediaSurfacesAreSelectable(ModeManager.PrimaryModes primaryMode)
+        {
+            return primaryMode == ModeManager.PrimaryModes.Lights || primaryMode == ModeManager.PrimaryModes.Media;
         }
 
         private void SetSelectability<T>(T selectable, bool enabled) where T : ISelectable

@@ -1,4 +1,5 @@
-﻿using ForgePlus.Palette;
+﻿using ForgePlus.Inspection;
+using ForgePlus.Palette;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using UnityEngine;
@@ -8,14 +9,24 @@ namespace ForgePlus.LevelManipulation
 {
     public class EditableSurface_Media : EditableSurface_Base
     {
-        [System.NonSerialized]
-        public LevelEntity_Media Media = null;
-
-        // TODO: Get rid of these and just attain them on the fly instead of preloading
-        //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
         public LevelEntity_Polygon Polygon = null;
-        [System.NonSerialized]
-        public LevelEntity_Light RuntimeLight = null;
+
+        // Read from the polygon each time, so they follow what's painted onto it
+        public LevelEntity_Media Media
+        {
+            get
+            {
+                return Polygon.Media;
+            }
+        }
+
+        public LevelEntity_Light RuntimeLight
+        {
+            get
+            {
+                return Polygon.ParentLevel.Lights[Polygon.NativeObject.media_lightsource_index];
+            }
+        }
 
         public override void OnValidatedPointerClick(PointerEventData eventData)
         {
@@ -29,17 +40,14 @@ namespace ForgePlus.LevelManipulation
                     PaletteManager.Instance.SelectSwatchForLight(RuntimeLight);
                     break;
                 case ModeManager.PrimaryModes.Media:
-                    if (Media != null)
-                    {
-                        SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(Media);
-                    }
-
+                    ClickPolygonInMediaMode(Polygon);
                     break;
                 default:
                     Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
-                    break;
+                    return;
             }
+
+            InspectorPanel.Instance.RefreshAllInspectors();
         }
 
         public override void OnValidatedBeginDrag(PointerEventData eventData)

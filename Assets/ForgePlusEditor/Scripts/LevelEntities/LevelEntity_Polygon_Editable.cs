@@ -173,6 +173,50 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // Puts the media in the polygon (or takes it out, for null), making, retyping or removing its media surface to
+        // match
+        public void SetMedia(LevelEntity_Media media)
+        {
+            var mediaIndex = media != null ? media.NativeIndex : (short) -1;
+            if (mediaIndex == NativeObject.media_index)
+            {
+                // Media is not different, so exit
+                return;
+            }
+
+            NativeObject.media_index = mediaIndex;
+
+            if (media == null)
+            {
+                if (MediaSurface)
+                {
+                    ParentLevel.EditableSurface_Medias.Remove(MediaSurface.GetComponent<EditableSurface_Media>());
+
+                    // With no media, the surface destroys itself
+                    MediaSurface.ApplyMedia();
+                    MediaSurface = null;
+                }
+
+                return;
+            }
+
+            // The media surface is lit by the polygon's media light, which a polygon that had no media may not have
+            if (!ParentLevel.Lights.ContainsKey(NativeObject.media_lightsource_index))
+            {
+                NativeObject.media_lightsource_index = NativeObject.floor_lightsource_index;
+            }
+
+            if (MediaSurface)
+            {
+                MediaSurface.ApplyMedia();
+            }
+            else
+            {
+                CreateMediaSurface();
+                SelectionManager.Instance.MatchSelectabilityToMode(MediaSurface.GetComponent<EditableSurface_Media>());
+            }
+        }
+
         private void CreateSelectionIndicators(RuntimeSurfaceGeometry surface, bool isfloor)
         {
             var vertices = surface.GetComponent<MeshFilter>().sharedMesh.vertices;

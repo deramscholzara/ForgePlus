@@ -24,11 +24,18 @@ namespace ForgePlus.UI
 
         protected override bool Shows(PaletteManager.Swatch swatch)
         {
-            return swatch.Media != null;
+            return swatch.Kind == PaletteManager.SwatchKinds.Media;
         }
 
         protected override void FillSwatch(TemplateContainer instance, PaletteManager.Swatch swatch)
         {
+            if (swatch.IsNone)
+            {
+                instance.Q<Label>("index").text = string.Empty;
+                instance.Q<Label>("type").text = "None";
+                return;
+            }
+
             instance.Q<Label>("index").text = swatch.Media.NativeIndex.ToString();
             instance.Q<Label>("type").text = AlephOneNames.MediaType(swatch.Media.NativeObject.type);
         }

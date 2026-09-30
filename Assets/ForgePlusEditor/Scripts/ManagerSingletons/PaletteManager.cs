@@ -11,17 +11,37 @@ using UnityEngine;
 
 namespace ForgePlus.Palette
 {
-    // The current mode's palette (textures, lights or media) and which swatch is selected.
+    // The current mode's palette (textures, lights, media or polygons) and which swatch is selected.
     // The palette panels show it; selecting a swatch here behaves as clicking it there.
     public class PaletteManager : SingletonMonoBehaviour<PaletteManager>
     {
+        public enum SwatchKinds
+        {
+            Texture,
+            Light,
+            Media,
+            Polygon,
+        }
+
+        // A texture swatch with no texture, or a media swatch with no media, is the palette's "None" (for removing
+        // what's assigned)
         public class Swatch
         {
+            public SwatchKinds Kind;
             public ushort ShapeDescriptor = cstypes.UNONE;
             public Texture2D Texture;
             public LevelEntity_Light Light;
             public LevelEntity_Media Media;
             public LevelEntity_Polygon Polygon;
+
+            public bool IsNone
+            {
+                get
+                {
+                    return (Kind == SwatchKinds.Texture && ShapeDescriptor.IsEmptyShapeDescriptor()) ||
+                           (Kind == SwatchKinds.Media && Media == null);
+                }
+            }
 
             public bool IsLandscape
             {
@@ -51,19 +71,24 @@ namespace ForgePlus.Palette
         public Swatch SelectedSwatch { get; private set; }
 
         // The SelectSwatchFor methods show a swatch as selected, to match what's already selected in the level
+        // (an empty shape descriptor is the "None" texture)
         public void SelectSwatchForTexture(ushort shapeDescriptor)
         {
-            Select(swatches.First(swatch => swatch.Texture && swatch.ShapeDescriptor.Equals(shapeDescriptor)), updateLevelSelection: false);
+            Select(swatches.FirstOrDefault(swatch => swatch.Kind == SwatchKinds.Texture && swatch.ShapeDescriptor.Equals(shapeDescriptor)), updateLevelSelection: false);
         }
 
-        public ushort GetSelectedTexture()
+        // Whether a texture swatch (maybe "None", an empty shape descriptor) is selected, for painting
+        public bool TryGetSelectedTexture(out ushort shapeDescriptor)
         {
-            return SelectedSwatch != null && SelectedSwatch.Texture ? SelectedSwatch.ShapeDescriptor : cstypes.UNONE;
+            var isSelected = SelectedSwatch != null && SelectedSwatch.Kind == SwatchKinds.Texture;
+            shapeDescriptor = isSelected ? SelectedSwatch.ShapeDescriptor : cstypes.UNONE;
+
+            return isSelected;
         }
 
         public void SelectSwatchForLight(LevelEntity_Light light)
         {
-            Select(swatches.First(swatch => swatch.Light == light), updateLevelSelection: false);
+            Select(swatches.FirstOrDefault(swatch => swatch.Kind == SwatchKinds.Light && swatch.Light == light), updateLevelSelection: false);
         }
 
         public LevelEntity_Light GetSelectedLight()
@@ -71,14 +96,19 @@ namespace ForgePlus.Palette
             return SelectedSwatch?.Light;
         }
 
+        // No media deselects the swatches (rather than selecting "None", which is only chosen, for painting)
         public void SelectSwatchForMedia(LevelEntity_Media media)
         {
-            Select(swatches.First(swatch => swatch.Media == media), updateLevelSelection: false);
+            Select(media != null ? swatches.FirstOrDefault(swatch => swatch.Kind == SwatchKinds.Media && swatch.Media == media) : null, updateLevelSelection: false);
         }
 
-        public LevelEntity_Media GetSelectedMedia()
+        // Whether a media swatch (maybe "None", null media) is selected, for painting
+        public bool TryGetSelectedMedia(out LevelEntity_Media media)
         {
-            return SelectedSwatch?.Media;
+            var isSelected = SelectedSwatch != null && SelectedSwatch.Kind == SwatchKinds.Media;
+            media = isSelected ? SelectedSwatch.Media : null;
+
+            return isSelected;
         }
 
         // The swatch of the polygon the selected annotation is linked to (none, for no polygon)
@@ -127,17 +157,22 @@ namespace ForgePlus.Palette
             OnSelectionChanged?.Invoke();
         }
 
-        // Textures clear the level's selection (for painting), lights and media select their object, and polygons
-        // become the selected annotation's
+        // Textures and "None" media clear the level's selection (for painting), lights and media select their object,
+        // and polygons become the selected annotation's
         private void UpdateLevelSelection(Swatch swatch, bool isSelected)
         {
-            if (swatch.Texture)
+            if (swatch.Kind == SwatchKinds.Texture || (swatch.IsNone && isSelected))
             {
                 SelectionManager.Instance.DeselectAll();
                 return;
             }
 
-            if (swatch.Polygon)
+            if (swatch.IsNone)
+            {
+                return;
+            }
+
+            if (swatch.Kind == SwatchKinds.Polygon)
             {
                 if (isSelected)
                 {
@@ -183,27 +218,32 @@ namespace ForgePlus.Palette
                                                                         -entryA.Key.GetCollection().CompareTo(entryB.Key.GetCollection()) :
                                                                         entryA.Key.GetCollection().CompareTo(entryB.Key.GetCollection()))));
 
+                        swatches.Add(new Swatch { Kind = SwatchKinds.Texture });
+
                         foreach (var textureEntry in loadedTextureEntries)
                         {
-                            swatches.Add(new Swatch { ShapeDescriptor = textureEntry.Key, Texture = textureEntry.Value });
+                            swatches.Add(new Swatch { Kind = SwatchKinds.Texture, ShapeDescriptor = textureEntry.Key, Texture = textureEntry.Value });
                         }
 
                         break;
                     case ModeManager.PrimaryModes.Lights:
+                        // No "None", since a surface always has a light
                         allowSwitchOff = true;
 
                         foreach (var light in LevelEntity_Level.Instance.Lights.Values)
                         {
-                            swatches.Add(new Swatch { Light = light });
+                            swatches.Add(new Swatch { Kind = SwatchKinds.Light, Light = light });
                         }
 
                         break;
                     case ModeManager.PrimaryModes.Media:
                         allowSwitchOff = true;
 
+                        swatches.Add(new Swatch { Kind = SwatchKinds.Media });
+
                         foreach (var media in LevelEntity_Level.Instance.Medias.Values)
                         {
-                            swatches.Add(new Swatch { Media = media });
+                            swatches.Add(new Swatch { Kind = SwatchKinds.Media, Media = media });
                         }
 
                         break;
@@ -235,7 +275,7 @@ namespace ForgePlus.Palette
 
                         foreach (var polygon in LevelEntity_Level.Instance.Polygons.OrderBy(pair => pair.Key).Select(pair => pair.Value))
                         {
-                            swatches.Add(new Swatch { Polygon = polygon });
+                            swatches.Add(new Swatch { Kind = SwatchKinds.Polygon, Polygon = polygon });
                         }
 
                         break;
@@ -251,10 +291,11 @@ namespace ForgePlus.Palette
 
             OnSwatchesChanged?.Invoke();
 
-            // The texture palette starts with its first texture selected
-            if (primaryMode == ModeManager.PrimaryModes.Textures && swatches.Count > 0)
+            // The texture palette starts with its first texture selected (after "None")
+            var firstTexture = swatches.FirstOrDefault(swatch => swatch.Kind == SwatchKinds.Texture && !swatch.IsNone);
+            if (primaryMode == ModeManager.PrimaryModes.Textures && firstTexture != null)
             {
-                Select(swatches[0], updateLevelSelection: true);
+                Select(firstTexture, updateLevelSelection: true);
             }
             else
             {

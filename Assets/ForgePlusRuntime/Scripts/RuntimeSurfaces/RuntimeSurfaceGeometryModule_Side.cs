@@ -621,20 +621,6 @@ namespace RuntimeCore.Entities.Geometry
             sideSurface.DataSource = dataSource;
             sideSurface.Platform = platformConstraint != null ? platformConstraint.Parent.GetComponent<LevelEntity_Platform>() : null;
 
-            var mediaIndex = map.get_polygon_data(sideEntity.ParentLevel.Level, FacingPolygonIndex).media_index;
-            sideSurface.Media = mediaIndex >= 0 ? sideEntity.ParentLevel.Medias[mediaIndex] : null;
-
-            if (sideEntity.NativeObject == null)
-            {
-                sideSurface.surfaceShapeDescriptor = cstypes.UNONE;
-                sideSurface.RuntimeLight = null;
-            }
-            else
-            {
-                sideSurface.surfaceShapeDescriptor = sideEntity.NativeObject.GetTexture(dataSource).texture;
-                sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.GetLightsourceIndex(dataSource)];
-            }
-
             sideEntity.ParentLevel.EditableSurface_Sides.Add(sideSurface);
 
             // PhysX can't make a collider from a surface with no area ("cleaning the mesh failed")

@@ -17,14 +17,28 @@ namespace ForgePlus.LevelManipulation
         public LevelEntity_Polygon ParentPolygon = null;
         public LevelEntity_Polygon.DataSources DataSource;
 
-        // TODO: Get rid of these and just attain them on the fly instead of preloading
-        //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
-        public ushort surfaceShapeDescriptor = cstypes.UNONE;
-        [System.NonSerialized]
-        public LevelEntity_Light RuntimeLight = null;
-        [System.NonSerialized]
-        public LevelEntity_Media Media = null;
         public LevelEntity_Platform Platform = null;
+
+        // Read from the polygon each time, so they follow what's painted onto it
+        public ushort SurfaceShapeDescriptor
+        {
+            get
+            {
+                return DataSource == LevelEntity_Polygon.DataSources.Floor ?
+                       ParentPolygon.NativeObject.floor_texture :
+                       ParentPolygon.NativeObject.ceiling_texture;
+            }
+        }
+
+        public LevelEntity_Light RuntimeLight
+        {
+            get
+            {
+                return ParentPolygon.ParentLevel.Lights[DataSource == LevelEntity_Polygon.DataSources.Floor ?
+                                                        ParentPolygon.NativeObject.floor_lightsource_index :
+                                                        ParentPolygon.NativeObject.ceiling_lightsource_index];
+            }
+        }
 
         private UVPlanarDrag uvDragPlane;
 
@@ -41,9 +55,7 @@ namespace ForgePlus.LevelManipulation
                 case ModeManager.PrimaryModes.Textures:
                     if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
                     {
-                        var selectedTexture = PaletteManager.Instance.GetSelectedTexture();
-
-                        if (!selectedTexture.IsEmptyShapeDescriptor())
+                        if (PaletteManager.Instance.TryGetSelectedTexture(out var selectedTexture))
                         {
                             ParentPolygon.SetShapeDescriptor(DataSource, selectedTexture);
                         }
@@ -67,10 +79,8 @@ namespace ForgePlus.LevelManipulation
                         SelectionManager.Instance.ToggleObjectSelection(ParentPolygon, multiSelect: false);
                         InputListener(ParentPolygon);
 
-                        if (!surfaceShapeDescriptor.IsEmptyShapeDescriptor())
-                        {
-                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor);
-                        }
+                        // An unassigned surface selects "None"
+                        PaletteManager.Instance.SelectSwatchForTexture(SurfaceShapeDescriptor);
                     }
 
                     break;
@@ -92,11 +102,7 @@ namespace ForgePlus.LevelManipulation
 
                     break;
                 case ModeManager.PrimaryModes.Media:
-                    if (Media != null)
-                    {
-                        SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(Media);
-                    }
+                    ClickPolygonInMediaMode(ParentPolygon);
 
                     break;
                 case ModeManager.PrimaryModes.Platforms:
@@ -144,15 +150,7 @@ namespace ForgePlus.LevelManipulation
                 {
                     alignmentGroupedPolygons.Clear();
 
-                    var commonElevation = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                          ParentPolygon.NativeObject.floor_height :
-                                          ParentPolygon.NativeObject.ceiling_height;
-
-                    var commonShapeDescriptor = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                                ParentPolygon.NativeObject.floor_texture :
-                                                ParentPolygon.NativeObject.ceiling_texture;
-
-                    CollectSimilarAdjacentPolygons(ParentPolygon, commonElevation, commonShapeDescriptor);
+                    CollectSimilarAdjacentPolygons(GetElevation(ParentPolygon), GetShapeDescriptor(ParentPolygon));
                 }
             }
             else
@@ -252,50 +250,51 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        private void CollectSimilarAdjacentPolygons(LevelEntity_Polygon centralPolygon, short commonElevation, ushort commonShapeDescriptor)
+        // Spreads out from this polygon through shared edges, collecting every polygon its surface continues into (at
+        // the same height, with the same texture), until no more neighbors continue it
+        private void CollectSimilarAdjacentPolygons(short commonElevation, ushort commonShapeDescriptor)
         {
-            for (var i = 0; i < map.MAXIMUM_VERTICES_PER_POLYGON; i++)
+            var checkedPolygons = new HashSet<LevelEntity_Polygon> { ParentPolygon };
+            var polygonsToSpreadFrom = new Stack<LevelEntity_Polygon>();
+            polygonsToSpreadFrom.Push(ParentPolygon);
+
+            while (polygonsToSpreadFrom.Count > 0)
             {
-                var adjacentPolygonIndex = ParentPolygon.NativeObject.adjacent_polygon_indexes[i];
+                var polygonData = polygonsToSpreadFrom.Pop().NativeObject;
 
-                if (adjacentPolygonIndex < 0 || adjacentPolygonIndex == ParentPolygon.NativeIndex)
+                for (var i = 0; i < polygonData.vertex_count; i++)
                 {
-                    continue;
+                    // Edges with no polygon on the other side have no adjacent polygon (NONE)
+                    if (!LevelEntity_Level.Instance.Polygons.TryGetValue(polygonData.adjacent_polygon_indexes[i], out var adjacentPolygon) ||
+                        !checkedPolygons.Add(adjacentPolygon))
+                    {
+                        continue;
+                    }
+
+                    if (GetElevation(adjacentPolygon) != commonElevation ||
+                        !GetShapeDescriptor(adjacentPolygon).Equals(commonShapeDescriptor))
+                    {
+                        continue;
+                    }
+
+                    alignmentGroupedPolygons.Add(adjacentPolygon);
+                    polygonsToSpreadFrom.Push(adjacentPolygon);
                 }
-
-                var adjacentPolygon = LevelEntity_Level.Instance.Polygons[adjacentPolygonIndex];
-
-                if (alignmentGroupedPolygons.Contains(adjacentPolygon))
-                {
-                    continue;
-                }
-
-                var adjacentElevation = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                        adjacentPolygon.NativeObject.floor_height :
-                                        adjacentPolygon.NativeObject.ceiling_height;
-
-                if (adjacentElevation != commonElevation)
-                {
-                    continue;
-                }
-
-                var adjacentShapeDescriptor = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                              adjacentPolygon.NativeObject.floor_texture :
-                                              adjacentPolygon.NativeObject.ceiling_texture;
-
-                if (!adjacentShapeDescriptor.Equals(commonShapeDescriptor))
-                {
-                    continue;
-                }
-
-                var alignmentGroupedSurface = DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                                              adjacentPolygon.FloorSurface.GetComponent<EditableSurface_Polygon>() :
-                                              adjacentPolygon.CeilingSurface.GetComponent<EditableSurface_Polygon>();
-
-                alignmentGroupedPolygons.Add(adjacentPolygon);
-
-                CollectSimilarAdjacentPolygons(adjacentPolygon, commonElevation, commonShapeDescriptor);
             }
+        }
+
+        private short GetElevation(LevelEntity_Polygon polygon)
+        {
+            return DataSource == LevelEntity_Polygon.DataSources.Floor ?
+                   polygon.NativeObject.floor_height :
+                   polygon.NativeObject.ceiling_height;
+        }
+
+        private ushort GetShapeDescriptor(LevelEntity_Polygon polygon)
+        {
+            return DataSource == LevelEntity_Polygon.DataSources.Floor ?
+                   polygon.NativeObject.floor_texture :
+                   polygon.NativeObject.ceiling_texture;
         }
     }
 }

@@ -18,6 +18,15 @@ namespace RuntimeCore.Entities.Geometry
 
         public new polygon_data NativeObject => base.NativeObject as polygon_data;
 
+        // The media in the polygon (null for none)
+        public LevelEntity_Media Media
+        {
+            get
+            {
+                return ParentLevel.Medias.TryGetValue(NativeObject.media_index, out var media) ? media : null;
+            }
+        }
+
         protected override void AssembleEntity()
         {
             base.AssembleEntity();
@@ -34,11 +43,16 @@ namespace RuntimeCore.Entities.Geometry
 
             if (NativeObject.media_index >= 0)
             {
-                var mediaRoot = new GameObject($"Media (polygon: {NativeIndex})");
-                MediaSurface = mediaRoot.AddComponent<RuntimeSurfaceGeometry>();
-                MediaSurface.InitializeRuntimeSurface(this, DataSources.Media);
-                mediaRoot.transform.SetParent(transform);
+                CreateMediaSurface();
             }
+        }
+
+        protected void CreateMediaSurface()
+        {
+            var mediaRoot = new GameObject($"Media (polygon: {NativeIndex})");
+            MediaSurface = mediaRoot.AddComponent<RuntimeSurfaceGeometry>();
+            MediaSurface.InitializeRuntimeSurface(this, DataSources.Media);
+            mediaRoot.transform.SetParent(transform);
         }
     }
 }
