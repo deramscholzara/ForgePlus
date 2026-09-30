@@ -93,7 +93,9 @@
     bottom: 5px;
 }
 
-.fp-swatch__media-type {
+/* A swatch's type (of media, or of platform) after its index */
+.fp-swatch__media-type,
+.fp-swatch__platform-type {
     left: 80px;
     right: 5px;
     top: 5px;

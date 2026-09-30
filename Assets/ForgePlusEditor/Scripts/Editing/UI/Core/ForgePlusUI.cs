@@ -244,6 +244,9 @@ namespace ForgePlus.UI
                 case ModeManager.PrimaryModes.Annotations:
                     paletteSlot.Show<PolygonPalettePanel>();
                     break;
+                case ModeManager.PrimaryModes.Platforms:
+                    paletteSlot.Show<PlatformPalettePanel>();
+                    break;
                 default:
                     paletteSlot.Hide();
                     break;

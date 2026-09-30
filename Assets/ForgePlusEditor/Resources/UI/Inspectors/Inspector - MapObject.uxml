@@ -55,27 +55,11 @@
         </ui:Instance>
         <ui:VisualElement name="Placement">
             <ui:VisualElement class="fp-space" />
-            <ui:Instance template="Subheader">
+            <ui:Instance template="Subheader" name="PlacementHeading">
                 <ui:AttributeOverrides element-name="label" text="Placement" />
             </ui:Instance>
-            <ui:Instance template="Row" name="PlacementInitialCount">
-                <ui:AttributeOverrides element-name="label" text="Initial Count:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="PlacementMinimumCount">
-                <ui:AttributeOverrides element-name="label" text="Min Count:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="PlacementMaximumCount">
-                <ui:AttributeOverrides element-name="label" text="Max Count:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="PlacementRandomCount">
-                <ui:AttributeOverrides element-name="label" text="Random Count:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="PlacementRandomChance">
-                <ui:AttributeOverrides element-name="label" text="Random Chance:" />
-            </ui:Instance>
-            <ui:Instance template="Row" name="PlacementRandomLocation">
-                <ui:AttributeOverrides element-name="label" text="Use Random Location:" />
-            </ui:Instance>
+            <ui:Label text="Shared by every object of this type (see Object Placement, with nothing selected)" class="fp-inspector-note" />
+            <ui:VisualElement name="placement-entry" />
         </ui:VisualElement>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Foldout">

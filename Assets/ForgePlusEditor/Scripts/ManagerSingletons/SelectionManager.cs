@@ -239,7 +239,8 @@ namespace ForgePlus.LevelManipulation
 
                 if (!multiSelect)
                 {
-                    DeselectAll();
+                    // The new selection is inspected instead
+                    DeselectAll(inspectNothingSelected: false);
                 }
 
                 // 1. Update displayed selection
@@ -303,12 +304,16 @@ namespace ForgePlus.LevelManipulation
                     // 3. Inspect selection
                     (selection as IInspectable).Inspect();
                 }
+                else if (SelectedObjects.Count == 0)
+                {
+                    InspectNothingSelected();
+                }
 
                 OnSelectionChanged?.Invoke();
             }
         }
 
-        public void DeselectAll()
+        public void DeselectAll(bool inspectNothingSelected = true)
         {
             InspectorPanel.Instance.ClearAllInspectors();
 
@@ -324,7 +329,22 @@ namespace ForgePlus.LevelManipulation
             // 2. Update actual selection list
             SelectedObjects.Clear();
 
+            if (inspectNothingSelected)
+            {
+                InspectNothingSelected();
+            }
+
             OnSelectionChanged?.Invoke();
+        }
+
+        // With nothing selected, Objects mode inspects the level's placement of each type of item and monster (which
+        // isn't any one object's)
+        private void InspectNothingSelected()
+        {
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Objects && LevelEntity_Level.Instance)
+            {
+                InspectorPanel.Instance.AddInspector(new Inspector_Placements(LevelEntity_Level.Instance));
+            }
         }
 
         // Makes a surface made while in a mode (such as by painting media) as selectable as the mode's other surfaces

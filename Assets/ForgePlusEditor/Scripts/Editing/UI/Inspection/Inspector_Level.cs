@@ -1,11 +1,16 @@
 ﻿using AlephOne;
+using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
 using RuntimeCore.Entities;
+using System.Text;
 using Unity.Properties;
+using Unity.Scripting.LifecycleManagement;
+using UnityEngine.UIElements;
 
 namespace ForgePlus.Inspection
 {
-    public class Inspector_Level : Inspector_Base<LevelEntity_Level>
+    [AutoStaticsCleanup]
+    public partial class Inspector_Level : Inspector_Base<LevelEntity_Level>
     {
         public Inspector_Level(LevelEntity_Level level) : base(level)
         {
@@ -44,12 +49,24 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Which walls and scenery collections the level uses (map.cpp: Environments)
         [CreateProperty]
         public string Environment
         {
             get
             {
-                return StaticWorld.environment_code.ToString();
+                var code = StaticWorld.environment_code;
+
+                return code >= 0 && code < EnvironmentNames.Length ? $"{EnvironmentNames[code]} ({code})" : code.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public string PhysicsModel
+        {
+            get
+            {
+                return StaticWorld.physics_model.ToString();
             }
         }
 
@@ -304,6 +321,162 @@ namespace ForgePlus.Inspection
             {
                 return csmacros.TEST_FLAG(StaticWorld.environment_flags, map._environment_activation_ranges);
             }
+        }
+
+        // ---------- Physics: the physics chunks saved in the level (which Aleph One uses instead of the physics file)
+
+        [CreateProperty]
+        public string PhysicsInUse
+        {
+            get
+            {
+                switch (PhysicsLoading.Instance.Source)
+                {
+                    case PhysicsModelSource.EmbeddedInLevel:
+                        return "The level's";
+                    case PhysicsModelSource.PhysicsFile:
+                    case PhysicsModelSource.Marathon1PhysicsFile:
+                        return "The physics file's";
+                    default:
+                        return "The engine's defaults";
+                }
+            }
+        }
+
+        [CreateProperty]
+        public string EmbeddedMonsters
+        {
+            get { return ChunkCount(tags.MONSTER_PHYSICS_TAG, monsters.SIZEOF_monster_definition, "definitions"); }
+        }
+
+        [CreateProperty]
+        public string EmbeddedEffects
+        {
+            get { return ChunkCount(tags.EFFECTS_PHYSICS_TAG, effects.SIZEOF_effect_definition, "definitions"); }
+        }
+
+        [CreateProperty]
+        public string EmbeddedProjectiles
+        {
+            get { return ChunkCount(tags.PROJECTILE_PHYSICS_TAG, projectiles.SIZEOF_projectile_definition, "definitions"); }
+        }
+
+        [CreateProperty]
+        public string EmbeddedPhysicsConstants
+        {
+            get { return ChunkCount(tags.PHYSICS_PHYSICS_TAG, player.SIZEOF_physics_constants, "sets"); }
+        }
+
+        [CreateProperty]
+        public string EmbeddedWeapons
+        {
+            get { return ChunkCount(tags.WEAPONS_PHYSICS_TAG, weapons.SIZEOF_weapon_definition, "definitions"); }
+        }
+
+        // ---------- The chunks ForgePlus keeps (and saves) as they were loaded, without reading them
+
+        [CreateProperty]
+        public string ShapePatchSize
+        {
+            get { return ChunkSize(tags.SHAPE_PATCH_TAG); }
+        }
+
+        [CreateProperty]
+        public string SoundPatchSize
+        {
+            get { return ChunkSize(tags.SOUND_PATCH_TAG); }
+        }
+
+        [CreateProperty]
+        public string MmlSize
+        {
+            get { return ChunkSize(tags.MMLS_TAG); }
+        }
+
+        [CreateProperty]
+        public string MmlText
+        {
+            get { return ChunkText(tags.MMLS_TAG); }
+        }
+
+        [CreateProperty]
+        public string LuaSize
+        {
+            get { return ChunkSize(tags.LUAS_TAG); }
+        }
+
+        [CreateProperty]
+        public string LuaText
+        {
+            get { return ChunkText(tags.LUAS_TAG); }
+        }
+
+        // The tab last shown, which the next level inspector shows too
+        private static int selectedTab;
+
+        private static readonly string[] TabNames = { "tab-info", "tab-flags", "tab-physics", "tab-shape-patches", "tab-sound-patches", "tab-mml", "tab-lua" };
+
+        // Longer text than this is cut off (a text element can only draw so many characters)
+        private const int MaximumTextLength = 12000;
+
+        private static readonly string[] EnvironmentNames = { "Lh'owon Water", "Lh'owon Lava", "Lh'owon Sewage", "Jjaro", "Pfhor" };
+
+        protected override void OnLoaded()
+        {
+            base.OnLoaded();
+
+            var tabs = Root.Q<RadioButtonGroup>("tabs");
+            tabs.SetValueWithoutNotify(selectedTab);
+            tabs.RegisterValueChangedCallback(changeEvent => ShowTab(changeEvent.newValue));
+
+            Root.Query<Label>(className: "fp-inspector-text-block__text").ForEach(text => text.selection.isSelectable = true);
+
+            ShowTab(selectedTab);
+        }
+
+        private void ShowTab(int tab)
+        {
+            selectedTab = tab;
+
+            for (var i = 0; i < TabNames.Length; i++)
+            {
+                Root.Q(TabNames[i]).style.display = i == tab ? DisplayStyle.Flex : DisplayStyle.None;
+            }
+        }
+
+        private byte[] GetChunk(uint tag)
+        {
+            return Entity.Level.loaded_wad.preserved_chunks.TryGetValue(tag, out var chunk) ? chunk : null;
+        }
+
+        private string ChunkSize(uint tag)
+        {
+            var chunk = GetChunk(tag);
+
+            return chunk != null ? $"{chunk.Length:N0} bytes" : "None";
+        }
+
+        private string ChunkCount(uint tag, int unitSize, string units)
+        {
+            var chunk = GetChunk(tag);
+
+            return chunk != null ? $"{chunk.Length / unitSize} {units}" : "None";
+        }
+
+        // MML and Lua are text (UTF-8, which is also plain ASCII), maybe with a terminating NUL
+        private string ChunkText(uint tag)
+        {
+            var chunk = GetChunk(tag);
+            if (chunk == null)
+            {
+                return string.Empty;
+            }
+
+            var text = Encoding.UTF8.GetString(chunk).TrimEnd('\0');
+
+            return text.Length > MaximumTextLength ?
+                   $"{text.Substring(0, MaximumTextLength)}\n\n(… and {text.Length - MaximumTextLength:N0} more characters)" :
+                   text;
         }
     }
 }

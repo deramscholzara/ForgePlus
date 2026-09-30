@@ -67,8 +67,9 @@ namespace ForgePlus.UI
             return binding;
         }
 
-        // Binds an inspector layout's rows, text and number fields, textures and flags (template instances named after
-        // the source's properties) to the source, the flags read-only
+        // Binds an inspector layout's rows, text and number fields, dropdowns, choices, textures and flags (template
+        // instances named after the source's properties) to the source. Those that can edit their property do while
+        // it can be set (see BindEditability).
         public static void BindInspectorFields(this VisualElement root, object dataSource)
         {
             root.Query<Label>(className: "fp-inspector-value").ForEach(value => BindToInstanceName(value, "text", dataSource));
@@ -78,11 +79,18 @@ namespace ForgePlus.UI
             root.Query<IntegerField>(className: "fp-inspector-text-field").ForEach(field => BindInspectorField(field, dataSource));
             root.Query<DropdownField>(className: "fp-inspector-dropdown").ForEach(dropdown => BindInspectorDropdown(dropdown, dataSource));
 
-            root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag =>
-            {
-                flag.SetEnabled(false);
-                BindToInstanceName(flag, "value", dataSource);
-            });
+            root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag => BindInspectorValue(flag, dataSource));
+
+            // A choice of one (mutually exclusive options), as the index of its selected option
+            root.Query<RadioButtonGroup>(className: "fp-inspector-choice").ForEach(choice => BindInspectorValue(choice, dataSource));
+        }
+
+        private static void BindInspectorValue<TValue>(BaseField<TValue> field, object dataSource)
+        {
+            var row = field.GetFirstAncestorOfType<TemplateContainer>();
+            var isEditable = BindEditability(row, dataSource);
+
+            field.Bind("value", dataSource, row.name, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
         }
 
         // A field edits its source property while the property has a setter, and is grayed out (read-only) until then
@@ -103,6 +111,43 @@ namespace ForgePlus.UI
 
             dropdown.Bind("choices", dataSource, row.name + "Choices");
             dropdown.Bind("value", dataSource, row.name, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
+
+            dropdown.OpensMenuToFitChoices();
+        }
+
+        // A dropdown's menu (drawn over the whole UI) is as wide as the dropdown at least, and wider when its choices need
+        // it (rather than always matching the dropdown, which cuts off choices in narrow panels). Replaces the menu the
+        // dropdown opens itself, which is only ever as wide as it is.
+        public static void OpensMenuToFitChoices(this DropdownField dropdown)
+        {
+            dropdown.RegisterCallback<PointerDownEvent>(pointerDownEvent =>
+            {
+                if (pointerDownEvent.button == 0)
+                {
+                    pointerDownEvent.StopImmediatePropagation();
+                    ShowChoicesMenu(dropdown);
+                }
+            }, TrickleDown.TrickleDown);
+
+            // As the dropdown opens its menu from the keyboard (such as with return, while it has focus)
+            dropdown.RegisterCallback<NavigationSubmitEvent>(submitEvent =>
+            {
+                submitEvent.StopImmediatePropagation();
+                ShowChoicesMenu(dropdown);
+            }, TrickleDown.TrickleDown);
+        }
+
+        private static void ShowChoicesMenu(DropdownField dropdown)
+        {
+            var menu = new GenericDropdownMenu();
+
+            foreach (var choice in dropdown.choices)
+            {
+                menu.AddItem(choice, choice == dropdown.value, () => dropdown.value = choice);
+            }
+
+            var input = dropdown.Q(className: DropdownField.inputUssClassName) ?? dropdown;
+            menu.DropDown(input.worldBound, dropdown, DropdownMenuSizeMode.Auto);
         }
 
         // A row is enabled while its source property has a setter, and (for a property that can only sometimes be edited,

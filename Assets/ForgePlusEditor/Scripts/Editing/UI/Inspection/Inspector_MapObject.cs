@@ -12,6 +12,8 @@ namespace ForgePlus.Inspection
 {
     public class Inspector_MapObject : Inspector_Base<LevelEntity_MapObject>
     {
+        private Inspector_Placement placementInspector;
+
         public Inspector_MapObject(LevelEntity_MapObject mapObject) : base(mapObject)
         {
         }
@@ -248,68 +250,23 @@ namespace ForgePlus.Inspection
             }
         }
 
-        [CreateProperty]
-        public string PlacementInitialCount
-        {
-            get
-            {
-                return HasPlacement ? Entity.Placement.initial_count.ToString() : "-";
-            }
-        }
-
-        [CreateProperty]
-        public string PlacementMinimumCount
-        {
-            get
-            {
-                return HasPlacement ? Entity.Placement.minimum_count.ToString() : "-";
-            }
-        }
-
-        [CreateProperty]
-        public string PlacementMaximumCount
-        {
-            get
-            {
-                return HasPlacement ? Entity.Placement.maximum_count.ToString() : "-";
-            }
-        }
-
-        [CreateProperty]
-        public string PlacementRandomCount
-        {
-            get
-            {
-                return HasPlacement ? Entity.Placement.random_count.ToString() : "-";
-            }
-        }
-
-        // random_chance is in (0, 65535]
-        [CreateProperty]
-        public string PlacementRandomChance
-        {
-            get
-            {
-                return HasPlacement ? $"{Math.Round(Entity.Placement.random_chance * 100.0 / ushort.MaxValue)} %" : "-";
-            }
-        }
-
-        [CreateProperty]
-        public string PlacementRandomLocation
-        {
-            get
-            {
-                return HasPlacement ? csmacros.TEST_FLAG(Entity.Placement.flags, map._reappears_in_random_location).ToString() : "-";
-            }
-        }
-
         protected override void OnLoaded()
         {
             base.OnLoaded();
 
-            Root.Q("Placement").BindEnabled(this, nameof(HasPlacement));
             Root.Q(nameof(Subtype)).BindShown(this, nameof(IsNotSoundSource));
             Root.Q(nameof(Sound)).BindShown(this, nameof(IsSoundSource));
+
+            // Items and monsters are placed by type (which is also edited with nothing selected, for every type)
+            Root.Q("Placement").style.display = HasPlacement ? DisplayStyle.Flex : DisplayStyle.None;
+            if (HasPlacement)
+            {
+                var typeName = NativeObject.type == map._saved_monster ? AlephOneNames.MonsterType(NativeObject.index) : AlephOneNames.ItemType(NativeObject.index);
+                Root.Find<Label>("PlacementHeading").text = $"Placement (every {typeName})";
+
+                placementInspector = new Inspector_Placement(Entity.Placement);
+                placementInspector.Load(Root.Q("placement-entry"));
+            }
 
             // Which sounds can be chosen, and whether they can be, depends on the sounds file
             SoundsLoading.Instance.OnDataLoadCompleted += OnSoundsLoadCompleted;
@@ -318,6 +275,9 @@ namespace ForgePlus.Inspection
         protected override void OnUnloading()
         {
             base.OnUnloading();
+
+            placementInspector?.Unload();
+            placementInspector = null;
 
             SoundsLoading.Instance.OnDataLoadCompleted -= OnSoundsLoadCompleted;
         }

@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
 using ForgePlus.LevelManipulation;
+using ForgePlus.UI;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Materials;
@@ -21,6 +22,7 @@ namespace ForgePlus.Palette
             Light,
             Media,
             Polygon,
+            Platform,
         }
 
         // A texture swatch with no texture, or a media swatch with no media, is the palette's "None" (for removing
@@ -33,6 +35,7 @@ namespace ForgePlus.Palette
             public LevelEntity_Light Light;
             public LevelEntity_Media Media;
             public LevelEntity_Polygon Polygon;
+            public LevelEntity_Platform Platform;
 
             public bool IsNone
             {
@@ -117,6 +120,18 @@ namespace ForgePlus.Palette
             Select(polygon ? swatches.FirstOrDefault(swatch => swatch.Polygon == polygon) : null, updateLevelSelection: false);
         }
 
+        // The swatch of the selected platform (either half of one that goes both ways), or none
+        public void SelectSwatchForPlatform(LevelEntity_Platform platform)
+        {
+            Select(platform ? swatches.FirstOrDefault(swatch => swatch.Kind == SwatchKinds.Platform && swatch.Platform.NativeIndex == platform.NativeIndex) : null, updateLevelSelection: false);
+        }
+
+        // For a swatch's contents changing (such as a platform's type), without the swatches themselves changing
+        public void RefreshSwatches()
+        {
+            OnSwatchesChanged?.Invoke();
+        }
+
         // Selects the swatch, or deselects it if it was selected and the palette allows that
         public void Click(Swatch swatch)
         {
@@ -177,6 +192,22 @@ namespace ForgePlus.Palette
                 if (isSelected)
                 {
                     LevelEntity_Annotation.LinkSelectedAnnotation(swatch.Polygon);
+                }
+
+                return;
+            }
+
+            // Clicking the selected platform deselects it (as in the level); otherwise, the next platform's selection
+            // replaces the previous one's
+            if (swatch.Kind == SwatchKinds.Platform)
+            {
+                if (isSelected)
+                {
+                    FocusPlatform(swatch.Platform);
+                }
+                else if (SelectedSwatch == null)
+                {
+                    SelectionManager.Instance.DeselectObject(swatch.Platform, multiSelect: false);
                 }
 
                 return;
@@ -249,7 +280,18 @@ namespace ForgePlus.Palette
                         break;
                     case ModeManager.PrimaryModes.Platforms:
                         allowSwitchOff = true;
-                        // TODO: populate with shortcuts that focus the camera on the associated platform polygon when clicked.
+
+                        // A platform that goes both ways is one platform, with a half on each surface (and one that
+                        // moves neither way has no moving surface to select)
+                        var runtimeLevel = LevelEntity_Level.Instance;
+                        for (short platformIndex = 0; platformIndex < runtimeLevel.Level.PlatformList.Count; platformIndex++)
+                        {
+                            var platform = LevelEntity_Platform.GetSelectablePlatform(runtimeLevel, platformIndex);
+                            if (platform)
+                            {
+                                swatches.Add(new Swatch { Kind = SwatchKinds.Platform, Platform = platform });
+                            }
+                        }
                         break;
                     case ModeManager.PrimaryModes.Objects:
                         allowSwitchOff = false;
@@ -313,11 +355,22 @@ namespace ForgePlus.Palette
         // The polygon palette shows the selected annotation's polygon
         private void OnLevelSelectionChanged()
         {
-            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Annotations)
+            switch (ModeManager.Instance.PrimaryMode)
             {
-                var annotation = LevelEntity_Annotation.SelectedAnnotation;
-                SelectSwatchForPolygon(annotation ? annotation.LinkedPolygon : null);
+                case ModeManager.PrimaryModes.Annotations:
+                    var annotation = LevelEntity_Annotation.SelectedAnnotation;
+                    SelectSwatchForPolygon(annotation ? annotation.LinkedPolygon : null);
+                    break;
+                case ModeManager.PrimaryModes.Platforms:
+                    SelectSwatchForPlatform(SelectionManager.Instance.SelectedObject as LevelEntity_Platform);
+                    break;
             }
+        }
+
+        private static void FocusPlatform(LevelEntity_Platform platform)
+        {
+            SelectionManager.Instance.SelectObject(platform, multiSelect: false);
+            ForgePlusUI.Instance.EditorCamera.FrameSelected();
         }
 
         private void OnClickEmptySpace()

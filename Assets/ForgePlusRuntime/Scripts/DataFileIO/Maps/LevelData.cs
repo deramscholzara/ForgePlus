@@ -128,6 +128,9 @@ namespace ForgePlus.DataFileIO
 
             UnityEngine.Object.Destroy(runtimeLevel.gameObject);
 
+            // Destroy waits for the end of the frame, so the level could otherwise still seem open to OpenLevel
+            runtimeLevel = null;
+
             PhysicsLoading.Instance.ClearLevel();
         }
 

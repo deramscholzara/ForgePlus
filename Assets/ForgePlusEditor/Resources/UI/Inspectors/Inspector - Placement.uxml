@@ -1,0 +1,26 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <!-- Bound to Inspector_Placement (one type's placement, placed under a heading naming the type) -->
+    <ui:Instance template="IntegerFieldRow" name="InitialCount">
+        <ui:AttributeOverrides element-name="label" text="Initial Count:" />
+    </ui:Instance>
+    <ui:Instance template="IntegerFieldRow" name="MinimumCount">
+        <ui:AttributeOverrides element-name="label" text="Minimum Count:" />
+    </ui:Instance>
+    <ui:Instance template="IntegerFieldRow" name="MaximumCount">
+        <ui:AttributeOverrides element-name="label" text="Maximum Count:" />
+    </ui:Instance>
+    <ui:Instance template="Flag" name="RandomCountIsInfinite">
+        <ui:AttributeOverrides element-name="flag" text="Infinite Random Count" />
+    </ui:Instance>
+    <ui:Instance template="IntegerFieldRow" name="RandomCount">
+        <ui:AttributeOverrides element-name="label" text="Random Count:" />
+    </ui:Instance>
+    <ui:Instance template="IntegerFieldRow" name="RandomChance">
+        <ui:AttributeOverrides element-name="label" text="Random Chance (%):" />
+    </ui:Instance>
+    <ui:Instance template="Flag" name="ReappearsInRandomLocation">
+        <ui:AttributeOverrides element-name="flag" text="Reappears in Random Location" />
+    </ui:Instance>
+</ui:UXML>

@@ -28,6 +28,17 @@ namespace ForgePlus.DataFileIO
             currentlyOpenLevel.OpenLevel();
         }
 
+        // Destroys and rebuilds the open level's runtime objects from its data, keeping the data (and its edits)
+        public void CloseCurrentLevelObjects()
+        {
+            currentlyOpenLevel?.CloseLevel();
+        }
+
+        public void ReopenCurrentLevelObjects()
+        {
+            currentlyOpenLevel?.OpenLevel();
+        }
+
         public void CloseFile()
         {
             file?.Close();

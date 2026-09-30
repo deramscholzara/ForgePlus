@@ -1282,29 +1282,8 @@ namespace AlephOne
                         {
                             platform_data p = level.PlatformList[loop];
 
-                            // ghs: this belongs somewhere else
-                            var platform = new static_platform_data(); // obj_clear(platform);
-                            platform.type = p.type;
-                            platform.speed = p.speed;
-                            platform.delay = p.delay;
-                            if (PLATFORM_GOES_BOTH_WAYS(p))
-                            {
-                                platform.maximum_height = p.maximum_ceiling_height;
-                                platform.minimum_height = p.minimum_floor_height;
-                            }
-                            else if (PLATFORM_COMES_FROM_FLOOR(p))
-                            {
-                                platform.maximum_height = p.maximum_floor_height;
-                                platform.minimum_height = p.minimum_floor_height;
-                            }
-                            else
-                            {
-                                platform.maximum_height = p.maximum_ceiling_height;
-                                platform.minimum_height = p.minimum_floor_height;
-                            }
-                            platform.static_flags = p.static_flags;
-                            platform.polygon_index = p.polygon_index;
-                            platform.tag = p.tag;
+                            // ForgePlus: shared with editing, which needs the same static data
+                            static_platform_data platform = static_platform_data_from_platform(p);
 
                             pack_static_platform_data(temp_array, new[] { platform }, 1);
                         }

@@ -1,6 +1,8 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.LevelManipulation;
 using RuntimeCore.Entities.Geometry;
+using System.Collections.Generic;
 using Unity.Properties;
 
 namespace ForgePlus.Inspection
@@ -36,12 +38,40 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Choosing Platform makes the polygon a platform (with a S'pht door's settings, which Platforms mode edits), and
+        // choosing another type for a platform removes its platform
         [CreateProperty]
         public string Type
         {
             get
             {
-                return AlephOneNames.PolygonType(Polygon.type);
+                return TypeChoice(Polygon.type);
+            }
+            set
+            {
+                for (short type = 0; type < NumberOfPolygonTypes; type++)
+                {
+                    if (TypeChoice(type) == value && type != Polygon.type)
+                    {
+                        SetType(type);
+                        return;
+                    }
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> TypeChoices
+        {
+            get
+            {
+                var choices = new List<string>();
+                for (short type = 0; type < NumberOfPolygonTypes; type++)
+                {
+                    choices.Add(TypeChoice(type));
+                }
+
+                return choices;
             }
         }
 
@@ -124,6 +154,31 @@ namespace ForgePlus.Inspection
             {
                 return Polygon.ceiling_lightsource_index.ToString();
             }
+        }
+
+        // Aleph One's polygon types run from _polygon_is_normal to _polygon_is_superglue
+        private const short NumberOfPolygonTypes = map._polygon_is_superglue + 1;
+
+        // Making or removing a platform rebuilds the level (the sides around it change), and reselects the polygon
+        private void SetType(short type)
+        {
+            if (type == map._polygon_is_platform)
+            {
+                PlatformEditing.MakePlatform(Entity);
+            }
+            else if (Polygon.type == map._polygon_is_platform)
+            {
+                PlatformEditing.RemovePlatform(Entity, type);
+            }
+            else
+            {
+                Edit(polygon => polygon.NativeObject.type = type);
+            }
+        }
+
+        private static string TypeChoice(short type)
+        {
+            return $"{AlephOneNames.PolygonType(type)} ({type})";
         }
     }
 }

@@ -11,6 +11,27 @@ namespace RuntimeCore.Entities.Geometry
     {
         private PlatformSelectionIndicators selectionIndicators;
 
+        // A platform that goes both ways is one platform in the level, moved by a component on each surface, so one of
+        // them (the floor's) stands for the platform wherever it's selected (from any of its faces, or the platforms list)
+        public LevelEntity_Platform SelectablePlatform
+        {
+            get
+            {
+                return GetSelectablePlatform(ParentLevel, NativeIndex) ?? this;
+            }
+        }
+
+        public static LevelEntity_Platform GetSelectablePlatform(LevelEntity_Level level, short platformIndex)
+        {
+            if (level.FloorPlatforms.TryGetValue(platformIndex, out var platform) ||
+                level.CeilingPlatforms.TryGetValue(platformIndex, out platform))
+            {
+                return platform;
+            }
+
+            return null;
+        }
+
         public void DisplaySelectionState(bool state)
         {
             if (state)

@@ -165,6 +165,67 @@
     height: var(--fp-flag-height);
 }
 
+/* The Level inspector's tabs, wrapping onto as many rows as they need */
+.fp-level-tabs {
+    margin: 5px 0;
+}
+
+.fp-level-tabs #contentContainer {
+    flex-wrap: wrap;
+}
+
+.fp-level-tabs__tab {
+    height: var(--fp-short-control-height);
+    margin: 0 4px 4px 0;
+    padding: 0 6px;
+}
+
+/* Text to read, such as a script, in the value area's colors */
+.fp-inspector-text-block {
+    margin-top: 5px;
+    padding: 5px;
+    background-color: var(--fp-value-area);
+}
+
+.fp-inspector-text-block__text {
+    white-space: normal;
+    font-size: 11px;
+}
+
+/* A sentence explaining an inspector (or a section of one) */
+.fp-inspector-note {
+    margin: 2px 0 5px 0;
+    padding: 0 5px;
+    color: var(--fp-text-faint);
+    white-space: normal;
+}
+
+/* A choice of one: its label, then its options as flags */
+.fp-inspector-choice-area {
+    margin-bottom: 5px;
+}
+
+.fp-inspector-choice__label {
+    margin: 0 0 2px 0;
+    padding: 0;
+    color: var(--fp-text-light);
+}
+
+.fp-inspector-choice-area:disabled > .fp-inspector-choice__label {
+    color: var(--fp-text-faint);
+}
+
+.fp-inspector-choice__option {
+    height: var(--fp-flag-height);
+    margin: 0 0 2px 0;
+}
+
+.fp-inspector-choice__option .unity-radio-button__text {
+    -unity-text-align: middle-left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .fp-inspector-action {
     height: var(--fp-short-control-height);
 }

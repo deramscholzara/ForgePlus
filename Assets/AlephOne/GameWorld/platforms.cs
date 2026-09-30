@@ -390,12 +390,23 @@ namespace AlephOne
 
             if (level.PlatformList.Count < maximum_platforms_per_map)
             {
-                polygon_data polygon = get_polygon_data(level, polygon_index);
-                short i;
-
                 platform_index = (short) level.PlatformList.Count;
                 platform = new platform_data();
                 level.PlatformList.Add(platform);
+
+                initialize_platform(level, platform_index, data, polygon_index);
+            }
+
+            return platform_index;
+        }
+
+        // ForgePlus: the rest of new_platform(), so an edited platform can be initialized again from its static data
+        public static void initialize_platform(MapLevel level, short platform_index, static_platform_data data, short polygon_index)
+        {
+            platform_data platform = level.PlatformList[platform_index];
+            {
+                polygon_data polygon = get_polygon_data(level, polygon_index);
+                short i;
 
                 /* remember the platform_index in the polygon's .permutation field */
                 polygon.permutation = platform_index;
@@ -453,8 +464,37 @@ namespace AlephOne
                 // adjust_platform_endpoint_and_line_heights(platform_index);
                 // adjust_platform_for_media(platform_index, true);
             }
+        }
 
-            return platform_index;
+        // ForgePlus: the static data export_tag_to_global_array_and_size() (game_wad.cpp) saves for a platform, when the
+        // level has no static data of its own for its platforms
+        public static static_platform_data static_platform_data_from_platform(platform_data p)
+        {
+            // ghs: this belongs somewhere else
+            var platform = new static_platform_data(); // obj_clear(platform);
+            platform.type = p.type;
+            platform.speed = p.speed;
+            platform.delay = p.delay;
+            if (PLATFORM_GOES_BOTH_WAYS(p))
+            {
+                platform.maximum_height = p.maximum_ceiling_height;
+                platform.minimum_height = p.minimum_floor_height;
+            }
+            else if (PLATFORM_COMES_FROM_FLOOR(p))
+            {
+                platform.maximum_height = p.maximum_floor_height;
+                platform.minimum_height = p.minimum_floor_height;
+            }
+            else
+            {
+                platform.maximum_height = p.maximum_ceiling_height;
+                platform.minimum_height = p.minimum_floor_height;
+            }
+            platform.static_flags = p.static_flags;
+            platform.polygon_index = p.polygon_index;
+            platform.tag = p.tag;
+
+            return platform;
         }
 
         public static static_platform_data get_defaults_for_platform_type(short type)
