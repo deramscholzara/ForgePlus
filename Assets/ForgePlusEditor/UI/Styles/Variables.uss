@@ -42,4 +42,7 @@
     --fp-control-height: 40px;
     --fp-short-control-height: 30px;
     --fp-flag-height: 20px;
+
+    /* What only Aleph One supports (not the original Marathon 2 and Infinity) is marked in this */
+    --fp-aleph-one: rgb(230, 150, 30);
 }

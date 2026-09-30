@@ -169,8 +169,8 @@
         <ui:Instance template="Flag" name="DeactivatesLight">
             <ui:AttributeOverrides element-name="flag" text="Deactivates Light" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="FloodsM1">
-            <ui:AttributeOverrides element-name="flag" text="Floods (Marathon 1)" />
+        <ui:Instance template="Flag" name="FloodsM1" class="fp-aleph-one-only">
+            <ui:AttributeOverrides element-name="flag" text="Floods (Marathon 1; Aleph One only)" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">

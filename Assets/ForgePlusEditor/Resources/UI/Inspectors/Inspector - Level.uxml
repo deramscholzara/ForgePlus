@@ -20,16 +20,16 @@
             <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
                 <ui:AttributeOverrides element-name="control" text="Physics" />
             </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="Aleph One only">
                 <ui:AttributeOverrides element-name="control" text="Shape Patches" />
             </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="Aleph One only">
                 <ui:AttributeOverrides element-name="control" text="Sound Patches" />
             </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="Aleph One only">
                 <ui:AttributeOverrides element-name="control" text="MML" />
             </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="Aleph One only">
                 <ui:AttributeOverrides element-name="control" text="Lua" />
             </ui:Instance>
         </ui:RadioButtonGroup>
@@ -112,42 +112,42 @@
                 <ui:AttributeOverrides element-name="flag" text="Rescue" />
             </ui:Instance>
             <ui:VisualElement class="fp-space" />
-            <ui:Instance template="Subheader">
-                <ui:AttributeOverrides element-name="label" text="Marathon 1" />
+            <ui:Instance template="Subheader" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="label" text="Marathon 1 (Aleph One only)" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="TerminalPause">
+            <ui:Instance template="Flag" name="TerminalPause" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Terminal Pause" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1Rebellion">
+            <ui:Instance template="Flag" name="M1Rebellion" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Rebellion" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1Exploration">
+            <ui:Instance template="Flag" name="M1Exploration" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Exploration" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1Repair">
+            <ui:Instance template="Flag" name="M1Repair" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Repair" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1Rescue">
+            <ui:Instance template="Flag" name="M1Rescue" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Rescue" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1Glue">
+            <ui:Instance template="Flag" name="M1Glue" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Glue" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1Ouch">
+            <ui:Instance template="Flag" name="M1Ouch" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Ouch" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1HasMusic">
+            <ui:Instance template="Flag" name="M1HasMusic" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Has Music" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1WeaponsStyle">
+            <ui:Instance template="Flag" name="M1WeaponsStyle" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Weapons Style" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="M1ActivationRange">
+            <ui:Instance template="Flag" name="M1ActivationRange" class="fp-aleph-one-only">
                 <ui:AttributeOverrides element-name="flag" text="Activation Range" />
             </ui:Instance>
         </ui:VisualElement>
         <ui:VisualElement name="tab-physics">
-            <ui:Label text="Physics saved in the level, which it uses instead of the selected physics file (Files tab)." class="fp-inspector-note" />
+            <ui:Label text="Physics saved in the level, which it uses instead of the selected physics file (Files tab). Marathon Infinity and Aleph One load it; Marathon 2 doesn't." class="fp-inspector-note" />
             <ui:Instance template="Row" name="PhysicsInUse">
                 <ui:AttributeOverrides element-name="label" text="In Use:" />
             </ui:Instance>
@@ -168,26 +168,26 @@
             </ui:Instance>
         </ui:VisualElement>
         <ui:VisualElement name="tab-shape-patches">
-            <ui:Label text="Changes to the shapes (graphics) saved in the level (ShPa). Kept and saved as they are." class="fp-inspector-note" />
+            <ui:Label text="Aleph One only: changes to the shapes (graphics) saved in the level (ShPa), which the original Marathon 2 and Infinity ignore. Kept and saved as they are." class="fp-inspector-note fp-aleph-one-only" />
             <ui:Instance template="Row" name="ShapePatchSize">
                 <ui:AttributeOverrides element-name="label" text="Size:" />
             </ui:Instance>
         </ui:VisualElement>
         <ui:VisualElement name="tab-sound-patches">
-            <ui:Label text="Changes to the sounds saved in the level (SnPa). Kept and saved as they are." class="fp-inspector-note" />
+            <ui:Label text="Aleph One only: changes to the sounds saved in the level (SnPa), which the original Marathon 2 and Infinity ignore. Kept and saved as they are." class="fp-inspector-note fp-aleph-one-only" />
             <ui:Instance template="Row" name="SoundPatchSize">
                 <ui:AttributeOverrides element-name="label" text="Size:" />
             </ui:Instance>
         </ui:VisualElement>
         <ui:VisualElement name="tab-mml">
-            <ui:Label text="MML saved in the level (MMLS), which changes engine settings while it's played. Kept and saved as it is." class="fp-inspector-note" />
+            <ui:Label text="Aleph One only: MML saved in the level (MMLS), which changes engine settings while it's played. The original Marathon 2 and Infinity ignore it. Kept and saved as it is." class="fp-inspector-note fp-aleph-one-only" />
             <ui:Instance template="Row" name="MmlSize">
                 <ui:AttributeOverrides element-name="label" text="Size:" />
             </ui:Instance>
             <ui:Instance template="TextBlock" name="MmlText" />
         </ui:VisualElement>
         <ui:VisualElement name="tab-lua">
-            <ui:Label text="The Lua script saved in the level (LUAS), which runs while it's played. Kept and saved as it is." class="fp-inspector-note" />
+            <ui:Label text="Aleph One only: the Lua script saved in the level (LUAS), which runs while it's played. The original Marathon 2 and Infinity ignore it. Kept and saved as it is." class="fp-inspector-note fp-aleph-one-only" />
             <ui:Instance template="Row" name="LuaSize">
                 <ui:AttributeOverrides element-name="label" text="Size:" />
             </ui:Instance>
