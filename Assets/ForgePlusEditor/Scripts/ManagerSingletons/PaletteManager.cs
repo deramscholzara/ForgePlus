@@ -215,6 +215,8 @@ namespace ForgePlus.Palette
                         break;
                     case ModeManager.PrimaryModes.Level:
                         break;
+                    case ModeManager.PrimaryModes.Terminals:
+                        break;
                     case ModeManager.PrimaryModes.None:
                     default:
                         break;

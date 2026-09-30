@@ -695,7 +695,7 @@ namespace AlephOne
                 assert(S.Position == Count * SIZEOF_collection_header);
             }
 
-            // Not ported: set_shapes_images_file(File);
+            images.set_shapes_images_file(File);
         }
 
         public static void close_shapes_file()

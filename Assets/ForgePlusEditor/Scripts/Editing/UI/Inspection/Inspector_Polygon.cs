@@ -1,7 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
 using RuntimeCore.Entities.Geometry;
-using System;
 using Unity.Properties;
 
 namespace ForgePlus.Inspection
@@ -125,72 +124,6 @@ namespace ForgePlus.Inspection
             {
                 return Polygon.ceiling_lightsource_index.ToString();
             }
-        }
-
-        [CreateProperty]
-        public string VertexCount
-        {
-            get
-            {
-                return Polygon.vertex_count.ToString();
-            }
-        }
-
-        [CreateProperty]
-        public string VertexIndices
-        {
-            get
-            {
-                return Lines(Polygon.endpoint_indexes, index => index.ToString());
-            }
-        }
-
-        [CreateProperty]
-        public string LineIndices
-        {
-            get
-            {
-                return Lines(Polygon.line_indexes, index => index.ToString());
-            }
-        }
-
-        [CreateProperty]
-        public string SideIndices
-        {
-            get
-            {
-                return Lines(Polygon.side_indexes, index => index < 0 ? "- no side -" : index.ToString());
-            }
-        }
-
-        [CreateProperty]
-        public string AdjacentPolygonIndices
-        {
-            get
-            {
-                return Lines(Polygon.adjacent_polygon_indexes, index => index < 0 ? "- no polygon -" : index.ToString());
-            }
-        }
-
-        [CreateProperty]
-        public string FirstObjectIndex
-        {
-            get
-            {
-                return Polygon.first_object.ToString();
-            }
-        }
-
-        // One of the polygon's vertices' values per line
-        private string Lines(short[] values, Func<short, string> format)
-        {
-            var lines = new string[Polygon.vertex_count];
-            for (var i = 0; i < lines.Length; i++)
-            {
-                lines[i] = format(values[i]);
-            }
-
-            return string.Join("\n", lines);
         }
     }
 }

@@ -30,8 +30,11 @@
             <ui:Instance template="RadioToggle" class="fp-header__mode">
                 <ui:AttributeOverrides element-name="control" text="Annotations" />
             </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode fp-header__mode--last">
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
                 <ui:AttributeOverrides element-name="control" text="Level" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode fp-header__mode--last">
+                <ui:AttributeOverrides element-name="control" text="Terminals" />
             </ui:Instance>
         </ui:RadioButtonGroup>
         <ui:VisualElement class="fp-grow" picking-mode="Ignore" />

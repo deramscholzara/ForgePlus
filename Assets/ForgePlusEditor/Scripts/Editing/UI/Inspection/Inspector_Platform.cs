@@ -50,15 +50,6 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string PolygonIndex
-        {
-            get
-            {
-                return Entity.NativeObject.polygon_index.ToString();
-            }
-        }
-
-        [CreateProperty]
         public string Type
         {
             get

@@ -21,13 +21,17 @@ namespace ForgePlus.UI
         private bool isVisible = true;
 
         private PanelSlot visualizationSlot;
+        private PanelSlot inspectorSlot;
         private PanelSlot menuSlot;
+        private PanelSlot terminalSlot;
         private PanelSlot toolModesSlot;
         private PanelSlot paletteSlot;
 
         public EditorViewModel Editor { get; private set; }
 
         public SettingsViewModel Settings { get; private set; }
+
+        public TerminalsViewModel Terminals { get; private set; }
 
         public EditorCamera EditorCamera
         {
@@ -77,6 +81,7 @@ namespace ForgePlus.UI
 
             Editor = new EditorViewModel();
             Settings = new SettingsViewModel();
+            Terminals = new TerminalsViewModel();
 
             var levelName = root.Q<Label>("level-name");
             levelName.Bind("text", Editor, nameof(EditorViewModel.LevelName));
@@ -84,12 +89,13 @@ namespace ForgePlus.UI
 
             CreateSlot("header-slot").Show<HeaderPanel>();
             CreateSlot("manipulation-slot").Show<ManipulationPanel>();
-            CreateSlot("inspector-slot").Show<InspectorColumnPanel>();
             CreateSlot("view-options-slot").Show<ViewOptionsPanel>();
             root.Q("mode-settings").AddToClassList("fp-mode-settings--loaded");
 
             visualizationSlot = CreateSlot("visualization-slot");
+            inspectorSlot = CreateSlot("inspector-slot");
             menuSlot = CreateSlot("menu-slot");
+            terminalSlot = CreateSlot("terminal-slot");
             toolModesSlot = CreateSlot("tool-modes-slot");
             paletteSlot = CreateSlot("palette-slot");
 
@@ -121,6 +127,7 @@ namespace ForgePlus.UI
 
             Editor?.Dispose();
             Settings?.Dispose();
+            Terminals?.Dispose();
         }
 
         private void Update()
@@ -170,11 +177,39 @@ namespace ForgePlus.UI
             {
                 menuSlot.Hide();
             }
+
+            ShowTerminal();
+        }
+
+        // The page being read takes the menu's place, so it's hidden while the menu is open
+        private void ShowTerminal()
+        {
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Terminals && !Editor.MenuOpen)
+            {
+                terminalSlot.Show<TerminalPanel>();
+            }
+            else
+            {
+                terminalSlot.Hide();
+            }
         }
 
         // Each mode shows only the panels that apply to it (None, while no level is open, shows none of them)
         private void OnPrimaryModeChanged(ModeManager.PrimaryModes primaryMode)
         {
+            // Terminals aren't selected, so their mode shows the terminal and group being previewed in place of the
+            // inspectors
+            if (primaryMode == ModeManager.PrimaryModes.Terminals)
+            {
+                inspectorSlot.Show<TerminalDetailsPanel>();
+            }
+            else
+            {
+                inspectorSlot.Show<InspectorColumnPanel>();
+            }
+
+            ShowTerminal();
+
             switch (primaryMode)
             {
                 case ModeManager.PrimaryModes.Geometry:
@@ -208,6 +243,9 @@ namespace ForgePlus.UI
                     break;
                 case ModeManager.PrimaryModes.Media:
                     paletteSlot.Show<MediaPalettePanel>();
+                    break;
+                case ModeManager.PrimaryModes.Terminals:
+                    paletteSlot.Show<TerminalStylesPanel>();
                     break;
                 default:
                     paletteSlot.Hide();

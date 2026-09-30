@@ -52,6 +52,25 @@ namespace ForgePlus.UI
             return binding;
         }
 
+        // Binds an inspector layout's rows, textures and flags (template instances named after the source's properties)
+        // to the source, the flags read-only
+        public static void BindInspectorFields(this VisualElement root, object dataSource)
+        {
+            root.Query<Label>(className: "fp-inspector-value").ForEach(value => BindToInstanceName(value, "text", dataSource));
+            root.Query<Image>(className: "fp-inspector-texture").ForEach(texture => BindToInstanceName(texture, "image", dataSource));
+
+            root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag =>
+            {
+                flag.SetEnabled(false);
+                BindToInstanceName(flag, "value", dataSource);
+            });
+        }
+
+        private static void BindToInstanceName(VisualElement element, string elementProperty, object dataSource)
+        {
+            element.Bind(elementProperty, dataSource, element.GetFirstAncestorOfType<TemplateContainer>().name);
+        }
+
         // Lets clicks through the gaps in layout-only elements (template wrappers and radio groups' containers)
         // to the level, so only controls and boxes block them
         public static void IgnoreLayoutPicking(this VisualElement root)

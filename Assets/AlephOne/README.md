@@ -53,10 +53,11 @@ These are stated here once, instead of in the files.
     array.
   - The current map file (`set_map_file()`) and physics file (`set_physics_file()`) are parameters.
 
-  Other state stays global as in Aleph One (the shapes file and its collections, the flood map, the
-  temporary index lists of `map_constructors`), so only work that doesn't change it can run on other
-  threads: ForgePlus builds a level's `PhysicsModel` on a worker thread, and decodes the loaded shapes'
-  bitmaps in parallel, which is why the last error (`game_errors`) is kept per thread.
+  Other state stays global as in Aleph One (the shapes file and its collections, the open resource
+  files and the files the scenario's pictures come from, the flood map, the temporary index lists of
+  `map_constructors`), so only work that doesn't change it can run on other threads: ForgePlus builds
+  a level's `PhysicsModel` on a worker thread, and decodes the loaded shapes' bitmaps in parallel,
+  which is why the last error (`game_errors`) is kept per thread.
 - **Pointers.** A pointer into a buffer is the array and an offset (`byte *buffer` is `buffer,
   buffer_offset`; a bitmap's `pixel8 *row_addresses[]` are offsets into `bitmap_definition.pixels`).
   An output pointer is `out`, or `ref` where Aleph One leaves it unchanged on failure. `out` parameters
@@ -99,12 +100,21 @@ These are stated here once, instead of in the files.
     says no with its own copy of the attribute (`CSeries/NoAutoStaticsCleanupAttribute.cs`), and
     ForgePlus resets the loaded shapes and last error itself.
   - `game_errors` keeps its last error per thread.
+  - `computer_interface`'s terminal font: Aleph One measures terminal text with its interface font
+    (Courier Prime 12), which isn't ported, so `char_width()` and `_get_font_line_height()` give that
+    font's metrics (7 pixels a character, 12 a line), and `text_at()` reads a NUL past the end of a
+    terminal's text, where Aleph One's buffer carries on.
+  - `images.picture_to_surface()` stops at the end of a picture's data (Aleph One would read NOPs forever).
   - The deviations: `new_media()` keeps a medium as loaded (it doesn't mark the slot used or update the
     medium, which would change what is saved), platforms keep their polygons' native heights,
     `process_map_wad()` pads a short map info chunk with zeros, and `load_shapes_patch()` stops at the
     end of a truncated patch.
 
 ## SDL
+
+`SDL/SDL_surface.cs` stands in for the software surfaces Aleph One decodes pictures into (`SDL_Surface`,
+`SDL_CreateRGBSurface`, `SDL_SetPaletteColors`): 8-bit paletted, 16-bit and 32-bit, their pixels little-endian
+and their rows padded to 4 bytes as SDL's are.
 
 `SDL/SDL_rwops.cs` stands in for the parts of SDL2's `SDL_rwops.h` and `SDL_endian.h` that Aleph One
 uses: `SDL_RWops` over a file or memory, `SDL_RWread`, `SDL_RWwrite`, `SDL_RWseek`, `SDL_RWtell`,

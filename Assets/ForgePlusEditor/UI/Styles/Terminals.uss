@@ -1,0 +1,128 @@
+/* Terminals mode: the page being previewed (centered, like the menu), the terminals' and groups' index lists, and
+   the style pool */
+
+.fp-terminal-slot {
+    width: 1000px;
+    min-width: 300px;
+    flex-shrink: 1;
+    justify-content: center;
+}
+
+.fp-terminal {
+    flex-shrink: 0;
+}
+
+/* Filled in code, in terminal coordinates scaled to its width */
+.fp-terminal__screen {
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.fp-terminal__background {
+    background-color: var(--fp-panel-background);
+}
+
+/* Where a checkpoint's map would be, the level shows through */
+.fp-terminal__map {
+    border-width: 2px;
+    border-color: var(--fp-indicator-frame);
+}
+
+.fp-terminal__text {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    -unity-text-align: upper-left;
+}
+
+.fp-terminal__missing {
+    margin: 0;
+    padding: 0;
+    background-color: var(--fp-terminal-black);
+    color: var(--fp-text-bright);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.fp-terminal__note {
+    justify-content: center;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.fp-terminal__note-directive {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-size: 24px;
+    -unity-font-style: bold;
+    color: var(--fp-text-light);
+    -unity-text-align: middle-center;
+}
+
+.fp-terminal__note-description {
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    color: var(--fp-text-faint);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.fp-terminal__actions {
+    flex-direction: row;
+    height: var(--fp-control-height);
+    margin-top: 5px;
+    padding: 5px;
+    flex-shrink: 0;
+}
+
+.fp-terminal__action {
+    width: 100px;
+    flex-shrink: 0;
+}
+
+.fp-terminal__caption {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    color: var(--fp-text-light);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+/* The style pool: each color and face, as terminal text in it */
+.fp-terminal-style {
+    flex-direction: row;
+    height: var(--fp-short-control-height);
+    background-color: var(--fp-terminal-black);
+}
+
+.fp-terminal-style__key {
+    width: 30px;
+    margin: 0;
+    padding: 0;
+    background-color: var(--fp-label-area);
+    color: var(--fp-text-light);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.fp-terminal-style__sample {
+    align-self: center;
+    margin: 0 0 0 10px;
+    padding: 0;
+    -unity-text-align: middle-left;
+}
+
+/* Indexes to choose from (a level's terminals, a terminal's groups), five to a row */
+.fp-index-list #contentContainer {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.fp-index-list__item {
+    width: 20%;
+    height: var(--fp-short-control-height);
+    padding: 0 2.5px 5px 2.5px;
+}

@@ -4,8 +4,10 @@ using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Rect = UnityEngine.Rect;
 
 namespace ForgePlus.CameraNavigation
 {
@@ -47,6 +49,15 @@ namespace ForgePlus.CameraNavigation
             if (SelectionFramingBounds.TryGetBounds(SelectionManager.Instance.Selection, out var bounds))
             {
                 Frame(bounds);
+            }
+        }
+
+        // The area is in viewport coordinates (0 to 1, from the bottom left)
+        public void Frame(IReadOnlyList<ISelectable> targets, Rect viewportArea)
+        {
+            if (SelectionFramingBounds.TryGetBounds(targets, out var bounds))
+            {
+                Frame(bounds, viewportArea);
             }
         }
 
@@ -110,14 +121,25 @@ namespace ForgePlus.CameraNavigation
 
         private void Frame(Bounds bounds)
         {
+            Frame(bounds, new Rect(0f, 0f, 1f, 1f));
+        }
+
+        private void Frame(Bounds bounds, Rect viewportArea)
+        {
             var camera = GetComponent<Camera>();
 
-            // Fit the bounds' enclosing sphere into the narrower of the two fields of view
-            var halfVerticalFieldOfView = camera.fieldOfView * 0.5f * Mathf.Deg2Rad;
-            var halfHorizontalFieldOfView = Mathf.Atan(Mathf.Tan(halfVerticalFieldOfView) * camera.aspect);
-            var distance = bounds.extents.magnitude / Mathf.Sin(Mathf.Min(halfVerticalFieldOfView, halfHorizontalFieldOfView));
+            // Fit the bounds' enclosing sphere into the narrower of the area's two fields of view
+            var verticalExtent = Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
+            var horizontalExtent = verticalExtent * camera.aspect;
+            var halfFieldOfView = Mathf.Min(Mathf.Atan(verticalExtent * viewportArea.height), Mathf.Atan(horizontalExtent * viewportArea.width));
+            var distance = bounds.extents.magnitude / Mathf.Sin(halfFieldOfView);
 
-            framingTargetPosition = bounds.center - transform.forward * distance;
+            // Then move it from the view's center to the area's
+            var areaOffset = (viewportArea.center * 2f) - Vector2.one;
+
+            framingTargetPosition = bounds.center - transform.forward * distance
+                                    - transform.right * (areaOffset.x * horizontalExtent * distance)
+                                    - transform.up * (areaOffset.y * verticalExtent * distance);
             currentVelocityVector = Vector3.zero;
 
             if (IsNavigationBlocked || framingDuration <= 0f)

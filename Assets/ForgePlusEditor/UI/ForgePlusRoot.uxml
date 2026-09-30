@@ -12,6 +12,7 @@
             </ui:VisualElement>
             <ui:VisualElement class="fp-flexible-space" picking-mode="Ignore" />
             <ui:VisualElement name="menu-slot" class="fp-slot fp-menu-slot" picking-mode="Ignore" />
+            <ui:VisualElement name="terminal-slot" class="fp-slot fp-terminal-slot" picking-mode="Ignore" />
             <ui:VisualElement class="fp-flexible-space" picking-mode="Ignore" />
             <ui:VisualElement name="right-column" class="fp-column fp-column--right" picking-mode="Ignore">
                 <ui:VisualElement name="mode-settings" class="fp-box fp-box--padded fp-mode-settings">

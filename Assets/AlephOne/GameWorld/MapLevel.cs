@@ -45,6 +45,10 @@ namespace AlephOne
         // [0, MAXIMUM_OBJECT_TYPES) is item_placement_info, [MAXIMUM_OBJECT_TYPES, 2*MAXIMUM_OBJECT_TYPES) is monster_placement_info
         public object_frequency_definition[] object_placement_info = placement.new_object_placement_info();
 
+        /* ---------- computer_interface.cpp */
+
+        public List<terminal_text_t> map_terminal_text = new List<terminal_text_t>();
+
         /* ---------- ForgePlus */
 
         public LoadedWad loaded_wad = new LoadedWad();
