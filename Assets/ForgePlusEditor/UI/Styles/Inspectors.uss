@@ -96,6 +96,37 @@
     white-space: normal;
 }
 
+/* A text field in a row's value area, looking like the row's value */
+.fp-inspector-text-field {
+    margin: 0;
+    padding: 0;
+}
+
+.fp-inspector-text-field > .unity-base-text-field__input {
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+}
+
+.fp-inspector-row:disabled .fp-inspector-text-field,
+.fp-inspector-row:disabled .fp-inspector-text-field > .unity-base-text-field__input {
+    opacity: 1;
+    color: var(--fp-value-text-disabled);
+}
+
+/* An annotation in the annotations list, which is selected by clicking it */
+.fp-annotation {
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.fp-annotation--selected {
+    border-color: var(--fp-focus);
+}
+
 .fp-inspector-texture {
     width: 170px;
     height: 170px;

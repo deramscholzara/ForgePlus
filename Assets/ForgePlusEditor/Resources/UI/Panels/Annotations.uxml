@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <!-- The level's annotations, each an annotation inspector (added by the annotations panel) -->
+    <ui:VisualElement class="fp-box fp-inspector-column">
+        <ui:Instance template="ScrollArea" name="annotations" class="fp-grow">
+            <ui:Label name="no-annotations" text="This level has no annotations" class="fp-inspector-subheader" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

@@ -16,6 +16,9 @@ namespace ForgePlus.UI
         {
             var settings = ForgePlusUI.Instance.Settings;
 
+            // Not implemented yet
+            Root.Find<Toggle>("visualization-effect").SetEnabled(false);
+
             var objectIcons = Root.Find<Toggle>("object-icons");
             objectIcons.BindValue(settings, nameof(SettingsViewModel.ObjectIconsEnabled));
             objectIcons.BindEnabled(settings, nameof(SettingsViewModel.ObjectIconsEditable));

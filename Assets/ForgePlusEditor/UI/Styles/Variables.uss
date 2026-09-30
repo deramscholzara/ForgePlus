@@ -12,6 +12,9 @@
     --fp-indicator-frame: rgb(178, 178, 178);
     --fp-indicator-on: rgb(128, 128, 128);
 
+    /* What has focus or is selected is outlined in this (the default theme's own focus color) */
+    --fp-focus: rgb(0, 106, 166);
+
     --fp-text-light: rgb(230, 230, 230);
     --fp-text-bright: rgb(255, 255, 255);
     --fp-text-faint: rgba(255, 255, 255, 0.6);

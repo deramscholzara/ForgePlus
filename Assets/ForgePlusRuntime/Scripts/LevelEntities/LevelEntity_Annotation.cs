@@ -80,6 +80,29 @@ namespace RuntimeCore.Entities
 
                 gameObject.layer = SelectionManager.DefaultLayer;
             }
+
+            DisplayPolygonSelectionState(state);
+        }
+
+        // The polygon that shows the annotation on Aleph One's map (once it's on the map) is highlighted with it:
+        // its floor, ceiling and sides
+        private void DisplayPolygonSelectionState(bool state)
+        {
+            if (!ParentLevel.Polygons.TryGetValue(NativeObject.polygon_index, out var polygon))
+            {
+                return;
+            }
+
+            polygon.DisplaySelectionState(state);
+
+            var polygonData = polygon.NativeObject;
+            for (var i = 0; i < polygonData.vertex_count; i++)
+            {
+                if (ParentLevel.Sides.TryGetValue(polygonData.side_indexes[i], out var side) && side != null)
+                {
+                    side.DisplaySelectionState(state);
+                }
+            }
         }
 
         public void Inspect()

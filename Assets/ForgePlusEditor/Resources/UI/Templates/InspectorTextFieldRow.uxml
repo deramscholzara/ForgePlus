@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A text field (read-only until editing is supported); an instance is named after the inspector property it shows -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area">
+            <ui:TextField name="value" class="fp-inspector-text-field" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -52,12 +52,19 @@ namespace ForgePlus.UI
             return binding;
         }
 
-        // Binds an inspector layout's rows, textures and flags (template instances named after the source's properties)
-        // to the source, the flags read-only
+        // Binds an inspector layout's rows, text fields, textures and flags (template instances named after the source's
+        // properties) to the source, the text fields and flags read-only
         public static void BindInspectorFields(this VisualElement root, object dataSource)
         {
             root.Query<Label>(className: "fp-inspector-value").ForEach(value => BindToInstanceName(value, "text", dataSource));
             root.Query<Image>(className: "fp-inspector-texture").ForEach(texture => BindToInstanceName(texture, "image", dataSource));
+
+            root.Query<TextField>(className: "fp-inspector-text-field").ForEach(field =>
+            {
+                field.isReadOnly = true;
+                field.GetFirstAncestorOfType<TemplateContainer>().SetEnabled(false);
+                BindToInstanceName(field, "value", dataSource);
+            });
 
             root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag =>
             {

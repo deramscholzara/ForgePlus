@@ -198,14 +198,18 @@ namespace ForgePlus.UI
         private void OnPrimaryModeChanged(ModeManager.PrimaryModes primaryMode)
         {
             // Terminals aren't selected, so their mode shows the terminal and group being previewed in place of the
-            // inspectors
-            if (primaryMode == ModeManager.PrimaryModes.Terminals)
+            // inspectors, and annotations are listed, each as its inspector
+            switch (primaryMode)
             {
-                inspectorSlot.Show<TerminalDetailsPanel>();
-            }
-            else
-            {
-                inspectorSlot.Show<InspectorColumnPanel>();
+                case ModeManager.PrimaryModes.Terminals:
+                    inspectorSlot.Show<TerminalDetailsPanel>();
+                    break;
+                case ModeManager.PrimaryModes.Annotations:
+                    inspectorSlot.Show<AnnotationsPanel>();
+                    break;
+                default:
+                    inspectorSlot.Show<InspectorColumnPanel>();
+                    break;
             }
 
             ShowTerminal();
