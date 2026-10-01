@@ -1782,6 +1782,17 @@ namespace AlephOne
         // export_level(), writing build_level_wad() and, with with_directory_data, the level's directory data
         public static bool save_level(FileSpecifier File, MapLevel level, bool with_directory_data = true)
         {
+            return save_levels(File, new[] { level }, with_directory_data);
+        }
+
+        // ForgePlus: save_level() for a map file of several levels (a merged map), each a wad in turn, in the order given,
+        // with its directory data. The file's data version is the first level's.
+        // The header's file_name is File's name unless one is given (such as the loaded file's), and its checksum is
+        // calculated for the saved file unless one is given to keep (such as the loaded file's, so what refers to that
+        // map by its checksum, like saved games and films, still finds it).
+        public static bool save_levels(FileSpecifier File, IList<MapLevel> levels, bool with_directory_data = true,
+            byte[] file_name = null, uint? checksum = null)
+        {
             var header = new wad_header();
             short err = 0;
             bool success = false;
@@ -1794,8 +1805,15 @@ namespace AlephOne
             TempFile.SetTempName(File);
 
             /* Fill in the default wad header (we are using File instead of TempFile to get the name right in the header) */
-            fill_default_wad_header(File, CURRENT_WADFILE_VERSION, level_data_version_for_saving(level), 1,
+            fill_default_wad_header(File, CURRENT_WADFILE_VERSION, level_data_version_for_saving(levels[0]), (short) levels.Count,
                 (short) (with_directory_data ? SIZEOF_directory_data : 0), header);
+
+            // ForgePlus: the given name, if there is one (keeping its terminating NUL)
+            if (file_name != null)
+            {
+                Array.Clear(header.file_name, 0, header.file_name.Length);
+                Array.Copy(file_name, header.file_name, Math.Min(file_name.Length, MAXIMUM_WADFILE_NAME_LENGTH - 1));
+            }
 
             if (create_wadfile(TempFile))
             {
@@ -1807,35 +1825,56 @@ namespace AlephOne
                     {
                         offset = SIZEOF_wad_header;
 
-                        wad = build_level_wad(level, header, out wad_length);
-                        if (wad != null)
+                        var entries = new byte[get_size_of_directory_data(header)];
+                        var wrote_all = true;
+
+                        for (short index = 0; wrote_all && index < levels.Count; ++index)
                         {
-                            var entries = new byte[get_size_of_directory_data(header)];
-                            set_indexed_directory_offset_and_length(header, entries, 0, offset, wad_length, 0);
+                            MapLevel level = levels[index];
+
+                            wad = build_level_wad(level, header, out wad_length);
+                            if (wad == null)
+                            {
+                                wrote_all = false;
+                                break;
+                            }
+
+                            set_indexed_directory_offset_and_length(header, entries, index, offset, wad_length, index);
                             if (with_directory_data)
                             {
                                 Array.Copy(directory_data_bytes(level, level.loaded_wad.directory_data), 0, entries,
-                                    get_indexed_directory_data(header, 0, entries), SIZEOF_directory_data);
+                                    get_indexed_directory_data(header, index, entries), SIZEOF_directory_data);
                             }
 
-                            if (write_wad(SaveFile, header, wad, offset))
-                            {
-                                /* Update the new header */
-                                offset += wad_length;
-                                header.directory_offset = offset;
-                                if (write_wad_header(SaveFile, header) && write_directorys(SaveFile, header, entries))
-                                {
-                                    /* We win. */
-                                    success = true;
-                                }
-                            }
+                            wrote_all = write_wad(SaveFile, header, wad, offset);
+                            offset += wad_length;
 
                             free_wad(wad);
+                        }
+
+                        if (wrote_all)
+                        {
+                            /* Update the new header */
+                            header.directory_offset = offset;
+                            if (write_wad_header(SaveFile, header) && write_directorys(SaveFile, header, entries))
+                            {
+                                /* We win. */
+                                success = true;
+                            }
                         }
                     }
 
                     err = (short) SaveFile.GetError();
                     calculate_and_store_wadfile_checksum(SaveFile);
+
+                    // ForgePlus: the given checksum, in place of the calculated one
+                    if (checksum.HasValue)
+                    {
+                        read_wad_header(SaveFile, header);
+                        header.checksum = checksum.Value;
+                        write_wad_header(SaveFile, header);
+                    }
+
                     close_wad_file(SaveFile);
                 }
 

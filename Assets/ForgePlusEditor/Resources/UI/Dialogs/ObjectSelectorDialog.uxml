@@ -1,7 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <!-- A titled list of options (buttons added by ObjectSelectorDialog) -->
+    <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
+    <!-- A titled list of options (buttons added by ObjectSelectorDialog), with a message and a checkbox when it has them -->
     <ui:VisualElement class="fp-box fp-dialog">
         <ui:Label name="title" text="Select..." class="fp-dialog__header" />
+        <ui:Label name="message" text="" class="fp-dialog__message" />
+        <ui:Instance template="Toggle" name="checkbox" class="fp-toggle--flag fp-dialog__checkbox">
+            <ui:AttributeOverrides element-name="control" text="Checkbox" />
+        </ui:Instance>
         <ui:VisualElement name="options" />
     </ui:VisualElement>
 </ui:UXML>

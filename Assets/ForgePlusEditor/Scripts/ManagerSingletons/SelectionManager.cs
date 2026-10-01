@@ -190,6 +190,7 @@ namespace ForgePlus.LevelManipulation
                             SelectObject(LevelEntity_Level.Instance, multiSelect: false);
                         }
                         break;
+                    case ModeManager.PrimaryModes.Map:
                     case ModeManager.PrimaryModes.Terminals:
                     case ModeManager.PrimaryModes.None:
                     default:

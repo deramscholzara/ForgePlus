@@ -40,6 +40,15 @@ namespace ForgePlus.DataFileIO
             }
         }
 
+        // The loaded map file (null while none is loaded)
+        public MapsFile MapsFile
+        {
+            get
+            {
+                return data?.MapsFile;
+            }
+        }
+
         protected override DataFileTypes DataFileType
         {
             get

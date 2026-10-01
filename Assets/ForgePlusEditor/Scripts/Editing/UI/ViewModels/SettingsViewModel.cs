@@ -93,6 +93,23 @@ namespace ForgePlus.UI
             }
         }
 
+        // The index of the choice, in the order of MergedSaveChecksums (Ask, Keep, Regenerate)
+        [CreateProperty]
+        public int MergedSaveChecksum
+        {
+            get
+            {
+                return (int) SettingsManager.Instance.MergedSaveChecksum;
+            }
+            set
+            {
+                if (value >= 0)
+                {
+                    SettingsManager.Instance.MergedSaveChecksum = (MergedSaveChecksums) value;
+                }
+            }
+        }
+
         [CreateProperty]
         public bool ClipPlatformSidesEnabled
         {

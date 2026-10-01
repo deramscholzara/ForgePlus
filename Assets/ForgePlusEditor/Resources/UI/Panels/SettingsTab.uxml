@@ -2,6 +2,7 @@
     <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
     <ui:Template name="SliderRow" src="../Templates/SliderRow.uxml" />
     <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
     <ui:VisualElement class="fp-grow" picking-mode="Ignore">
         <ui:VisualElement class="fp-box fp-settings__options">
             <ui:Instance template="ScrollArea" class="fp-grow fp-scroll--spaced">
@@ -25,6 +26,21 @@
                 <ui:Instance template="Toggle" name="ambient-occlusion" class="fp-toggle--wide fp-setting">
                     <ui:AttributeOverrides element-name="control" text="Ambient Occlusion" />
                 </ui:Instance>
+                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <!-- What Save Merged does with the map file's checksum (Ask until its dialog's choice is remembered), in the
+                     order of MergedSaveChecksums -->
+                <ui:Label text="Update Merge Checksum On Save" class="fp-setting__label" />
+                <ui:RadioButtonGroup name="merged-save-checksum" class="fp-radio-group fp-radio-row fp-setting">
+                    <ui:Instance template="RadioToggle" class="fp-setting__choice">
+                        <ui:AttributeOverrides element-name="control" text="Ask" />
+                    </ui:Instance>
+                    <ui:Instance template="RadioToggle" class="fp-setting__choice">
+                        <ui:AttributeOverrides element-name="control" text="Keep" />
+                    </ui:Instance>
+                    <ui:Instance template="RadioToggle" class="fp-setting__choice fp-setting__choice--last">
+                        <ui:AttributeOverrides element-name="control" text="Regenerate" />
+                    </ui:Instance>
+                </ui:RadioButtonGroup>
             </ui:Instance>
         </ui:VisualElement>
         <ui:Label text="Version: 2020-09-14-0" class="fp-faint-text fp-settings__version" />

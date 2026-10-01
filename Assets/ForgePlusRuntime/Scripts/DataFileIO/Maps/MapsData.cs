@@ -9,6 +9,15 @@ namespace ForgePlus.DataFileIO
     {
         private LevelData currentlyOpenLevel;
 
+        // The loaded map file (null until it's loaded)
+        public MapsFile MapsFile
+        {
+            get
+            {
+                return file;
+            }
+        }
+
         public IReadOnlyCollection<string> LevelNames
         {
             get
@@ -63,6 +72,16 @@ namespace ForgePlus.DataFileIO
             }
 
             currentlyOpenLevel.SaveAsSingleLevelFile(savePath);
+        }
+
+        public void SaveMerged(string savePath, bool keepChecksum)
+        {
+            if (currentlyOpenLevel == null)
+            {
+                throw new IOException($"Tried saving merged levels with no LevelData loaded.");
+            }
+
+            currentlyOpenLevel.SaveMerged(savePath, keepChecksum);
         }
     }
 }

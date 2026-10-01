@@ -1,0 +1,60 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="TextFieldRow" src="../Templates/InspectorTextFieldRow.uxml" />
+    <ui:Template name="TextBlock" src="../Templates/InspectorTextBlock.uxml" />
+    <!-- Bound to Inspector_Map: the map file, as a whole (each level's own data is in the Level inspector) -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Map" />
+        </ui:Instance>
+        <ui:Instance template="TextFieldRow" name="Name" class="fp-inspector-row--vertical">
+            <ui:AttributeOverrides element-name="label" text="Name:" />
+        </ui:Instance>
+        <ui:Label text="The name in the map file's header. Save Merged keeps it when it keeps the checksum, and otherwise (as Save Level does) names it after the saved file. Marathon doesn't show it." class="fp-inspector-note" />
+        <ui:Instance template="Row" name="FileName">
+            <ui:AttributeOverrides element-name="label" text="File:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="LevelCount">
+            <ui:AttributeOverrides element-name="label" text="Levels:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FileVersion">
+            <ui:AttributeOverrides element-name="label" text="File Version:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="DataVersion">
+            <ui:AttributeOverrides element-name="label" text="Data Version:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Checksum">
+            <ui:AttributeOverrides element-name="label" text="Checksum:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="ParentChecksum">
+            <ui:AttributeOverrides element-name="label" text="Parent Checksum:" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="Mac File" />
+        </ui:Instance>
+        <ui:Label text="The resource fork holds the map's pictures (such as its terminals'), color tables and level script. Saving keeps it, and the Finder's information, as they are, in the same form (such as MacBinary)." class="fp-inspector-note" />
+        <ui:Instance template="Row" name="Container">
+            <ui:AttributeOverrides element-name="label" text="Format:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="ResourceFork">
+            <ui:AttributeOverrides element-name="label" text="Resource Fork:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Version">
+            <ui:AttributeOverrides element-name="label" text="Version:" />
+        </ui:Instance>
+        <!-- A row for each type of resource (added by Inspector_Map) -->
+        <ui:VisualElement name="resources" />
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader" class="fp-aleph-one-only">
+            <ui:AttributeOverrides element-name="label" text="Level Script (Aleph One only)" />
+        </ui:Instance>
+        <ui:Label text="Aleph One only: MML in the map's resources (TEXT 128) that sets things for each level, such as its music, Lua script and loading screen. The original Marathon 2 and Infinity ignore it. Kept and saved as it is." class="fp-inspector-note fp-aleph-one-only" />
+        <ui:Instance template="Row" name="LevelScriptSize">
+            <ui:AttributeOverrides element-name="label" text="Size:" />
+        </ui:Instance>
+        <ui:Instance template="TextBlock" name="LevelScriptText" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -5,7 +5,8 @@ using UnityEngine.UIElements;
 
 namespace ForgePlus.ApplicationGeneral
 {
-    // A titled list of options, which completes with the chosen option (or null for Cancel)
+    // A titled list of options, which completes with the chosen option (or null for Cancel). It can explain the choice
+    // with a message, and have a checkbox (such as "Remember my choice"), which is read once it completes.
     public class ObjectSelectorDialog : UIPanel
     {
         // Continues after the click that completes it, rather than inside it
@@ -14,12 +15,18 @@ namespace ForgePlus.ApplicationGeneral
         private readonly string title;
         private readonly IList<string> options;
         private readonly IList<string> optionLabels;
+        private readonly string message;
+        private readonly string checkboxLabel;
 
-        public ObjectSelectorDialog(string title, IList<string> options, IList<string> optionLabels)
+        private Toggle checkbox;
+
+        public ObjectSelectorDialog(string title, IList<string> options, IList<string> optionLabels, string message = null, string checkboxLabel = null)
         {
             this.title = title;
             this.options = options;
             this.optionLabels = optionLabels;
+            this.message = message;
+            this.checkboxLabel = checkboxLabel;
         }
 
         public Task<string> Selection
@@ -27,6 +34,14 @@ namespace ForgePlus.ApplicationGeneral
             get
             {
                 return selection.Task;
+            }
+        }
+
+        public bool IsChecked
+        {
+            get
+            {
+                return checkbox != null && checkbox.value;
             }
         }
 
@@ -41,6 +56,14 @@ namespace ForgePlus.ApplicationGeneral
         protected override void OnLoaded()
         {
             Root.Q<Label>("title").text = title;
+
+            var messageLabel = Root.Q<Label>("message");
+            messageLabel.text = message ?? string.Empty;
+            messageLabel.style.display = string.IsNullOrEmpty(message) ? DisplayStyle.None : DisplayStyle.Flex;
+
+            checkbox = Root.Find<Toggle>("checkbox");
+            checkbox.text = checkboxLabel ?? string.Empty;
+            Root.Q("checkbox").style.display = string.IsNullOrEmpty(checkboxLabel) ? DisplayStyle.None : DisplayStyle.Flex;
 
             var optionsContainer = Root.Q("options");
             var buttonTemplate = LoadTemplate("Button");

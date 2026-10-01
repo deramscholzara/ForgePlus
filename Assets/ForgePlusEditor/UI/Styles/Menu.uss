@@ -136,6 +136,25 @@
     height: var(--fp-control-height);
 }
 
+/* A setting's name, above its choices */
+.fp-setting__label {
+    margin: 5px 0 0 0;
+    padding: 0 5px;
+    color: var(--fp-text-bright);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+.fp-setting__choice {
+    flex-grow: 1;
+    flex-basis: 0;
+    margin-right: 4px;
+}
+
+.fp-setting__choice--last {
+    margin-right: 0;
+}
+
 .fp-settings__version {
     height: 30px;
     flex-shrink: 0;

@@ -283,6 +283,18 @@
     margin: 0 5px 5px 5px;
 }
 
+.fp-dialog__message {
+    margin: 0 5px 10px 5px;
+    padding: 0 5px;
+    color: var(--fp-text-bright);
+    white-space: normal;
+}
+
+.fp-dialog__checkbox {
+    height: var(--fp-short-control-height);
+    margin: 0 5px 10px 5px;
+}
+
 /* ---------- Name tags in the level (WorldLabels) ---------- */
 
 /* Behind every panel, covering the view */

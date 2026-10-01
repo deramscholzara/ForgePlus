@@ -78,6 +78,12 @@ namespace ForgePlus.DataFileIO
             LevelIndex = 0;
         }
 
+        // The saved file holds every level (this one where it was), and it's now the loaded map file
+        public void SaveMerged(string savePath, bool keepChecksum)
+        {
+            mapsFile.SaveMerged(level, LevelIndex, savePath, keepChecksum);
+        }
+
         public void OpenLevel()
         {
             if (runtimeLevel)

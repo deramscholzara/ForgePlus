@@ -8,6 +8,15 @@ using UnityEngine.Rendering.Universal;
 
 namespace ForgePlus.ApplicationGeneral
 {
+    // What Save Merged does with the loaded map file's checksum
+    public enum MergedSaveChecksums
+    {
+        // Asks each time, in a dialog that can remember the choice
+        Ask,
+        Keep,
+        Regenerate,
+    }
+
     // Early, so it's ready before the settings UI binds to it
     [DefaultExecutionOrder(-100)]
     public class SettingsManager : SingletonMonoBehaviour<SettingsManager>
@@ -22,6 +31,7 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_ColorAdjustment = "Settings_ColorAdjustment";
         private const string PlayerPrefsSettingsKey_Vignette = "Settings_Vignette";
         private const string PlayerPrefsSettingsKey_ClipPlatformSides = "Settings_ClipPlatformSides";
+        private const string PlayerPrefsSettingsKey_MergedSaveChecksum = "Settings_MergedSaveChecksum";
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
 
@@ -174,6 +184,22 @@ namespace ForgePlus.ApplicationGeneral
                 PlatformSideClipping.ClippingEnabled = value;
 
                 OnSettingChanged?.Invoke(nameof(ClipPlatformSidesEnabled));
+            }
+        }
+
+        public MergedSaveChecksums MergedSaveChecksum
+        {
+            get
+            {
+                var value = PlayerPrefs.GetInt(PlayerPrefsSettingsKey_MergedSaveChecksum, (int) MergedSaveChecksums.Ask);
+
+                return Enum.IsDefined(typeof(MergedSaveChecksums), value) ? (MergedSaveChecksums) value : MergedSaveChecksums.Ask;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_MergedSaveChecksum, (int) value);
+
+                OnSettingChanged?.Invoke(nameof(MergedSaveChecksum));
             }
         }
 

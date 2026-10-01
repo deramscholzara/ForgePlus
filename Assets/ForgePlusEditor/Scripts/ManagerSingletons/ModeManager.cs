@@ -18,6 +18,7 @@ namespace ForgePlus.LevelManipulation
             Objects,
             Annotations,
             Level,
+            Map,
             Terminals,
         }
 
