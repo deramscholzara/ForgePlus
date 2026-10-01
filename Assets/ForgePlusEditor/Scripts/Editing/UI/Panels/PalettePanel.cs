@@ -123,11 +123,9 @@ namespace ForgePlus.UI
 
         private void ShowSelection()
         {
-            var selectedSwatch = PaletteManager.Instance.SelectedSwatch;
-
             foreach (var swatchToggle in swatchToggles)
             {
-                var isSelected = swatchToggle.Key == selectedSwatch;
+                var isSelected = PaletteManager.Instance.IsSelected(swatchToggle.Key);
                 swatchToggle.Value.SetValueWithoutNotify(isSelected);
 
                 if (isSelected && ScrollsToSelection)

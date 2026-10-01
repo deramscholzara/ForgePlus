@@ -12,7 +12,8 @@ using UnityEngine;
 
 namespace ForgePlus.Palette
 {
-    // The current mode's palette (textures, lights, media or polygons) and which swatch is selected.
+    // The current mode's palette (textures, lights, media, sounds, platforms or polygons) and which swatch is selected
+    // (in each of its sets, for a palette of several, such as sounds' ambient and random lists, except while painting).
     // The palette panels show it; selecting a swatch here behaves as clicking it there.
     public class PaletteManager : SingletonMonoBehaviour<PaletteManager>
     {
@@ -38,6 +39,11 @@ namespace ForgePlus.Palette
             public LevelEntity_Media Media;
             public LevelEntity_Polygon Polygon;
             public LevelEntity_Platform Platform;
+
+            // Which of the palette's sets it's in. A palette of several (such as the Sounds palette's ambient and random
+            // sounds, which a polygon has one of each of) can show a swatch selected in each at once (such as a selected
+            // polygon's), but painting paints with one.
+            public int Group;
 
             // The ambient or random sound's index in its list (NONE for the list's "None")
             public short SoundIndex = cstypes.NONE;
@@ -93,7 +99,33 @@ namespace ForgePlus.Palette
             }
         }
 
-        public Swatch SelectedSwatch { get; private set; }
+        // The selected swatch of each set (by its group)
+        private readonly Dictionary<int, Swatch> selectedSwatches = new Dictionary<int, Swatch>();
+
+        // The selected swatch of a palette with one set (or of the first set, of one with several)
+        public Swatch SelectedSwatch
+        {
+            get
+            {
+                return GetSelectedSwatch(0);
+            }
+        }
+
+        public Swatch GetSelectedSwatch(int group)
+        {
+            return selectedSwatches.TryGetValue(group, out var swatch) ? swatch : null;
+        }
+
+        public bool IsSelected(Swatch swatch)
+        {
+            return swatch != null && GetSelectedSwatch(swatch.Group) == swatch;
+        }
+
+        // The Sounds palette's set of each list
+        public static int SoundGroup(SoundImageKinds kind)
+        {
+            return kind == SoundImageKinds.Ambient ? 0 : 1;
+        }
 
         // The SelectSwatchFor methods show a swatch as selected, to match what's already selected in the level
         // (an empty shape descriptor is the "None" texture)
@@ -148,31 +180,44 @@ namespace ForgePlus.Palette
             Select(platform ? swatches.FirstOrDefault(swatch => swatch.Kind == SwatchKinds.Platform && swatch.Platform.NativeIndex == platform.NativeIndex) : null, updateLevelSelection: false);
         }
 
-        // Whether an ambient or random sound swatch (maybe its list's "None", NONE) is selected, for painting
-        public bool TryGetSelectedSound(out SoundImageKinds kind, out short index)
+        // Whether a swatch of the list (maybe its "None", NONE) is selected, for painting
+        public bool TryGetSelectedSound(SoundImageKinds kind, out short index)
         {
-            var isSelected = SelectedSwatch != null && SelectedSwatch.IsSound;
-            kind = isSelected ? SelectedSwatch.SoundKind : SoundImageKinds.Ambient;
-            index = isSelected ? SelectedSwatch.SoundIndex : cstypes.NONE;
+            var swatch = GetSelectedSwatch(SoundGroup(kind));
+            index = swatch != null ? swatch.SoundIndex : cstypes.NONE;
 
-            return isSelected;
+            return swatch != null;
         }
 
-        // The swatch of an ambient or random sound (none, for no entry), to match what's selected
+        // The swatch of an ambient or random sound, in its list's set (the other list's is kept), to match what's selected
         public void SelectSwatchForSound(SoundImageEntry entry)
         {
-            Select(entry != null ? swatches.FirstOrDefault(swatch => swatch.IsSound && swatch.SoundKind == entry.Kind && swatch.SoundIndex == entry.Index) : null,
-                   updateLevelSelection: false);
+            Select(FindSoundSwatch(entry.Kind, entry.Index), updateLevelSelection: false);
+        }
+
+        // The swatches of the polygon's ambient and random sounds (each its list's "None", for none)
+        public void SelectSwatchesForPolygonSounds(LevelEntity_Polygon polygon)
+        {
+            foreach (var kind in new[] { SoundImageKinds.Ambient, SoundImageKinds.Random })
+            {
+                var swatch = FindSoundSwatch(kind, SoundImageEditing.IndexOf(polygon.NativeObject, kind));
+                SetSelected(SoundGroup(kind), swatch, updateLevelSelection: false);
+            }
         }
 
         // Selects the sound's swatch as clicking it does (such as for an entry just added)
         public void ClickSound(SoundImageKinds kind, short index)
         {
-            var swatch = swatches.FirstOrDefault(candidate => candidate.IsSound && candidate.SoundKind == kind && candidate.SoundIndex == index);
-            if (swatch != null && swatch != SelectedSwatch)
+            var swatch = FindSoundSwatch(kind, index);
+            if (swatch != null && !IsSelected(swatch))
             {
                 Select(swatch, updateLevelSelection: true);
             }
+        }
+
+        private Swatch FindSoundSwatch(SoundImageKinds kind, short index)
+        {
+            return swatches.FirstOrDefault(swatch => swatch.IsSound && swatch.SoundKind == kind && swatch.SoundIndex == index);
         }
 
         // For a swatch's contents changing (such as a platform's type), without the swatches themselves changing
@@ -181,40 +226,87 @@ namespace ForgePlus.Palette
             OnSwatchesChanged?.Invoke();
         }
 
-        // Selects the swatch, or deselects it if it was selected and the palette allows that
+        // Selects the swatch (in its set), or deselects it if it was selected and the palette allows that
         public void Click(Swatch swatch)
         {
-            if (swatch != SelectedSwatch)
+            if (!IsSelected(swatch))
             {
                 Select(swatch, updateLevelSelection: true);
             }
             else if (allowSwitchOff)
             {
-                Select(null, updateLevelSelection: true);
+                SetSelected(swatch.Group, null, updateLevelSelection: true);
             }
         }
 
+        // Selects the swatch in its set (or, for none, deselects the first set's, as a palette with one set has)
         private void Select(Swatch swatch, bool updateLevelSelection)
         {
-            var previousSwatch = SelectedSwatch;
+            SetSelected(swatch != null ? swatch.Group : 0, swatch, updateLevelSelection);
+        }
+
+        // The set a swatch was last selected in (whose swatch painting keeps)
+        private int lastSelectedGroup;
+
+        // While a swatch's selection is changing the level's (whose change it shouldn't then follow)
+        private bool isUpdatingLevelSelection;
+
+        private void ClearSelection(bool updateLevelSelection)
+        {
+            foreach (var group in selectedSwatches.Keys.ToList())
+            {
+                SetSelected(group, null, updateLevelSelection);
+            }
+        }
+
+        private void SetSelected(int group, Swatch swatch, bool updateLevelSelection)
+        {
+            var previousSwatch = GetSelectedSwatch(group);
             if (swatch == previousSwatch)
             {
                 return;
             }
 
-            SelectedSwatch = swatch;
+            if (swatch != null)
+            {
+                selectedSwatches[group] = swatch;
+
+                // Painting paints with one swatch, so choosing one in a set deselects the others'
+                if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
+                {
+                    foreach (var otherGroup in selectedSwatches.Keys.Where(key => key != group).ToList())
+                    {
+                        selectedSwatches.Remove(otherGroup);
+                    }
+                }
+
+                lastSelectedGroup = group;
+            }
+            else
+            {
+                selectedSwatches.Remove(group);
+            }
 
             // The previous swatch's object is deselected before the new one's is selected
             if (updateLevelSelection)
             {
-                if (previousSwatch != null)
-                {
-                    UpdateLevelSelection(previousSwatch, isSelected: false);
-                }
+                isUpdatingLevelSelection = true;
 
-                if (swatch != null)
+                try
                 {
-                    UpdateLevelSelection(swatch, isSelected: true);
+                    if (previousSwatch != null)
+                    {
+                        UpdateLevelSelection(previousSwatch, isSelected: false);
+                    }
+
+                    if (swatch != null)
+                    {
+                        UpdateLevelSelection(swatch, isSelected: true);
+                    }
+                }
+                finally
+                {
+                    isUpdatingLevelSelection = false;
                 }
             }
 
@@ -297,7 +389,7 @@ namespace ForgePlus.Palette
         private void UpdatePaletteToMatchMode(ModeManager.PrimaryModes primaryMode)
         {
             swatches.Clear();
-            SelectedSwatch = null;
+            selectedSwatches.Clear();
 
             if (LevelEntity_Level.Instance)
             {
@@ -359,7 +451,7 @@ namespace ForgePlus.Palette
 
                             for (short index = cstypes.NONE; index < count; index++)
                             {
-                                swatches.Add(new Swatch { Kind = swatchKind, SoundIndex = index });
+                                swatches.Add(new Swatch { Kind = swatchKind, SoundIndex = index, Group = SoundGroup(kind) });
                             }
                         }
 
@@ -436,6 +528,7 @@ namespace ForgePlus.Palette
         private void Start()
         {
             ModeManager.Instance.OnPrimaryModeChanged += UpdatePaletteToMatchMode;
+            ModeManager.Instance.OnSecondaryModeChanged += OnSecondaryModeChanged;
             SelectionManager.Instance.OnClickEmptySpace += OnClickEmptySpace;
             SelectionManager.Instance.OnSelectionChanged += OnLevelSelectionChanged;
             SoundImageEditing.OnChanged += OnSoundImagesChanged;
@@ -454,10 +547,26 @@ namespace ForgePlus.Palette
                     SelectSwatchForPlatform(SelectionManager.Instance.SelectedObject as LevelEntity_Platform);
                     break;
                 case ModeManager.PrimaryModes.Sounds:
-                    // A swatch picked for painting stays picked; otherwise the palette shows the selected entry
-                    if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Painting)
+                    // The swatches picked for painting stay picked. Otherwise the palette shows what's selected: a polygon's
+                    // ambient and random sounds (each list's "None", for none), or an entry (in its list's set, keeping the
+                    // other's).
+                    if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Painting && !isUpdatingLevelSelection)
                     {
-                        SelectSwatchForSound(SelectionManager.Instance.SelectedObject as SoundImageEntry);
+                        var selectedObject = SelectionManager.Instance.SelectedObject;
+
+                        if (selectedObject is LevelEntity_Polygon selectedPolygon)
+                        {
+                            SelectSwatchesForPolygonSounds(selectedPolygon);
+                        }
+                        else if (selectedObject is SoundImageEntry selectedEntry)
+                        {
+                            SelectSwatchForSound(selectedEntry);
+                        }
+                        else if (selectedObject == null)
+                        {
+                            // Nothing selected (such as a polygon deselected) has no sounds to show
+                            ClearSelection(updateLevelSelection: false);
+                        }
                     }
 
                     break;
@@ -480,13 +589,15 @@ namespace ForgePlus.Palette
                 return;
             }
 
-            var previous = SelectedSwatch;
+            var previous = selectedSwatches.Values.ToList();
             UpdatePaletteToMatchMode(ModeManager.PrimaryModes.Sounds);
 
-            if (previous != null && previous.IsSound)
+            foreach (var swatch in previous)
             {
-                var match = swatches.FirstOrDefault(swatch => swatch.IsSound && swatch.SoundKind == previous.SoundKind && swatch.SoundIndex == previous.SoundIndex);
-                Select(match, updateLevelSelection: false);
+                if (swatch.IsSound)
+                {
+                    SetSelected(swatch.Group, FindSoundSwatch(swatch.SoundKind, swatch.SoundIndex), updateLevelSelection: false);
+                }
             }
         }
 
@@ -496,9 +607,26 @@ namespace ForgePlus.Palette
             ForgePlusUI.Instance.EditorCamera.FrameSelected();
         }
 
+        // Selecting can show a swatch in each set (a polygon's ambient and random sounds), but painting paints with one, so
+        // painting keeps only the one selected last
+        private void OnSecondaryModeChanged(ModeManager.SecondaryModes secondaryMode)
+        {
+            if (secondaryMode != ModeManager.SecondaryModes.Painting || selectedSwatches.Count < 2)
+            {
+                return;
+            }
+
+            foreach (var group in selectedSwatches.Keys.Where(key => key != lastSelectedGroup).ToList())
+            {
+                selectedSwatches.Remove(group);
+            }
+
+            OnSelectionChanged?.Invoke();
+        }
+
         private void OnClickEmptySpace()
         {
-            Select(null, updateLevelSelection: true);
+            ClearSelection(updateLevelSelection: true);
         }
     }
 }

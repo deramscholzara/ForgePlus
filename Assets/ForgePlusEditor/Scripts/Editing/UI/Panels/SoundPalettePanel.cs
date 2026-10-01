@@ -152,16 +152,15 @@ namespace ForgePlus.UI
 
         private void ShowSelection()
         {
-            var selectedSwatch = PaletteManager.Instance.SelectedSwatch;
-
+            // Each list has its own selected swatch
             foreach (var swatchInstance in swatchInstances)
             {
-                swatchInstance.Value.Q<Toggle>().SetValueWithoutNotify(swatchInstance.Key == selectedSwatch);
+                swatchInstance.Value.Q<Toggle>().SetValueWithoutNotify(PaletteManager.Instance.IsSelected(swatchInstance.Key));
             }
 
             // An entry (not "None") of a list can be duplicated while it's selected
-            var canDuplicateAmbient = selectedSwatch != null && selectedSwatch.Kind == PaletteManager.SwatchKinds.AmbientSound && !selectedSwatch.IsNone;
-            var canDuplicateRandom = selectedSwatch != null && selectedSwatch.Kind == PaletteManager.SwatchKinds.RandomSound && !selectedSwatch.IsNone;
+            var canDuplicateAmbient = PaletteManager.Instance.TryGetSelectedSound(SoundImageKinds.Ambient, out var ambientIndex) && ambientIndex != cstypes.NONE;
+            var canDuplicateRandom = PaletteManager.Instance.TryGetSelectedSound(SoundImageKinds.Random, out var randomIndex) && randomIndex != cstypes.NONE;
             Root.Find<Button>("duplicate-ambient").SetEnabled(canDuplicateAmbient);
             Root.Find<Button>("duplicate-random").SetEnabled(canDuplicateRandom);
         }
@@ -180,7 +179,7 @@ namespace ForgePlus.UI
 
         private static void Duplicate(SoundImageKinds kind)
         {
-            if (!PaletteManager.Instance.TryGetSelectedSound(out var selectedKind, out var selectedIndex) || selectedKind != kind || selectedIndex == cstypes.NONE)
+            if (!PaletteManager.Instance.TryGetSelectedSound(kind, out var selectedIndex) || selectedIndex == cstypes.NONE)
             {
                 return;
             }
