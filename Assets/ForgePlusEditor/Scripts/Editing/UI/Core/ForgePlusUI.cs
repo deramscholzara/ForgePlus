@@ -32,6 +32,9 @@ namespace ForgePlus.UI
         // Name tags for points in the level (annotations), behind the panels
         public WorldLabels WorldLabels { get; private set; }
 
+        // Sounds' volumes and directions in the level, and selected sound sources' radii
+        public SoundVisualization SoundVisualization { get; private set; }
+
         public SettingsViewModel Settings { get; private set; }
 
         public TerminalsViewModel Terminals { get; private set; }
@@ -73,6 +76,7 @@ namespace ForgePlus.UI
             root.pickingMode = PickingMode.Ignore;
 
             WorldLabels = new WorldLabels(root);
+            SoundVisualization = new SoundVisualization(root);
 
             Editor = new EditorViewModel();
             Settings = new SettingsViewModel();
@@ -129,6 +133,7 @@ namespace ForgePlus.UI
         private void LateUpdate()
         {
             WorldLabels?.UpdatePositions();
+            SoundVisualization?.Update();
         }
 
         private void Update()
@@ -252,6 +257,9 @@ namespace ForgePlus.UI
                     break;
                 case ModeManager.PrimaryModes.Media:
                     paletteSlot.Show<MediaPalettePanel>();
+                    break;
+                case ModeManager.PrimaryModes.Sounds:
+                    paletteSlot.Show<SoundPalettePanel>();
                     break;
                 case ModeManager.PrimaryModes.Terminals:
                     paletteSlot.Show<TerminalStylesPanel>();

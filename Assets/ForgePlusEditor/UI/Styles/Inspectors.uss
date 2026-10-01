@@ -369,3 +369,61 @@
     margin-bottom: 5px;
     flex-shrink: 0;
 }
+
+/* A range's fields share the value area, with "to" between them; the second looks like the first */
+.fp-inspector-range-field {
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 0;
+}
+
+.fp-inspector-range-separator {
+    flex-shrink: 0;
+    padding: 0 5px;
+    margin: 0;
+    color: var(--fp-value-text);
+    -unity-text-align: middle-center;
+}
+
+.fp-inspector-range-maximum {
+    margin: 0;
+    padding: 0;
+}
+
+.fp-inspector-range-maximum > .unity-base-text-field__input {
+    margin: 0;
+    padding: 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+}
+
+.fp-inspector-row:disabled .fp-inspector-range-maximum,
+.fp-inspector-row:disabled .fp-inspector-range-maximum > .unity-base-text-field__input {
+    opacity: 1;
+    color: var(--fp-value-text-disabled);
+}
+
+/* A button in a row's value area, looking like the row's value */
+.fp-inspector-row-button {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0 2px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+    -unity-text-align: middle-left;
+}
+
+.fp-inspector-row-button:hover {
+    border-color: var(--fp-focus);
+}
+
+/* A grayed-out row's button reads as its value does */
+.fp-inspector-row:disabled .fp-inspector-row-button {
+    color: var(--fp-value-text-disabled);
+}

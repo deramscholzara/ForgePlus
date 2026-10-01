@@ -1,4 +1,5 @@
-﻿using ForgePlus.ApplicationGeneral;
+﻿using AlephOne;
+using ForgePlus.ApplicationGeneral;
 using ForgePlus.Entities.Geometry;
 using ForgePlus.Inspection;
 using RuntimeCore.Entities;
@@ -115,6 +116,29 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
                         SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
 
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
+                        break;
+                    case ModeManager.PrimaryModes.Sounds:
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
+                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
+
+                        // Sound sources are the only objects here (their sounds are edited too)
+                        foreach (var mapObject in LevelEntity_Level.Instance.MapObjects.Values)
+                        {
+                            SetSelectability<LevelEntity_MapObject>(mapObject, enabled: mapObject.NativeObject.type == map._saved_sound_source);
+                        }
+
+                        // A polygon's surfaces (and the sides facing into it, and its media's surface) select it, or
+                        // paint its sound
                         SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
                         SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
                         SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
@@ -357,7 +381,7 @@ namespace ForgePlus.LevelManipulation
         // TODO: Include geometry mode when a media subfilter is available
         private static bool MediaSurfacesAreSelectable(ModeManager.PrimaryModes primaryMode)
         {
-            return primaryMode == ModeManager.PrimaryModes.Lights || primaryMode == ModeManager.PrimaryModes.Media;
+            return primaryMode == ModeManager.PrimaryModes.Lights || primaryMode == ModeManager.PrimaryModes.Media || primaryMode == ModeManager.PrimaryModes.Sounds;
         }
 
         private void SetSelectability<T>(T selectable, bool enabled) where T : ISelectable

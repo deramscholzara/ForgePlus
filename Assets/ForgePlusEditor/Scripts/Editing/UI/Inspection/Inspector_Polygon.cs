@@ -117,14 +117,26 @@ namespace ForgePlus.Inspection
             }
         }
 
-        // Its entry in the level's ambient sounds, which it loops while the player is in it (the Level inspector's Sounds
-        // tab lists them)
+        // Its entry in the level's ambient sounds, which it loops while the player is in it (Sounds mode lists them)
         [CreateProperty]
         public string AmbientSound
         {
             get
             {
                 return SoundImageDescriptions.AmbientSoundOfPolygon(Entity.ParentLevel.Level, Polygon.ambient_sound_image_index);
+            }
+            set
+            {
+                SetSound(SoundImageKinds.Ambient, value);
+            }
+        }
+
+        [CreateProperty]
+        public List<string> AmbientSoundChoices
+        {
+            get
+            {
+                return SoundChoices(SoundImageKinds.Ambient);
             }
         }
 
@@ -135,6 +147,88 @@ namespace ForgePlus.Inspection
             get
             {
                 return SoundImageDescriptions.RandomSoundOfPolygon(Entity.ParentLevel.Level, Polygon.random_sound_image_index);
+            }
+            set
+            {
+                SetSound(SoundImageKinds.Random, value);
+            }
+        }
+
+        [CreateProperty]
+        public List<string> RandomSoundChoices
+        {
+            get
+            {
+                return SoundChoices(SoundImageKinds.Random);
+            }
+        }
+
+        // The sound sources it hears (those near enough, as the level's map indexes list them for it: map_constructors.cpp,
+        // precalculate_polygon_sound_sources)
+        [CreateProperty]
+        public string HeardSoundSources
+        {
+            get
+            {
+                var level = Entity.ParentLevel.Level;
+                var sources = new List<string>();
+
+                for (var i = (int) Polygon.sound_source_indexes; i >= 0 && i < level.MapIndexList.Count; i++)
+                {
+                    var objectIndex = level.MapIndexList[i];
+                    if (objectIndex == cstypes.NONE)
+                    {
+                        break;
+                    }
+
+                    sources.Add(objectIndex.ToString());
+                }
+
+                return sources.Count == 0 ? "None" : $"Objects {string.Join(", ", sources)}";
+            }
+        }
+
+        // "None", then each entry of the list
+        private List<string> SoundChoices(SoundImageKinds kind)
+        {
+            var level = Entity.ParentLevel.Level;
+            var choices = new List<string>();
+            var count = SoundImageEditing.Count(kind);
+
+            for (short index = cstypes.NONE; index < count; index++)
+            {
+                choices.Add(SoundChoice(level, kind, index));
+            }
+
+            // One that's not in the list is still shown
+            var current = SoundChoice(level, kind, SoundImageEditing.IndexOf(Polygon, kind));
+            if (!choices.Contains(current))
+            {
+                choices.Insert(0, current);
+            }
+
+            return choices;
+        }
+
+        private static string SoundChoice(MapLevel level, SoundImageKinds kind, short index)
+        {
+            return kind == SoundImageKinds.Ambient ?
+                   SoundImageDescriptions.AmbientSoundOfPolygon(level, index) :
+                   SoundImageDescriptions.RandomSoundOfPolygon(level, index);
+        }
+
+        private void SetSound(SoundImageKinds kind, string choice)
+        {
+            var level = Entity.ParentLevel.Level;
+            var count = SoundImageEditing.Count(kind);
+
+            for (short index = cstypes.NONE; index < count; index++)
+            {
+                if (SoundChoice(level, kind, index) == choice)
+                {
+                    SoundImageEditing.Assign(Entity, kind, index);
+                    return;
+                }
             }
         }
 

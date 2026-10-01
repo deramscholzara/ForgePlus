@@ -334,10 +334,42 @@
     bottom: 0;
 }
 
+.fp-popup,
 .fp-light-picker {
     position: absolute;
     background-color: var(--fp-label-area);
     padding: 5px;
     border-width: 1px;
     border-color: var(--fp-indicator-frame);
+}
+
+/* ChecklistPicker's list, under its Select All and Select None */
+.fp-checklist-picker__actions {
+    flex-direction: row;
+    flex-shrink: 0;
+    margin-bottom: 5px;
+}
+
+.fp-checklist-picker__action {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: var(--fp-short-control-height);
+    margin-right: 5px;
+}
+
+.fp-checklist-picker__item {
+    height: var(--fp-flag-height);
+}
+
+/* ---------- Sounds' volume bars in the level (SoundVisualization) ---------- */
+
+/* Side by side (a polygon's ambient and random sounds'), centered on their point in the level */
+.fp-volume-bars {
+    position: absolute;
+    flex-direction: row;
+    translate: -50% -50%;
+}
+
+.fp-volume-bars > .fp-volume-bar {
+    margin: 0 1px;
 }

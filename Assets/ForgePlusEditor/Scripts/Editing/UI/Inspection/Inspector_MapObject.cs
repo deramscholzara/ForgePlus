@@ -6,6 +6,7 @@ using RuntimeCore.Entities;
 using RuntimeCore.Entities.MapObjects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Properties;
 using UnityEngine.UIElements;
 
@@ -160,25 +161,86 @@ namespace ForgePlus.Inspection
             }
         }
 
-        // A sound source's volume, which is its facing (map.cpp, cause_ambient_sound_source_update): from silent (0) to
-        // full (MAXIMUM_SOUND_VOLUME), or, when it's negative, the volume is the intensity of the light whose index it
-        // is (negated) while the game runs. A value that's neither (such as a light the level hasn't) is reverted.
+        // A sound source's facing is its volume (map.cpp, _sound_add_ambient_sources_proc): from silent (0) to full
+        // (MAXIMUM_SOUND_VOLUME), or, when it's negative, the intensity of the light whose index it is (negated) while the
+        // game runs. Light 0 can't be one (as -0 is 0).
+        [CreateProperty]
+        public bool VolumeFromLight
+        {
+            get
+            {
+                return NativeObject.facing < 0;
+            }
+            set
+            {
+                if (value == VolumeFromLight)
+                {
+                    return;
+                }
+
+                if (value)
+                {
+                    // The first light it can follow
+                    var level = LevelEntity_Level.Instance;
+                    var light = level ? level.Lights.Keys.Where(index => index > 0).DefaultIfEmpty((short) 0).Min() : (short) 0;
+
+                    if (light > 0)
+                    {
+                        Edit(mapObject => mapObject.NativeObject.facing = (short) -light);
+                    }
+                    else
+                    {
+                        RefreshInspectorsOf(Entity);
+                    }
+                }
+                else
+                {
+                    Edit(mapObject => mapObject.NativeObject.facing = SoundManagerEnums.MAXIMUM_SOUND_VOLUME);
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool IsVolumeFromLightEditable
+        {
+            get
+            {
+                return IsSoundSource;
+            }
+        }
+
+        [CreateProperty]
+        public bool IsVolumeFixed
+        {
+            get
+            {
+                return IsSoundSource && !VolumeFromLight;
+            }
+        }
+
+        [CreateProperty]
+        public bool IsVolumeFromLightShown
+        {
+            get
+            {
+                return IsSoundSource && VolumeFromLight;
+            }
+        }
+
         [CreateProperty]
         public int Volume
         {
             get
             {
-                return NativeObject.facing;
+                return Math.Max(0, (int) NativeObject.facing);
             }
             set
             {
-                var level = LevelEntity_Level.Instance;
-                var isVolume = value >= 0 && value <= SoundManagerEnums.MAXIMUM_SOUND_VOLUME;
-                var isLight = value < 0 && value >= short.MinValue + 1 && level && level.Lights.ContainsKey((short) -value);
+                var volume = (short) Math.Clamp(value, 0, SoundManagerEnums.MAXIMUM_SOUND_VOLUME);
 
-                if (isVolume || isLight)
+                if (volume != NativeObject.facing)
                 {
-                    Edit(mapObject => mapObject.NativeObject.facing = (short) value);
+                    Edit(mapObject => mapObject.NativeObject.facing = volume);
                 }
                 else
                 {
@@ -187,14 +249,12 @@ namespace ForgePlus.Inspection
             }
         }
 
-        // The slider only covers volumes (a light's index is typed in the field), and is at silent while it's a light's.
-        // It doesn't set a light's volume to silent just by showing it there.
         [CreateProperty]
         public int VolumeSlider
         {
             get
             {
-                return Math.Max(0, (int) NativeObject.facing);
+                return Volume;
             }
             set
             {
@@ -205,25 +265,35 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // The light whose intensity is its volume
         [CreateProperty]
-        public bool IsVolumeFromLight
+        public int VolumeLight
         {
             get
             {
-                return IsSoundSource && NativeObject.facing < 0;
+                return NativeObject.facing < 0 ? -NativeObject.facing : LightIndexField.NoLight;
+            }
+            set
+            {
+                var level = LevelEntity_Level.Instance;
+                if (value > 0 && value <= short.MaxValue && level && level.Lights.ContainsKey((short) value))
+                {
+                    Edit(mapObject => mapObject.NativeObject.facing = (short) -value);
+                }
+                else
+                {
+                    RefreshInspectorsOf(Entity);
+                }
             }
         }
 
+        // As it's saved (the light's index, negated)
         [CreateProperty]
-        public string VolumeNote
+        public string SavedVolume
         {
             get
             {
-                var lightIndex = -NativeObject.facing;
-
-                return NativeObject.facing < 0 ?
-                       $"While the game runs, the sound's volume follows light {lightIndex}'s intensity: silent while the light is off, and full volume while it's fully on. (Light 0 can't be used this way.)" :
-                       string.Empty;
+                return NativeObject.facing.ToString();
             }
         }
 
@@ -278,6 +348,20 @@ namespace ForgePlus.Inspection
             {
                 return csmacros.TEST_FLAG(NativeObject.flags, map._map_object_is_invisible);
             }
+            set
+            {
+                SetFlag(map._map_object_is_invisible, value);
+            }
+        }
+
+        // A sound source's flags can be edited (the others' not yet)
+        [CreateProperty]
+        public bool IsInvisibleEditable
+        {
+            get
+            {
+                return IsSoundSource;
+            }
         }
 
         [CreateProperty]
@@ -286,6 +370,22 @@ namespace ForgePlus.Inspection
             get
             {
                 return csmacros.TEST_FLAG(NativeObject.flags, map._map_object_hanging_from_ceiling);
+            }
+            set
+            {
+                SetFlag(map._map_object_hanging_from_ceiling, value);
+
+                // It's placed from the ceiling instead of the floor (or the other way)
+                Entity.ApplyPlacement();
+            }
+        }
+
+        [CreateProperty]
+        public bool IsFromCeilingEditable
+        {
+            get
+            {
+                return IsSoundSource;
             }
         }
 
@@ -323,6 +423,19 @@ namespace ForgePlus.Inspection
             {
                 return csmacros.TEST_FLAG(NativeObject.flags, map._map_object_floats);
             }
+            set
+            {
+                SetFlag(map._map_object_floats, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsFloatsEditable
+        {
+            get
+            {
+                return IsSoundSource;
+            }
         }
 
         [CreateProperty]
@@ -341,14 +454,18 @@ namespace ForgePlus.Inspection
             Root.Q(nameof(Subtype)).BindShown(this, nameof(IsNotSoundSource));
             Root.Q(nameof(Sound)).BindShown(this, nameof(IsSoundSource));
             Root.Q(nameof(Angle)).BindShown(this, nameof(IsNotSoundSource));
-            Root.Q(nameof(Volume)).BindShown(this, nameof(IsSoundSource));
+            Root.Q(nameof(VolumeFromLight)).BindShown(this, nameof(IsSoundSource));
+            Root.Q(nameof(Volume)).BindShown(this, nameof(IsVolumeFixed));
+            Root.Q(nameof(VolumeLight)).BindShown(this, nameof(IsVolumeFromLightShown));
+            Root.Q(nameof(SavedVolume)).BindShown(this, nameof(IsVolumeFromLightShown));
             Root.Q(nameof(ActivationBias)).BindShown(this, nameof(IsMonster));
 
             Root.Q(nameof(Volume)).Q<SliderInt>().highValue = SoundManagerEnums.MAXIMUM_SOUND_VOLUME;
 
-            var volumeNote = Root.Q<Label>("volume-note");
-            volumeNote.Bind("text", this, nameof(VolumeNote));
-            volumeNote.BindShown(this, nameof(IsVolumeFromLight));
+            Root.Q("volume-light-note").BindShown(this, nameof(IsVolumeFromLightShown));
+
+            // Light 0 can't be one a volume follows
+            Root.Find<LightIndexField>(nameof(VolumeLight)).MinimumLight = 1;
 
             Root.Find<Toggle>(nameof(Invisible)).text = IsSoundSource ? "Platform Sound" : "Invisible";
 
@@ -385,6 +502,11 @@ namespace ForgePlus.Inspection
         private static readonly string[] ActivationBiasNames = { "Player", "Nearest Hostile", "Goal", "Random" };
 
         // "Waterfall (6)", or just the number for a code the engine has no sound for
+        private void SetFlag(ushort flag, bool isSet)
+        {
+            Edit(mapObject => mapObject.NativeObject.flags = isSet ? (ushort) (mapObject.NativeObject.flags | flag) : (ushort) (mapObject.NativeObject.flags & ~flag));
+        }
+
         private static string AmbientSoundChoice(short ambientSound)
         {
             var name = AlephOneNames.AmbientSound(ambientSound);

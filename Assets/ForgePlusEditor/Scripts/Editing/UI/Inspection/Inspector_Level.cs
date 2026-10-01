@@ -446,7 +446,7 @@ namespace ForgePlus.Inspection
             }
         }
 
-        // ---------- Sounds: the level's ambient and random sounds, which its polygons play (each lists the ones it uses)
+        // ---------- Sounds: how many ambient and random sounds the level has, which its polygons play (Sounds mode edits them)
 
         [CreateProperty]
         public string AmbientSoundCount
@@ -532,8 +532,6 @@ namespace ForgePlus.Inspection
             chapterScreenPreview.RegisterCallback<GeometryChangedEvent>(geometryChangedEvent => FitChapterScreenPreview());
             ShowChapterScreenPreview();
 
-            AddSoundRows();
-
             ShowTab(selectedTab);
 
             // Saving reloads the map file, which no longer has a chapter screen that was turned off
@@ -590,45 +588,6 @@ namespace ForgePlus.Inspection
             {
                 chapterScreenPreview.style.height = height;
             }
-        }
-
-        // A row for each of the level's ambient and random sounds (with how many polygons play it), under its list's header
-        private void AddSoundRows()
-        {
-            var level = Entity.Level;
-            var rowTemplate = LoadTemplate("InspectorRow");
-
-            var ambientSounds = Root.Q("ambient-sounds");
-            for (var i = 0; i < level.AmbientSoundImageList.Count; i++)
-            {
-                var index = i;
-                var users = level.PolygonList.Count(polygon => polygon.ambient_sound_image_index == index);
-                AddSoundRow(ambientSounds, rowTemplate, index, $"{SoundImageDescriptions.Describe(level.AmbientSoundImageList[i])}\n{PolygonCount(users)}");
-            }
-
-            var randomSounds = Root.Q("random-sounds");
-            for (var i = 0; i < level.RandomSoundImageList.Count; i++)
-            {
-                var index = i;
-                var users = level.PolygonList.Count(polygon => polygon.random_sound_image_index == index);
-                AddSoundRow(randomSounds, rowTemplate, index, $"{SoundImageDescriptions.Describe(level.RandomSoundImageList[i])}\n{PolygonCount(users)}");
-            }
-        }
-
-        private static void AddSoundRow(VisualElement list, VisualTreeAsset rowTemplate, int index, string description)
-        {
-            var row = rowTemplate.Instantiate();
-            row.Q<Label>("label").text = $"{index}:";
-            row.Q<Label>("value").text = description;
-
-            // Read-only, as rows with no setter are
-            row.SetEnabled(false);
-            list.Add(row);
-        }
-
-        private static string PolygonCount(int count)
-        {
-            return count == 1 ? "Played in 1 polygon" : $"Played in {count} polygons";
         }
 
         private byte[] GetChunk(uint tag)

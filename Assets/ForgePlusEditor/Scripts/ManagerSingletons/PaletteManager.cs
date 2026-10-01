@@ -23,6 +23,8 @@ namespace ForgePlus.Palette
             Media,
             Polygon,
             Platform,
+            AmbientSound,
+            RandomSound,
         }
 
         // A texture swatch with no texture, or a media swatch with no media, is the palette's "None" (for removing
@@ -37,12 +39,32 @@ namespace ForgePlus.Palette
             public LevelEntity_Polygon Polygon;
             public LevelEntity_Platform Platform;
 
+            // The ambient or random sound's index in its list (NONE for the list's "None")
+            public short SoundIndex = cstypes.NONE;
+
+            public bool IsSound
+            {
+                get
+                {
+                    return Kind == SwatchKinds.AmbientSound || Kind == SwatchKinds.RandomSound;
+                }
+            }
+
+            public SoundImageKinds SoundKind
+            {
+                get
+                {
+                    return Kind == SwatchKinds.AmbientSound ? SoundImageKinds.Ambient : SoundImageKinds.Random;
+                }
+            }
+
             public bool IsNone
             {
                 get
                 {
                     return (Kind == SwatchKinds.Texture && ShapeDescriptor.IsEmptyShapeDescriptor()) ||
-                           (Kind == SwatchKinds.Media && Media == null);
+                           (Kind == SwatchKinds.Media && Media == null) ||
+                           (IsSound && SoundIndex < 0);
                 }
             }
 
@@ -126,6 +148,33 @@ namespace ForgePlus.Palette
             Select(platform ? swatches.FirstOrDefault(swatch => swatch.Kind == SwatchKinds.Platform && swatch.Platform.NativeIndex == platform.NativeIndex) : null, updateLevelSelection: false);
         }
 
+        // Whether an ambient or random sound swatch (maybe its list's "None", NONE) is selected, for painting
+        public bool TryGetSelectedSound(out SoundImageKinds kind, out short index)
+        {
+            var isSelected = SelectedSwatch != null && SelectedSwatch.IsSound;
+            kind = isSelected ? SelectedSwatch.SoundKind : SoundImageKinds.Ambient;
+            index = isSelected ? SelectedSwatch.SoundIndex : cstypes.NONE;
+
+            return isSelected;
+        }
+
+        // The swatch of an ambient or random sound (none, for no entry), to match what's selected
+        public void SelectSwatchForSound(SoundImageEntry entry)
+        {
+            Select(entry != null ? swatches.FirstOrDefault(swatch => swatch.IsSound && swatch.SoundKind == entry.Kind && swatch.SoundIndex == entry.Index) : null,
+                   updateLevelSelection: false);
+        }
+
+        // Selects the sound's swatch as clicking it does (such as for an entry just added)
+        public void ClickSound(SoundImageKinds kind, short index)
+        {
+            var swatch = swatches.FirstOrDefault(candidate => candidate.IsSound && candidate.SoundKind == kind && candidate.SoundIndex == index);
+            if (swatch != null && swatch != SelectedSwatch)
+            {
+                Select(swatch, updateLevelSelection: true);
+            }
+        }
+
         // For a swatch's contents changing (such as a platform's type), without the swatches themselves changing
         public void RefreshSwatches()
         {
@@ -184,6 +233,27 @@ namespace ForgePlus.Palette
 
             if (swatch.IsNone)
             {
+                return;
+            }
+
+            // A sound's entry is selected to inspect it (as a light is, in either tool mode)
+            if (swatch.IsSound)
+            {
+                var entry = SoundImageEditing.GetEntry(swatch.SoundKind, swatch.SoundIndex);
+                if (entry == null)
+                {
+                    return;
+                }
+
+                if (isSelected)
+                {
+                    SelectionManager.Instance.SelectObject(entry, multiSelect: false);
+                }
+                else
+                {
+                    SelectionManager.Instance.DeselectObject(entry, multiSelect: false);
+                }
+
                 return;
             }
 
@@ -278,6 +348,22 @@ namespace ForgePlus.Palette
                         }
 
                         break;
+                    case ModeManager.PrimaryModes.Sounds:
+                        allowSwitchOff = true;
+
+                        // Each list, after its "None" (for painting a polygon's sound off)
+                        foreach (var kind in new[] { SoundImageKinds.Ambient, SoundImageKinds.Random })
+                        {
+                            var swatchKind = kind == SoundImageKinds.Ambient ? SwatchKinds.AmbientSound : SwatchKinds.RandomSound;
+                            var count = SoundImageEditing.Count(kind);
+
+                            for (short index = cstypes.NONE; index < count; index++)
+                            {
+                                swatches.Add(new Swatch { Kind = swatchKind, SoundIndex = index });
+                            }
+                        }
+
+                        break;
                     case ModeManager.PrimaryModes.Platforms:
                         allowSwitchOff = true;
 
@@ -352,6 +438,7 @@ namespace ForgePlus.Palette
             ModeManager.Instance.OnPrimaryModeChanged += UpdatePaletteToMatchMode;
             SelectionManager.Instance.OnClickEmptySpace += OnClickEmptySpace;
             SelectionManager.Instance.OnSelectionChanged += OnLevelSelectionChanged;
+            SoundImageEditing.OnChanged += OnSoundImagesChanged;
         }
 
         // The polygon palette shows the selected annotation's polygon
@@ -366,6 +453,40 @@ namespace ForgePlus.Palette
                 case ModeManager.PrimaryModes.Platforms:
                     SelectSwatchForPlatform(SelectionManager.Instance.SelectedObject as LevelEntity_Platform);
                     break;
+                case ModeManager.PrimaryModes.Sounds:
+                    // A swatch picked for painting stays picked; otherwise the palette shows the selected entry
+                    if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Painting)
+                    {
+                        SelectSwatchForSound(SelectionManager.Instance.SelectedObject as SoundImageEntry);
+                    }
+
+                    break;
+            }
+        }
+
+        // An entry added or removed changes the Sounds palette's swatches, and one changed (or a polygon's sound) changes
+        // what they show. The swatch picked for painting stays picked.
+        private void OnSoundImagesChanged()
+        {
+            if (ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Sounds)
+            {
+                return;
+            }
+
+            // The swatches are the same while the lists are as long (the palette panel shows what changed in them)
+            var swatchCount = 2 + SoundImageEditing.Count(SoundImageKinds.Ambient) + SoundImageEditing.Count(SoundImageKinds.Random);
+            if (swatches.Count == swatchCount)
+            {
+                return;
+            }
+
+            var previous = SelectedSwatch;
+            UpdatePaletteToMatchMode(ModeManager.PrimaryModes.Sounds);
+
+            if (previous != null && previous.IsSound)
+            {
+                var match = swatches.FirstOrDefault(swatch => swatch.IsSound && swatch.SoundKind == previous.SoundKind && swatch.SoundIndex == previous.SoundIndex);
+                Select(match, updateLevelSelection: false);
             }
         }
 

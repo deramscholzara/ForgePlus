@@ -66,6 +66,24 @@ namespace RuntimeCore.Entities.MapObjects
             }
         }
 
+        // Sound sources' icons show while this is set, whether or not the other icons do (in Sounds mode, where they're
+        // selected)
+        public static bool SoundSourceIconsAreVisible
+        {
+            get
+            {
+                return soundSourceIconsAreVisible;
+            }
+            set
+            {
+                soundSourceIconsAreVisible = value;
+
+                ApplyVisibilityToAllObjects();
+            }
+        }
+
+        private static bool soundSourceIconsAreVisible = false;
+
         public static bool SpritePreviewsAreVisible
         {
             get
@@ -223,24 +241,29 @@ namespace RuntimeCore.Entities.MapObjects
 
             gameObject.AddComponent<MeshCollider>().convex = true;
 
+            ApplyPlacement();
+
+            GenerateSprite();
+
+            ApplyVisibility();
+        }
+
+        // Where it is (from its polygon's floor, or its ceiling for one hanging from it), and which way it faces
+        public void ApplyPlacement()
+        {
             var hangsFromCeiling = (NativeObject.flags & map._map_object_hanging_from_ceiling) != 0;
 
             int elevation = hangsFromCeiling ?
                             ParentLevel.Level.PolygonList[NativeObject.polygon_index].ceiling_height + NativeObject.location.z :
                             ParentLevel.Level.PolygonList[NativeObject.polygon_index].floor_height + NativeObject.location.z;
 
-            if (hangsFromCeiling)
-            {
-                transform.localScale = new Vector3(1f, -1f, 1f);
-            }
+            transform.localScale = new Vector3(1f, hangsFromCeiling ? -1f : 1f, 1f);
 
             transform.position = new Vector3(NativeObject.location.x, elevation, -NativeObject.location.y) / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
-            transform.eulerAngles = new Vector3(0f, AlephOneExtensions.AngleToDegrees(NativeObject.facing) + 90f, 0f);
-
-            GenerateSprite();
-
-            ApplyVisibility();
+            // A sound source's facing is its volume instead, so it isn't turned
+            var facing = NativeObject.type == map._saved_sound_source ? (short) 0 : NativeObject.facing;
+            transform.eulerAngles = new Vector3(0f, AlephOneExtensions.AngleToDegrees(facing) + 90f, 0f);
         }
 
         private static void ApplyVisibilityToAllObjects()
@@ -260,7 +283,7 @@ namespace RuntimeCore.Entities.MapObjects
 
         private void ApplyVisibility()
         {
-            GetComponent<MeshRenderer>().enabled = iconsAreVisible;
+            GetComponent<MeshRenderer>().enabled = iconsAreVisible || (soundSourceIconsAreVisible && NativeObject.type == map._saved_sound_source);
 
             if (spritePreviewRenderer)
             {

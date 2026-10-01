@@ -166,23 +166,13 @@
             <ui:VisualElement name="chapter-screen-preview" class="fp-chapter-screen" />
         </ui:VisualElement>
         <ui:VisualElement name="tab-sounds">
-            <ui:Label text="The sounds the level's polygons play while the player is in them (each polygon picks one of each, or none). Each varies by up to the amount after its value." class="fp-inspector-note" />
-            <ui:Instance template="Subheader">
-                <ui:AttributeOverrides element-name="label" text="Ambient Sounds (Looped)" />
-            </ui:Instance>
+            <ui:Label text="The sounds the level's polygons play while the player is in them (each polygon picks one of each, or none). Sounds mode edits them." class="fp-inspector-note" />
             <ui:Instance template="Row" name="AmbientSoundCount">
-                <ui:AttributeOverrides element-name="label" text="Count:" />
-            </ui:Instance>
-            <!-- A row for each (added by Inspector_Level) -->
-            <ui:VisualElement name="ambient-sounds" class="fp-inspector-list" />
-            <ui:VisualElement class="fp-space" />
-            <ui:Instance template="Subheader">
-                <ui:AttributeOverrides element-name="label" text="Random Sounds (Now and Then)" />
+                <ui:AttributeOverrides element-name="label" text="Ambient Sounds:" />
             </ui:Instance>
             <ui:Instance template="Row" name="RandomSoundCount">
-                <ui:AttributeOverrides element-name="label" text="Count:" />
+                <ui:AttributeOverrides element-name="label" text="Random Sounds:" />
             </ui:Instance>
-            <ui:VisualElement name="random-sounds" class="fp-inspector-list" />
         </ui:VisualElement>
         <ui:VisualElement name="tab-shape-patches">
             <ui:Label text="Aleph One only: changes to the shapes (graphics) saved in the level (ShPa), which the original Marathon 2 and Infinity ignore. Kept and saved as they are." class="fp-inspector-note fp-aleph-one-only" />

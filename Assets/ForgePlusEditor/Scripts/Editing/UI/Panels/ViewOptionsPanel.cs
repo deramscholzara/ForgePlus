@@ -25,6 +25,14 @@ namespace ForgePlus.UI
 
             Root.Find<Toggle>("sprite-previews").BindValue(settings, nameof(SettingsViewModel.SpritePreviewsEnabled));
             Root.Find<Toggle>("clip-platform-sides").BindValue(settings, nameof(SettingsViewModel.ClipPlatformSidesEnabled));
+
+            var soundDirection = Root.Find<Toggle>("sound-direction");
+            soundDirection.BindValue(settings, nameof(SettingsViewModel.SoundDirectionEnabled));
+            soundDirection.BindEnabled(settings, nameof(SettingsViewModel.SoundDisplaysEditable));
+
+            var soundVolume = Root.Find<Toggle>("sound-volume");
+            soundVolume.BindValue(settings, nameof(SettingsViewModel.SoundVolumeEnabled));
+            soundVolume.BindEnabled(settings, nameof(SettingsViewModel.SoundDisplaysEditable));
         }
     }
 }

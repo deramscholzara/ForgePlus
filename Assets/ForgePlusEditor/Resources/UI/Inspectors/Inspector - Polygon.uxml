@@ -52,11 +52,14 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Sounds" />
         </ui:Instance>
-        <ui:Instance template="Row" name="AmbientSound" tooltip="Its entry in the level's ambient sounds (Level mode's Sounds tab lists them), which it loops while the player is in it">
+        <ui:Instance template="DropdownRow" name="AmbientSound" tooltip="Its entry in the level's ambient sounds (Sounds mode lists them), which it loops while the player is in it">
             <ui:AttributeOverrides element-name="label" text="Ambient:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="RandomSound" tooltip="Its entry in the level's random sounds (Level mode's Sounds tab lists them), which it plays now and then while the player is in it">
+        <ui:Instance template="DropdownRow" name="RandomSound" tooltip="Its entry in the level's random sounds (Sounds mode lists them), which it plays now and then while the player is in it">
             <ui:AttributeOverrides element-name="label" text="Random:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="HeardSoundSources" class="fp-inspector-row--vertical" tooltip="The sound sources near enough to it to be heard in it (as the level's precalculated map indexes list them)">
+            <ui:AttributeOverrides element-name="label" text="Hears Sound Sources:" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

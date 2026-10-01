@@ -104,6 +104,10 @@ namespace ForgePlus.LevelManipulation
                     ClickPolygonInMediaMode(ParentPolygon);
 
                     break;
+                case ModeManager.PrimaryModes.Sounds:
+                    ClickPolygonInSoundsMode(ParentPolygon);
+
+                    break;
                 case ModeManager.PrimaryModes.Platforms:
                     // Any face of a platform (either surface of one that goes both ways, or the sides that move with it)
                     // selects it, or deselects it if it's selected

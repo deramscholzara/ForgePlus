@@ -235,6 +235,14 @@ namespace ForgePlus.Entities.Geometry
                     }
 
                     break;
+                case ModeManager.PrimaryModes.Sounds:
+                    // A side is the polygon's it faces into
+                    if (ParentSide.FacingPolygon)
+                    {
+                        ClickPolygonInSoundsMode(ParentSide.FacingPolygon);
+                    }
+
+                    break;
                 case ModeManager.PrimaryModes.Platforms:
                     // Any face of a platform (either surface of one that goes both ways, or the sides that move with it)
                     // selects it, or deselects it if it's selected

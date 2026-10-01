@@ -32,6 +32,8 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_Vignette = "Settings_Vignette";
         private const string PlayerPrefsSettingsKey_ClipPlatformSides = "Settings_ClipPlatformSides";
         private const string PlayerPrefsSettingsKey_MergedSaveChecksum = "Settings_MergedSaveChecksum";
+        private const string PlayerPrefsSettingsKey_SoundDirection = "Settings_SoundDirection";
+        private const string PlayerPrefsSettingsKey_SoundVolume = "Settings_SoundVolume";
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
 
@@ -244,8 +246,50 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Shows each polygon's random sound's direction (an arrow at its center, over the range it varies by), whatever
+        // the mode, while it's on (and in Sounds mode, always). A selected polygon always shows its own.
+        public bool SoundDirectionEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_SoundDirection, 0) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_SoundDirection, value ? 1 : 0);
+
+                OnSettingChanged?.Invoke(nameof(SoundDirectionEnabled));
+            }
+        }
+
+        // Shows each polygon's ambient and random sounds' volumes, and each sound source's, as bars, whatever the mode,
+        // while it's on (and in Sounds mode, always). A selected polygon or sound source always shows its own.
+        public bool SoundVolumeEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_SoundVolume, 0) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_SoundVolume, value ? 1 : 0);
+
+                OnSettingChanged?.Invoke(nameof(SoundVolumeEnabled));
+            }
+        }
+
+        // Sounds mode always shows sounds' directions and volumes
+        public bool SoundDisplaysForcedOn
+        {
+            get
+            {
+                return ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Sounds;
+            }
+        }
+
         private void ApplyObjectVisibility()
         {
+            LevelEntity_MapObject.SoundSourceIconsAreVisible = SoundDisplaysForcedOn;
             LevelEntity_MapObject.IconsAreVisible = objectIconsEnabled || ObjectIconsForcedOn;
             LevelEntity_MapObject.SpritePreviewsAreVisible = spritePreviewsEnabled;
 

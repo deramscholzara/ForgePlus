@@ -7,7 +7,7 @@
     "com.unity.inputsystem": "6.7.0",
     "com.unity.mathematics": "1.4.0",
     "com.unity.multiplayer.center": "3.0.0",
-    "com.unity.pipeline": "0.7.0-exp.1",
+    "com.unity.pipeline": "0.6.0-exp.1",
     "com.unity.render-pipelines.universal": "17.7.0",
     "com.unity.searcher": "4.9.5",
     "com.unity.timeline": "6.7.0",
@@ -20,6 +20,7 @@
     "com.unity.modules.screencapture": "1.0.0",
     "com.unity.modules.smartstrings": "1.0.0",
     "com.unity.modules.ui": "1.0.0",
-    "com.unity.modules.vectorgraphics": "1.0.0"
+    "com.unity.modules.vectorgraphics": "1.0.0",
+    "com.unity.ai.desktop": "0.4.0-exp.3"
   }
 }

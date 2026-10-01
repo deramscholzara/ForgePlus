@@ -1,0 +1,41 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- The level's ambient and random sounds (swatches added by SoundPalettePanel), each list after its "None" -->
+    <ui:VisualElement class="fp-palette" picking-mode="Ignore">
+        <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
+        <ui:VisualElement class="fp-box fp-palette__box">
+            <ui:Instance template="ScrollArea" name="swatches" class="fp-grow">
+                <ui:VisualElement class="fp-inspector">
+                    <ui:Instance template="Header">
+                        <ui:AttributeOverrides element-name="label" text="Ambient Sounds" />
+                    </ui:Instance>
+                </ui:VisualElement>
+                <ui:VisualElement name="ambient-swatches" class="fp-palette__swatches" />
+                <ui:VisualElement class="fp-sound-palette__actions">
+                    <ui:Instance template="Button" name="add-ambient" class="fp-sound-palette__action">
+                        <ui:AttributeOverrides element-name="control" text="Add" />
+                    </ui:Instance>
+                    <ui:Instance template="Button" name="duplicate-ambient" class="fp-sound-palette__action fp-sound-palette__action--last">
+                        <ui:AttributeOverrides element-name="control" text="Duplicate" />
+                    </ui:Instance>
+                </ui:VisualElement>
+                <ui:VisualElement class="fp-inspector">
+                    <ui:Instance template="Header">
+                        <ui:AttributeOverrides element-name="label" text="Random Sounds" />
+                    </ui:Instance>
+                </ui:VisualElement>
+                <ui:VisualElement name="random-swatches" class="fp-palette__swatches" />
+                <ui:VisualElement class="fp-sound-palette__actions">
+                    <ui:Instance template="Button" name="add-random" class="fp-sound-palette__action">
+                        <ui:AttributeOverrides element-name="control" text="Add" />
+                    </ui:Instance>
+                    <ui:Instance template="Button" name="duplicate-random" class="fp-sound-palette__action fp-sound-palette__action--last">
+                        <ui:AttributeOverrides element-name="control" text="Duplicate" />
+                    </ui:Instance>
+                </ui:VisualElement>
+            </ui:Instance>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

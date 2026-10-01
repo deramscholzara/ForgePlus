@@ -172,10 +172,56 @@ namespace ForgePlus.UI
             }
         }
 
+        // Shown as on while Sounds mode forces sounds' displays on
+        [CreateProperty]
+        public bool SoundDirectionEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.SoundDisplaysForcedOn || SettingsManager.Instance.SoundDirectionEnabled;
+            }
+            set
+            {
+                if (!SettingsManager.Instance.SoundDisplaysForcedOn)
+                {
+                    SettingsManager.Instance.SoundDirectionEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool SoundVolumeEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.SoundDisplaysForcedOn || SettingsManager.Instance.SoundVolumeEnabled;
+            }
+            set
+            {
+                if (!SettingsManager.Instance.SoundDisplaysForcedOn)
+                {
+                    SettingsManager.Instance.SoundVolumeEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool SoundDisplaysEditable
+        {
+            get
+            {
+                return !SettingsManager.Instance.SoundDisplaysForcedOn;
+            }
+        }
+
+        // Also when the mode changes (which may force icons, and sounds' displays, on)
         private void OnObjectVisibilityChanged()
         {
             Notify(nameof(ObjectIconsEnabled));
             Notify(nameof(ObjectIconsEditable));
+            Notify(nameof(SoundDirectionEnabled));
+            Notify(nameof(SoundVolumeEnabled));
+            Notify(nameof(SoundDisplaysEditable));
         }
     }
 }

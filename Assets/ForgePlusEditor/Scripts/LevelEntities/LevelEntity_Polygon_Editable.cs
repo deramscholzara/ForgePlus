@@ -38,7 +38,9 @@ namespace RuntimeCore.Entities.Geometry
 
         public void Inspect()
         {
-            var inspector = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
+            // Geometry and Sounds modes inspect the polygon itself (with its sounds), and the others its textures
+            var inspector = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ||
+                            ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Sounds ?
                             (Inspector_Base)new Inspector_Polygon(this) :
                             new Inspector_PolygonTextures(this);
             InspectorPanel.Instance.AddInspector(inspector);

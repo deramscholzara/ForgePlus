@@ -11,6 +11,9 @@ namespace ForgePlus.UI
     {
         public const int NoLight = -1;
 
+        // Lights below this index can't be chosen (such as light 0, which a sound source's volume can't follow)
+        public int MinimumLight { get; set; }
+
         private readonly Label indexLabel;
         private readonly VisualElement preview;
 
@@ -71,7 +74,7 @@ namespace ForgePlus.UI
         {
             if (enabledInHierarchy)
             {
-                LightPicker.Show(this, value, chosenLight => value = chosenLight);
+                LightPicker.Show(this, value, chosenLight => value = chosenLight, MinimumLight);
             }
         }
 

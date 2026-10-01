@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A range of whole numbers, from the first field's to the second's (each committed on return or leaving it); an
+         instance is named after the inspector property the first edits, and the second edits its <Name>Maximum property.
+         It's grayed out while the property can't be set, or while its Is<Name>Editable property is false. -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area fp-inspector-row__value-area--row">
+            <ui:IntegerField name="value" is-delayed="true" class="fp-inspector-text-field fp-inspector-range-field" />
+            <ui:Label text="to" class="fp-inspector-range-separator" />
+            <ui:IntegerField name="maximum" is-delayed="true" class="fp-inspector-range-maximum fp-inspector-range-field" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

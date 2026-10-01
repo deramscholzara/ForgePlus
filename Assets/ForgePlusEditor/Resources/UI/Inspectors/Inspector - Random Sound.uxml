@@ -1,0 +1,45 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <ui:Template name="IntegerRangeRow" src="../Templates/InspectorIntegerRangeRow.uxml" />
+    <ui:Template name="FloatRangeRow" src="../Templates/InspectorFloatRangeRow.uxml" />
+    <ui:Template name="ButtonRow" src="../Templates/InspectorButtonRow.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- Bound to Inspector_RandomSound -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header" name="header">
+            <ui:AttributeOverrides element-name="label" text="Random Sound" />
+        </ui:Instance>
+        <ui:Label name="aleph-one-note" text="Aleph One only: the original Marathon 2 and Infinity hold 64 random sounds (0 to 63)." class="fp-inspector-note fp-aleph-one-only" />
+        <ui:Label text="Played now and then while the player is in a polygon that plays it, each time at a value from each range's first to its second (the same, for no variation). A period of 30 ticks is 1 second." class="fp-inspector-note" />
+        <ui:Instance template="Row" name="Index">
+            <ui:AttributeOverrides element-name="label" text="Index:" />
+        </ui:Instance>
+        <ui:Instance template="DropdownRow" name="Sound" tooltip="Choosing a sound needs a sounds file (Files tab), to know which sounds there are">
+            <ui:AttributeOverrides element-name="label" text="Sound:" />
+        </ui:Instance>
+        <ui:Instance template="IntegerRangeRow" name="Volume" tooltip="0 is silent, and 256 is full volume">
+            <ui:AttributeOverrides element-name="label" text="Volume:" />
+        </ui:Instance>
+        <ui:Instance template="IntegerRangeRow" name="Period" tooltip="How long it waits between plays, in ticks (30 a second)">
+            <ui:AttributeOverrides element-name="label" text="Period (Ticks):" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="NonDirectional">
+            <ui:AttributeOverrides element-name="flag" text="Non-Directional" />
+        </ui:Instance>
+        <ui:Instance template="IntegerRangeRow" name="Direction" tooltip="The direction it comes from, in degrees (grayed out while it's non-directional)">
+            <ui:AttributeOverrides element-name="label" text="Direction (°):" />
+        </ui:Instance>
+        <ui:Instance template="FloatRangeRow" name="Pitch" tooltip="A multiple of the sound's own pitch">
+            <ui:AttributeOverrides element-name="label" text="Pitch (×):" />
+        </ui:Instance>
+        <ui:Instance template="ButtonRow" name="PlayedIn" tooltip="The polygons that play it: uncheck one to have it play no random sound">
+            <ui:AttributeOverrides element-name="label" text="Played In:" />
+        </ui:Instance>
+        <ui:Instance template="Button" name="delete" class="fp-inspector-action">
+            <ui:AttributeOverrides element-name="control" text="Delete" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

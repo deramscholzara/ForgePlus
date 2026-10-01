@@ -85,6 +85,23 @@ namespace ForgePlus.LevelManipulation
             PaletteManager.Instance.SelectSwatchForMedia(SelectionManager.Instance.GetIsSelected(media) ? media : null);
         }
 
+        // Painting gives the polygon the chosen ambient or random sound (or none), and selecting selects the polygon (to
+        // inspect its sounds)
+        protected static void ClickPolygonInSoundsMode(LevelEntity_Polygon polygon)
+        {
+            if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
+            {
+                if (PaletteManager.Instance.TryGetSelectedSound(out var kind, out var index))
+                {
+                    SoundImageEditing.Assign(polygon, kind, index);
+                }
+
+                return;
+            }
+
+            SelectionManager.Instance.ToggleObjectSelection(polygon, multiSelect: false);
+        }
+
         protected async void InputListener(ISelectable mustBeSelectedObject)
         {
             while (Application.isPlaying && SelectionManager.Instance.GetIsSelected(mustBeSelectedObject))

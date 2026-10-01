@@ -14,6 +14,7 @@ namespace ForgePlus.LevelManipulation
             Textures,
             Lights,
             Media,
+            Sounds,
             Platforms,
             Objects,
             Annotations,
@@ -121,6 +122,7 @@ namespace ForgePlus.LevelManipulation
                         return allSecondaryModes;
                     case PrimaryModes.Lights:
                     case PrimaryModes.Media:
+                    case PrimaryModes.Sounds:
                         return selectionAndPainting;
                     default:
                         return selectionOnly;

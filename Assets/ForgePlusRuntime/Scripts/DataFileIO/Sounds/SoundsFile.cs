@@ -36,5 +36,22 @@ namespace ForgePlus.DataFileIO
 
             return false;
         }
+
+        // How the sound fades with distance (its behavior: quiet, normal or loud), from the first source that has it,
+        // or NONE if none does
+        public short Behavior(short soundIndex)
+        {
+            for (var source = 0; source < soundFile.SourceCount(); source++)
+            {
+                var definition = soundFile.GetSoundDefinition(source, soundIndex);
+
+                if (definition != null && definition.sound_code != cstypes.NONE)
+                {
+                    return definition.behavior_index;
+                }
+            }
+
+            return cstypes.NONE;
+        }
     }
 }

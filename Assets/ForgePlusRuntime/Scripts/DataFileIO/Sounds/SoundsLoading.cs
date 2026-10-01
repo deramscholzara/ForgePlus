@@ -49,6 +49,15 @@ namespace ForgePlus.DataFileIO
             return IsLoaded && soundIndex != cstypes.NONE && data.SoundsFile.HasSound(soundIndex);
         }
 
+        // How the ambient sound code's sound fades with distance (quiet, normal or loud), or NONE without a sounds file
+        // (or a sound for the code)
+        public short AmbientSoundBehavior(short ambientSound)
+        {
+            var definition = SoundManager.get_ambient_sound_definition(ambientSound);
+
+            return IsLoaded && definition != null ? data.SoundsFile.Behavior(definition.sound_index) : cstypes.NONE;
+        }
+
         private void TryLoadFile()
         {
             if (data != null)

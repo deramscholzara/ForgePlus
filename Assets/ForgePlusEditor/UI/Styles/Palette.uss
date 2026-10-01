@@ -105,3 +105,67 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+/* An ambient or random sound's swatch: its sound after its index, and a bar of its volume at its right */
+.fp-swatch__sound {
+    left: 70px;
+    right: 22px;
+    top: 5px;
+    bottom: 5px;
+    -unity-text-align: middle-left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.fp-swatch__volume {
+    right: 6px;
+    top: 4px;
+    bottom: 7px;
+    width: 10px;
+}
+
+/* A volume bar (in a swatch, or over the level): a frame, filled from the bottom (to its fill's height) */
+.fp-swatch__volume,
+.fp-volume-bar {
+    border-width: 1px;
+    border-color: var(--fp-control-text);
+    background-color: var(--fp-label-area);
+}
+
+.fp-volume-bar__fill {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+    background-color: var(--fp-annotation);
+}
+
+/* How much higher a random sound's volume can be (from its volume, up to the top of this) */
+.fp-volume-bar__range {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+    background-color: var(--fp-indicator-on);
+}
+
+/* The Sounds palette's buttons, under each list */
+.fp-sound-palette__actions {
+    flex-direction: row;
+    flex-shrink: 0;
+    margin: 0 0 15px 0;
+}
+
+.fp-sound-palette__action {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: var(--fp-short-control-height);
+    margin-right: 5px;
+}
+
+.fp-sound-palette__action--last {
+    margin-right: 0;
+}

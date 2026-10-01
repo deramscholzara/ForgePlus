@@ -41,6 +41,9 @@ namespace ForgePlus.LevelManipulation
                 case ModeManager.PrimaryModes.Media:
                     ClickPolygonInMediaMode(Polygon);
                     break;
+                case ModeManager.PrimaryModes.Sounds:
+                    ClickPolygonInSoundsMode(Polygon);
+                    break;
                 default:
                     Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
                     return;

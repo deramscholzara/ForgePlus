@@ -22,6 +22,9 @@
                 <ui:AttributeOverrides element-name="control" text="Media" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="Sounds" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
                 <ui:AttributeOverrides element-name="control" text="Platforms" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">

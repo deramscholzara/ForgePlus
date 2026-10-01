@@ -79,6 +79,11 @@ namespace ForgePlus.UI
 
             root.Query<TextField>(className: "fp-inspector-text-field").ForEach(field => BindInspectorField(field, dataSource));
             root.Query<IntegerField>(className: "fp-inspector-text-field").ForEach(field => BindInspectorField(field, dataSource));
+            root.Query<FloatField>(className: "fp-inspector-text-field").ForEach(field => BindInspectorField(field, dataSource));
+
+            // A range's second field edits the source's <Name>Maximum property
+            root.Query<IntegerField>(className: "fp-inspector-range-maximum").ForEach(field => BindInspectorRangeMaximum(field, dataSource));
+            root.Query<FloatField>(className: "fp-inspector-range-maximum").ForEach(field => BindInspectorRangeMaximum(field, dataSource));
             root.Query<DropdownField>(className: "fp-inspector-dropdown").ForEach(dropdown => BindInspectorDropdown(dropdown, dataSource));
 
             root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag => BindInspectorValue(flag, dataSource));
@@ -106,6 +111,17 @@ namespace ForgePlus.UI
             var isEditable = dataSource.GetType().GetProperty(sliderProperty)?.GetSetMethod() != null;
 
             slider.Bind("value", dataSource, sliderProperty, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
+        }
+
+        // The row's editability is its first field's
+        private static void BindInspectorRangeMaximum<TValue>(TextInputBaseField<TValue> field, object dataSource)
+        {
+            var row = field.GetFirstAncestorOfType<TemplateContainer>();
+            var maximumProperty = row.name + "Maximum";
+            var isEditable = dataSource.GetType().GetProperty(maximumProperty)?.GetSetMethod() != null;
+
+            field.isReadOnly = !isEditable;
+            field.Bind("value", dataSource, maximumProperty, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
         }
 
         // A field edits its source property while the property has a setter, and is grayed out (read-only) until then
