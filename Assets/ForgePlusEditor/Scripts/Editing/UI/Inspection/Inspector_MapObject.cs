@@ -2,6 +2,7 @@
 using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
 using ForgePlus.UI;
+using RuntimeCore.Entities;
 using RuntimeCore.Entities.MapObjects;
 using System;
 using System.Collections.Generic;
@@ -149,12 +150,101 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Which way it faces (a sound source's facing is its volume instead)
         [CreateProperty]
         public string Angle
         {
             get
             {
                 return AlephOneExtensions.AngleToDegrees(NativeObject.facing).ToString();
+            }
+        }
+
+        // A sound source's volume, which is its facing (map.cpp, cause_ambient_sound_source_update): from silent (0) to
+        // full (MAXIMUM_SOUND_VOLUME), or, when it's negative, the volume is the intensity of the light whose index it
+        // is (negated) while the game runs. A value that's neither (such as a light the level hasn't) is reverted.
+        [CreateProperty]
+        public int Volume
+        {
+            get
+            {
+                return NativeObject.facing;
+            }
+            set
+            {
+                var level = LevelEntity_Level.Instance;
+                var isVolume = value >= 0 && value <= SoundManagerEnums.MAXIMUM_SOUND_VOLUME;
+                var isLight = value < 0 && value >= short.MinValue + 1 && level && level.Lights.ContainsKey((short) -value);
+
+                if (isVolume || isLight)
+                {
+                    Edit(mapObject => mapObject.NativeObject.facing = (short) value);
+                }
+                else
+                {
+                    RefreshInspectorsOf(Entity);
+                }
+            }
+        }
+
+        // The slider only covers volumes (a light's index is typed in the field), and is at silent while it's a light's.
+        // It doesn't set a light's volume to silent just by showing it there.
+        [CreateProperty]
+        public int VolumeSlider
+        {
+            get
+            {
+                return Math.Max(0, (int) NativeObject.facing);
+            }
+            set
+            {
+                if (value != VolumeSlider)
+                {
+                    Volume = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool IsVolumeFromLight
+        {
+            get
+            {
+                return IsSoundSource && NativeObject.facing < 0;
+            }
+        }
+
+        [CreateProperty]
+        public string VolumeNote
+        {
+            get
+            {
+                var lightIndex = -NativeObject.facing;
+
+                return NativeObject.facing < 0 ?
+                       $"While the game runs, the sound's volume follows light {lightIndex}'s intensity: silent while the light is off, and full volume while it's fully on. (Light 0 can't be used this way.)" :
+                       string.Empty;
+            }
+        }
+
+        // What an activated monster goes for (monsters.cpp: activation_bias, from the flags' top 4 bits)
+        [CreateProperty]
+        public string ActivationBias
+        {
+            get
+            {
+                var bias = map.DECODE_ACTIVATION_BIAS(NativeObject.flags);
+
+                return bias >= 0 && bias < ActivationBiasNames.Length ? $"{ActivationBiasNames[bias]} ({bias})" : bias.ToString();
+            }
+        }
+
+        [CreateProperty]
+        public bool IsMonster
+        {
+            get
+            {
+                return NativeObject.type == map._saved_monster;
             }
         }
 
@@ -178,6 +268,9 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // The same flag is a sound source's "platform sound" (it plays the moving sound of the platform it's on, while
+        // the platform moves) and anything else's "invisible" (a monster teleports in when it's activated), so it's
+        // labelled for the object it's on
         [CreateProperty]
         public bool Invisible
         {
@@ -233,15 +326,6 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public bool OnPlatform
-        {
-            get
-            {
-                return csmacros.TEST_FLAG(NativeObject.flags, map._map_object_is_platform_sound);
-            }
-        }
-
-        [CreateProperty]
         public bool HasPlacement
         {
             get
@@ -256,6 +340,17 @@ namespace ForgePlus.Inspection
 
             Root.Q(nameof(Subtype)).BindShown(this, nameof(IsNotSoundSource));
             Root.Q(nameof(Sound)).BindShown(this, nameof(IsSoundSource));
+            Root.Q(nameof(Angle)).BindShown(this, nameof(IsNotSoundSource));
+            Root.Q(nameof(Volume)).BindShown(this, nameof(IsSoundSource));
+            Root.Q(nameof(ActivationBias)).BindShown(this, nameof(IsMonster));
+
+            Root.Q(nameof(Volume)).Q<SliderInt>().highValue = SoundManagerEnums.MAXIMUM_SOUND_VOLUME;
+
+            var volumeNote = Root.Q<Label>("volume-note");
+            volumeNote.Bind("text", this, nameof(VolumeNote));
+            volumeNote.BindShown(this, nameof(IsVolumeFromLight));
+
+            Root.Find<Toggle>(nameof(Invisible)).text = IsSoundSource ? "Platform Sound" : "Invisible";
 
             // Items and monsters are placed by type (which is also edited with nothing selected, for every type)
             Root.Q("Placement").style.display = HasPlacement ? DisplayStyle.Flex : DisplayStyle.None;
@@ -286,6 +381,8 @@ namespace ForgePlus.Inspection
         {
             RefreshValuesInInspector();
         }
+
+        private static readonly string[] ActivationBiasNames = { "Player", "Nearest Hostile", "Goal", "Random" };
 
         // "Waterfall (6)", or just the number for a code the engine has no sound for
         private static string AmbientSoundChoice(short ambientSound)

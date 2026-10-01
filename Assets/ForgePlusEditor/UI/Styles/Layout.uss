@@ -322,3 +322,22 @@
     -unity-text-outline-width: 1px;
     -unity-text-outline-color: var(--fp-text-bright);
 }
+
+/* ---------- Pop-ups over the whole UI (such as LightPicker's list of lights) ---------- */
+
+/* Covers the UI, so a click outside the pop-up closes it */
+.fp-popup-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.fp-light-picker {
+    position: absolute;
+    background-color: var(--fp-label-area);
+    padding: 5px;
+    border-width: 1px;
+    border-color: var(--fp-indicator-frame);
+}

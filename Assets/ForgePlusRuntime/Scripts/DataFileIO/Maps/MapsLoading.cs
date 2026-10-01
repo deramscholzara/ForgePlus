@@ -49,6 +49,15 @@ namespace ForgePlus.DataFileIO
             }
         }
 
+        // The open level's index in the map file (-1 while none is open)
+        public int OpenLevelIndex
+        {
+            get
+            {
+                return data != null ? data.OpenLevelIndex : -1;
+            }
+        }
+
         protected override DataFileTypes DataFileType
         {
             get

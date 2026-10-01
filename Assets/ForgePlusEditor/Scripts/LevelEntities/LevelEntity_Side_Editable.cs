@@ -242,6 +242,9 @@ namespace RuntimeCore.Entities.Geometry
                     TransparentSurface.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
                     break;
             }
+
+            // Whether the line has a transparent side, or a landscape, may have changed
+            LineFlagsEditing.UpdateForSide(ParentLevel.Level, NativeObject);
         }
 
         // The material depends on the transfer mode too (a landscape's is its own), besides how the texture moves
@@ -272,6 +275,9 @@ namespace RuntimeCore.Entities.Geometry
                     TransparentSurface.ApplyTransferMode(innerLayer);
                     break;
             }
+
+            // Whether the line has a landscape may have changed
+            LineFlagsEditing.UpdateForSide(ParentLevel.Level, NativeObject);
         }
 
         public void SetLight(DataSources dataSource, short lightIndex)

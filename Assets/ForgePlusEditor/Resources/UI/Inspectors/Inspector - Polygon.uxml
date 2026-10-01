@@ -3,6 +3,7 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <!-- Bound to Inspector_Polygon -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -24,7 +25,7 @@
         <ui:Instance template="Row" name="FloorHeight">
             <ui:AttributeOverrides element-name="label" text="Height:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="FloorLightIndex">
+        <ui:Instance template="LightRow" name="FloorLightIndex">
             <ui:AttributeOverrides element-name="label" text="Light:" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
@@ -34,7 +35,7 @@
         <ui:Instance template="Row" name="CeilingHeight">
             <ui:AttributeOverrides element-name="label" text="Height:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="CeilingLightIndex">
+        <ui:Instance template="LightRow" name="CeilingLightIndex">
             <ui:AttributeOverrides element-name="label" text="Light:" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
@@ -44,17 +45,17 @@
         <ui:Instance template="Row" name="MediaIndex">
             <ui:AttributeOverrides element-name="label" text="Index:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="MediaLight">
+        <ui:Instance template="LightRow" name="MediaLight">
             <ui:AttributeOverrides element-name="label" text="Light:" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Sounds" />
         </ui:Instance>
-        <ui:Instance template="Row" name="AmbientSound">
+        <ui:Instance template="Row" name="AmbientSound" tooltip="Its entry in the level's ambient sounds (Level mode's Sounds tab lists them), which it loops while the player is in it">
             <ui:AttributeOverrides element-name="label" text="Ambient:" />
         </ui:Instance>
-        <ui:Instance template="Row" name="RandomSound">
+        <ui:Instance template="Row" name="RandomSound" tooltip="Its entry in the level's random sounds (Level mode's Sounds tab lists them), which it plays now and then while the player is in it">
             <ui:AttributeOverrides element-name="label" text="Random:" />
         </ui:Instance>
     </ui:VisualElement>

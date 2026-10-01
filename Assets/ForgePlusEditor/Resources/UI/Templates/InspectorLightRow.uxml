@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:fp="ForgePlus.UI">
+    <!-- A light, chosen from the level's lights (with their previews); an instance is named after the inspector property
+         it edits (a light index, or -1 for none), and is grayed out while that property can't be set, or while its
+         Is<Name>Editable property is false -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area">
+            <fp:LightIndexField name="value" class="fp-inspector-light" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

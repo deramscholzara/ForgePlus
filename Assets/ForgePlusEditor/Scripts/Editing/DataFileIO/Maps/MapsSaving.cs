@@ -18,10 +18,31 @@ namespace ForgePlus.DataFileIO
         private const string KeepChecksumOption = "Keep";
         private const string RegenerateChecksumOption = "Regenerate";
 
-        // Just the open level, in a map file of its own
-        public void Save()
+        private const string MapOnlyOption = "MapOnly";
+        private const string PhysicsOption = "Physics";
+        private const string ResourcesOption = "Resources";
+        private const string ResourcesAndPhysicsOption = "ResourcesAndPhysics";
+
+        // Just the open level, in a map file of its own, with what it uses besides its map (its embedded physics, and its
+        // resources from the map file), as chosen in a dialog (unless it's cancelled)
+        public async void Save()
         {
-            ShowSelectionBrowserCoroutine(merged: false, keepChecksum: false);
+            var option = await DialogManager.Instance.DisplayQueuedDialog(
+                title: "Save with...",
+                message: "Physics: the physics saved in the level. Resources: what it uses from the map file's resources (its chapter screen, its terminals' pictures, its part of the level script, and the end screens).",
+                options: new[] { MapOnlyOption, PhysicsOption, ResourcesOption, ResourcesAndPhysicsOption },
+                optionLabels: new[] { "Map Only", "Physics", "Resources", "Resources and Physics" },
+                checkboxLabel: null);
+
+            if (option.Option == null)
+            {
+                return;
+            }
+
+            var withPhysics = option.Option == PhysicsOption || option.Option == ResourcesAndPhysicsOption;
+            var withResources = option.Option == ResourcesOption || option.Option == ResourcesAndPhysicsOption;
+
+            ShowSelectionBrowserCoroutine(merged: false, path => SaveLevelToUnmergedMapFile(path, withPhysics, withResources));
         }
 
         // Every level of the map file, with the open level as edited, in one map file. Its checksum is kept or
@@ -52,10 +73,11 @@ namespace ForgePlus.DataFileIO
                 }
             }
 
-            ShowSelectionBrowserCoroutine(merged: true, keepChecksum: choice == MergedSaveChecksums.Keep);
+            var keepChecksum = choice == MergedSaveChecksums.Keep;
+            ShowSelectionBrowserCoroutine(merged: true, path => SaveMergedMapFile(path, keepChecksum));
         }
 
-        private void ShowSelectionBrowserCoroutine(bool merged, bool keepChecksum)
+        private void ShowSelectionBrowserCoroutine(bool merged, Action<string> save)
         {
             UIBlocking.Instance.Block();
 
@@ -69,10 +91,10 @@ namespace ForgePlus.DataFileIO
                 directory: initialDirectory,
                 defaultName: defaultName,
                 type.FileExtension(),
-                cb: savePath => HandleSelectionBrowserResponse(savePath, type, merged, keepChecksum));
+                cb: savePath => HandleSelectionBrowserResponse(savePath, type, save));
         }
 
-        private void HandleSelectionBrowserResponse(string savePath, DataFileTypes type, bool merged, bool keepChecksum)
+        private void HandleSelectionBrowserResponse(string savePath, DataFileTypes type, Action<string> save)
         {
             if (!string.IsNullOrEmpty(savePath) && !string.IsNullOrWhiteSpace(savePath))
             {
@@ -81,14 +103,7 @@ namespace ForgePlus.DataFileIO
 
                 try
                 {
-                    if (merged)
-                    {
-                        SaveMergedMapFile(path, keepChecksum);
-                    }
-                    else
-                    {
-                        SaveLevelToUnmergedMapFile(path);
-                    }
+                    save(path);
 
                     FileSettings.Instance.UpdateFilePath(type, filePath: path, loadFile: false);
 
@@ -103,14 +118,14 @@ namespace ForgePlus.DataFileIO
             UIBlocking.Instance.Unblock();
         }
 
-        private void SaveLevelToUnmergedMapFile(string savePath)
+        public void SaveLevelToUnmergedMapFile(string savePath, bool withPhysics, bool withResources)
         {
             if (data == null)
             {
                 throw new IOException($"Tried saving Level with no MapsData loaded.");
             }
 
-            data.SaveCurrentLevel(savePath);
+            data.SaveCurrentLevel(savePath, withPhysics, withResources);
         }
 
         public void SaveMergedMapFile(string savePath, bool keepChecksum)

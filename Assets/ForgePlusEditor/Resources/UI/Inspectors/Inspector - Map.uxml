@@ -19,6 +19,9 @@
         <ui:Instance template="Row" name="LevelCount">
             <ui:AttributeOverrides element-name="label" text="Levels:" />
         </ui:Instance>
+        <ui:Instance template="Row" name="EmbeddedPhysicsLevelCount" tooltip="Physics saved in a level, which it uses instead of the selected physics file (Files tab). Marathon Infinity and Aleph One load it; Marathon 2 doesn't.">
+            <ui:AttributeOverrides element-name="label" text="Embedded Physics:" />
+        </ui:Instance>
         <ui:Instance template="Row" name="FileVersion">
             <ui:AttributeOverrides element-name="label" text="File Version:" />
         </ui:Instance>
@@ -35,7 +38,7 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Mac File" />
         </ui:Instance>
-        <ui:Label text="The resource fork holds the map's pictures (such as its terminals'), color tables and level script. Saving keeps it, and the Finder's information, as they are, in the same form (such as MacBinary)." class="fp-inspector-note" />
+        <ui:Label text="The resource fork holds the map's pictures (such as its terminals'), color tables and level script. Save Merged keeps it (but for chapter screens turned off in Level mode), and the Finder's information, as they are, in the same form (such as MacBinary). Save Level (with resources) keeps only what its level uses (its chapter screen, as level 0's, its terminals' pictures, its part of the level script, and the end screens)." class="fp-inspector-note" />
         <ui:Instance template="Row" name="Container">
             <ui:AttributeOverrides element-name="label" text="Format:" />
         </ui:Instance>

@@ -54,6 +54,10 @@ namespace AlephOne
         public List<terminal_groupings> groupings = new List<terminal_groupings>();
         public List<text_face_data> font_changes = new List<text_face_data>();
         public List<byte> text = new List<byte>();
+
+        // ForgePlus: whether the text is saved encoded (as it was loaded, until it's changed), whatever decode_text()
+        // has done to it since
+        public bool encode_when_saved = false;
     }
 
     [NoAutoStaticsCleanup]
@@ -535,6 +539,9 @@ namespace AlephOne
                 StreamToBytes(p, text, text.Length);
                 data.text.AddRange(text);
 
+                // ForgePlus: saved as it was loaded
+                data.encode_when_saved = (data.flags & _text_is_encoded_flag) != 0;
+
                 // Continue with next terminal
                 count -= total_length;
             }
@@ -553,8 +560,17 @@ namespace AlephOne
                 ushort total_length = (ushort) packed_terminal_length(t);
                 ushort grouping_count = (ushort) t.groupings.Count;
                 ushort font_changes_count = (ushort) t.font_changes.Count;
+
+                // ForgePlus: the text (and its flag) as encode_when_saved says, whether or not it's been decoded
+                var saved = new terminal_text_t { flags = t.flags, text = new List<byte>(t.text) };
+                if (((saved.flags & _text_is_encoded_flag) != 0) != t.encode_when_saved)
+                {
+                    encode_text(saved);
+                    saved.flags = t.encode_when_saved ? (ushort) (t.flags | _text_is_encoded_flag) : (ushort) (t.flags & ~_text_is_encoded_flag);
+                }
+
                 ValueToStream(p, total_length);
-                ValueToStream(p, t.flags);
+                ValueToStream(p, saved.flags);
                 ValueToStream(p, t.lines_per_page);
                 ValueToStream(p, grouping_count);
                 ValueToStream(p, font_changes_count);
@@ -584,7 +600,7 @@ namespace AlephOne
                 assert((p.Position - p_start) == SIZEOF_text_face_data * font_changes_count);
 
                 // Write text (no conversion)
-                BytesToStream(p, t.text.ToArray(), t.text.Count);
+                BytesToStream(p, saved.text.ToArray(), saved.text.Count);
             }
         }
 

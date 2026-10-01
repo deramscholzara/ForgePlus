@@ -103,6 +103,17 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // How many levels have physics saved in them (which Marathon Infinity and Aleph One use instead of the physics
+        // file)
+        [CreateProperty]
+        public string EmbeddedPhysicsLevelCount
+        {
+            get
+            {
+                return $"{mapsFile.EmbeddedPhysicsLevelCount} of {mapsFile.Levels.Count} levels";
+            }
+        }
+
         // The wad format's version (wad.h), which saving writes as Marathon Infinity's
         [CreateProperty]
         public string FileVersion
@@ -270,6 +281,8 @@ namespace ForgePlus.Inspection
                 row.Q<Label>("label").text = $"{code.TrimEnd()}:";
                 row.Q<Label>("value").text = ResourceTypeNames.TryGetValue(code, out var name) ? $"{type.Value} ({name})" : type.Value.ToString();
 
+                // Read-only, as rows with no setter are
+                row.SetEnabled(false);
                 rows.Insert(index++, row);
             }
         }

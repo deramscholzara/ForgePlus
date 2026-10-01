@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.UI;
 using RuntimeCore.Entities.Geometry;
 using Unity.Properties;
 
@@ -108,12 +109,81 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // A switch that only works while its primary surface's light is above 75% (devices.cpp: switch_can_be_toggled)
         [CreateProperty]
         public bool LightedMustBeAbove75Percent
         {
             get
             {
                 return csmacros.TEST_FLAG(Side.flags, map._side_is_lighted_switch);
+            }
+            set
+            {
+                SetFlag(map._side_is_lighted_switch, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsLightedMustBeAbove75PercentEditable
+        {
+            get
+            {
+                return IsControlPanel;
+            }
+        }
+
+        // Aleph One only: Marathon 1's lighted switch, which only works while its light is above 50%. Aleph One sets it
+        // on a Marathon 1 level's switches (in vacuum levels), and the 75% flag outranks it.
+        [CreateProperty]
+        public bool LightedMustBeAbove50Percent
+        {
+            get
+            {
+                return csmacros.TEST_FLAG(Side.flags, map._side_is_m1_lighted_switch);
+            }
+            set
+            {
+                SetFlag(map._side_is_m1_lighted_switch, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsLightedMustBeAbove50PercentEditable
+        {
+            get
+            {
+                return IsControlPanel && !LightedMustBeAbove75Percent;
+            }
+        }
+
+        // Aleph One only: a tag switch that needs an item (such as a chip insertion) works without it, as Marathon 1's do
+        // (Aleph One sets it on a Marathon 1 level's sides)
+        [CreateProperty]
+        public bool ItemIsOptional
+        {
+            get
+            {
+                return csmacros.TEST_FLAG(Side.flags, map._side_item_is_optional);
+            }
+            set
+            {
+                SetFlag(map._side_item_is_optional, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsItemIsOptionalEditable
+        {
+            get
+            {
+                if (!IsControlPanel)
+                {
+                    return false;
+                }
+
+                var definition = devices.get_control_panel_definition(Side.control_panel_type);
+
+                return definition != null && definition._class == map._panel_is_tag_switch && definition.item != cstypes.NONE;
             }
         }
 
@@ -135,31 +205,90 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Each surface's light, which a surface without a texture hasn't, and a landscape doesn't use (so it can't be
+        // set, as painting a light can't set it)
         [CreateProperty]
-        public string PrimaryLightIndex
+        public int PrimaryLightIndex
         {
             get
             {
-                return Side.primary_texture.texture.IsEmptyShapeDescriptor() ? "-" : Side.primary_lightsource_index.ToString();
+                return Side.primary_texture.texture.IsEmptyShapeDescriptor() ? LightIndexField.NoLight : Side.primary_lightsource_index;
+            }
+            set
+            {
+                SetLight(LevelEntity_Side.DataSources.Primary, value);
             }
         }
 
         [CreateProperty]
-        public string SecondaryLightIndex
+        public bool IsPrimaryLightIndexEditable
         {
             get
             {
-                return Side.secondary_texture.texture.IsEmptyShapeDescriptor() ? "-" : Side.secondary_lightsource_index.ToString();
+                return UsesLight(Side.primary_texture.texture);
             }
         }
 
         [CreateProperty]
-        public string TransparentLightIndex
+        public int SecondaryLightIndex
         {
             get
             {
-                return Side.transparent_texture.texture.IsEmptyShapeDescriptor() ? "-" : Side.transparent_lightsource_index.ToString();
+                return Side.secondary_texture.texture.IsEmptyShapeDescriptor() ? LightIndexField.NoLight : Side.secondary_lightsource_index;
             }
+            set
+            {
+                SetLight(LevelEntity_Side.DataSources.Secondary, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsSecondaryLightIndexEditable
+        {
+            get
+            {
+                return UsesLight(Side.secondary_texture.texture);
+            }
+        }
+
+        [CreateProperty]
+        public int TransparentLightIndex
+        {
+            get
+            {
+                return Side.transparent_texture.texture.IsEmptyShapeDescriptor() ? LightIndexField.NoLight : Side.transparent_lightsource_index;
+            }
+            set
+            {
+                SetLight(LevelEntity_Side.DataSources.Transparent, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsTransparentLightIndexEditable
+        {
+            get
+            {
+                return UsesLight(Side.transparent_texture.texture);
+            }
+        }
+
+        private static bool UsesLight(ushort texture)
+        {
+            return !texture.IsEmptyShapeDescriptor() && !texture.UsesLandscapeCollection();
+        }
+
+        private void SetLight(LevelEntity_Side.DataSources dataSource, int lightIndex)
+        {
+            if (lightIndex >= 0)
+            {
+                Edit(side => side.SetLight(dataSource, (short) lightIndex));
+            }
+        }
+
+        private void SetFlag(ushort flag, bool isSet)
+        {
+            Edit(side => side.NativeObject.flags = isSet ? (ushort) (side.NativeObject.flags | flag) : (ushort) (side.NativeObject.flags & ~flag));
         }
     }
 }

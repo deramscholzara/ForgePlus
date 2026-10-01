@@ -70,9 +70,9 @@ namespace ForgePlus.DataFileIO
             level = null;
         }
 
-        public void SaveAsSingleLevelFile(string savePath)
+        public void SaveAsSingleLevelFile(string savePath, bool withPhysics, bool withResources)
         {
-            mapsFile.SaveAsSingleLevelFile(level, savePath);
+            mapsFile.SaveAsSingleLevelFile(level, LevelIndex, savePath, withPhysics, withResources);
 
             // The saved file holds only this level, and it's now the loaded map file
             LevelIndex = 0;

@@ -3,6 +3,7 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
     <!-- Bound to Inspector_Side -->
     <ui:VisualElement class="fp-inspector">
@@ -44,6 +45,12 @@
         <ui:Instance template="Flag" name="ProjectilesOnly">
             <ui:AttributeOverrides element-name="flag" text="Projectiles Only" />
         </ui:Instance>
+        <ui:Instance template="Flag" name="LightedMustBeAbove50Percent" class="fp-aleph-one-only" tooltip="Aleph One only: Marathon 1's lighted switch">
+            <ui:AttributeOverrides element-name="flag" text="Light Must Be &gt; 50%" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="ItemIsOptional" class="fp-aleph-one-only" tooltip="Aleph One only: a tag switch that needs an item (such as a chip insertion) works without it, as in Marathon 1">
+            <ui:AttributeOverrides element-name="flag" text="Item Is Optional" />
+        </ui:Instance>
         <ui:VisualElement class="fp-separator fp-separator--horizontal" />
         <ui:Instance template="Flag" name="IsControlPanel">
             <ui:AttributeOverrides element-name="flag" text="Is Control Panel" />
@@ -55,22 +62,22 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Primary Surface" />
         </ui:Instance>
-        <ui:Instance template="Row" name="PrimaryLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        <ui:Instance template="LightRow" name="PrimaryLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light:" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Secondary Surface" />
         </ui:Instance>
-        <ui:Instance template="Row" name="SecondaryLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        <ui:Instance template="LightRow" name="SecondaryLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light:" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Transparent Surface" />
         </ui:Instance>
-        <ui:Instance template="Row" name="TransparentLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+        <ui:Instance template="LightRow" name="TransparentLightIndex">
+            <ui:AttributeOverrides element-name="label" text="Light:" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Foldout">

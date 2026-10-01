@@ -19,6 +19,10 @@
                 <ui:Instance template="Row" name="LinesPerPage">
                     <ui:AttributeOverrides element-name="label" text="Lines Per Page:" />
                 </ui:Instance>
+                <ui:Instance template="Flag" name="TextIsEncoded">
+                    <ui:AttributeOverrides element-name="flag" text="Text Is Encoded" />
+                </ui:Instance>
+                <ui:Label text="Only for a legacy form of the data, which has always been optional: the text is lightly scrambled in the file (as Bungie's tools saved it), so it can't be read there. Marathon 2, Infinity and Aleph One read the text either way." class="fp-inspector-note" />
                 <ui:VisualElement class="fp-space" />
                 <ui:Instance template="Subheader">
                     <ui:AttributeOverrides element-name="label" text="Groups" />

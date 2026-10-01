@@ -19,6 +19,7 @@ namespace ForgePlus.UI
             nameof(TerminalIndex),
             nameof(HasTerminals),
             nameof(LinesPerPage),
+            nameof(TextIsEncoded),
             nameof(GroupIndex),
             nameof(GroupType),
             nameof(UsesPermutation),
@@ -111,6 +112,25 @@ namespace ForgePlus.UI
             get
             {
                 return Terminal != null ? Terminal.lines_per_page.ToString() : "-";
+            }
+        }
+
+        // Whether the terminal's text is saved encoded (lightly scrambled, as Bungie's tools saved it, so it can't be read
+        // in the file). Marathon and Aleph One read it either way.
+        [CreateProperty]
+        public bool TextIsEncoded
+        {
+            get
+            {
+                return Terminal != null && Terminal.encode_when_saved;
+            }
+            set
+            {
+                if (Terminal != null && Terminal.encode_when_saved != value)
+                {
+                    Terminal.encode_when_saved = value;
+                    Notify(nameof(TextIsEncoded));
+                }
             }
         }
 

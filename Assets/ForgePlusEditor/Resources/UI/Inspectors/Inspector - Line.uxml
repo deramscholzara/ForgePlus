@@ -21,5 +21,8 @@
         <ui:Instance template="Flag" name="Transparent">
             <ui:AttributeOverrides element-name="flag" text="Is Transparent" />
         </ui:Instance>
+        <ui:Instance template="Flag" name="Decorative" class="fp-aleph-one-only" tooltip="Aleph One only: projectiles always pass through the line's transparent sides">
+            <ui:AttributeOverrides element-name="flag" text="Decorative" />
+        </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

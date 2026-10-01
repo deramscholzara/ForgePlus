@@ -288,3 +288,84 @@
     margin: 0;
     padding: 0;
 }
+
+/* A light's index and a preview of its intensity (LightIndexField), in a row's value area, looking like the row's
+   value (its border only shows focus), which opens a list of the level's lights (LightPicker) */
+.fp-inspector-light {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.fp-light-field__input {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    padding: 0 2px 0 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+}
+
+.fp-root .fp-inspector-light:focus > .fp-light-field__input {
+    border-color: var(--fp-focus);
+}
+
+.fp-light-field__index {
+    min-width: 30px;
+    margin: 0;
+    padding: 0;
+    color: var(--fp-value-text);
+}
+
+.fp-light-field__preview {
+    flex-grow: 1;
+    height: 12px;
+    margin: 0 5px;
+    border-width: 1px;
+    border-color: var(--fp-indicator-frame);
+}
+
+.fp-inspector-row:disabled .fp-inspector-light {
+    opacity: 1;
+}
+
+.fp-inspector-row:disabled .fp-light-field__index {
+    color: var(--fp-value-text-disabled);
+}
+
+.fp-inspector-row:disabled .fp-light-field__arrow {
+    visibility: hidden;
+}
+
+/* A slider and a number field for the same value, side by side */
+.fp-inspector-slider {
+    flex-grow: 1;
+    margin: 0 5px 0 0;
+}
+
+.fp-inspector-slider-number {
+    width: 50px;
+    flex-shrink: 0;
+}
+
+/* A chapter screen's preview, as wide as the inspector, keeping its shape */
+.fp-chapter-screen {
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.fp-chapter-screen--off {
+    opacity: 0.35;
+}
+
+.fp-inspector-row__value-area--row {
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Rows added to a list in an inspector, spaced as the inspector's own are */
+.fp-inspector-list > * {
+    margin-bottom: 5px;
+    flex-shrink: 0;
+}

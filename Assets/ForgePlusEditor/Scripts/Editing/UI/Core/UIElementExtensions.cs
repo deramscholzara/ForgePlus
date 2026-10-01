@@ -82,6 +82,8 @@ namespace ForgePlus.UI
             root.Query<DropdownField>(className: "fp-inspector-dropdown").ForEach(dropdown => BindInspectorDropdown(dropdown, dataSource));
 
             root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag => BindInspectorValue(flag, dataSource));
+            root.Query<LightIndexField>(className: "fp-inspector-light").ForEach(light => BindInspectorValue(light, dataSource));
+            root.Query<SliderInt>(className: "fp-inspector-slider").ForEach(slider => BindInspectorSlider(slider, dataSource));
 
             // A choice of one (mutually exclusive options), as the index of its selected option
             root.Query<RadioButtonGroup>(className: "fp-inspector-choice").ForEach(choice => BindInspectorValue(choice, dataSource));
@@ -93,6 +95,17 @@ namespace ForgePlus.UI
             var isEditable = BindEditability(row, dataSource);
 
             field.Bind("value", dataSource, row.name, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
+        }
+
+        // A slider beside a row's number field edits the source's <Name>Slider property (the row's editability is the
+        // number field's)
+        private static void BindInspectorSlider(SliderInt slider, object dataSource)
+        {
+            var row = slider.GetFirstAncestorOfType<TemplateContainer>();
+            var sliderProperty = row.name + "Slider";
+            var isEditable = dataSource.GetType().GetProperty(sliderProperty)?.GetSetMethod() != null;
+
+            slider.Bind("value", dataSource, sliderProperty, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
         }
 
         // A field edits its source property while the property has a setter, and is grayed out (read-only) until then

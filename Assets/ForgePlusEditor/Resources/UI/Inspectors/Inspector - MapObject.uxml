@@ -3,6 +3,7 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="SliderIntegerRow" src="../Templates/InspectorSliderIntegerRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
     <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
     <!-- Bound to Inspector_MapObject -->
@@ -22,9 +23,16 @@
         <ui:Instance template="DropdownRow" name="Sound" tooltip="Choosing a sound needs a sounds file (Files tab), to know which sounds there are">
             <ui:AttributeOverrides element-name="label" text="Sound:" />
         </ui:Instance>
+        <ui:Instance template="Row" name="ActivationBias">
+            <ui:AttributeOverrides element-name="label" text="Activates On:" />
+        </ui:Instance>
         <ui:Instance template="Row" name="Angle">
             <ui:AttributeOverrides element-name="label" text="Angle:" />
         </ui:Instance>
+        <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="0 is silent, and 256 is full volume. A negative number is a light's index (negated), whose intensity is the volume while the game runs.">
+            <ui:AttributeOverrides element-name="label" text="Volume Level:" />
+        </ui:Instance>
+        <ui:Label name="volume-note" text="" class="fp-inspector-note" />
         <ui:Instance template="Row" name="Position">
             <ui:AttributeOverrides element-name="label" text="Position:" />
         </ui:Instance>
@@ -32,6 +40,7 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Flags" />
         </ui:Instance>
+        <!-- Labelled "Platform Sound" for a sound source (see Inspector_MapObject.Invisible) -->
         <ui:Instance template="Flag" name="Invisible">
             <ui:AttributeOverrides element-name="flag" text="Invisible" />
         </ui:Instance>
@@ -49,9 +58,6 @@
         </ui:Instance>
         <ui:Instance template="Flag" name="Floats">
             <ui:AttributeOverrides element-name="flag" text="Floats" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="OnPlatform">
-            <ui:AttributeOverrides element-name="flag" text="On Platform" />
         </ui:Instance>
         <ui:VisualElement name="Placement">
             <ui:VisualElement class="fp-space" />

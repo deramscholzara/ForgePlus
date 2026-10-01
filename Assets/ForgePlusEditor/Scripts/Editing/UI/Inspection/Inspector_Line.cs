@@ -53,5 +53,30 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Aleph One only: projectiles always pass through the line's transparent sides (rather than hitting their
+        // textures, such as a grate's)
+        [CreateProperty]
+        public bool Decorative
+        {
+            get
+            {
+                return Line.is_decorative();
+            }
+            set
+            {
+                Edit(line => line.NativeObject.set_decorative(value));
+            }
+        }
+
+        // Only a line with a transparent side has anything for projectiles to pass through
+        [CreateProperty]
+        public bool IsDecorativeEditable
+        {
+            get
+            {
+                return map.LINE_HAS_TRANSPARENT_SIDE(Line) || Line.is_decorative();
+            }
+        }
+
     }
 }

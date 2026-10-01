@@ -90,6 +90,7 @@ namespace ForgePlus.LevelManipulation
 
             platforms.new_platform(level, staticData, polygon.NativeIndex, level.PlatformList.Count + 1);
             level.static_platforms.Add(staticData);
+            LineFlagsEditing.UpdateForPlatformChange(level, polygon.NativeObject);
 
             var polygonIndex = polygon.NativeIndex;
             RebuildLevel(() => SelectPolygon(polygonIndex));
@@ -119,6 +120,7 @@ namespace ForgePlus.LevelManipulation
             // Its permutation was its platform's index, which means nothing to other types
             polygon.NativeObject.type = newType;
             polygon.NativeObject.permutation = 0;
+            LineFlagsEditing.UpdateForPlatformChange(level, polygon.NativeObject);
 
             var polygonIndex = polygon.NativeIndex;
             RebuildLevel(() => SelectPolygon(polygonIndex));

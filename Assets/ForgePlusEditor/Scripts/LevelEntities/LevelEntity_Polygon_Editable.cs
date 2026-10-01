@@ -199,6 +199,22 @@ namespace RuntimeCore.Entities.Geometry
                     FloorSurface.ApplyLight();
 
                     break;
+                case DataSources.Media:
+                    if (lightIndex == NativeObject.media_lightsource_index)
+                    {
+                        // Light is not different, so exit
+                        return;
+                    }
+
+                    NativeObject.media_lightsource_index = lightIndex;
+
+                    // Without media, there's no surface to light (the light is kept for when it has one)
+                    if (MediaSurface)
+                    {
+                        MediaSurface.ApplyLight();
+                    }
+
+                    break;
                 default:
                     return;
             }

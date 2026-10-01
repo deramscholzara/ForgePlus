@@ -5,7 +5,7 @@
 // build_save_game_wad, build_meta_game_wad, get_dynamic_data_from_save/_wad, get_player_data_from_wad,
 // the net functions, and in process_map_wad the restoring_game path, scenery, shapes and sounds patches,
 // MMLS/LUAS/Lua state, music and ephemera. Chunks that aren't loaded are kept with the level
-// (MapLevel.loaded_wad) and saved as they were, and so are the terminals, which are loaded but not packed.
+// (MapLevel.loaded_wad) and saved as they were.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -940,7 +940,7 @@ namespace AlephOne
             load_placement_data(level, new StreamPointer(data, MAXIMUM_OBJECT_TYPES * SIZEOF_object_frequency_definition), new StreamPointer(data));
 
             /* Extract the terminal data. */
-            data = extract_type_from_wad(wad, TERMINAL_DATA_TAG, out data_length);
+            data = extract_modeled_type_from_wad(level, wad, TERMINAL_DATA_TAG, out data_length);
             load_terminal_data(level, data, data_length);
 
             /* Extract the media definitions */
@@ -1375,6 +1375,8 @@ namespace AlephOne
                     count = level.RandomSoundImageList.Count;
                     break;
                 case TERMINAL_DATA_TAG:
+                    count = computer_interface.calculate_packed_terminal_data_length(level);
+                    break;
                 case MONSTER_PHYSICS_TAG:
                 case EFFECTS_PHYSICS_TAG:
                 case PROJECTILE_PHYSICS_TAG:
@@ -1451,6 +1453,8 @@ namespace AlephOne
                     pack_random_sound_image_data(temp_array, level.RandomSoundImageList, count);
                     break;
                 case TERMINAL_DATA_TAG:
+                    computer_interface.pack_map_terminal_data(level, temp_array, count);
+                    break;
                 case MONSTER_PHYSICS_TAG:
                 case EFFECTS_PHYSICS_TAG:
                 case PROJECTILE_PHYSICS_TAG:
@@ -1680,8 +1684,10 @@ namespace AlephOne
         // The level's chunks in their loaded order, those it models packed from it and the rest as loaded,
         // then any new modeled chunks in export order. With keep_unchanged_chunks, a chunk that packs as it
         // did after loading is written as loaded, so an unedited level is saved byte for byte (packing zeroes
-        // unused fields, and loading applies fixes that Aleph One applies again on every load).
-        public static wad_data build_level_wad(MapLevel level, wad_header header, out int length, bool keep_unchanged_chunks = true)
+        // unused fields, and loading applies fixes that Aleph One applies again on every load). Chunks with an
+        // excluded tag (such as the physics chunks) are left out.
+        public static wad_data build_level_wad(MapLevel level, wad_header header, out int length, bool keep_unchanged_chunks = true,
+            ICollection<uint> excluded_tags = null)
         {
             // Marathon 1 chunks aren't Marathon 2 data
             if (level.loaded_wad.data_version == MARATHON_ONE_DATA_VERSION) keep_unchanged_chunks = false;
@@ -1698,6 +1704,7 @@ namespace AlephOne
             foreach (uint tag in level.loaded_wad.chunk_order)
             {
                 if (written.Contains(tag)) continue; // a wad can't hold a tag twice
+                if (excluded_tags != null && excluded_tags.Contains(tag)) continue;
 
                 if (writes_as_modeled(level, tag))
                 {
@@ -1730,6 +1737,7 @@ namespace AlephOne
             foreach (uint tag in new_tags)
             {
                 if (written.Contains(tag)) continue;
+                if (excluded_tags != null && excluded_tags.Contains(tag)) continue;
                 byte[] array = level_chunk_data(level, tag, out int size);
                 add(tag, array, size);
             }
@@ -1780,9 +1788,11 @@ namespace AlephOne
         }
 
         // export_level(), writing build_level_wad() and, with with_directory_data, the level's directory data
-        public static bool save_level(FileSpecifier File, MapLevel level, bool with_directory_data = true)
+        // ForgePlus: excluded_tags, as for build_level_wad()
+        public static bool save_level(FileSpecifier File, MapLevel level, bool with_directory_data = true,
+            ICollection<uint> excluded_tags = null)
         {
-            return save_levels(File, new[] { level }, with_directory_data);
+            return save_levels(File, new[] { level }, with_directory_data, excluded_tags: excluded_tags);
         }
 
         // ForgePlus: save_level() for a map file of several levels (a merged map), each a wad in turn, in the order given,
@@ -1791,7 +1801,7 @@ namespace AlephOne
         // calculated for the saved file unless one is given to keep (such as the loaded file's, so what refers to that
         // map by its checksum, like saved games and films, still finds it).
         public static bool save_levels(FileSpecifier File, IList<MapLevel> levels, bool with_directory_data = true,
-            byte[] file_name = null, uint? checksum = null)
+            byte[] file_name = null, uint? checksum = null, ICollection<uint> excluded_tags = null)
         {
             var header = new wad_header();
             short err = 0;
@@ -1832,7 +1842,7 @@ namespace AlephOne
                         {
                             MapLevel level = levels[index];
 
-                            wad = build_level_wad(level, header, out wad_length);
+                            wad = build_level_wad(level, header, out wad_length, excluded_tags: excluded_tags);
                             if (wad == null)
                             {
                                 wrote_all = false;

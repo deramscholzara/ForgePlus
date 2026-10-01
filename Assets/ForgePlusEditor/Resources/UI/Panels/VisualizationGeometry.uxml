@@ -17,7 +17,7 @@
                     <ui:AttributeOverrides element-name="control" text="Sides" />
                 </ui:Instance>
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right">
-                    <ui:AttributeOverrides element-name="control" text="Vertices" />
+                    <ui:AttributeOverrides element-name="control" text="Points" />
                 </ui:Instance>
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
                     <ui:AttributeOverrides element-name="control" text="Media" />

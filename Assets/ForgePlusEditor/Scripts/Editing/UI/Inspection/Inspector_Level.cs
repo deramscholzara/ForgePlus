@@ -1,10 +1,13 @@
 ﻿using AlephOne;
 using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
+using ForgePlus.UI;
 using RuntimeCore.Entities;
+using System.Linq;
 using System.Text;
 using Unity.Properties;
 using Unity.Scripting.LifecycleManagement;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace ForgePlus.Inspection
@@ -323,7 +326,32 @@ namespace ForgePlus.Inspection
             }
         }
 
-        // ---------- Physics: the physics chunks saved in the level (which Aleph One uses instead of the physics file)
+        // ---------- Physics: whether the level has physics saved in it (which Marathon Infinity and Aleph One use instead
+        // of the physics file, and which ForgePlus uses for its sprites)
+
+        private static readonly uint[] PhysicsTags =
+        {
+            tags.MONSTER_PHYSICS_TAG, tags.EFFECTS_PHYSICS_TAG, tags.PROJECTILE_PHYSICS_TAG, tags.PHYSICS_PHYSICS_TAG,
+            tags.WEAPONS_PHYSICS_TAG,
+        };
+
+        [CreateProperty]
+        public string EmbeddedPhysics
+        {
+            get
+            {
+                foreach (var tag in PhysicsTags)
+                {
+                    var chunk = GetChunk(tag);
+                    if (chunk != null && chunk.Length > 0)
+                    {
+                        return "Yes";
+                    }
+                }
+
+                return "No";
+            }
+        }
 
         [CreateProperty]
         public string PhysicsInUse
@@ -343,34 +371,99 @@ namespace ForgePlus.Inspection
             }
         }
 
-        [CreateProperty]
-        public string EmbeddedMonsters
+        // ---------- Chapter screen: the picture Aleph One shows as the level starts, from the map's resources (see
+        // MapsFile.ChapterScreenPictureId)
+
+        private static MapsFile MapsFile
         {
-            get { return ChunkCount(tags.MONSTER_PHYSICS_TAG, monsters.SIZEOF_monster_definition, "definitions"); }
+            get
+            {
+                return MapsLoading.Instance.MapsFile;
+            }
+        }
+
+        private static int LevelIndex
+        {
+            get
+            {
+                return MapsLoading.Instance.OpenLevelIndex;
+            }
+        }
+
+        private static short ChapterScreenId
+        {
+            get
+            {
+                return MapsFile != null && LevelIndex >= 0 ? MapsFile.ChapterScreenPictureId(LevelIndex) : (short) -1;
+            }
+        }
+
+        // Turning it off leaves it out of the saved map, so a chapter screen can be turned off only while the map has one
+        // (and the resources can be changed)
+        [CreateProperty]
+        public bool ShowChapterScreen
+        {
+            get
+            {
+                return ChapterScreenId >= 0 && MapsFile.IsChapterScreenShown(LevelIndex);
+            }
+            set
+            {
+                if (ChapterScreenId >= 0)
+                {
+                    MapsFile.SetChapterScreenShown(LevelIndex, value);
+                    RefreshValuesInInspector();
+                    ShowChapterScreenPreview();
+                }
+            }
         }
 
         [CreateProperty]
-        public string EmbeddedEffects
+        public bool IsShowChapterScreenEditable
         {
-            get { return ChunkCount(tags.EFFECTS_PHYSICS_TAG, effects.SIZEOF_effect_definition, "definitions"); }
+            get
+            {
+                return ChapterScreenId >= 0 && MapsFile.Forks.CanEditResources;
+            }
+        }
+
+        // Its resource ID, and which bit depth's version it is (the deepest the map has)
+        [CreateProperty]
+        public string ChapterScreenPicture
+        {
+            get
+            {
+                var id = ChapterScreenId;
+                if (id < 0)
+                {
+                    return "None";
+                }
+
+                var depthOffset = id - 1500 - LevelIndex;
+                var depth = depthOffset >= 20000 ? "32-bit" : depthOffset >= 10000 ? "16-bit" : "8-bit";
+
+                return $"PICT {id} ({depth})";
+            }
+        }
+
+        // ---------- Sounds: the level's ambient and random sounds, which its polygons play (each lists the ones it uses)
+
+        [CreateProperty]
+        public string AmbientSoundCount
+        {
+            get
+            {
+                return Entity.Level.AmbientSoundImageList.Count.ToString();
+            }
         }
 
         [CreateProperty]
-        public string EmbeddedProjectiles
+        public string RandomSoundCount
         {
-            get { return ChunkCount(tags.PROJECTILE_PHYSICS_TAG, projectiles.SIZEOF_projectile_definition, "definitions"); }
-        }
-
-        [CreateProperty]
-        public string EmbeddedPhysicsConstants
-        {
-            get { return ChunkCount(tags.PHYSICS_PHYSICS_TAG, player.SIZEOF_physics_constants, "sets"); }
-        }
-
-        [CreateProperty]
-        public string EmbeddedWeapons
-        {
-            get { return ChunkCount(tags.WEAPONS_PHYSICS_TAG, weapons.SIZEOF_weapon_definition, "definitions"); }
+            get
+            {
+                return Entity.Level.RandomSoundImageList.Count.ToString();
+            }
         }
 
         // ---------- The chunks ForgePlus keeps (and saves) as they were loaded, without reading them
@@ -414,12 +507,15 @@ namespace ForgePlus.Inspection
         // The tab last shown, which the next level inspector shows too
         private static int selectedTab;
 
-        private static readonly string[] TabNames = { "tab-info", "tab-flags", "tab-physics", "tab-shape-patches", "tab-sound-patches", "tab-mml", "tab-lua" };
+        private static readonly string[] TabNames = { "tab-info", "tab-flags", "tab-chapter-screen", "tab-sounds", "tab-shape-patches", "tab-sound-patches", "tab-mml", "tab-lua" };
 
         // Longer text than this is cut off (a text element can only draw so many characters)
         private const int MaximumTextLength = 12000;
 
         private static readonly string[] EnvironmentNames = { "Lh'owon Water", "Lh'owon Lava", "Lh'owon Sewage", "Jjaro", "Pfhor" };
+
+        private VisualElement chapterScreenPreview;
+        private float chapterScreenAspect;
 
         protected override void OnLoaded()
         {
@@ -431,7 +527,30 @@ namespace ForgePlus.Inspection
 
             Root.Query<Label>(className: "fp-inspector-text-block__text").ForEach(text => text.selection.isSelectable = true);
 
+            // As wide as the inspector, and as tall as its picture's shape makes it
+            chapterScreenPreview = Root.Q("chapter-screen-preview");
+            chapterScreenPreview.RegisterCallback<GeometryChangedEvent>(geometryChangedEvent => FitChapterScreenPreview());
+            ShowChapterScreenPreview();
+
+            AddSoundRows();
+
             ShowTab(selectedTab);
+
+            // Saving reloads the map file, which no longer has a chapter screen that was turned off
+            MapsLoading.Instance.OnSaveCompleted += OnSaveCompleted;
+        }
+
+        protected override void OnUnloading()
+        {
+            base.OnUnloading();
+
+            MapsLoading.Instance.OnSaveCompleted -= OnSaveCompleted;
+        }
+
+        private void OnSaveCompleted()
+        {
+            RefreshValuesInInspector();
+            ShowChapterScreenPreview();
         }
 
         private void ShowTab(int tab)
@@ -444,6 +563,74 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // The chapter screen (from the map's resources, as Aleph One shows it at 32 bits), dimmed while it's turned off
+        private void ShowChapterScreenPreview()
+        {
+            var picture = ChapterScreenId >= 0 ? ScenarioPictures.Get((short) (1500 + LevelIndex)) : null;
+            var texture = picture?.Texture;
+
+            if (!texture)
+            {
+                chapterScreenPreview.style.display = DisplayStyle.None;
+                return;
+            }
+
+            chapterScreenAspect = (float) texture.height / texture.width;
+            chapterScreenPreview.style.backgroundImage = texture;
+            chapterScreenPreview.style.display = DisplayStyle.Flex;
+            chapterScreenPreview.EnableInClassList("fp-chapter-screen--off", !ShowChapterScreen);
+
+            FitChapterScreenPreview();
+        }
+
+        private void FitChapterScreenPreview()
+        {
+            var height = chapterScreenPreview.resolvedStyle.width * chapterScreenAspect;
+            if (!float.IsNaN(height) && Mathf.Abs(chapterScreenPreview.resolvedStyle.height - height) > 0.5f)
+            {
+                chapterScreenPreview.style.height = height;
+            }
+        }
+
+        // A row for each of the level's ambient and random sounds (with how many polygons play it), under its list's header
+        private void AddSoundRows()
+        {
+            var level = Entity.Level;
+            var rowTemplate = LoadTemplate("InspectorRow");
+
+            var ambientSounds = Root.Q("ambient-sounds");
+            for (var i = 0; i < level.AmbientSoundImageList.Count; i++)
+            {
+                var index = i;
+                var users = level.PolygonList.Count(polygon => polygon.ambient_sound_image_index == index);
+                AddSoundRow(ambientSounds, rowTemplate, index, $"{SoundImageDescriptions.Describe(level.AmbientSoundImageList[i])}\n{PolygonCount(users)}");
+            }
+
+            var randomSounds = Root.Q("random-sounds");
+            for (var i = 0; i < level.RandomSoundImageList.Count; i++)
+            {
+                var index = i;
+                var users = level.PolygonList.Count(polygon => polygon.random_sound_image_index == index);
+                AddSoundRow(randomSounds, rowTemplate, index, $"{SoundImageDescriptions.Describe(level.RandomSoundImageList[i])}\n{PolygonCount(users)}");
+            }
+        }
+
+        private static void AddSoundRow(VisualElement list, VisualTreeAsset rowTemplate, int index, string description)
+        {
+            var row = rowTemplate.Instantiate();
+            row.Q<Label>("label").text = $"{index}:";
+            row.Q<Label>("value").text = description;
+
+            // Read-only, as rows with no setter are
+            row.SetEnabled(false);
+            list.Add(row);
+        }
+
+        private static string PolygonCount(int count)
+        {
+            return count == 1 ? "Played in 1 polygon" : $"Played in {count} polygons";
+        }
+
         private byte[] GetChunk(uint tag)
         {
             return Entity.Level.loaded_wad.preserved_chunks.TryGetValue(tag, out var chunk) ? chunk : null;
@@ -454,13 +641,6 @@ namespace ForgePlus.Inspection
             var chunk = GetChunk(tag);
 
             return chunk != null ? $"{chunk.Length:N0} bytes" : "None";
-        }
-
-        private string ChunkCount(uint tag, int unitSize, string units)
-        {
-            var chunk = GetChunk(tag);
-
-            return chunk != null ? $"{chunk.Length / unitSize} {units}" : "None";
         }
 
         // MML and Lua are text (UTF-8, which is also plain ASCII), maybe with a terminating NUL

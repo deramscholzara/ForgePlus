@@ -18,6 +18,15 @@ namespace ForgePlus.DataFileIO
             }
         }
 
+        // The open level's index in the map file (-1 while none is open)
+        public int OpenLevelIndex
+        {
+            get
+            {
+                return currentlyOpenLevel != null ? currentlyOpenLevel.LevelIndex : -1;
+            }
+        }
+
         public IReadOnlyCollection<string> LevelNames
         {
             get
@@ -64,14 +73,14 @@ namespace ForgePlus.DataFileIO
             currentlyOpenLevel.UnloadData();
         }
 
-        public void SaveCurrentLevel(string savePath)
+        public void SaveCurrentLevel(string savePath, bool withPhysics, bool withResources)
         {
             if (currentlyOpenLevel == null)
             {
                 throw new IOException($"Tried saving Level with no LevelData loaded.");
             }
 
-            currentlyOpenLevel.SaveAsSingleLevelFile(savePath);
+            currentlyOpenLevel.SaveAsSingleLevelFile(savePath, withPhysics, withResources);
         }
 
         public void SaveMerged(string savePath, bool keepChecksum)

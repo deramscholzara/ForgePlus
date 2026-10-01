@@ -18,7 +18,10 @@
                 <ui:AttributeOverrides element-name="control" text="Flags" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
-                <ui:AttributeOverrides element-name="control" text="Physics" />
+                <ui:AttributeOverrides element-name="control" text="Chapter Screen" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+                <ui:AttributeOverrides element-name="control" text="Sounds" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="Aleph One only">
                 <ui:AttributeOverrides element-name="control" text="Shape Patches" />
@@ -45,6 +48,12 @@
             </ui:Instance>
             <ui:Instance template="Row" name="PhysicsModel">
                 <ui:AttributeOverrides element-name="label" text="Physics Model:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="EmbeddedPhysics" tooltip="Physics saved in the level, which it uses instead of the selected physics file (Files tab). Marathon Infinity and Aleph One load it; Marathon 2 doesn't.">
+                <ui:AttributeOverrides element-name="label" text="Embedded Physics:" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PhysicsInUse">
+                <ui:AttributeOverrides element-name="label" text="Physics In Use:" />
             </ui:Instance>
         </ui:VisualElement>
         <ui:VisualElement name="tab-flags">
@@ -146,26 +155,34 @@
                 <ui:AttributeOverrides element-name="flag" text="Activation Range" />
             </ui:Instance>
         </ui:VisualElement>
-        <ui:VisualElement name="tab-physics">
-            <ui:Label text="Physics saved in the level, which it uses instead of the selected physics file (Files tab). Marathon Infinity and Aleph One load it; Marathon 2 doesn't." class="fp-inspector-note" />
-            <ui:Instance template="Row" name="PhysicsInUse">
-                <ui:AttributeOverrides element-name="label" text="In Use:" />
+        <ui:VisualElement name="tab-chapter-screen">
+            <ui:Label text="The picture shown as the level starts, from the map's resources (PICT 1500 plus the level's index; its 16-bit and 32-bit versions are 10000 and 20000 more). Turning it off leaves it out of the saved map." class="fp-inspector-note" />
+            <ui:Instance template="Flag" name="ShowChapterScreen" tooltip="Grayed out while the map has no chapter screen for the level">
+                <ui:AttributeOverrides element-name="flag" text="Show Chapter Screen" />
             </ui:Instance>
-            <ui:Instance template="Row" name="EmbeddedMonsters">
-                <ui:AttributeOverrides element-name="label" text="Monsters:" />
+            <ui:Instance template="Row" name="ChapterScreenPicture">
+                <ui:AttributeOverrides element-name="label" text="Picture:" />
             </ui:Instance>
-            <ui:Instance template="Row" name="EmbeddedEffects">
-                <ui:AttributeOverrides element-name="label" text="Effects:" />
+            <ui:VisualElement name="chapter-screen-preview" class="fp-chapter-screen" />
+        </ui:VisualElement>
+        <ui:VisualElement name="tab-sounds">
+            <ui:Label text="The sounds the level's polygons play while the player is in them (each polygon picks one of each, or none). Each varies by up to the amount after its value." class="fp-inspector-note" />
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="Ambient Sounds (Looped)" />
             </ui:Instance>
-            <ui:Instance template="Row" name="EmbeddedProjectiles">
-                <ui:AttributeOverrides element-name="label" text="Projectiles:" />
+            <ui:Instance template="Row" name="AmbientSoundCount">
+                <ui:AttributeOverrides element-name="label" text="Count:" />
             </ui:Instance>
-            <ui:Instance template="Row" name="EmbeddedPhysicsConstants">
-                <ui:AttributeOverrides element-name="label" text="Physics Constants:" />
+            <!-- A row for each (added by Inspector_Level) -->
+            <ui:VisualElement name="ambient-sounds" class="fp-inspector-list" />
+            <ui:VisualElement class="fp-space" />
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="Random Sounds (Now and Then)" />
             </ui:Instance>
-            <ui:Instance template="Row" name="EmbeddedWeapons">
-                <ui:AttributeOverrides element-name="label" text="Weapons:" />
+            <ui:Instance template="Row" name="RandomSoundCount">
+                <ui:AttributeOverrides element-name="label" text="Count:" />
             </ui:Instance>
+            <ui:VisualElement name="random-sounds" class="fp-inspector-list" />
         </ui:VisualElement>
         <ui:VisualElement name="tab-shape-patches">
             <ui:Label text="Aleph One only: changes to the shapes (graphics) saved in the level (ShPa), which the original Marathon 2 and Infinity ignore. Kept and saved as they are." class="fp-inspector-note fp-aleph-one-only" />

@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
 using ForgePlus.LevelManipulation;
+using ForgePlus.UI;
 using RuntimeCore.Entities.Geometry;
 using System.Collections.Generic;
 using Unity.Properties;
@@ -93,30 +94,47 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // The light of the polygon's media's surface, which only a polygon with media uses
         [CreateProperty]
-        public string MediaLight
+        public int MediaLight
         {
             get
             {
-                return Polygon.media_lightsource_index.ToString();
+                return Polygon.media_index < 0 ? LightIndexField.NoLight : Polygon.media_lightsource_index;
+            }
+            set
+            {
+                SetLight(LevelEntity_Polygon.DataSources.Media, value);
             }
         }
 
+        [CreateProperty]
+        public bool IsMediaLightEditable
+        {
+            get
+            {
+                return Polygon.media_index >= 0;
+            }
+        }
+
+        // Its entry in the level's ambient sounds, which it loops while the player is in it (the Level inspector's Sounds
+        // tab lists them)
         [CreateProperty]
         public string AmbientSound
         {
             get
             {
-                return Polygon.ambient_sound_image_index.ToString();
+                return SoundImageDescriptions.AmbientSoundOfPolygon(Entity.ParentLevel.Level, Polygon.ambient_sound_image_index);
             }
         }
 
+        // Its entry in the level's random sounds, which it plays now and then while the player is in it
         [CreateProperty]
         public string RandomSound
         {
             get
             {
-                return Polygon.random_sound_image_index.ToString();
+                return SoundImageDescriptions.RandomSoundOfPolygon(Entity.ParentLevel.Level, Polygon.random_sound_image_index);
             }
         }
 
@@ -129,12 +147,26 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // A landscape surface doesn't use its light (so it can't be set, as painting a light can't set it)
         [CreateProperty]
-        public string FloorLightIndex
+        public int FloorLightIndex
         {
             get
             {
-                return Polygon.floor_lightsource_index.ToString();
+                return Polygon.floor_lightsource_index;
+            }
+            set
+            {
+                SetLight(LevelEntity_Polygon.DataSources.Floor, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsFloorLightIndexEditable
+        {
+            get
+            {
+                return !Polygon.floor_texture.UsesLandscapeCollection();
             }
         }
 
@@ -148,11 +180,32 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string CeilingLightIndex
+        public int CeilingLightIndex
         {
             get
             {
-                return Polygon.ceiling_lightsource_index.ToString();
+                return Polygon.ceiling_lightsource_index;
+            }
+            set
+            {
+                SetLight(LevelEntity_Polygon.DataSources.Ceiling, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsCeilingLightIndexEditable
+        {
+            get
+            {
+                return !Polygon.ceiling_texture.UsesLandscapeCollection();
+            }
+        }
+
+        private void SetLight(LevelEntity_Polygon.DataSources dataSource, int lightIndex)
+        {
+            if (lightIndex >= 0)
+            {
+                Edit(polygon => polygon.SetLight(dataSource, (short) lightIndex));
             }
         }
 
