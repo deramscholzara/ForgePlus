@@ -223,8 +223,25 @@ namespace ForgePlus.LevelManipulation
                             SelectObject(LevelEntity_Level.Instance, multiSelect: false);
                         }
                         break;
-                    case ModeManager.PrimaryModes.Map:
                     case ModeManager.PrimaryModes.Terminals:
+                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
+                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
+                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
+                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
+                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
+                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
+                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
+
+                        // Clicking a terminal (a side that's a computer terminal panel) previews it
+                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
+                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
+                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
+                        break;
+                    case ModeManager.PrimaryModes.Map:
                     case ModeManager.PrimaryModes.None:
                     default:
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);

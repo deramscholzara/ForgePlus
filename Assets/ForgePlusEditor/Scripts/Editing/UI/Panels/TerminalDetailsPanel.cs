@@ -39,6 +39,15 @@ namespace ForgePlus.UI
 
             terminals.OnTerminalsChanged += AddTerminalToggles;
             terminals.OnTerminalChanged += AddGroupToggles;
+
+            // Choosing a terminal or group shows its preview (in the menu's place, if it's open)
+            terminalList.RegisterCallback<ClickEvent>(OnListClicked);
+            groupList.RegisterCallback<ClickEvent>(OnListClicked);
+        }
+
+        private static void OnListClicked(ClickEvent clickEvent)
+        {
+            ForgePlusUI.Instance.ShowTerminalPreview();
         }
 
         protected override void OnUnloading()

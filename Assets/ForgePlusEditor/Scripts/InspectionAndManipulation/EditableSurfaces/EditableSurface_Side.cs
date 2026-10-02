@@ -5,6 +5,7 @@ using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Palette;
+using ForgePlus.UI;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System;
@@ -266,6 +267,19 @@ namespace ForgePlus.Entities.Geometry
                     }
 
                     break;
+                case ModeManager.PrimaryModes.Terminals:
+                    // A computer terminal panel previews its terminal (its permutation), as the game shows it when it's
+                    // used (devices.cpp: change_panel_state)
+                    var side = ParentSide.NativeObject;
+                    if (side != null &&
+                        map.SIDE_IS_CONTROL_PANEL(side) &&
+                        devices.get_control_panel_definition(side.control_panel_type) != null &&
+                        devices.get_panel_class(side.control_panel_type) == map._panel_is_computer_terminal)
+                    {
+                        ForgePlusUI.Instance.ShowTerminal(side.control_panel_permutation);
+                    }
+
+                    return;
                 default:
                     Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
                     return;

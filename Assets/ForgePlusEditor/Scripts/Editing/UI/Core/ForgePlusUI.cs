@@ -28,6 +28,8 @@ namespace ForgePlus.UI
         private PanelSlot toolModesSlot;
         private PanelSlot paletteSlot;
 
+        private ModeManager.PrimaryModes lastPrimaryMode = ModeManager.PrimaryModes.None;
+
         public EditorViewModel Editor { get; private set; }
 
         // Name tags for points in the level (annotations), behind the panels
@@ -46,6 +48,22 @@ namespace ForgePlus.UI
             {
                 return editorCamera;
             }
+        }
+
+        // Shows the terminals mode's preview of the terminal (and the group) being viewed, in the menu's place
+        public void ShowTerminalPreview()
+        {
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Terminals)
+            {
+                Editor.MenuOpen = false;
+            }
+        }
+
+        // Views the terminal (as choosing it in the terminals panel does), and shows its preview
+        public void ShowTerminal(int terminalIndex)
+        {
+            Terminals.TerminalIndex = terminalIndex;
+            ShowTerminalPreview();
         }
 
         // Whether a text or number field has focus (so hotkeys are typed instead)
@@ -208,6 +226,18 @@ namespace ForgePlus.UI
         // Each mode shows only the panels that apply to it (None, while no level is open, shows none of them)
         private void OnPrimaryModeChanged(ModeManager.PrimaryModes primaryMode)
         {
+            // Terminals mode opens on its preview (the menu can be opened again from there). Switching to it from no
+            // mode (as a level is opened) isn't entering it.
+            var isEnteringTerminals = primaryMode == ModeManager.PrimaryModes.Terminals &&
+                                      lastPrimaryMode != ModeManager.PrimaryModes.Terminals &&
+                                      lastPrimaryMode != ModeManager.PrimaryModes.None;
+            lastPrimaryMode = primaryMode;
+
+            if (isEnteringTerminals && Editor.MenuOpen)
+            {
+                // Which shows the preview (OnMenuOpenChanged)
+                Editor.MenuOpen = false;
+            }
             // Terminals aren't selected, so their mode shows the terminal and group being previewed in place of the
             // inspectors, annotations are listed, each as its inspector, and the map file (which isn't in the level)
             // has its own inspector
