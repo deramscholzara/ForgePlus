@@ -32,6 +32,7 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_ColorAdjustment = "Settings_ColorAdjustment";
         private const string PlayerPrefsSettingsKey_Vignette = "Settings_Vignette";
         private const string PlayerPrefsSettingsKey_ClipPlatformSides = "Settings_ClipPlatformSides";
+        private const string PlayerPrefsSettingsKey_ShowInvalidSides = "Settings_ShowInvalidSides";
         private const string PlayerPrefsSettingsKey_MergedSaveChecksum = "Settings_MergedSaveChecksum";
         private const string PlayerPrefsSettingsKey_SoundDirection = "Settings_SoundDirection";
         private const string PlayerPrefsSettingsKey_SoundVolume = "Settings_SoundVolume";
@@ -191,6 +192,35 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Sides a line has no side data for (placeholders), which can't be clicked once hidden, so hiding them deselects any
+        public bool ShowInvalidSidesEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_ShowInvalidSides, 1) == 0 ? false : true;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_ShowInvalidSides, value ? 1 : 0);
+
+                if (!value && SelectionManager.Instance)
+                {
+                    foreach (var selection in SelectionManager.Instance.Selection)
+                    {
+                        if (selection is LevelEntity_Side side && side.NativeObject == null)
+                        {
+                            SelectionManager.Instance.DeselectAll();
+                            break;
+                        }
+                    }
+                }
+
+                LevelEntity_Side.PlaceholdersAreVisible = value;
+
+                OnSettingChanged?.Invoke(nameof(ShowInvalidSidesEnabled));
+            }
+        }
+
         public MergedSaveChecksums MergedSaveChecksum
         {
             get
@@ -328,6 +358,7 @@ namespace ForgePlus.ApplicationGeneral
             IsFullScreen = IsFullScreen;
             MinimumLight = MinimumLight;
             ClipPlatformSidesEnabled = ClipPlatformSidesEnabled;
+            ShowInvalidSidesEnabled = ShowInvalidSidesEnabled;
 
             ModeManager.Instance.OnPrimaryModeChanged += OnPrimaryModeChanged;
         }

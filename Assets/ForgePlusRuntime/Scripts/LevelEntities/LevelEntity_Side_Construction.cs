@@ -229,6 +229,11 @@ namespace RuntimeCore.Entities.Geometry
             }
             #endregion Surface_Assembly
 
+            if (side == null && runtimeSide)
+            {
+                runtimeSide.ApplyPlaceholderVisibility();
+            }
+
             return runtimeSide;
         }
 

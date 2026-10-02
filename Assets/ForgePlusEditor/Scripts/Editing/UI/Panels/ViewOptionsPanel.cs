@@ -25,6 +25,7 @@ namespace ForgePlus.UI
 
             Root.Find<Toggle>("sprite-previews").BindValue(settings, nameof(SettingsViewModel.SpritePreviewsEnabled));
             Root.Find<Toggle>("clip-platform-sides").BindValue(settings, nameof(SettingsViewModel.ClipPlatformSidesEnabled));
+            Root.Find<Toggle>("show-invalid-sides").BindValue(settings, nameof(SettingsViewModel.ShowInvalidSidesEnabled));
 
             var soundDirection = Root.Find<Toggle>("sound-direction");
             soundDirection.BindValue(settings, nameof(SettingsViewModel.SoundDirectionEnabled));

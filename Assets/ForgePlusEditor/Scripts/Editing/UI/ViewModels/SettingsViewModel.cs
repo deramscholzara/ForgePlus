@@ -125,6 +125,19 @@ namespace ForgePlus.UI
             }
         }
 
+        [CreateProperty]
+        public bool ShowInvalidSidesEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.ShowInvalidSidesEnabled;
+            }
+            set
+            {
+                SettingsManager.Instance.ShowInvalidSidesEnabled = value;
+            }
+        }
+
         // Shown as on while Object mode forces icons on
         [CreateProperty]
         public bool ObjectIconsEnabled

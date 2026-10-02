@@ -1822,6 +1822,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 139743140134912
+    m_Key: ViewOptions.ShowInvalidSides.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 139743148523520
+    m_Key: ViewOptions.ShowInvalidSides.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

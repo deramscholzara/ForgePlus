@@ -14,6 +14,10 @@
         <ui:Instance template="Toggle" name="clip-platform-sides" class="fp-toggle--wide-short fp-view-option">
             <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.ClipPlatformSides.Control.Text" />
         </ui:Instance>
+        <!-- Sides a line has no side data for -->
+        <ui:Instance template="Toggle" name="show-invalid-sides" class="fp-toggle--wide-short fp-view-option" tooltip="@Common/ViewOptions.ShowInvalidSides.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.ShowInvalidSides.Control.Text" />
+        </ui:Instance>
         <!-- Always on in Sounds mode -->
         <ui:Instance template="Toggle" name="sound-direction" class="fp-toggle--wide-short fp-view-option">
             <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SoundDirection.Control.Text" />

@@ -378,6 +378,8 @@ MonoBehaviour:
   - rid: 552786097007231886
   - rid: 552786097007231887
   - rid: 552786097007231888
+  - rid: 552786129695801426
+  - rid: 552786129695801427
   references:
     version: 2
     RefIds:
@@ -2912,3 +2914,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Data Fork Only
+    - rid: 552786129695801426
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 139743140134912
+        m_Metadata:
+          m_Items: []
+        m_Value: Show Invalid Sides
+    - rid: 552786129695801427
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 139743148523520
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows the sides where a line has no side data for a polygon it faces (drawn untextured)
