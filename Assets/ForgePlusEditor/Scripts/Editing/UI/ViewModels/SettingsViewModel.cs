@@ -1,4 +1,5 @@
 ﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.DataFileIO;
 using System;
 using Unity.Properties;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace ForgePlus.UI
         {
             SettingsManager.Instance.OnSettingChanged += Notify;
             SettingsManager.Instance.OnObjectVisibilityChanged += OnObjectVisibilityChanged;
+            SoundsLoading.Instance.OnDataLoadCompleted += OnSoundsLoadCompleted;
         }
 
         [CreateProperty]
@@ -170,6 +172,8 @@ namespace ForgePlus.UI
                 settingsManager.OnSettingChanged -= Notify;
                 settingsManager.OnObjectVisibilityChanged -= OnObjectVisibilityChanged;
             }
+
+            SoundsLoading.Instance.OnDataLoadCompleted -= OnSoundsLoadCompleted;
         }
 
         // Shown as on while Sounds mode forces sounds' displays on
@@ -214,6 +218,29 @@ namespace ForgePlus.UI
             }
         }
 
+        [CreateProperty]
+        public bool PlayLevelAudioEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.PlayLevelAudioEnabled;
+            }
+            set
+            {
+                SettingsManager.Instance.PlayLevelAudioEnabled = value;
+            }
+        }
+
+        // Playing level audio needs a sounds file (Files tab) to play sounds from
+        [CreateProperty]
+        public bool PlayLevelAudioEditable
+        {
+            get
+            {
+                return SoundsLoading.Instance.IsLoaded;
+            }
+        }
+
         // Also when the mode changes (which may force icons, and sounds' displays, on)
         private void OnObjectVisibilityChanged()
         {
@@ -222,6 +249,11 @@ namespace ForgePlus.UI
             Notify(nameof(SoundDirectionEnabled));
             Notify(nameof(SoundVolumeEnabled));
             Notify(nameof(SoundDisplaysEditable));
+        }
+
+        private void OnSoundsLoadCompleted(bool isLoaded)
+        {
+            Notify(nameof(PlayLevelAudioEditable));
         }
     }
 }

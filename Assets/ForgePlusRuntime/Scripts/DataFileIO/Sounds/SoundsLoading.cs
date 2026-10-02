@@ -33,6 +33,23 @@ namespace ForgePlus.DataFileIO
             base.LoadFile(forceReload);
         }
 
+        // Its clips go with it
+        public override void UnloadFile()
+        {
+            data?.LoadedFile?.ReleaseClips();
+
+            base.UnloadFile();
+        }
+
+        // The loaded sounds file (for playing its sounds), or null without one
+        public SoundsFile File
+        {
+            get
+            {
+                return IsLoaded ? data.SoundsFile : null;
+            }
+        }
+
         // Whether the ambient sound code (as in ambient sound images and sound objects) plays a sound in the file
         public bool HasAmbientSound(short ambientSound)
         {

@@ -46,6 +46,20 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Its bitmap in its collection (-1 for none); one the shapes file doesn't have is shown as a grid
+        [CreateProperty]
+        public int FloorBitmap
+        {
+            get
+            {
+                return BitmapOf(Polygon.floor_texture);
+            }
+            set
+            {
+                SetTexture(LevelEntity_Polygon.DataSources.Floor, WithBitmap(Polygon.floor_texture, value));
+            }
+        }
+
         [CreateProperty]
         public string FloorOffset
         {
@@ -109,6 +123,19 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
+        public int CeilingBitmap
+        {
+            get
+            {
+                return BitmapOf(Polygon.ceiling_texture);
+            }
+            set
+            {
+                SetTexture(LevelEntity_Polygon.DataSources.Ceiling, WithBitmap(Polygon.ceiling_texture, value));
+            }
+        }
+
+        [CreateProperty]
         public string CeilingOffset
         {
             get
@@ -159,6 +186,20 @@ namespace ForgePlus.Inspection
             {
                 return Polygon.ceiling_lightsource_index.ToString();
             }
+        }
+
+        protected override void OnLoaded()
+        {
+            base.OnLoaded();
+
+            MakeTextureChoosable(nameof(FloorTexture), () => Polygon.floor_texture, texture => SetTexture(LevelEntity_Polygon.DataSources.Floor, texture));
+            MakeTextureChoosable(nameof(CeilingTexture), () => Polygon.ceiling_texture, texture => SetTexture(LevelEntity_Polygon.DataSources.Ceiling, texture));
+        }
+
+        // As painting it from the texture palette does
+        private void SetTexture(LevelEntity_Polygon.DataSources dataSource, ushort shapeDescriptor)
+        {
+            Edit(polygon => polygon.SetShapeDescriptor(dataSource, shapeDescriptor));
         }
     }
 }

@@ -3,6 +3,7 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="DropdownPlayRow" src="../Templates/InspectorDropdownPlayRow.uxml" />
     <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <!-- Bound to Inspector_Polygon -->
     <ui:VisualElement class="fp-inspector">
@@ -52,10 +53,10 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="Sounds" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="AmbientSound" tooltip="Its entry in the level's ambient sounds (Sounds mode lists them), which it loops while the player is in it">
+        <ui:Instance template="DropdownPlayRow" name="AmbientSound" tooltip="Its entry in the level's ambient sounds (Sounds mode lists them), which it loops while the player is in it">
             <ui:AttributeOverrides element-name="label" text="Ambient:" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="RandomSound" tooltip="Its entry in the level's random sounds (Sounds mode lists them), which it plays now and then while the player is in it">
+        <ui:Instance template="DropdownPlayRow" name="RandomSound" tooltip="Its entry in the level's random sounds (Sounds mode lists them), which it plays now and then while the player is in it">
             <ui:AttributeOverrides element-name="label" text="Random:" />
         </ui:Instance>
         <ui:Instance template="Row" name="HeardSoundSources" class="fp-inspector-row--vertical" tooltip="The sound sources near enough to it to be heard in it (as the level's precalculated map indexes list them)">

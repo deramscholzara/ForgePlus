@@ -135,6 +135,20 @@ namespace ForgePlus.Palette
         }
 
         // Whether a texture swatch (maybe "None", an empty shape descriptor) is selected, for painting
+        // The textures that can be assigned (the loaded ones), in the palette's order: landscapes first, then each
+        // collection's in order
+        public static List<KeyValuePair<ushort, Texture2D>> SortedLoadedTextures()
+        {
+            var loadedTextureEntries = MaterialGeneration_Geometry.GetAllLoadedTextures().ToList();
+            loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.GetCollection() == entryB.Key.GetCollection() ?
+                                                           entryA.Key.GetShape().CompareTo(entryB.Key.GetShape()) :
+                                                           ((entryA.Key.UsesLandscapeCollection() || entryB.Key.UsesLandscapeCollection()) ?
+                                                            -entryA.Key.GetCollection().CompareTo(entryB.Key.GetCollection()) :
+                                                            entryA.Key.GetCollection().CompareTo(entryB.Key.GetCollection()))));
+
+            return loadedTextureEntries;
+        }
+
         public bool TryGetSelectedTexture(out ushort shapeDescriptor)
         {
             var isSelected = SelectedSwatch != null && SelectedSwatch.Kind == SwatchKinds.Texture;
@@ -404,16 +418,9 @@ namespace ForgePlus.Palette
                     case ModeManager.PrimaryModes.Textures:
                         allowSwitchOff = false;
 
-                        var loadedTextureEntries = MaterialGeneration_Geometry.GetAllLoadedTextures().ToList();
-                        loadedTextureEntries.Sort((entryA, entryB) => (entryA.Key.GetCollection() == entryB.Key.GetCollection() ?
-                                                                       entryA.Key.GetShape().CompareTo(entryB.Key.GetShape()) :
-                                                                       ((entryA.Key.UsesLandscapeCollection() || entryB.Key.UsesLandscapeCollection()) ?
-                                                                        -entryA.Key.GetCollection().CompareTo(entryB.Key.GetCollection()) :
-                                                                        entryA.Key.GetCollection().CompareTo(entryB.Key.GetCollection()))));
-
                         swatches.Add(new Swatch { Kind = SwatchKinds.Texture });
 
-                        foreach (var textureEntry in loadedTextureEntries)
+                        foreach (var textureEntry in SortedLoadedTextures())
                         {
                             swatches.Add(new Swatch { Kind = SwatchKinds.Texture, ShapeDescriptor = textureEntry.Key, Texture = textureEntry.Value });
                         }

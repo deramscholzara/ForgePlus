@@ -104,16 +104,28 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // A placeholder (with no side data) is inspected as the face of its line that it is
         public void Inspect()
         {
-            var inspector = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
-                            (Inspector_Base)new Inspector_Side(this) :
-                            new Inspector_SideTextures(this);
+            Inspector_Base inspector;
+            if (NativeObject == null)
+            {
+                inspector = new Inspector_PlaceholderSide(this);
+            }
+            else if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
+            {
+                inspector = new Inspector_Side(this);
+            }
+            else
+            {
+                inspector = new Inspector_SideTextures(this);
+            }
+
             InspectorPanel.Instance.AddInspector(inspector);
 
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
             {
-                ParentLevel.Lines[NativeObject.line_index].Inspect();
+                ParentLevel.Lines[ParentLineIndex].Inspect();
             }
         }
 
@@ -227,19 +239,20 @@ namespace RuntimeCore.Entities.Geometry
                 newTransferMode = transferMode;
             }
 
+            // A surface the side doesn't draw (one the inspector edits) has nothing to update
             switch (dataSource)
             {
                 case LevelEntity_Side.DataSources.Primary:
                     NativeObject.primary_transfer_mode = newTransferMode;
-                    PrimarySurface.ApplyTexture();
+                    PrimarySurface?.ApplyTexture();
                     break;
                 case LevelEntity_Side.DataSources.Secondary:
                     NativeObject.secondary_transfer_mode = newTransferMode;
-                    SecondarySurface.ApplyTexture();
+                    SecondarySurface?.ApplyTexture();
                     break;
                 case LevelEntity_Side.DataSources.Transparent:
                     NativeObject.transparent_transfer_mode = newTransferMode;
-                    TransparentSurface.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+                    TransparentSurface?.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
                     break;
             }
 
@@ -260,19 +273,19 @@ namespace RuntimeCore.Entities.Geometry
             {
                 case DataSources.Primary:
                     NativeObject.primary_transfer_mode = transferMode;
-                    PrimarySurface.ApplyTexture();
-                    PrimarySurface.ApplyTransferMode();
+                    PrimarySurface?.ApplyTexture();
+                    PrimarySurface?.ApplyTransferMode();
                     break;
                 case DataSources.Secondary:
                     NativeObject.secondary_transfer_mode = transferMode;
-                    SecondarySurface.ApplyTexture();
-                    SecondarySurface.ApplyTransferMode();
+                    SecondarySurface?.ApplyTexture();
+                    SecondarySurface?.ApplyTransferMode();
                     break;
                 case DataSources.Transparent:
                     var innerLayer = !NativeObject.HasLayeredTransparentSide(ParentLevel.Level);
                     NativeObject.transparent_transfer_mode = transferMode;
-                    TransparentSurface.ApplyTexture(innerLayer);
-                    TransparentSurface.ApplyTransferMode(innerLayer);
+                    TransparentSurface?.ApplyTexture(innerLayer);
+                    TransparentSurface?.ApplyTransferMode(innerLayer);
                     break;
             }
 

@@ -3,8 +3,8 @@
 // Not ported (the running platform state machine): update_platforms, platform_was_entered,
 // try_and_change_platform_state, try_and_change_tagged_platform_states, set_platform_state,
 // monster_can_enter/leave_platform, player_touch_platform_state, platform_is_legal_player_target,
-// platform_is_at_initial_state, get_platform_moving_sound, adjust_platform_for_media, platform sounds,
-// and MML parsing.
+// platform_is_at_initial_state, adjust_platform_for_media, and MML parsing. Which sound a platform plays
+// (play_platform_sound) is ported, as get_platform_sound, but not playing it.
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
@@ -273,11 +273,16 @@ namespace AlephOne
         public const short _obstructed_sound = 2;
         public const short _uncontrollable_sound = 3;
 
-        // Only the defaults are ported: the sounds (starting_extension, starting_contraction,
-        // stopping_extension, stopping_contraction, obstructed_sound, uncontrollable_sound, moving_sound),
-        // key_item_index and damage are the running game's.
+        // Not ported: key_item_index and damage (the running game's)
         public class platform_definition
         {
+            /* sounds; specific sounds are played if they can be (i.e., ...at_bottom) otherwise the
+                general sound is played */
+            public short starting_extension, starting_contraction;
+            public short stopping_extension, stopping_contraction;
+            public short obstructed_sound, uncontrollable_sound;
+            public short moving_sound;
+
             public static_platform_data defaults;
         }
 
@@ -285,6 +290,10 @@ namespace AlephOne
         {
             new platform_definition // _platform_is_spht_door
             {
+                starting_extension = SoundManagerEnums._snd_spht_door_opening, starting_contraction = SoundManagerEnums._snd_spht_door_closing,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = SoundManagerEnums._snd_spht_door_obstructed, uncontrollable_sound = SoundManagerEnums._snd_spht_door_obstructed,
+                moving_sound = SoundManagerEnums._ambient_snd_spht_door,
                 defaults = new static_platform_data(
                     _platform_is_spht_door, _fast_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -294,6 +303,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_split_spht_door
             {
+                starting_extension = SoundManagerEnums._snd_spht_door_opening, starting_contraction = SoundManagerEnums._snd_spht_door_closing,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = SoundManagerEnums._snd_spht_door_obstructed, uncontrollable_sound = SoundManagerEnums._snd_spht_door_obstructed,
+                moving_sound = SoundManagerEnums._ambient_snd_spht_door,
                 defaults = new static_platform_data(
                     _platform_is_spht_split_door, _slow_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -304,6 +317,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_locked_spht_door
             {
+                starting_extension = SoundManagerEnums._snd_spht_door_opening, starting_contraction = SoundManagerEnums._snd_spht_door_closing,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = SoundManagerEnums._snd_spht_door_obstructed, uncontrollable_sound = SoundManagerEnums._snd_spht_door_obstructed,
+                moving_sound = SoundManagerEnums._ambient_snd_spht_door,
                 defaults = new static_platform_data(
                     _platform_is_locked_spht_door, _slow_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -314,6 +331,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_spht_platform
             {
+                starting_extension = NONE, starting_contraction = NONE,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = NONE, uncontrollable_sound = NONE,
+                moving_sound = NONE,
                 defaults = new static_platform_data(
                     _platform_is_spht_platform, _slow_platform, _long_delay_platform, NONE, NONE,
                     FLAG(_platform_is_initially_active) | FLAG(_platform_is_initially_extended) | FLAG(_platform_comes_from_floor) |
@@ -321,6 +342,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_noisy_spht_platform
             {
+                starting_extension = SoundManagerEnums._snd_spht_platform_starting, starting_contraction = SoundManagerEnums._snd_spht_platform_starting,
+                stopping_extension = SoundManagerEnums._snd_spht_platform_stopping, stopping_contraction = SoundManagerEnums._snd_spht_platform_stopping,
+                obstructed_sound = SoundManagerEnums._snd_spht_platform_stopping, uncontrollable_sound = NONE,
+                moving_sound = SoundManagerEnums._ambient_snd_spht_platform,
                 defaults = new static_platform_data(
                     _platform_is_noisy_spht_platform, _slow_platform, _long_delay_platform, NONE, NONE,
                     FLAG(_platform_is_initially_active) | FLAG(_platform_is_initially_extended) | FLAG(_platform_comes_from_floor) |
@@ -328,6 +353,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_heavy_spht_door
             {
+                starting_extension = SoundManagerEnums._snd_heavy_spht_door_closing, starting_contraction = SoundManagerEnums._snd_heavy_spht_door_opening,
+                stopping_extension = SoundManagerEnums._snd_heavy_spht_door_closed, stopping_contraction = SoundManagerEnums._snd_heavy_spht_door_open,
+                obstructed_sound = SoundManagerEnums._snd_heavy_spht_door_obstructed, uncontrollable_sound = SoundManagerEnums._snd_heavy_spht_door_obstructed,
+                moving_sound = SoundManagerEnums._ambient_snd_heavy_spht_door,
                 defaults = new static_platform_data(
                     _platform_is_heavy_spht_door, _slow_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -337,6 +366,10 @@ namespace AlephOne
             },
             new platform_definition // pfhor door
             {
+                starting_extension = SoundManagerEnums._snd_pfhor_door_opening, starting_contraction = SoundManagerEnums._snd_pfhor_door_closing,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = SoundManagerEnums._snd_pfhor_door_obstructed, uncontrollable_sound = SoundManagerEnums._snd_pfhor_door_obstructed,
+                moving_sound = SoundManagerEnums._ambient_snd_pfhor_door,
                 defaults = new static_platform_data(
                     _platform_is_pfhor_door, _fast_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -346,6 +379,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_heavy_spht_platform
             {
+                starting_extension = SoundManagerEnums._snd_heavy_spht_platform_starting, starting_contraction = SoundManagerEnums._snd_heavy_spht_platform_starting,
+                stopping_extension = SoundManagerEnums._snd_heavy_spht_platform_stopping, stopping_contraction = SoundManagerEnums._snd_heavy_spht_platform_stopping,
+                obstructed_sound = SoundManagerEnums._snd_heavy_spht_platform_stopping, uncontrollable_sound = NONE,
+                moving_sound = SoundManagerEnums._ambient_snd_heavy_spht_platform,
                 defaults = new static_platform_data(
                     _platform_is_heavy_spht_platform, _slow_platform, _long_delay_platform, NONE, NONE,
                     FLAG(_platform_is_initially_active) | FLAG(_platform_is_initially_extended) |
@@ -353,6 +390,10 @@ namespace AlephOne
             },
             new platform_definition // pfhor platform
             {
+                starting_extension = SoundManagerEnums._snd_pfhor_platform_starting, starting_contraction = SoundManagerEnums._snd_pfhor_platform_starting,
+                stopping_extension = SoundManagerEnums._snd_pfhor_platform_stopping, stopping_contraction = SoundManagerEnums._snd_pfhor_platform_stopping,
+                obstructed_sound = SoundManagerEnums._snd_pfhor_platform_stopping, uncontrollable_sound = NONE,
+                moving_sound = SoundManagerEnums._ambient_snd_pfhor_platform,
                 defaults = new static_platform_data(
                     _platform_is_pfhor_platform, _slow_platform, _long_delay_platform, NONE, NONE,
                     FLAG(_platform_is_initially_active) | FLAG(_platform_is_initially_extended) | FLAG(_platform_comes_from_floor) |
@@ -374,6 +415,51 @@ namespace AlephOne
         private static platform_definition get_platform_definition(short type)
         {
             return GetMemberWithBounds(platform_definitions, type, NUMBER_OF_PLATFORM_TYPES);
+        }
+
+        public static short get_platform_moving_sound(MapLevel level, short platform_index)
+        {
+            platform_data platform = get_platform_data(level, platform_index);
+            platform_definition definition = get_platform_definition(platform.type);
+            if (definition == null) return NONE;
+
+            return definition.moving_sound;
+        }
+
+        // play_platform_sound: which sound (a sound index, or NONE) the platform plays for the sound code. ForgePlus: with
+        // whether it's extending (PLATFORM_IS_EXTENDING), and fully contracted (PLATFORM_IS_FULLY_CONTRACTED), passed in,
+        // as the running game's dynamic flags aren't kept
+        public static short get_platform_sound(MapLevel level, short platform_index, short type, bool is_extending, bool is_fully_contracted)
+        {
+            platform_data platform = get_platform_data(level, platform_index);
+            platform_definition definition = get_platform_definition(platform.type);
+            if (definition == null) return NONE;
+            short sound_code;
+
+            switch (type)
+            {
+                case _obstructed_sound:
+                    sound_code = definition.obstructed_sound;
+                    break;
+
+                case _uncontrollable_sound:
+                    sound_code = definition.uncontrollable_sound;
+                    break;
+
+                case _starting_sound:
+                    sound_code = is_extending ? definition.starting_extension : definition.starting_contraction;
+                    break;
+                case _stopping_sound:
+                    sound_code = is_fully_contracted ? definition.stopping_contraction : definition.stopping_extension;
+                    break;
+
+                default:
+                    assert(false);
+                    sound_code = NONE;
+                    break;
+            }
+
+            return sound_code;
         }
 
         // maximum_platforms_per_map is MAXIMUM_PLATFORMS_PER_MAP, which scan_and_add_platforms() sets to the

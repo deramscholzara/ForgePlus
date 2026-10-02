@@ -140,6 +140,21 @@ namespace ForgePlus.Inspection
             }
         }
 
+        [CreateProperty]
+        public bool IsAmbientSoundPlayable
+        {
+            get
+            {
+                return SoundPreviews.CanPlay(SoundImageKinds.Ambient, SoundImageEditing.IndexOf(Polygon, SoundImageKinds.Ambient));
+            }
+        }
+
+        // Its entry, at the entry's volume
+        public void PlayAmbientSound()
+        {
+            SoundPreviews.Play(SoundImageKinds.Ambient, SoundImageEditing.IndexOf(Polygon, SoundImageKinds.Ambient));
+        }
+
         // Its entry in the level's random sounds, which it plays now and then while the player is in it
         [CreateProperty]
         public string RandomSound
@@ -161,6 +176,21 @@ namespace ForgePlus.Inspection
             {
                 return SoundChoices(SoundImageKinds.Random);
             }
+        }
+
+        [CreateProperty]
+        public bool IsRandomSoundPlayable
+        {
+            get
+            {
+                return SoundPreviews.CanPlay(SoundImageKinds.Random, SoundImageEditing.IndexOf(Polygon, SoundImageKinds.Random));
+            }
+        }
+
+        // Its entry, at a volume and pitch from the entry's ranges
+        public void PlayRandomSound()
+        {
+            SoundPreviews.Play(SoundImageKinds.Random, SoundImageEditing.IndexOf(Polygon, SoundImageKinds.Random));
         }
 
         // The sound sources it hears (those near enough, as the level's map indexes list them for it: map_constructors.cpp,

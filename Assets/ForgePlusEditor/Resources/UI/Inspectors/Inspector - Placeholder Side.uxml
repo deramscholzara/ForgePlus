@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <!-- Bound to Inspector_PlaceholderSide -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="Side (None)" />
+        </ui:Instance>
+        <ui:Label text="This face of its line has no side in the level, so it has no texture. Its polygons' heights can expose it (as they're shown here, or as platforms move), where the game draws nothing." class="fp-inspector-note" />
+        <ui:Instance template="Row" name="LineIndex">
+            <ui:AttributeOverrides element-name="label" text="Line:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Face">
+            <ui:AttributeOverrides element-name="label" text="Face:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FacingPolygon">
+            <ui:AttributeOverrides element-name="label" text="Faces:" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="OpposingPolygon">
+            <ui:AttributeOverrides element-name="label" text="Opposite:" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

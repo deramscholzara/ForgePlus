@@ -18,8 +18,12 @@
         <ui:Instance template="Toggle" name="sound-direction" class="fp-toggle--wide-short fp-view-option">
             <ui:AttributeOverrides element-name="control" text="Sound Direction" />
         </ui:Instance>
-        <ui:Instance template="Toggle" name="sound-volume" class="fp-toggle--wide-short fp-view-option fp-view-option--last">
+        <ui:Instance template="Toggle" name="sound-volume" class="fp-toggle--wide-short fp-view-option">
             <ui:AttributeOverrides element-name="control" text="Sound Volume" />
+        </ui:Instance>
+        <!-- Needs a sounds file (Files tab) to play sounds from -->
+        <ui:Instance template="Toggle" name="play-level-audio" class="fp-toggle--wide-short fp-view-option fp-view-option--last" tooltip="Plays what the game would play where the camera is: its polygon's ambient and random sounds, its media's and platform's, and the sound sources it hears (needs a sounds file, in the Files tab)">
+            <ui:AttributeOverrides element-name="control" text="Play Level Audio" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

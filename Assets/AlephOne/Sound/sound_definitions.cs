@@ -1,7 +1,6 @@
 ﻿// Port of Aleph One: Source_Files/Sound/sound_definitions.h
 //
-// Not ported: depth_curve_definition, sound_behavior_definition and sound_behavior_definitions (sound playback),
-// and the commented-out sound_definitions table.
+// Not ported: the commented-out sound_definitions table.
 // sound_definition is ported as SoundDefinition (SoundFile.cs), which is what Aleph One reads a sounds file into.
 // The ambient and random sound tables are the originals: MML can change them (parse_mml_sounds in SoundManager.cpp),
 // which isn't ported.
@@ -17,6 +16,31 @@ namespace AlephOne
         public ambient_sound_definition(short sound_index)
         {
             this.sound_index = sound_index;
+        }
+    }
+
+    public class depth_curve_definition
+    {
+        public short maximum_volume, maximum_volume_distance;
+        public short minimum_volume, minimum_volume_distance;
+
+        public depth_curve_definition(int maximum_volume, int maximum_volume_distance, int minimum_volume, int minimum_volume_distance)
+        {
+            this.maximum_volume = (short) maximum_volume;
+            this.maximum_volume_distance = (short) maximum_volume_distance;
+            this.minimum_volume = (short) minimum_volume;
+            this.minimum_volume_distance = (short) minimum_volume_distance;
+        }
+    }
+
+    public class sound_behavior_definition
+    {
+        public depth_curve_definition obstructed_curve, unobstructed_curve;
+
+        public sound_behavior_definition(depth_curve_definition obstructed_curve, depth_curve_definition unobstructed_curve)
+        {
+            this.obstructed_curve = obstructed_curve;
+            this.unobstructed_curve = unobstructed_curve;
         }
     }
 
@@ -71,6 +95,26 @@ namespace AlephOne
         public const int SIZEOF_sound_file_header = 260;
 
         public const int SIZEOF_sound_definition = 64;
+
+        /* ---------- sound behavior structures */
+
+        public static readonly sound_behavior_definition[] sound_behavior_definitions = new sound_behavior_definition[NUMBER_OF_SOUND_BEHAVIOR_DEFINITIONS]
+        {
+            /* _sound_is_quiet */
+            new sound_behavior_definition(
+                new depth_curve_definition(0, 0, 0, 0), /* obstructed quiet sounds make no sound */
+                new depth_curve_definition(MAXIMUM_SOUND_VOLUME, 0, 0, 5 * world.WORLD_ONE)),
+
+            /* _sound_is_normal */
+            new sound_behavior_definition(
+                new depth_curve_definition(MAXIMUM_SOUND_VOLUME / 2, 0, 0, 7 * world.WORLD_ONE),
+                new depth_curve_definition(MAXIMUM_SOUND_VOLUME, world.WORLD_ONE, 0, 10 * world.WORLD_ONE)),
+
+            /* _sound_is_loud */
+            new sound_behavior_definition(
+                new depth_curve_definition((3 * MAXIMUM_SOUND_VOLUME) / 4, 0, 0, 10 * world.WORLD_ONE),
+                new depth_curve_definition(MAXIMUM_SOUND_VOLUME, 2 * world.WORLD_ONE, MAXIMUM_SOUND_VOLUME / 8, 15 * world.WORLD_ONE)),
+        };
 
         /* ---------- ambient sound definition structures */
 

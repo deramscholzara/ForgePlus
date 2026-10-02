@@ -251,7 +251,15 @@ namespace RuntimeCore.Entities.Geometry
 
                 runtimeSide.InitializeEntity(parentLevel, sideIndex, side);
 
-                parentLevel.Sides[sideIndex] = runtimeSide;
+                if (side != null)
+                {
+                    parentLevel.Sides[sideIndex] = runtimeSide;
+                }
+                else
+                {
+                    // Each placeholder is its own, though none has a side index to be found by
+                    parentLevel.PlaceholderSides.Add(runtimeSide);
+                }
             }
         }
     }

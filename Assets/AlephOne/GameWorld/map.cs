@@ -1,8 +1,8 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/map.h, and the map-data parts of map.cpp
 //
 // Not ported (runtime only): object_data, dynamic_data and game_data (saved games), map objects and
-// their polygon lists, animation, sounds, rendering, collision (keep_line_segment_out_of_walls,
-// find_line_crossed_leaving_polygon, line_is_obstructed, ...), the automap, and the MARATHON.C,
+// their polygon lists, animation, sounds, rendering, collision (keep_line_segment_out_of_walls, ...; but
+// find_line_crossed_leaving_polygon and line_is_obstructed are, for sounds), the automap, and the MARATHON.C,
 // PLACEMENT.C, DEVICES.C and GAME_WAD.C prototypes (those an editor needs are in their own files).
 using System;
 using static AlephOne.csalerts;
@@ -1082,6 +1082,109 @@ namespace AlephOne
             assert(new_polygon_index != polygon_index);
 
             return new_polygon_index;
+        }
+
+        public static short find_line_crossed_leaving_polygon(MapLevel level, short polygon_index,
+            world_point2d p0, /* origin (not necessairly in polygon_index) */
+            world_point2d p1) /* destination (not necessairly in polygon_index) */
+        {
+            polygon_data polygon = get_polygon_data(level, polygon_index);
+            short intersected_line_index = NONE;
+            short i;
+
+            for (i = 0; i < polygon.vertex_count; ++i)
+            {
+                /* e1 is clockwise from e0 */
+                world_point2d e0 = get_endpoint_data(level, polygon.endpoint_indexes[i]).vertex;
+                world_point2d e1 = get_endpoint_data(level, polygon.endpoint_indexes[i == polygon.vertex_count - 1 ? 0 : i + 1]).vertex;
+
+                /* if e0p1 cross e0e1 is negative, p1 is on the outside of edge e0e1 (a result of zero
+                    means p1 is on the line e0e1) */
+                if ((p1.x - e0.x) * (e1.y - e0.y) - (p1.y - e0.y) * (e1.x - e0.x) > 0)
+                {
+                    /* if p0e1 cross p0p1 is positive, p0p1 crosses e0e1 to the left of e1 */
+                    if ((e1.x - p0.x) * (p1.y - p0.y) - (e1.y - p0.y) * (p1.x - p0.x) <= 0)
+                    {
+                        /* if p0e0 cross p0p1 is negative or zero, p0p1 crosses e0e1 on or to the right of e0 */
+                        if ((e0.x - p0.x) * (p1.y - p0.y) - (e0.y - p0.y) * (p1.x - p0.x) >= 0)
+                        {
+                            intersected_line_index = polygon.line_indexes[i];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return intersected_line_index;
+        }
+
+        // ForgePlus: only Infinity's improved line_is_obstructed (film_profile.line_is_obstructed_fix), which Aleph One
+        // uses for every scenario but the original Marathon 2's films; the earlier _find_line_crossed_leaving_polygon
+        // isn't ported
+        public static bool line_is_obstructed(MapLevel level, short polygon_index1, world_point2d p1, short polygon_index2,
+            world_point2d p2, bool for_sounds)
+        {
+            short polygon_index = polygon_index1;
+            bool obstructed = false;
+            short line_index;
+
+            do
+            {
+                bool last_line = false;
+                line_index = find_line_crossed_leaving_polygon(level, polygon_index, p1, p2);
+
+                if (line_index != NONE)
+                {
+                    if (last_line && polygon_index == polygon_index2) break;
+
+                    line_data line_data = get_line_data(level, line_index);
+                    if (!LINE_IS_SOLID(line_data) || (for_sounds && LINE_HAS_TRANSPARENT_SIDE(line_data)))
+                    {
+                        /* transparent line, find adjacent polygon */
+                        polygon_index = find_adjacent_polygon(level, polygon_index, line_index);
+                        if (for_sounds && polygon_index == NONE) break;
+                        assert(polygon_index != NONE);
+                    }
+                    else
+                    {
+                        obstructed = true; /* non-transparent line */
+                    }
+                    if (last_line)
+                    {
+                        if (polygon_index == polygon_index2) break;
+                        obstructed = true;
+                        break;
+                    }
+                }
+                else
+                {
+                    /* the polygon we ended up in is different than the polygon the caller thinks the
+                        destination point is in; this probably means that the source is on a different
+                        level than the caller, but it could also easily mean that we're dealing with
+                        weird boundary conditions of find_line_crossed_leaving_polygon() */
+                    if (polygon_index != polygon_index2)
+                    {
+                        obstructed = true;
+                        polygon_data polygon = get_polygon_data(level, polygon_index);
+                        polygon_data polygon2 = get_polygon_data(level, polygon_index2);
+                        for (int i = 0; i < polygon.vertex_count; ++i)
+                        {
+                            for (int j = 0; j < polygon2.vertex_count; ++j)
+                            {
+                                if (polygon.endpoint_indexes[i] == polygon2.endpoint_indexes[j])
+                                {
+                                    // if our destination polygon shares any endpoints with our actual destination, we're ok
+                                    obstructed = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            while (!obstructed && line_index != NONE);
+
+            return obstructed;
         }
 
         private static short find_flooding_polygon_helper(MapLevel level, short parent, short polygon_index)

@@ -55,6 +55,20 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Its bitmap in its collection (-1 for none); one the shapes file doesn't have is shown as a grid
+        [CreateProperty]
+        public int PrimaryBitmap
+        {
+            get
+            {
+                return BitmapOf(Side.primary_texture.texture);
+            }
+            set
+            {
+                SetTexture(LevelEntity_Side.DataSources.Primary, WithBitmap(Side.primary_texture.texture, value));
+            }
+        }
+
         [CreateProperty]
         public string PrimaryOffset
         {
@@ -114,6 +128,19 @@ namespace ForgePlus.Inspection
             get
             {
                 return TextureOrPlaceholder(Side.secondary_texture.texture);
+            }
+        }
+
+        [CreateProperty]
+        public int SecondaryBitmap
+        {
+            get
+            {
+                return BitmapOf(Side.secondary_texture.texture);
+            }
+            set
+            {
+                SetTexture(LevelEntity_Side.DataSources.Secondary, WithBitmap(Side.secondary_texture.texture, value));
             }
         }
 
@@ -180,6 +207,19 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
+        public int TransparentBitmap
+        {
+            get
+            {
+                return BitmapOf(Side.transparent_texture.texture);
+            }
+            set
+            {
+                SetTexture(LevelEntity_Side.DataSources.Transparent, WithBitmap(Side.transparent_texture.texture, value));
+            }
+        }
+
+        [CreateProperty]
         public string TransparentOffset
         {
             get
@@ -230,6 +270,21 @@ namespace ForgePlus.Inspection
             {
                 return HasData(Side.transparent_texture) ? Side.transparent_lightsource_index.ToString() : "-";
             }
+        }
+
+        protected override void OnLoaded()
+        {
+            base.OnLoaded();
+
+            MakeTextureChoosable(nameof(PrimaryTexture), () => Side.primary_texture.texture, texture => SetTexture(LevelEntity_Side.DataSources.Primary, texture));
+            MakeTextureChoosable(nameof(SecondaryTexture), () => Side.secondary_texture.texture, texture => SetTexture(LevelEntity_Side.DataSources.Secondary, texture));
+            MakeTextureChoosable(nameof(TransparentTexture), () => Side.transparent_texture.texture, texture => SetTexture(LevelEntity_Side.DataSources.Transparent, texture));
+        }
+
+        // As painting it from the texture palette does
+        private void SetTexture(LevelEntity_Side.DataSources dataSource, ushort shapeDescriptor)
+        {
+            Edit(side => side.SetShapeDescriptor(dataSource, shapeDescriptor));
         }
 
         private static bool HasData(side_texture_definition surface)

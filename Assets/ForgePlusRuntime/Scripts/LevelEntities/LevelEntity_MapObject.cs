@@ -29,7 +29,9 @@ namespace RuntimeCore.Entities.MapObjects
         private static Mesh SceneryMesh;
         private static Mesh SoundMesh;
 
-        private static readonly Dictionary<Rect, Mesh> SpriteQuadMeshes = new Dictionary<Rect, Mesh>();
+        // Not readonly, so AutoStaticsCleanup makes a new one each Play session (it leaves readonly fields as they are,
+        // which would keep the last session's meshes, destroyed by then)
+        private static Dictionary<Rect, Mesh> SpriteQuadMeshes = new Dictionary<Rect, Mesh>();
 
         private const float PlaceholderHeight = 0.05f;
         private const string SpriteObjectName = "Sprite";
@@ -313,7 +315,7 @@ namespace RuntimeCore.Entities.MapObjects
 
         private static Mesh GetSpriteQuadMesh(Rect bounds)
         {
-            if (SpriteQuadMeshes.TryGetValue(bounds, out var mesh))
+            if (SpriteQuadMeshes.TryGetValue(bounds, out var mesh) && mesh)
             {
                 return mesh;
             }

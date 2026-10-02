@@ -32,6 +32,13 @@
     width: 100%;
 }
 
+/* Four to a row (in the texture picker), splitting the 4px gaps between them */
+.fp-swatch-slot--quarter {
+    width: 25%;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
 /* Swatches are toggles with their own content drawn over them */
 .fp-swatch {
     height: var(--fp-short-control-height);
@@ -106,16 +113,45 @@
     overflow: hidden;
 }
 
-/* An ambient or random sound's swatch: its sound after its index, and a bar of its volume at its right */
+/* An ambient or random sound's swatch: its sound after its index, and a button to play it and a bar of its volume at
+   its right */
 .fp-swatch__sound {
     left: 70px;
-    right: 22px;
+    right: 42px;
     top: 5px;
     bottom: 5px;
     -unity-text-align: middle-left;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+/* A sound swatch's play button, left of its volume bar: just its triangle, over the swatch */
+.fp-swatch .fp-swatch__play {
+    position: absolute;
+    right: 20px;
+    top: 4px;
+    bottom: 7px;
+    width: 18px;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: none;
+    color: var(--fp-control-text);
+}
+
+.fp-swatch .fp-swatch__play:hover {
+    background-color: var(--fp-indicator-frame);
+}
+
+.fp-swatch .fp-swatch__play:hover:active {
+    background-color: var(--fp-indicator-on);
+}
+
+.fp-swatch .fp-swatch__play:disabled {
+    opacity: 0.3;
 }
 
 .fp-swatch__volume {

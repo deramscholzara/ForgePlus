@@ -33,6 +33,10 @@ namespace ForgePlus.UI
             var soundVolume = Root.Find<Toggle>("sound-volume");
             soundVolume.BindValue(settings, nameof(SettingsViewModel.SoundVolumeEnabled));
             soundVolume.BindEnabled(settings, nameof(SettingsViewModel.SoundDisplaysEditable));
+
+            var playLevelAudio = Root.Find<Toggle>("play-level-audio");
+            playLevelAudio.BindValue(settings, nameof(SettingsViewModel.PlayLevelAudioEnabled));
+            playLevelAudio.BindEnabled(settings, nameof(SettingsViewModel.PlayLevelAudioEditable));
         }
     }
 }

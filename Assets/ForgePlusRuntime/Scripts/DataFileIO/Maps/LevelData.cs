@@ -157,6 +157,7 @@ namespace ForgePlus.DataFileIO
             runtimeLevel.Polygons = new Dictionary<short, LevelEntity_Polygon>();
             runtimeLevel.Lines = new Dictionary<short, LevelEntity_Line>();
             runtimeLevel.Sides = new Dictionary<short, LevelEntity_Side>();
+            runtimeLevel.PlaceholderSides = new List<LevelEntity_Side>();
             runtimeLevel.Lights = new Dictionary<short, LevelEntity_Light>();
             runtimeLevel.Medias = new Dictionary<short, LevelEntity_Media>();
             runtimeLevel.CeilingPlatforms = new Dictionary<short, LevelEntity_Platform>();

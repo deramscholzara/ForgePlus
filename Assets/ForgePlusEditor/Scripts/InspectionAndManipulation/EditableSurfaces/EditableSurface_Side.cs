@@ -102,6 +102,12 @@ namespace ForgePlus.Entities.Geometry
                             return;
                         }
 
+                        if (selectedSourceSide.NativeObject == null || ParentSide.NativeObject == null)
+                        {
+                            // A surface with no side data has no texture to align, so exit
+                            return;
+                        }
+
                         var destinationIsSource = selectedSourceSide == ParentSide;
 
                         // Assign defaults for when the destination is the source (instead of a neighbor).

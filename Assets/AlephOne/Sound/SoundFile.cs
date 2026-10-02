@@ -1,8 +1,9 @@
 ﻿// Port of Aleph One: Source_Files/Sound/SoundFile.h, SoundFile.cpp (the sound definitions)
 //
-// Not ported: the sounds themselves (SoundHeader, SoundInfo, SoundData, SoundDefinition::Load/LoadData,
-// M2SoundFile::GetSoundHeader/GetSoundData), so M2SoundFile::Open reads the definitions but not the sound headers, and
-// doesn't keep the file open; and M1SoundFile (Marathon 1's resource-fork sounds).
+// SoundData is a byte array. M2SoundFile doesn't keep the sound file opened (GetSoundData opens it again to load a
+// sound's data).
+//
+// Not ported: M2SoundFile::GetSoundHeader, and M1SoundFile (Marathon 1's resource-fork sounds).
 using System.Collections.Generic;
 using static AlephOne.Packing;
 using static AlephOne.sound_definitions;
@@ -87,6 +88,231 @@ namespace AlephOne
 
             return true;
         }
+
+        public bool Load(OpenedFile SoundFile, bool LoadPermutations)
+        {
+            if (!SoundFile.IsOpen()) return false;
+
+            sounds.Clear();
+            int count = LoadPermutations ? permutations : System.Math.Min(permutations, (short) 1);
+
+            for (int i = 0; i < count; i++)
+            {
+                var sound = new SoundHeader();
+                sounds.Add(sound);
+
+                if (!SoundFile.SetPosition(group_offset + sound_offsets[i])
+                    || !sound.Load(SoundFile))
+                {
+                    sounds.Clear();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public byte[] LoadData(OpenedFile SoundFile, short permutation)
+        {
+            if (!SoundFile.IsOpen())
+            {
+                return null;
+            }
+
+            if (!SoundFile.SetPosition(group_offset + sound_offsets[permutation]))
+            {
+                return null;
+            }
+
+            if (permutation >= sounds.Count)
+            {
+                return null;
+            }
+
+            return sounds[permutation].LoadData(SoundFile);
+        }
+
+        // The permutations' headers (loaded by Load)
+        public readonly List<SoundHeader> sounds = new List<SoundHeader>();
+    }
+
+    public enum AudioFormat
+    {
+        _8_bit,
+        _16_bit,
+        _32_float,
+    }
+
+    public class SoundInfo
+    {
+        public AudioFormat audio_format = AudioFormat._8_bit;
+        public bool stereo = false;
+        public bool little_endian = false;
+        public int bytes_per_frame = 1;
+        public int loop_start = 0;
+        public int loop_end = 0;
+        public uint rate = 0; // _fixed (16.16)
+        public int length = 0;
+    }
+
+    // A System 7 sound header (standard, extended or compressed) and its samples
+    public class SoundHeader : SoundInfo
+    {
+        private const byte stdSH = 0x00; // standard sound header
+        private const byte extSH = 0xFF; // extended sound header
+        private const byte cmpSH = 0xFE; // compressed sound header
+
+        // The largest header (an extended or compressed one)
+        private const int MaximumHeaderSize = 64;
+
+        private int data_offset = 0;
+        private bool signed_8bits = false;
+
+        public int Length() { return length; }
+
+        public void Clear() { length = 0; }
+
+        private bool UnpackStandardSystem7Header(StreamPointer header)
+        {
+            bytes_per_frame = 1;
+            audio_format = AudioFormat._8_bit;
+            stereo = false;
+            little_endian = false;
+            header.Skip(4); // sample pointer
+            StreamToValue(header, out length);
+            StreamToValue(header, out rate);
+            StreamToValue(header, out loop_start);
+            StreamToValue(header, out loop_end);
+
+            return true;
+        }
+
+        private bool UnpackExtendedSystem7Header(StreamPointer header)
+        {
+            header.Skip(4); // sample pointer
+            StreamToValue(header, out int num_channels);
+            stereo = (num_channels == 2);
+            StreamToValue(header, out rate);
+            StreamToValue(header, out loop_start);
+            StreamToValue(header, out loop_end);
+            StreamToValue(header, out byte header_type);
+            header.Skip(1); // baseFrequency
+            StreamToValue(header, out int num_frames);
+
+            if (header_type == 0xfe)
+            {
+                header.Skip(10); // AIFF rate
+                header.Skip(4); // marker chunk
+                StreamToValue(header, out uint format);
+                header.Skip(4 * 3); // future use, ptr, ptr
+                StreamToValue(header, out short comp_id);
+                if (format != cstypes.FOUR_CHARS_TO_INT('t', 'w', 'o', 's') || comp_id != -1)
+                {
+                    return false;
+                }
+                signed_8bits = true;
+                header.Skip(4);
+            }
+            else
+            {
+                header.Skip(22);
+            }
+
+            StreamToValue(header, out short sample_size);
+
+            audio_format = sample_size == 16 ? AudioFormat._16_bit : AudioFormat._8_bit;
+            bytes_per_frame = (audio_format == AudioFormat._16_bit ? 2 : 1) * (stereo ? 2 : 1);
+
+            length = num_frames * bytes_per_frame;
+            little_endian = false;
+
+            return true;
+        }
+
+        // ForgePlus: from the header's bytes, as read from the file's current position (the stream Aleph One reads from)
+        private bool Load(byte[] buffer)
+        {
+            Clear();
+
+            byte encoding = buffer[20];
+            var s = new StreamPointer(buffer);
+
+            switch (encoding)
+            {
+                case stdSH:
+                    if (UnpackStandardSystem7Header(s))
+                    {
+                        data_offset = 22;
+                        return true;
+                    }
+                    break;
+                case extSH:
+                case cmpSH:
+                    if (UnpackExtendedSystem7Header(s))
+                    {
+                        data_offset = 64;
+                        return true;
+                    }
+                    break;
+            }
+
+            return false;
+        }
+
+        public bool Load(OpenedFile SoundFile)
+        {
+            // ForgePlus: as much of the largest header as the file has
+            if (!SoundFile.GetPosition(out int position) || !SoundFile.GetLength(out int file_length)) return false;
+
+            var buffer = new byte[MaximumHeaderSize];
+            int count = System.Math.Min(MaximumHeaderSize, file_length - position);
+            if (count < 22 || !SoundFile.Read(count, buffer)) return false;
+
+            try
+            {
+                return Load(buffer);
+            }
+            catch (System.IndexOutOfRangeException)
+            {
+                return false;
+            }
+        }
+
+        // ForgePlus: the samples as the file has them: 8-bit ones unsigned (as signed ones are converted to), and
+        // 16-bit ones big-endian (as little_endian says), for the caller to read (rather than swapped to the platform's)
+        public byte[] LoadData(OpenedFile SoundFile)
+        {
+            if (data_offset == 0 || length <= 0)
+            {
+                return null;
+            }
+
+            if (!SoundFile.GetPosition(out int position) || !SoundFile.SetPosition(position + data_offset))
+            {
+                return null;
+            }
+
+            var p = new byte[length];
+            if (!SoundFile.Read(length, p))
+            {
+                return null;
+            }
+
+            if (audio_format == AudioFormat._8_bit && signed_8bits)
+            {
+                ConvertSignedToUnsignedByte(p, length);
+            }
+
+            return p;
+        }
+
+        private static void ConvertSignedToUnsignedByte(byte[] data, int length)
+        {
+            for (int i = 0; i < length; i++)
+            {
+                data[i] = (byte) ((sbyte) data[i] + 128);
+            }
+        }
     }
 
     public abstract class SoundFile
@@ -109,6 +335,8 @@ namespace AlephOne
         private const int v1Unused = 124;
 
         private readonly List<List<SoundDefinition>> sound_definitions = new List<List<SoundDefinition>>();
+
+        private FileSpecifier sound_file_spec;
 
         private static int HeaderSize() { return SIZEOF_sound_file_header; }
 
@@ -165,7 +393,17 @@ namespace AlephOne
                     }
                 }
 
-                // Not ported: loading all the sound headers, and keeping the sound file opened
+                // load all the headers
+                for (int source = 0; source < source_count; ++source)
+                {
+                    for (int i = 0; i < sound_count; ++i)
+                    {
+                        sound_definitions[source][i].Load(sound_file, true);
+                    }
+                }
+
+                // ForgePlus: rather than keeping the sound file opened, it's opened again to load a sound's data
+                sound_file_spec = SoundFileSpec;
 
                 return true;
             }
@@ -178,6 +416,24 @@ namespace AlephOne
         public override void Close()
         {
             sound_definitions.Clear();
+        }
+
+        // The permutation's samples (see SoundHeader.LoadData), or null if they can't be loaded
+        public byte[] GetSoundData(SoundDefinition definition, short permutation)
+        {
+            if (sound_file_spec == null) return null;
+
+            var sound_file = new OpenedFile();
+            if (!sound_file_spec.Open(sound_file, false)) return null;
+
+            try
+            {
+                return definition.LoadData(sound_file, permutation);
+            }
+            finally
+            {
+                sound_file.Close();
+            }
         }
 
         public override SoundDefinition GetSoundDefinition(int source, int sound_index)

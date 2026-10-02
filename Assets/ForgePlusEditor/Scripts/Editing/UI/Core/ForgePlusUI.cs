@@ -1,6 +1,7 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.CameraNavigation;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Sound;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -77,6 +78,10 @@ namespace ForgePlus.UI
 
             WorldLabels = new WorldLabels(root);
             SoundVisualization = new SoundVisualization(root);
+
+            // The level's sounds are heard at the camera (where its AudioListener is)
+            var soundPlayback = editorCamera.gameObject.AddComponent<LevelSoundPlayback>();
+            soundPlayback.IsListening = SettingsManager.Instance.PlayLevelAudioEnabled;
 
             Editor = new EditorViewModel();
             Settings = new SettingsViewModel();

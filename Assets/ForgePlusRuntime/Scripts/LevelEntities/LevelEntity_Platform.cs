@@ -4,6 +4,7 @@ using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Common;
 using System;
 using System.Threading;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using AlephOne;
 using static AlephOne.platforms;
@@ -11,6 +12,7 @@ using static AlephOne.map;
 
 namespace RuntimeCore.Entities.Geometry
 {
+    [AutoStaticsCleanup]
     public partial class LevelEntity_Platform : LevelEntity_Base, IDestructionPreparable, ISelectable, IInspectable
     {
         public enum LinkedSurfaces
@@ -37,6 +39,11 @@ namespace RuntimeCore.Entities.Geometry
         // TODO: Add this to IInspectable so it must be implemented in all inspectables
         public event Action<LevelEntity_Platform> OnInspectionStateChange;
 
+        // When the game would play one of a platform's sounds (play_platform_sound, in platforms.cpp): the platform, the
+        // sound code (_starting_sound, _stopping_sound or _obstructed_sound), whether it's extending, and whether it's
+        // fully contracted. A split platform's (whose floor and ceiling both move) come from its floor only.
+        public static event Action<LevelEntity_Platform, short, bool, bool> OnRuntimeSound;
+
         // TODO: Use this for checking "is active" state for toggling?
         private CancellationTokenSource platformBehaviorCTS;
 
@@ -53,6 +60,13 @@ namespace RuntimeCore.Entities.Geometry
 
         private float remainingStateTime = 0f;
 
+        // An initially active platform starts moving silently (new_platform, in platforms.cpp, starts it moving rather
+        // than waiting to), as does one carrying on in the other direction after being obstructed
+        private bool startsMovingSilently;
+
+        // Whether the last move went anywhere (so it stopped somewhere)
+        private bool lastMoveMoved;
+
         public float CurrentHeightInWorldUnitIncrements
         {
             get
@@ -66,6 +80,16 @@ namespace RuntimeCore.Entities.Geometry
             get
             {
                 return platformBehaviorCTS != null;
+            }
+        }
+
+        // Whether it's active and extending or contracting (rather than waiting at either end), as with
+        // PLATFORM_IS_ACTIVE and PLATFORM_IS_MOVING in the game
+        public bool IsRuntimeMoving
+        {
+            get
+            {
+                return IsRuntimeActive && (currentState == States.Extending || currentState == States.Contracting);
             }
         }
 
@@ -115,6 +139,8 @@ namespace RuntimeCore.Entities.Geometry
 
         public void BeginRuntimeStyleBehavior()
         {
+            startsMovingSilently = true;
+
             currentState = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? States.Extended : States.Contracted;
 
             currentPosition = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? extendedPosition : contractedPosition;
@@ -131,6 +157,12 @@ namespace RuntimeCore.Entities.Geometry
 
         public void SetRuntimeActive(bool value, bool isRootActivation = true)
         {
+            // Deactivating one that's moving stops it as if obstructed (set_platform_state, in platforms.cpp)
+            if (!value && IsRuntimeMoving)
+            {
+                PlayRuntimeSound(_obstructed_sound);
+            }
+
             if (value)
             {
                 ActivateRuntimeBehavior();
@@ -167,6 +199,10 @@ namespace RuntimeCore.Entities.Geometry
                 if (currentState == States.Extending &&
                     PLATFORM_REVERSES_DIRECTION_WHEN_OBSTRUCTED(NativeObject.static_flags))
                 {
+                    // Whichever part is obstructed plays it (and it carries on, the other way, without starting again)
+                    OnRuntimeSound?.Invoke(this, _obstructed_sound, true, false);
+
+                    startsMovingSilently = true;
                     BeginState(States.Contracting, loop: false);
                 }
             }
@@ -242,6 +278,11 @@ namespace RuntimeCore.Entities.Geometry
                             break;
                         }
 
+                        if (lastMoveMoved)
+                        {
+                            PlayRuntimeSound(_stopping_sound);
+                        }
+
                         if (loop)
                         {
                             currentPosition = contractedPosition;
@@ -278,6 +319,11 @@ namespace RuntimeCore.Entities.Geometry
                         if (cancellationToken.IsCancellationRequested)
                         {
                             break;
+                        }
+
+                        if (lastMoveMoved)
+                        {
+                            PlayRuntimeSound(_stopping_sound);
                         }
 
                         if (loop)
@@ -320,10 +366,21 @@ namespace RuntimeCore.Entities.Geometry
 
         private async Awaitable Move(CancellationToken cancellationToken, float speed, float targetPosition)
         {
+            var startsSilently = startsMovingSilently;
+            startsMovingSilently = false;
+            lastMoveMoved = false;
+
             if (currentPosition == targetPosition)
             {
                 // Already there, so there's no time to spend moving
                 return;
+            }
+
+            lastMoveMoved = true;
+
+            if (!startsSilently)
+            {
+                PlayRuntimeSound(_starting_sound);
             }
 
             if (speed <= 0f)
@@ -360,6 +417,21 @@ namespace RuntimeCore.Entities.Geometry
             currentPosition = targetPosition;
 
             remainingStateTime = GetStateOffsetRealTimeSinceStartup() - endTime;
+        }
+
+        // From its floor, for a split platform (so its sounds play once), as it is now: extending, or fully contracted
+        // (stopped there)
+        private void PlayRuntimeSound(short soundCode)
+        {
+            if (linkedSurface == LinkedSurfaces.Ceiling && PLATFORM_COMES_FROM_FLOOR(NativeObject.static_flags))
+            {
+                return;
+            }
+
+            var isExtending = currentState == States.Extending;
+            var isFullyContracted = currentState == States.Contracting && currentPosition == contractedPosition;
+
+            OnRuntimeSound?.Invoke(this, soundCode, isExtending, isFullyContracted);
         }
 
         private static float GetSpeedInMetersPerSecond(short worldDistancePerTick)

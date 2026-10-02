@@ -4,6 +4,7 @@
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="TextureRow" src="../Templates/InspectorTextureRow.uxml" />
+    <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
     <!-- Bound to Inspector_SideTextures -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -22,6 +23,9 @@
         <ui:Instance template="TextureRow" name="PrimaryTexture">
             <ui:AttributeOverrides element-name="label" text="Texture:" />
         </ui:Instance>
+        <ui:Instance template="IntegerFieldRow" name="PrimaryBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
+            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
+        </ui:Instance>
         <ui:Instance template="Row" name="PrimaryOffset">
             <ui:AttributeOverrides element-name="label" text="Offset:" />
         </ui:Instance>
@@ -38,6 +42,9 @@
         <ui:Instance template="TextureRow" name="SecondaryTexture">
             <ui:AttributeOverrides element-name="label" text="Texture:" />
         </ui:Instance>
+        <ui:Instance template="IntegerFieldRow" name="SecondaryBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
+            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
+        </ui:Instance>
         <ui:Instance template="Row" name="SecondaryOffset">
             <ui:AttributeOverrides element-name="label" text="Offset:" />
         </ui:Instance>
@@ -53,6 +60,9 @@
         </ui:Instance>
         <ui:Instance template="TextureRow" name="TransparentTexture">
             <ui:AttributeOverrides element-name="label" text="Texture:" />
+        </ui:Instance>
+        <ui:Instance template="IntegerFieldRow" name="TransparentBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
+            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
         </ui:Instance>
         <ui:Instance template="Row" name="TransparentOffset">
             <ui:AttributeOverrides element-name="label" text="Offset:" />

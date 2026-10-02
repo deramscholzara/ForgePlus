@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 namespace ForgePlus.Inspection
 {
     // What the ambient and random sound inspectors share: the entry's index, its sound, which polygons play it (a list
-    // to uncheck them from), and deleting it
+    // to uncheck them from), playing it, and deleting it
     public abstract class Inspector_SoundImage : Inspector_Base<SoundImageEntry>
     {
         protected Inspector_SoundImage(SoundImageEntry entry) : base(entry)
@@ -48,6 +48,22 @@ namespace ForgePlus.Inspection
 
                 return count == 1 ? "1 polygon" : $"{count} polygons";
             }
+        }
+
+        // Playing it needs its sound in the sounds file
+        [CreateProperty]
+        public bool IsSoundPlayable
+        {
+            get
+            {
+                return SoundPreviews.CanPlay(Entity.Kind, Entity.Index);
+            }
+        }
+
+        // As the game plays it (at its volume, and a random one's pitch)
+        public void PlaySound()
+        {
+            SoundPreviews.Play(Entity.Kind, Entity.Index);
         }
 
         protected override void OnLoaded()

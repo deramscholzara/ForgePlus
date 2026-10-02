@@ -252,21 +252,30 @@ namespace RuntimeCore.Entities.Geometry
                 return;
             }
 
+            var opposingPolygonIndex = OpposingPolygonIndex;
+            var level = sideEntity.ParentLevel.Level;
+            var opposingPolygon = opposingPolygonIndex >= 0 ? map.get_polygon_data(level, opposingPolygonIndex) : null;
+            var opposingPolygonIsPlatform = opposingPolygon != null && opposingPolygon.GetPlatform(level) != null;
+
             if (FacingPolygonIsPlatform)
             {
-                // A platform's own sides (such as a door's frame) always cover its whole travel
+                if (!opposingPolygonIsPlatform)
+                {
+                    // A platform's own sides (such as a door's frame) always cover its whole travel
+                    return;
+                }
+
+                // Between two platforms, what's drawn depends on both of their heights (and it's nothing while they're
+                // level, as with platforms that rise together), so it's trimmed to that, where it is
+                IsStaticBatchable = false;
+
+                platformSideClipping = SurfaceRenderer.gameObject.AddComponent<PlatformSideClipping>();
+                platformSideClipping.Module = this;
+                platformClippingIsApplied = false;
                 return;
             }
 
-            var opposingPolygonIndex = OpposingPolygonIndex;
-            if (opposingPolygonIndex < 0)
-            {
-                return;
-            }
-
-            var level = sideEntity.ParentLevel.Level;
-            var opposingPolygon = map.get_polygon_data(level, opposingPolygonIndex);
-            if (opposingPolygon.GetPlatform(level) == null)
+            if (!opposingPolygonIsPlatform)
             {
                 return;
             }

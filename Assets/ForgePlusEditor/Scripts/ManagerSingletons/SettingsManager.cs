@@ -1,4 +1,5 @@
 ﻿using ForgePlus.LevelManipulation;
+using ForgePlus.Sound;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
 using System;
@@ -34,6 +35,7 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_MergedSaveChecksum = "Settings_MergedSaveChecksum";
         private const string PlayerPrefsSettingsKey_SoundDirection = "Settings_SoundDirection";
         private const string PlayerPrefsSettingsKey_SoundVolume = "Settings_SoundVolume";
+        private const string PlayerPrefsSettingsKey_PlayLevelAudio = "Settings_PlayLevelAudio";
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
 
@@ -275,6 +277,26 @@ namespace ForgePlus.ApplicationGeneral
                 PlayerPrefs.SetInt(PlayerPrefsSettingsKey_SoundVolume, value ? 1 : 0);
 
                 OnSettingChanged?.Invoke(nameof(SoundVolumeEnabled));
+            }
+        }
+
+        // Plays what the game would play at the camera (LevelSoundPlayback), while there's a sounds file to play it from
+        public bool PlayLevelAudioEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_PlayLevelAudio, 0) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_PlayLevelAudio, value ? 1 : 0);
+
+                if (LevelSoundPlayback.Instance)
+                {
+                    LevelSoundPlayback.Instance.IsListening = value;
+                }
+
+                OnSettingChanged?.Invoke(nameof(PlayLevelAudioEnabled));
             }
         }
 

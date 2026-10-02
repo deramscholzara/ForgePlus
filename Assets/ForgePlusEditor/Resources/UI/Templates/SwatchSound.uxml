@@ -1,8 +1,10 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <!-- An ambient or random sound: its index, its sound, a bar of its volume, and (while polygons play it) the in-use mark -->
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:fp="ForgePlus.UI">
+    <!-- An ambient or random sound: its index, its sound, a button to play it, a bar of its volume, and (while polygons
+         play it) the in-use mark -->
     <ui:Toggle name="control" class="fp-toggle fp-toggle--wide-short fp-swatch fp-template">
         <ui:Label name="index" text="00" picking-mode="Ignore" class="fp-swatch__content fp-swatch__index" />
         <ui:Label name="sound" text="Sound" picking-mode="Ignore" class="fp-swatch__content fp-swatch__sound" />
+        <fp:PlayButton name="play" text="" tooltip="Plays it once (needs a sounds file, in the Files tab)" class="fp-swatch__play" />
         <ui:VisualElement name="volume" picking-mode="Ignore" class="fp-swatch__content fp-swatch__volume">
             <ui:VisualElement name="volume-fill" picking-mode="Ignore" class="fp-volume-bar__fill" />
         </ui:VisualElement>

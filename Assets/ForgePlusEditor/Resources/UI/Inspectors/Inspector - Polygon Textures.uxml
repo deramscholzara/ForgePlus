@@ -4,6 +4,7 @@
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="TextureRow" src="../Templates/InspectorTextureRow.uxml" />
+    <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
     <!-- Bound to Inspector_PolygonTextures -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -18,6 +19,9 @@
         </ui:Instance>
         <ui:Instance template="TextureRow" name="FloorTexture">
             <ui:AttributeOverrides element-name="label" text="Texture:" />
+        </ui:Instance>
+        <ui:Instance template="IntegerFieldRow" name="FloorBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
+            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
         </ui:Instance>
         <ui:Instance template="Row" name="FloorOffset">
             <ui:AttributeOverrides element-name="label" text="Offset:" />
@@ -34,6 +38,9 @@
         </ui:Instance>
         <ui:Instance template="TextureRow" name="CeilingTexture">
             <ui:AttributeOverrides element-name="label" text="Texture:" />
+        </ui:Instance>
+        <ui:Instance template="IntegerFieldRow" name="CeilingBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
+            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
         </ui:Instance>
         <ui:Instance template="Row" name="CeilingOffset">
             <ui:AttributeOverrides element-name="label" text="Offset:" />

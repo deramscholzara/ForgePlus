@@ -22,6 +22,10 @@ namespace RuntimeCore.Entities
         public Dictionary<short, LevelEntity_Line> Lines;
         [System.NonSerialized]
         public Dictionary<short, LevelEntity_Side> Sides;
+        // The faces of lines that are drawn (their polygons' heights expose them) but have no side in the level's data,
+        // so no texture: each has no side index (NativeIndex is NONE), and is kept here rather than in Sides
+        [System.NonSerialized]
+        public List<LevelEntity_Side> PlaceholderSides;
         [System.NonSerialized]
         public Dictionary<short, LevelEntity_Light> Lights;
         [System.NonSerialized]

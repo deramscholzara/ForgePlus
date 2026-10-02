@@ -2,6 +2,7 @@
     <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="DropdownPlayRow" src="../Templates/InspectorDropdownPlayRow.uxml" />
     <ui:Template name="SliderIntegerRow" src="../Templates/InspectorSliderIntegerRow.uxml" />
     <ui:Template name="ButtonRow" src="../Templates/InspectorButtonRow.uxml" />
     <ui:Template name="Button" src="../Templates/Button.uxml" />
@@ -15,7 +16,7 @@
         <ui:Instance template="Row" name="Index">
             <ui:AttributeOverrides element-name="label" text="Index:" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="Sound" tooltip="Choosing a sound needs a sounds file (Files tab), to know which sounds there are">
+        <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="Choosing a sound needs a sounds file (Files tab), to know which sounds there are">
             <ui:AttributeOverrides element-name="label" text="Sound:" />
         </ui:Instance>
         <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="0 is silent, and 256 is full volume">

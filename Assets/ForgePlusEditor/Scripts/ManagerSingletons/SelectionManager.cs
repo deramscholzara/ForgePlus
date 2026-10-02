@@ -60,6 +60,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: true);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: true);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: true);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: true);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
@@ -76,6 +77,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: true);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: true);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: true);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
@@ -92,6 +94,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: true); // Shown in right-palette and just selects and inspects the light
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
@@ -108,6 +111,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: true); // Shown in right-palette and just selects and inspects the media
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
@@ -124,6 +128,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
@@ -147,6 +152,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: true);
@@ -163,6 +169,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
@@ -179,6 +186,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
@@ -196,6 +204,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
@@ -221,6 +230,7 @@ namespace ForgePlus.LevelManipulation
                         SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
                         SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
                         SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
+                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.PlaceholderSides, enabled: false);
                         SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
                         SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
                         SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);

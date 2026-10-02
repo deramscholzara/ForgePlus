@@ -69,9 +69,9 @@ namespace ForgePlus.UI
             return binding;
         }
 
-        // Binds an inspector layout's rows, text and number fields, dropdowns, choices, textures and flags (template
-        // instances named after the source's properties) to the source. Those that can edit their property do while
-        // it can be set (see BindEditability).
+        // Binds an inspector layout's rows, text and number fields, dropdowns, choices, textures, flags and play buttons
+        // (template instances named after the source's properties) to the source. Those that can edit their property do
+        // while it can be set (see BindEditability).
         public static void BindInspectorFields(this VisualElement root, object dataSource)
         {
             root.Query<Label>(className: "fp-inspector-value").ForEach(value => BindToInstanceName(value, "text", dataSource));
@@ -92,6 +92,30 @@ namespace ForgePlus.UI
 
             // A choice of one (mutually exclusive options), as the index of its selected option
             root.Query<RadioButtonGroup>(className: "fp-inspector-choice").ForEach(choice => BindInspectorValue(choice, dataSource));
+
+            root.Query<PlayButton>(className: "fp-inspector-play").ForEach(button => BindInspectorPlayButton(button, dataSource));
+        }
+
+        // A row's play button calls its source's Play<Name>() method, while its Is<Name>Playable property is true
+        private static void BindInspectorPlayButton(PlayButton button, object dataSource)
+        {
+            var row = button.GetFirstAncestorOfType<TemplateContainer>();
+            var sourceType = dataSource.GetType();
+            var play = sourceType.GetMethod("Play" + row.name, Type.EmptyTypes);
+            var playableProperty = $"Is{row.name}Playable";
+
+            if (play == null)
+            {
+                button.SetEnabled(false);
+                return;
+            }
+
+            button.clicked += () => play.Invoke(dataSource, null);
+
+            if (sourceType.GetProperty(playableProperty) != null)
+            {
+                button.BindEnabled(dataSource, playableProperty);
+            }
         }
 
         private static void BindInspectorValue<TValue>(BaseField<TValue> field, object dataSource)

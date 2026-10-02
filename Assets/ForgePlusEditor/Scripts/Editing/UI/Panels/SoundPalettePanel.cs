@@ -1,4 +1,5 @@
 using AlephOne;
+using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
 using ForgePlus.Palette;
 using System.Collections.Generic;
@@ -7,8 +8,8 @@ using UnityEngine.UIElements;
 namespace ForgePlus.UI
 {
     // The level's ambient and random sounds, each list after its "None", with buttons for adding an entry to a list and
-    // duplicating its selected one. Each swatch shows its sound, its volume, and whether polygons play it. An entry past
-    // the original engine's limit (64 in each list) is Aleph One only.
+    // duplicating its selected one. Each swatch shows its sound (with a button to play it), its volume, and whether
+    // polygons play it. An entry past the original engine's limit (64 in each list) is Aleph One only.
     public class SoundPalettePanel : UIPanel
     {
         private readonly List<KeyValuePair<PaletteManager.Swatch, TemplateContainer>> swatchInstances = new List<KeyValuePair<PaletteManager.Swatch, TemplateContainer>>();
@@ -35,6 +36,7 @@ namespace ForgePlus.UI
             PaletteManager.Instance.OnSwatchesChanged += Rebuild;
             PaletteManager.Instance.OnSelectionChanged += ShowSelection;
             SoundImageEditing.OnChanged += ShowContents;
+            SoundsLoading.Instance.OnDataLoadCompleted += OnSoundsLoadCompleted;
 
             Rebuild();
         }
@@ -49,6 +51,7 @@ namespace ForgePlus.UI
             }
 
             SoundImageEditing.OnChanged -= ShowContents;
+            SoundsLoading.Instance.OnDataLoadCompleted -= OnSoundsLoadCompleted;
 
             swatchInstances.Clear();
         }
@@ -80,6 +83,8 @@ namespace ForgePlus.UI
                     ShowSelection();
                 });
 
+                instance.Q<PlayButton>("play").clicked += () => SoundPreviews.Play(clickedSwatch.SoundKind, clickedSwatch.SoundIndex);
+
                 swatchInstances.Add(new KeyValuePair<PaletteManager.Swatch, TemplateContainer>(swatch, instance));
                 (swatch.SoundKind == SoundImageKinds.Ambient ? ambientSwatches : randomSwatches).Add(instance);
             }
@@ -88,6 +93,12 @@ namespace ForgePlus.UI
 
             ShowContents();
             ShowSelection();
+        }
+
+        // Which sounds can be played depends on the sounds file
+        private void OnSoundsLoadCompleted(bool isLoaded)
+        {
+            ShowContents();
         }
 
         // What each swatch shows, and the buttons (which change with the lists)
@@ -110,6 +121,7 @@ namespace ForgePlus.UI
                     instance.Q<Label>("index").text = string.Empty;
                     instance.Q<Label>("sound").text = "None";
                     instance.Q("volume").style.display = DisplayStyle.None;
+                    instance.Q("play").style.display = DisplayStyle.None;
                     instance.Q("in-use").style.display = DisplayStyle.None;
                     continue;
                 }
@@ -132,6 +144,8 @@ namespace ForgePlus.UI
                 instance.Q<Label>("index").text = index.ToString();
                 instance.Q<Label>("sound").text = sound;
                 instance.Q("volume").style.display = DisplayStyle.Flex;
+                instance.Q("play").style.display = DisplayStyle.Flex;
+                instance.Q("play").SetEnabled(SoundPreviews.CanPlay(swatch.SoundKind, index));
                 instance.Q("volume-fill").style.height = Length.Percent(VolumeBars.Percent(volume));
                 instance.Q("in-use").style.display = SoundImageEditing.UsageCount(swatch.SoundKind, index) > 0 ? DisplayStyle.Flex : DisplayStyle.None;
                 instance.EnableInClassList("fp-aleph-one-only", index >= SoundImageEditing.MaximumOriginalEntries);

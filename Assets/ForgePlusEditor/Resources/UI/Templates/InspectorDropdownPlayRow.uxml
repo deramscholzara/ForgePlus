@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:fp="ForgePlus.UI">
+    <!-- A choice of a sound from a list, with a button to play it; an instance is named after the inspector property it
+         edits (as InspectorDropdownRow's is). The button calls its Play<Name>() method, and is grayed out while its
+         Is<Name>Playable property is false (or while the row is) -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area fp-inspector-row__value-area--playable">
+            <ui:DropdownField name="value" class="fp-inspector-dropdown" />
+            <fp:PlayButton name="play" text="" tooltip="Plays it once (needs a sounds file, in the Files tab)" class="fp-inspector-play" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

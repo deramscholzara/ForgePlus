@@ -3,6 +3,8 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="DropdownPlayRow" src="../Templates/InspectorDropdownPlayRow.uxml" />
+    <ui:Template name="PlayRow" src="../Templates/InspectorPlayRow.uxml" />
     <ui:Template name="SliderIntegerRow" src="../Templates/InspectorSliderIntegerRow.uxml" />
     <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
@@ -21,9 +23,13 @@
         <ui:Instance template="Row" name="Subtype">
             <ui:AttributeOverrides element-name="label" text="Subtype:" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="Sound" tooltip="Choosing a sound needs a sounds file (Files tab), to know which sounds there are">
+        <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="Choosing a sound needs a sounds file (Files tab), to know which sounds there are">
             <ui:AttributeOverrides element-name="label" text="Sound:" />
         </ui:Instance>
+        <ui:Instance template="PlayRow" name="PlatformMovingSound" tooltip="The sound it plays instead, while its platform moves (its platform's moving sound)">
+            <ui:AttributeOverrides element-name="label" text="Plays:" />
+        </ui:Instance>
+        <ui:Label name="platform-sound-note" text="As a platform sound, it plays its platform's moving sound (rather than its own sound) while the platform moves, and nothing while it doesn't." class="fp-inspector-note" />
         <ui:Instance template="Row" name="ActivationBias">
             <ui:AttributeOverrides element-name="label" text="Activates On:" />
         </ui:Instance>

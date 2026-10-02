@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
+using ForgePlus.LevelManipulation;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.MapObjects;
@@ -142,13 +143,72 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // A platform sound source doesn't play its own sound (see PlatformMovingSound), so it's grayed out
         [CreateProperty]
         public bool IsSoundEditable
         {
             get
             {
-                return SoundsLoading.Instance.IsLoaded;
+                return SoundsLoading.Instance.IsLoaded && !IsPlatformSoundSource;
             }
+        }
+
+        [CreateProperty]
+        public bool IsSoundPlayable
+        {
+            get
+            {
+                return SoundPreviews.CanPlayAmbientSound(NativeObject.index);
+            }
+        }
+
+        // At its volume
+        public void PlaySound()
+        {
+            SoundPreviews.PlayAmbientSound(NativeObject.index, SoundPreviews.SoundSourceVolume(NativeObject));
+        }
+
+        // A sound source with the platform sound flag plays its platform's moving sound instead of its own, while the
+        // platform moves (and nothing otherwise): _sound_add_ambient_sources_proc, in map.cpp
+        [CreateProperty]
+        public bool IsPlatformSoundSource
+        {
+            get
+            {
+                return IsSoundSource && Invisible;
+            }
+        }
+
+        [CreateProperty]
+        public string PlatformMovingSound
+        {
+            get
+            {
+                var polygon = map.get_polygon_data(LevelEntity_Level.Instance.Level, NativeObject.polygon_index);
+                if (polygon == null || polygon.type != map._polygon_is_platform)
+                {
+                    return "None (its polygon isn't a platform, so it never plays)";
+                }
+
+                var ambientSound = SoundPreviews.PlatformMovingSound(LevelEntity_Level.Instance.Level, NativeObject);
+
+                return ambientSound == cstypes.NONE ? "None (its platform makes no moving sound)" : AmbientSoundChoice(ambientSound);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsPlatformMovingSoundPlayable
+        {
+            get
+            {
+                return SoundPreviews.CanPlayAmbientSound(SoundPreviews.PlatformMovingSound(LevelEntity_Level.Instance.Level, NativeObject));
+            }
+        }
+
+        // At its volume
+        public void PlayPlatformMovingSound()
+        {
+            SoundPreviews.PlayAmbientSound(SoundPreviews.PlatformMovingSound(LevelEntity_Level.Instance.Level, NativeObject), SoundPreviews.SoundSourceVolume(NativeObject));
         }
 
         // Which way it faces (a sound source's facing is its volume instead)
@@ -463,6 +523,9 @@ namespace ForgePlus.Inspection
             Root.Q(nameof(Volume)).Q<SliderInt>().highValue = SoundManagerEnums.MAXIMUM_SOUND_VOLUME;
 
             Root.Q("volume-light-note").BindShown(this, nameof(IsVolumeFromLightShown));
+
+            Root.Q(nameof(PlatformMovingSound)).BindShown(this, nameof(IsPlatformSoundSource));
+            Root.Q("platform-sound-note").BindShown(this, nameof(IsPlatformSoundSource));
 
             // Light 0 can't be one a volume follows
             Root.Find<LightIndexField>(nameof(VolumeLight)).MinimumLight = 1;
