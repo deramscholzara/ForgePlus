@@ -36,24 +36,21 @@ namespace ForgePlus.LevelManipulation
         // Pixels (as uGUI's EventSystem had it)
         private const float DragThreshold = 10f;
 
+        // The camera the level is seen through, and the UI whose presses aren't the level's
+        public Camera mainCamera;
+        public ForgePlusUI ui;
+
+        // The level, and the selection indicators (and selected objects) drawn on their own layer
+        public LayerMask raycastLayers;
+
         // Pressing and releasing over nothing (no UI, and nothing in the level)
         public event Action OnClickEmptySpace;
-
-        private int raycastLayers;
 
         private bool isPressed;
         private bool pressStartedOverEmptiness;
         private IWorldPointerHandler pressedHandler;
         private WorldPointerEventData eventData;
         private Vector2 pressPosition;
-
-        protected override void Awake()
-        {
-            base.Awake();
-
-            // The level, and the selection indicators (and selected objects) drawn on their own layer
-            raycastLayers = LayerMask.GetMask("Default", "SelectionVisualization");
-        }
 
         private void Update()
         {
@@ -152,22 +149,12 @@ namespace ForgePlus.LevelManipulation
 
         private bool Raycast(Vector2 position, out RaycastHit hit)
         {
-            hit = default;
-
-            var camera = Camera.main;
-            if (!camera)
-            {
-                return false;
-            }
-
-            return Physics.Raycast(camera.ScreenPointToRay(position), out hit, camera.farClipPlane, raycastLayers);
+            return Physics.Raycast(mainCamera.ScreenPointToRay(position), out hit, mainCamera.farClipPlane, raycastLayers);
         }
 
-        private static bool IsOverUI(Vector2 position)
+        private bool IsOverUI(Vector2 position)
         {
-            var ui = ForgePlusUI.Instance;
-
-            return ui && ui.IsPointerOverUI(position);
+            return ui.IsPointerOverUI(position);
         }
     }
 }
