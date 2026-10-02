@@ -2,7 +2,7 @@
 
 .fp-root {
     flex-grow: 1;
-    -unity-font-definition: url("project://database/Assets/ForgePlusEditor/UI/Settings/LiberationSans%20UI%20Font.asset");
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf");
     font-size: 14px;
     color: var(--fp-text-light);
 }
