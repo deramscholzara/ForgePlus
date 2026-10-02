@@ -1,0 +1,193 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Map Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Map
+  m_TableCollectionNameGuid: 745da985c4962cc4192dbf56ca45a0f3
+  m_KeyGenerator:
+    rid: 552786097007231043
+  m_Entries:
+  - m_Id: 2572458541056
+    m_Key: Inspector.Map.Map.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572458541057
+    m_Key: Inspector.Map.Name.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735360
+    m_Key: Inspector.Map.TheNameInThe.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735361
+    m_Key: Inspector.Map.FileName.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735362
+    m_Key: Inspector.Map.LevelCount.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735363
+    m_Key: Inspector.Map.EmbeddedPhysicsLevelCount.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735364
+    m_Key: Inspector.Map.EmbeddedPhysicsLevelCount.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735365
+    m_Key: Inspector.Map.FileVersion.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735366
+    m_Key: Inspector.Map.DataVersion.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735367
+    m_Key: Inspector.Map.Checksum.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735368
+    m_Key: Inspector.Map.ParentChecksum.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735369
+    m_Key: Inspector.Map.MacFile.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735370
+    m_Key: Inspector.Map.TheResourceForkHolds.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735371
+    m_Key: Inspector.Map.Container.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735372
+    m_Key: Inspector.Map.ResourceFork.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735373
+    m_Key: Inspector.Map.Version.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735374
+    m_Key: Inspector.Map.LevelScriptAlephOne.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735375
+    m_Key: Inspector.Map.AlephOneOnlyMML.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2572462735376
+    m_Key: Inspector.Map.LevelScriptSize.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165184
+    m_Key: Inspector.Map.EmbeddedPhysicsLevelCount
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165185
+    m_Key: Inspector.Map.Version.Marathon
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165186
+    m_Key: Inspector.Map.Version.MarathonWithDirectory
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165187
+    m_Key: Inspector.Map.Version.Marathon2
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165188
+    m_Key: Inspector.Map.Version.MarathonInfinity
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165189
+    m_Key: Inspector.Map.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165190
+    m_Key: Inspector.Map.Bytes
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165191
+    m_Key: Inspector.Map.TextCutOff
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165192
+    m_Key: Inspector.Map.ResourceCount
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139219165193
+    m_Key: Inspector.Map.ResourceType.Pictures
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139227553792
+    m_Key: Inspector.Map.ResourceType.ColorTables
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139227553793
+    m_Key: Inspector.Map.ResourceType.Sounds
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139227553794
+    m_Key: Inspector.Map.ResourceType.Texts
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6139227553795
+    m_Key: Inspector.Map.ResourceType.Versions
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231043
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928705935

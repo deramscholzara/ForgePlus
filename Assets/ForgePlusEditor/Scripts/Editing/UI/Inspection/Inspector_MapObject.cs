@@ -2,6 +2,7 @@
 using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.MapObjects;
@@ -51,7 +52,23 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return NativeObject.GetTypeName();
+                switch (NativeObject.type)
+                {
+                    case map._saved_monster:
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.Type.Monster");
+                    case map._saved_object:
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.Type.Scenery");
+                    case map._saved_item:
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.Type.Item");
+                    case map._saved_player:
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.Type.Player");
+                    case map._saved_goal:
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.Type.Goal");
+                    case map._saved_sound_source:
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.Type.Sound");
+                    default:
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.Type.Unknown", NativeObject.type);
+                }
             }
         }
 
@@ -63,16 +80,16 @@ namespace ForgePlus.Inspection
                 switch (NativeObject.type)
                 {
                     case map._saved_monster:
-                        return $"{AlephOneNames.MonsterType(NativeObject.index)} ({NativeObject.index})";
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.NameAndNumber", AlephOneNames.MonsterType(NativeObject.index), NativeObject.index);
                     case map._saved_item:
-                        return $"{AlephOneNames.ItemType(NativeObject.index)} ({NativeObject.index})";
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.NameAndNumber", AlephOneNames.ItemType(NativeObject.index), NativeObject.index);
                     case map._saved_player:
                     case map._saved_object:
                     case map._saved_sound_source:
                     case map._saved_goal:
                         return $"({NativeObject.index})";
                     default:
-                        return "Invalid";
+                        return Strings.Get(Strings.Common, "Inspector.MapObject.Subtype.Invalid");
                 }
             }
         }
@@ -187,12 +204,12 @@ namespace ForgePlus.Inspection
                 var polygon = map.get_polygon_data(LevelEntity_Level.Instance.Level, NativeObject.polygon_index);
                 if (polygon == null || polygon.type != map._polygon_is_platform)
                 {
-                    return "None (its polygon isn't a platform, so it never plays)";
+                    return Strings.Get(Strings.Common, "Inspector.MapObject.PlatformMovingSound.NotPlatform");
                 }
 
                 var ambientSound = SoundPreviews.PlatformMovingSound(LevelEntity_Level.Instance.Level, NativeObject);
 
-                return ambientSound == cstypes.NONE ? "None (its platform makes no moving sound)" : AmbientSoundChoice(ambientSound);
+                return ambientSound == cstypes.NONE ? Strings.Get(Strings.Common, "Inspector.MapObject.PlatformMovingSound.None") : AmbientSoundChoice(ambientSound);
             }
         }
 
@@ -365,7 +382,7 @@ namespace ForgePlus.Inspection
             {
                 var bias = map.DECODE_ACTIVATION_BIAS(NativeObject.flags);
 
-                return bias >= 0 && bias < ActivationBiasNames.Length ? $"{ActivationBiasNames[bias]} ({bias})" : bias.ToString();
+                return bias >= 0 && bias < ActivationBiasCount ? Strings.Get(Strings.Common, "Inspector.MapObject.NameAndNumber", ActivationBiasName(bias), bias) : bias.ToString();
             }
         }
 
@@ -383,9 +400,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return $"X: {NativeObject.location.x}\n" +
-                       $"Y: {NativeObject.location.y}\n" +
-                       $"Z: {NativeObject.location.z}";
+                return Strings.Get(Strings.Common, "Inspector.MapObject.Position", NativeObject.location.x, NativeObject.location.y, NativeObject.location.z);
             }
         }
 
@@ -530,14 +545,14 @@ namespace ForgePlus.Inspection
             // Light 0 can't be one a volume follows
             Root.Find<LightIndexField>(nameof(VolumeLight)).MinimumLight = 1;
 
-            Root.Find<Toggle>(nameof(Invisible)).text = IsSoundSource ? "Platform Sound" : "Invisible";
+            Root.Find<Toggle>(nameof(Invisible)).text = IsSoundSource ? Strings.Get(Strings.Common, "Inspector.MapObject.Flag.PlatformSound") : Strings.Get(Strings.Common, "Inspector.MapObject.Flag.Invisible");
 
             // Items and monsters are placed by type (which is also edited with nothing selected, for every type)
             Root.Q("Placement").style.display = HasPlacement ? DisplayStyle.Flex : DisplayStyle.None;
             if (HasPlacement)
             {
                 var typeName = NativeObject.type == map._saved_monster ? AlephOneNames.MonsterType(NativeObject.index) : AlephOneNames.ItemType(NativeObject.index);
-                Root.Find<Label>("PlacementHeading").text = $"Placement (every {typeName})";
+                Root.Find<Label>("PlacementHeading").text = Strings.Get(Strings.Common, "Inspector.MapObject.PlacementHeading", typeName);
 
                 placementInspector = new Inspector_Placement(Entity.Placement);
                 placementInspector.Load(Root.Q("placement-entry"));
@@ -562,7 +577,22 @@ namespace ForgePlus.Inspection
             RefreshValuesInInspector();
         }
 
-        private static readonly string[] ActivationBiasNames = { "Player", "Nearest Hostile", "Goal", "Random" };
+        private const int ActivationBiasCount = 4;
+
+        private static string ActivationBiasName(int bias)
+        {
+            switch (bias)
+            {
+                case 0:
+                    return Strings.Get(Strings.Common, "Inspector.MapObject.ActivationBias.Player");
+                case 1:
+                    return Strings.Get(Strings.Common, "Inspector.MapObject.ActivationBias.NearestHostile");
+                case 2:
+                    return Strings.Get(Strings.Common, "Inspector.MapObject.ActivationBias.Goal");
+                default:
+                    return Strings.Get(Strings.Common, "Inspector.MapObject.ActivationBias.Random");
+            }
+        }
 
         // "Waterfall (6)", or just the number for a code the engine has no sound for
         private void SetFlag(ushort flag, bool isSet)
@@ -574,7 +604,7 @@ namespace ForgePlus.Inspection
         {
             var name = AlephOneNames.AmbientSound(ambientSound);
 
-            return name == ambientSound.ToString() ? $"({ambientSound})" : $"{name} ({ambientSound})";
+            return name == ambientSound.ToString() ? $"({ambientSound})" : Strings.Get(Strings.Common, "Inspector.MapObject.NameAndNumber", name, ambientSound);
         }
     }
 }

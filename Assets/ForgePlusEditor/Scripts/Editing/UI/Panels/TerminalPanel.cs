@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using RuntimeCore.Entities;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
@@ -154,7 +155,7 @@ namespace ForgePlus.UI
                 // Marathon 1's logon is a shape from the interface collection, not a picture
                 var logoBounds = frame.Clone();
                 logoBounds.bottom = (short) (frame.top + RECTANGLE_HEIGHT(frame) / 2);
-                AddNote(null, "Marathon 1's logon shape", logoBounds);
+                AddNote(null, Strings.Get(Strings.Terminals, "Terminals.Note.Marathon1Logon"), logoBounds);
                 frame = logoBounds;
             }
             else
@@ -167,7 +168,7 @@ namespace ForgePlus.UI
                 }
                 else
                 {
-                    AddMissing($"Picture {group.permutation} was not found!", TerminalLayout.GetObjectBounds(_center_object));
+                    AddMissing(Strings.Get(Strings.Terminals, "Terminals.Missing.Picture", group.permutation),TerminalLayout.GetObjectBounds(_center_object));
                 }
             }
 
@@ -186,7 +187,7 @@ namespace ForgePlus.UI
             }
             else
             {
-                AddMissing($"Picture {pictureId} was not found!", TerminalLayout.GetObjectBounds(flags));
+                AddMissing(Strings.Get(Strings.Terminals, "Terminals.Missing.Picture", pictureId),TerminalLayout.GetObjectBounds(flags));
             }
         }
 
@@ -203,7 +204,7 @@ namespace ForgePlus.UI
             var goalAreas = GetGoalAreas(group.permutation);
             if (goalAreas.Count == 0)
             {
-                AddMissing($"Checkpoint {group.permutation} was not found!", mapBounds);
+                AddMissing(Strings.Get(Strings.Terminals, "Terminals.Missing.Checkpoint", group.permutation),mapBounds);
                 return;
             }
 
@@ -383,29 +384,29 @@ namespace ForgePlus.UI
             switch (group.type)
             {
                 case _unfinished_group:
-                    return "Start-marker of the pages to be displayed while the level's mission is unfinished (and whatever its state, if the terminal has no success or failure pages). This page is not displayed in-game.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Unfinished.Description");
                 case _success_group:
-                    return "Start-marker of the pages to be displayed once the level's mission is complete. This page is not displayed in-game.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Success.Description");
                 case _failure_group:
-                    return "Start-marker of the pages to be displayed once the level's mission has failed. This page is not displayed in-game.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Failure.Description");
                 case _end_group:
-                    return "Exits the terminal.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.End.Description");
                 case _interlevel_teleport_group:
-                    return $"Exits the terminal, and teleports the player to level {group.permutation}.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.InterlevelTeleport.Description", group.permutation);
                 case _intralevel_teleport_group:
-                    return $"Exits the terminal, and teleports the player to polygon {group.permutation}.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.IntralevelTeleport.Description", group.permutation);
                 case _sound_group:
-                    return $"Plays sound {group.permutation}, then goes straight on to the next group.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Sound.Description", group.permutation);
                 case _tag_group:
-                    return $"Activates the lights and platforms tagged {group.permutation}, then goes straight on to the next group.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Tag.Description", group.permutation);
                 case _movie_group:
-                    return $"Movie {group.permutation}, which Aleph One doesn't play (it shows nothing here).";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Movie.Description", group.permutation);
                 case _track_group:
-                    return $"Music track {group.permutation}, which Aleph One doesn't play (it shows nothing here).";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Track.Description", group.permutation);
                 case _camera_group:
-                    return $"A view of object {group.permutation}, which Aleph One doesn't draw (it shows nothing here).";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Camera.Description", group.permutation);
                 default:
-                    return $"Default and unspecified group type ({group.type}), which Aleph One ignores.";
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Default.Description", group.type);
             }
         }
     }

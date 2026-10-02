@@ -1,4 +1,5 @@
-﻿using UnityEngine.UIElements;
+﻿using ForgePlus.Localization;
+using UnityEngine.UIElements;
 using static AlephOne.computer_interface;
 
 namespace ForgePlus.UI
@@ -21,15 +22,15 @@ namespace ForgePlus.UI
         protected override void OnLoaded()
         {
             var faces = Root.Q("faces");
-            faces.Add(CreateSample("-", "Plain", _plain_text, 0));
-            faces.Add(CreateSample("B", "Bold", _bold_text, 0));
-            faces.Add(CreateSample("I", "Italic", _italic_text, 0));
-            faces.Add(CreateSample("U", "Underline", _underline_text, 0));
+            faces.Add(CreateSample("-", Strings.Get(Strings.Terminals, "Terminals.Styles.Plain"), _plain_text, 0));
+            faces.Add(CreateSample("B", Strings.Get(Strings.Terminals, "Terminals.Styles.Bold"), _bold_text, 0));
+            faces.Add(CreateSample("I", Strings.Get(Strings.Terminals, "Terminals.Styles.Italic"), _italic_text, 0));
+            faces.Add(CreateSample("U", Strings.Get(Strings.Terminals, "Terminals.Styles.Underline"), _underline_text, 0));
 
             var colors = Root.Q("colors");
             for (short color = 0; color < TerminalText.ColorCount; color++)
             {
-                colors.Add(CreateSample(color.ToString(), $"Color {color}", _plain_text, color));
+                colors.Add(CreateSample(color.ToString(), Strings.Get(Strings.Terminals, "Terminals.Styles.Color", color), _plain_text, color));
             }
         }
 

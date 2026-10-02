@@ -12,81 +12,81 @@
     <!-- Bound to Inspector_MapObject -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Object" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Object.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Id.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Type">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Type.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Subtype">
-            <ui:AttributeOverrides element-name="label" text="Subtype:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Subtype.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="Choosing a sound needs a sounds file (Files tab), to know which sounds there are">
-            <ui:AttributeOverrides element-name="label" text="Sound:" />
+        <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="@Common/Inspector.MapObject.Sound.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Sound.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="PlayRow" name="PlatformMovingSound" tooltip="The sound it plays instead, while its platform moves (its platform's moving sound)">
-            <ui:AttributeOverrides element-name="label" text="Plays:" />
+        <ui:Instance template="PlayRow" name="PlatformMovingSound" tooltip="@Common/Inspector.MapObject.PlatformMovingSound.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PlatformMovingSound.Label.Text" />
         </ui:Instance>
-        <ui:Label name="platform-sound-note" text="As a platform sound, it plays its platform's moving sound (rather than its own sound) while the platform moves, and nothing while it doesn't." class="fp-inspector-note" />
+        <ui:Label name="platform-sound-note" text="@Common/Inspector.MapObject.PlatformSoundNote.Text" class="fp-inspector-note" />
         <ui:Instance template="Row" name="ActivationBias">
-            <ui:AttributeOverrides element-name="label" text="Activates On:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.ActivationBias.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Angle">
-            <ui:AttributeOverrides element-name="label" text="Angle:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Angle.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="VolumeFromLight" tooltip="The volume follows a light's intensity while the game runs (saved as the light's index, negated)">
-            <ui:AttributeOverrides element-name="flag" text="Volume from Light" />
+        <ui:Instance template="Flag" name="VolumeFromLight" tooltip="@Common/Inspector.MapObject.VolumeFromLight.Tooltip">
+            <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.VolumeFromLight.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="0 is silent, and 256 is full volume">
-            <ui:AttributeOverrides element-name="label" text="Volume:" />
+        <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="@Common/Inspector.MapObject.Volume.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Volume.Label.Text" />
         </ui:Instance>
         <ui:Instance template="LightRow" name="VolumeLight">
-            <ui:AttributeOverrides element-name="label" text="Light ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.VolumeLight.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="SavedVolume">
-            <ui:AttributeOverrides element-name="label" text="Saved As:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.SavedVolume.Label.Text" />
         </ui:Instance>
-        <ui:Label name="volume-light-note" text="While the game runs, the sound's volume follows the light's intensity: silent while it's off, and full while it's fully on. It's saved as the light's index, negated (so light 0 can't be one)." class="fp-inspector-note" />
+        <ui:Label name="volume-light-note" text="@Common/Inspector.MapObject.VolumeLightNote.Text" class="fp-inspector-note" />
         <ui:Instance template="Row" name="Position">
-            <ui:AttributeOverrides element-name="label" text="Position:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Position.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Flags" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Flags.Label.Text" />
         </ui:Instance>
         <!-- Labelled "Platform Sound" for a sound source (see Inspector_MapObject.Invisible) -->
         <ui:Instance template="Flag" name="Invisible">
-            <ui:AttributeOverrides element-name="flag" text="Invisible" />
+            <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.Invisible.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="FromCeiling">
-            <ui:AttributeOverrides element-name="flag" text="From Ceiling" />
+            <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.FromCeiling.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="Blind">
-            <ui:AttributeOverrides element-name="flag" text="Blind" />
+            <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.Blind.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="Deaf">
-            <ui:AttributeOverrides element-name="flag" text="Deaf" />
+            <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.Deaf.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="NetworkOnly">
-            <ui:AttributeOverrides element-name="flag" text="Network Only" />
+            <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.NetworkOnly.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="Floats">
-            <ui:AttributeOverrides element-name="flag" text="Floats" />
+            <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.Floats.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement name="Placement">
             <ui:VisualElement class="fp-space" />
             <ui:Instance template="Subheader" name="PlacementHeading">
-                <ui:AttributeOverrides element-name="label" text="Placement" />
+                <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PlacementHeading.Label.Text" />
             </ui:Instance>
-            <ui:Label text="Shared by every object of this type (see Object Placement, with nothing selected)" class="fp-inspector-note" />
+            <ui:Label text="@Common/Inspector.MapObject.SharedByEveryObject.Text" class="fp-inspector-note" />
             <ui:VisualElement name="placement-entry" />
         </ui:VisualElement>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Foldout">
             <ui:Instance template="Row" name="PolygonIndex">
-                <ui:AttributeOverrides element-name="label" text="Polygon ID:" />
+                <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PolygonIndex.Label.Text" />
             </ui:Instance>
         </ui:Instance>
     </ui:VisualElement>

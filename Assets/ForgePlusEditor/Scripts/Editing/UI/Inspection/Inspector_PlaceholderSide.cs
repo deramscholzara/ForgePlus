@@ -1,5 +1,6 @@
 using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using RuntimeCore.Entities.Geometry;
 using Unity.Properties;
 
@@ -43,7 +44,9 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Entity.IsClockwise ? "Clockwise" : "Counterclockwise";
+                return Entity.IsClockwise ?
+                       Strings.Get(Strings.Common, "Inspector.PlaceholderSide.Face.Clockwise") :
+                       Strings.Get(Strings.Common, "Inspector.PlaceholderSide.Face.Counterclockwise");
             }
         }
 
@@ -69,12 +72,14 @@ namespace ForgePlus.Inspection
         {
             if (polygonIndex < 0)
             {
-                return "None";
+                return Strings.Get(Strings.Common, "Inspector.PlaceholderSide.PolygonNone");
             }
 
             var polygon = map.get_polygon_data(Entity.ParentLevel.Level, polygonIndex);
 
-            return polygon != null && polygon.type == map._polygon_is_platform ? $"{polygonIndex} (Platform {polygon.permutation})" : polygonIndex.ToString();
+            return polygon != null && polygon.type == map._polygon_is_platform ?
+                   Strings.Get(Strings.Common, "Inspector.PlaceholderSide.PlatformPolygon", polygonIndex, polygon.permutation) :
+                   polygonIndex.ToString();
         }
     }
 }

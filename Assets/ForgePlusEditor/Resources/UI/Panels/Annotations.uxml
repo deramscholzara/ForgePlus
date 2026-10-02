@@ -3,7 +3,7 @@
     <!-- The level's annotations, each an annotation inspector (added by the annotations panel) -->
     <ui:VisualElement class="fp-box fp-inspector-column">
         <ui:Instance template="ScrollArea" name="annotations" class="fp-grow">
-            <ui:Label name="no-annotations" text="This level has no annotations" class="fp-inspector-subheader" />
+            <ui:Label name="no-annotations" text="@Annotations/Annotations.Annotations.NoAnnotations.Text" class="fp-inspector-subheader" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

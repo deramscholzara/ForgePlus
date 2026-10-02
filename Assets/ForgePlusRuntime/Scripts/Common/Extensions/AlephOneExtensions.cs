@@ -76,7 +76,8 @@ namespace ForgePlus.Extensions
             Array.Copy(bytes, buffer, bytes.Length);
         }
 
-        public static string GetTypeName(this map_object mapObject)
+        // The type as an English word, for naming objects and logging (the inspector shows its own, localized)
+        public static string GetTypeIdentifier(this map_object mapObject)
         {
             switch (mapObject.type)
             {

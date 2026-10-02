@@ -1,0 +1,283 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Sounds Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Sounds
+  m_TableCollectionNameGuid: 30600656d5180ed4d9ea21376925ecbb
+  m_KeyGenerator:
+    rid: 552786097007231038
+  m_Entries:
+  - m_Id: 2577936302080
+    m_Key: Inspector.AmbientSound.Header.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302081
+    m_Key: Inspector.AmbientSound.AlephOneNote.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302082
+    m_Key: Inspector.AmbientSound.LoopedWhileThePlayer.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302083
+    m_Key: Inspector.AmbientSound.Index.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302084
+    m_Key: Inspector.AmbientSound.Sound.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302085
+    m_Key: Inspector.AmbientSound.Sound.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302086
+    m_Key: Inspector.AmbientSound.Volume.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302087
+    m_Key: Inspector.AmbientSound.Volume.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302088
+    m_Key: Inspector.AmbientSound.PlayedIn.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302089
+    m_Key: Inspector.AmbientSound.PlayedIn.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577936302090
+    m_Key: Inspector.AmbientSound.Delete.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578506727424
+    m_Key: Inspector.RandomSound.Header.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921728
+    m_Key: Inspector.RandomSound.AlephOneNote.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921729
+    m_Key: Inspector.RandomSound.PlayedNowAndThen.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921730
+    m_Key: Inspector.RandomSound.Index.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921731
+    m_Key: Inspector.RandomSound.Sound.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921732
+    m_Key: Inspector.RandomSound.Sound.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921733
+    m_Key: Inspector.RandomSound.Volume.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921734
+    m_Key: Inspector.RandomSound.Volume.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921735
+    m_Key: Inspector.RandomSound.Period.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921736
+    m_Key: Inspector.RandomSound.Period.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578510921737
+    m_Key: Inspector.RandomSound.NonDirectional.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578515116032
+    m_Key: Inspector.RandomSound.Direction.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578515116033
+    m_Key: Inspector.RandomSound.Direction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578515116034
+    m_Key: Inspector.RandomSound.Pitch.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578515116035
+    m_Key: Inspector.RandomSound.Pitch.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578515116036
+    m_Key: Inspector.RandomSound.PlayedIn.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578515116037
+    m_Key: Inspector.RandomSound.PlayedIn.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578515116038
+    m_Key: Inspector.RandomSound.Delete.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578687082496
+    m_Key: SoundPalette.Swatches.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578687082497
+    m_Key: SoundPalette.AddAmbient.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578687082498
+    m_Key: SoundPalette.DuplicateAmbient.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578687082499
+    m_Key: SoundPalette.RandomSounds.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578687082500
+    m_Key: SoundPalette.AddRandom.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578687082501
+    m_Key: SoundPalette.DuplicateRandom.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2578817105920
+    m_Key: SwatchSound.Play.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144877281280
+    m_Key: Inspector.SoundImage.PlayedIn.One
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475584
+    m_Key: Inspector.SoundImage.PlayedIn.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475585
+    m_Key: Inspector.SoundImage.Header.Ambient
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475586
+    m_Key: Inspector.SoundImage.Header.Random
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475587
+    m_Key: Inspector.SoundImage.Polygon
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475588
+    m_Key: Inspector.SoundImage.Delete.Title.Ambient
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475589
+    m_Key: Inspector.SoundImage.Delete.Title.Random
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475590
+    m_Key: Inspector.SoundImage.Delete.Message.Ambient.One
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475591
+    m_Key: Inspector.SoundImage.Delete.Message.Ambient.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475592
+    m_Key: Inspector.SoundImage.Delete.Message.Random.One
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475593
+    m_Key: Inspector.SoundImage.Delete.Message.Random.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475594
+    m_Key: Inspector.SoundImage.Delete.Confirm
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475595
+    m_Key: SoundPalette.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475596
+    m_Key: SoundPalette.Add
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6144881475597
+    m_Key: SoundPalette.Add.AlephOneOnly
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231038
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928704571

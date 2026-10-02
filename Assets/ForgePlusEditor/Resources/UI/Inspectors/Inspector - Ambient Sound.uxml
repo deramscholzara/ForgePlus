@@ -9,24 +9,24 @@
     <!-- Bound to Inspector_AmbientSound -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header" name="header">
-            <ui:AttributeOverrides element-name="label" text="Ambient Sound" />
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.AmbientSound.Header.Label.Text" />
         </ui:Instance>
-        <ui:Label name="aleph-one-note" text="Aleph One only: the original Marathon 2 and Infinity hold 64 ambient sounds (0 to 63)." class="fp-inspector-note fp-aleph-one-only" />
-        <ui:Label text="Looped while the player is in a polygon that plays it." class="fp-inspector-note" />
+        <ui:Label name="aleph-one-note" text="@Sounds/Inspector.AmbientSound.AlephOneNote.Text" class="fp-inspector-note fp-aleph-one-only" />
+        <ui:Label text="@Sounds/Inspector.AmbientSound.LoopedWhileThePlayer.Text" class="fp-inspector-note" />
         <ui:Instance template="Row" name="Index">
-            <ui:AttributeOverrides element-name="label" text="Index:" />
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.AmbientSound.Index.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="Choosing a sound needs a sounds file (Files tab), to know which sounds there are">
-            <ui:AttributeOverrides element-name="label" text="Sound:" />
+        <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="@Sounds/Inspector.AmbientSound.Sound.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.AmbientSound.Sound.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="0 is silent, and 256 is full volume">
-            <ui:AttributeOverrides element-name="label" text="Volume:" />
+        <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="@Sounds/Inspector.AmbientSound.Volume.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.AmbientSound.Volume.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="ButtonRow" name="PlayedIn" tooltip="The polygons that play it: uncheck one to have it play no ambient sound">
-            <ui:AttributeOverrides element-name="label" text="Played In:" />
+        <ui:Instance template="ButtonRow" name="PlayedIn" tooltip="@Sounds/Inspector.AmbientSound.PlayedIn.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.AmbientSound.PlayedIn.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Button" name="delete" class="fp-inspector-action">
-            <ui:AttributeOverrides element-name="control" text="Delete" />
+            <ui:AttributeOverrides element-name="control" text="@Sounds/Inspector.AmbientSound.Delete.Control.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

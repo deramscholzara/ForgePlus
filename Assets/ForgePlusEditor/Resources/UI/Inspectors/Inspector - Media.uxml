@@ -6,38 +6,38 @@
     <!-- Bound to Inspector_Media -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Media" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Media.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Id.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Type">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Type.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="LowHeight">
-            <ui:AttributeOverrides element-name="label" text="Low Height:" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.LowHeight.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="HighHeight">
-            <ui:AttributeOverrides element-name="label" text="High Height:" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.HighHeight.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="FlowDirection">
-            <ui:AttributeOverrides element-name="label" text="Flow Direction:" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.FlowDirection.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="FlowMagnitude">
-            <ui:AttributeOverrides element-name="label" text="Flow Magnitude:" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.FlowMagnitude.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="LightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.LightIndex.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="MinimumLightIntensity">
-            <ui:AttributeOverrides element-name="label" text="Minimum Light Intensity:" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.MinimumLightIntensity.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Flags" />
+            <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Flags.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="FloorObstructsSound">
-            <ui:AttributeOverrides element-name="flag" text="Floor Obstructs Sound" />
+            <ui:AttributeOverrides element-name="flag" text="@Media/Inspector.Media.FloorObstructsSound.Flag.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

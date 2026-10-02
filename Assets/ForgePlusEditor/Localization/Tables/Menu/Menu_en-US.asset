@@ -1,0 +1,222 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Menu_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: f6bd09c25a7784548a8e269ccdad0e6e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231045
+  - rid: 552786097007231046
+  - rid: 552786097007231047
+  - rid: 552786097007231048
+  - rid: 552786097007231049
+  - rid: 552786097007231050
+  - rid: 552786097007231051
+  - rid: 552786097007231052
+  - rid: 552786097007231053
+  - rid: 552786097007231054
+  - rid: 552786097007231055
+  - rid: 552786097007231056
+  - rid: 552786097007231057
+  - rid: 552786097007231058
+  - rid: 552786097007231059
+  - rid: 552786097007231060
+  - rid: 552786097007231061
+  - rid: 552786097007231062
+  - rid: 552786097007231063
+  - rid: 552786097007231064
+  - rid: 552786097007231065
+  - rid: 552786097007231066
+  - rid: 552786097007231067
+  - rid: 552786097007231699
+  - rid: 552786097007231700
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231045
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584626216960
+        m_Metadata:
+          m_Items: []
+        m_Value: Maps
+    - rid: 552786097007231046
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584626216961
+        m_Metadata:
+          m_Items: []
+        m_Value: Shapes
+    - rid: 552786097007231047
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584626216962
+        m_Metadata:
+          m_Items: []
+        m_Value: Physics
+    - rid: 552786097007231048
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584626216963
+        m_Metadata:
+          m_Items: []
+        m_Value: Sounds
+    - rid: 552786097007231049
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584630411264
+        m_Metadata:
+          m_Items: []
+        m_Value: Load Level
+    - rid: 552786097007231050
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584642994176
+        m_Metadata:
+          m_Items: []
+        m_Value: "Note: this will be configurable eventually.\n\nWith menu closed\n    Movement:\n        - Forward/Back/Left/Right: WASD\n        - Down/Up: Q/E\n        - Go faster: Hold Shift\n        - Forward/Back in steps: Mouse wheel (when the pointer isn't over the UI)\n\n    Looking:\n        - Move mouse while holding RMB or Space\n\nUI Controls:\n    - Open/Close Menu: Tab or Escape\n    - Show/Hide All UI: ` (~ key without Shift)\n\nSurface Dragging:\n    - You can drag on a surface to adjust textures in Texture mode, when the Palette mode (right side) is set to Edit.\n        - If you hold the control key while starting to drag (you can let go after the drag starts) then contiguous surfaces with the same bitmap will also align to the dragged surface.\n        - With the surface selected in this mode, you can also use arrow keys to nudge and snap it in 128th increments (classic pixel distance).\n\nHotkeys:\n    - Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be held):\n    - Invert Grid Snap Setting: alt/option\n    - In Texture > Edit Mode, you can select a surface (normal click) then alt-click a surface of the same geometry type (Polygon or Side) to align that surface's texture to the selected one.  SIdes must be neighbors, but polygons (ceilings and floors) can be anywhere.  The assigned textures are not required to be the same, and will not be updated when aligning.\n    - In Texture > Edit Mode, if you hold control while beginning to drag on a surface, all contiguous surfaces with the same bitmap will also be aligned to the dragged surface.\n\nPainting:\n    - In Texture > Paint Mode, you can click on surfaces to assign the selected texture swatch to those surfaces."
+    - rid: 552786097007231051
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584655577088
+        m_Metadata:
+          m_Items: []
+        m_Value: Files
+    - rid: 552786097007231052
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584655577089
+        m_Metadata:
+          m_Items: []
+        m_Value: Inputs
+    - rid: 552786097007231053
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584655577090
+        m_Metadata:
+          m_Items: []
+        m_Value: Settings
+    - rid: 552786097007231054
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965696
+        m_Metadata:
+          m_Items: []
+        m_Value: Full-Screen
+    - rid: 552786097007231055
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965697
+        m_Metadata:
+          m_Items: []
+        m_Value: Minimum Light
+    - rid: 552786097007231056
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965698
+        m_Metadata:
+          m_Items: []
+        m_Value: Bloom
+    - rid: 552786097007231057
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965699
+        m_Metadata:
+          m_Items: []
+        m_Value: Vignette
+    - rid: 552786097007231058
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965700
+        m_Metadata:
+          m_Items: []
+        m_Value: Color Adjustment
+    - rid: 552786097007231059
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965701
+        m_Metadata:
+          m_Items: []
+        m_Value: Ambient Occlusion
+    - rid: 552786097007231060
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965702
+        m_Metadata:
+          m_Items: []
+        m_Value: Update Merge Checksum On Save
+    - rid: 552786097007231061
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965703
+        m_Metadata:
+          m_Items: []
+        m_Value: Ask
+    - rid: 552786097007231062
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965704
+        m_Metadata:
+          m_Items: []
+        m_Value: Keep
+    - rid: 552786097007231063
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965705
+        m_Metadata:
+          m_Items: []
+        m_Value: Regenerate
+    - rid: 552786097007231064
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584663965706
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Version: 2020-09-14-0'
+    - rid: 552786097007231065
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584785600512
+        m_Metadata:
+          m_Items: []
+        m_Value: Select
+    - rid: 552786097007231066
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584785600513
+        m_Metadata:
+          m_Items: []
+        m_Value: select a file...
+    - rid: 552786097007231067
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2584785600514
+        m_Metadata:
+          m_Items: []
+        m_Value: Unload
+    - rid: 552786097007231699
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6150963216384
+        m_Metadata:
+          m_Items: []
+        m_Value: Choose {0} file
+    - rid: 552786097007231700
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6150963216385
+        m_Metadata:
+          m_Items: []
+        m_Value: select a file...

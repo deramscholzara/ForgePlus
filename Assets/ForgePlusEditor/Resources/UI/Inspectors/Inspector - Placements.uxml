@@ -5,14 +5,14 @@
          the items and monsters foldouts -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Object Placement" />
+            <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placements.ObjectPlacement.Label.Text" />
         </ui:Instance>
-        <ui:Label text="How the level places each type of item and monster: at the start, and every 15 seconds after (monsters only when the game's options have them replenish). Selecting an object shows its type's." class="fp-inspector-note" />
+        <ui:Label text="@Objects/Inspector.Placements.HowTheLevelPlaces.Text" class="fp-inspector-note" />
         <ui:Instance template="Foldout" name="items">
-            <ui:AttributeOverrides element-name="control" text="Items" />
+            <ui:AttributeOverrides element-name="control" text="@Objects/Inspector.Placements.Items.Control.Text" />
         </ui:Instance>
         <ui:Instance template="Foldout" name="monsters">
-            <ui:AttributeOverrides element-name="control" text="Monsters" />
+            <ui:AttributeOverrides element-name="control" text="@Objects/Inspector.Placements.Monsters.Control.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

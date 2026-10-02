@@ -4,55 +4,55 @@
     <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
     <ui:VisualElement class="fp-header" picking-mode="Ignore">
         <ui:Instance template="Toggle" name="menu" class="fp-header__menu">
-            <ui:AttributeOverrides element-name="control" text="Menu" />
+            <ui:AttributeOverrides element-name="control" text="@Common/Header.Menu.Control.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
         <!-- In the order of ModeManager.PrimaryModes -->
         <ui:RadioButtonGroup name="primary-modes" class="fp-radio-group fp-radio-row fp-header__modes">
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Geometry" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Geometry.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Textures" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Textures.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Lights" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Lights.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Media" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Media.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Sounds" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Sounds.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Platforms" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Platforms.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Objects" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Objects.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Annotations" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Annotations.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Level" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Level.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="Map" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Map.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode fp-header__mode--last">
-                <ui:AttributeOverrides element-name="control" text="Terminals" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Terminals.Control.Text" />
             </ui:Instance>
         </ui:RadioButtonGroup>
         <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
         <ui:VisualElement class="fp-header__actions" picking-mode="Ignore">
             <ui:Instance template="Button" name="save-merged" class="fp-header__action">
-                <ui:AttributeOverrides element-name="control" text="Save Merged" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.SaveMerged.Control.Text" />
             </ui:Instance>
             <ui:Instance template="Button" name="save" class="fp-header__action">
-                <ui:AttributeOverrides element-name="control" text="Save Level" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Save.Control.Text" />
             </ui:Instance>
             <ui:Instance template="Button" name="quit" class="fp-header__action">
-                <ui:AttributeOverrides element-name="control" text="Quit" />
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Quit.Control.Text" />
             </ui:Instance>
         </ui:VisualElement>
     </ui:VisualElement>

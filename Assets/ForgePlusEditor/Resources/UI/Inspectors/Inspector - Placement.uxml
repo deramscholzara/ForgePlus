@@ -3,24 +3,24 @@
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
     <!-- Bound to Inspector_Placement (one type's placement, placed under a heading naming the type) -->
     <ui:Instance template="IntegerFieldRow" name="InitialCount">
-        <ui:AttributeOverrides element-name="label" text="Initial Count:" />
+        <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.InitialCount.Label.Text" />
     </ui:Instance>
     <ui:Instance template="IntegerFieldRow" name="MinimumCount">
-        <ui:AttributeOverrides element-name="label" text="Minimum Count:" />
+        <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.MinimumCount.Label.Text" />
     </ui:Instance>
     <ui:Instance template="IntegerFieldRow" name="MaximumCount">
-        <ui:AttributeOverrides element-name="label" text="Maximum Count:" />
+        <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.MaximumCount.Label.Text" />
     </ui:Instance>
     <ui:Instance template="Flag" name="RandomCountIsInfinite">
-        <ui:AttributeOverrides element-name="flag" text="Infinite Random Count" />
+        <ui:AttributeOverrides element-name="flag" text="@Objects/Inspector.Placement.RandomCountIsInfinite.Flag.Text" />
     </ui:Instance>
     <ui:Instance template="IntegerFieldRow" name="RandomCount">
-        <ui:AttributeOverrides element-name="label" text="Random Count:" />
+        <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.RandomCount.Label.Text" />
     </ui:Instance>
     <ui:Instance template="IntegerFieldRow" name="RandomChance">
-        <ui:AttributeOverrides element-name="label" text="Random Chance (%):" />
+        <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.RandomChance.Label.Text" />
     </ui:Instance>
     <ui:Instance template="Flag" name="ReappearsInRandomLocation">
-        <ui:AttributeOverrides element-name="flag" text="Reappears in Random Location" />
+        <ui:AttributeOverrides element-name="flag" text="@Objects/Inspector.Placement.ReappearsInRandomLocation.Flag.Text" />
     </ui:Instance>
 </ui:UXML>

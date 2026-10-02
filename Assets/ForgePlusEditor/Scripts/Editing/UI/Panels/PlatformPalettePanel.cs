@@ -1,4 +1,5 @@
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
 using UnityEngine.UIElements;
 
@@ -11,7 +12,7 @@ namespace ForgePlus.UI
         {
             get
             {
-                return "Platforms";
+                return Strings.Get(Strings.Platforms, "Palette.Platforms.Header");
             }
         }
 

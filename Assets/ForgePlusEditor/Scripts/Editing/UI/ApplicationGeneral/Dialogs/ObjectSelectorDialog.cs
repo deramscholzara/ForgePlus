@@ -1,4 +1,5 @@
-﻿using ForgePlus.UI;
+﻿using ForgePlus.Localization;
+using ForgePlus.UI;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine.UIElements;
@@ -77,7 +78,7 @@ namespace ForgePlus.ApplicationGeneral
                 AddOption(optionsContainer, buttonTemplate, label, options[i]);
             }
 
-            AddOption(optionsContainer, buttonTemplate, "Cancel", null);
+            AddOption(optionsContainer, buttonTemplate, Strings.Get(Strings.Common, "Dialog.ObjectSelector.Cancel"), null);
         }
 
         protected override void OnUnloading()

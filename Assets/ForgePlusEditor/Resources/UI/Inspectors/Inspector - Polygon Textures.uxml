@@ -8,48 +8,48 @@
     <!-- Bound to Inspector_PolygonTextures -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Polygon Textures" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.PolygonTextures.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.Id.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Floor" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.Floor.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextureRow" name="FloorTexture">
-            <ui:AttributeOverrides element-name="label" text="Texture:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorTexture.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="FloorBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
-            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
+        <ui:Instance template="IntegerFieldRow" name="FloorBitmap" tooltip="@Textures/Inspector.PolygonTextures.FloorBitmap.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorBitmap.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="FloorOffset">
-            <ui:AttributeOverrides element-name="label" text="Offset:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorOffset.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownRow" name="FloorTransferMode">
-            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorTransferMode.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="FloorLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Ceiling" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.Ceiling.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextureRow" name="CeilingTexture">
-            <ui:AttributeOverrides element-name="label" text="Texture:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingTexture.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="CeilingBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
-            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
+        <ui:Instance template="IntegerFieldRow" name="CeilingBitmap" tooltip="@Textures/Inspector.PolygonTextures.CeilingBitmap.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingBitmap.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="CeilingOffset">
-            <ui:AttributeOverrides element-name="label" text="Offset:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingOffset.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownRow" name="CeilingTransferMode">
-            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingTransferMode.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="CeilingLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingLightIndex.Label.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

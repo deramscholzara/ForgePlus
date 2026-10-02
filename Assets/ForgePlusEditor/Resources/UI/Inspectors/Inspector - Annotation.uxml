@@ -7,29 +7,29 @@
     <!-- Bound to Inspector_Annotation -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Annotation" />
+            <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Annotation.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Id.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextFieldRow" name="Text" class="fp-inspector-row--vertical">
-            <ui:AttributeOverrides element-name="label" text="Text:" />
+            <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Text.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Type">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
+            <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Type.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Position" />
+            <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Position.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="LocationX">
-            <ui:AttributeOverrides element-name="label" text="X:" />
+            <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.LocationX.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="LocationY">
-            <ui:AttributeOverrides element-name="label" text="Y:" />
+            <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.LocationY.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="PolygonIndex">
-            <ui:AttributeOverrides element-name="label" text="Polygon:" />
+            <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.PolygonIndex.Label.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

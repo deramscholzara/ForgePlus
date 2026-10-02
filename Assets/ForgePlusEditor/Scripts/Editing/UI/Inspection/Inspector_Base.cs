@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
 using RuntimeCore.Materials;
@@ -127,7 +128,7 @@ namespace ForgePlus.Inspection
             }
 
             image.AddToClassList("fp-inspector-texture--choosable");
-            image.tooltip = "Click to choose a texture";
+            image.tooltip = Strings.Get(Strings.Common, "Inspector.Base.ChooseTexture.Tooltip");
             image.RegisterCallback<ClickEvent>(clickEvent =>
             {
                 clickEvent.StopPropagation();

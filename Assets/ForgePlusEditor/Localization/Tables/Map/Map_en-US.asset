@@ -1,0 +1,286 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Map_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: d740a56bacba3f84bae7ab31a8217a81, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231195
+  - rid: 552786097007231196
+  - rid: 552786097007231197
+  - rid: 552786097007231198
+  - rid: 552786097007231199
+  - rid: 552786097007231200
+  - rid: 552786097007231201
+  - rid: 552786097007231202
+  - rid: 552786097007231203
+  - rid: 552786097007231204
+  - rid: 552786097007231205
+  - rid: 552786097007231206
+  - rid: 552786097007231207
+  - rid: 552786097007231208
+  - rid: 552786097007231209
+  - rid: 552786097007231210
+  - rid: 552786097007231211
+  - rid: 552786097007231212
+  - rid: 552786097007231213
+  - rid: 552786097007231746
+  - rid: 552786097007231747
+  - rid: 552786097007231748
+  - rid: 552786097007231749
+  - rid: 552786097007231750
+  - rid: 552786097007231751
+  - rid: 552786097007231752
+  - rid: 552786097007231753
+  - rid: 552786097007231754
+  - rid: 552786097007231755
+  - rid: 552786097007231756
+  - rid: 552786097007231757
+  - rid: 552786097007231758
+  - rid: 552786097007231759
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231195
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572458541056
+        m_Metadata:
+          m_Items: []
+        m_Value: Map
+    - rid: 552786097007231196
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572458541057
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Name:'
+    - rid: 552786097007231197
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735360
+        m_Metadata:
+          m_Items: []
+        m_Value: The name in the map file's header. Save Merged keeps it when it keeps the checksum, and otherwise (as Save Level does) names it after the saved file. Marathon doesn't show it.
+    - rid: 552786097007231198
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735361
+        m_Metadata:
+          m_Items: []
+        m_Value: 'File:'
+    - rid: 552786097007231199
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735362
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Levels:'
+    - rid: 552786097007231200
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735363
+        m_Metadata:
+          m_Items: []
+        m_Value: Physics saved in a level, which it uses instead of the selected physics file (Files tab). Marathon Infinity and Aleph One load it; Marathon 2 doesn't.
+    - rid: 552786097007231201
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735364
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Embedded Physics:'
+    - rid: 552786097007231202
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735365
+        m_Metadata:
+          m_Items: []
+        m_Value: 'File Version:'
+    - rid: 552786097007231203
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735366
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Data Version:'
+    - rid: 552786097007231204
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735367
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Checksum:'
+    - rid: 552786097007231205
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735368
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Parent Checksum:'
+    - rid: 552786097007231206
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735369
+        m_Metadata:
+          m_Items: []
+        m_Value: Mac File
+    - rid: 552786097007231207
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735370
+        m_Metadata:
+          m_Items: []
+        m_Value: The resource fork holds the map's pictures (such as its terminals'), color tables and level script. Save Merged keeps it (but for chapter screens turned off in Level mode), and the Finder's information, as they are, in the same form (such as MacBinary). Save Level (with resources) keeps only what its level uses (its chapter screen, as level 0's, its terminals' pictures, its part of the level script, and the end screens).
+    - rid: 552786097007231208
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735371
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Format:'
+    - rid: 552786097007231209
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735372
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Resource Fork:'
+    - rid: 552786097007231210
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735373
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Version:'
+    - rid: 552786097007231211
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735374
+        m_Metadata:
+          m_Items: []
+        m_Value: Level Script (Aleph One only)
+    - rid: 552786097007231212
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735375
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: MML in the map''s resources (TEXT 128) that sets things for each level, such as its music, Lua script and loading screen. The original Marathon 2 and Infinity ignore it. Kept and saved as it is.'
+    - rid: 552786097007231213
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2572462735376
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Size:'
+    - rid: 552786097007231746
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165184
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} of {1} levels'
+    - rid: 552786097007231747
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165185
+        m_Metadata:
+          m_Items: []
+        m_Value: Marathon ({0})
+    - rid: 552786097007231748
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165186
+        m_Metadata:
+          m_Items: []
+        m_Value: Marathon, with Level Directory ({0})
+    - rid: 552786097007231749
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165187
+        m_Metadata:
+          m_Items: []
+        m_Value: Marathon 2 ({0})
+    - rid: 552786097007231750
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165188
+        m_Metadata:
+          m_Items: []
+        m_Value: Marathon Infinity ({0})
+    - rid: 552786097007231751
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165189
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786097007231752
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165190
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} bytes'
+    - rid: 552786097007231753
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165191
+        m_Metadata:
+          m_Items: []
+        m_Value: "{0}\n\n(\u2026 and {1} more characters)"
+    - rid: 552786097007231754
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165192
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} ({1})'
+    - rid: 552786097007231755
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139219165193
+        m_Metadata:
+          m_Items: []
+        m_Value: pictures
+    - rid: 552786097007231756
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139227553792
+        m_Metadata:
+          m_Items: []
+        m_Value: color tables
+    - rid: 552786097007231757
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139227553793
+        m_Metadata:
+          m_Items: []
+        m_Value: sounds
+    - rid: 552786097007231758
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139227553794
+        m_Metadata:
+          m_Items: []
+        m_Value: texts
+    - rid: 552786097007231759
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6139227553795
+        m_Metadata:
+          m_Items: []
+        m_Value: versions

@@ -1,4 +1,5 @@
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
 using RuntimeCore.Entities;
 using UnityEngine.UIElements;
@@ -21,7 +22,7 @@ namespace ForgePlus.UI
         {
             get
             {
-                return "Polygons";
+                return Strings.Get(Strings.Annotations, "Palette.Polygons.Header");
             }
         }
 

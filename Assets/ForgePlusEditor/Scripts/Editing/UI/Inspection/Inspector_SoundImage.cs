@@ -2,6 +2,7 @@ using AlephOne;
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using ForgePlus.UI;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,13 @@ namespace ForgePlus.Inspection
         {
         }
 
-        protected abstract string KindName { get; }
+        private bool IsAmbient
+        {
+            get
+            {
+                return Entity.Kind == SoundImageKinds.Ambient;
+            }
+        }
 
         [CreateProperty]
         public string Index
@@ -46,7 +53,7 @@ namespace ForgePlus.Inspection
             {
                 var count = SoundImageEditing.UsageCount(Entity.Kind, Entity.Index);
 
-                return count == 1 ? "1 polygon" : $"{count} polygons";
+                return count == 1 ? Strings.Get(Strings.Sounds, "Inspector.SoundImage.PlayedIn.One") : Strings.Get(Strings.Sounds, "Inspector.SoundImage.PlayedIn.Many", count);
             }
         }
 
@@ -70,7 +77,7 @@ namespace ForgePlus.Inspection
         {
             base.OnLoaded();
 
-            Root.Q<Label>(className: "fp-inspector-header").text = $"{KindName} Sound {Entity.Index}";
+            Root.Q<Label>(className: "fp-inspector-header").text = Strings.Get(Strings.Sounds, IsAmbient ? "Inspector.SoundImage.Header.Ambient" : "Inspector.SoundImage.Header.Random", Entity.Index);
             Root.Q("aleph-one-note").style.display = Entity.Index >= SoundImageEditing.MaximumOriginalEntries ? DisplayStyle.Flex : DisplayStyle.None;
 
             var playedIn = Root.Find<Button>(nameof(PlayedIn));
@@ -97,7 +104,7 @@ namespace ForgePlus.Inspection
             var kind = Entity.Kind;
             var index = Entity.Index;
             var polygons = SoundImageEditing.PolygonsUsing(kind, index).ToList();
-            var labels = polygons.Select(polygon => $"Polygon {polygon.NativeIndex}").ToList();
+            var labels = polygons.Select(polygon => Strings.Get(Strings.Sounds, "Inspector.SoundImage.Polygon", polygon.NativeIndex)).ToList();
 
             ChecklistPicker.Show(anchor, labels,
                 isChecked: item => SoundImageEditing.IndexOf(polygons[item].NativeObject, kind) == index,
@@ -110,13 +117,15 @@ namespace ForgePlus.Inspection
             var kind = Entity.Kind;
             var index = Entity.Index;
             var count = SoundImageEditing.UsageCount(kind, index);
-            var polygons = count == 1 ? "1 polygon plays it" : $"{count} polygons play it";
+            var message = IsAmbient ?
+                          (count == 1 ? Strings.Get(Strings.Sounds, "Inspector.SoundImage.Delete.Message.Ambient.One") : Strings.Get(Strings.Sounds, "Inspector.SoundImage.Delete.Message.Ambient.Many", count)) :
+                          (count == 1 ? Strings.Get(Strings.Sounds, "Inspector.SoundImage.Delete.Message.Random.One") : Strings.Get(Strings.Sounds, "Inspector.SoundImage.Delete.Message.Random.Many", count));
 
             var result = await DialogManager.Instance.DisplayQueuedDialog(
-                title: $"Delete {KindName} Sound {index}?",
-                message: $"{polygons}, and will play no {KindName.ToLowerInvariant()} sound. Each later {KindName.ToLowerInvariant()} sound's index moves down by one (and the polygons that play it follow it).",
+                title: Strings.Get(Strings.Sounds, IsAmbient ? "Inspector.SoundImage.Delete.Title.Ambient" : "Inspector.SoundImage.Delete.Title.Random", index),
+                message: message,
                 options: new[] { "Delete" },
-                optionLabels: null,
+                optionLabels: new[] { Strings.Get(Strings.Sounds, "Inspector.SoundImage.Delete.Confirm") },
                 checkboxLabel: null);
 
             if (result.Option != "Delete")

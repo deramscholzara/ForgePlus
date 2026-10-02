@@ -4,6 +4,7 @@ using ForgePlus.Extensions;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
@@ -470,7 +471,22 @@ namespace ForgePlus.Entities.Geometry
 
         private static string DataSourceDialogTitle(bool isDestination)
         {
-            return isDestination ? "Select Destination..." : "Select Source...";
+            return isDestination ? Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Title.Destination") : Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Title.Source");
+        }
+
+        private static string DataSourceLabel(string dataSource)
+        {
+            switch (dataSource)
+            {
+                case nameof(LevelEntity_Side.DataSources.Primary):
+                    return Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Source.Primary");
+                case nameof(LevelEntity_Side.DataSources.Secondary):
+                    return Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Source.Secondary");
+                case nameof(LevelEntity_Side.DataSources.Transparent):
+                    return Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Source.Transparent");
+                default:
+                    return dataSource;
+            }
         }
 
         private async Task<LevelEntity_Side.DataSources?> ShowLayerSourceDialog(bool isDestination)
@@ -483,8 +499,8 @@ namespace ForgePlus.Entities.Geometry
 
             var dialogOptionLabels = new List<string>()
                                 {
-                                    "Inner",
-                                    "Outer"
+                                    Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Layer.Inner"),
+                                    Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Layer.Outer")
                                 };
 
             var result = await DialogManager.Instance.DisplayQueuedDialog(DataSourceDialogTitle(isDestination),
@@ -501,8 +517,11 @@ namespace ForgePlus.Entities.Geometry
 
         private async Task<LevelEntity_Side.DataSources?> ShowVariableDataSourceDialog(List<string> dialogOptions, bool isDestination)
         {
+            var dialogOptionLabels = dialogOptions.Select(DataSourceLabel).ToList();
+
             var result = await DialogManager.Instance.DisplayQueuedDialog(DataSourceDialogTitle(isDestination),
-                                                                          dialogOptions);
+                                                                          dialogOptions,
+                                                                          dialogOptionLabels);
 
             if (result == null)
             {

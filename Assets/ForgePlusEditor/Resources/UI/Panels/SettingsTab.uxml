@@ -7,42 +7,42 @@
         <ui:VisualElement class="fp-box fp-settings__options">
             <ui:Instance template="ScrollArea" class="fp-grow fp-scroll--spaced">
                 <ui:Instance template="Toggle" name="full-screen" class="fp-toggle--wide fp-setting">
-                    <ui:AttributeOverrides element-name="control" text="Full-Screen" />
+                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.FullScreen.Control.Text" />
                 </ui:Instance>
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <ui:Instance template="SliderRow" name="minimum-light" class="fp-setting">
-                    <ui:AttributeOverrides element-name="control" label="Minimum Light" />
+                    <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.MinimumLight.Control.Label" />
                 </ui:Instance>
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <ui:Instance template="Toggle" name="bloom" class="fp-toggle--wide fp-setting">
-                    <ui:AttributeOverrides element-name="control" text="Bloom" />
+                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Bloom.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="Toggle" name="vignette" class="fp-toggle--wide fp-setting">
-                    <ui:AttributeOverrides element-name="control" text="Vignette" />
+                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Vignette.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="Toggle" name="color-adjustment" class="fp-toggle--wide fp-setting">
-                    <ui:AttributeOverrides element-name="control" text="Color Adjustment" />
+                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.ColorAdjustment.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="Toggle" name="ambient-occlusion" class="fp-toggle--wide fp-setting">
-                    <ui:AttributeOverrides element-name="control" text="Ambient Occlusion" />
+                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.AmbientOcclusion.Control.Text" />
                 </ui:Instance>
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <!-- What Save Merged does with the map file's checksum (Ask until its dialog's choice is remembered), in the
                      order of MergedSaveChecksums -->
-                <ui:Label text="Update Merge Checksum On Save" class="fp-setting__label" />
+                <ui:Label text="@Menu/SettingsTab.UpdateMergeChecksumOn.Text" class="fp-setting__label" />
                 <ui:RadioButtonGroup name="merged-save-checksum" class="fp-radio-group fp-radio-row fp-setting">
                     <ui:Instance template="RadioToggle" class="fp-setting__choice">
-                        <ui:AttributeOverrides element-name="control" text="Ask" />
+                        <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Ask.Control.Text" />
                     </ui:Instance>
                     <ui:Instance template="RadioToggle" class="fp-setting__choice">
-                        <ui:AttributeOverrides element-name="control" text="Keep" />
+                        <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Keep.Control.Text" />
                     </ui:Instance>
                     <ui:Instance template="RadioToggle" class="fp-setting__choice fp-setting__choice--last">
-                        <ui:AttributeOverrides element-name="control" text="Regenerate" />
+                        <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Regenerate.Control.Text" />
                     </ui:Instance>
                 </ui:RadioButtonGroup>
             </ui:Instance>
         </ui:VisualElement>
-        <ui:Label text="Version: 2020-09-14-0" class="fp-faint-text fp-settings__version" />
+        <ui:Label text="@Menu/SettingsTab.Version20200914.Text" class="fp-faint-text fp-settings__version" />
     </ui:VisualElement>
 </ui:UXML>

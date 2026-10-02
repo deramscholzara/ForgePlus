@@ -317,7 +317,7 @@ namespace ForgePlus.DataFileIO
             {
                 var mapObject = level.SavedObjectList[objectIndex];
 
-                var mapObjectRootGO = new GameObject($"MapObject: {mapObject.GetTypeName()} ({objectIndex})");
+                var mapObjectRootGO = new GameObject($"MapObject: {mapObject.GetTypeIdentifier()} ({objectIndex})");
                 mapObjectRootGO.transform.SetParent(mapObjectsGroupGO.transform);
 
                 var runtimeMapObject = mapObjectRootGO.AddComponent<LevelEntity_MapObject>();

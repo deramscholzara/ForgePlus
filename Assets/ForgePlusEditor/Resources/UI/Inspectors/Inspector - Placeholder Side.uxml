@@ -4,20 +4,20 @@
     <!-- Bound to Inspector_PlaceholderSide -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Side (None)" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.SideNone.Label.Text" />
         </ui:Instance>
-        <ui:Label text="This face of its line has no side in the level, so it has no texture. Its polygons' heights can expose it (as they're shown here, or as platforms move), where the game draws nothing." class="fp-inspector-note" />
+        <ui:Label text="@Common/Inspector.PlaceholderSide.ThisFaceOfIts.Text" class="fp-inspector-note" />
         <ui:Instance template="Row" name="LineIndex">
-            <ui:AttributeOverrides element-name="label" text="Line:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.LineIndex.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Face">
-            <ui:AttributeOverrides element-name="label" text="Face:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.Face.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="FacingPolygon">
-            <ui:AttributeOverrides element-name="label" text="Faces:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.FacingPolygon.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="OpposingPolygon">
-            <ui:AttributeOverrides element-name="label" text="Opposite:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.OpposingPolygon.Label.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

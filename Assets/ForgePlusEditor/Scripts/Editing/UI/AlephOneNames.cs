@@ -1,4 +1,5 @@
-﻿using AlephOne;
+using AlephOne;
+using ForgePlus.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,68 +8,85 @@ using Unity.Scripting.LifecycleManagement;
 
 namespace ForgePlus.Extensions
 {
-    // Display names taken from the names of Aleph One's own constants (polygon type 5 is "platform", from _polygon_is_platform)
+    // Display names of Aleph One's values, each the Common string table's "Term.<class>.<constant>" entry (so it can be
+    // reworded), which starts as the name of Aleph One's own constant for it (polygon type 5 is "platform", from
+    // _polygon_is_platform). A value with no constant is shown as its number.
     [NoAutoStaticsCleanup]
     public static class AlephOneNames
     {
         // Civilians keep their prefix in their names ("civilian crew", not "crew")
         private const string CivilianPrefix = "_civilian_";
 
-        private static readonly Dictionary<string, Dictionary<long, string>> NamesByKey = new Dictionary<string, Dictionary<long, string>>();
-
-        public static string PolygonType(short type)
+        private sealed class Category
         {
-            return GetName(typeof(map), type, prefixes: new[] { "_polygon_is_", "_polygon_" });
+            public Type ConstantsClass;
+            public string[] Prefixes = Array.Empty<string>();
+            public string[] ExcludedPrefixes = Array.Empty<string>();
+            public string Suffix = string.Empty;
+            public string[] Candidates;
+
+            // Each value's constant (the first, where constants alias a value), and its name from it
+            public Dictionary<long, (string Constant, string Name)> Names;
         }
 
-        public static string SideType(short type)
+        private static readonly Category PolygonTypes = new Category
         {
-            var candidates = new[] { "_full_side", "_high_side", "_low_side", "_composite_side", "_split_side" };
+            ConstantsClass = typeof(map),
+            Prefixes = new[] { "_polygon_is_", "_polygon_" },
+        };
 
-            return GetName(typeof(map), type, suffix: "_side", candidates: candidates);
-        }
-
-        public static string LightType(short type)
+        private static readonly Category SideTypes = new Category
         {
-            var candidates = new[] { "_normal_light", "_strobe_light", "_media_light" };
+            ConstantsClass = typeof(map),
+            Suffix = "_side",
+            Candidates = new[] { "_full_side", "_high_side", "_low_side", "_composite_side", "_split_side" },
+        };
 
-            return GetName(typeof(lightsource), type, suffix: "_light", candidates: candidates);
-        }
-
-        public static string LightingFunction(short function)
+        private static readonly Category LightTypes = new Category
         {
-            var candidates = new[]
+            ConstantsClass = typeof(lightsource),
+            Suffix = "_light",
+            Candidates = new[] { "_normal_light", "_strobe_light", "_media_light" },
+        };
+
+        private static readonly Category LightingFunctions = new Category
+        {
+            ConstantsClass = typeof(lightsource),
+            Suffix = "_lighting_function",
+            Candidates = new[]
             {
                 "_constant_lighting_function",
                 "_linear_lighting_function",
                 "_smooth_lighting_function",
                 "_flicker_lighting_function",
-            };
+            },
+        };
 
-            return GetName(typeof(lightsource), function, suffix: "_lighting_function", candidates: candidates);
-        }
-
-        public static string PlatformType(short type)
+        private static readonly Category PlatformTypes = new Category
         {
-            return GetName(typeof(platforms), type, prefixes: new[] { "_platform_is_" });
-        }
+            ConstantsClass = typeof(platforms),
+            Prefixes = new[] { "_platform_is_" },
+        };
 
         // Media sounds share the media type prefix
-        public static string MediaType(short type)
+        private static readonly Category MediaTypes = new Category
         {
-            var candidates = new[] { "_media_water", "_media_lava", "_media_goo", "_media_sewage", "_media_jjaro" };
+            ConstantsClass = typeof(media),
+            Prefixes = new[] { "_media_" },
+            Candidates = new[] { "_media_water", "_media_lava", "_media_goo", "_media_sewage", "_media_jjaro" },
+        };
 
-            return GetName(typeof(media), type, prefixes: new[] { "_media_" }, candidates: candidates);
-        }
-
-        public static string ControlPanelClass(short panelClass)
+        private static readonly Category ControlPanelClasses = new Category
         {
-            return GetName(typeof(map), panelClass, prefixes: new[] { "_panel_is_" });
-        }
+            ConstantsClass = typeof(map),
+            Prefixes = new[] { "_panel_is_" },
+        };
 
-        public static string TerminalGroupType(short type)
+        private static readonly Category TerminalGroupTypes = new Category
         {
-            var candidates = new[]
+            ConstantsClass = typeof(computer_interface),
+            Suffix = "_group",
+            Candidates = new[]
             {
                 "_logon_group",
                 "_unfinished_group",
@@ -87,66 +105,109 @@ namespace ForgePlus.Extensions
                 "_camera_group",
                 "_static_group",
                 "_tag_group",
-            };
-
-            return GetName(typeof(computer_interface), type, suffix: "_group", candidates: candidates);
-        }
+            },
+        };
 
         // Monster flags share the monster type prefix
-        public static string MonsterType(short type)
+        private static readonly Category MonsterTypes = new Category
         {
-            var excludedPrefixes = new[] { "_monster_is_", "_monster_was_", "_monster_has_", "_monster_can_" };
+            ConstantsClass = typeof(monsters),
+            Prefixes = new[] { "_monster_", CivilianPrefix },
+            ExcludedPrefixes = new[] { "_monster_is_", "_monster_was_", "_monster_has_", "_monster_can_" },
+        };
 
-            return GetName(typeof(monsters), type, prefixes: new[] { "_monster_", CivilianPrefix }, excludedPrefixes: excludedPrefixes);
+        private static readonly Category AmbientSounds = new Category
+        {
+            ConstantsClass = typeof(SoundManagerEnums),
+            Prefixes = new[] { "_ambient_snd_" },
+        };
+
+        private static readonly Category RandomSounds = new Category
+        {
+            ConstantsClass = typeof(SoundManagerEnums),
+            Prefixes = new[] { "_random_snd_" },
+        };
+
+        private static readonly Category ItemTypes = new Category
+        {
+            ConstantsClass = typeof(items),
+            Prefixes = new[] { "_i_" },
+        };
+
+        private static readonly Category[] Categories =
+        {
+            PolygonTypes, SideTypes, LightTypes, LightingFunctions, PlatformTypes, MediaTypes, ControlPanelClasses,
+            TerminalGroupTypes, MonsterTypes, AmbientSounds, RandomSounds, ItemTypes,
+        };
+
+        public static string PolygonType(short type) { return GetName(PolygonTypes, type); }
+
+        public static string SideType(short type) { return GetName(SideTypes, type); }
+
+        public static string LightType(short type) { return GetName(LightTypes, type); }
+
+        public static string LightingFunction(short function) { return GetName(LightingFunctions, function); }
+
+        public static string PlatformType(short type) { return GetName(PlatformTypes, type); }
+
+        public static string MediaType(short type) { return GetName(MediaTypes, type); }
+
+        public static string ControlPanelClass(short panelClass) { return GetName(ControlPanelClasses, panelClass); }
+
+        public static string TerminalGroupType(short type) { return GetName(TerminalGroupTypes, type); }
+
+        // As terminal source names it ("logon", for #LOGON), which is syntax, so it's never localized
+        public static string TerminalGroupSourceName(short type)
+        {
+            return GetNames(TerminalGroupTypes).TryGetValue(type, out var name) ? name.Name : type.ToString();
         }
 
-        public static string AmbientSound(short ambientSound)
+        public static string MonsterType(short type) { return GetName(MonsterTypes, type); }
+
+        public static string AmbientSound(short ambientSound) { return GetName(AmbientSounds, ambientSound); }
+
+        public static string RandomSound(short randomSound) { return GetName(RandomSounds, randomSound); }
+
+        public static string ItemType(short type) { return GetName(ItemTypes, type); }
+
+        // Every name's entry (its key, and its text from its constant), for filling the Common table
+        public static IEnumerable<KeyValuePair<string, string>> AllEntries()
         {
-            return GetName(typeof(SoundManagerEnums), ambientSound, prefixes: new[] { "_ambient_snd_" });
-        }
-
-        public static string RandomSound(short randomSound)
-        {
-            return GetName(typeof(SoundManagerEnums), randomSound, prefixes: new[] { "_random_snd_" });
-        }
-
-        public static string ItemType(short type)
-        {
-            return GetName(typeof(items), type, prefixes: new[] { "_i_" });
-        }
-
-        private static string GetName(Type constantsClass, long value, string[] prefixes = null, string[] excludedPrefixes = null, string suffix = "", string[] candidates = null)
-        {
-            prefixes = prefixes ?? Array.Empty<string>();
-            excludedPrefixes = excludedPrefixes ?? Array.Empty<string>();
-
-            var key = string.Join("|",
-                                  constantsClass.FullName,
-                                  string.Join(",", prefixes),
-                                  suffix,
-                                  candidates != null ? string.Join(",", candidates) : string.Empty);
-
-            if (!NamesByKey.TryGetValue(key, out var names))
+            foreach (var category in Categories)
             {
-                names = GetNames(constantsClass, prefixes, excludedPrefixes, suffix, candidates);
+                foreach (var name in GetNames(category).Values)
+                {
+                    yield return new KeyValuePair<string, string>(TermKey(category, name.Constant), name.Name);
+                }
+            }
+        }
 
-                NamesByKey[key] = names;
+        private static string TermKey(Category category, string constant)
+        {
+            return $"Term.{category.ConstantsClass.Name}.{constant}";
+        }
+
+        private static string GetName(Category category, long value)
+        {
+            if (!GetNames(category).TryGetValue(value, out var name))
+            {
+                return value.ToString();
             }
 
-            if (names.TryGetValue(value, out var name))
-            {
-                return name;
-            }
-
-            return value.ToString();
+            return Strings.TryGet(Strings.Common, TermKey(category, name.Constant), out var localized) ? localized : name.Name;
         }
 
-        private static Dictionary<long, string> GetNames(Type constantsClass, string[] prefixes, string[] excludedPrefixes, string suffix, string[] candidates)
+        private static Dictionary<long, (string Constant, string Name)> GetNames(Category category)
         {
-            var names = new Dictionary<long, string>();
+            if (category.Names != null)
+            {
+                return category.Names;
+            }
+
+            var names = new Dictionary<long, (string Constant, string Name)>();
 
             // In declaration order (reflection doesn't guarantee any order), so the first alias of a value wins
-            foreach (var field in constantsClass.GetFields(BindingFlags.Public | BindingFlags.Static).OrderBy(field => field.MetadataToken))
+            foreach (var field in category.ConstantsClass.GetFields(BindingFlags.Public | BindingFlags.Static).OrderBy(field => field.MetadataToken))
             {
                 var constantName = field.Name;
 
@@ -156,14 +217,14 @@ namespace ForgePlus.Extensions
                 }
 
                 bool matches;
-                if (candidates != null)
+                if (category.Candidates != null)
                 {
-                    matches = candidates.Contains(constantName);
+                    matches = category.Candidates.Contains(constantName);
                 }
                 else
                 {
-                    matches = prefixes.Any(prefix => constantName.StartsWith(prefix, StringComparison.Ordinal)) &&
-                              !excludedPrefixes.Any(prefix => constantName.StartsWith(prefix, StringComparison.Ordinal));
+                    matches = category.Prefixes.Any(prefix => constantName.StartsWith(prefix, StringComparison.Ordinal)) &&
+                              !category.ExcludedPrefixes.Any(prefix => constantName.StartsWith(prefix, StringComparison.Ordinal));
                 }
 
                 if (!matches)
@@ -176,9 +237,11 @@ namespace ForgePlus.Extensions
                 // Where constants alias the same value, the first is the canonical one
                 if (!names.ContainsKey(constantValue))
                 {
-                    names[constantValue] = Prettify(constantName, prefixes, suffix);
+                    names[constantValue] = (constantName, Prettify(constantName, category.Prefixes, category.Suffix));
                 }
             }
+
+            category.Names = names;
 
             return names;
         }

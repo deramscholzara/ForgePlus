@@ -24,14 +24,6 @@ namespace ForgePlus.Inspection
             }
         }
 
-        protected override string KindName
-        {
-            get
-            {
-                return "Ambient";
-            }
-        }
-
         private ambient_sound_image_data Image
         {
             get

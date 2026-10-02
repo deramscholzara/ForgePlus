@@ -6,7 +6,7 @@
         <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
         <ui:VisualElement class="fp-inspector-row__value-area fp-inspector-row__value-area--playable">
             <ui:DropdownField name="value" class="fp-inspector-dropdown" />
-            <fp:PlayButton name="play" text="" tooltip="Plays it once (needs a sounds file, in the Files tab)" class="fp-inspector-play" />
+            <fp:PlayButton name="play" text="" tooltip="@Common/InspectorDropdownPlayRow.Play.Tooltip" class="fp-inspector-play" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -7,56 +7,56 @@
     <!-- Bound to Inspector_Map: the map file, as a whole (each level's own data is in the Level inspector) -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Map" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Map.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextFieldRow" name="Name" class="fp-inspector-row--vertical">
-            <ui:AttributeOverrides element-name="label" text="Name:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Name.Label.Text" />
         </ui:Instance>
-        <ui:Label text="The name in the map file's header. Save Merged keeps it when it keeps the checksum, and otherwise (as Save Level does) names it after the saved file. Marathon doesn't show it." class="fp-inspector-note" />
+        <ui:Label text="@Map/Inspector.Map.TheNameInThe.Text" class="fp-inspector-note" />
         <ui:Instance template="Row" name="FileName">
-            <ui:AttributeOverrides element-name="label" text="File:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.FileName.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="LevelCount">
-            <ui:AttributeOverrides element-name="label" text="Levels:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.LevelCount.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="EmbeddedPhysicsLevelCount" tooltip="Physics saved in a level, which it uses instead of the selected physics file (Files tab). Marathon Infinity and Aleph One load it; Marathon 2 doesn't.">
-            <ui:AttributeOverrides element-name="label" text="Embedded Physics:" />
+        <ui:Instance template="Row" name="EmbeddedPhysicsLevelCount" tooltip="@Map/Inspector.Map.EmbeddedPhysicsLevelCount.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.EmbeddedPhysicsLevelCount.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="FileVersion">
-            <ui:AttributeOverrides element-name="label" text="File Version:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.FileVersion.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="DataVersion">
-            <ui:AttributeOverrides element-name="label" text="Data Version:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.DataVersion.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Checksum">
-            <ui:AttributeOverrides element-name="label" text="Checksum:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Checksum.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="ParentChecksum">
-            <ui:AttributeOverrides element-name="label" text="Parent Checksum:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.ParentChecksum.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Mac File" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.MacFile.Label.Text" />
         </ui:Instance>
-        <ui:Label text="The resource fork holds the map's pictures (such as its terminals'), color tables and level script. Save Merged keeps it (but for chapter screens turned off in Level mode), and the Finder's information, as they are, in the same form (such as MacBinary). Save Level (with resources) keeps only what its level uses (its chapter screen, as level 0's, its terminals' pictures, its part of the level script, and the end screens)." class="fp-inspector-note" />
+        <ui:Label text="@Map/Inspector.Map.TheResourceForkHolds.Text" class="fp-inspector-note" />
         <ui:Instance template="Row" name="Container">
-            <ui:AttributeOverrides element-name="label" text="Format:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Container.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="ResourceFork">
-            <ui:AttributeOverrides element-name="label" text="Resource Fork:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.ResourceFork.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Version">
-            <ui:AttributeOverrides element-name="label" text="Version:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Version.Label.Text" />
         </ui:Instance>
         <!-- A row for each type of resource (added by Inspector_Map) -->
         <ui:VisualElement name="resources" />
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader" class="fp-aleph-one-only">
-            <ui:AttributeOverrides element-name="label" text="Level Script (Aleph One only)" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.LevelScriptAlephOne.Label.Text" />
         </ui:Instance>
-        <ui:Label text="Aleph One only: MML in the map's resources (TEXT 128) that sets things for each level, such as its music, Lua script and loading screen. The original Marathon 2 and Infinity ignore it. Kept and saved as it is." class="fp-inspector-note fp-aleph-one-only" />
+        <ui:Label text="@Map/Inspector.Map.AlephOneOnlyMML.Text" class="fp-inspector-note fp-aleph-one-only" />
         <ui:Instance template="Row" name="LevelScriptSize">
-            <ui:AttributeOverrides element-name="label" text="Size:" />
+            <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.LevelScriptSize.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextBlock" name="LevelScriptText" />
     </ui:VisualElement>

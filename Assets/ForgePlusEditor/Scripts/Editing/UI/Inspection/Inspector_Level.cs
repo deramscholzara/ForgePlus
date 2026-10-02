@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
 using System.Linq;
@@ -60,7 +61,9 @@ namespace ForgePlus.Inspection
             {
                 var code = StaticWorld.environment_code;
 
-                return code >= 0 && code < EnvironmentNames.Length ? $"{EnvironmentNames[code]} ({code})" : code.ToString();
+                var name = EnvironmentName(code);
+
+                return name != null ? Strings.Get(Strings.Level, "Inspector.Level.Environment.Value", name, code) : code.ToString();
             }
         }
 
@@ -345,11 +348,11 @@ namespace ForgePlus.Inspection
                     var chunk = GetChunk(tag);
                     if (chunk != null && chunk.Length > 0)
                     {
-                        return "Yes";
+                        return Strings.Get(Strings.Level, "Inspector.Level.EmbeddedPhysics.Yes");
                     }
                 }
 
-                return "No";
+                return Strings.Get(Strings.Level, "Inspector.Level.EmbeddedPhysics.No");
             }
         }
 
@@ -361,12 +364,12 @@ namespace ForgePlus.Inspection
                 switch (PhysicsLoading.Instance.Source)
                 {
                     case PhysicsModelSource.EmbeddedInLevel:
-                        return "The level's";
+                        return Strings.Get(Strings.Level, "Inspector.Level.PhysicsInUse.Level");
                     case PhysicsModelSource.PhysicsFile:
                     case PhysicsModelSource.Marathon1PhysicsFile:
-                        return "The physics file's";
+                        return Strings.Get(Strings.Level, "Inspector.Level.PhysicsInUse.PhysicsFile");
                     default:
-                        return "The engine's defaults";
+                        return Strings.Get(Strings.Level, "Inspector.Level.PhysicsInUse.EngineDefaults");
                 }
             }
         }
@@ -436,13 +439,13 @@ namespace ForgePlus.Inspection
                 var id = ChapterScreenId;
                 if (id < 0)
                 {
-                    return "None";
+                    return Strings.Get(Strings.Level, "Inspector.Level.None");
                 }
 
                 var depthOffset = id - 1500 - LevelIndex;
-                var depth = depthOffset >= 20000 ? "32-bit" : depthOffset >= 10000 ? "16-bit" : "8-bit";
+                var depth = depthOffset >= 20000 ? 32 : depthOffset >= 10000 ? 16 : 8;
 
-                return $"PICT {id} ({depth})";
+                return Strings.Get(Strings.Level, "Inspector.Level.ChapterScreen.Picture", id, depth);
             }
         }
 
@@ -512,7 +515,25 @@ namespace ForgePlus.Inspection
         // Longer text than this is cut off (a text element can only draw so many characters)
         private const int MaximumTextLength = 12000;
 
-        private static readonly string[] EnvironmentNames = { "Lh'owon Water", "Lh'owon Lava", "Lh'owon Sewage", "Jjaro", "Pfhor" };
+        // The environment's name, or null for an unknown code
+        private static string EnvironmentName(int code)
+        {
+            switch (code)
+            {
+                case 0:
+                    return Strings.Get(Strings.Level, "Inspector.Level.Environment.LhowonWater");
+                case 1:
+                    return Strings.Get(Strings.Level, "Inspector.Level.Environment.LhowonLava");
+                case 2:
+                    return Strings.Get(Strings.Level, "Inspector.Level.Environment.LhowonSewage");
+                case 3:
+                    return Strings.Get(Strings.Level, "Inspector.Level.Environment.Jjaro");
+                case 4:
+                    return Strings.Get(Strings.Level, "Inspector.Level.Environment.Pfhor");
+                default:
+                    return null;
+            }
+        }
 
         private VisualElement chapterScreenPreview;
         private float chapterScreenAspect;
@@ -599,7 +620,7 @@ namespace ForgePlus.Inspection
         {
             var chunk = GetChunk(tag);
 
-            return chunk != null ? $"{chunk.Length:N0} bytes" : "None";
+            return chunk != null ? Strings.Get(Strings.Level, "Inspector.Level.Bytes", chunk.Length.ToString("N0")) : Strings.Get(Strings.Level, "Inspector.Level.None");
         }
 
         // MML and Lua are text (UTF-8, which is also plain ASCII), maybe with a terminating NUL
@@ -614,7 +635,7 @@ namespace ForgePlus.Inspection
             var text = Encoding.UTF8.GetString(chunk).TrimEnd('\0');
 
             return text.Length > MaximumTextLength ?
-                   $"{text.Substring(0, MaximumTextLength)}\n\n(… and {text.Length - MaximumTextLength:N0} more characters)" :
+                   Strings.Get(Strings.Level, "Inspector.Level.TextCutOff", text.Substring(0, MaximumTextLength), (text.Length - MaximumTextLength).ToString("N0")) :
                    text;
         }
     }

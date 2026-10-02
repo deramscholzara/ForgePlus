@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
 using ForgePlus.UI;
 using RuntimeCore.Common;
@@ -269,7 +270,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return $"{Entity.NativeObject.minimum_floor_height} to {Entity.NativeObject.maximum_floor_height}";
+                return Strings.Get(Strings.Platforms, "Inspector.Platform.Range", Entity.NativeObject.minimum_floor_height, Entity.NativeObject.maximum_floor_height);
             }
         }
 
@@ -278,7 +279,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return $"{Entity.NativeObject.minimum_ceiling_height} to {Entity.NativeObject.maximum_ceiling_height}";
+                return Strings.Get(Strings.Platforms, "Inspector.Platform.Range", Entity.NativeObject.minimum_ceiling_height, Entity.NativeObject.maximum_ceiling_height);
             }
         }
 
@@ -559,7 +560,7 @@ namespace ForgePlus.Inspection
 
         private static string TypeChoice(short type)
         {
-            return $"{AlephOneNames.PlatformType(type)} ({type})";
+            return Strings.Get(Strings.Platforms, "Inspector.Platform.TypeChoice", AlephOneNames.PlatformType(type), type);
         }
     }
 }

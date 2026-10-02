@@ -1,0 +1,390 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Lights_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: a5fd559ab2d41194d868fc99124ed649, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231131
+  - rid: 552786097007231132
+  - rid: 552786097007231133
+  - rid: 552786097007231134
+  - rid: 552786097007231135
+  - rid: 552786097007231136
+  - rid: 552786097007231137
+  - rid: 552786097007231138
+  - rid: 552786097007231139
+  - rid: 552786097007231140
+  - rid: 552786097007231141
+  - rid: 552786097007231142
+  - rid: 552786097007231143
+  - rid: 552786097007231144
+  - rid: 552786097007231145
+  - rid: 552786097007231146
+  - rid: 552786097007231147
+  - rid: 552786097007231148
+  - rid: 552786097007231149
+  - rid: 552786097007231150
+  - rid: 552786097007231151
+  - rid: 552786097007231152
+  - rid: 552786097007231153
+  - rid: 552786097007231154
+  - rid: 552786097007231155
+  - rid: 552786097007231156
+  - rid: 552786097007231157
+  - rid: 552786097007231158
+  - rid: 552786097007231159
+  - rid: 552786097007231160
+  - rid: 552786097007231161
+  - rid: 552786097007231162
+  - rid: 552786097007231163
+  - rid: 552786097007231164
+  - rid: 552786097007231165
+  - rid: 552786097007231166
+  - rid: 552786097007231167
+  - rid: 552786097007231168
+  - rid: 552786097007231169
+  - rid: 552786097007231170
+  - rid: 552786097007231171
+  - rid: 552786097007231172
+  - rid: 552786097007231173
+  - rid: 552786097007231174
+  - rid: 552786097007231175
+  - rid: 552786097007231716
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231131
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884480
+        m_Metadata:
+          m_Items: []
+        m_Value: Light
+    - rid: 552786097007231132
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884481
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231133
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884482
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Tag:'
+    - rid: 552786097007231134
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884483
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231135
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884484
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Phase:'
+    - rid: 552786097007231136
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884485
+        m_Metadata:
+          m_Items: []
+        m_Value: Flags
+    - rid: 552786097007231137
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884486
+        m_Metadata:
+          m_Items: []
+        m_Value: Starts Active
+    - rid: 552786097007231138
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884487
+        m_Metadata:
+          m_Items: []
+        m_Value: Slaved Intensities
+    - rid: 552786097007231139
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884488
+        m_Metadata:
+          m_Items: []
+        m_Value: Cycle All States
+    - rid: 552786097007231140
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884489
+        m_Metadata:
+          m_Items: []
+        m_Value: 'State: Becoming Active'
+    - rid: 552786097007231141
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884490
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Style:'
+    - rid: 552786097007231142
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884491
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Period:'
+    - rid: 552786097007231143
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884492
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Period:"
+    - rid: 552786097007231144
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884493
+        m_Metadata:
+          m_Items: []
+        m_Value: '<i>O</i>(Intensity):'
+    - rid: 552786097007231145
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884494
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Intensity:"
+    - rid: 552786097007231146
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884495
+        m_Metadata:
+          m_Items: []
+        m_Value: 'State: Primary Active'
+    - rid: 552786097007231147
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884496
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Style:'
+    - rid: 552786097007231148
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884497
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Period:'
+    - rid: 552786097007231149
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884498
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Period:"
+    - rid: 552786097007231150
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884499
+        m_Metadata:
+          m_Items: []
+        m_Value: '<i>O</i>(Intensity):'
+    - rid: 552786097007231151
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884500
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Intensity:"
+    - rid: 552786097007231152
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884501
+        m_Metadata:
+          m_Items: []
+        m_Value: 'State: Secondary Active'
+    - rid: 552786097007231153
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884502
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Style:'
+    - rid: 552786097007231154
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884503
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Period:'
+    - rid: 552786097007231155
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884504
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Period:"
+    - rid: 552786097007231156
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580452884505
+        m_Metadata:
+          m_Items: []
+        m_Value: '<i>O</i>(Intensity):'
+    - rid: 552786097007231157
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078784
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Intensity:"
+    - rid: 552786097007231158
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078785
+        m_Metadata:
+          m_Items: []
+        m_Value: 'State: Becoming Inactive'
+    - rid: 552786097007231159
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078786
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Style:'
+    - rid: 552786097007231160
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078787
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Period:'
+    - rid: 552786097007231161
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078788
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Period:"
+    - rid: 552786097007231162
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078789
+        m_Metadata:
+          m_Items: []
+        m_Value: '<i>O</i>(Intensity):'
+    - rid: 552786097007231163
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078790
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Intensity:"
+    - rid: 552786097007231164
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078791
+        m_Metadata:
+          m_Items: []
+        m_Value: 'State: Primary Inactive'
+    - rid: 552786097007231165
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078792
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Style:'
+    - rid: 552786097007231166
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078793
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Period:'
+    - rid: 552786097007231167
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078794
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Period:"
+    - rid: 552786097007231168
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078795
+        m_Metadata:
+          m_Items: []
+        m_Value: '<i>O</i>(Intensity):'
+    - rid: 552786097007231169
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078796
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Intensity:"
+    - rid: 552786097007231170
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580457078797
+        m_Metadata:
+          m_Items: []
+        m_Value: 'State: Secondary Inactive'
+    - rid: 552786097007231171
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580461273088
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Style:'
+    - rid: 552786097007231172
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580461273089
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Period:'
+    - rid: 552786097007231173
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580461273090
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Period:"
+    - rid: 552786097007231174
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580461273091
+        m_Metadata:
+          m_Items: []
+        m_Value: '<i>O</i>(Intensity):'
+    - rid: 552786097007231175
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2580461273092
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u0394 Intensity:"
+    - rid: 552786097007231716
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6147414835200
+        m_Metadata:
+          m_Items: []
+        m_Value: Lights

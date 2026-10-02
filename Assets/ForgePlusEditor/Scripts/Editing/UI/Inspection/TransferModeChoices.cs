@@ -1,4 +1,5 @@
 using AlephOne;
+using ForgePlus.Localization;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 
@@ -11,69 +12,83 @@ namespace ForgePlus.Inspection
     [NoAutoStaticsCleanup]
     public static class TransferModeChoices
     {
-        private const string AlephOneOnly = " (Aleph One only)";
-        private const string ObjectsOnly = " (objects only)";
-
-        private static readonly string[] Names =
+        // Each mode's name's entry (TransferMode.Name.<name>)
+        private static readonly string[] NameKeys =
         {
             "Normal",
-            "Fade Out to Black",
+            "FadeOutToBlack",
             "Invisibility",
-            "Subtle Invisibility",
+            "SubtleInvisibility",
             "Pulsate",
             "Wobble",
-            "Fast Wobble",
+            "FastWobble",
             "Static",
-            "50% Static",
+            "HalfStatic",
             "Landscape",
             "Smear",
-            "Fade Out Static",
-            "Pulsating Static",
-            "Fold In",
-            "Fold Out",
-            "Horizontal Slide",
-            "Fast Horizontal Slide",
-            "Vertical Slide",
-            "Fast Vertical Slide",
+            "FadeOutStatic",
+            "PulsatingStatic",
+            "FoldIn",
+            "FoldOut",
+            "HorizontalSlide",
+            "FastHorizontalSlide",
+            "VerticalSlide",
+            "FastVerticalSlide",
             "Wander",
-            "Fast Wander",
-            "Big Landscape",
-            "Reverse Horizontal Slide",
-            "Reverse Fast Horizontal Slide",
-            "Reverse Vertical Slide",
-            "Reverse Fast Vertical Slide",
-            "2x Scale",
-            "4x Scale",
+            "FastWander",
+            "BigLandscape",
+            "ReverseHorizontalSlide",
+            "ReverseFastHorizontalSlide",
+            "ReverseVerticalSlide",
+            "ReverseFastVerticalSlide",
+            "Scale2x",
+            "Scale4x",
         };
 
-        public static readonly List<string> All = new List<string>();
-
-        public static readonly List<string> Unavailable = new List<string>();
-
-        static TransferModeChoices()
+        public static List<string> All
         {
-            for (short mode = 0; mode < Names.Length; mode++)
+            get
             {
-                All.Add(Choice(mode));
-
-                if (IsObjectsOnly(mode))
+                var all = new List<string>();
+                for (short mode = 0; mode < NameKeys.Length; mode++)
                 {
-                    Unavailable.Add(Choice(mode));
+                    all.Add(Choice(mode));
                 }
+
+                return all;
+            }
+        }
+
+        public static List<string> Unavailable
+        {
+            get
+            {
+                var unavailable = new List<string>();
+                for (short mode = 0; mode < NameKeys.Length; mode++)
+                {
+                    if (IsObjectsOnly(mode))
+                    {
+                        unavailable.Add(Choice(mode));
+                    }
+                }
+
+                return unavailable;
             }
         }
 
         // "7 - Static", or just the number for a mode outside the list
         public static string Choice(short mode)
         {
-            if (mode < 0 || mode >= Names.Length)
+            if (mode < 0 || mode >= NameKeys.Length)
             {
                 return mode.ToString();
             }
 
-            var suffix = IsAlephOneOnly(mode) ? AlephOneOnly : (IsObjectsOnly(mode) ? ObjectsOnly : string.Empty);
+            var name = Strings.Get(Strings.Textures, "TransferMode.Name." + NameKeys[mode]);
+            var choiceKey = IsAlephOneOnly(mode) ? "TransferMode.Choice.AlephOneOnly" :
+                            (IsObjectsOnly(mode) ? "TransferMode.Choice.ObjectsOnly" : "TransferMode.Choice");
 
-            return $"{mode} - {Names[mode]}{suffix}";
+            return Strings.Get(Strings.Textures, choiceKey, mode, name);
         }
 
         public static bool TryParse(string choice, out short mode)

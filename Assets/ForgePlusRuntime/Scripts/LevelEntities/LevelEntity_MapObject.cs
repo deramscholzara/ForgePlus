@@ -221,7 +221,7 @@ namespace RuntimeCore.Entities.MapObjects
                     gameObject.AddComponent<MeshFilter>().sharedMesh = GoalMesh;
                     break;
                 default:
-                    Debug.LogError($"Object type \"{NativeObject.GetTypeName()}\" is not part of the standard Marathon 2 engine - so... be careful.");
+                    Debug.LogError($"Object type \"{NativeObject.GetTypeIdentifier()}\" is not part of the standard Marathon 2 engine - so... be careful.");
                     if (!GenericMesh)
                     {
                         GenericMesh = BuildTriangleMesh(Color.white);
@@ -409,7 +409,7 @@ namespace RuntimeCore.Entities.MapObjects
         {
             var mesh = new Mesh();
 
-            mesh.name = $"{NativeObject.GetTypeName()} ({NativeIndex})";
+            mesh.name = $"{NativeObject.GetTypeIdentifier()} ({NativeIndex})";
 
             return mesh;
         }

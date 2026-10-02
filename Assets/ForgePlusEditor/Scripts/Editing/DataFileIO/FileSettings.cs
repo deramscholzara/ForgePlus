@@ -1,5 +1,6 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO.Extensions;
+using ForgePlus.Localization;
 using SFB;
 using System;
 using System.IO;
@@ -105,7 +106,7 @@ namespace ForgePlus.DataFileIO
                 : Path.GetDirectoryName(initialDirectory);
 
             StandaloneFileBrowser.OpenFilePanelAsync(
-                title: $"Choose {type} file",
+                title: Strings.Get(Strings.Menu, "FileBrowser.Open.Title", type.DisplayName()),
                 directory: initialDirectory,
                 type.FileExtension(),
                 multiselect: false,

@@ -1,0 +1,1833 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Common Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Common
+  m_TableCollectionNameGuid: cdc9627813db16c4d82ec20004791906
+  m_KeyGenerator:
+    rid: 552786097007231032
+  m_Entries:
+  - m_Id: 2585184059392
+    m_Key: ObjectSelectorDialog.Title.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585196642304
+    m_Key: ObjectSelectorDialog.Checkbox.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632192
+    m_Key: Inspector.MapObject.Object.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632193
+    m_Key: Inspector.MapObject.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632194
+    m_Key: Inspector.MapObject.Type.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632195
+    m_Key: Inspector.MapObject.Subtype.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632196
+    m_Key: Inspector.MapObject.Sound.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632197
+    m_Key: Inspector.MapObject.Sound.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632198
+    m_Key: Inspector.MapObject.PlatformMovingSound.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632199
+    m_Key: Inspector.MapObject.PlatformMovingSound.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632200
+    m_Key: Inspector.MapObject.PlatformSoundNote.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632201
+    m_Key: Inspector.MapObject.ActivationBias.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632202
+    m_Key: Inspector.MapObject.Angle.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632203
+    m_Key: Inspector.MapObject.VolumeFromLight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632204
+    m_Key: Inspector.MapObject.VolumeFromLight.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632205
+    m_Key: Inspector.MapObject.Volume.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632206
+    m_Key: Inspector.MapObject.Volume.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632207
+    m_Key: Inspector.MapObject.VolumeLight.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632208
+    m_Key: Inspector.MapObject.SavedVolume.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632209
+    m_Key: Inspector.MapObject.VolumeLightNote.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632210
+    m_Key: Inspector.MapObject.Position.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632211
+    m_Key: Inspector.MapObject.Flags.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632212
+    m_Key: Inspector.MapObject.Invisible.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632213
+    m_Key: Inspector.MapObject.FromCeiling.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632214
+    m_Key: Inspector.MapObject.Blind.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632215
+    m_Key: Inspector.MapObject.Deaf.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632216
+    m_Key: Inspector.MapObject.NetworkOnly.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632217
+    m_Key: Inspector.MapObject.Floats.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632218
+    m_Key: Inspector.MapObject.PlacementHeading.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632219
+    m_Key: Inspector.MapObject.SharedByEveryObject.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585498632220
+    m_Key: Inspector.MapObject.PolygonIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585557352448
+    m_Key: Inspector.PlaceholderSide.SideNone.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585557352449
+    m_Key: Inspector.PlaceholderSide.ThisFaceOfIts.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585557352450
+    m_Key: Inspector.PlaceholderSide.LineIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585557352451
+    m_Key: Inspector.PlaceholderSide.Face.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585557352452
+    m_Key: Inspector.PlaceholderSide.FacingPolygon.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585557352453
+    m_Key: Inspector.PlaceholderSide.OpposingPolygon.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585796427776
+    m_Key: Inspector.Polygon.Polygon.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622080
+    m_Key: Inspector.Polygon.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622081
+    m_Key: Inspector.Polygon.Type.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622082
+    m_Key: Inspector.Polygon.Permutation.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622083
+    m_Key: Inspector.Polygon.Floor.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622084
+    m_Key: Inspector.Polygon.FloorHeight.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622085
+    m_Key: Inspector.Polygon.FloorLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622086
+    m_Key: Inspector.Polygon.Ceiling.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622087
+    m_Key: Inspector.Polygon.CeilingHeight.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585800622088
+    m_Key: Inspector.Polygon.CeilingLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585804816384
+    m_Key: Inspector.Polygon.Media.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585804816385
+    m_Key: Inspector.Polygon.MediaIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585804816386
+    m_Key: Inspector.Polygon.MediaLight.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585804816387
+    m_Key: Inspector.Polygon.Sounds.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585804816388
+    m_Key: Inspector.Polygon.AmbientSound.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585809010688
+    m_Key: Inspector.Polygon.AmbientSound.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585809010689
+    m_Key: Inspector.Polygon.RandomSound.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585809010690
+    m_Key: Inspector.Polygon.RandomSound.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585809010691
+    m_Key: Inspector.Polygon.HeardSoundSources.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585809010692
+    m_Key: Inspector.Polygon.HeardSoundSources.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585955811328
+    m_Key: Header.Menu.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005632
+    m_Key: Header.Geometry.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005633
+    m_Key: Header.Textures.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005634
+    m_Key: Header.Lights.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005635
+    m_Key: Header.Media.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005636
+    m_Key: Header.Sounds.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005637
+    m_Key: Header.Platforms.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005638
+    m_Key: Header.Objects.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005639
+    m_Key: Header.Annotations.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005640
+    m_Key: Header.Level.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005641
+    m_Key: Header.Map.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005642
+    m_Key: Header.Terminals.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005643
+    m_Key: Header.SaveMerged.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005644
+    m_Key: Header.Save.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585960005645
+    m_Key: Header.Quit.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585968394240
+    m_Key: Manipulation.FrameSelected.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585968394241
+    m_Key: Manipulation.LockX.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585972588544
+    m_Key: Manipulation.LockY.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2585972588545
+    m_Key: Manipulation.Snap.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586052280320
+    m_Key: ViewOptions.VisualizationEffect.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586052280321
+    m_Key: ViewOptions.ObjectIcons.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586052280322
+    m_Key: ViewOptions.SpritePreviews.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586052280323
+    m_Key: ViewOptions.ClipPlatformSides.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586052280324
+    m_Key: ViewOptions.SoundDirection.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586052280325
+    m_Key: ViewOptions.SoundVolume.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586056474624
+    m_Key: ViewOptions.PlayLevelAudio.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586056474625
+    m_Key: ViewOptions.PlayLevelAudio.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586069057536
+    m_Key: InspectorDropdownPlayRow.Play.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586077446144
+    m_Key: InspectorFloatRangeRow.To.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586081640448
+    m_Key: InspectorFoldout.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586090029056
+    m_Key: InspectorIntegerRangeRow.To.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2586098417664
+    m_Key: InspectorPlayRow.Play.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003248881664
+    m_Key: Term.map._polygon_is_normal
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270272
+    m_Key: Term.map._polygon_is_item_impassable
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270273
+    m_Key: Term.map._polygon_is_monster_impassable
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270274
+    m_Key: Term.map._polygon_is_hill
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270275
+    m_Key: Term.map._polygon_is_base
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270276
+    m_Key: Term.map._polygon_is_platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270277
+    m_Key: Term.map._polygon_is_light_on_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270278
+    m_Key: Term.map._polygon_is_platform_on_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270279
+    m_Key: Term.map._polygon_is_light_off_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270280
+    m_Key: Term.map._polygon_is_platform_off_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270281
+    m_Key: Term.map._polygon_is_teleporter
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270282
+    m_Key: Term.map._polygon_is_zone_border
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270283
+    m_Key: Term.map._polygon_is_goal
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270284
+    m_Key: Term.map._polygon_is_visible_monster_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270285
+    m_Key: Term.map._polygon_is_invisible_monster_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270286
+    m_Key: Term.map._polygon_is_dual_monster_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270287
+    m_Key: Term.map._polygon_is_item_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270288
+    m_Key: Term.map._polygon_must_be_explored
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270289
+    m_Key: Term.map._polygon_is_automatic_exit
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270290
+    m_Key: Term.map._polygon_is_minor_ouch
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270291
+    m_Key: Term.map._polygon_is_major_ouch
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270292
+    m_Key: Term.map._polygon_is_glue
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270293
+    m_Key: Term.map._polygon_is_glue_trigger
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270294
+    m_Key: Term.map._polygon_is_superglue
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270295
+    m_Key: Term.map._full_side
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270296
+    m_Key: Term.map._high_side
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270297
+    m_Key: Term.map._low_side
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270298
+    m_Key: Term.map._composite_side
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270299
+    m_Key: Term.map._split_side
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270300
+    m_Key: Term.lightsource._normal_light
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270301
+    m_Key: Term.lightsource._strobe_light
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270302
+    m_Key: Term.lightsource._media_light
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270303
+    m_Key: Term.lightsource._constant_lighting_function
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270304
+    m_Key: Term.lightsource._linear_lighting_function
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270305
+    m_Key: Term.lightsource._smooth_lighting_function
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270306
+    m_Key: Term.lightsource._flicker_lighting_function
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270307
+    m_Key: Term.platforms._platform_is_spht_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270308
+    m_Key: Term.platforms._platform_is_spht_split_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270309
+    m_Key: Term.platforms._platform_is_locked_spht_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270310
+    m_Key: Term.platforms._platform_is_spht_platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270311
+    m_Key: Term.platforms._platform_is_noisy_spht_platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270312
+    m_Key: Term.platforms._platform_is_heavy_spht_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270313
+    m_Key: Term.platforms._platform_is_pfhor_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270314
+    m_Key: Term.platforms._platform_is_heavy_spht_platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270315
+    m_Key: Term.platforms._platform_is_pfhor_platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270316
+    m_Key: Term.platforms._platform_is_player_controllable
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270317
+    m_Key: Term.platforms._platform_is_monster_controllable
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270318
+    m_Key: Term.platforms._platform_is_locked
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270319
+    m_Key: Term.platforms._platform_is_secret
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270320
+    m_Key: Term.platforms._platform_is_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270321
+    m_Key: Term.media._media_water
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270322
+    m_Key: Term.media._media_lava
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270323
+    m_Key: Term.media._media_goo
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270324
+    m_Key: Term.media._media_sewage
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270325
+    m_Key: Term.media._media_jjaro
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270326
+    m_Key: Term.map._panel_is_oxygen_refuel
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270327
+    m_Key: Term.map._panel_is_shield_refuel
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270328
+    m_Key: Term.map._panel_is_double_shield_refuel
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270329
+    m_Key: Term.map._panel_is_triple_shield_refuel
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270330
+    m_Key: Term.map._panel_is_light_switch
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270331
+    m_Key: Term.map._panel_is_platform_switch
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270332
+    m_Key: Term.map._panel_is_tag_switch
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270333
+    m_Key: Term.map._panel_is_pattern_buffer
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270334
+    m_Key: Term.map._panel_is_computer_terminal
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270335
+    m_Key: Term.computer_interface._logon_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270336
+    m_Key: Term.computer_interface._unfinished_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270337
+    m_Key: Term.computer_interface._success_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270338
+    m_Key: Term.computer_interface._failure_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270339
+    m_Key: Term.computer_interface._information_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270340
+    m_Key: Term.computer_interface._end_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270341
+    m_Key: Term.computer_interface._interlevel_teleport_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270342
+    m_Key: Term.computer_interface._intralevel_teleport_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270343
+    m_Key: Term.computer_interface._checkpoint_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270344
+    m_Key: Term.computer_interface._sound_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270345
+    m_Key: Term.computer_interface._movie_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270346
+    m_Key: Term.computer_interface._track_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270347
+    m_Key: Term.computer_interface._pict_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270348
+    m_Key: Term.computer_interface._logoff_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270349
+    m_Key: Term.computer_interface._camera_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270350
+    m_Key: Term.computer_interface._static_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270351
+    m_Key: Term.computer_interface._tag_group
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270352
+    m_Key: Term.monsters._monster_marine
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270353
+    m_Key: Term.monsters._monster_tick_energy
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270354
+    m_Key: Term.monsters._monster_tick_oxygen
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270355
+    m_Key: Term.monsters._monster_tick_kamakazi
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270356
+    m_Key: Term.monsters._monster_compiler_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270357
+    m_Key: Term.monsters._monster_compiler_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270358
+    m_Key: Term.monsters._monster_compiler_minor_invisible
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003257270359
+    m_Key: Term.monsters._monster_compiler_major_invisible
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464576
+    m_Key: Term.monsters._monster_fighter_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464577
+    m_Key: Term.monsters._monster_fighter_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464578
+    m_Key: Term.monsters._monster_fighter_minor_projectile
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464579
+    m_Key: Term.monsters._monster_fighter_major_projectile
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464580
+    m_Key: Term.monsters._civilian_crew
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464581
+    m_Key: Term.monsters._civilian_science
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464582
+    m_Key: Term.monsters._civilian_security
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464583
+    m_Key: Term.monsters._civilian_assimilated
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464584
+    m_Key: Term.monsters._monster_hummer_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464585
+    m_Key: Term.monsters._monster_hummer_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464586
+    m_Key: Term.monsters._monster_hummer_big_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464587
+    m_Key: Term.monsters._monster_hummer_big_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464588
+    m_Key: Term.monsters._monster_hummer_possessed
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464589
+    m_Key: Term.monsters._monster_cyborg_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464590
+    m_Key: Term.monsters._monster_cyborg_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464591
+    m_Key: Term.monsters._monster_cyborg_flame_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464592
+    m_Key: Term.monsters._monster_cyborg_flame_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464593
+    m_Key: Term.monsters._monster_enforcer_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464594
+    m_Key: Term.monsters._monster_enforcer_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464595
+    m_Key: Term.monsters._monster_hunter_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464596
+    m_Key: Term.monsters._monster_hunter_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464597
+    m_Key: Term.monsters._monster_trooper_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464598
+    m_Key: Term.monsters._monster_trooper_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464599
+    m_Key: Term.monsters._monster_mother_of_all_cyborgs
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464600
+    m_Key: Term.monsters._monster_mother_of_all_hunters
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464601
+    m_Key: Term.monsters._monster_sewage_yeti
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464602
+    m_Key: Term.monsters._monster_water_yeti
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464603
+    m_Key: Term.monsters._monster_lava_yeti
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464604
+    m_Key: Term.monsters._monster_defender_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464605
+    m_Key: Term.monsters._monster_defender_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464606
+    m_Key: Term.monsters._monster_juggernaut_minor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464607
+    m_Key: Term.monsters._monster_juggernaut_major
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464608
+    m_Key: Term.monsters._monster_tiny_fighter
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464609
+    m_Key: Term.monsters._monster_tiny_bob
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464610
+    m_Key: Term.monsters._monster_tiny_yeti
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464611
+    m_Key: Term.monsters._civilian_fusion_crew
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464612
+    m_Key: Term.monsters._civilian_fusion_science
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464613
+    m_Key: Term.monsters._civilian_fusion_security
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464614
+    m_Key: Term.monsters._civilian_fusion_assimilated
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464615
+    m_Key: Term.SoundManagerEnums._ambient_snd_water
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464616
+    m_Key: Term.SoundManagerEnums._ambient_snd_sewage
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464617
+    m_Key: Term.SoundManagerEnums._ambient_snd_lava
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464618
+    m_Key: Term.SoundManagerEnums._ambient_snd_goo
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464619
+    m_Key: Term.SoundManagerEnums._ambient_snd_under_media
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464620
+    m_Key: Term.SoundManagerEnums._ambient_snd_wind
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464621
+    m_Key: Term.SoundManagerEnums._ambient_snd_waterfall
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464622
+    m_Key: Term.SoundManagerEnums._ambient_snd_siren
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464623
+    m_Key: Term.SoundManagerEnums._ambient_snd_fan
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464624
+    m_Key: Term.SoundManagerEnums._ambient_snd_spht_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464625
+    m_Key: Term.SoundManagerEnums._ambient_snd_spht_platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464626
+    m_Key: Term.SoundManagerEnums._ambient_snd_heavy_spht_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464627
+    m_Key: Term.SoundManagerEnums._ambient_snd_heavy_spht_platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464628
+    m_Key: Term.SoundManagerEnums._ambient_snd_light_machinery
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464629
+    m_Key: Term.SoundManagerEnums._ambient_snd_heavy_machinery
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464630
+    m_Key: Term.SoundManagerEnums._ambient_snd_transformer
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464631
+    m_Key: Term.SoundManagerEnums._ambient_snd_sparking_transformer
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464632
+    m_Key: Term.SoundManagerEnums._ambient_snd_machine_binder
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464633
+    m_Key: Term.SoundManagerEnums._ambient_snd_machine_bookpress
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464634
+    m_Key: Term.SoundManagerEnums._ambient_snd_machine_puncher
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464635
+    m_Key: Term.SoundManagerEnums._ambient_snd_electric
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464636
+    m_Key: Term.SoundManagerEnums._ambient_snd_alarm
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464637
+    m_Key: Term.SoundManagerEnums._ambient_snd_night_wind
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464638
+    m_Key: Term.SoundManagerEnums._ambient_snd_pfhor_door
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464639
+    m_Key: Term.SoundManagerEnums._ambient_snd_pfhor_platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464640
+    m_Key: Term.SoundManagerEnums._ambient_snd_alien_noise1
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464641
+    m_Key: Term.SoundManagerEnums._ambient_snd_alien_noise2
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464642
+    m_Key: Term.SoundManagerEnums._ambient_snd_alien_harmonics
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464643
+    m_Key: Term.SoundManagerEnums._random_snd_water_drip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464644
+    m_Key: Term.SoundManagerEnums._random_snd_surface_explosion
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464645
+    m_Key: Term.SoundManagerEnums._random_snd_underground_explosion
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464646
+    m_Key: Term.SoundManagerEnums._random_snd_owl
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464647
+    m_Key: Term.SoundManagerEnums._random_snd_creak
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464648
+    m_Key: Term.items._i_knife
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464649
+    m_Key: Term.items._i_magnum
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464650
+    m_Key: Term.items._i_magnum_magazine
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464651
+    m_Key: Term.items._i_plasma_pistol
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464652
+    m_Key: Term.items._i_plasma_magazine
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464653
+    m_Key: Term.items._i_assault_rifle
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464654
+    m_Key: Term.items._i_assault_rifle_magazine
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464655
+    m_Key: Term.items._i_assault_grenade_magazine
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464656
+    m_Key: Term.items._i_missile_launcher
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464657
+    m_Key: Term.items._i_missile_launcher_magazine
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464658
+    m_Key: Term.items._i_invisibility_powerup
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464659
+    m_Key: Term.items._i_invincibility_powerup
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464660
+    m_Key: Term.items._i_infravision_powerup
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464661
+    m_Key: Term.items._i_alien_shotgun
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464662
+    m_Key: Term.items._i_alien_shotgun_magazine
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464663
+    m_Key: Term.items._i_flamethrower
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464664
+    m_Key: Term.items._i_flamethrower_canister
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464665
+    m_Key: Term.items._i_extravision_powerup
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464666
+    m_Key: Term.items._i_oxygen_powerup
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464667
+    m_Key: Term.items._i_energy_powerup
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464668
+    m_Key: Term.items._i_double_energy_powerup
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464669
+    m_Key: Term.items._i_triple_energy_powerup
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464670
+    m_Key: Term.items._i_shotgun
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464671
+    m_Key: Term.items._i_shotgun_magazine
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464672
+    m_Key: Term.items._i_spht_door_key
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464673
+    m_Key: Term.items._i_uplink_chip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464674
+    m_Key: Term.items._i_light_blue_ball
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464675
+    m_Key: Term.items._i_red_ball
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464676
+    m_Key: Term.items._i_violet_ball
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464677
+    m_Key: Term.items._i_yellow_ball
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464678
+    m_Key: Term.items._i_brown_ball
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464679
+    m_Key: Term.items._i_orange_ball
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464680
+    m_Key: Term.items._i_blue_ball
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464681
+    m_Key: Term.items._i_green_ball
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464682
+    m_Key: Term.items._i_smg
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4003261464683
+    m_Key: Term.items._i_smg_ammo
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152078901248
+    m_Key: Inspector.Base.ChooseTexture.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152087289856
+    m_Key: Inspector.Polygon.HeardSoundSources.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152087289857
+    m_Key: Inspector.Polygon.HeardSoundSources.Objects
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152087289858
+    m_Key: Inspector.Polygon.TypeChoice
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152087289859
+    m_Key: Inspector.PlaceholderSide.Face.Clockwise
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152087289860
+    m_Key: Inspector.PlaceholderSide.Face.Counterclockwise
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152087289861
+    m_Key: Inspector.PlaceholderSide.PolygonNone
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152087289862
+    m_Key: Inspector.PlaceholderSide.PlatformPolygon
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398720
+    m_Key: Inspector.MapObject.Type.Monster
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398721
+    m_Key: Inspector.MapObject.Type.Scenery
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398722
+    m_Key: Inspector.MapObject.Type.Item
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398723
+    m_Key: Inspector.MapObject.Type.Player
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398724
+    m_Key: Inspector.MapObject.Type.Goal
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398725
+    m_Key: Inspector.MapObject.Type.Sound
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398726
+    m_Key: Inspector.MapObject.Type.Unknown
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398727
+    m_Key: Inspector.MapObject.NameAndNumber
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398728
+    m_Key: Inspector.MapObject.Subtype.Invalid
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398729
+    m_Key: Inspector.MapObject.PlatformMovingSound.NotPlatform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398730
+    m_Key: Inspector.MapObject.PlatformMovingSound.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398731
+    m_Key: Inspector.MapObject.Position
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398732
+    m_Key: Inspector.MapObject.Flag.PlatformSound
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398733
+    m_Key: Inspector.MapObject.Flag.Invisible
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398734
+    m_Key: Inspector.MapObject.PlacementHeading
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398735
+    m_Key: Inspector.MapObject.ActivationBias.Player
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398736
+    m_Key: Inspector.MapObject.ActivationBias.NearestHostile
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398737
+    m_Key: Inspector.MapObject.ActivationBias.Goal
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152154398738
+    m_Key: Inspector.MapObject.ActivationBias.Random
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953152
+    m_Key: SoundImage.NameAndCode
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953153
+    m_Key: SoundImage.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953154
+    m_Key: SoundImage.OfPolygon
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953155
+    m_Key: SoundImage.OfPolygon.Missing
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953156
+    m_Key: SoundImage.Describe.Volume
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953157
+    m_Key: SoundImage.Describe.Every
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953158
+    m_Key: SoundImage.Describe.Direction
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953159
+    m_Key: SoundImage.Describe.Direction.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953160
+    m_Key: SoundImage.Describe.Pitch
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953161
+    m_Key: SoundImage.Volume
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953162
+    m_Key: SoundImage.Seconds
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152187953163
+    m_Key: SoundImage.WithDelta
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062016
+    m_Key: Dialog.SaveWith.Title
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062017
+    m_Key: Dialog.SaveWith.Message
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062018
+    m_Key: Dialog.SaveWith.MapOnly
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062019
+    m_Key: Dialog.SaveWith.Physics
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062020
+    m_Key: Dialog.SaveWith.Resources
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062021
+    m_Key: Dialog.SaveWith.ResourcesAndPhysics
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062022
+    m_Key: Dialog.SaveMerged.Title
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062023
+    m_Key: Dialog.SaveMerged.Message
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062024
+    m_Key: Dialog.SaveMerged.KeepChecksum
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062025
+    m_Key: Dialog.SaveMerged.RegenerateChecksum
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062026
+    m_Key: Dialog.SaveMerged.RememberChoice
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062027
+    m_Key: Saving.Location.Title
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062028
+    m_Key: Saving.Location.Merged.Title
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062029
+    m_Key: FileBrowser.Type.Maps
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062030
+    m_Key: FileBrowser.Type.Shapes
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062031
+    m_Key: FileBrowser.Type.Sounds
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062032
+    m_Key: FileBrowser.Type.Physics
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152255062033
+    m_Key: FileBrowser.Type.Images
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152284422144
+    m_Key: Dialog.ObjectSelector.Cancel
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152313782272
+    m_Key: ToolModes.Paint
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152313782273
+    m_Key: ToolModes.Edit
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152313782274
+    m_Key: ToolModes.Select
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152313782275
+    m_Key: Picker.Checklist.SelectAll
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152313782276
+    m_Key: Picker.Checklist.SelectNone
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251264
+    m_Key: Surface.Side.DataSourceDialog.Title.Destination
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251265
+    m_Key: Surface.Side.DataSourceDialog.Title.Source
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251266
+    m_Key: Surface.Side.DataSourceDialog.Layer.Inner
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251267
+    m_Key: Surface.Side.DataSourceDialog.Layer.Outer
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251268
+    m_Key: Surface.Side.DataSourceDialog.Source.Primary
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251269
+    m_Key: Surface.Side.DataSourceDialog.Source.Secondary
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251270
+    m_Key: Surface.Side.DataSourceDialog.Source.Transparent
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251271
+    m_Key: Runtime.MacFileForks.Source.InContainer
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251272
+    m_Key: Runtime.MacFileForks.Source.NamedFork
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251273
+    m_Key: Runtime.MacFileForks.Container.MacBinary
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251274
+    m_Key: Runtime.MacFileForks.Container.AppleSingle
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6152410251275
+    m_Key: Runtime.MacFileForks.Container.DataForkOnly
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231032
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928702829

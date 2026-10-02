@@ -10,48 +10,48 @@
         <ui:Instance template="ScrollArea" class="fp-grow">
             <ui:VisualElement name="details" class="fp-inspector">
                 <ui:Instance template="Header">
-                    <ui:AttributeOverrides element-name="label" text="Terminals" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Terminals.Label.Text" />
                 </ui:Instance>
                 <ui:RadioButtonGroup name="terminals" class="fp-radio-group fp-index-list" />
                 <ui:Instance template="Subheader">
-                    <ui:AttributeOverrides element-name="label" text="Terminal" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Terminal.Label.Text" />
                 </ui:Instance>
                 <ui:Instance template="Row" name="LinesPerPage">
-                    <ui:AttributeOverrides element-name="label" text="Lines Per Page:" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.LinesPerPage.Label.Text" />
                 </ui:Instance>
                 <ui:Instance template="Flag" name="TextIsEncoded">
-                    <ui:AttributeOverrides element-name="flag" text="Text Is Encoded" />
+                    <ui:AttributeOverrides element-name="flag" text="@Terminals/TerminalDetails.TextIsEncoded.Flag.Text" />
                 </ui:Instance>
-                <ui:Label text="Only for a legacy form of the data, which has always been optional: the text is lightly scrambled in the file (as Bungie's tools saved it), so it can't be read there. Marathon 2, Infinity and Aleph One read the text either way." class="fp-inspector-note" />
+                <ui:Label text="@Terminals/TerminalDetails.OnlyForALegacy.Text" class="fp-inspector-note" />
                 <ui:VisualElement class="fp-space" />
                 <ui:Instance template="Subheader">
-                    <ui:AttributeOverrides element-name="label" text="Groups" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Groups.Label.Text" />
                 </ui:Instance>
                 <ui:RadioButtonGroup name="groups" class="fp-radio-group fp-index-list" />
                 <ui:Instance template="Row" name="GroupType">
-                    <ui:AttributeOverrides element-name="label" text="Type:" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.GroupType.Label.Text" />
                 </ui:Instance>
                 <ui:Instance template="Row" name="Permutation">
-                    <ui:AttributeOverrides element-name="label" text="Permutation:" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Permutation.Label.Text" />
                 </ui:Instance>
                 <ui:Instance template="Row" name="Text" class="fp-inspector-row--vertical">
-                    <ui:AttributeOverrides element-name="label" text="Text:" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Text.Label.Text" />
                 </ui:Instance>
                 <ui:Instance template="Row" name="TextStyles" class="fp-inspector-row--vertical">
-                    <ui:AttributeOverrides element-name="label" text="Styles (at positions in the text above):" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.TextStyles.Label.Text" />
                 </ui:Instance>
                 <ui:VisualElement class="fp-space" />
                 <ui:Instance template="Subheader">
-                    <ui:AttributeOverrides element-name="label" text="Group Flags" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.GroupFlags.Label.Text" />
                 </ui:Instance>
                 <ui:Instance template="Flag" name="DrawObjectOnRight">
-                    <ui:AttributeOverrides element-name="flag" text="Draw Object On Right" />
+                    <ui:AttributeOverrides element-name="flag" text="@Terminals/TerminalDetails.DrawObjectOnRight.Flag.Text" />
                 </ui:Instance>
                 <ui:Instance template="Flag" name="CenterObject">
-                    <ui:AttributeOverrides element-name="flag" text="Center Object" />
+                    <ui:AttributeOverrides element-name="flag" text="@Terminals/TerminalDetails.CenterObject.Flag.Text" />
                 </ui:Instance>
                 <ui:Instance template="Flag" name="IsMarathon1">
-                    <ui:AttributeOverrides element-name="flag" text="Marathon 1" />
+                    <ui:AttributeOverrides element-name="flag" text="@Terminals/TerminalDetails.IsMarathon1.Flag.Text" />
                 </ui:Instance>
             </ui:VisualElement>
         </ui:Instance>

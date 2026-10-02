@@ -2,6 +2,7 @@
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO.Extensions;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using RuntimeCore.Entities;
 using SFB;
 using System;
@@ -28,10 +29,16 @@ namespace ForgePlus.DataFileIO
         public async void Save()
         {
             var option = await DialogManager.Instance.DisplayQueuedDialog(
-                title: "Save with...",
-                message: "Physics: the physics saved in the level. Resources: what it uses from the map file's resources (its chapter screen, its terminals' pictures, its part of the level script, and the end screens).",
+                title: Strings.Get(Strings.Common, "Dialog.SaveWith.Title"),
+                message: Strings.Get(Strings.Common, "Dialog.SaveWith.Message"),
                 options: new[] { MapOnlyOption, PhysicsOption, ResourcesOption, ResourcesAndPhysicsOption },
-                optionLabels: new[] { "Map Only", "Physics", "Resources", "Resources and Physics" },
+                optionLabels: new[]
+                {
+                    Strings.Get(Strings.Common, "Dialog.SaveWith.MapOnly"),
+                    Strings.Get(Strings.Common, "Dialog.SaveWith.Physics"),
+                    Strings.Get(Strings.Common, "Dialog.SaveWith.Resources"),
+                    Strings.Get(Strings.Common, "Dialog.SaveWith.ResourcesAndPhysics"),
+                },
                 checkboxLabel: null);
 
             if (option.Option == null)
@@ -54,11 +61,15 @@ namespace ForgePlus.DataFileIO
             if (choice == MergedSaveChecksums.Ask)
             {
                 var result = await DialogManager.Instance.DisplayQueuedDialog(
-                    title: "Save Merged",
-                    message: "Keep the map file's checksum, so saved games, films and physics files made for it still find it (even though its levels may have changed), or regenerate it for the saved file (also naming the map after the saved file)?",
+                    title: Strings.Get(Strings.Common, "Dialog.SaveMerged.Title"),
+                    message: Strings.Get(Strings.Common, "Dialog.SaveMerged.Message"),
                     options: new[] { KeepChecksumOption, RegenerateChecksumOption },
-                    optionLabels: new[] { "Keep Checksum", "Regenerate Checksum" },
-                    checkboxLabel: "Remember my choice (see Settings)");
+                    optionLabels: new[]
+                    {
+                        Strings.Get(Strings.Common, "Dialog.SaveMerged.KeepChecksum"),
+                        Strings.Get(Strings.Common, "Dialog.SaveMerged.RegenerateChecksum"),
+                    },
+                    checkboxLabel: Strings.Get(Strings.Common, "Dialog.SaveMerged.RememberChoice"));
 
                 if (result.Option == null)
                 {
@@ -87,7 +98,7 @@ namespace ForgePlus.DataFileIO
             var defaultName = merged ? Path.GetFileNameWithoutExtension(initialPath) : LevelEntity_Level.Instance.Level.GetLevelName();
 
             StandaloneFileBrowser.SaveFilePanelAsync(
-                title: merged ? $"Choose merged {type} save location" : $"Choose {type} save location",
+                title: Strings.Get(Strings.Common, merged ? "Saving.Location.Merged.Title" : "Saving.Location.Title", type.DisplayName()),
                 directory: initialDirectory,
                 defaultName: defaultName,
                 type.FileExtension(),

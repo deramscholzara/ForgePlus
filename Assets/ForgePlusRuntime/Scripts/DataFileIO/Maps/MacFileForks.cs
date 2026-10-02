@@ -1,4 +1,5 @@
 using AlephOne;
+using ForgePlus.Localization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -52,7 +53,27 @@ namespace ForgePlus.DataFileIO
         // The resource fork Aleph One uses for the file's resources (or null, if it has none), and where it is
         public MacResourceFork ResourceFork { get; private set; }
 
-        public string ResourceForkSource { get; private set; }
+        public string ResourceForkSource
+        {
+            get
+            {
+                if (ResourceFork == null)
+                {
+                    return null;
+                }
+
+                if (resourceForkSidecar == null)
+                {
+                    return Container == Containers.None
+                               ? sourceFileName
+                               : Strings.Get(Strings.Common, "Runtime.MacFileForks.Source.InContainer", sourceFileName, ContainerName(Container));
+                }
+
+                return resourceForkSidecar == SidecarSuffixes[2]
+                           ? Strings.Get(Strings.Common, "Runtime.MacFileForks.Source.NamedFork", sourceFileName)
+                           : sourceFileName + resourceForkSidecar;
+            }
+        }
 
         // Whether resources can be removed from the resource fork (see SetResourceRemoved)
         public bool CanEditResources { get; private set; }
@@ -203,24 +224,24 @@ namespace ForgePlus.DataFileIO
         // In the order resource_manager.open_res_file looks for it
         private void FindResourceFork(byte[] fileBytes)
         {
-            // Each candidate's description, bytes, and sidecar suffix (null for the file itself)
-            var candidates = new List<(string Source, byte[] Bytes, string Sidecar)>();
+            // Each candidate's bytes, and sidecar suffix (null for the file itself)
+            var candidates = new List<(byte[] Bytes, string Sidecar)>();
 
             foreach (var sidecar in sidecars)
             {
                 if (sidecar.Key != SidecarSuffixes[2])
                 {
-                    candidates.Add((sourceFileName + sidecar.Key, sidecar.Value, sidecar.Key));
+                    candidates.Add((sidecar.Value, sidecar.Key));
                 }
             }
 
-            candidates.Add((Container == Containers.None ? sourceFileName : $"{sourceFileName} ({ContainerName(Container)})", fileBytes, null));
+            candidates.Add((fileBytes, null));
 
             foreach (var sidecar in sidecars)
             {
                 if (sidecar.Key == SidecarSuffixes[2])
                 {
-                    candidates.Add(($"{sourceFileName} (named fork)", sidecar.Value, sidecar.Key));
+                    candidates.Add((sidecar.Value, sidecar.Key));
                 }
             }
 
@@ -231,7 +252,6 @@ namespace ForgePlus.DataFileIO
                 if (resourceFork != null)
                 {
                     ResourceFork = resourceFork;
-                    ResourceForkSource = candidate.Source;
                     resourceForkSidecar = candidate.Sidecar;
 
                     // A sidecar's resources can be changed while it's just a resource fork (rather than one in a
@@ -313,11 +333,11 @@ namespace ForgePlus.DataFileIO
             switch (container)
             {
                 case Containers.MacBinary:
-                    return "MacBinary";
+                    return Strings.Get(Strings.Common, "Runtime.MacFileForks.Container.MacBinary");
                 case Containers.AppleSingle:
-                    return "AppleSingle";
+                    return Strings.Get(Strings.Common, "Runtime.MacFileForks.Container.AppleSingle");
                 default:
-                    return "Data Fork Only";
+                    return Strings.Get(Strings.Common, "Runtime.MacFileForks.Container.DataForkOnly");
             }
         }
 

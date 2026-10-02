@@ -1,4 +1,5 @@
 ﻿using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
 using UnityEngine.UIElements;
 
@@ -10,7 +11,7 @@ namespace ForgePlus.UI
         {
             get
             {
-                return "Media";
+                return Strings.Get(Strings.Media, "Palette.Media.Header");
             }
         }
 
@@ -32,7 +33,7 @@ namespace ForgePlus.UI
             if (swatch.IsNone)
             {
                 instance.Q<Label>("index").text = string.Empty;
-                instance.Q<Label>("type").text = "None";
+                instance.Q<Label>("type").text = Strings.Get(Strings.Media, "Palette.Media.None");
                 return;
             }
 

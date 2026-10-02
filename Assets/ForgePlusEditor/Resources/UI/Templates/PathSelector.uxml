@@ -4,11 +4,11 @@
         <ui:Label name="heading" text="Type" class="fp-heading fp-path-selector__heading" />
         <ui:VisualElement class="fp-path-selector__row">
             <ui:Instance template="Button" name="select" class="fp-path-selector__button">
-                <ui:AttributeOverrides element-name="control" text="Select" />
+                <ui:AttributeOverrides element-name="control" text="@Menu/PathSelector.Select.Control.Text" />
             </ui:Instance>
-            <ui:Label name="path" text="select a file..." class="fp-readout fp-path-selector__path" />
+            <ui:Label name="path" text="@Menu/PathSelector.Path.Text" class="fp-readout fp-path-selector__path" />
             <ui:Instance template="Button" name="unload" class="fp-path-selector__button">
-                <ui:AttributeOverrides element-name="control" text="Unload" />
+                <ui:AttributeOverrides element-name="control" text="@Menu/PathSelector.Unload.Control.Text" />
             </ui:Instance>
         </ui:VisualElement>
     </ui:VisualElement>

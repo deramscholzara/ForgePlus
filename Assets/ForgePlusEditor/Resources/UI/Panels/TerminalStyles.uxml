@@ -10,15 +10,15 @@
             <ui:Instance template="ScrollArea" class="fp-grow">
                 <ui:VisualElement class="fp-inspector">
                     <ui:Instance template="Header">
-                        <ui:AttributeOverrides element-name="label" text="Text Styles" />
+                        <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalStyles.TextStyles.Label.Text" />
                     </ui:Instance>
                     <ui:Instance template="Subheader">
-                        <ui:AttributeOverrides element-name="label" text="Faces" />
+                        <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalStyles.Faces.Label.Text" />
                     </ui:Instance>
                     <ui:VisualElement name="faces" class="fp-inspector" />
                     <ui:VisualElement class="fp-space" />
                     <ui:Instance template="Subheader">
-                        <ui:AttributeOverrides element-name="label" text="Colors" />
+                        <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalStyles.Colors.Label.Text" />
                     </ui:Instance>
                     <ui:VisualElement name="colors" class="fp-inspector" />
                 </ui:VisualElement>

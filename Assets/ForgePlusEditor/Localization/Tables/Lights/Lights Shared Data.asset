@@ -1,0 +1,258 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Lights Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Lights
+  m_TableCollectionNameGuid: a6a000b04aff3a54eab6a85e4e8224a1
+  m_KeyGenerator:
+    rid: 552786097007231036
+  m_Entries:
+  - m_Id: 2580452884480
+    m_Key: Inspector.Light.Light.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884481
+    m_Key: Inspector.Light.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884482
+    m_Key: Inspector.Light.Tag.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884483
+    m_Key: Inspector.Light.Type.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884484
+    m_Key: Inspector.Light.Phase.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884485
+    m_Key: Inspector.Light.Flags.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884486
+    m_Key: Inspector.Light.StartsActive.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884487
+    m_Key: Inspector.Light.SlavedIntensities.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884488
+    m_Key: Inspector.Light.CycleAllStates.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884489
+    m_Key: Inspector.Light.StateBecomingActive.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884490
+    m_Key: Inspector.Light.BecomingActiveFunction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884491
+    m_Key: Inspector.Light.BecomingActivePeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884492
+    m_Key: Inspector.Light.BecomingActiveDeltaPeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884493
+    m_Key: Inspector.Light.BecomingActiveIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884494
+    m_Key: Inspector.Light.BecomingActiveDeltaIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884495
+    m_Key: Inspector.Light.StatePrimaryActive.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884496
+    m_Key: Inspector.Light.PrimaryActiveFunction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884497
+    m_Key: Inspector.Light.PrimaryActivePeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884498
+    m_Key: Inspector.Light.PrimaryActiveDeltaPeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884499
+    m_Key: Inspector.Light.PrimaryActiveIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884500
+    m_Key: Inspector.Light.PrimaryActiveDeltaIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884501
+    m_Key: Inspector.Light.StateSecondaryActive.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884502
+    m_Key: Inspector.Light.SecondaryActiveFunction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884503
+    m_Key: Inspector.Light.SecondaryActivePeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884504
+    m_Key: Inspector.Light.SecondaryActiveDeltaPeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580452884505
+    m_Key: Inspector.Light.SecondaryActiveIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078784
+    m_Key: Inspector.Light.SecondaryActiveDeltaIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078785
+    m_Key: Inspector.Light.StateBecomingInactive.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078786
+    m_Key: Inspector.Light.BecomingInactiveFunction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078787
+    m_Key: Inspector.Light.BecomingInactivePeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078788
+    m_Key: Inspector.Light.BecomingInactiveDeltaPeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078789
+    m_Key: Inspector.Light.BecomingInactiveIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078790
+    m_Key: Inspector.Light.BecomingInactiveDeltaIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078791
+    m_Key: Inspector.Light.StatePrimaryInactive.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078792
+    m_Key: Inspector.Light.PrimaryInactiveFunction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078793
+    m_Key: Inspector.Light.PrimaryInactivePeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078794
+    m_Key: Inspector.Light.PrimaryInactiveDeltaPeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078795
+    m_Key: Inspector.Light.PrimaryInactiveIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078796
+    m_Key: Inspector.Light.PrimaryInactiveDeltaIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580457078797
+    m_Key: Inspector.Light.StateSecondaryInactive.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580461273088
+    m_Key: Inspector.Light.SecondaryInactiveFunction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580461273089
+    m_Key: Inspector.Light.SecondaryInactivePeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580461273090
+    m_Key: Inspector.Light.SecondaryInactiveDeltaPeriod.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580461273091
+    m_Key: Inspector.Light.SecondaryInactiveIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2580461273092
+    m_Key: Inspector.Light.SecondaryInactiveDeltaIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6147414835200
+    m_Key: Palette.Lights.Header
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231036
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928704004

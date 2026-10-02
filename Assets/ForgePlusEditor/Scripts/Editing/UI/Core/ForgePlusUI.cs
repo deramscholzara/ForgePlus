@@ -1,6 +1,8 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.CameraNavigation;
+using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using ForgePlus.Sound;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +18,10 @@ namespace ForgePlus.UI
         [SerializeField]
         private EditorCamera editorCamera = null;
 
+        // The project's localization settings (Project Settings > Localization), for ForgePlus's text
+        [SerializeField]
+        private Unity.Localization.LocalizationSettings localizationSettings = null;
+
         private readonly List<PanelSlot> slots = new List<PanelSlot>();
 
         private VisualElement root;
@@ -29,6 +35,12 @@ namespace ForgePlus.UI
         private PanelSlot paletteSlot;
 
         private ModeManager.PrimaryModes lastPrimaryMode = ModeManager.PrimaryModes.None;
+
+        private bool isBuilt;
+
+        // The open mode's string table, and the mode whose panels were last asked for (while its table loads)
+        private string modeTable;
+        private ModeManager.PrimaryModes shownMode = ModeManager.PrimaryModes.None;
 
         public EditorViewModel Editor { get; private set; }
 
@@ -89,8 +101,17 @@ namespace ForgePlus.UI
             return panel.Pick(panelPosition) != null;
         }
 
-        private void Start()
+        // Built once the text it shows everywhere (the Common and Menu string tables) is loaded
+        private async void Start()
         {
+            await Strings.InitializeAsync(localizationSettings);
+
+            if (!this)
+            {
+                // Destroyed while the strings loaded, so exit
+                return;
+            }
+
             root = GetComponent<UIDocument>().rootVisualElement;
             root.pickingMode = PickingMode.Ignore;
 
@@ -130,6 +151,8 @@ namespace ForgePlus.UI
             Editor.OnMenuOpenChanged += OnMenuOpenChanged;
 
             ModeManager.Instance.OnPrimaryModeChanged += OnPrimaryModeChanged;
+
+            isBuilt = true;
         }
 
         private void OnDestroy()
@@ -155,12 +178,22 @@ namespace ForgePlus.UI
         // After the camera moves (in its Update)
         private void LateUpdate()
         {
+            if (!isBuilt)
+            {
+                return;
+            }
+
             WorldLabels?.UpdatePositions();
             SoundVisualization?.Update();
         }
 
         private void Update()
         {
+            if (!isBuilt)
+            {
+                return;
+            }
+
             if (Hotkeys.WasPressed(ForgePlusInput.Interface.ToggleUI))
             {
                 SetVisible(!isVisible);
@@ -238,6 +271,41 @@ namespace ForgePlus.UI
                 // Which shows the preview (OnMenuOpenChanged)
                 Editor.MenuOpen = false;
             }
+
+            ShowModeWhenItsStringsLoad(primaryMode);
+        }
+
+        // A mode's panels are shown once its string table is loaded (as it's entered), and the last mode's is released
+        private async void ShowModeWhenItsStringsLoad(ModeManager.PrimaryModes primaryMode)
+        {
+            shownMode = primaryMode;
+
+            var table = Strings.TableFor(primaryMode);
+            if (table != modeTable)
+            {
+                Strings.ReleaseTable(modeTable);
+                modeTable = table;
+            }
+
+            if (table != null && !Strings.IsLoaded(table))
+            {
+                await Strings.LoadTableAsync(table);
+
+                if (!this || shownMode != primaryMode)
+                {
+                    // Destroyed, or another mode was entered, while its strings loaded, so exit
+                    return;
+                }
+
+                // Inspectors made while they loaded (such as the level's, as Level mode selects it) show them now
+                InspectorPanel.Instance.RefreshAllInspectors();
+            }
+
+            ShowModePanels(primaryMode);
+        }
+
+        private void ShowModePanels(ModeManager.PrimaryModes primaryMode)
+        {
             // Terminals aren't selected, so their mode shows the terminal and group being previewed in place of the
             // inspectors, annotations are listed, each as its inspector, and the map file (which isn't in the level)
             // has its own inspector

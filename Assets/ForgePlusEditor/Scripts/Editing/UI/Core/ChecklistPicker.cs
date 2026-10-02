@@ -1,3 +1,4 @@
+using ForgePlus.Localization;
 using System;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
@@ -49,7 +50,7 @@ namespace ForgePlus.UI
             actions.AddToClassList("fp-checklist-picker__actions");
             box.Add(actions);
 
-            foreach (var (text, isSet) in new[] { ("Select All", true), ("Select None", false) })
+            foreach (var (text, isSet) in new[] { (Strings.Get(Strings.Common, "Picker.Checklist.SelectAll"), true), (Strings.Get(Strings.Common, "Picker.Checklist.SelectNone"), false) })
             {
                 var instance = buttonTemplate.Instantiate();
                 instance.AddToClassList("fp-checklist-picker__action");

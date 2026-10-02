@@ -11,176 +11,176 @@
     <!-- Bound to Inspector_Platform -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Platform" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Platform.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Id.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownRow" name="Type">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Type.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="Tag">
-            <ui:AttributeOverrides element-name="label" text="Tag:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Tag.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="Speed">
-            <ui:AttributeOverrides element-name="label" text="Speed (units/tick):" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Speed.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="Delay">
-            <ui:AttributeOverrides element-name="label" text="Delay (ticks):" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Delay.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Movement" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Movement.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Choice" name="Direction">
-            <ui:AttributeOverrides element-name="label" text="Moves:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Direction.Label.Text" />
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="From Floor" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.Direction.Control.Text" />
             </ui:Instance>
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="From Ceiling" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.FromCeiling.Control.Text" />
             </ui:Instance>
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="From Floor and Ceiling" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.FromFloorAndCeiling.Control.Text" />
             </ui:Instance>
         </ui:Instance>
         <ui:Instance template="Flag" name="InitiallyActive">
-            <ui:AttributeOverrides element-name="flag" text="Initially Active" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.InitiallyActive.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="InitiallyExtended">
-            <ui:AttributeOverrides element-name="flag" text="Initially Extended" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.InitiallyExtended.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="ExtendsFloorToCeiling">
-            <ui:AttributeOverrides element-name="flag" text="Extends Floor to Ceiling" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ExtendsFloorToCeiling.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Heights" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Heights.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="LowestIsAutomatic">
-            <ui:AttributeOverrides element-name="flag" text="Automatic Lowest Height" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.LowestIsAutomatic.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="Lowest">
-            <ui:AttributeOverrides element-name="label" text="Lowest:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Lowest.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="HighestIsAutomatic">
-            <ui:AttributeOverrides element-name="flag" text="Automatic Highest Height" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.HighestIsAutomatic.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="Highest">
-            <ui:AttributeOverrides element-name="label" text="Highest:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Highest.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="UsesNativePolygonHeights">
-            <ui:AttributeOverrides element-name="flag" text="Uses Native Polygon Heights" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.UsesNativePolygonHeights.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="FloorRange">
-            <ui:AttributeOverrides element-name="label" text="Floor Range:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.FloorRange.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="CeilingRange">
-            <ui:AttributeOverrides element-name="label" text="Ceiling Range:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.CeilingRange.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Timing" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Timing.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="DelaysBeforeActivation">
-            <ui:AttributeOverrides element-name="flag" text="Delays Before Activation" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DelaysBeforeActivation.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="ContractsSlower">
-            <ui:AttributeOverrides element-name="flag" text="Contracts Slower" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ContractsSlower.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Control" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Control.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="IsPlayerControllable">
-            <ui:AttributeOverrides element-name="flag" text="Player Controllable" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsPlayerControllable.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="IsMonsterControllable">
-            <ui:AttributeOverrides element-name="flag" text="Monster Controllable" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsMonsterControllable.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="CannotBeExternallyDeactivated">
-            <ui:AttributeOverrides element-name="flag" text="Can't Be Externally Deactivated" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.CannotBeExternallyDeactivated.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="ActivatesOnlyOnce">
-            <ui:AttributeOverrides element-name="flag" text="Activates Only Once" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ActivatesOnlyOnce.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="IsDoor">
-            <ui:AttributeOverrides element-name="flag" text="Door" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsDoor.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="IsLocked">
-            <ui:AttributeOverrides element-name="flag" text="Locked" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsLocked.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="IsSecret">
-            <ui:AttributeOverrides element-name="flag" text="Secret" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsSecret.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Obstruction" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Obstruction.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="ReversesWhenObstructed">
-            <ui:AttributeOverrides element-name="flag" text="Reverses When Obstructed" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ReversesWhenObstructed.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="CausesDamage">
-            <ui:AttributeOverrides element-name="flag" text="Causes Damage" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.CausesDamage.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Activation" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Activation.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="DeactivatesAtEachLevel">
-            <ui:AttributeOverrides element-name="flag" text="Deactivates at Each Level" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DeactivatesAtEachLevel.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="DeactivatesAtInitialLevel">
-            <ui:AttributeOverrides element-name="flag" text="Deactivates at Initial Level" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DeactivatesAtInitialLevel.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Choice" name="WhenActivating">
-            <ui:AttributeOverrides element-name="label" text="When Activating:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.WhenActivating.Label.Text" />
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="Leaves Adjacent Platforms" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.WhenActivating.Control.Text" />
             </ui:Instance>
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="Activates Adjacent Platforms" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.ActivatesAdjacentPlatforms.Control.Text" />
             </ui:Instance>
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="Deactivates Adjacent Platforms" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.DeactivatesAdjacentPlatforms.Control.Text" />
             </ui:Instance>
         </ui:Instance>
         <ui:Instance template="Choice" name="WhenDeactivating">
-            <ui:AttributeOverrides element-name="label" text="When Deactivating:" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.WhenDeactivating.Label.Text" />
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="Leaves Adjacent Platforms" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.WhenDeactivating.Control.Text" />
             </ui:Instance>
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="Activates Adjacent Platforms" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.ActivatesAdjacentPlatforms.Control.Text" />
             </ui:Instance>
             <ui:Instance template="ChoiceOption">
-                <ui:AttributeOverrides element-name="control" text="Deactivates Adjacent Platforms" />
+                <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.DeactivatesAdjacentPlatforms.Control.Text" />
             </ui:Instance>
         </ui:Instance>
         <ui:Instance template="Flag" name="ActivatesAdjacentAtEachLevel">
-            <ui:AttributeOverrides element-name="flag" text="Activates Adjacent at Each Level" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ActivatesAdjacentAtEachLevel.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="DoesNotActivateParent">
-            <ui:AttributeOverrides element-name="flag" text="Doesn't Activate Parent" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DoesNotActivateParent.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="ActivatesLight">
-            <ui:AttributeOverrides element-name="flag" text="Activates Light" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ActivatesLight.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="DeactivatesLight">
-            <ui:AttributeOverrides element-name="flag" text="Deactivates Light" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DeactivatesLight.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="FloodsM1" class="fp-aleph-one-only">
-            <ui:AttributeOverrides element-name="flag" text="Floods (Marathon 1; Aleph One only)" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.FloodsM1.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Simulation Actions" />
+            <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.SimulationActions.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="SimulationActive">
-            <ui:AttributeOverrides element-name="flag" text="Active" />
+            <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.SimulationActive.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Button" name="obstruct" class="fp-inspector-action">
-            <ui:AttributeOverrides element-name="control" text="Obstruct Extension" />
+            <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.Obstruct.Control.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

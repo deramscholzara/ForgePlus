@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using RuntimeCore.Entities.Geometry;
 using System.Collections.Generic;
 using Unity.Properties;
@@ -65,7 +66,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return $"X: {Polygon.floor_origin.x}\nY: {Polygon.floor_origin.y}";
+                return Strings.Get(Strings.Textures, "Inspector.PolygonTextures.Offset", Polygon.floor_origin.x, Polygon.floor_origin.y);
             }
         }
 
@@ -140,7 +141,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return $"X: {Polygon.ceiling_origin.x}\nY: {Polygon.ceiling_origin.y}";
+                return Strings.Get(Strings.Textures, "Inspector.PolygonTextures.Offset", Polygon.ceiling_origin.x, Polygon.ceiling_origin.y);
             }
         }
 

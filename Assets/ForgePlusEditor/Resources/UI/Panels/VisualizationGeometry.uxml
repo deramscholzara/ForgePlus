@@ -5,22 +5,22 @@
         <ui:VisualElement class="fp-box fp-box--padded fp-visualization__options">
             <ui:RadioButtonGroup name="visualization" value="0" class="fp-radio-group fp-visualization__grid">
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__everything fp-visualization__everything--in-grid">
-                    <ui:AttributeOverrides element-name="control" text="Show Everything" />
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.ShowEverything.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
-                    <ui:AttributeOverrides element-name="control" text="Polygons" />
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Polygons.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right">
-                    <ui:AttributeOverrides element-name="control" text="Lines" />
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Lines.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
-                    <ui:AttributeOverrides element-name="control" text="Sides" />
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Sides.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right">
-                    <ui:AttributeOverrides element-name="control" text="Points" />
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Points.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
-                    <ui:AttributeOverrides element-name="control" text="Media" />
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Media.Control.Text" />
                 </ui:Instance>
             </ui:RadioButtonGroup>
         </ui:VisualElement>

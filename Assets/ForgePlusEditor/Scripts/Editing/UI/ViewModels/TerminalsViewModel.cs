@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.DataFileIO;
+using ForgePlus.Localization;
 using RuntimeCore.Entities;
 using System;
 using System.Collections.Generic;
@@ -240,7 +241,7 @@ namespace ForgePlus.UI
                 }
 
                 var text = TerminalText.Decode(Terminal.text, Page.Group.start_index, Page.Group.start_index + Page.Group.length, keepLineEnds: true);
-                return string.IsNullOrWhiteSpace(text) ? "(none)" : text;
+                return string.IsNullOrWhiteSpace(text) ? Strings.Get(Strings.Terminals, "Terminals.Text.Empty") : text;
             }
         }
 
@@ -272,10 +273,10 @@ namespace ForgePlus.UI
                         builder.Append('\n');
                     }
 
-                    builder.Append($"At {change.index - start}: {DescribeFace(change.face)}, color {change.color}");
+                    builder.Append(Strings.Get(Strings.Terminals, "Terminals.TextStyles.Change", change.index - start, DescribeFace(change.face), change.color));
                 }
 
-                return builder.Length > 0 ? builder.ToString() : "None";
+                return builder.Length > 0 ? builder.ToString() : Strings.Get(Strings.Terminals, "Terminals.TextStyles.None");
             }
         }
 
@@ -290,13 +291,12 @@ namespace ForgePlus.UI
                     return "-";
                 }
 
-                var caption = $"Page {pageIndex + 1} of {pages.Count}  -  Group {Page.GroupIndex}";
                 if (Page.PagesOfGroup > 1)
                 {
-                    caption += $", part {Page.PageOfGroup + 1} of {Page.PagesOfGroup}";
+                    return Strings.Get(Strings.Terminals, "Terminals.PageCaption.WithPart", pageIndex + 1, pages.Count, Page.GroupIndex, Page.PageOfGroup + 1, Page.PagesOfGroup);
                 }
 
-                return caption;
+                return Strings.Get(Strings.Terminals, "Terminals.PageCaption", pageIndex + 1, pages.Count, Page.GroupIndex);
             }
         }
 
@@ -354,13 +354,13 @@ namespace ForgePlus.UI
         {
             if (face == _plain_text)
             {
-                return "plain";
+                return Strings.Get(Strings.Terminals, "Terminals.TextStyles.Face.Plain");
             }
 
             var styles = new List<string>();
-            if ((face & _bold_text) != 0) styles.Add("bold");
-            if ((face & _italic_text) != 0) styles.Add("italic");
-            if ((face & _underline_text) != 0) styles.Add("underline");
+            if ((face & _bold_text) != 0) styles.Add(Strings.Get(Strings.Terminals, "Terminals.TextStyles.Face.Bold"));
+            if ((face & _italic_text) != 0) styles.Add(Strings.Get(Strings.Terminals, "Terminals.TextStyles.Face.Italic"));
+            if ((face & _underline_text) != 0) styles.Add(Strings.Get(Strings.Terminals, "Terminals.TextStyles.Face.Underline"));
 
             return string.Join(" ", styles);
         }

@@ -4,13 +4,13 @@
     <ui:VisualElement class="fp-menu" picking-mode="Ignore">
         <ui:RadioButtonGroup name="tabs" class="fp-radio-group fp-radio-row fp-menu__tabs">
             <ui:Instance template="RadioToggle" class="fp-menu__tab">
-                <ui:AttributeOverrides element-name="control" text="Files" />
+                <ui:AttributeOverrides element-name="control" text="@Menu/Menu.Files.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-menu__tab">
-                <ui:AttributeOverrides element-name="control" text="Inputs" />
+                <ui:AttributeOverrides element-name="control" text="@Menu/Menu.Inputs.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-menu__tab">
-                <ui:AttributeOverrides element-name="control" text="Settings" />
+                <ui:AttributeOverrides element-name="control" text="@Menu/Menu.Settings.Control.Text" />
             </ui:Instance>
         </ui:RadioButtonGroup>
         <ui:VisualElement name="tab-slot" class="fp-menu__content" picking-mode="Ignore" />

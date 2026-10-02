@@ -130,9 +130,16 @@ namespace ForgePlus.UI
 
                 if (isSelected && ScrollsToSelection)
                 {
-                    // After layout, so a swatch that was just added has a position to scroll to
+                    // After layout, so a swatch that was just added has a position to scroll to (unless the swatches
+                    // were rebuilt since)
                     var toggle = swatchToggle.Value;
-                    scrollView.schedule.Execute(() => scrollView.ScrollTo(toggle));
+                    scrollView.schedule.Execute(() =>
+                    {
+                        if (scrollView.contentContainer.Contains(toggle))
+                        {
+                            scrollView.ScrollTo(toggle);
+                        }
+                    });
                 }
             }
         }

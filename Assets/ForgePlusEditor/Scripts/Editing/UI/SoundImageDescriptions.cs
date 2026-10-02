@@ -1,5 +1,6 @@
 using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using System.Text;
 
 namespace ForgePlus.UI
@@ -16,14 +17,14 @@ namespace ForgePlus.UI
         {
             var name = AlephOneNames.AmbientSound(sound);
 
-            return name == sound.ToString() ? $"({sound})" : $"{name} ({sound})";
+            return name == sound.ToString() ? $"({sound})" : Strings.Get(Strings.Common, "SoundImage.NameAndCode", name, sound);
         }
 
         public static string RandomSoundName(short sound)
         {
             var name = AlephOneNames.RandomSound(sound);
 
-            return name == sound.ToString() ? $"({sound})" : $"{name} ({sound})";
+            return name == sound.ToString() ? $"({sound})" : Strings.Get(Strings.Common, "SoundImage.NameAndCode", name, sound);
         }
 
         // The polygon's ambient sound, as its index in the list and its sound
@@ -31,49 +32,49 @@ namespace ForgePlus.UI
         {
             if (index < 0)
             {
-                return "None";
+                return Strings.Get(Strings.Common, "SoundImage.None");
             }
 
             return index < level.AmbientSoundImageList.Count ?
-                   $"{index}: {AmbientSoundName(level.AmbientSoundImageList[index].sound_index)}" :
-                   $"{index} (not in the level)";
+                   Strings.Get(Strings.Common, "SoundImage.OfPolygon", index, AmbientSoundName(level.AmbientSoundImageList[index].sound_index)) :
+                   Strings.Get(Strings.Common, "SoundImage.OfPolygon.Missing", index);
         }
 
         public static string RandomSoundOfPolygon(MapLevel level, short index)
         {
             if (index < 0)
             {
-                return "None";
+                return Strings.Get(Strings.Common, "SoundImage.None");
             }
 
             return index < level.RandomSoundImageList.Count ?
-                   $"{index}: {RandomSoundName(level.RandomSoundImageList[index].sound_index)}" :
-                   $"{index} (not in the level)";
+                   Strings.Get(Strings.Common, "SoundImage.OfPolygon", index, RandomSoundName(level.RandomSoundImageList[index].sound_index)) :
+                   Strings.Get(Strings.Common, "SoundImage.OfPolygon.Missing", index);
         }
 
         public static string Describe(ambient_sound_image_data sound)
         {
             return $"{AmbientSoundName(sound.sound_index)}\n" +
-                   $"Volume: {Volume(sound.volume)}";
+                   Strings.Get(Strings.Common, "SoundImage.Describe.Volume", Volume(sound.volume));
         }
 
         public static string Describe(random_sound_image_data sound)
         {
             var description = new StringBuilder();
             description.Append($"{RandomSoundName(sound.sound_index)}\n");
-            description.Append($"Volume: {Volume(sound.volume)}{Delta(sound.delta_volume, sound.delta_volume.ToString())}\n");
-            description.Append($"Every: {Seconds(sound.period)}{Delta(sound.delta_period, Seconds(sound.delta_period))}\n");
+            description.Append(Strings.Get(Strings.Common, "SoundImage.Describe.Volume", WithDelta(Volume(sound.volume), sound.delta_volume, sound.delta_volume.ToString())) + "\n");
+            description.Append(Strings.Get(Strings.Common, "SoundImage.Describe.Every", WithDelta(Seconds(sound.period), sound.delta_period, Seconds(sound.delta_period))) + "\n");
 
             if (csmacros.TEST_FLAG(sound.flags, map._sound_image_is_non_directional))
             {
-                description.Append("Direction: None (all around)\n");
+                description.Append(Strings.Get(Strings.Common, "SoundImage.Describe.Direction.None") + "\n");
             }
             else
             {
-                description.Append($"Direction: {Degrees(sound.direction)}{Delta(sound.delta_direction, Degrees(sound.delta_direction))}\n");
+                description.Append(Strings.Get(Strings.Common, "SoundImage.Describe.Direction", WithDelta(Degrees(sound.direction), sound.delta_direction, Degrees(sound.delta_direction))) + "\n");
             }
 
-            description.Append($"Pitch: {Pitch(sound.pitch)}{Delta(sound.delta_pitch, Pitch(sound.delta_pitch))}");
+            description.Append(Strings.Get(Strings.Common, "SoundImage.Describe.Pitch", WithDelta(Pitch(sound.pitch), sound.delta_pitch, Pitch(sound.delta_pitch))));
 
             return description.ToString();
         }
@@ -81,12 +82,12 @@ namespace ForgePlus.UI
         // Out of MAXIMUM_SOUND_VOLUME (full volume)
         private static string Volume(short volume)
         {
-            return $"{volume} ({100f * volume / SoundManagerEnums.MAXIMUM_SOUND_VOLUME:0}%)";
+            return Strings.Get(Strings.Common, "SoundImage.Volume", volume, (100f * volume / SoundManagerEnums.MAXIMUM_SOUND_VOLUME).ToString("0"));
         }
 
         private static string Seconds(short ticks)
         {
-            return $"{ticks / TicksPerSecond:0.##} s";
+            return Strings.Get(Strings.Common, "SoundImage.Seconds", (ticks / TicksPerSecond).ToString("0.##"));
         }
 
         private static string Degrees(short angle)
@@ -100,9 +101,10 @@ namespace ForgePlus.UI
             return $"{(float) pitch / (1 << 16):0.##}×";
         }
 
-        private static string Delta(int delta, string amount)
+        // The value, and how much more it can be (if it varies)
+        private static string WithDelta(string value, int delta, string amount)
         {
-            return delta != 0 ? $" (plus up to {amount})" : string.Empty;
+            return delta != 0 ? Strings.Get(Strings.Common, "SoundImage.WithDelta", value, amount) : value;
         }
     }
 }

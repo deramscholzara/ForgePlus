@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Media_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: ddfb85c14fe0a064aaf115cc5291fb1b, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231491
+  - rid: 552786097007231492
+  - rid: 552786097007231493
+  - rid: 552786097007231494
+  - rid: 552786097007231495
+  - rid: 552786097007231496
+  - rid: 552786097007231497
+  - rid: 552786097007231498
+  - rid: 552786097007231499
+  - rid: 552786097007231500
+  - rid: 552786097007231501
+  - rid: 552786097007231889
+  - rid: 552786097007231890
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231491
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531264
+        m_Metadata:
+          m_Items: []
+        m_Value: Media
+    - rid: 552786097007231492
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531265
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231493
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531266
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231494
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531267
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Low Height:'
+    - rid: 552786097007231495
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531268
+        m_Metadata:
+          m_Items: []
+        m_Value: 'High Height:'
+    - rid: 552786097007231496
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531269
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Flow Direction:'
+    - rid: 552786097007231497
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531270
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Flow Magnitude:'
+    - rid: 552786097007231498
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531271
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light Index:'
+    - rid: 552786097007231499
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531272
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Minimum Light Intensity:'
+    - rid: 552786097007231500
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531273
+        m_Metadata:
+          m_Items: []
+        m_Value: Flags
+    - rid: 552786097007231501
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2579387531274
+        m_Metadata:
+          m_Items: []
+        m_Value: Floor Obstructs Sound
+    - rid: 552786097007231889
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6146215264256
+        m_Metadata:
+          m_Items: []
+        m_Value: Media
+    - rid: 552786097007231890
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6146215264257
+        m_Metadata:
+          m_Items: []
+        m_Value: None

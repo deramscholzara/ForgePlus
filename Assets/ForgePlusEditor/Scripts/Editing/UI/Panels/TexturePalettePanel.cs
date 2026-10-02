@@ -1,4 +1,5 @@
 ﻿using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
 using RuntimeCore.Materials;
 using UnityEngine;
@@ -51,7 +52,7 @@ namespace ForgePlus.UI
             }
 
             // "None" shows what an unassigned surface looks like in the inspectors
-            instance.Q<Label>("label").text = swatch.IsNone ? "None" : $"C: {swatch.ShapeDescriptor.GetCollection()} B: {swatch.ShapeDescriptor.GetShape()}";
+            instance.Q<Label>("label").text = swatch.IsNone ? Strings.Get(Strings.Textures, "Palette.Texture.None") : Strings.Get(Strings.Textures, "Palette.Texture.Label", swatch.ShapeDescriptor.GetCollection(), swatch.ShapeDescriptor.GetShape());
             instance.Q<Image>("preview").image = swatch.IsNone ? Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder") : swatch.Texture;
             instance.Q("in-use").style.display = !swatch.IsNone && MaterialGeneration_Geometry.GetTextureIsInUse(swatch.ShapeDescriptor) ? DisplayStyle.Flex : DisplayStyle.None;
         }

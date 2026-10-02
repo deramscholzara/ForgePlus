@@ -1,5 +1,6 @@
 using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
 using RuntimeCore.Materials;
 using System;
@@ -56,7 +57,7 @@ namespace ForgePlus.UI
                 });
 
                 // "None" shows what an unassigned surface looks like in the inspectors
-                instance.Q<Label>("label").text = isNone ? "None" : $"C: {shapeDescriptor.GetCollection()} B: {shapeDescriptor.GetShape()}";
+                instance.Q<Label>("label").text = isNone ? Strings.Get(Strings.Textures, "Palette.Texture.None") : Strings.Get(Strings.Textures, "Palette.Texture.Label", shapeDescriptor.GetCollection(), shapeDescriptor.GetShape());
                 instance.Q<Image>("preview").image = isNone ? Resources.Load<Texture2D>("Walls/UnassignedSurfaceUIPlaceholder") : texture;
                 instance.Q("in-use").style.display = !isNone && MaterialGeneration_Geometry.GetTextureIsInUse(shapeDescriptor) ? DisplayStyle.Flex : DisplayStyle.None;
 

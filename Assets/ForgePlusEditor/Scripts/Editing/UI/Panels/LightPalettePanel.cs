@@ -1,4 +1,5 @@
-﻿using ForgePlus.Palette;
+﻿using ForgePlus.Localization;
+using ForgePlus.Palette;
 using RuntimeCore.Entities;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace ForgePlus.UI
         {
             get
             {
-                return "Lights";
+                return Strings.Get(Strings.Lights, "Palette.Lights.Header");
             }
         }
 

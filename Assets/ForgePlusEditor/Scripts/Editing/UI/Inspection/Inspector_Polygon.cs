@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using ForgePlus.UI;
 using RuntimeCore.Entities.Geometry;
 using System.Collections.Generic;
@@ -214,7 +215,9 @@ namespace ForgePlus.Inspection
                     sources.Add(objectIndex.ToString());
                 }
 
-                return sources.Count == 0 ? "None" : $"Objects {string.Join(", ", sources)}";
+                return sources.Count == 0 ?
+                       Strings.Get(Strings.Common, "Inspector.Polygon.HeardSoundSources.None") :
+                       Strings.Get(Strings.Common, "Inspector.Polygon.HeardSoundSources.Objects", string.Join(", ", sources));
             }
         }
 
@@ -355,7 +358,7 @@ namespace ForgePlus.Inspection
 
         private static string TypeChoice(short type)
         {
-            return $"{AlephOneNames.PolygonType(type)} ({type})";
+            return Strings.Get(Strings.Common, "Inspector.Polygon.TypeChoice", AlephOneNames.PolygonType(type), type);
         }
     }
 }

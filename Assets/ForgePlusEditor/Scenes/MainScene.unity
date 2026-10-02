@@ -506,6 +506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ForgePlus.UI.ForgePlusUI
   editorCamera: {fileID: 1061089425}
+  localizationSettings: {fileID: 11400000, guid: bad37622360a3484e89c0c5bf016bb44, type: 2}
 --- !u!114 &1360784491
 MonoBehaviour:
   m_ObjectHideFlags: 0

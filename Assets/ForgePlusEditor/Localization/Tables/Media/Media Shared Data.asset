@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Media Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Media
+  m_TableCollectionNameGuid: f1fe01ea89eaaa94c9886dd3a13bf4a5
+  m_KeyGenerator:
+    rid: 552786097007231037
+  m_Entries:
+  - m_Id: 2579387531264
+    m_Key: Inspector.Media.Media.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531265
+    m_Key: Inspector.Media.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531266
+    m_Key: Inspector.Media.Type.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531267
+    m_Key: Inspector.Media.LowHeight.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531268
+    m_Key: Inspector.Media.HighHeight.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531269
+    m_Key: Inspector.Media.FlowDirection.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531270
+    m_Key: Inspector.Media.FlowMagnitude.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531271
+    m_Key: Inspector.Media.LightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531272
+    m_Key: Inspector.Media.MinimumLightIntensity.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531273
+    m_Key: Inspector.Media.Flags.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2579387531274
+    m_Key: Inspector.Media.FloorObstructsSound.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6146215264256
+    m_Key: Palette.Media.Header
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6146215264257
+    m_Key: Palette.Media.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231037
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928704298

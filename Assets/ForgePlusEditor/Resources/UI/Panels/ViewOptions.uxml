@@ -3,27 +3,27 @@
     <ui:VisualElement picking-mode="Ignore">
         <!-- A placeholder, which doesn't change anything yet -->
         <ui:Instance template="Toggle" name="visualization-effect" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="Visualization Effect" value="false" />
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.VisualizationEffect.Control.Text" value="false" />
         </ui:Instance>
         <ui:Instance template="Toggle" name="object-icons" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="Object Icons" />
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.ObjectIcons.Control.Text" />
         </ui:Instance>
         <ui:Instance template="Toggle" name="sprite-previews" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="Sprite Previews" />
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SpritePreviews.Control.Text" />
         </ui:Instance>
         <ui:Instance template="Toggle" name="clip-platform-sides" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="Clip Platform Sides" />
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.ClipPlatformSides.Control.Text" />
         </ui:Instance>
         <!-- Always on in Sounds mode -->
         <ui:Instance template="Toggle" name="sound-direction" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="Sound Direction" />
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SoundDirection.Control.Text" />
         </ui:Instance>
         <ui:Instance template="Toggle" name="sound-volume" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="Sound Volume" />
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SoundVolume.Control.Text" />
         </ui:Instance>
         <!-- Needs a sounds file (Files tab) to play sounds from -->
-        <ui:Instance template="Toggle" name="play-level-audio" class="fp-toggle--wide-short fp-view-option fp-view-option--last" tooltip="Plays what the game would play where the camera is: its polygon's ambient and random sounds, its media's and platform's, and the sound sources it hears (needs a sounds file, in the Files tab)">
-            <ui:AttributeOverrides element-name="control" text="Play Level Audio" />
+        <ui:Instance template="Toggle" name="play-level-audio" class="fp-toggle--wide-short fp-view-option fp-view-option--last" tooltip="@Common/ViewOptions.PlayLevelAudio.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.PlayLevelAudio.Control.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

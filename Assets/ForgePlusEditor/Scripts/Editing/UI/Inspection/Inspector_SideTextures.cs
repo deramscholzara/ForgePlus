@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using RuntimeCore.Entities.Geometry;
 using System.Collections.Generic;
 using Unity.Properties;
@@ -294,7 +295,9 @@ namespace ForgePlus.Inspection
 
         private static string SurfaceOffset(side_texture_definition surface)
         {
-            return HasData(surface) ? $"X: {surface.x0}\nY: {surface.y0}" : "X: -\nY: -";
+            return HasData(surface) ?
+                   Strings.Get(Strings.Textures, "Inspector.SideTextures.Offset", surface.x0, surface.y0) :
+                   Strings.Get(Strings.Textures, "Inspector.SideTextures.Offset", "-", "-");
         }
     }
 }

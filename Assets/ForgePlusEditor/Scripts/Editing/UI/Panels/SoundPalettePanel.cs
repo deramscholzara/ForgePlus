@@ -1,6 +1,7 @@
 using AlephOne;
 using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
@@ -72,6 +73,7 @@ namespace ForgePlus.UI
                 }
 
                 var instance = swatchTemplate.Instantiate();
+                Strings.Localize(instance);
                 var toggle = instance.Q<Toggle>();
                 var clickedSwatch = swatch;
 
@@ -119,7 +121,7 @@ namespace ForgePlus.UI
                 if (swatch.IsNone || index >= SoundImageEditing.Count(swatch.SoundKind))
                 {
                     instance.Q<Label>("index").text = string.Empty;
-                    instance.Q<Label>("sound").text = "None";
+                    instance.Q<Label>("sound").text = Strings.Get(Strings.Sounds, "SoundPalette.None");
                     instance.Q("volume").style.display = DisplayStyle.None;
                     instance.Q("play").style.display = DisplayStyle.None;
                     instance.Q("in-use").style.display = DisplayStyle.None;
@@ -160,7 +162,7 @@ namespace ForgePlus.UI
         {
             var isAlephOneOnly = SoundImageEditing.Count(kind) >= SoundImageEditing.MaximumOriginalEntries;
 
-            button.text = isAlephOneOnly ? "Add (Aleph One Only)" : "Add";
+            button.text = isAlephOneOnly ? Strings.Get(Strings.Sounds, "SoundPalette.Add.AlephOneOnly") : Strings.Get(Strings.Sounds, "SoundPalette.Add");
             button.GetFirstAncestorOfType<TemplateContainer>().EnableInClassList("fp-aleph-one-only", isAlephOneOnly);
         }
 

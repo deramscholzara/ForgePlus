@@ -8,70 +8,70 @@
     <!-- Bound to Inspector_SideTextures -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Side Textures" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SideTextures.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.Id.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Type">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.Type.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Primary Surface" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimarySurface.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextureRow" name="PrimaryTexture">
-            <ui:AttributeOverrides element-name="label" text="Texture:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryTexture.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="PrimaryBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
-            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
+        <ui:Instance template="IntegerFieldRow" name="PrimaryBitmap" tooltip="@Textures/Inspector.SideTextures.PrimaryBitmap.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryBitmap.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="PrimaryOffset">
-            <ui:AttributeOverrides element-name="label" text="Offset:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryOffset.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownRow" name="PrimaryTransferMode">
-            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryTransferMode.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="PrimaryLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Secondary Surface" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondarySurface.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextureRow" name="SecondaryTexture">
-            <ui:AttributeOverrides element-name="label" text="Texture:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryTexture.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="SecondaryBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
-            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
+        <ui:Instance template="IntegerFieldRow" name="SecondaryBitmap" tooltip="@Textures/Inspector.SideTextures.SecondaryBitmap.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryBitmap.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="SecondaryOffset">
-            <ui:AttributeOverrides element-name="label" text="Offset:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryOffset.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownRow" name="SecondaryTransferMode">
-            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryTransferMode.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="SecondaryLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Transparent Surface" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentSurface.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextureRow" name="TransparentTexture">
-            <ui:AttributeOverrides element-name="label" text="Texture:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentTexture.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="TransparentBitmap" tooltip="Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.">
-            <ui:AttributeOverrides element-name="label" text="Bitmap:" />
+        <ui:Instance template="IntegerFieldRow" name="TransparentBitmap" tooltip="@Textures/Inspector.SideTextures.TransparentBitmap.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentBitmap.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="TransparentOffset">
-            <ui:AttributeOverrides element-name="label" text="Offset:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentOffset.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownRow" name="TransparentTransferMode">
-            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentTransferMode.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="TransparentLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentLightIndex.Label.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

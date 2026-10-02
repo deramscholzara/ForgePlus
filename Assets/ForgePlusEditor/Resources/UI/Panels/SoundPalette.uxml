@@ -9,30 +9,30 @@
             <ui:Instance template="ScrollArea" name="swatches" class="fp-grow">
                 <ui:VisualElement class="fp-inspector">
                     <ui:Instance template="Header">
-                        <ui:AttributeOverrides element-name="label" text="Ambient Sounds" />
+                        <ui:AttributeOverrides element-name="label" text="@Sounds/SoundPalette.Swatches.Label.Text" />
                     </ui:Instance>
                 </ui:VisualElement>
                 <ui:VisualElement name="ambient-swatches" class="fp-palette__swatches" />
                 <ui:VisualElement class="fp-sound-palette__actions">
                     <ui:Instance template="Button" name="add-ambient" class="fp-sound-palette__action">
-                        <ui:AttributeOverrides element-name="control" text="Add" />
+                        <ui:AttributeOverrides element-name="control" text="@Sounds/SoundPalette.AddAmbient.Control.Text" />
                     </ui:Instance>
                     <ui:Instance template="Button" name="duplicate-ambient" class="fp-sound-palette__action fp-sound-palette__action--last">
-                        <ui:AttributeOverrides element-name="control" text="Duplicate" />
+                        <ui:AttributeOverrides element-name="control" text="@Sounds/SoundPalette.DuplicateAmbient.Control.Text" />
                     </ui:Instance>
                 </ui:VisualElement>
                 <ui:VisualElement class="fp-inspector">
                     <ui:Instance template="Header">
-                        <ui:AttributeOverrides element-name="label" text="Random Sounds" />
+                        <ui:AttributeOverrides element-name="label" text="@Sounds/SoundPalette.RandomSounds.Label.Text" />
                     </ui:Instance>
                 </ui:VisualElement>
                 <ui:VisualElement name="random-swatches" class="fp-palette__swatches" />
                 <ui:VisualElement class="fp-sound-palette__actions">
                     <ui:Instance template="Button" name="add-random" class="fp-sound-palette__action">
-                        <ui:AttributeOverrides element-name="control" text="Add" />
+                        <ui:AttributeOverrides element-name="control" text="@Sounds/SoundPalette.AddRandom.Control.Text" />
                     </ui:Instance>
                     <ui:Instance template="Button" name="duplicate-random" class="fp-sound-palette__action fp-sound-palette__action--last">
-                        <ui:AttributeOverrides element-name="control" text="Duplicate" />
+                        <ui:AttributeOverrides element-name="control" text="@Sounds/SoundPalette.DuplicateRandom.Control.Text" />
                     </ui:Instance>
                 </ui:VisualElement>
             </ui:Instance>

@@ -1,8 +1,8 @@
 using AlephOne;
 using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using ForgePlus.UI;
-using System.Collections.Generic;
 using System.Text;
 using Unity.Properties;
 using UnityEngine.UIElements;
@@ -20,16 +20,6 @@ namespace ForgePlus.Inspection
 
         private static readonly uint VersionType = ResourceType("vers");
         private const short VersionId = 1;
-
-        // What Aleph One uses each type for (images.cpp, XML_LevelScript.cpp)
-        private static readonly Dictionary<string, string> ResourceTypeNames = new Dictionary<string, string>
-        {
-            { "PICT", "pictures" },
-            { "clut", "color tables" },
-            { "snd ", "sounds" },
-            { "TEXT", "texts" },
-            { "vers", "versions" },
-        };
 
         private readonly MapsFile mapsFile;
 
@@ -110,7 +100,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return $"{mapsFile.EmbeddedPhysicsLevelCount} of {mapsFile.Levels.Count} levels";
+                return Strings.Get(Strings.Map, "Inspector.Map.EmbeddedPhysicsLevelCount", mapsFile.EmbeddedPhysicsLevelCount, mapsFile.Levels.Count);
             }
         }
 
@@ -123,13 +113,13 @@ namespace ForgePlus.Inspection
                 switch (Header.version)
                 {
                     case wad.PRE_ENTRY_POINT_WADFILE_VERSION:
-                        return $"Marathon ({Header.version})";
+                        return Strings.Get(Strings.Map, "Inspector.Map.Version.Marathon", Header.version);
                     case wad.WADFILE_HAS_DIRECTORY_ENTRY:
-                        return $"Marathon, with Level Directory ({Header.version})";
+                        return Strings.Get(Strings.Map, "Inspector.Map.Version.MarathonWithDirectory", Header.version);
                     case wad.WADFILE_SUPPORTS_OVERLAYS:
-                        return $"Marathon 2 ({Header.version})";
+                        return Strings.Get(Strings.Map, "Inspector.Map.Version.Marathon2", Header.version);
                     case wad.WADFILE_HAS_INFINITY_STUFF:
-                        return $"Marathon Infinity ({Header.version})";
+                        return Strings.Get(Strings.Map, "Inspector.Map.Version.MarathonInfinity", Header.version);
                     default:
                         return Header.version.ToString();
                 }
@@ -145,11 +135,11 @@ namespace ForgePlus.Inspection
                 switch (Header.data_version)
                 {
                     case editor.MARATHON_ONE_DATA_VERSION:
-                        return $"Marathon ({Header.data_version})";
+                        return Strings.Get(Strings.Map, "Inspector.Map.Version.Marathon", Header.data_version);
                     case editor.MARATHON_TWO_DATA_VERSION:
-                        return $"Marathon 2 ({Header.data_version})";
+                        return Strings.Get(Strings.Map, "Inspector.Map.Version.Marathon2", Header.data_version);
                     case editor.MARATHON_INFINITY_DATA_VERSION:
-                        return $"Marathon Infinity ({Header.data_version})";
+                        return Strings.Get(Strings.Map, "Inspector.Map.Version.MarathonInfinity", Header.data_version);
                     default:
                         return Header.data_version.ToString();
                 }
@@ -172,7 +162,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Header.parent_checksum == 0 ? "None" : $"0x{Header.parent_checksum:X8}";
+                return Header.parent_checksum == 0 ? Strings.Get(Strings.Map, "Inspector.Map.None") : $"0x{Header.parent_checksum:X8}";
             }
         }
 
@@ -190,7 +180,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Resources != null ? mapsFile.Forks.ResourceForkSource : "None";
+                return Resources != null ? mapsFile.Forks.ResourceForkSource : Strings.Get(Strings.Map, "Inspector.Map.None");
             }
         }
 
@@ -203,7 +193,7 @@ namespace ForgePlus.Inspection
                 var version = Resources?.Get(VersionType, VersionId);
                 if (version == null || version.Length < 7)
                 {
-                    return "None";
+                    return Strings.Get(Strings.Map, "Inspector.Map.None");
                 }
 
                 var shortVersion = PascalString(version, 6);
@@ -221,7 +211,7 @@ namespace ForgePlus.Inspection
             {
                 var levelScript = Resources?.Get(LevelScriptType, LevelScriptId);
 
-                return levelScript != null ? $"{levelScript.Length:N0} bytes" : "None";
+                return levelScript != null ? Strings.Get(Strings.Map, "Inspector.Map.Bytes", levelScript.Length.ToString("N0")) : Strings.Get(Strings.Map, "Inspector.Map.None");
             }
         }
 
@@ -240,7 +230,7 @@ namespace ForgePlus.Inspection
                 var text = Encoding.UTF8.GetString(levelScript).TrimEnd('\0').Replace("\r\n", "\n").Replace('\r', '\n');
 
                 return text.Length > MaximumTextLength ?
-                       $"{text.Substring(0, MaximumTextLength)}\n\n(… and {text.Length - MaximumTextLength:N0} more characters)" :
+                       Strings.Get(Strings.Map, "Inspector.Map.TextCutOff", text.Substring(0, MaximumTextLength), (text.Length - MaximumTextLength).ToString("N0")) :
                        text;
             }
         }
@@ -279,11 +269,32 @@ namespace ForgePlus.Inspection
 
                 var row = rowTemplate.Instantiate();
                 row.Q<Label>("label").text = $"{code.TrimEnd()}:";
-                row.Q<Label>("value").text = ResourceTypeNames.TryGetValue(code, out var name) ? $"{type.Value} ({name})" : type.Value.ToString();
+                var name = ResourceTypeName(code);
+                row.Q<Label>("value").text = name != null ? Strings.Get(Strings.Map, "Inspector.Map.ResourceCount", type.Value, name) : type.Value.ToString();
 
                 // Read-only, as rows with no setter are
                 row.SetEnabled(false);
                 rows.Insert(index++, row);
+            }
+        }
+
+        // What Aleph One uses the type for (images.cpp, XML_LevelScript.cpp), or null for a type it doesn't use
+        private static string ResourceTypeName(string code)
+        {
+            switch (code)
+            {
+                case "PICT":
+                    return Strings.Get(Strings.Map, "Inspector.Map.ResourceType.Pictures");
+                case "clut":
+                    return Strings.Get(Strings.Map, "Inspector.Map.ResourceType.ColorTables");
+                case "snd ":
+                    return Strings.Get(Strings.Map, "Inspector.Map.ResourceType.Sounds");
+                case "TEXT":
+                    return Strings.Get(Strings.Map, "Inspector.Map.ResourceType.Texts");
+                case "vers":
+                    return Strings.Get(Strings.Map, "Inspector.Map.ResourceType.Versions");
+                default:
+                    return null;
             }
         }
 
