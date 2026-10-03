@@ -26,6 +26,10 @@
         <ui:Instance template="IntegerFieldRow" name="PrimaryBitmap" tooltip="@Textures/Inspector.SideTextures.PrimaryBitmap.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryBitmap.Label.Text" />
         </ui:Instance>
+        <ui:Instance template="DropdownRow" name="PrimaryCollection" class="fp-aleph-one-only" tooltip="@Textures/Inspector.Collection.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
+        </ui:Instance>
+        <ui:Label name="PrimaryCollectionNote" class="fp-inspector-note fp-aleph-one-only" />
         <ui:Instance template="Row" name="PrimaryOffset">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryOffset.Label.Text" />
         </ui:Instance>
@@ -45,6 +49,10 @@
         <ui:Instance template="IntegerFieldRow" name="SecondaryBitmap" tooltip="@Textures/Inspector.SideTextures.SecondaryBitmap.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryBitmap.Label.Text" />
         </ui:Instance>
+        <ui:Instance template="DropdownRow" name="SecondaryCollection" class="fp-aleph-one-only" tooltip="@Textures/Inspector.Collection.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
+        </ui:Instance>
+        <ui:Label name="SecondaryCollectionNote" class="fp-inspector-note fp-aleph-one-only" />
         <ui:Instance template="Row" name="SecondaryOffset">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryOffset.Label.Text" />
         </ui:Instance>
@@ -64,6 +72,10 @@
         <ui:Instance template="IntegerFieldRow" name="TransparentBitmap" tooltip="@Textures/Inspector.SideTextures.TransparentBitmap.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentBitmap.Label.Text" />
         </ui:Instance>
+        <ui:Instance template="DropdownRow" name="TransparentCollection" class="fp-aleph-one-only" tooltip="@Textures/Inspector.Collection.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
+        </ui:Instance>
+        <ui:Label name="TransparentCollectionNote" class="fp-inspector-note fp-aleph-one-only" />
         <ui:Instance template="Row" name="TransparentOffset">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentOffset.Label.Text" />
         </ui:Instance>

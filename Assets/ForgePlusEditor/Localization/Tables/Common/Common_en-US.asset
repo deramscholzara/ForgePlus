@@ -380,6 +380,38 @@ MonoBehaviour:
   - rid: 552786097007231888
   - rid: 552786129695801426
   - rid: 552786129695801427
+  - rid: 552786132139770094
+  - rid: 552786132139770095
+  - rid: 552786132139770096
+  - rid: 552786132139770097
+  - rid: 552786132139770098
+  - rid: 552786132139770099
+  - rid: 552786132139770100
+  - rid: 552786132139770101
+  - rid: 552786132139770102
+  - rid: 552786132139770103
+  - rid: 552786132139770104
+  - rid: 552786132139770105
+  - rid: 552786132139770106
+  - rid: 552786132139770107
+  - rid: 552786132139770108
+  - rid: 552786132139770109
+  - rid: 552786132139770110
+  - rid: 552786132139770111
+  - rid: 552786132139770112
+  - rid: 552786132139770113
+  - rid: 552786132139770114
+  - rid: 552786132139770115
+  - rid: 552786132139770116
+  - rid: 552786132139770117
+  - rid: 552786132139770118
+  - rid: 552786132139770119
+  - rid: 552786132139770120
+  - rid: 552786132139770121
+  - rid: 552786132139770122
+  - rid: 552786132139770123
+  - rid: 552786132139770124
+  - rid: 552786132139770125
   references:
     version: 2
     RefIds:
@@ -2928,3 +2960,227 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Shows the sides where a line has no side data for a polygon it faces (drawn untextured)
+    - rid: 552786132139770094
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146240
+        m_Metadata:
+          m_Items: []
+        m_Value: interface
+    - rid: 552786132139770095
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146241
+        m_Metadata:
+          m_Items: []
+        m_Value: weapons in hand
+    - rid: 552786132139770096
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146242
+        m_Metadata:
+          m_Items: []
+        m_Value: juggernaut
+    - rid: 552786132139770097
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146243
+        m_Metadata:
+          m_Items: []
+        m_Value: tick
+    - rid: 552786132139770098
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146244
+        m_Metadata:
+          m_Items: []
+        m_Value: rocket
+    - rid: 552786132139770099
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146245
+        m_Metadata:
+          m_Items: []
+        m_Value: hunter
+    - rid: 552786132139770100
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146246
+        m_Metadata:
+          m_Items: []
+        m_Value: player
+    - rid: 552786132139770101
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146247
+        m_Metadata:
+          m_Items: []
+        m_Value: items
+    - rid: 552786132139770102
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146248
+        m_Metadata:
+          m_Items: []
+        m_Value: trooper
+    - rid: 552786132139770103
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146249
+        m_Metadata:
+          m_Items: []
+        m_Value: fighter
+    - rid: 552786132139770104
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146250
+        m_Metadata:
+          m_Items: []
+        m_Value: defender
+    - rid: 552786132139770105
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146251
+        m_Metadata:
+          m_Items: []
+        m_Value: yeti
+    - rid: 552786132139770106
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146252
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian
+    - rid: 552786132139770107
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146253
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian fusion
+    - rid: 552786132139770108
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146254
+        m_Metadata:
+          m_Items: []
+        m_Value: enforcer
+    - rid: 552786132139770109
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146255
+        m_Metadata:
+          m_Items: []
+        m_Value: hummer
+    - rid: 552786132139770110
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146256
+        m_Metadata:
+          m_Items: []
+        m_Value: compiler
+    - rid: 552786132139770111
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146257
+        m_Metadata:
+          m_Items: []
+        m_Value: walls1
+    - rid: 552786132139770112
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146258
+        m_Metadata:
+          m_Items: []
+        m_Value: walls2
+    - rid: 552786132139770113
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146259
+        m_Metadata:
+          m_Items: []
+        m_Value: walls3
+    - rid: 552786132139770114
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146260
+        m_Metadata:
+          m_Items: []
+        m_Value: walls4
+    - rid: 552786132139770115
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146261
+        m_Metadata:
+          m_Items: []
+        m_Value: walls5
+    - rid: 552786132139770116
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146262
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery1
+    - rid: 552786132139770117
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146263
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery2
+    - rid: 552786132139770118
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146264
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery3
+    - rid: 552786132139770119
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146265
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery4
+    - rid: 552786132139770120
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146266
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery5
+    - rid: 552786132139770121
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146267
+        m_Metadata:
+          m_Items: []
+        m_Value: landscape1
+    - rid: 552786132139770122
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146268
+        m_Metadata:
+          m_Items: []
+        m_Value: landscape2
+    - rid: 552786132139770123
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146269
+        m_Metadata:
+          m_Items: []
+        m_Value: landscape3
+    - rid: 552786132139770124
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146270
+        m_Metadata:
+          m_Items: []
+        m_Value: landscape4
+    - rid: 552786132139770125
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146271
+        m_Metadata:
+          m_Items: []
+        m_Value: cyborg

@@ -1832,6 +1832,166 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 248518459146240
+    m_Key: Term.shape_descriptors._collection_interface
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146241
+    m_Key: Term.shape_descriptors._collection_weapons_in_hand
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146242
+    m_Key: Term.shape_descriptors._collection_juggernaut
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146243
+    m_Key: Term.shape_descriptors._collection_tick
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146244
+    m_Key: Term.shape_descriptors._collection_rocket
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146245
+    m_Key: Term.shape_descriptors._collection_hunter
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146246
+    m_Key: Term.shape_descriptors._collection_player
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146247
+    m_Key: Term.shape_descriptors._collection_items
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146248
+    m_Key: Term.shape_descriptors._collection_trooper
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146249
+    m_Key: Term.shape_descriptors._collection_fighter
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146250
+    m_Key: Term.shape_descriptors._collection_defender
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146251
+    m_Key: Term.shape_descriptors._collection_yeti
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146252
+    m_Key: Term.shape_descriptors._collection_civilian
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146253
+    m_Key: Term.shape_descriptors._collection_civilian_fusion
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146254
+    m_Key: Term.shape_descriptors._collection_enforcer
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146255
+    m_Key: Term.shape_descriptors._collection_hummer
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146256
+    m_Key: Term.shape_descriptors._collection_compiler
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146257
+    m_Key: Term.shape_descriptors._collection_walls1
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146258
+    m_Key: Term.shape_descriptors._collection_walls2
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146259
+    m_Key: Term.shape_descriptors._collection_walls3
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146260
+    m_Key: Term.shape_descriptors._collection_walls4
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146261
+    m_Key: Term.shape_descriptors._collection_walls5
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146262
+    m_Key: Term.shape_descriptors._collection_scenery1
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146263
+    m_Key: Term.shape_descriptors._collection_scenery2
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146264
+    m_Key: Term.shape_descriptors._collection_scenery3
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146265
+    m_Key: Term.shape_descriptors._collection_scenery4
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146266
+    m_Key: Term.shape_descriptors._collection_scenery5
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146267
+    m_Key: Term.shape_descriptors._collection_landscape1
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146268
+    m_Key: Term.shape_descriptors._collection_landscape2
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146269
+    m_Key: Term.shape_descriptors._collection_landscape3
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146270
+    m_Key: Term.shape_descriptors._collection_landscape4
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248518459146271
+    m_Key: Term.shape_descriptors._collection_cyborg
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

@@ -92,30 +92,46 @@ namespace ForgePlus.Inspection
             var shape = Mathf.Min(bitmap, shape_descriptors.MAXIMUM_SHAPES_PER_COLLECTION - 1);
 
             return shapeDescriptor.IsEmptyShapeDescriptor() ?
-                AlephOneExtensions.BuildShapeDescriptor(LevelWallCollection(), shape) :
+                AlephOneExtensions.BuildShapeDescriptor(CollectionChoices.LevelWallCollection(), shape) :
                 AlephOneExtensions.BuildShapeDescriptor(shapeDescriptor.GetCollection(), shape, shapeDescriptor.GetCLUT());
         }
 
-        // The first wall collection of the level's environment (as the game loads them: map.cpp,
-        // mark_environment_collections), or the first walls collection if it has none
-        private static int LevelWallCollection()
+        // A surface's collection, as a choice of CollectionChoices ("-" for no texture)
+        protected static string CollectionChoiceOf(ushort shapeDescriptor)
         {
-            var level = LevelEntity_Level.Instance;
-            var environmentCode = level ? level.Level.static_world.environment_code : (short) 0;
+            return shapeDescriptor.IsEmptyShapeDescriptor() ? "-" : CollectionChoices.Choice(shapeDescriptor.GetCollection());
+        }
 
-            if (environmentCode >= 0 && environmentCode < map.NUMBER_OF_ENVIRONMENTS)
+        // The texture's bitmap (and color table) from the chosen collection, if it's another one
+        protected static bool TryWithCollection(ushort shapeDescriptor, string choice, out ushort changedShapeDescriptor)
+        {
+            changedShapeDescriptor = shapeDescriptor;
+
+            if (shapeDescriptor.IsEmptyShapeDescriptor() ||
+                !CollectionChoices.TryParse(shapeDescriptor, choice, out var collection) ||
+                collection == shapeDescriptor.GetCollection())
             {
-                for (var i = 0; i < map.NUMBER_OF_ENV_COLLECTIONS; i++)
-                {
-                    var collection = map.Environments[environmentCode, i];
-                    if (collection != cstypes.NONE && ShapesLoading.Instance.IsWallCollection(collection))
-                    {
-                        return collection;
-                    }
-                }
+                return false;
             }
 
-            return shape_descriptors._collection_walls1;
+            changedShapeDescriptor = AlephOneExtensions.BuildShapeDescriptor(collection, shapeDescriptor.GetShape(), shapeDescriptor.GetCLUT());
+
+            return true;
+        }
+
+        // A note (a label named after the inspector's string property it shows), shown while it has text
+        protected void BindNote(string property)
+        {
+            var note = Root.Q<Label>(property);
+            if (note == null)
+            {
+                return;
+            }
+
+            note.Bind("text", this, property);
+
+            var shown = note.Bind("style.display", this, property);
+            shown.sourceToUiConverters.AddConverter((ref string text) => new StyleEnum<DisplayStyle>(string.IsNullOrEmpty(text) ? DisplayStyle.None : DisplayStyle.Flex));
         }
 
         // Clicking the texture row's texture opens a list of the textures to choose from (TexturePicker)

@@ -23,6 +23,10 @@
         <ui:Instance template="IntegerFieldRow" name="FloorBitmap" tooltip="@Textures/Inspector.PolygonTextures.FloorBitmap.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorBitmap.Label.Text" />
         </ui:Instance>
+        <ui:Instance template="DropdownRow" name="FloorCollection" class="fp-aleph-one-only" tooltip="@Textures/Inspector.Collection.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
+        </ui:Instance>
+        <ui:Label name="FloorCollectionNote" class="fp-inspector-note fp-aleph-one-only" />
         <ui:Instance template="Row" name="FloorOffset">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorOffset.Label.Text" />
         </ui:Instance>
@@ -42,6 +46,10 @@
         <ui:Instance template="IntegerFieldRow" name="CeilingBitmap" tooltip="@Textures/Inspector.PolygonTextures.CeilingBitmap.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingBitmap.Label.Text" />
         </ui:Instance>
+        <ui:Instance template="DropdownRow" name="CeilingCollection" class="fp-aleph-one-only" tooltip="@Textures/Inspector.Collection.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
+        </ui:Instance>
+        <ui:Label name="CeilingCollectionNote" class="fp-inspector-note fp-aleph-one-only" />
         <ui:Instance template="Row" name="CeilingOffset">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingOffset.Label.Text" />
         </ui:Instance>

@@ -392,6 +392,41 @@ MonoBehaviour:
     m_Flags: 1
     m_Metadata:
       m_Items: []
+  - m_Id: 248514709438464
+    m_Key: Inspector.Collection.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021376
+    m_Key: Inspector.Collection.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021377
+    m_Key: Collection.Choice.LevelWalls
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021378
+    m_Key: Collection.Choice.LevelLandscape
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021379
+    m_Key: Collection.Choice.AlephOneOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021380
+    m_Key: Collection.Name
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021381
+    m_Key: Collection.Note.AlephOneOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

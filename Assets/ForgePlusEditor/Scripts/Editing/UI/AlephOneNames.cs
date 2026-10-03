@@ -134,10 +134,17 @@ namespace ForgePlus.Extensions
             Prefixes = new[] { "_i_" },
         };
 
+        // Shapes collections ("walls1", from _collection_walls1)
+        private static readonly Category Collections = new Category
+        {
+            ConstantsClass = typeof(shape_descriptors),
+            Prefixes = new[] { "_collection_" },
+        };
+
         private static readonly Category[] Categories =
         {
             PolygonTypes, SideTypes, LightTypes, LightingFunctions, PlatformTypes, MediaTypes, ControlPanelClasses,
-            TerminalGroupTypes, MonsterTypes, AmbientSounds, RandomSounds, ItemTypes,
+            TerminalGroupTypes, MonsterTypes, AmbientSounds, RandomSounds, ItemTypes, Collections,
         };
 
         public static string PolygonType(short type) { return GetName(PolygonTypes, type); }
@@ -169,6 +176,8 @@ namespace ForgePlus.Extensions
         public static string RandomSound(short randomSound) { return GetName(RandomSounds, randomSound); }
 
         public static string ItemType(short type) { return GetName(ItemTypes, type); }
+
+        public static string Collection(int collection) { return GetName(Collections, collection); }
 
         // Every name's entry (its key, and its text from its constant), for filling the Common table
         public static IEnumerable<KeyValuePair<string, string>> AllEntries()

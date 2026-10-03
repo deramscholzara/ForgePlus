@@ -70,6 +70,41 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Its collection: one of the level's (which the original games load), or another (which only Aleph One does)
+        [CreateProperty]
+        public string PrimaryCollection
+        {
+            get
+            {
+                return CollectionChoiceOf(Side.primary_texture.texture);
+            }
+            set
+            {
+                if (TryWithCollection(Side.primary_texture.texture, value, out var texture))
+                {
+                    SetTexture(LevelEntity_Side.DataSources.Primary, texture);
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> PrimaryCollectionChoices
+        {
+            get { return CollectionChoices.All(Side.primary_texture.texture); }
+        }
+
+        [CreateProperty]
+        public bool IsPrimaryCollectionEditable
+        {
+            get { return HasData(Side.primary_texture); }
+        }
+
+        [CreateProperty]
+        public string PrimaryCollectionNote
+        {
+            get { return CollectionChoices.Note(Side.primary_texture.texture); }
+        }
+
         [CreateProperty]
         public string PrimaryOffset
         {
@@ -143,6 +178,40 @@ namespace ForgePlus.Inspection
             {
                 SetTexture(LevelEntity_Side.DataSources.Secondary, WithBitmap(Side.secondary_texture.texture, value));
             }
+        }
+
+        [CreateProperty]
+        public string SecondaryCollection
+        {
+            get
+            {
+                return CollectionChoiceOf(Side.secondary_texture.texture);
+            }
+            set
+            {
+                if (TryWithCollection(Side.secondary_texture.texture, value, out var texture))
+                {
+                    SetTexture(LevelEntity_Side.DataSources.Secondary, texture);
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> SecondaryCollectionChoices
+        {
+            get { return CollectionChoices.All(Side.secondary_texture.texture); }
+        }
+
+        [CreateProperty]
+        public bool IsSecondaryCollectionEditable
+        {
+            get { return HasData(Side.secondary_texture); }
+        }
+
+        [CreateProperty]
+        public string SecondaryCollectionNote
+        {
+            get { return CollectionChoices.Note(Side.secondary_texture.texture); }
         }
 
         [CreateProperty]
@@ -221,6 +290,40 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
+        public string TransparentCollection
+        {
+            get
+            {
+                return CollectionChoiceOf(Side.transparent_texture.texture);
+            }
+            set
+            {
+                if (TryWithCollection(Side.transparent_texture.texture, value, out var texture))
+                {
+                    SetTexture(LevelEntity_Side.DataSources.Transparent, texture);
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> TransparentCollectionChoices
+        {
+            get { return CollectionChoices.All(Side.transparent_texture.texture); }
+        }
+
+        [CreateProperty]
+        public bool IsTransparentCollectionEditable
+        {
+            get { return HasData(Side.transparent_texture); }
+        }
+
+        [CreateProperty]
+        public string TransparentCollectionNote
+        {
+            get { return CollectionChoices.Note(Side.transparent_texture.texture); }
+        }
+
+        [CreateProperty]
         public string TransparentOffset
         {
             get
@@ -280,6 +383,10 @@ namespace ForgePlus.Inspection
             MakeTextureChoosable(nameof(PrimaryTexture), () => Side.primary_texture.texture, texture => SetTexture(LevelEntity_Side.DataSources.Primary, texture));
             MakeTextureChoosable(nameof(SecondaryTexture), () => Side.secondary_texture.texture, texture => SetTexture(LevelEntity_Side.DataSources.Secondary, texture));
             MakeTextureChoosable(nameof(TransparentTexture), () => Side.transparent_texture.texture, texture => SetTexture(LevelEntity_Side.DataSources.Transparent, texture));
+
+            BindNote(nameof(PrimaryCollectionNote));
+            BindNote(nameof(SecondaryCollectionNote));
+            BindNote(nameof(TransparentCollectionNote));
         }
 
         // As painting it from the texture palette does

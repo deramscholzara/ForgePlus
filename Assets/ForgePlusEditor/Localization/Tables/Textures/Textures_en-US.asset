@@ -92,6 +92,13 @@ MonoBehaviour:
   - rid: 552786097007231792
   - rid: 552786097007231793
   - rid: 552786097007231794
+  - rid: 552786132139770087
+  - rid: 552786132139770088
+  - rid: 552786132139770089
+  - rid: 552786132139770090
+  - rid: 552786132139770091
+  - rid: 552786132139770092
+  - rid: 552786132139770093
   references:
     version: 2
     RefIds:
@@ -624,3 +631,52 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'C: {0} B: {1}'
+    - rid: 552786132139770087
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514709438464
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Collection:'
+    - rid: 552786132139770088
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021376
+        m_Metadata:
+          m_Items: []
+        m_Value: The shapes collection the texture's bitmap is from. Marathon 2 and Infinity only load the level's walls (from its environment) and its landscape (from its song index), so a texture from any other collection only shows in Aleph One.
+    - rid: 552786132139770089
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021377
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} (level''s walls)'
+    - rid: 552786132139770090
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021378
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} (level''s landscape)'
+    - rid: 552786132139770091
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021379
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} (Aleph One only)'
+    - rid: 552786132139770092
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021380
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} ({1})'
+    - rid: 552786132139770093
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021381
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: Marathon 2 and Infinity only load the level''s collections, {0} and {1}.'

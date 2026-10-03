@@ -61,6 +61,41 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Its collection: one of the level's (which the original games load), or another (which only Aleph One does)
+        [CreateProperty]
+        public string FloorCollection
+        {
+            get
+            {
+                return CollectionChoiceOf(Polygon.floor_texture);
+            }
+            set
+            {
+                if (TryWithCollection(Polygon.floor_texture, value, out var texture))
+                {
+                    SetTexture(LevelEntity_Polygon.DataSources.Floor, texture);
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> FloorCollectionChoices
+        {
+            get { return CollectionChoices.All(Polygon.floor_texture); }
+        }
+
+        [CreateProperty]
+        public bool IsFloorCollectionEditable
+        {
+            get { return !Polygon.floor_texture.IsEmptyShapeDescriptor(); }
+        }
+
+        [CreateProperty]
+        public string FloorCollectionNote
+        {
+            get { return CollectionChoices.Note(Polygon.floor_texture); }
+        }
+
         [CreateProperty]
         public string FloorOffset
         {
@@ -137,6 +172,40 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
+        public string CeilingCollection
+        {
+            get
+            {
+                return CollectionChoiceOf(Polygon.ceiling_texture);
+            }
+            set
+            {
+                if (TryWithCollection(Polygon.ceiling_texture, value, out var texture))
+                {
+                    SetTexture(LevelEntity_Polygon.DataSources.Ceiling, texture);
+                }
+            }
+        }
+
+        [CreateProperty]
+        public List<string> CeilingCollectionChoices
+        {
+            get { return CollectionChoices.All(Polygon.ceiling_texture); }
+        }
+
+        [CreateProperty]
+        public bool IsCeilingCollectionEditable
+        {
+            get { return !Polygon.ceiling_texture.IsEmptyShapeDescriptor(); }
+        }
+
+        [CreateProperty]
+        public string CeilingCollectionNote
+        {
+            get { return CollectionChoices.Note(Polygon.ceiling_texture); }
+        }
+
+        [CreateProperty]
         public string CeilingOffset
         {
             get
@@ -195,6 +264,9 @@ namespace ForgePlus.Inspection
 
             MakeTextureChoosable(nameof(FloorTexture), () => Polygon.floor_texture, texture => SetTexture(LevelEntity_Polygon.DataSources.Floor, texture));
             MakeTextureChoosable(nameof(CeilingTexture), () => Polygon.ceiling_texture, texture => SetTexture(LevelEntity_Polygon.DataSources.Ceiling, texture));
+
+            BindNote(nameof(FloorCollectionNote));
+            BindNote(nameof(CeilingCollectionNote));
         }
 
         // As painting it from the texture palette does
