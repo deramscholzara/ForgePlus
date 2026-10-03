@@ -1,4 +1,5 @@
 ﻿#if !NO_EDITING
+using AlephOne;
 using ForgePlus.Extensions;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
@@ -127,6 +128,26 @@ namespace RuntimeCore.Entities.Geometry
             {
                 ParentLevel.Lines[ParentLineIndex].Inspect();
             }
+        }
+
+        // For a computer terminal panel, the terminal it shows when used (its permutation, as devices.cpp:
+        // change_panel_state uses it)
+        public bool TryGetTerminalIndex(out short terminalIndex)
+        {
+            terminalIndex = cstypes.NONE;
+
+            var side = NativeObject;
+            if (side == null ||
+                !map.SIDE_IS_CONTROL_PANEL(side) ||
+                devices.get_control_panel_definition(side.control_panel_type) == null ||
+                devices.get_panel_class(side.control_panel_type) != map._panel_is_computer_terminal)
+            {
+                return false;
+            }
+
+            terminalIndex = side.control_panel_permutation;
+
+            return true;
         }
 
         // TODO: actually set these up to use the new entity system

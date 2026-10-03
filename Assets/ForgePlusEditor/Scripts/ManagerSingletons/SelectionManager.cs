@@ -50,6 +50,14 @@ namespace ForgePlus.LevelManipulation
 
         public void UpdateSelectionToMatchMode(ModeManager.PrimaryModes primaryMode)
         {
+            HideTerminalSides();
+
+            // A level opened or closed has none of the previous selection to select again
+            if (primaryMode != carriedSelectionMode)
+            {
+                carriedSelection.Clear();
+            }
+
             DeselectAll();
 
             if (LevelEntity_Level.Instance)
@@ -262,6 +270,8 @@ namespace ForgePlus.LevelManipulation
                         break;
                 }
             }
+
+            ShowTerminalSides();
         }
 
         public bool GetIsSelected(ISelectable selectable)
@@ -397,6 +407,43 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        // The face shown as selected for what's selected through it
+        private EditableSurface_Base shownFace;
+
+        // In Lights mode, the face the selected light was clicked on (or carried from another mode on) is shown as
+        // selected, as the light is what it's lit by. Painting deselects the light, and with it the face.
+        private void ShowSelectedFace()
+        {
+            EditableSurface_Base face = null;
+
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Lights &&
+                SelectedObjects.Count == 1 &&
+                SelectedObjects[0] is LevelEntity_Light selectedLight &&
+                ClickedSurface &&
+                GetSurfaceLight(ClickedSurface) == selectedLight)
+            {
+                face = ClickedSurface;
+            }
+
+            if (face == shownFace)
+            {
+                return;
+            }
+
+            // Not one of a level that's been closed
+            if (shownFace)
+            {
+                shownFace.DisplayFaceSelectionState(false);
+            }
+
+            shownFace = face;
+
+            if (shownFace)
+            {
+                shownFace.DisplayFaceSelectionState(true);
+            }
+        }
+
         // Makes a surface made while in a mode (such as by painting media) as selectable as the mode's other surfaces
         public void MatchSelectabilityToMode(EditableSurface_Media surface)
         {
@@ -437,8 +484,16 @@ namespace ForgePlus.LevelManipulation
             DefaultLayer = LayerMask.NameToLayer("Default");
             SelectionIndicatorLayer = LayerMask.NameToLayer("SelectionVisualization");
 
+            OnSelectionChanged += ShowSelectedFace;
+            ModeManager.Instance.OnPrimaryModeChanging += CollectCarriedSelection;
             ModeManager.Instance.OnPrimaryModeChanged += UpdateSelectionToMatchMode;
             WorldPointer.Instance.OnClickEmptySpace += OnPointerClickEmptySpace;
+        }
+
+        // After the rest of the editor (such as the palette, which starts out with nothing selected) has switched modes
+        private void LateUpdate()
+        {
+            SelectCarriedSelection();
         }
 
         private void OnDestroy()

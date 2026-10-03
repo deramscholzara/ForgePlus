@@ -392,6 +392,9 @@ namespace ForgePlus.Palette
             var selectable = (ISelectable)swatch.Light ?? swatch.Media;
             if (isSelected)
             {
+                // Selected from the palette, not on any face
+                SelectionManager.Instance.ClickedSurface = null;
+
                 SelectionManager.Instance.ToggleObjectSelection(selectable, multiSelect: false);
             }
             else

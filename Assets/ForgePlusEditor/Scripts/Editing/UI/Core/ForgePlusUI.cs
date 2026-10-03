@@ -125,6 +125,7 @@ namespace ForgePlus.UI
             Editor = new EditorViewModel();
             Settings = new SettingsViewModel();
             Terminals = new TerminalsViewModel();
+            Terminals.OnTerminalChanged += SelectionManager.Instance.ShowTerminalSides;
 
             var levelName = root.Q<Label>("level-name");
             levelName.Bind("text", Editor, nameof(EditorViewModel.LevelName));

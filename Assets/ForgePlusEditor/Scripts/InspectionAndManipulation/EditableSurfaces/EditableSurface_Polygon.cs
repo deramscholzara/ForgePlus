@@ -39,6 +39,14 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        protected override bool IsCeilingFace
+        {
+            get
+            {
+                return DataSource == LevelEntity_Polygon.DataSources.Ceiling;
+            }
+        }
+
         private UVPlanarDrag uvDragPlane;
 
         private readonly List<LevelEntity_Polygon> alignmentGroupedPolygons = new List<LevelEntity_Polygon>();

@@ -45,6 +45,9 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        // Before the primary mode changes to the given one, while everything is still as it was in the previous mode
+        public event Action<PrimaryModes> OnPrimaryModeChanging;
+
         private event Action<SecondaryModes> OnSecondaryModeChanged_Sender;
         public event Action<SecondaryModes> OnSecondaryModeChanged
         {
@@ -76,6 +79,8 @@ namespace ForgePlus.LevelManipulation
             {
                 if (primaryMode != value)
                 {
+                    OnPrimaryModeChanging?.Invoke(value);
+
                     primaryMode = value;
 
                     // Falls back to selection when the new mode can't use the current secondary mode

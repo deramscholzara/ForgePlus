@@ -269,15 +269,10 @@ namespace ForgePlus.Entities.Geometry
 
                     break;
                 case ModeManager.PrimaryModes.Terminals:
-                    // A computer terminal panel previews its terminal (its permutation), as the game shows it when it's
-                    // used (devices.cpp: change_panel_state)
-                    var side = ParentSide.NativeObject;
-                    if (side != null &&
-                        map.SIDE_IS_CONTROL_PANEL(side) &&
-                        devices.get_control_panel_definition(side.control_panel_type) != null &&
-                        devices.get_panel_class(side.control_panel_type) == map._panel_is_computer_terminal)
+                    // A computer terminal panel previews its terminal, as the game shows it when it's used
+                    if (ParentSide.TryGetTerminalIndex(out var terminalIndex))
                     {
-                        ForgePlusUI.Instance.ShowTerminal(side.control_panel_permutation);
+                        ForgePlusUI.Instance.ShowTerminal(terminalIndex);
                     }
 
                     return;
