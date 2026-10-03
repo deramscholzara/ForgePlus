@@ -86,6 +86,9 @@ namespace ForgePlus.UI
             root.Query<FloatField>(className: "fp-inspector-range-maximum").ForEach(field => BindInspectorRangeMaximum(field, dataSource));
             root.Query<DropdownField>(className: "fp-inspector-dropdown").ForEach(dropdown => BindInspectorDropdown(dropdown, dataSource));
 
+            // A pair's fields edit the source's <Name>X and <Name>Y properties (each named after its part)
+            root.Query<IntegerField>(className: "fp-inspector-pair-field").ForEach(field => BindInspectorPairField(field, dataSource));
+
             root.Query<Toggle>(className: "fp-inspector-flag").ForEach(flag => BindInspectorValue(flag, dataSource));
             root.Query<LightIndexField>(className: "fp-inspector-light").ForEach(light => BindInspectorValue(light, dataSource));
             root.Query<SliderInt>(className: "fp-inspector-slider").ForEach(slider => BindInspectorSlider(slider, dataSource));
@@ -146,6 +149,28 @@ namespace ForgePlus.UI
 
             field.isReadOnly = !isEditable;
             field.Bind("value", dataSource, maximumProperty, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
+        }
+
+        // A pair (the row) is grayed out while its Is<Name>Editable property is false, or while its parts can't be set
+        private static void BindInspectorPairField(IntegerField field, object dataSource)
+        {
+            var row = field.GetFirstAncestorOfType<TemplateContainer>();
+            var sourceType = dataSource.GetType();
+            var partProperty = row.name + field.name;
+            var isEditable = sourceType.GetProperty(partProperty)?.GetSetMethod() != null;
+            var editabilityProperty = $"Is{row.name}Editable";
+
+            if (isEditable && sourceType.GetProperty(editabilityProperty) != null)
+            {
+                row.BindEnabled(dataSource, editabilityProperty);
+            }
+            else
+            {
+                row.SetEnabled(isEditable);
+            }
+
+            field.isReadOnly = !isEditable;
+            field.Bind("value", dataSource, partProperty, isEditable ? BindingMode.TwoWay : BindingMode.ToTarget);
         }
 
         // A field edits its source property while the property has a setter, and is grayed out (read-only) until then

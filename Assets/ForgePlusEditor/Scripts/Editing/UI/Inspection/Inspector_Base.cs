@@ -80,6 +80,15 @@ namespace ForgePlus.Inspection
             return shapeDescriptor.IsEmptyShapeDescriptor() ? -1 : shapeDescriptor.GetShape();
         }
 
+        // Whether a surface's texture can be moved (a landscape's is fixed to the view, and a surface with no texture has
+        // none)
+        protected static bool IsOffsettable(ushort shapeDescriptor, short transferMode)
+        {
+            return !shapeDescriptor.IsEmptyShapeDescriptor() &&
+                   !shapeDescriptor.UsesLandscapeCollection() &&
+                   !AlephOneExtensions.IsLandscapeTransferMode(transferMode);
+        }
+
         // The texture with another bitmap from its collection (and color table): -1 for no texture, and, for a surface
         // with no texture, from the level's wall collection
         protected static ushort WithBitmap(ushort shapeDescriptor, int bitmap)

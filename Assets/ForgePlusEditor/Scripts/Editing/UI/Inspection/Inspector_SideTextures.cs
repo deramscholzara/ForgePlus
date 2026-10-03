@@ -105,13 +105,37 @@ namespace ForgePlus.Inspection
             get { return CollectionChoices.Note(Side.primary_texture.texture); }
         }
 
+        // Where its texture starts; a landscape (or a surface with no texture) has none to move
         [CreateProperty]
-        public string PrimaryOffset
+        public int PrimaryOffsetX
         {
             get
             {
-                return SurfaceOffset(Side.primary_texture);
+                return Side.primary_texture.x0;
             }
+            set
+            {
+                SetOffset(LevelEntity_Side.DataSources.Primary, ClampToShort(value), Side.primary_texture.y0);
+            }
+        }
+
+        [CreateProperty]
+        public int PrimaryOffsetY
+        {
+            get
+            {
+                return Side.primary_texture.y0;
+            }
+            set
+            {
+                SetOffset(LevelEntity_Side.DataSources.Primary, Side.primary_texture.x0, ClampToShort(value));
+            }
+        }
+
+        [CreateProperty]
+        public bool IsPrimaryOffsetEditable
+        {
+            get { return IsOffsettable(Side.primary_texture.texture, Side.primary_transfer_mode); }
         }
 
         [CreateProperty]
@@ -150,12 +174,26 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string PrimaryLightIndex
+        public int PrimaryLightIndex
         {
             get
             {
-                return HasData(Side.primary_texture) ? Side.primary_lightsource_index.ToString() : "-";
+                return Side.primary_lightsource_index;
             }
+            set
+            {
+                if (value >= 0)
+                {
+                    Edit(side => side.SetLight(LevelEntity_Side.DataSources.Primary, (short) value));
+                }
+            }
+        }
+
+        // A landscape (or a surface with no texture) isn't lit
+        [CreateProperty]
+        public bool IsPrimaryLightIndexEditable
+        {
+            get { return HasData(Side.primary_texture) && !Side.primary_texture.texture.UsesLandscapeCollection(); }
         }
 
         [CreateProperty]
@@ -215,12 +253,35 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string SecondaryOffset
+        public int SecondaryOffsetX
         {
             get
             {
-                return SurfaceOffset(Side.secondary_texture);
+                return Side.secondary_texture.x0;
             }
+            set
+            {
+                SetOffset(LevelEntity_Side.DataSources.Secondary, ClampToShort(value), Side.secondary_texture.y0);
+            }
+        }
+
+        [CreateProperty]
+        public int SecondaryOffsetY
+        {
+            get
+            {
+                return Side.secondary_texture.y0;
+            }
+            set
+            {
+                SetOffset(LevelEntity_Side.DataSources.Secondary, Side.secondary_texture.x0, ClampToShort(value));
+            }
+        }
+
+        [CreateProperty]
+        public bool IsSecondaryOffsetEditable
+        {
+            get { return IsOffsettable(Side.secondary_texture.texture, Side.secondary_transfer_mode); }
         }
 
         [CreateProperty]
@@ -259,12 +320,25 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string SecondaryLightIndex
+        public int SecondaryLightIndex
         {
             get
             {
-                return HasData(Side.secondary_texture) ? Side.secondary_lightsource_index.ToString() : "-";
+                return Side.secondary_lightsource_index;
             }
+            set
+            {
+                if (value >= 0)
+                {
+                    Edit(side => side.SetLight(LevelEntity_Side.DataSources.Secondary, (short) value));
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool IsSecondaryLightIndexEditable
+        {
+            get { return HasData(Side.secondary_texture) && !Side.secondary_texture.texture.UsesLandscapeCollection(); }
         }
 
         [CreateProperty]
@@ -324,12 +398,35 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string TransparentOffset
+        public int TransparentOffsetX
         {
             get
             {
-                return SurfaceOffset(Side.transparent_texture);
+                return Side.transparent_texture.x0;
             }
+            set
+            {
+                SetOffset(LevelEntity_Side.DataSources.Transparent, ClampToShort(value), Side.transparent_texture.y0);
+            }
+        }
+
+        [CreateProperty]
+        public int TransparentOffsetY
+        {
+            get
+            {
+                return Side.transparent_texture.y0;
+            }
+            set
+            {
+                SetOffset(LevelEntity_Side.DataSources.Transparent, Side.transparent_texture.x0, ClampToShort(value));
+            }
+        }
+
+        [CreateProperty]
+        public bool IsTransparentOffsetEditable
+        {
+            get { return IsOffsettable(Side.transparent_texture.texture, Side.transparent_transfer_mode); }
         }
 
         [CreateProperty]
@@ -368,12 +465,25 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string TransparentLightIndex
+        public int TransparentLightIndex
         {
             get
             {
-                return HasData(Side.transparent_texture) ? Side.transparent_lightsource_index.ToString() : "-";
+                return Side.transparent_lightsource_index;
             }
+            set
+            {
+                if (value >= 0)
+                {
+                    Edit(side => side.SetLight(LevelEntity_Side.DataSources.Transparent, (short) value));
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool IsTransparentLightIndexEditable
+        {
+            get { return HasData(Side.transparent_texture) && !Side.transparent_texture.texture.UsesLandscapeCollection(); }
         }
 
         protected override void OnLoaded()
@@ -400,11 +510,9 @@ namespace ForgePlus.Inspection
             return !surface.texture.IsEmptyShapeDescriptor();
         }
 
-        private static string SurfaceOffset(side_texture_definition surface)
+        private void SetOffset(LevelEntity_Side.DataSources dataSource, short x, short y)
         {
-            return HasData(surface) ?
-                   Strings.Get(Strings.Textures, "Inspector.SideTextures.Offset", surface.x0, surface.y0) :
-                   Strings.Get(Strings.Textures, "Inspector.SideTextures.Offset", "-", "-");
+            Edit(side => side.SetOffset(dataSource, x, y, rebatch: true));
         }
     }
 }

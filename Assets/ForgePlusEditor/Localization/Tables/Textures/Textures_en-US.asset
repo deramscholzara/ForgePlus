@@ -57,8 +57,6 @@ MonoBehaviour:
   - rid: 552786097007231251
   - rid: 552786097007231252
   - rid: 552786097007231253
-  - rid: 552786097007231760
-  - rid: 552786097007231761
   - rid: 552786097007231762
   - rid: 552786097007231763
   - rid: 552786097007231764
@@ -382,24 +380,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Light Index:'
-    - rid: 552786097007231760
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 6148421468160
-        m_Metadata:
-          m_Items: []
-        m_Value: 'X: {0}
-
-          Y: {1}'
-    - rid: 552786097007231761
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 6148421468161
-        m_Metadata:
-          m_Items: []
-        m_Value: 'X: {0}
-
-          Y: {1}'
     - rid: 552786097007231762
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:

@@ -217,16 +217,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 6148421468160
-    m_Key: Inspector.PolygonTextures.Offset
-    m_Flags: 1
-    m_Metadata:
-      m_Items: []
-  - m_Id: 6148421468161
-    m_Key: Inspector.SideTextures.Offset
-    m_Flags: 1
-    m_Metadata:
-      m_Items: []
   - m_Id: 6148421468162
     m_Key: TransferMode.Choice
     m_Flags: 1

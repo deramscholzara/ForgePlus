@@ -96,13 +96,37 @@ namespace ForgePlus.Inspection
             get { return CollectionChoices.Note(Polygon.floor_texture); }
         }
 
+        // Where its texture starts; a landscape (or a surface with no texture) has none to move
         [CreateProperty]
-        public string FloorOffset
+        public int FloorOffsetX
         {
             get
             {
-                return Strings.Get(Strings.Textures, "Inspector.PolygonTextures.Offset", Polygon.floor_origin.x, Polygon.floor_origin.y);
+                return Polygon.floor_origin.x;
             }
+            set
+            {
+                SetOffset(LevelEntity_Polygon.DataSources.Floor, ClampToShort(value), Polygon.floor_origin.y);
+            }
+        }
+
+        [CreateProperty]
+        public int FloorOffsetY
+        {
+            get
+            {
+                return Polygon.floor_origin.y;
+            }
+            set
+            {
+                SetOffset(LevelEntity_Polygon.DataSources.Floor, Polygon.floor_origin.x, ClampToShort(value));
+            }
+        }
+
+        [CreateProperty]
+        public bool IsFloorOffsetEditable
+        {
+            get { return IsOffsettable(Polygon.floor_texture, Polygon.floor_transfer_mode); }
         }
 
         [CreateProperty]
@@ -141,12 +165,23 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string FloorLightIndex
+        public int FloorLightIndex
         {
             get
             {
-                return Polygon.floor_lightsource_index.ToString();
+                return Polygon.floor_lightsource_index;
             }
+            set
+            {
+                SetLight(LevelEntity_Polygon.DataSources.Floor, value);
+            }
+        }
+
+        // A landscape isn't lit
+        [CreateProperty]
+        public bool IsFloorLightIndexEditable
+        {
+            get { return !Polygon.floor_texture.UsesLandscapeCollection(); }
         }
 
         [CreateProperty]
@@ -206,12 +241,35 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string CeilingOffset
+        public int CeilingOffsetX
         {
             get
             {
-                return Strings.Get(Strings.Textures, "Inspector.PolygonTextures.Offset", Polygon.ceiling_origin.x, Polygon.ceiling_origin.y);
+                return Polygon.ceiling_origin.x;
             }
+            set
+            {
+                SetOffset(LevelEntity_Polygon.DataSources.Ceiling, ClampToShort(value), Polygon.ceiling_origin.y);
+            }
+        }
+
+        [CreateProperty]
+        public int CeilingOffsetY
+        {
+            get
+            {
+                return Polygon.ceiling_origin.y;
+            }
+            set
+            {
+                SetOffset(LevelEntity_Polygon.DataSources.Ceiling, Polygon.ceiling_origin.x, ClampToShort(value));
+            }
+        }
+
+        [CreateProperty]
+        public bool IsCeilingOffsetEditable
+        {
+            get { return IsOffsettable(Polygon.ceiling_texture, Polygon.ceiling_transfer_mode); }
         }
 
         [CreateProperty]
@@ -250,12 +308,22 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string CeilingLightIndex
+        public int CeilingLightIndex
         {
             get
             {
-                return Polygon.ceiling_lightsource_index.ToString();
+                return Polygon.ceiling_lightsource_index;
             }
+            set
+            {
+                SetLight(LevelEntity_Polygon.DataSources.Ceiling, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsCeilingLightIndexEditable
+        {
+            get { return !Polygon.ceiling_texture.UsesLandscapeCollection(); }
         }
 
         protected override void OnLoaded()
@@ -274,5 +342,17 @@ namespace ForgePlus.Inspection
         {
             Edit(polygon => polygon.SetShapeDescriptor(dataSource, shapeDescriptor));
         }
-    }
+
+        private void SetOffset(LevelEntity_Polygon.DataSources dataSource, short x, short y)
+        {
+            Edit(polygon => polygon.SetOffset(dataSource, x, y, rebatch: true));
+        }
+
+        private void SetLight(LevelEntity_Polygon.DataSources dataSource, int lightIndex)
+        {
+            if (lightIndex >= 0)
+            {
+                Edit(polygon => polygon.SetLight(dataSource, (short) lightIndex));
+            }
+        }    }
 }

@@ -5,6 +5,8 @@
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="TextureRow" src="../Templates/InspectorTextureRow.uxml" />
     <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="IntegerPairRow" src="../Templates/InspectorIntegerPairRow.uxml" />
+    <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <!-- Bound to Inspector_PolygonTextures -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -27,13 +29,13 @@
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
         </ui:Instance>
         <ui:Label name="FloorCollectionNote" class="fp-inspector-note fp-aleph-one-only" />
-        <ui:Instance template="Row" name="FloorOffset">
+        <ui:Instance template="IntegerPairRow" name="FloorOffset">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorOffset.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownRow" name="FloorTransferMode">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorTransferMode.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="FloorLightIndex">
+        <ui:Instance template="LightRow" name="FloorLightIndex">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
@@ -50,13 +52,13 @@
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
         </ui:Instance>
         <ui:Label name="CeilingCollectionNote" class="fp-inspector-note fp-aleph-one-only" />
-        <ui:Instance template="Row" name="CeilingOffset">
+        <ui:Instance template="IntegerPairRow" name="CeilingOffset">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingOffset.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownRow" name="CeilingTransferMode">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingTransferMode.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="CeilingLightIndex">
+        <ui:Instance template="LightRow" name="CeilingLightIndex">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingLightIndex.Label.Text" />
         </ui:Instance>
     </ui:VisualElement>

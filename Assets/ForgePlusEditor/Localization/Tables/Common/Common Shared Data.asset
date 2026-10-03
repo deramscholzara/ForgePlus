@@ -1992,6 +1992,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 329893195431936
+    m_Key: InspectorIntegerPairRow.X.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 329893212209152
+    m_Key: InspectorIntegerPairRow.Y.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

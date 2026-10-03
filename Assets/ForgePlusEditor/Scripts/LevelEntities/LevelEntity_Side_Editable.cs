@@ -167,7 +167,7 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.primary_texture.x0 = x;
                     NativeObject.primary_texture.y0 = y;
 
-                    PrimarySurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                    PrimarySurface?.ApplyTextureOffset(rebatchImmediately: rebatch);
 
                     break;
                 case DataSources.Secondary:
@@ -182,7 +182,7 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.secondary_texture.x0 = x;
                     NativeObject.secondary_texture.y0 = y;
 
-                    SecondarySurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                    SecondarySurface?.ApplyTextureOffset(rebatchImmediately: rebatch);
 
                     break;
                 case DataSources.Transparent:
@@ -197,7 +197,7 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.transparent_texture.x0 = x;
                     NativeObject.transparent_texture.y0 = y;
 
-                    TransparentSurface.ApplyTextureOffset(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level),
+                    TransparentSurface?.ApplyTextureOffset(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level),
                                                           rebatchImmediately: rebatch);
 
                     break;
@@ -328,7 +328,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     NativeObject.primary_lightsource_index = lightIndex;
 
-                    PrimarySurface.ApplyLight();
+                    PrimarySurface?.ApplyLight();
 
                     break;
                 case DataSources.Secondary:
@@ -341,7 +341,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     NativeObject.secondary_lightsource_index = lightIndex;
 
-                    SecondarySurface.ApplyLight();
+                    SecondarySurface?.ApplyLight();
 
                     break;
                 case DataSources.Transparent:
@@ -354,7 +354,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     NativeObject.transparent_lightsource_index = lightIndex;
 
-                    TransparentSurface.ApplyLight(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+                    TransparentSurface?.ApplyLight(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
 
                     break;
                 default:
