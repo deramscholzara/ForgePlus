@@ -344,6 +344,20 @@ namespace ForgePlus.ApplicationGeneral
                         }
                     }
 
+                    // Ambient delta, which only sides have
+                    dynamicMesh.GetUVs(RuntimeSurfaceGeometryModule_Base.AmbientDeltaUVChannel, SurfaceUVs);
+                    if (SurfaceUVs.Count == vertexCount)
+                    {
+                        MergedUV4s.AddRange(SurfaceUVs);
+                    }
+                    else
+                    {
+                        for (var i = 0; i < vertexCount; i++)
+                        {
+                            MergedUV4s.Add(Vector4.zero);
+                        }
+                    }
+
                     dynamicMesh.GetColors(SurfaceColors);
                     MergedColors.AddRange(SurfaceColors);
                 }
@@ -366,6 +380,7 @@ namespace ForgePlus.ApplicationGeneral
                 }
 
                 builtMesh.SetUVs(channel: 3, uvs: MergedUV3s);
+                builtMesh.SetUVs(channel: RuntimeSurfaceGeometryModule_Base.AmbientDeltaUVChannel, uvs: MergedUV4s);
                 builtMesh.SetColors(MergedColors);
 
                 MergedVertices.Clear();
@@ -376,6 +391,7 @@ namespace ForgePlus.ApplicationGeneral
                 MergedUV1s.Clear();
                 MergedUV2s.Clear();
                 MergedUV3s.Clear();
+                MergedUV4s.Clear();
                 MergedColors.Clear();
 
                 return builtMesh;
@@ -438,6 +454,7 @@ namespace ForgePlus.ApplicationGeneral
         private static readonly List<Vector4> MergedUV1s = new List<Vector4>();
         private static readonly List<Vector4> MergedUV2s = new List<Vector4>();
         private static readonly List<Vector4> MergedUV3s = new List<Vector4>();
+        private static readonly List<Vector4> MergedUV4s = new List<Vector4>();
         private static readonly List<Color> MergedColors = new List<Color>();
 
         public static bool SeparateLights;
