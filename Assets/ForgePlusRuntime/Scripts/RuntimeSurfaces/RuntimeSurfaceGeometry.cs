@@ -115,6 +115,14 @@ namespace RuntimeCore.Entities.Geometry
             });
         }
 
+        public void ApplyAmbientDelta(bool rebatchImmediately = true)
+        {
+            if (geometryModule is RuntimeSurfaceGeometryModule_Side sideModule)
+            {
+                ApplyChange(rebatchImmediately, () => sideModule.ApplyAmbientDelta());
+            }
+        }
+
         public void ApplyMedia(bool rebatchImmediately = true)
         {
             if (geometryModule is RuntimeSurfaceGeometryModule_Polygon &&

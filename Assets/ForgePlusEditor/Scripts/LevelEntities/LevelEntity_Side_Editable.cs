@@ -384,6 +384,26 @@ namespace RuntimeCore.Entities.Geometry
             LineFlagsEditing.UpdateForSide(ParentLevel.Level, NativeObject);
         }
 
+        // Every section's surface is lit with the side's ambient delta
+        public void SetAmbientDelta(int ambientDelta)
+        {
+            if (ambientDelta == NativeObject.ambient_delta)
+            {
+                // Ambient delta is not different, so exit
+                return;
+            }
+
+            NativeObject.ambient_delta = ambientDelta;
+
+            foreach (var surface in new[] { TopSurface, MiddleSurface, BottomSurface })
+            {
+                if (surface)
+                {
+                    surface.ApplyAmbientDelta();
+                }
+            }
+        }
+
         public void SetLight(DataSources dataSource, short lightIndex)
         {
             switch (dataSource)

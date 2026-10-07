@@ -66,7 +66,7 @@ namespace ForgePlus.Inspection
 
                 if (delta != Side.ambient_delta)
                 {
-                    Edit(side => side.NativeObject.ambient_delta = delta);
+                    Edit(side => side.SetAmbientDelta(delta));
                 }
                 else
                 {

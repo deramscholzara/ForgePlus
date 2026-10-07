@@ -183,6 +183,8 @@ namespace RuntimeCore.Entities.Geometry
                 ApplyBatchKeyMaterial(innerLayer: false);
             }
 
+            ApplyAmbientDelta();
+
             ApplyRendererMaterials();
 
             ApplyInteractiveSurface();
@@ -553,6 +555,23 @@ namespace RuntimeCore.Entities.Geometry
             }
 
             BatchKey = modifiedBatchKey;
+        }
+
+        // Applies to both layers of a layered transparent side. Aleph One pins the lit result to between dark and full
+        // (render.c: render_node_side), so a delta past full light either way is clamped here.
+        public void ApplyAmbientDelta()
+        {
+            var ambientDelta = sideEntity.NativeObject == null ?
+                               0f :
+                               Mathf.Clamp((float)sideEntity.NativeObject.ambient_delta / cstypes.FIXED_ONE, -1f, 1f);
+
+            var uv4 = ScratchUVs;
+            for (var i = 0; i < uv4.Length; i++)
+            {
+                uv4[i] = new Vector4(ambientDelta, 0f, 0f, 0f);
+            }
+
+            SurfaceMesh.SetUVs(AmbientDeltaUVChannel, uv4);
         }
 
         public override void ApplyMedia()

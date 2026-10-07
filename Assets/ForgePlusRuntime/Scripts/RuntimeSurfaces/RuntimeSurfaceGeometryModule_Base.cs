@@ -12,6 +12,10 @@ namespace RuntimeCore.Entities.Geometry
         // zw for a layered side's outer layer; x is 1 for static, y is the texture's scale
         public static readonly Vector2 DefaultTransferModeEffects = new Vector2(0f, 1f);
 
+        // UV4.x holds the side's ambient delta, from -1 (full dark) to +1 (full light), which offsets the light intensity
+        // of every layer; yzw are unused. Surfaces without it (such as polygons) are treated as having no delta.
+        public const int AmbientDeltaUVChannel = 4;
+
         protected int lastTextureIndex;
         protected int lastLightIndex;
 
