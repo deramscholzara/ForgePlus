@@ -96,6 +96,13 @@
     flex-direction: row;
     height: var(--fp-short-control-height);
     background-color: var(--fp-terminal-black);
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+/* Clicking one applies it to the group's text being edited */
+.fp-terminal-style:hover {
+    border-color: var(--fp-focus);
 }
 
 .fp-terminal-style__key {
@@ -125,4 +132,103 @@
     width: 20%;
     height: var(--fp-short-control-height);
     padding: 0 2.5px 5px 2.5px;
+}
+
+/* Where a dragged group's number would go */
+.fp-index-list__item--dragged {
+    opacity: 0.4;
+}
+
+.fp-index-list__insertion-marker {
+    position: absolute;
+    width: 3px;
+    background-color: var(--fp-focus);
+}
+
+/* Adding and removing a terminal's groups */
+.fp-terminal-group-actions {
+    flex-direction: row;
+    margin: 0 0 2px 0;
+}
+
+.fp-terminal-group-actions__action {
+    flex-grow: 1;
+    flex-basis: 0;
+    margin: 0 2.5px;
+}
+
+/* A group's text: a block of lines, as terminal text is */
+.fp-terminal-text .fp-inspector-text-field {
+    min-height: 160px;
+    max-height: 400px;
+}
+
+.fp-terminal-text .fp-inspector-text-field > .unity-base-text-field__input {
+    flex-grow: 1;
+    -unity-text-align: upper-left;
+}
+
+/* Wrapped at the field's width (which also makes its scrolling vertical only) */
+.fp-terminal-text .fp-inspector-text-field {
+    white-space: normal;
+}
+
+/* A bar along a group's number, colored by what the group is for (TerminalRules.GroupKind) */
+.fp-terminal-group-kind {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 4px;
+}
+
+.fp-terminal-group-kind--section-start {
+    background-color: rgb(0, 200, 60);
+}
+
+.fp-terminal-group-kind--log {
+    background-color: rgb(120, 170, 255);
+}
+
+.fp-terminal-group-kind--body {
+    background-color: rgb(0, 215, 215);
+}
+
+.fp-terminal-group-kind--action {
+    background-color: rgb(240, 210, 0);
+}
+
+.fp-terminal-group-kind--ending {
+    background-color: rgb(225, 40, 40);
+}
+
+.fp-terminal-group-kind--stranding {
+    background-color: rgb(120, 120, 120);
+}
+
+/* Buttons under a group's text that apply a face or color to its selected text */
+.fp-terminal-style-buttons {
+    flex-direction: row;
+    margin: 4px 0 0 0;
+}
+
+.fp-terminal-style-button {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: var(--fp-short-control-height);
+    margin: 0 1px;
+    padding: 0;
+    font-size: 12px;
+}
+
+/* Each color's number, in the color, on terminal black */
+.fp-terminal-style-button--color,
+.fp-terminal-style-button--color:hover {
+    background-color: var(--fp-terminal-black);
+    -unity-font-style: bold;
+}
+
+.fp-terminal-style-button--color:hover {
+    border-width: 1px;
+    border-color: var(--fp-focus);
 }

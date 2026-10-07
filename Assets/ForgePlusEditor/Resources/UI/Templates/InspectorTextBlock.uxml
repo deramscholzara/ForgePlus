@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- Text to read (such as a script), selectable for copying; an instance is named after the inspector property it shows -->
+    <ui:VisualElement class="fp-inspector-text-block fp-template">
+        <ui:Label name="value" text="" class="fp-inspector-value fp-inspector-text-block__text" />
+    </ui:VisualElement>
+</ui:UXML>

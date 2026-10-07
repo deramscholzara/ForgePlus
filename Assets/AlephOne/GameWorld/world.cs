@@ -1,6 +1,8 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/world.h, world.cpp (the distance functions)
 //
-// Not ported: trig tables, random numbers, and the point transforms of the running game.
+// Not ported: trig tables (arctangent is computed instead), random numbers, and the point transforms of the running
+// game.
+using System;
 using static AlephOne.cstypes;
 using static AlephOne.FilmProfileGlobals;
 
@@ -48,6 +50,16 @@ namespace AlephOne
     {
         public short i, j;
         public short k;
+    }
+
+    public struct world_location3d
+    {
+        public world_point3d point;
+        public short polygon_index;
+
+        public short yaw, pitch; // angle
+
+        public world_vector3d velocity;
     }
 
     public static class world
@@ -156,6 +168,24 @@ namespace AlephOne
 
             if (x > r) r += 1;
             return (int) r;
+        }
+
+        public static short distance3d(world_point3d p0, world_point3d p1)
+        {
+            int dx = (int) p0.x - p1.x;
+            int dy = (int) p0.y - p1.y;
+            int dz = (int) p0.z - p1.z;
+            long dist_squared = 1L * dx * dx + 1L * dy * dy + 1L * dz * dz; // [0, ~2^33.6]
+            return dist_squared < 1L * INT16_MAX * INT16_MAX ? (short) isqrt((uint) dist_squared) : INT16_MAX;
+        }
+
+        // ForgePlus: the angle of (x, y), computed with Math.Atan2 rather than the trig tables (m2_arctangent and
+        // a1_arctangent, which aren't ported), so it can differ from them by an angle unit
+        public static short arctangent(int x, int y)
+        {
+            if (x == 0 && y == 0) return 0;
+
+            return NORMALIZE_ANGLE((int) Math.Round(Math.Atan2(y, x) * NUMBER_OF_ANGLES / (2 * Math.PI)));
         }
     }
 }

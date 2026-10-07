@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ForgePlus.Localization;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
@@ -28,6 +29,9 @@ namespace ForgePlus.UI
             Root.AddToClassList("fp-panel");
             Root.IgnoreLayoutPicking();
             parent.Add(Root);
+
+            // Before the panel's own setup, which may show text of its own in place of the layout's
+            Strings.Localize(Root);
 
             OnLoaded();
         }

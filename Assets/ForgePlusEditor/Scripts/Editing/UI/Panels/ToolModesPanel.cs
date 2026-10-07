@@ -1,4 +1,5 @@
 ﻿using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
@@ -61,11 +62,11 @@ namespace ForgePlus.UI
             switch (mode)
             {
                 case ModeManager.SecondaryModes.Painting:
-                    return "Paint";
+                    return Strings.Get(Strings.Common, "ToolModes.Paint");
                 case ModeManager.SecondaryModes.Editing:
-                    return "Edit";
+                    return Strings.Get(Strings.Common, "ToolModes.Edit");
                 default:
-                    return "Select";
+                    return Strings.Get(Strings.Common, "ToolModes.Select");
             }
         }
     }

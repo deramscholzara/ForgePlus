@@ -1089,7 +1089,7 @@ namespace AlephOne
             // short of drastic changes in how collection indices are specified (a bigger structure
             // than shape_descriptor, for example).
             collection_header header = ((uint) collection_index < MAXIMUM_COLLECTIONS) ? collection_headers[collection_index] : null;
-            vassert(header != null, string.Format("Collection index out of range: {0}", collection_index));
+            vassert(header != null, "Collection index out of range: {0}", collection_index);
 
             return header;
         }

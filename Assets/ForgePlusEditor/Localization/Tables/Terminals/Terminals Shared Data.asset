@@ -1,0 +1,348 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Terminals Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Terminals
+  m_TableCollectionNameGuid: 40872e691392b094dab2e5da7f36729d
+  m_KeyGenerator:
+    rid: 552786097007231044
+  m_Entries:
+  - m_Id: 2571858755584
+    m_Key: Terminal.Back.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571858755585
+    m_Key: Terminal.Next.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144192
+    m_Key: TerminalDetails.Terminals.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144193
+    m_Key: TerminalDetails.Terminal.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144194
+    m_Key: TerminalDetails.LinesPerPage.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144195
+    m_Key: TerminalDetails.TextIsEncoded.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144196
+    m_Key: TerminalDetails.OnlyForALegacy.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144197
+    m_Key: TerminalDetails.Groups.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144198
+    m_Key: TerminalDetails.GroupType.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144199
+    m_Key: TerminalDetails.Permutation.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144200
+    m_Key: TerminalDetails.Text.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144201
+    m_Key: TerminalDetails.TextStyles.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144202
+    m_Key: TerminalDetails.GroupFlags.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144203
+    m_Key: TerminalDetails.DrawObjectOnRight.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144204
+    m_Key: TerminalDetails.CenterObject.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571867144205
+    m_Key: TerminalDetails.IsMarathon1.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571875532800
+    m_Key: TerminalStyles.TextStyles.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571875532801
+    m_Key: TerminalStyles.Faces.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2571875532802
+    m_Key: TerminalStyles.Colors.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229056
+    m_Key: Terminals.Note.Marathon1Logon
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229057
+    m_Key: Terminals.Missing.Picture
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229058
+    m_Key: Terminals.Missing.Checkpoint
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229059
+    m_Key: Terminals.Group.Unfinished.Description
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229060
+    m_Key: Terminals.Group.Success.Description
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229061
+    m_Key: Terminals.Group.Failure.Description
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229062
+    m_Key: Terminals.Group.End.Description
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229063
+    m_Key: Terminals.Group.InterlevelTeleport.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229064
+    m_Key: Terminals.Group.IntralevelTeleport.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229065
+    m_Key: Terminals.Group.Sound.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229066
+    m_Key: Terminals.Group.Tag.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229067
+    m_Key: Terminals.Group.Movie.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229068
+    m_Key: Terminals.Group.Track.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229069
+    m_Key: Terminals.Group.Camera.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229070
+    m_Key: Terminals.Group.Default.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229071
+    m_Key: Terminals.Styles.Plain
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229072
+    m_Key: Terminals.Styles.Bold
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229073
+    m_Key: Terminals.Styles.Italic
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229074
+    m_Key: Terminals.Styles.Underline
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229075
+    m_Key: Terminals.Styles.Color
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229076
+    m_Key: Terminals.Text.Empty
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229077
+    m_Key: Terminals.TextStyles.Change
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229078
+    m_Key: Terminals.TextStyles.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229079
+    m_Key: Terminals.PageCaption
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229080
+    m_Key: Terminals.PageCaption.WithPart
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229081
+    m_Key: Terminals.TextStyles.Face.Plain
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229082
+    m_Key: Terminals.TextStyles.Face.Bold
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229083
+    m_Key: Terminals.TextStyles.Face.Italic
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6138141229084
+    m_Key: Terminals.TextStyles.Face.Underline
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354432
+    m_Key: Permutation.Group.Unused
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354433
+    m_Key: Permutation.Group.Logon
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354434
+    m_Key: Permutation.Group.Logoff
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354435
+    m_Key: Permutation.Group.Pict
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354436
+    m_Key: Permutation.Group.InterlevelTeleport
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354437
+    m_Key: Permutation.Group.IntralevelTeleport
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354438
+    m_Key: Permutation.Group.Checkpoint
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354439
+    m_Key: Permutation.Group.Sound
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354440
+    m_Key: Permutation.Group.Static
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354441
+    m_Key: Permutation.Group.Tag
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354442
+    m_Key: Permutation.Group.Movie
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329901038354443
+    m_Key: Permutation.Group.Track
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434293691367424
+    m_Key: TerminalDetails.AddGroup.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434293703950336
+    m_Key: TerminalDetails.RemoveGroup.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434293703950337
+    m_Key: TerminalDetails.ReorderGroups.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1434293703950338
+    m_Key: TerminalDetails.TextStyles.Note
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231044
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928706208

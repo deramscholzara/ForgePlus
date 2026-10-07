@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <!-- The map file's inspector (added by the map panel) -->
+    <ui:VisualElement class="fp-box fp-inspector-column">
+        <ui:Instance template="ScrollArea" name="inspectors" class="fp-grow" />
+    </ui:VisualElement>
+</ui:UXML>

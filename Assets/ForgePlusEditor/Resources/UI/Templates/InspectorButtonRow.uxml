@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A button in a row's value area (looking like a dropdown), which its inspector sets up (such as to open a list) -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area">
+            <ui:Button name="value" text="" class="fp-inspector-row-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

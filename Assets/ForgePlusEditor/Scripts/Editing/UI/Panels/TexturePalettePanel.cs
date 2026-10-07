@@ -1,6 +1,4 @@
-﻿using ForgePlus.Extensions;
-using ForgePlus.Palette;
-using RuntimeCore.Materials;
+﻿using ForgePlus.Palette;
 using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
@@ -31,7 +29,7 @@ namespace ForgePlus.UI
 
         protected override bool Shows(PaletteManager.Swatch swatch)
         {
-            return swatch.Texture;
+            return swatch.Kind == PaletteManager.SwatchKinds.Texture;
         }
 
         protected override void FillSwatch(TemplateContainer instance, PaletteManager.Swatch swatch)
@@ -49,9 +47,7 @@ namespace ForgePlus.UI
                 nextIsRight = !nextIsRight;
             }
 
-            instance.Q<Label>("label").text = $"C: {swatch.ShapeDescriptor.GetCollection()} B: {swatch.ShapeDescriptor.GetShape()}";
-            instance.Q<Image>("preview").image = swatch.Texture;
-            instance.Q("in-use").style.display = MaterialGeneration_Geometry.GetTextureIsInUse(swatch.ShapeDescriptor) ? DisplayStyle.Flex : DisplayStyle.None;
+            Swatches.FillTexture(instance, swatch.ShapeDescriptor, swatch.Texture);
         }
     }
 }

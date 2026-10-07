@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
+    <!-- Opens and closes the Errors panel, and flashes while it's closed and the level has errors -->
+    <ui:VisualElement class="fp-errors-toggle" picking-mode="Ignore">
+        <ui:Instance template="Toggle" name="errors" class="fp-errors-toggle__toggle fp-text-20">
+            <ui:AttributeOverrides element-name="control" text="!" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Toggle name="control" class="fp-toggle fp-toggle--wide-short fp-swatch fp-template">
+        <ui:Label name="index" text="00" picking-mode="Ignore" class="fp-swatch__content fp-swatch__index" />
+    </ui:Toggle>
+</ui:UXML>

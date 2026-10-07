@@ -3,18 +3,18 @@
     <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
     <ui:VisualElement class="fp-manipulation" picking-mode="Ignore">
         <ui:Instance template="Button" name="frame-selected" class="fp-manipulation__frame">
-            <ui:AttributeOverrides element-name="control" text="Frame Selected" />
+            <ui:AttributeOverrides element-name="control" text="@Common/Manipulation.FrameSelected.Control.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-separator fp-separator--vertical" />
         <ui:Instance template="Toggle" name="lock-x" class="fp-manipulation__axis fp-text-20">
-            <ui:AttributeOverrides element-name="control" text="X" />
+            <ui:AttributeOverrides element-name="control" text="@Common/Manipulation.LockX.Control.Text" />
         </ui:Instance>
         <ui:Instance template="Toggle" name="lock-y" class="fp-manipulation__axis fp-text-20">
-            <ui:AttributeOverrides element-name="control" text="Y" />
+            <ui:AttributeOverrides element-name="control" text="@Common/Manipulation.LockY.Control.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-separator fp-separator--vertical" />
         <ui:Instance template="Toggle" name="snap" class="fp-manipulation__snap fp-text-16 fp-manipulation--last">
-            <ui:AttributeOverrides element-name="control" text="Grid Snap" />
+            <ui:AttributeOverrides element-name="control" text="@Common/Manipulation.Snap.Control.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

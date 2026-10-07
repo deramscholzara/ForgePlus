@@ -1,7 +1,7 @@
 # AlephOne data layer
 
 A C# port of the parts of the [Aleph One](https://github.com/Aleph-One-Marathon/alephone) engine
-that read and write Marathon data files (wads, maps, shapes, physics). Aleph One is the source of
+that read and write Marathon data files (wads, maps, shapes, physics, and the definitions in sounds files). Aleph One is the source of
 truth: this code mirrors its source as literally as C# allows, so it can be compared side by side
 with the original and kept in sync with it.
 

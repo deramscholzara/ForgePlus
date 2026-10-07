@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <!-- A read-only flag; an instance is named after the inspector property it shows -->
+    <!-- A flag; an instance is named after the inspector property it edits, and is grayed out while that property can't be
+         set, or while its Is<Name>Editable property is false (such as when an option it depends on has made it irrelevant) -->
     <ui:Toggle name="flag" text="Flag" class="fp-toggle fp-toggle--flag fp-inspector-flag fp-template" />
 </ui:UXML>

@@ -3,113 +3,204 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
-    <!-- Bound to Inspector_Level -->
+    <ui:Template name="TextFieldRow" src="../Templates/InspectorTextFieldRow.uxml" />
+    <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="TextBlock" src="../Templates/InspectorTextBlock.uxml" />
+    <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
+    <!-- Bound to Inspector_Level, which shows the tab (tab-*) chosen in the tabs -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Level Info" />
+            <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.Level.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Name" class="fp-inspector-row--vertical">
-            <ui:AttributeOverrides element-name="label" text="Name:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="Environment">
-            <ui:AttributeOverrides element-name="label" text="Environment:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="Landscape">
-            <ui:AttributeOverrides element-name="label" text="Landscape:" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Game Type Flags" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="SinglePlayer">
-            <ui:AttributeOverrides element-name="flag" text="Single Player" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Cooperative">
-            <ui:AttributeOverrides element-name="flag" text="Cooperative" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-separator fp-separator--horizontal" />
-        <ui:Instance template="Flag" name="Carnage">
-            <ui:AttributeOverrides element-name="flag" text="Carnage" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="KillTheOneWithTheBall">
-            <ui:AttributeOverrides element-name="flag" text="Kill the One w/the Ball" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="MonarchOfTheHill">
-            <ui:AttributeOverrides element-name="flag" text="Monarch of the Hill" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Defense">
-            <ui:AttributeOverrides element-name="flag" text="Defense" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Rugby">
-            <ui:AttributeOverrides element-name="flag" text="Rugby" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="CaptureTheFlag">
-            <ui:AttributeOverrides element-name="flag" text="Capture the Flag" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Environment Flags" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Vacuum">
-            <ui:AttributeOverrides element-name="flag" text="Vacuum" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Magnetic">
-            <ui:AttributeOverrides element-name="flag" text="Magnetic" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Rebellion">
-            <ui:AttributeOverrides element-name="flag" text="Rebellion" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="LowGravity">
-            <ui:AttributeOverrides element-name="flag" text="Low Gravity" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Extermination">
-            <ui:AttributeOverrides element-name="flag" text="Extermination" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Exploration">
-            <ui:AttributeOverrides element-name="flag" text="Exploration" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Retrieval">
-            <ui:AttributeOverrides element-name="flag" text="Retrieval" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Repair">
-            <ui:AttributeOverrides element-name="flag" text="Repair" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="Rescue">
-            <ui:AttributeOverrides element-name="flag" text="Rescue" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="M1 Environment Flags" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="TerminalPause">
-            <ui:AttributeOverrides element-name="flag" text="Terminal Pause" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1Rebellion">
-            <ui:AttributeOverrides element-name="flag" text="Rebellion" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1Exploration">
-            <ui:AttributeOverrides element-name="flag" text="Exploration" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1Repair">
-            <ui:AttributeOverrides element-name="flag" text="Repair" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1Rescue">
-            <ui:AttributeOverrides element-name="flag" text="Rescue" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1Glue">
-            <ui:AttributeOverrides element-name="flag" text="Glue" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1Ouch">
-            <ui:AttributeOverrides element-name="flag" text="Ouch" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1HasMusic">
-            <ui:AttributeOverrides element-name="flag" text="Has Music" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1WeaponsStyle">
-            <ui:AttributeOverrides element-name="flag" text="Weapons Style" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="M1ActivationRange">
-            <ui:AttributeOverrides element-name="flag" text="Activation Range" />
-        </ui:Instance>
+        <ui:RadioButtonGroup name="tabs" class="fp-radio-group fp-radio-row fp-level-tabs">
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+                <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.Info.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+                <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.Flags.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+                <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.ChapterScreen.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab">
+                <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.Sounds.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="@Level/Inspector.Level.AlephOneOnly.Tooltip">
+                <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.ShapePatches.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="@Level/Inspector.Level.AlephOneOnly.Tooltip">
+                <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.SoundPatches.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="@Level/Inspector.Level.AlephOneOnly.Tooltip">
+                <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.MML.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-level-tabs__tab fp-aleph-one-only" tooltip="@Level/Inspector.Level.AlephOneOnly.Tooltip">
+                <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.Lua.Control.Text" />
+            </ui:Instance>
+        </ui:RadioButtonGroup>
+        <ui:VisualElement name="tab-info">
+            <ui:Instance template="TextFieldRow" name="Name" class="fp-inspector-row--vertical">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.Name.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="DropdownRow" name="Environment">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.Environment.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="DropdownRow" name="Landscape">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.Landscape.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PhysicsModel">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.PhysicsModel.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="EmbeddedPhysics" tooltip="@Level/Inspector.Level.EmbeddedPhysics.Tooltip">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.EmbeddedPhysics.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="PhysicsInUse">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.PhysicsInUse.Label.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:VisualElement name="tab-flags">
+            <ui:VisualElement class="fp-space" />
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.GameTypes.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="SinglePlayer">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.SinglePlayer.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Cooperative">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Cooperative.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Carnage">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Carnage.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="KillTheOneWithTheBall">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.KillTheOneWithTheBall.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="MonarchOfTheHill">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.MonarchOfTheHill.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Defense">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Defense.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Rugby">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Rugby.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="CaptureTheFlag">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.CaptureTheFlag.Flag.Text" />
+            </ui:Instance>
+            <ui:VisualElement class="fp-space" />
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.Environment.Label.Text2" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Vacuum">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Vacuum.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Magnetic">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Magnetic.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Rebellion">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Rebellion.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="LowGravity">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.LowGravity.Flag.Text" />
+            </ui:Instance>
+            <ui:VisualElement class="fp-space" />
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.Mission.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Extermination">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Extermination.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Exploration">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Exploration.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Retrieval">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Retrieval.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Repair">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Repair.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="Rescue">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.Rescue.Flag.Text" />
+            </ui:Instance>
+            <ui:VisualElement class="fp-space" />
+            <ui:Instance template="Subheader" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.Marathon1AlephOne.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="TerminalPause" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.TerminalPause.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1Rebellion" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1Rebellion.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1Exploration" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1Exploration.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1Repair" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1Repair.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1Rescue" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1Rescue.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1Glue" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1Glue.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1Ouch" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1Ouch.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1HasMusic" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1HasMusic.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1WeaponsStyle" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1WeaponsStyle.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="M1ActivationRange" class="fp-aleph-one-only">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.M1ActivationRange.Flag.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:VisualElement name="tab-chapter-screen">
+            <ui:Label text="@Level/Inspector.Level.ThePictureShownAs.Text" class="fp-inspector-note" />
+            <ui:Instance template="Flag" name="ShowChapterScreen" tooltip="@Level/Inspector.Level.ShowChapterScreen.Tooltip">
+                <ui:AttributeOverrides element-name="flag" text="@Level/Inspector.Level.ShowChapterScreen.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="ChapterScreenPicture">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.ChapterScreenPicture.Label.Text" />
+            </ui:Instance>
+            <ui:VisualElement name="chapter-screen-preview" class="fp-chapter-screen" />
+        </ui:VisualElement>
+        <ui:VisualElement name="tab-sounds">
+            <ui:Label text="@Level/Inspector.Level.TheSoundsTheLevel.Text" class="fp-inspector-note" />
+            <ui:Instance template="Row" name="AmbientSoundCount">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.AmbientSoundCount.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="Row" name="RandomSoundCount">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.RandomSoundCount.Label.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:VisualElement name="tab-shape-patches">
+            <ui:Label text="@Level/Inspector.Level.AlephOneOnlyChanges.Text" class="fp-inspector-note fp-aleph-one-only" />
+            <ui:Instance template="Row" name="ShapePatchSize">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.ShapePatchSize.Label.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:VisualElement name="tab-sound-patches">
+            <ui:Label text="@Level/Inspector.Level.AlephOneOnlyChanges.Text2" class="fp-inspector-note fp-aleph-one-only" />
+            <ui:Instance template="Row" name="SoundPatchSize">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.SoundPatchSize.Label.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:VisualElement name="tab-mml">
+            <ui:Label text="@Level/Inspector.Level.AlephOneOnlyMML.Text" class="fp-inspector-note fp-aleph-one-only" />
+            <ui:Instance template="Row" name="MmlSize">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.MmlSize.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="TextBlock" name="MmlText" />
+        </ui:VisualElement>
+        <ui:VisualElement name="tab-lua">
+            <ui:Label text="@Level/Inspector.Level.AlephOneOnlyThe.Text" class="fp-inspector-note fp-aleph-one-only" />
+            <ui:Instance template="Row" name="LuaSize">
+                <ui:AttributeOverrides element-name="label" text="@Level/Inspector.Level.LuaSize.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="TextBlock" name="LuaText" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

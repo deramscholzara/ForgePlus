@@ -1,10 +1,14 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
-    <!-- The palette's swatches (added by its panel) -->
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <!-- The palette's swatches (added by its panel), under its header if it has one -->
     <ui:VisualElement class="fp-palette" picking-mode="Ignore">
         <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
         <ui:VisualElement class="fp-box fp-palette__box">
             <ui:Instance template="ScrollArea" name="swatches" class="fp-grow">
+                <ui:VisualElement name="header" class="fp-inspector">
+                    <ui:Instance template="Header" />
+                </ui:VisualElement>
                 <ui:VisualElement name="swatches-container" class="fp-palette__swatches" />
             </ui:Instance>
         </ui:VisualElement>

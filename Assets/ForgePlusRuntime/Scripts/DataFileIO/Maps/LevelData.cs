@@ -70,12 +70,18 @@ namespace ForgePlus.DataFileIO
             level = null;
         }
 
-        public void SaveAsSingleLevelFile(string savePath)
+        public void SaveAsSingleLevelFile(string savePath, bool withPhysics, bool withResources)
         {
-            mapsFile.SaveAsSingleLevelFile(level, savePath);
+            mapsFile.SaveAsSingleLevelFile(level, LevelIndex, savePath, withPhysics, withResources);
 
             // The saved file holds only this level, and it's now the loaded map file
             LevelIndex = 0;
+        }
+
+        // Saves every level, with this one in its place
+        public void SaveMerged(string savePath, bool keepChecksum)
+        {
+            mapsFile.SaveMerged(level, LevelIndex, savePath, keepChecksum);
         }
 
         public void OpenLevel()
@@ -128,6 +134,9 @@ namespace ForgePlus.DataFileIO
 
             UnityEngine.Object.Destroy(runtimeLevel.gameObject);
 
+            // Destroy waits for the end of the frame, so the level could otherwise still seem open to OpenLevel
+            runtimeLevel = null;
+
             PhysicsLoading.Instance.ClearLevel();
         }
 
@@ -141,13 +150,14 @@ namespace ForgePlus.DataFileIO
 
             var initializeLevelStartTime = DateTime.Now;
 
-            runtimeLevel = new GameObject($"Level ({LevelName})").AddComponent<LevelEntity_Level>();
+            runtimeLevel = new GameObject(LevelEntity_Level.GameObjectName(LevelName)).AddComponent<LevelEntity_Level>();
             runtimeLevel.Level = level;
             runtimeLevel.Index = (short) LevelIndex;
 
             runtimeLevel.Polygons = new Dictionary<short, LevelEntity_Polygon>();
             runtimeLevel.Lines = new Dictionary<short, LevelEntity_Line>();
             runtimeLevel.Sides = new Dictionary<short, LevelEntity_Side>();
+            runtimeLevel.PlaceholderSides = new List<LevelEntity_Side>();
             runtimeLevel.Lights = new Dictionary<short, LevelEntity_Light>();
             runtimeLevel.Medias = new Dictionary<short, LevelEntity_Media>();
             runtimeLevel.CeilingPlatforms = new Dictionary<short, LevelEntity_Platform>();
@@ -307,7 +317,7 @@ namespace ForgePlus.DataFileIO
             {
                 var mapObject = level.SavedObjectList[objectIndex];
 
-                var mapObjectRootGO = new GameObject($"MapObject: {mapObject.GetTypeName()} ({objectIndex})");
+                var mapObjectRootGO = new GameObject(LevelEntity_MapObject.GameObjectName(mapObject, objectIndex));
                 mapObjectRootGO.transform.SetParent(mapObjectsGroupGO.transform);
 
                 var runtimeMapObject = mapObjectRootGO.AddComponent<LevelEntity_MapObject>();
@@ -331,15 +341,13 @@ namespace ForgePlus.DataFileIO
             for (var i = 0; i < level.MapAnnotationList.Count; i++)
             {
                 var annotation = level.MapAnnotationList[i];
-                var annotationInstance = UnityEngine.Object.Instantiate(LevelEntity_Annotation.Prefab);
+                var annotationInstance = new GameObject($"Annotation ({i})").AddComponent<LevelEntity_Annotation>();
                 annotationInstance.NativeIndex = (short) i;
                 annotationInstance.NativeObject = annotation;
                 annotationInstance.ParentLevel = runtimeLevel;
 
                 annotationInstance.RefreshLabel();
-
-                var positionalHeight = (runtimeLevel.Polygons[annotation.polygon_index].NativeObject.floor_height + runtimeLevel.Polygons[annotation.polygon_index].NativeObject.ceiling_height) / 2f / GeometryUtilities.WorldUnitIncrementsPerMeter;
-                annotationInstance.transform.position = new Vector3(annotation.location.x / GeometryUtilities.WorldUnitIncrementsPerMeter, positionalHeight, -annotation.location.y / GeometryUtilities.WorldUnitIncrementsPerMeter);
+                annotationInstance.RefreshPosition();
 
                 annotationInstance.transform.SetParent(annotationsGroupGO.transform, worldPositionStays: true);
 

@@ -1,0 +1,46 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="DropdownPlayRow" src="../Templates/InspectorDropdownPlayRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <ui:Template name="IntegerRangeRow" src="../Templates/InspectorIntegerRangeRow.uxml" />
+    <ui:Template name="FloatRangeRow" src="../Templates/InspectorFloatRangeRow.uxml" />
+    <ui:Template name="ButtonRow" src="../Templates/InspectorButtonRow.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- Bound to Inspector_RandomSound -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header" name="header">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Header.Label.Text" />
+        </ui:Instance>
+        <ui:Label name="aleph-one-note" text="@Sounds/Inspector.RandomSound.AlephOneNote.Text" class="fp-inspector-note fp-aleph-one-only" />
+        <ui:Label text="@Sounds/Inspector.RandomSound.PlayedNowAndThen.Text" class="fp-inspector-note" />
+        <ui:Instance template="Row" name="Index">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Index.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="@Sounds/Inspector.RandomSound.Sound.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Sound.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="IntegerRangeRow" name="Volume" tooltip="@Sounds/Inspector.RandomSound.Volume.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Volume.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="IntegerRangeRow" name="Period" tooltip="@Sounds/Inspector.RandomSound.Period.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Period.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="NonDirectional">
+            <ui:AttributeOverrides element-name="flag" text="@Sounds/Inspector.RandomSound.NonDirectional.Flag.Text" />
+        </ui:Instance>
+        <ui:Instance template="IntegerRangeRow" name="Direction" tooltip="@Sounds/Inspector.RandomSound.Direction.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Direction.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="FloatRangeRow" name="Pitch" tooltip="@Sounds/Inspector.RandomSound.Pitch.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Pitch.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="ButtonRow" name="PlayedIn" tooltip="@Sounds/Inspector.RandomSound.PlayedIn.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.PlayedIn.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="Button" name="delete" class="fp-inspector-action">
+            <ui:AttributeOverrides element-name="control" text="@Sounds/Inspector.RandomSound.Delete.Control.Text" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

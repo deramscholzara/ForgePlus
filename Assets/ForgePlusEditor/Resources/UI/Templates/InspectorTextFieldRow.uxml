@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A text field; an instance is named after the inspector property it edits, and is grayed out while that property
+         can't be set -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area">
+            <ui:TextField name="value" class="fp-inspector-text-field" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

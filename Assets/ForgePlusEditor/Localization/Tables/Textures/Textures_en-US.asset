@@ -1,0 +1,670 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Textures_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: 1dff2aacbd3eeba43b1e619f4f4fa9fd, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231214
+  - rid: 552786097007231215
+  - rid: 552786097007231216
+  - rid: 552786097007231217
+  - rid: 552786097007231218
+  - rid: 552786097007231219
+  - rid: 552786097007231220
+  - rid: 552786097007231221
+  - rid: 552786097007231222
+  - rid: 552786097007231223
+  - rid: 552786097007231224
+  - rid: 552786097007231225
+  - rid: 552786097007231226
+  - rid: 552786097007231227
+  - rid: 552786097007231228
+  - rid: 552786097007231229
+  - rid: 552786097007231230
+  - rid: 552786097007231231
+  - rid: 552786097007231232
+  - rid: 552786097007231233
+  - rid: 552786097007231234
+  - rid: 552786097007231235
+  - rid: 552786097007231236
+  - rid: 552786097007231237
+  - rid: 552786097007231238
+  - rid: 552786097007231239
+  - rid: 552786097007231240
+  - rid: 552786097007231241
+  - rid: 552786097007231242
+  - rid: 552786097007231243
+  - rid: 552786097007231244
+  - rid: 552786097007231245
+  - rid: 552786097007231246
+  - rid: 552786097007231247
+  - rid: 552786097007231248
+  - rid: 552786097007231249
+  - rid: 552786097007231250
+  - rid: 552786097007231251
+  - rid: 552786097007231252
+  - rid: 552786097007231253
+  - rid: 552786097007231762
+  - rid: 552786097007231763
+  - rid: 552786097007231764
+  - rid: 552786097007231765
+  - rid: 552786097007231766
+  - rid: 552786097007231767
+  - rid: 552786097007231768
+  - rid: 552786097007231769
+  - rid: 552786097007231770
+  - rid: 552786097007231771
+  - rid: 552786097007231772
+  - rid: 552786097007231773
+  - rid: 552786097007231774
+  - rid: 552786097007231775
+  - rid: 552786097007231776
+  - rid: 552786097007231777
+  - rid: 552786097007231778
+  - rid: 552786097007231779
+  - rid: 552786097007231780
+  - rid: 552786097007231781
+  - rid: 552786097007231782
+  - rid: 552786097007231783
+  - rid: 552786097007231784
+  - rid: 552786097007231785
+  - rid: 552786097007231786
+  - rid: 552786097007231787
+  - rid: 552786097007231788
+  - rid: 552786097007231789
+  - rid: 552786097007231790
+  - rid: 552786097007231791
+  - rid: 552786097007231792
+  - rid: 552786097007231793
+  - rid: 552786097007231794
+  - rid: 552786132139770087
+  - rid: 552786132139770088
+  - rid: 552786132139770089
+  - rid: 552786132139770090
+  - rid: 552786132139770091
+  - rid: 552786132139770092
+  - rid: 552786132139770093
+  - rid: 552786204080472155
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231214
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582076080128
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon Textures
+    - rid: 552786097007231215
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582076080129
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231216
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582076080130
+        m_Metadata:
+          m_Items: []
+        m_Value: Floor
+    - rid: 552786097007231217
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582076080131
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Texture:'
+    - rid: 552786097007231218
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582076080132
+        m_Metadata:
+          m_Items: []
+        m_Value: Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.
+    - rid: 552786097007231219
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582076080133
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Bitmap:'
+    - rid: 552786097007231220
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582080274432
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Offset:'
+    - rid: 552786097007231221
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582080274433
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Transfer Mode:'
+    - rid: 552786097007231222
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582080274434
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light:'
+    - rid: 552786097007231223
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582080274435
+        m_Metadata:
+          m_Items: []
+        m_Value: Ceiling
+    - rid: 552786097007231224
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582080274436
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Texture:'
+    - rid: 552786097007231225
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582080274437
+        m_Metadata:
+          m_Items: []
+        m_Value: Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.
+    - rid: 552786097007231226
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582080274438
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Bitmap:'
+    - rid: 552786097007231227
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582084468736
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Offset:'
+    - rid: 552786097007231228
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582084468737
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Transfer Mode:'
+    - rid: 552786097007231229
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582084468738
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light:'
+    - rid: 552786097007231230
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582126411776
+        m_Metadata:
+          m_Items: []
+        m_Value: Side Textures
+    - rid: 552786097007231231
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582126411777
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231232
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582126411778
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231233
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606080
+        m_Metadata:
+          m_Items: []
+        m_Value: Primary Surface
+    - rid: 552786097007231234
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606081
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Texture:'
+    - rid: 552786097007231235
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606082
+        m_Metadata:
+          m_Items: []
+        m_Value: Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.
+    - rid: 552786097007231236
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606083
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Bitmap:'
+    - rid: 552786097007231237
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606084
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Offset:'
+    - rid: 552786097007231238
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606085
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Transfer Mode:'
+    - rid: 552786097007231239
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606086
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light Index:'
+    - rid: 552786097007231240
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606087
+        m_Metadata:
+          m_Items: []
+        m_Value: Secondary Surface
+    - rid: 552786097007231241
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582130606088
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Texture:'
+    - rid: 552786097007231242
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800384
+        m_Metadata:
+          m_Items: []
+        m_Value: Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.
+    - rid: 552786097007231243
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800385
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Bitmap:'
+    - rid: 552786097007231244
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800386
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Offset:'
+    - rid: 552786097007231245
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800387
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Transfer Mode:'
+    - rid: 552786097007231246
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800388
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light Index:'
+    - rid: 552786097007231247
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800389
+        m_Metadata:
+          m_Items: []
+        m_Value: Transparent Surface
+    - rid: 552786097007231248
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800390
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Texture:'
+    - rid: 552786097007231249
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800391
+        m_Metadata:
+          m_Items: []
+        m_Value: Its bitmap in its collection (-1 for none). One the shapes file doesn't have is shown as a grid.
+    - rid: 552786097007231250
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800392
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Bitmap:'
+    - rid: 552786097007231251
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582134800393
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Offset:'
+    - rid: 552786097007231252
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582138994688
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Transfer Mode:'
+    - rid: 552786097007231253
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582138994689
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light Index:'
+    - rid: 552786097007231762
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468162
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1}'
+    - rid: 552786097007231763
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468163
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} (Aleph One only)'
+    - rid: 552786097007231764
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468164
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} (objects only)'
+    - rid: 552786097007231765
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468165
+        m_Metadata:
+          m_Items: []
+        m_Value: Normal
+    - rid: 552786097007231766
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468166
+        m_Metadata:
+          m_Items: []
+        m_Value: Fade Out to Black
+    - rid: 552786097007231767
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468167
+        m_Metadata:
+          m_Items: []
+        m_Value: Invisibility
+    - rid: 552786097007231768
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468168
+        m_Metadata:
+          m_Items: []
+        m_Value: Subtle Invisibility
+    - rid: 552786097007231769
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468169
+        m_Metadata:
+          m_Items: []
+        m_Value: Pulsate
+    - rid: 552786097007231770
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468170
+        m_Metadata:
+          m_Items: []
+        m_Value: Wobble
+    - rid: 552786097007231771
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468171
+        m_Metadata:
+          m_Items: []
+        m_Value: Fast Wobble
+    - rid: 552786097007231772
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468172
+        m_Metadata:
+          m_Items: []
+        m_Value: Static
+    - rid: 552786097007231773
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468173
+        m_Metadata:
+          m_Items: []
+        m_Value: 50% Static
+    - rid: 552786097007231774
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468174
+        m_Metadata:
+          m_Items: []
+        m_Value: Landscape
+    - rid: 552786097007231775
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468175
+        m_Metadata:
+          m_Items: []
+        m_Value: Smear
+    - rid: 552786097007231776
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468176
+        m_Metadata:
+          m_Items: []
+        m_Value: Fade Out Static
+    - rid: 552786097007231777
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468177
+        m_Metadata:
+          m_Items: []
+        m_Value: Pulsating Static
+    - rid: 552786097007231778
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468178
+        m_Metadata:
+          m_Items: []
+        m_Value: Fold In
+    - rid: 552786097007231779
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468179
+        m_Metadata:
+          m_Items: []
+        m_Value: Fold Out
+    - rid: 552786097007231780
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468180
+        m_Metadata:
+          m_Items: []
+        m_Value: Horizontal Slide
+    - rid: 552786097007231781
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468181
+        m_Metadata:
+          m_Items: []
+        m_Value: Fast Horizontal Slide
+    - rid: 552786097007231782
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468182
+        m_Metadata:
+          m_Items: []
+        m_Value: Vertical Slide
+    - rid: 552786097007231783
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468183
+        m_Metadata:
+          m_Items: []
+        m_Value: Fast Vertical Slide
+    - rid: 552786097007231784
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468184
+        m_Metadata:
+          m_Items: []
+        m_Value: Wander
+    - rid: 552786097007231785
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468185
+        m_Metadata:
+          m_Items: []
+        m_Value: Fast Wander
+    - rid: 552786097007231786
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468186
+        m_Metadata:
+          m_Items: []
+        m_Value: Big Landscape
+    - rid: 552786097007231787
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468187
+        m_Metadata:
+          m_Items: []
+        m_Value: Reverse Horizontal Slide
+    - rid: 552786097007231788
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468188
+        m_Metadata:
+          m_Items: []
+        m_Value: Reverse Fast Horizontal Slide
+    - rid: 552786097007231789
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468189
+        m_Metadata:
+          m_Items: []
+        m_Value: Reverse Vertical Slide
+    - rid: 552786097007231790
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468190
+        m_Metadata:
+          m_Items: []
+        m_Value: Reverse Fast Vertical Slide
+    - rid: 552786097007231791
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468191
+        m_Metadata:
+          m_Items: []
+        m_Value: 2x Scale
+    - rid: 552786097007231792
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148421468192
+        m_Metadata:
+          m_Items: []
+        m_Value: 4x Scale
+    - rid: 552786097007231793
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148610211840
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786097007231794
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6148610211841
+        m_Metadata:
+          m_Items: []
+        m_Value: 'C: {0} B: {1}'
+    - rid: 552786132139770087
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514709438464
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Collection:'
+    - rid: 552786132139770088
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021376
+        m_Metadata:
+          m_Items: []
+        m_Value: The shapes collection the texture's bitmap is from. Marathon 2 and Infinity only load the level's walls (from its environment) and its landscape (from its song index), so a texture from any other collection only shows in Aleph One.
+    - rid: 552786132139770089
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021377
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} (level''s walls)'
+    - rid: 552786132139770090
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021378
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} (level''s landscape)'
+    - rid: 552786132139770091
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021379
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} (Aleph One only)'
+    - rid: 552786132139770092
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021380
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} ({1})'
+    - rid: 552786132139770093
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248514722021381
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: Marathon 2 and Infinity only load the level''s collections, {0} and {1}.'
+    - rid: 552786204080472155
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1348305329733632
+        m_Metadata:
+          m_Items: []
+        m_Value: Set by its control panel type and whether it starts on (in Geometry mode), as the game sets it.

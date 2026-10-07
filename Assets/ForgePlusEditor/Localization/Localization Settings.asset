@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19400, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Localization Settings
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.LocalizationSettings
+  m_AvailableLocales:
+  - rid: 552786097007231028
+  m_ProjectLocaleCode: en-US
+  m_ResourceDatabase:
+    rid: 552786097007231025
+  m_StartupSelectors:
+  - rid: 552786097007231026
+  - rid: 552786097007231027
+  m_PreferredLoading: 0
+  m_SmartStringsSettings: {fileID: 0}
+  m_PreloadBehavior: 1
+  m_PreloadTables: []
+  m_DeferInitialization: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231025
+      type: {class: ResourceDatabase, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_AssetProvider:
+          m_Providers:
+          - rid: 552786097007231030
+          - rid: 552786097007231029
+          m_Selected:
+            rid: 552786097007231030
+    - rid: 552786097007231026
+      type: {class: CommandLineLocaleSelector, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CommandLineArgument: -language=
+    - rid: 552786097007231027
+      type: {class: SystemLocaleSelector, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data: 
+    - rid: 552786097007231028
+      type: {class: Locale, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_Code: en-US
+        m_LocaleName: English (United States)
+        m_FallbackCode: 
+        m_Enabled: 1
+    - rid: 552786097007231029
+      type: {class: ReferencedAssetProvider, ns: Unity.Localization.Providers, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_ByAddress: []
+        m_OwnedAddresses: []
+    - rid: 552786097007231030
+      type: {class: JsonResourceProvider, ns: Unity.Localization.Providers.FileTables, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_Collections:
+        - Guid: cdc9627813db16c4d82ec20004791906
+          Name: Common
+        - Guid: 920d96b35e949f446a2f1219b9456ea0
+          Name: Menu
+        - Guid: 9ba8f798e63950b4597125a87dc732e4
+          Name: Geometry
+        - Guid: 53d90a99b5908804993e31e636e43a74
+          Name: Textures
+        - Guid: a6a000b04aff3a54eab6a85e4e8224a1
+          Name: Lights
+        - Guid: f1fe01ea89eaaa94c9886dd3a13bf4a5
+          Name: Media
+        - Guid: 30600656d5180ed4d9ea21376925ecbb
+          Name: Sounds
+        - Guid: a29638c87540b554a8fe06664bb42fdb
+          Name: Platforms
+        - Guid: 3e941181d13d50948989d12e273ce204
+          Name: Objects
+        - Guid: 3095a629b2a3866459e09fd7731eb86f
+          Name: Annotations
+        - Guid: 015493dcfae4c6247a47b9504677fb5b
+          Name: Level
+        - Guid: 745da985c4962cc4192dbf56ca45a0f3
+          Name: Map
+        - Guid: 40872e691392b094dab2e5da7f36729d
+          Name: Terminals
+        m_OwnedCollections:
+        - cdc9627813db16c4d82ec20004791906
+        - 920d96b35e949f446a2f1219b9456ea0
+        - 9ba8f798e63950b4597125a87dc732e4
+        - 53d90a99b5908804993e31e636e43a74
+        - a6a000b04aff3a54eab6a85e4e8224a1
+        - f1fe01ea89eaaa94c9886dd3a13bf4a5
+        - 30600656d5180ed4d9ea21376925ecbb
+        - a29638c87540b554a8fe06664bb42fdb
+        - 3e941181d13d50948989d12e273ce204
+        - 3095a629b2a3866459e09fd7731eb86f
+        - 015493dcfae4c6247a47b9504677fb5b
+        - 745da985c4962cc4192dbf56ca45a0f3
+        - 40872e691392b094dab2e5da7f36729d
+        m_BakedTables: []
+        m_SubPath: LocalizationTables
+        m_PlayModeSource: 0

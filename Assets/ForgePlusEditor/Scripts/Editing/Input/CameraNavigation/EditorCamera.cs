@@ -87,11 +87,12 @@ namespace ForgePlus.CameraNavigation
             }
         }
 
-        // Frames the level's first player spawn, or polygon 0 if it has no player spawns
+        // Frames the level's first player spawn, or polygon 0 if it has no player spawns (but a level rebuilt after an
+        // edit stays where it's being looked at)
         private void OnLevelOpened(string levelName)
         {
             var level = LevelEntity_Level.Instance;
-            if (!level)
+            if (!level || MapsLoading.Instance.IsRebuildingLevel)
             {
                 return;
             }

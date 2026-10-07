@@ -4,6 +4,7 @@ using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Common;
 using System;
 using System.Threading;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using AlephOne;
 using static AlephOne.platforms;
@@ -11,6 +12,7 @@ using static AlephOne.map;
 
 namespace RuntimeCore.Entities.Geometry
 {
+    [AutoStaticsCleanup]
     public partial class LevelEntity_Platform : LevelEntity_Base, IDestructionPreparable, ISelectable, IInspectable
     {
         public enum LinkedSurfaces
@@ -37,6 +39,10 @@ namespace RuntimeCore.Entities.Geometry
         // TODO: Add this to IInspectable so it must be implemented in all inspectables
         public event Action<LevelEntity_Platform> OnInspectionStateChange;
 
+        // play_platform_sound (platforms.cpp): the platform, sound code, whether it's extending, and whether it's fully
+        // contracted. A split platform's come from its floor only.
+        public static event Action<LevelEntity_Platform, short, bool, bool> OnRuntimeSound;
+
         // TODO: Use this for checking "is active" state for toggling?
         private CancellationTokenSource platformBehaviorCTS;
 
@@ -53,6 +59,13 @@ namespace RuntimeCore.Entities.Geometry
 
         private float remainingStateTime = 0f;
 
+        // An initially active platform starts moving without its starting sound (platforms.cpp: new_platform), as does
+        // one reversing after being obstructed
+        private bool startsMovingSilently;
+
+        // A move that went nowhere stops without its stopping sound
+        private bool lastMoveTraveled;
+
         public float CurrentHeightInWorldUnitIncrements
         {
             get
@@ -66,6 +79,15 @@ namespace RuntimeCore.Entities.Geometry
             get
             {
                 return platformBehaviorCTS != null;
+            }
+        }
+
+        // As PLATFORM_IS_ACTIVE and PLATFORM_IS_MOVING (rather than waiting at either end)
+        public bool IsRuntimeMoving
+        {
+            get
+            {
+                return IsRuntimeActive && (currentState == States.Extending || currentState == States.Contracting);
             }
         }
 
@@ -115,6 +137,8 @@ namespace RuntimeCore.Entities.Geometry
 
         public void BeginRuntimeStyleBehavior()
         {
+            startsMovingSilently = true;
+
             currentState = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? States.Extended : States.Contracted;
 
             currentPosition = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? extendedPosition : contractedPosition;
@@ -131,6 +155,12 @@ namespace RuntimeCore.Entities.Geometry
 
         public void SetRuntimeActive(bool value, bool isRootActivation = true)
         {
+            // Deactivating one that's moving stops it as if obstructed (set_platform_state, in platforms.cpp)
+            if (!value && IsRuntimeMoving)
+            {
+                PlayRuntimeSound(_obstructed_sound);
+            }
+
             if (value)
             {
                 ActivateRuntimeBehavior();
@@ -167,6 +197,10 @@ namespace RuntimeCore.Entities.Geometry
                 if (currentState == States.Extending &&
                     PLATFORM_REVERSES_DIRECTION_WHEN_OBSTRUCTED(NativeObject.static_flags))
                 {
+                    // Whichever part is obstructed plays it, and it reverses without its starting sound
+                    OnRuntimeSound?.Invoke(this, _obstructed_sound, true, false);
+
+                    startsMovingSilently = true;
                     BeginState(States.Contracting, loop: false);
                 }
             }
@@ -242,6 +276,11 @@ namespace RuntimeCore.Entities.Geometry
                             break;
                         }
 
+                        if (lastMoveTraveled)
+                        {
+                            PlayRuntimeSound(_stopping_sound);
+                        }
+
                         if (loop)
                         {
                             currentPosition = contractedPosition;
@@ -278,6 +317,11 @@ namespace RuntimeCore.Entities.Geometry
                         if (cancellationToken.IsCancellationRequested)
                         {
                             break;
+                        }
+
+                        if (lastMoveTraveled)
+                        {
+                            PlayRuntimeSound(_stopping_sound);
                         }
 
                         if (loop)
@@ -320,10 +364,21 @@ namespace RuntimeCore.Entities.Geometry
 
         private async Awaitable Move(CancellationToken cancellationToken, float speed, float targetPosition)
         {
+            var startsSilently = startsMovingSilently;
+            startsMovingSilently = false;
+            lastMoveTraveled = false;
+
             if (currentPosition == targetPosition)
             {
                 // Already there, so there's no time to spend moving
                 return;
+            }
+
+            lastMoveTraveled = true;
+
+            if (!startsSilently)
+            {
+                PlayRuntimeSound(_starting_sound);
             }
 
             if (speed <= 0f)
@@ -360,6 +415,20 @@ namespace RuntimeCore.Entities.Geometry
             currentPosition = targetPosition;
 
             remainingStateTime = GetStateOffsetRealTimeSinceStartup() - endTime;
+        }
+
+        // A split platform's play from its floor only, so they play once
+        private void PlayRuntimeSound(short soundCode)
+        {
+            if (linkedSurface == LinkedSurfaces.Ceiling && PLATFORM_COMES_FROM_FLOOR(NativeObject.static_flags))
+            {
+                return;
+            }
+
+            var isExtending = currentState == States.Extending;
+            var isFullyContracted = currentState == States.Contracting && currentPosition == contractedPosition;
+
+            OnRuntimeSound?.Invoke(this, soundCode, isExtending, isFullyContracted);
         }
 
         private static float GetSpeedInMetersPerSecond(short worldDistancePerTick)

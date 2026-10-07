@@ -5,7 +5,7 @@
 // build_save_game_wad, build_meta_game_wad, get_dynamic_data_from_save/_wad, get_player_data_from_wad,
 // the net functions, and in process_map_wad the restoring_game path, scenery, shapes and sounds patches,
 // MMLS/LUAS/Lua state, music and ephemera. Chunks that aren't loaded are kept with the level
-// (MapLevel.loaded_wad) and saved as they were, and so are the terminals, which are loaded but not packed.
+// (MapLevel.loaded_wad) and saved as they were.
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -181,7 +181,7 @@ namespace AlephOne
             }
 
             /* If they asked for a valid location, make sure that we gave them one */
-            if (location != null) vassert(done, $"Tried to place: {index} only {count} starting pts.");
+            if (location != null) vassert(done, "Tried to place: {0} only {1} starting pts.", index, count);
 
             return count;
         }
@@ -940,7 +940,7 @@ namespace AlephOne
             load_placement_data(level, new StreamPointer(data, MAXIMUM_OBJECT_TYPES * SIZEOF_object_frequency_definition), new StreamPointer(data));
 
             /* Extract the terminal data. */
-            data = extract_type_from_wad(wad, TERMINAL_DATA_TAG, out data_length);
+            data = extract_modeled_type_from_wad(level, wad, TERMINAL_DATA_TAG, out data_length);
             load_terminal_data(level, data, data_length);
 
             /* Extract the media definitions */
@@ -1282,29 +1282,8 @@ namespace AlephOne
                         {
                             platform_data p = level.PlatformList[loop];
 
-                            // ghs: this belongs somewhere else
-                            var platform = new static_platform_data(); // obj_clear(platform);
-                            platform.type = p.type;
-                            platform.speed = p.speed;
-                            platform.delay = p.delay;
-                            if (PLATFORM_GOES_BOTH_WAYS(p))
-                            {
-                                platform.maximum_height = p.maximum_ceiling_height;
-                                platform.minimum_height = p.minimum_floor_height;
-                            }
-                            else if (PLATFORM_COMES_FROM_FLOOR(p))
-                            {
-                                platform.maximum_height = p.maximum_floor_height;
-                                platform.minimum_height = p.minimum_floor_height;
-                            }
-                            else
-                            {
-                                platform.maximum_height = p.maximum_ceiling_height;
-                                platform.minimum_height = p.minimum_floor_height;
-                            }
-                            platform.static_flags = p.static_flags;
-                            platform.polygon_index = p.polygon_index;
-                            platform.tag = p.tag;
+                            // ForgePlus: shared with editing
+                            static_platform_data platform = static_platform_data_from_platform(p);
 
                             pack_static_platform_data(temp_array, new[] { platform }, 1);
                         }
@@ -1396,6 +1375,8 @@ namespace AlephOne
                     count = level.RandomSoundImageList.Count;
                     break;
                 case TERMINAL_DATA_TAG:
+                    count = computer_interface.calculate_packed_terminal_data_length(level);
+                    break;
                 case MONSTER_PHYSICS_TAG:
                 case EFFECTS_PHYSICS_TAG:
                 case PROJECTILE_PHYSICS_TAG:
@@ -1472,6 +1453,8 @@ namespace AlephOne
                     pack_random_sound_image_data(temp_array, level.RandomSoundImageList, count);
                     break;
                 case TERMINAL_DATA_TAG:
+                    computer_interface.pack_map_terminal_data(level, temp_array, count);
+                    break;
                 case MONSTER_PHYSICS_TAG:
                 case EFFECTS_PHYSICS_TAG:
                 case PROJECTILE_PHYSICS_TAG:
@@ -1701,8 +1684,10 @@ namespace AlephOne
         // The level's chunks in their loaded order, those it models packed from it and the rest as loaded,
         // then any new modeled chunks in export order. With keep_unchanged_chunks, a chunk that packs as it
         // did after loading is written as loaded, so an unedited level is saved byte for byte (packing zeroes
-        // unused fields, and loading applies fixes that Aleph One applies again on every load).
-        public static wad_data build_level_wad(MapLevel level, wad_header header, out int length, bool keep_unchanged_chunks = true)
+        // unused fields, and loading applies fixes that Aleph One applies again on every load). Chunks with an
+        // excluded tag (such as the physics chunks) are left out.
+        public static wad_data build_level_wad(MapLevel level, wad_header header, out int length, bool keep_unchanged_chunks = true,
+            ICollection<uint> excluded_tags = null)
         {
             // Marathon 1 chunks aren't Marathon 2 data
             if (level.loaded_wad.data_version == MARATHON_ONE_DATA_VERSION) keep_unchanged_chunks = false;
@@ -1719,6 +1704,7 @@ namespace AlephOne
             foreach (uint tag in level.loaded_wad.chunk_order)
             {
                 if (written.Contains(tag)) continue; // a wad can't hold a tag twice
+                if (excluded_tags != null && excluded_tags.Contains(tag)) continue;
 
                 if (writes_as_modeled(level, tag))
                 {
@@ -1751,6 +1737,7 @@ namespace AlephOne
             foreach (uint tag in new_tags)
             {
                 if (written.Contains(tag)) continue;
+                if (excluded_tags != null && excluded_tags.Contains(tag)) continue;
                 byte[] array = level_chunk_data(level, tag, out int size);
                 add(tag, array, size);
             }
@@ -1801,7 +1788,17 @@ namespace AlephOne
         }
 
         // export_level(), writing build_level_wad() and, with with_directory_data, the level's directory data
-        public static bool save_level(FileSpecifier File, MapLevel level, bool with_directory_data = true)
+        // ForgePlus: excluded_tags, as for build_level_wad()
+        public static bool save_level(FileSpecifier File, MapLevel level, bool with_directory_data = true,
+            ICollection<uint> excluded_tags = null)
+        {
+            return save_levels(File, new[] { level }, with_directory_data, excluded_tags: excluded_tags);
+        }
+
+        // ForgePlus: save_level() for several levels, in order (the data version is the first's). A given file_name or
+        // checksum replaces File's name or the calculated one (so saved games and films still find the map).
+        public static bool save_levels(FileSpecifier File, IList<MapLevel> levels, bool with_directory_data = true,
+            byte[] file_name = null, uint? checksum = null, ICollection<uint> excluded_tags = null)
         {
             var header = new wad_header();
             short err = 0;
@@ -1815,8 +1812,15 @@ namespace AlephOne
             TempFile.SetTempName(File);
 
             /* Fill in the default wad header (we are using File instead of TempFile to get the name right in the header) */
-            fill_default_wad_header(File, CURRENT_WADFILE_VERSION, level_data_version_for_saving(level), 1,
+            fill_default_wad_header(File, CURRENT_WADFILE_VERSION, level_data_version_for_saving(levels[0]), (short) levels.Count,
                 (short) (with_directory_data ? SIZEOF_directory_data : 0), header);
+
+            // ForgePlus: the given name, if there is one (keeping its terminating NUL)
+            if (file_name != null)
+            {
+                Array.Clear(header.file_name, 0, header.file_name.Length);
+                Array.Copy(file_name, header.file_name, Math.Min(file_name.Length, MAXIMUM_WADFILE_NAME_LENGTH - 1));
+            }
 
             if (create_wadfile(TempFile))
             {
@@ -1828,35 +1832,56 @@ namespace AlephOne
                     {
                         offset = SIZEOF_wad_header;
 
-                        wad = build_level_wad(level, header, out wad_length);
-                        if (wad != null)
+                        var entries = new byte[get_size_of_directory_data(header)];
+                        var wrote_all = true;
+
+                        for (short index = 0; wrote_all && index < levels.Count; ++index)
                         {
-                            var entries = new byte[get_size_of_directory_data(header)];
-                            set_indexed_directory_offset_and_length(header, entries, 0, offset, wad_length, 0);
+                            MapLevel level = levels[index];
+
+                            wad = build_level_wad(level, header, out wad_length, excluded_tags: excluded_tags);
+                            if (wad == null)
+                            {
+                                wrote_all = false;
+                                break;
+                            }
+
+                            set_indexed_directory_offset_and_length(header, entries, index, offset, wad_length, index);
                             if (with_directory_data)
                             {
                                 Array.Copy(directory_data_bytes(level, level.loaded_wad.directory_data), 0, entries,
-                                    get_indexed_directory_data(header, 0, entries), SIZEOF_directory_data);
+                                    get_indexed_directory_data(header, index, entries), SIZEOF_directory_data);
                             }
 
-                            if (write_wad(SaveFile, header, wad, offset))
-                            {
-                                /* Update the new header */
-                                offset += wad_length;
-                                header.directory_offset = offset;
-                                if (write_wad_header(SaveFile, header) && write_directorys(SaveFile, header, entries))
-                                {
-                                    /* We win. */
-                                    success = true;
-                                }
-                            }
+                            wrote_all = write_wad(SaveFile, header, wad, offset);
+                            offset += wad_length;
 
                             free_wad(wad);
+                        }
+
+                        if (wrote_all)
+                        {
+                            /* Update the new header */
+                            header.directory_offset = offset;
+                            if (write_wad_header(SaveFile, header) && write_directorys(SaveFile, header, entries))
+                            {
+                                /* We win. */
+                                success = true;
+                            }
                         }
                     }
 
                     err = (short) SaveFile.GetError();
                     calculate_and_store_wadfile_checksum(SaveFile);
+
+                    // ForgePlus: the given checksum, in place of the calculated one
+                    if (checksum.HasValue)
+                    {
+                        read_wad_header(SaveFile, header);
+                        header.checksum = checksum.Value;
+                        write_wad_header(SaveFile, header);
+                    }
+
                     close_wad_file(SaveFile);
                 }
 

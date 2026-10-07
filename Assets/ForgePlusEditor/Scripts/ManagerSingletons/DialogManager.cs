@@ -30,6 +30,13 @@ namespace ForgePlus.ApplicationGeneral
         // The chosen option, or null if the dialog was cancelled
         public async Task<string> DisplayQueuedDialog(string title, IList<string> options, IList<string> optionLabels = null)
         {
+            return (await DisplayQueuedDialog(title, message: null, options, optionLabels, checkboxLabel: null)).Option;
+        }
+
+        // With a message, and a checkbox (if it has a label) whose state is returned with the chosen option
+        public async Task<(string Option, bool IsChecked)> DisplayQueuedDialog(string title, string message, IList<string> options,
+            IList<string> optionLabels, string checkboxLabel)
+        {
             if (dialogQueue.Count == 0)
             {
                 UIBlocking.Instance.Block();
@@ -43,10 +50,10 @@ namespace ForgePlus.ApplicationGeneral
                 await Awaitable.NextFrameAsync();
             }
 
-            var dialog = new ObjectSelectorDialog(title, options, optionLabels);
+            var dialog = new ObjectSelectorDialog(title, options, optionLabels, message, checkboxLabel);
             DialogSlot.Show(dialog);
 
-            var result = await dialog.Selection;
+            var result = (await dialog.Selection, dialog.IsChecked);
 
             DialogSlot.Hide();
             dialogQueue.Remove(queuedDialog);

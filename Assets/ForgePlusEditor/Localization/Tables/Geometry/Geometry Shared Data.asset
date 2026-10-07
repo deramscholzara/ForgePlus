@@ -1,0 +1,323 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Geometry Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Geometry
+  m_TableCollectionNameGuid: 9ba8f798e63950b4597125a87dc732e4
+  m_KeyGenerator:
+    rid: 552786097007231034
+  m_Entries:
+  - m_Id: 2582931718144
+    m_Key: Inspector.Line.Line.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582931718145
+    m_Key: Inspector.Line.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582931718146
+    m_Key: Inspector.Line.Flags.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582931718147
+    m_Key: Inspector.Line.Solid.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582931718148
+    m_Key: Inspector.Line.Transparent.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582931718149
+    m_Key: Inspector.Line.Decorative.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582931718150
+    m_Key: Inspector.Line.Decorative.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480192
+    m_Key: Inspector.Side.Side.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480193
+    m_Key: Inspector.Side.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480194
+    m_Key: Inspector.Side.Type.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480195
+    m_Key: Inspector.Side.ControlPanel.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480196
+    m_Key: Inspector.Side.ControlPanelType.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480197
+    m_Key: Inspector.Side.ControlPanelPermutation.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480198
+    m_Key: Inspector.Side.Flags.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480199
+    m_Key: Inspector.Side.InitiallyActive.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480200
+    m_Key: Inspector.Side.IsRepairSwitch.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480201
+    m_Key: Inspector.Side.CanBeDestroyed.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480202
+    m_Key: Inspector.Side.LightedMustBeAbove75Percent.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480203
+    m_Key: Inspector.Side.ProjectilesOnly.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480204
+    m_Key: Inspector.Side.LightedMustBeAbove50Percent.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480205
+    m_Key: Inspector.Side.LightedMustBeAbove50Percent.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480206
+    m_Key: Inspector.Side.ItemIsOptional.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480207
+    m_Key: Inspector.Side.ItemIsOptional.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480208
+    m_Key: Inspector.Side.IsControlPanel.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480209
+    m_Key: Inspector.Side.IsDestructiveSwitch.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480210
+    m_Key: Inspector.Side.PrimarySurface.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480211
+    m_Key: Inspector.Side.PrimaryLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480212
+    m_Key: Inspector.Side.SecondarySurface.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583401480213
+    m_Key: Inspector.Side.SecondaryLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583405674496
+    m_Key: Inspector.Side.TransparentSurface.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583405674497
+    m_Key: Inspector.Side.TransparentLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583405674498
+    m_Key: Inspector.Side.AmbientDelta.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583560863744
+    m_Key: VisualizationGeometry.ShowEverything.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583560863745
+    m_Key: VisualizationGeometry.Polygons.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583560863746
+    m_Key: VisualizationGeometry.Lines.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583560863747
+    m_Key: VisualizationGeometry.Sides.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583560863748
+    m_Key: VisualizationGeometry.Points.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2583560863749
+    m_Key: VisualizationGeometry.Media.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329912669159424
+    m_Key: Permutation.ControlPanel.Unused
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329912669159425
+    m_Key: Permutation.ControlPanel.LightSwitch
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329912669159426
+    m_Key: Permutation.ControlPanel.PlatformSwitch
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329912669159427
+    m_Key: Permutation.ControlPanel.PlatformSwitchDisabled
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329912669159428
+    m_Key: Permutation.ControlPanel.TagSwitch
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329912669159429
+    m_Key: Permutation.ControlPanel.TagSwitchZero
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1329912669159430
+    m_Key: Permutation.ControlPanel.Terminal
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1347040818380800
+    m_Key: ControlPanelType.Choice
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1347040835158016
+    m_Key: ControlPanelType.Choice.AlephOneOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1347040835158017
+    m_Key: ControlPanelType.TakesItem
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1347040839352320
+    m_Key: ControlPanelType.Breakable
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1347040839352321
+    m_Key: ControlPanelType.Note.AlephOneOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1347040839352322
+    m_Key: Inspector.Side.ControlPanelTextureNote
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1405657890308096
+    m_Key: Inspector.Side.AllSurfaces.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1405657898696704
+    m_Key: Inspector.Side.AmbientDelta.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1405657898696705
+    m_Key: Inspector.Side.AmbientDeltaCaption.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1405657898696706
+    m_Key: Inspector.Side.AmbientDeltaCaption.Brighter
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1405657898696707
+    m_Key: Inspector.Side.AmbientDeltaCaption.Darker
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1410168277057536
+    m_Key: Inspector.Line.SolidCaption.Wall
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1410168289640448
+    m_Key: Inspector.Line.SolidCaption.Platform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1410168289640449
+    m_Key: Inspector.Line.SolidCaption.InvisibleWall
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231034
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928703425

@@ -63,6 +63,42 @@
     background-color: var(--fp-value-area);
 }
 
+/* A value with a button to play it, at its right */
+.fp-inspector-row__value-area--playable {
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.fp-inspector-row__value-area--playable > .fp-inspector-value {
+    flex-grow: 1;
+    flex-shrink: 1;
+}
+
+/* Just its triangle, in the value's color (where the row's value area ends) */
+.fp-root .fp-inspector-play {
+    flex-shrink: 0;
+    width: 18px;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: none;
+    color: var(--fp-value-text);
+}
+
+.fp-root .fp-inspector-play:hover {
+    background-color: var(--fp-indicator-frame);
+}
+
+.fp-root .fp-inspector-play:hover:active {
+    background-color: var(--fp-indicator-on);
+}
+
+.fp-root .fp-inspector-play:disabled {
+    opacity: 0.3;
+}
+
 /* Above its value, a label can be as wide as its text */
 .fp-inspector-row--vertical .fp-inspector-row__label {
     width: auto;
@@ -96,14 +132,176 @@
     white-space: normal;
 }
 
+/* A text or number field in a row's value area, looking like the row's value (its border only shows focus) */
+.fp-inspector-text-field,
+.fp-inspector-pair-field {
+    margin: 0;
+    padding: 0;
+}
+
+.fp-inspector-text-field > .unity-base-text-field__input,
+.fp-inspector-pair-field > .unity-base-text-field__input {
+    margin: 0;
+    padding: 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+}
+
+.fp-inspector-row:disabled .fp-inspector-text-field,
+.fp-inspector-row:disabled .fp-inspector-text-field > .unity-base-text-field__input,
+.fp-inspector-row:disabled .fp-inspector-pair-field,
+.fp-inspector-row:disabled .fp-inspector-pair-field > .unity-base-text-field__input {
+    opacity: 1;
+    color: var(--fp-value-text-disabled);
+}
+
+/* A dropdown in a row's value area, looking like the row's value (its border only shows focus). It fits its row however
+   long its choice is (rather than pushing a play button beside it out of the row), cutting the choice short with an
+   ellipsis. */
+.fp-inspector-dropdown {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.fp-inspector-dropdown .unity-base-popup-field__text {
+    flex-shrink: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.fp-inspector-dropdown > .unity-base-popup-field__input {
+    margin: 0;
+    padding: 0 2px 0 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+}
+
+.fp-root .fp-inspector-dropdown:focus > .unity-base-popup-field__input {
+    border-color: var(--fp-focus);
+}
+
+.fp-inspector-row:disabled .fp-inspector-dropdown,
+.fp-inspector-row:disabled .fp-inspector-dropdown > .unity-base-popup-field__input {
+    opacity: 1;
+    color: var(--fp-value-text-disabled);
+}
+
+/* An annotation in the annotations list, which is selected by clicking it */
+.fp-annotation {
+    border-width: 2px;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.fp-annotation--selected {
+    border-color: var(--fp-focus);
+}
+
 .fp-inspector-texture {
     width: 170px;
     height: 170px;
     -unity-background-scale-mode: scale-to-fit;
 }
 
+/* One that opens a list of textures to choose from when clicked */
+.fp-inspector-texture--choosable {
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.fp-inspector-texture--choosable:hover {
+    border-color: var(--fp-focus);
+}
+
 .fp-inspector-flag {
     height: var(--fp-flag-height);
+}
+
+/* Data only Aleph One supports (the original Marathon 2 and Infinity ignore it) is marked with a stripe on its left,
+   whatever it is (a tab, a heading, a flag, a note), besides saying so in its wording */
+.fp-aleph-one-only {
+    border-left-width: 4px;
+    border-left-color: var(--fp-aleph-one);
+}
+
+.fp-aleph-one-only.fp-inspector-note {
+    color: var(--fp-aleph-one);
+}
+
+/* An Aleph One only choice in a dropdown's menu (UIElementExtensions.OpensMenuToFitChoices) */
+.unity-base-dropdown__item.fp-dropdown-item--aleph-one-only {
+    border-left-width: 4px;
+    border-left-color: var(--fp-aleph-one);
+}
+
+/* The Level inspector's tabs, wrapping onto as many rows as they need */
+.fp-level-tabs {
+    margin: 5px 0;
+}
+
+.fp-level-tabs #contentContainer {
+    flex-wrap: wrap;
+}
+
+.fp-level-tabs__tab {
+    height: var(--fp-short-control-height);
+    margin: 0 4px 4px 0;
+    padding: 0 6px;
+}
+
+/* Text to read, such as a script, in the value area's colors */
+.fp-inspector-text-block {
+    margin-top: 5px;
+    padding: 5px;
+    background-color: var(--fp-value-area);
+}
+
+.fp-inspector-text-block__text {
+    white-space: normal;
+    font-size: 11px;
+}
+
+/* A sentence explaining an inspector (or a section of one) */
+.fp-inspector-note {
+    margin: 2px 0 5px 0;
+    padding: 0 5px;
+    color: var(--fp-text-faint);
+    white-space: normal;
+}
+
+/* A choice of one: its label, then its options as flags */
+.fp-inspector-choice-area {
+    margin-bottom: 5px;
+}
+
+.fp-inspector-choice__label {
+    margin: 0 0 2px 0;
+    padding: 0;
+    color: var(--fp-text-light);
+}
+
+.fp-inspector-choice-area:disabled > .fp-inspector-choice__label {
+    color: var(--fp-text-faint);
+}
+
+.fp-inspector-choice__option {
+    height: var(--fp-flag-height);
+    margin: 0 0 2px 0;
+}
+
+.fp-inspector-choice__option .unity-radio-button__text {
+    -unity-text-align: middle-left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .fp-inspector-action {
@@ -156,4 +354,166 @@
 .fp-inspector-foldout > .unity-foldout__content {
     margin: 0;
     padding: 0;
+}
+
+/* A light's index and a preview of its intensity (LightIndexField), in a row's value area, looking like the row's
+   value (its border only shows focus), which opens a list of the level's lights (LightPicker) */
+.fp-inspector-light {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+}
+
+.fp-light-field__input {
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    padding: 0 2px 0 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+}
+
+.fp-root .fp-inspector-light:focus > .fp-light-field__input {
+    border-color: var(--fp-focus);
+}
+
+.fp-light-field__index {
+    min-width: 30px;
+    margin: 0;
+    padding: 0;
+    color: var(--fp-value-text);
+}
+
+.fp-light-field__preview {
+    flex-grow: 1;
+    height: 12px;
+    margin: 0 5px;
+    border-width: 1px;
+    border-color: var(--fp-indicator-frame);
+}
+
+.fp-inspector-row:disabled .fp-inspector-light {
+    opacity: 1;
+}
+
+.fp-inspector-row:disabled .fp-light-field__index {
+    color: var(--fp-value-text-disabled);
+}
+
+.fp-inspector-row:disabled .fp-light-field__arrow {
+    visibility: hidden;
+}
+
+/* A slider and a number field for the same value, side by side */
+.fp-inspector-slider {
+    flex-grow: 1;
+    margin: 0 5px 0 0;
+}
+
+.fp-inspector-slider-number {
+    width: 50px;
+    flex-shrink: 0;
+}
+
+/* A chapter screen's preview, as wide as the inspector, keeping its shape */
+.fp-chapter-screen {
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.fp-chapter-screen--off {
+    opacity: 0.35;
+}
+
+.fp-inspector-row__value-area--row {
+    flex-direction: row;
+    align-items: center;
+}
+
+/* Rows grouped (such as to gray them out together, or in a scope to bind them to part of the inspected object), spaced
+   as the inspector's own are; a group is at full opacity while grayed out (as the rows are) */
+.fp-inspector-group > *,
+.fp-inspector-scope > * {
+    margin-bottom: 5px;
+    flex-shrink: 0;
+}
+
+.fp-inspector > .fp-inspector-group,
+.fp-inspector > .fp-inspector-scope {
+    margin-bottom: 0;
+}
+
+.fp-inspector-group:disabled {
+    opacity: 1;
+}
+
+/* A range's fields share the value area, with "to" between them; the second looks like the first */
+.fp-inspector-range-field {
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 0;
+}
+
+/* Names a pair's field (X: and Y:), in the value's color */
+.fp-inspector-pair-label {
+    flex-shrink: 0;
+    padding: 0 3px 0 0;
+    margin: 0;
+    color: var(--fp-value-text);
+}
+
+.fp-inspector-pair-label--second {
+    padding-left: 8px;
+}
+
+.fp-inspector-range-separator {
+    flex-shrink: 0;
+    padding: 0 5px;
+    margin: 0;
+    color: var(--fp-value-text);
+    -unity-text-align: middle-center;
+}
+
+.fp-inspector-range-maximum {
+    margin: 0;
+    padding: 0;
+}
+
+.fp-inspector-range-maximum > .unity-base-text-field__input {
+    margin: 0;
+    padding: 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+}
+
+.fp-inspector-row:disabled .fp-inspector-range-maximum,
+.fp-inspector-row:disabled .fp-inspector-range-maximum > .unity-base-text-field__input {
+    opacity: 1;
+    color: var(--fp-value-text-disabled);
+}
+
+/* A button in a row's value area, looking like the row's value */
+.fp-inspector-row-button {
+    flex-grow: 1;
+    margin: 0;
+    padding: 0 2px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0);
+    color: var(--fp-value-text);
+    -unity-text-align: middle-left;
+}
+
+.fp-inspector-row-button:hover {
+    border-color: var(--fp-focus);
+}
+
+/* A grayed-out row's button reads as its value does */
+.fp-inspector-row:disabled .fp-inspector-row-button {
+    color: var(--fp-value-text-disabled);
 }

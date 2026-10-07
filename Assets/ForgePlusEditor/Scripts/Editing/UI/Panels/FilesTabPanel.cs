@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
 {
-    public class FilesTabPanel : UIPanel
+    public class FilesTabPanel : UIPanel, IMenuTab
     {
         private readonly List<DataFileViewModel> dataFiles = new List<DataFileViewModel>();
         private readonly List<string> levelNames = new List<string>();
@@ -23,11 +23,15 @@ namespace ForgePlus.UI
             }
         }
 
+        // Loading the selected level
+        public VisualElement Actions { get; private set; }
+
         protected override void OnLoaded()
         {
             BindDataFile("maps", DataFileTypes.Maps);
             BindDataFile("shapes", DataFileTypes.Shapes);
             BindDataFile("physics", DataFileTypes.Physics);
+            BindDataFile("sounds", DataFileTypes.Sounds);
 
             var levelItemTemplate = LoadTemplate("LevelItem");
 
@@ -39,9 +43,11 @@ namespace ForgePlus.UI
 
             loadButton = Root.Find<Button>("load");
             loadButton.clicked += OnLoad;
+            Actions = Root.Q("actions");
 
             MapsLoading.Instance.OnDataLoadCompleted += OnMapsLoaded;
             MapsLoading.Instance.OnSaveCompleted += RefreshList;
+            MapsLoading.Instance.OnLevelNamesChanged += RefreshList;
 
             if (MapsLoading.Instance.LevelNames == null)
             {
@@ -62,6 +68,7 @@ namespace ForgePlus.UI
         {
             MapsLoading.Instance.OnDataLoadCompleted -= OnMapsLoaded;
             MapsLoading.Instance.OnSaveCompleted -= RefreshList;
+            MapsLoading.Instance.OnLevelNamesChanged -= RefreshList;
 
             foreach (var dataFile in dataFiles)
             {

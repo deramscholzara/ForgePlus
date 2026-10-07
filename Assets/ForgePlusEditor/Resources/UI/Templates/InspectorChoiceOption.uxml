@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- One option of the InspectorChoice it's placed in, drawn as a flag -->
+    <ui:RadioButton name="control" text="Option" class="fp-toggle fp-toggle--flag fp-inspector-choice__option fp-template" />
+</ui:UXML>

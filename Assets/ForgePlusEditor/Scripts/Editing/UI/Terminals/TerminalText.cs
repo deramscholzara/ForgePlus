@@ -1,6 +1,8 @@
 ﻿using AlephOne;
+using ForgePlus.Localization;
 using System.Collections.Generic;
 using System.Text;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static AlephOne.computer_interface;
@@ -10,9 +12,33 @@ namespace ForgePlus.UI
 {
     // A terminal's text as Aleph One draws it: its characters (Mac Roman), and its faces and colors (set_text_face's,
     // which follow the terminal's text color)
+    [NoAutoStaticsCleanup]
     public static class TerminalText
     {
         public const short ColorCount = _computer_interface_color_blue - _computer_interface_text_color + 1;
+
+        // The faces (and plain), then the colors, as the styles panel and the group's style buttons offer them
+        public static readonly IReadOnlyList<Style> Styles = CreateStyles();
+
+        // Applied as its kind and value, and shown with its key (as its terminal source code) and name, in its face and
+        // color
+        public class Style
+        {
+            public TerminalSource.StyleKind Kind;
+            public short Value;
+            public short Face;
+            public short ColorIndex;
+            public string Key;
+            public string NameKey;
+
+            public string Name
+            {
+                get
+                {
+                    return Kind == TerminalSource.StyleKind.Color ? Strings.Get(Strings.Terminals, "Terminals.Styles.Color", ColorIndex) : Strings.Get(Strings.Terminals, NameKey);
+                }
+            }
+        }
 
         // The printable characters, with the line ends as line breaks where they're kept
         public static string Decode(List<byte> text, int startIndex, int endIndex, bool keepLineEnds = false)
@@ -76,6 +102,24 @@ namespace ForgePlus.UI
                 default:
                     return "CourierPrime";
             }
+        }
+
+        private static List<Style> CreateStyles()
+        {
+            var styles = new List<Style>
+            {
+                new Style { Kind = TerminalSource.StyleKind.Plain, Value = _plain_text, Face = _plain_text, Key = "-", NameKey = "Terminals.Styles.Plain" },
+                new Style { Kind = TerminalSource.StyleKind.Face, Value = _bold_text, Face = _bold_text, Key = "B", NameKey = "Terminals.Styles.Bold" },
+                new Style { Kind = TerminalSource.StyleKind.Face, Value = _italic_text, Face = _italic_text, Key = "I", NameKey = "Terminals.Styles.Italic" },
+                new Style { Kind = TerminalSource.StyleKind.Face, Value = _underline_text, Face = _underline_text, Key = "U", NameKey = "Terminals.Styles.Underline" },
+            };
+
+            for (short color = 0; color < ColorCount; color++)
+            {
+                styles.Add(new Style { Kind = TerminalSource.StyleKind.Color, Value = color, Face = _plain_text, ColorIndex = color, Key = color.ToString() });
+            }
+
+            return styles;
         }
     }
 }

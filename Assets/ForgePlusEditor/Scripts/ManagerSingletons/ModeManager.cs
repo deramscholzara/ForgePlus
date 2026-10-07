@@ -14,10 +14,12 @@ namespace ForgePlus.LevelManipulation
             Textures,
             Lights,
             Media,
+            Sounds,
             Platforms,
             Objects,
             Annotations,
             Level,
+            Map,
             Terminals,
         }
 
@@ -42,6 +44,9 @@ namespace ForgePlus.LevelManipulation
                 OnPrimaryModeChanged_Sender -= value;
             }
         }
+
+        // With the new mode, while everything is still as it was in the previous one
+        public event Action<PrimaryModes> OnPrimaryModeChanging;
 
         private event Action<SecondaryModes> OnSecondaryModeChanged_Sender;
         public event Action<SecondaryModes> OnSecondaryModeChanged
@@ -74,6 +79,8 @@ namespace ForgePlus.LevelManipulation
             {
                 if (primaryMode != value)
                 {
+                    OnPrimaryModeChanging?.Invoke(value);
+
                     primaryMode = value;
 
                     // Falls back to selection when the new mode can't use the current secondary mode
@@ -119,6 +126,8 @@ namespace ForgePlus.LevelManipulation
                     case PrimaryModes.Textures:
                         return allSecondaryModes;
                     case PrimaryModes.Lights:
+                    case PrimaryModes.Media:
+                    case PrimaryModes.Sounds:
                         return selectionAndPainting;
                     default:
                         return selectionOnly;

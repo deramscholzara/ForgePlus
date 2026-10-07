@@ -3,6 +3,7 @@ using RuntimeCore.Entities;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using AlephOne;
 using ForgePlus.Extensions;
 
 namespace ForgePlus.DataFileIO
@@ -27,6 +28,9 @@ namespace ForgePlus.DataFileIO
 
         public event Action OnLevelClosed;
 
+        // When a level's name in the map's directory changes (renamed, or a rename discarded)
+        public event Action OnLevelNamesChanged;
+
         public IReadOnlyCollection<string> LevelNames
         {
             get
@@ -39,6 +43,27 @@ namespace ForgePlus.DataFileIO
                 return data.LevelNames;
             }
         }
+
+        // Null while none is loaded
+        public MapsFile MapsFile
+        {
+            get
+            {
+                return data?.MapsFile;
+            }
+        }
+
+        // -1 while none is open
+        public int OpenLevelIndex
+        {
+            get
+            {
+                return data != null ? data.OpenLevelIndex : -1;
+            }
+        }
+
+        // So, for example, the camera stays where it is
+        public bool IsRebuildingLevel { get; private set; }
 
         protected override DataFileTypes DataFileType
         {
@@ -55,6 +80,30 @@ namespace ForgePlus.DataFileIO
             data?.CloseFile();
 
             base.UnloadFile();
+        }
+
+        // Rebuilds the open level's directory entry after its name or flags change (game_wad.cpp: build_directory_data)
+        public void UpdateOpenLevelDirectory()
+        {
+            var level = LevelEntity_Level.Instance;
+            var mapsFile = MapsFile;
+            var levelIndex = OpenLevelIndex;
+            if (!level || mapsFile == null || levelIndex < 0 || levelIndex >= mapsFile.Levels.Count)
+            {
+                // No level is open, so exit
+                return;
+            }
+
+            var directory = mapsFile.Levels[levelIndex];
+            var nameChanged = directory.GetLevelName() != level.Level.GetLevelName();
+
+            mapsFile.Levels[levelIndex] = game_wad.build_directory_data(level.Level.static_world);
+
+            if (nameChanged)
+            {
+                level.gameObject.name = LevelEntity_Level.GameObjectName(level.Level.GetLevelName());
+                OnLevelNamesChanged?.Invoke();
+            }
         }
 
         public void OpenLevel(int levelIndex = 0)
@@ -79,6 +128,34 @@ namespace ForgePlus.DataFileIO
             UIBlocking.Instance.Unblock();
         }
 
+        // Closes and reopens the open level from its current data, for edits that change its structure
+        // (such as making a polygon a platform, which changes the sides around it)
+        public void RebuildLevel()
+        {
+            if (data == null || !LevelEntity_Level.Instance)
+            {
+                // No level is open, so exit
+                return;
+            }
+
+            UIBlocking.Instance.Block();
+            IsRebuildingLevel = true;
+
+            try
+            {
+                data.CloseCurrentLevelObjects();
+                OnLevelClosed?.Invoke();
+
+                data.ReopenCurrentLevelObjects();
+                OnLevelOpened_Sender?.Invoke(LevelEntity_Level.Instance.Level.GetLevelName());
+            }
+            finally
+            {
+                IsRebuildingLevel = false;
+                UIBlocking.Instance.Unblock();
+            }
+        }
+
         public void CloseLevel()
         {
             if (data == null)
@@ -87,9 +164,14 @@ namespace ForgePlus.DataFileIO
                 return;
             }
 
-            data.CloseAndUnloadCurrentLevel();
+            var namesChanged = data.CloseAndUnloadCurrentLevel();
 
             OnLevelClosed?.Invoke();
+
+            if (namesChanged)
+            {
+                OnLevelNamesChanged?.Invoke();
+            }
         }
     }
 }

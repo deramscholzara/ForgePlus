@@ -2,59 +2,67 @@
     <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="DropdownPlayRow" src="../Templates/InspectorDropdownPlayRow.uxml" />
+    <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <!-- Bound to Inspector_Polygon -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Polygon" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Polygon.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Id.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Type">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
+        <ui:Instance template="DropdownRow" name="Type">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Type.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Permutation">
-            <ui:AttributeOverrides element-name="label" text="Permutation:" />
+        <ui:Instance template="IntegerFieldRow" name="Permutation">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Permutation.Label.Text" />
         </ui:Instance>
+        <ui:Label name="PermutationCaption" class="fp-inspector-note" />
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Floor" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Floor.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="FloorHeight">
-            <ui:AttributeOverrides element-name="label" text="Height:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.FloorHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="FloorLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light:" />
+        <ui:Instance template="LightRow" name="FloorLightIndex">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.FloorLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Ceiling" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Ceiling.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="CeilingHeight">
-            <ui:AttributeOverrides element-name="label" text="Height:" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.CeilingHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="CeilingLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light:" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Media" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="MediaIndex">
-            <ui:AttributeOverrides element-name="label" text="Index:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="MediaLight">
-            <ui:AttributeOverrides element-name="label" text="Light:" />
+        <ui:Instance template="LightRow" name="CeilingLightIndex">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.CeilingLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Sounds" />
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Media.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="AmbientSound">
-            <ui:AttributeOverrides element-name="label" text="Ambient:" />
+        <ui:Instance template="DropdownRow" name="MediaIndex">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.MediaIndex.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="RandomSound">
-            <ui:AttributeOverrides element-name="label" text="Random:" />
+        <ui:Instance template="LightRow" name="MediaLight">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.MediaLight.Label.Text" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Sounds.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="DropdownPlayRow" name="AmbientSound" tooltip="@Common/Inspector.Polygon.AmbientSound.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.AmbientSound.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="DropdownPlayRow" name="RandomSound" tooltip="@Common/Inspector.Polygon.RandomSound.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.RandomSound.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="HeardSoundSources" class="fp-inspector-row--vertical" tooltip="@Common/Inspector.Polygon.HeardSoundSources.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.HeardSoundSources.Label.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

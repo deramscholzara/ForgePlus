@@ -5,7 +5,7 @@
         <ui:VisualElement class="fp-box fp-box--padded fp-visualization__options">
             <ui:RadioButtonGroup name="visualization" value="0" class="fp-radio-group">
                 <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__everything">
-                    <ui:AttributeOverrides element-name="control" text="Show Everything" />
+                    <ui:AttributeOverrides element-name="control" text="@Objects/VisualizationObjects.ShowEverything.Control.Text" />
                 </ui:Instance>
             </ui:RadioButtonGroup>
         </ui:VisualElement>

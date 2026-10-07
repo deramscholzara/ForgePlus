@@ -1,0 +1,462 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Platforms_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: cfa3f36e59d21ab4292f454c6f7c0458, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231328
+  - rid: 552786097007231329
+  - rid: 552786097007231330
+  - rid: 552786097007231331
+  - rid: 552786097007231332
+  - rid: 552786097007231333
+  - rid: 552786097007231334
+  - rid: 552786097007231335
+  - rid: 552786097007231336
+  - rid: 552786097007231337
+  - rid: 552786097007231338
+  - rid: 552786097007231339
+  - rid: 552786097007231340
+  - rid: 552786097007231341
+  - rid: 552786097007231342
+  - rid: 552786097007231343
+  - rid: 552786097007231344
+  - rid: 552786097007231345
+  - rid: 552786097007231346
+  - rid: 552786097007231347
+  - rid: 552786097007231348
+  - rid: 552786097007231349
+  - rid: 552786097007231350
+  - rid: 552786097007231351
+  - rid: 552786097007231352
+  - rid: 552786097007231353
+  - rid: 552786097007231354
+  - rid: 552786097007231355
+  - rid: 552786097007231356
+  - rid: 552786097007231357
+  - rid: 552786097007231358
+  - rid: 552786097007231359
+  - rid: 552786097007231360
+  - rid: 552786097007231361
+  - rid: 552786097007231362
+  - rid: 552786097007231363
+  - rid: 552786097007231364
+  - rid: 552786097007231365
+  - rid: 552786097007231366
+  - rid: 552786097007231367
+  - rid: 552786097007231368
+  - rid: 552786097007231369
+  - rid: 552786097007231370
+  - rid: 552786097007231371
+  - rid: 552786097007231372
+  - rid: 552786097007231373
+  - rid: 552786097007231374
+  - rid: 552786097007231375
+  - rid: 552786097007231376
+  - rid: 552786097007231377
+  - rid: 552786097007231378
+  - rid: 552786097007231379
+  - rid: 552786097007231380
+  - rid: 552786097007231810
+  - rid: 552786097007231812
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231328
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577231659008
+        m_Metadata:
+          m_Items: []
+        m_Value: Platform
+    - rid: 552786097007231329
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577231659009
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231330
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577231659010
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231331
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577235853312
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Tag:'
+    - rid: 552786097007231332
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577235853313
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Speed (units/tick):'
+    - rid: 552786097007231333
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577235853314
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Delay (ticks):'
+    - rid: 552786097007231334
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047616
+        m_Metadata:
+          m_Items: []
+        m_Value: Movement
+    - rid: 552786097007231335
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047617
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Moves:'
+    - rid: 552786097007231336
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047618
+        m_Metadata:
+          m_Items: []
+        m_Value: From Floor
+    - rid: 552786097007231337
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047619
+        m_Metadata:
+          m_Items: []
+        m_Value: From Ceiling
+    - rid: 552786097007231338
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047620
+        m_Metadata:
+          m_Items: []
+        m_Value: From Floor and Ceiling
+    - rid: 552786097007231339
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047621
+        m_Metadata:
+          m_Items: []
+        m_Value: Initially Active
+    - rid: 552786097007231340
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047622
+        m_Metadata:
+          m_Items: []
+        m_Value: Initially Extended
+    - rid: 552786097007231341
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047623
+        m_Metadata:
+          m_Items: []
+        m_Value: Extends Floor to Ceiling
+    - rid: 552786097007231342
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577240047624
+        m_Metadata:
+          m_Items: []
+        m_Value: Heights
+    - rid: 552786097007231343
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241920
+        m_Metadata:
+          m_Items: []
+        m_Value: Automatic Lowest Height
+    - rid: 552786097007231344
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241921
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Lowest:'
+    - rid: 552786097007231345
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241922
+        m_Metadata:
+          m_Items: []
+        m_Value: Automatic Highest Height
+    - rid: 552786097007231346
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241923
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Highest:'
+    - rid: 552786097007231347
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241924
+        m_Metadata:
+          m_Items: []
+        m_Value: Uses Native Polygon Heights
+    - rid: 552786097007231348
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241925
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Floor Range:'
+    - rid: 552786097007231349
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241926
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Ceiling Range:'
+    - rid: 552786097007231350
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241927
+        m_Metadata:
+          m_Items: []
+        m_Value: Timing
+    - rid: 552786097007231351
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577244241928
+        m_Metadata:
+          m_Items: []
+        m_Value: Delays Before Activation
+    - rid: 552786097007231352
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577248436224
+        m_Metadata:
+          m_Items: []
+        m_Value: Contracts Slower
+    - rid: 552786097007231353
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577248436225
+        m_Metadata:
+          m_Items: []
+        m_Value: Control
+    - rid: 552786097007231354
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577248436226
+        m_Metadata:
+          m_Items: []
+        m_Value: Player Controllable
+    - rid: 552786097007231355
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577248436227
+        m_Metadata:
+          m_Items: []
+        m_Value: Monster Controllable
+    - rid: 552786097007231356
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577248436228
+        m_Metadata:
+          m_Items: []
+        m_Value: Can't Be Externally Deactivated
+    - rid: 552786097007231357
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577248436229
+        m_Metadata:
+          m_Items: []
+        m_Value: Activates Only Once
+    - rid: 552786097007231358
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577248436230
+        m_Metadata:
+          m_Items: []
+        m_Value: Door
+    - rid: 552786097007231359
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577248436231
+        m_Metadata:
+          m_Items: []
+        m_Value: Locked
+    - rid: 552786097007231360
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630528
+        m_Metadata:
+          m_Items: []
+        m_Value: Secret
+    - rid: 552786097007231361
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630529
+        m_Metadata:
+          m_Items: []
+        m_Value: Obstruction
+    - rid: 552786097007231362
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630530
+        m_Metadata:
+          m_Items: []
+        m_Value: Reverses When Obstructed
+    - rid: 552786097007231363
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630531
+        m_Metadata:
+          m_Items: []
+        m_Value: Causes Damage
+    - rid: 552786097007231364
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630532
+        m_Metadata:
+          m_Items: []
+        m_Value: Activation
+    - rid: 552786097007231365
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630533
+        m_Metadata:
+          m_Items: []
+        m_Value: Deactivates at Each Level
+    - rid: 552786097007231366
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630534
+        m_Metadata:
+          m_Items: []
+        m_Value: Deactivates at Initial Level
+    - rid: 552786097007231367
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630535
+        m_Metadata:
+          m_Items: []
+        m_Value: 'When Activating:'
+    - rid: 552786097007231368
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630536
+        m_Metadata:
+          m_Items: []
+        m_Value: Leaves Adjacent Platforms
+    - rid: 552786097007231369
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630537
+        m_Metadata:
+          m_Items: []
+        m_Value: Activates Adjacent Platforms
+    - rid: 552786097007231370
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630538
+        m_Metadata:
+          m_Items: []
+        m_Value: Deactivates Adjacent Platforms
+    - rid: 552786097007231371
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630539
+        m_Metadata:
+          m_Items: []
+        m_Value: 'When Deactivating:'
+    - rid: 552786097007231372
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630540
+        m_Metadata:
+          m_Items: []
+        m_Value: Leaves Adjacent Platforms
+    - rid: 552786097007231373
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630541
+        m_Metadata:
+          m_Items: []
+        m_Value: Activates Adjacent at Each Level
+    - rid: 552786097007231374
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630542
+        m_Metadata:
+          m_Items: []
+        m_Value: Doesn't Activate Parent
+    - rid: 552786097007231375
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577252630543
+        m_Metadata:
+          m_Items: []
+        m_Value: Activates Light
+    - rid: 552786097007231376
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577256824832
+        m_Metadata:
+          m_Items: []
+        m_Value: Deactivates Light
+    - rid: 552786097007231377
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577256824833
+        m_Metadata:
+          m_Items: []
+        m_Value: Floods (Marathon 1; Aleph One only)
+    - rid: 552786097007231378
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577256824834
+        m_Metadata:
+          m_Items: []
+        m_Value: Simulation Actions
+    - rid: 552786097007231379
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577256824835
+        m_Metadata:
+          m_Items: []
+        m_Value: Active
+    - rid: 552786097007231380
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577256824836
+        m_Metadata:
+          m_Items: []
+        m_Value: Obstruct Extension
+    - rid: 552786097007231810
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6143694487552
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} to {1}'
+    - rid: 552786097007231812
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6143916785664
+        m_Metadata:
+          m_Items: []
+        m_Value: Platforms

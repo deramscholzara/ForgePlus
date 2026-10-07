@@ -11,6 +11,7 @@ namespace ForgePlus.UI
 
         private VisualElement swatchesContainer;
         private VisualTreeAsset swatchTemplate;
+        private ScrollView scrollView;
 
         protected override string LayoutPath
         {
@@ -21,6 +22,24 @@ namespace ForgePlus.UI
         }
 
         protected abstract string SwatchTemplateName { get; }
+
+        // Saying what the swatches are (none, if they speak for themselves)
+        protected virtual string Header
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        // For long palettes whose selection follows the level's
+        protected virtual bool ScrollsToSelection
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         // PaletteManager may not have changed its swatches for a new mode yet, so each palette shows only its own kind
         protected abstract bool Shows(PaletteManager.Swatch swatch);
@@ -33,9 +52,27 @@ namespace ForgePlus.UI
             }
         }
 
+        // The palette's one list, unless its layout has others
+        protected virtual IEnumerable<VisualElement> SwatchContainers
+        {
+            get
+            {
+                yield return swatchesContainer;
+            }
+        }
+
         protected override void OnLoaded()
         {
+            scrollView = Root.Find<ScrollView>("swatches");
             swatchesContainer = Root.Q("swatches-container");
+
+            var header = Root.Q("header");
+            if (header != null)
+            {
+                header.style.display = Header == null ? DisplayStyle.None : DisplayStyle.Flex;
+                header.Q<Label>("label").text = Header;
+            }
+
             swatchTemplate = LoadTemplate(SwatchTemplateName);
 
             PaletteManager.Instance.OnSwatchesChanged += Rebuild;
@@ -60,11 +97,28 @@ namespace ForgePlus.UI
         {
         }
 
+        protected virtual void OnRebuilt()
+        {
+        }
+
+        protected virtual void OnSelectionShown()
+        {
+        }
+
+        protected virtual VisualElement ContainerFor(PaletteManager.Swatch swatch)
+        {
+            return swatchesContainer;
+        }
+
         protected abstract void FillSwatch(TemplateContainer instance, PaletteManager.Swatch swatch);
 
         private void Rebuild()
         {
-            swatchesContainer.Clear();
+            foreach (var container in SwatchContainers)
+            {
+                container.Clear();
+            }
+
             swatchToggles.Clear();
 
             OnRebuilding();
@@ -90,21 +144,32 @@ namespace ForgePlus.UI
                 swatchToggles.Add(new KeyValuePair<PaletteManager.Swatch, Toggle>(swatch, toggle));
 
                 FillSwatch(instance, swatch);
-                swatchesContainer.Add(instance);
+                ContainerFor(swatch).Add(instance);
             }
 
-            swatchesContainer.IgnoreLayoutPicking();
+            foreach (var container in SwatchContainers)
+            {
+                container.IgnoreLayoutPicking();
+            }
+
+            OnRebuilt();
             ShowSelection();
         }
 
         private void ShowSelection()
         {
-            var selectedSwatch = PaletteManager.Instance.SelectedSwatch;
-
             foreach (var swatchToggle in swatchToggles)
             {
-                swatchToggle.Value.SetValueWithoutNotify(swatchToggle.Key == selectedSwatch);
+                var isSelected = PaletteManager.Instance.IsSelected(swatchToggle.Key);
+                swatchToggle.Value.SetValueWithoutNotify(isSelected);
+
+                if (isSelected && ScrollsToSelection)
+                {
+                    scrollView.ScrollToAfterLayout(swatchToggle.Value);
+                }
             }
+
+            OnSelectionShown();
         }
     }
 }

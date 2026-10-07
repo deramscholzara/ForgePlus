@@ -1,0 +1,534 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Terminals_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: a1b2251e89507744eaed5d4c299ae67e, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231176
+  - rid: 552786097007231177
+  - rid: 552786097007231178
+  - rid: 552786097007231179
+  - rid: 552786097007231180
+  - rid: 552786097007231181
+  - rid: 552786097007231182
+  - rid: 552786097007231183
+  - rid: 552786097007231184
+  - rid: 552786097007231185
+  - rid: 552786097007231186
+  - rid: 552786097007231187
+  - rid: 552786097007231188
+  - rid: 552786097007231189
+  - rid: 552786097007231190
+  - rid: 552786097007231191
+  - rid: 552786097007231192
+  - rid: 552786097007231193
+  - rid: 552786097007231194
+  - rid: 552786097007231717
+  - rid: 552786097007231718
+  - rid: 552786097007231719
+  - rid: 552786097007231720
+  - rid: 552786097007231721
+  - rid: 552786097007231722
+  - rid: 552786097007231723
+  - rid: 552786097007231724
+  - rid: 552786097007231725
+  - rid: 552786097007231726
+  - rid: 552786097007231727
+  - rid: 552786097007231728
+  - rid: 552786097007231729
+  - rid: 552786097007231730
+  - rid: 552786097007231731
+  - rid: 552786097007231732
+  - rid: 552786097007231733
+  - rid: 552786097007231734
+  - rid: 552786097007231735
+  - rid: 552786097007231736
+  - rid: 552786097007231737
+  - rid: 552786097007231738
+  - rid: 552786097007231739
+  - rid: 552786097007231740
+  - rid: 552786097007231741
+  - rid: 552786097007231742
+  - rid: 552786097007231743
+  - rid: 552786097007231744
+  - rid: 552786097007231745
+  - rid: 552786204080472113
+  - rid: 552786204080472114
+  - rid: 552786204080472115
+  - rid: 552786204080472116
+  - rid: 552786204080472117
+  - rid: 552786204080472118
+  - rid: 552786204080472119
+  - rid: 552786204080472120
+  - rid: 552786204080472121
+  - rid: 552786204080472122
+  - rid: 552786204080472123
+  - rid: 552786204080472124
+  - rid: 552786204080472182
+  - rid: 552786204080472183
+  - rid: 552786204080472184
+  - rid: 552786204080472185
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231176
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571858755584
+        m_Metadata:
+          m_Items: []
+        m_Value: Back
+    - rid: 552786097007231177
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571858755585
+        m_Metadata:
+          m_Items: []
+        m_Value: Next
+    - rid: 552786097007231178
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144192
+        m_Metadata:
+          m_Items: []
+        m_Value: Terminals
+    - rid: 552786097007231179
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144193
+        m_Metadata:
+          m_Items: []
+        m_Value: Terminal
+    - rid: 552786097007231180
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144194
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Lines Per Page:'
+    - rid: 552786097007231181
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144195
+        m_Metadata:
+          m_Items: []
+        m_Value: Text Is Encoded
+    - rid: 552786097007231182
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144196
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Only for a legacy form of the data, which has always been optional: the text is lightly scrambled in the file (as Bungie''s tools saved it), so it can''t be read there. Marathon 2, Infinity and Aleph One read the text either way.'
+    - rid: 552786097007231183
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144197
+        m_Metadata:
+          m_Items: []
+        m_Value: Groups
+    - rid: 552786097007231184
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144198
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231185
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144199
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Permutation:'
+    - rid: 552786097007231186
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144200
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Text:'
+    - rid: 552786097007231187
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144201
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Styles (at positions in the text above):'
+    - rid: 552786097007231188
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144202
+        m_Metadata:
+          m_Items: []
+        m_Value: Group Flags
+    - rid: 552786097007231189
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144203
+        m_Metadata:
+          m_Items: []
+        m_Value: Draw Object On Right
+    - rid: 552786097007231190
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144204
+        m_Metadata:
+          m_Items: []
+        m_Value: Center Object
+    - rid: 552786097007231191
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571867144205
+        m_Metadata:
+          m_Items: []
+        m_Value: Marathon 1
+    - rid: 552786097007231192
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571875532800
+        m_Metadata:
+          m_Items: []
+        m_Value: Text Styles
+    - rid: 552786097007231193
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571875532801
+        m_Metadata:
+          m_Items: []
+        m_Value: Faces
+    - rid: 552786097007231194
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2571875532802
+        m_Metadata:
+          m_Items: []
+        m_Value: Colors
+    - rid: 552786097007231717
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229056
+        m_Metadata:
+          m_Items: []
+        m_Value: Marathon 1's logon shape
+    - rid: 552786097007231718
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229057
+        m_Metadata:
+          m_Items: []
+        m_Value: Picture {0} was not found!
+    - rid: 552786097007231719
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229058
+        m_Metadata:
+          m_Items: []
+        m_Value: Checkpoint {0} was not found!
+    - rid: 552786097007231720
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229059
+        m_Metadata:
+          m_Items: []
+        m_Value: Start-marker of the pages to be displayed while the level's mission is unfinished (and whatever its state, if the terminal has no success or failure pages). This page is not displayed in-game.
+    - rid: 552786097007231721
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229060
+        m_Metadata:
+          m_Items: []
+        m_Value: Start-marker of the pages to be displayed once the level's mission is complete. This page is not displayed in-game.
+    - rid: 552786097007231722
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229061
+        m_Metadata:
+          m_Items: []
+        m_Value: Start-marker of the pages to be displayed once the level's mission has failed. This page is not displayed in-game.
+    - rid: 552786097007231723
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229062
+        m_Metadata:
+          m_Items: []
+        m_Value: Exits the terminal.
+    - rid: 552786097007231724
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229063
+        m_Metadata:
+          m_Items: []
+        m_Value: Exits the terminal, and teleports the player to level {0}.
+    - rid: 552786097007231725
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229064
+        m_Metadata:
+          m_Items: []
+        m_Value: Exits the terminal, and teleports the player to polygon {0}.
+    - rid: 552786097007231726
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229065
+        m_Metadata:
+          m_Items: []
+        m_Value: Plays sound {0}, then goes straight on to the next group.
+    - rid: 552786097007231727
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229066
+        m_Metadata:
+          m_Items: []
+        m_Value: Activates the lights and platforms tagged {0}, then goes straight on to the next group.
+    - rid: 552786097007231728
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229067
+        m_Metadata:
+          m_Items: []
+        m_Value: Movie {0}, which Aleph One doesn't play (it shows nothing here).
+    - rid: 552786097007231729
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229068
+        m_Metadata:
+          m_Items: []
+        m_Value: Music track {0}, which Aleph One doesn't play (it shows nothing here).
+    - rid: 552786097007231730
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229069
+        m_Metadata:
+          m_Items: []
+        m_Value: A view of object {0}, which Aleph One doesn't draw (it shows nothing here).
+    - rid: 552786097007231731
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229070
+        m_Metadata:
+          m_Items: []
+        m_Value: Default and unspecified group type ({0}), which Aleph One ignores.
+    - rid: 552786097007231732
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229071
+        m_Metadata:
+          m_Items: []
+        m_Value: Normal
+    - rid: 552786097007231733
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229072
+        m_Metadata:
+          m_Items: []
+        m_Value: Bold
+    - rid: 552786097007231734
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229073
+        m_Metadata:
+          m_Items: []
+        m_Value: Italics
+    - rid: 552786097007231735
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229074
+        m_Metadata:
+          m_Items: []
+        m_Value: Underline
+    - rid: 552786097007231736
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229075
+        m_Metadata:
+          m_Items: []
+        m_Value: Color {0}
+    - rid: 552786097007231737
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229076
+        m_Metadata:
+          m_Items: []
+        m_Value: (none)
+    - rid: 552786097007231738
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229077
+        m_Metadata:
+          m_Items: []
+        m_Value: 'At {0}: {1}, color {2}'
+    - rid: 552786097007231739
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229078
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786097007231740
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229079
+        m_Metadata:
+          m_Items: []
+        m_Value: Page {0} of {1}  -  Group {2}
+    - rid: 552786097007231741
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229080
+        m_Metadata:
+          m_Items: []
+        m_Value: Page {0} of {1}  -  Group {2}, part {3} of {4}
+    - rid: 552786097007231742
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229081
+        m_Metadata:
+          m_Items: []
+        m_Value: plain
+    - rid: 552786097007231743
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229082
+        m_Metadata:
+          m_Items: []
+        m_Value: bold
+    - rid: 552786097007231744
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229083
+        m_Metadata:
+          m_Items: []
+        m_Value: italic
+    - rid: 552786097007231745
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6138141229084
+        m_Metadata:
+          m_Items: []
+        m_Value: underline
+    - rid: 552786204080472113
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354432
+        m_Metadata:
+          m_Items: []
+        m_Value: Not used by this group type.
+    - rid: 552786204080472114
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354433
+        m_Metadata:
+          m_Items: []
+        m_Value: The picture shown with the logon text.
+    - rid: 552786204080472115
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354434
+        m_Metadata:
+          m_Items: []
+        m_Value: The picture shown with the logoff text.
+    - rid: 552786204080472116
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354435
+        m_Metadata:
+          m_Items: []
+        m_Value: The picture it shows.
+    - rid: 552786204080472117
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354436
+        m_Metadata:
+          m_Items: []
+        m_Value: The level it teleports to.
+    - rid: 552786204080472118
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354437
+        m_Metadata:
+          m_Items: []
+        m_Value: The polygon it teleports to.
+    - rid: 552786204080472119
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354438
+        m_Metadata:
+          m_Items: []
+        m_Value: The goal object (by its number) whose location the map shows.
+    - rid: 552786204080472120
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354439
+        m_Metadata:
+          m_Items: []
+        m_Value: The sound it plays.
+    - rid: 552786204080472121
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354440
+        m_Metadata:
+          m_Items: []
+        m_Value: How long the static lasts, in ticks (30 per second).
+    - rid: 552786204080472122
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354441
+        m_Metadata:
+          m_Items: []
+        m_Value: The tag of the lights and platforms it activates.
+    - rid: 552786204080472123
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354442
+        m_Metadata:
+          m_Items: []
+        m_Value: The movie it shows (Aleph One doesn't play terminal movies).
+    - rid: 552786204080472124
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329901038354443
+        m_Metadata:
+          m_Items: []
+        m_Value: The music track it plays (Aleph One doesn't play terminal tracks).
+    - rid: 552786204080472182
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1434293691367424
+        m_Metadata:
+          m_Items: []
+        m_Value: Add Group
+    - rid: 552786204080472183
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1434293703950336
+        m_Metadata:
+          m_Items: []
+        m_Value: Remove Group
+    - rid: 552786204080472184
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1434293703950337
+        m_Metadata:
+          m_Items: []
+        m_Value: A group is added after the selected one (or nearby, where the game can reach it). Drag a group's number to move it elsewhere in the order. An edit that would leave the terminal unread, leave a group the game can't reach, or strand the player is ignored.
+    - rid: 552786204080472185
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1434293703950338
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Styles are written in the text as Bungie''s terminal source wrote them: $B and $b turn bold on and off, $I and $i italic, $U and $u underline, and $C0 to $C7 set the color. Each group starts plain, in color 0. Click a style under Text Styles to apply it to the selected text.'

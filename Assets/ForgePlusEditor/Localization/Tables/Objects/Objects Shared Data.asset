@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Objects Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Objects
+  m_TableCollectionNameGuid: 3e941181d13d50948989d12e273ce204
+  m_KeyGenerator:
+    rid: 552786097007231040
+  m_Entries:
+  - m_Id: 2576011116544
+    m_Key: Inspector.Placement.InitialCount.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576011116545
+    m_Key: Inspector.Placement.MinimumCount.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576011116546
+    m_Key: Inspector.Placement.MaximumCount.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576011116547
+    m_Key: Inspector.Placement.RandomCountIsInfinite.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576015310848
+    m_Key: Inspector.Placement.RandomCount.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576015310849
+    m_Key: Inspector.Placement.RandomChance.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576015310850
+    m_Key: Inspector.Placement.ReappearsInRandomLocation.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576023699456
+    m_Key: Inspector.Placements.ObjectPlacement.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576023699457
+    m_Key: Inspector.Placements.HowTheLevelPlaces.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576023699458
+    m_Key: Inspector.Placements.Items.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576023699459
+    m_Key: Inspector.Placements.Monsters.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2576451518464
+    m_Key: VisualizationObjects.ShowEverything.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231040
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928705121

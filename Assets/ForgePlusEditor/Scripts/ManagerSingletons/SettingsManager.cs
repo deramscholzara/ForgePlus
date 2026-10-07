@@ -1,4 +1,5 @@
 ﻿using ForgePlus.LevelManipulation;
+using ForgePlus.Sound;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
 using System;
@@ -8,6 +9,15 @@ using UnityEngine.Rendering.Universal;
 
 namespace ForgePlus.ApplicationGeneral
 {
+    // What Save Merged does with the loaded map file's checksum
+    public enum MergedSaveChecksums
+    {
+        // Asks each time, in a dialog that can remember the choice
+        Ask,
+        Keep,
+        Regenerate,
+    }
+
     // Early, so it's ready before the settings UI binds to it
     [DefaultExecutionOrder(-100)]
     public class SettingsManager : SingletonMonoBehaviour<SettingsManager>
@@ -22,6 +32,11 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_ColorAdjustment = "Settings_ColorAdjustment";
         private const string PlayerPrefsSettingsKey_Vignette = "Settings_Vignette";
         private const string PlayerPrefsSettingsKey_ClipPlatformSides = "Settings_ClipPlatformSides";
+        private const string PlayerPrefsSettingsKey_ShowInvalidSides = "Settings_ShowInvalidSides";
+        private const string PlayerPrefsSettingsKey_MergedSaveChecksum = "Settings_MergedSaveChecksum";
+        private const string PlayerPrefsSettingsKey_SoundDirection = "Settings_SoundDirection";
+        private const string PlayerPrefsSettingsKey_SoundVolume = "Settings_SoundVolume";
+        private const string PlayerPrefsSettingsKey_PlayLevelAudio = "Settings_PlayLevelAudio";
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
 
@@ -50,7 +65,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             get
             {
-                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_FullScreen, 1) == 0 ? false : true;
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_FullScreen, 1) != 0;
             }
             set
             {
@@ -85,7 +100,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             get
             {
-                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_AmbientOcclusion, 1) == 0 ? false : true;
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_AmbientOcclusion, 1) != 0;
             }
             set
             {
@@ -105,7 +120,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             get
             {
-                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_Bloom, 1) == 0 ? false : true;
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_Bloom, 1) != 0;
             }
             set
             {
@@ -125,7 +140,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             get
             {
-                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_ColorAdjustment, 1) == 0 ? false : true;
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_ColorAdjustment, 1) != 0;
             }
             set
             {
@@ -145,7 +160,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             get
             {
-                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_Vignette, 1) == 0 ? false : true;
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_Vignette, 1) != 0;
             }
             set
             {
@@ -165,7 +180,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             get
             {
-                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_ClipPlatformSides, 1) == 0 ? false : true;
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_ClipPlatformSides, 1) != 0;
             }
             set
             {
@@ -174,6 +189,51 @@ namespace ForgePlus.ApplicationGeneral
                 PlatformSideClipping.ClippingEnabled = value;
 
                 OnSettingChanged?.Invoke(nameof(ClipPlatformSidesEnabled));
+            }
+        }
+
+        // Placeholder sides (with no side data) can't be clicked once hidden, so hiding them deselects any
+        public bool ShowInvalidSidesEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_ShowInvalidSides, 1) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_ShowInvalidSides, value ? 1 : 0);
+
+                if (!value && SelectionManager.Instance)
+                {
+                    foreach (var selection in SelectionManager.Instance.Selection)
+                    {
+                        if (selection is LevelEntity_Side side && side.NativeObject == null)
+                        {
+                            SelectionManager.Instance.DeselectAll();
+                            break;
+                        }
+                    }
+                }
+
+                LevelEntity_Side.PlaceholdersAreVisible = value;
+
+                OnSettingChanged?.Invoke(nameof(ShowInvalidSidesEnabled));
+            }
+        }
+
+        public MergedSaveChecksums MergedSaveChecksum
+        {
+            get
+            {
+                var value = PlayerPrefs.GetInt(PlayerPrefsSettingsKey_MergedSaveChecksum, (int) MergedSaveChecksums.Ask);
+
+                return Enum.IsDefined(typeof(MergedSaveChecksums), value) ? (MergedSaveChecksums) value : MergedSaveChecksums.Ask;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_MergedSaveChecksum, (int) value);
+
+                OnSettingChanged?.Invoke(nameof(MergedSaveChecksum));
             }
         }
 
@@ -218,8 +278,68 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Shown in every mode when on; always shown in Sounds mode
+        public bool SoundDirectionEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_SoundDirection, 0) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_SoundDirection, value ? 1 : 0);
+
+                OnSettingChanged?.Invoke(nameof(SoundDirectionEnabled));
+            }
+        }
+
+        // Shown in every mode when on; always shown in Sounds mode
+        public bool SoundVolumeEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_SoundVolume, 0) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_SoundVolume, value ? 1 : 0);
+
+                OnSettingChanged?.Invoke(nameof(SoundVolumeEnabled));
+            }
+        }
+
+        // Plays what the game would play at the camera (LevelSoundPlayback)
+        public bool PlayLevelAudioEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_PlayLevelAudio, 0) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_PlayLevelAudio, value ? 1 : 0);
+
+                if (LevelSoundPlayback.Instance)
+                {
+                    LevelSoundPlayback.Instance.IsListening = value;
+                }
+
+                OnSettingChanged?.Invoke(nameof(PlayLevelAudioEnabled));
+            }
+        }
+
+        // Sounds mode always shows sounds' directions and volumes
+        public bool SoundDisplaysForcedOn
+        {
+            get
+            {
+                return ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Sounds;
+            }
+        }
+
         private void ApplyObjectVisibility()
         {
+            LevelEntity_MapObject.SoundSourceIconsAreVisible = SoundDisplaysForcedOn;
             LevelEntity_MapObject.IconsAreVisible = objectIconsEnabled || ObjectIconsForcedOn;
             LevelEntity_MapObject.SpritePreviewsAreVisible = spritePreviewsEnabled;
 
@@ -236,6 +356,7 @@ namespace ForgePlus.ApplicationGeneral
             IsFullScreen = IsFullScreen;
             MinimumLight = MinimumLight;
             ClipPlatformSidesEnabled = ClipPlatformSidesEnabled;
+            ShowInvalidSidesEnabled = ShowInvalidSidesEnabled;
 
             ModeManager.Instance.OnPrimaryModeChanged += OnPrimaryModeChanged;
         }

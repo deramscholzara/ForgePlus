@@ -25,12 +25,21 @@ namespace ForgePlus.UI
             save.BindEnabled(editor, nameof(EditorViewModel.IsLevelOpen));
             save.clicked += OnSave;
 
+            var saveMerged = Root.Find<Button>("save-merged");
+            saveMerged.BindEnabled(editor, nameof(EditorViewModel.IsLevelOpen));
+            saveMerged.clicked += OnSaveMerged;
+
             Root.Find<Button>("quit").clicked += OnQuit;
         }
 
         private static void OnSave()
         {
             MapsLoading.Instance.Save();
+        }
+
+        private static void OnSaveMerged()
+        {
+            MapsLoading.Instance.SaveMerged();
         }
 
         private static void OnQuit()

@@ -1,23 +1,31 @@
-﻿using ForgePlus.Palette;
+﻿using ForgePlus.Inspection;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
     public class EditableSurface_Media : EditableSurface_Base
     {
-        [System.NonSerialized]
-        public LevelEntity_Media Media = null;
-
-        // TODO: Get rid of these and just attain them on the fly instead of preloading
-        //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
         public LevelEntity_Polygon Polygon = null;
-        [System.NonSerialized]
-        public LevelEntity_Light RuntimeLight = null;
 
-        public override void OnValidatedPointerClick(PointerEventData eventData)
+        public LevelEntity_Media Media
+        {
+            get
+            {
+                return Polygon.Media;
+            }
+        }
+
+        public override LevelEntity_Light RuntimeLight
+        {
+            get
+            {
+                return Polygon.ParentLevel.Lights[Polygon.NativeObject.media_lightsource_index];
+            }
+        }
+
+        public override void OnValidatedPointerClick(WorldPointerEventData eventData)
         {
             switch (ModeManager.Instance.PrimaryMode)
             {
@@ -25,34 +33,31 @@ namespace ForgePlus.LevelManipulation
                     SelectionManager.Instance.ToggleObjectSelection(Polygon, multiSelect: false);
                     break;
                 case ModeManager.PrimaryModes.Lights:
-                    SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
-                    PaletteManager.Instance.SelectSwatchForLight(RuntimeLight);
+                    ToggleLightSelection();
                     break;
                 case ModeManager.PrimaryModes.Media:
-                    if (Media != null)
-                    {
-                        SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(Media);
-                    }
-
+                case ModeManager.PrimaryModes.Sounds:
+                    ClickPolygonInMode(Polygon);
                     break;
                 default:
                     Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
-                    break;
+                    return;
             }
+
+            InspectorPanel.Instance.RefreshAllInspectors();
         }
 
-        public override void OnValidatedBeginDrag(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedDrag(PointerEventData eventData)
+        public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedEndDrag(PointerEventData eventData)
+        public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }

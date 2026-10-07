@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <!-- Bound to Inspector_PlaceholderSide -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.SideNone.Label.Text" />
+        </ui:Instance>
+        <ui:Label text="@Common/Inspector.PlaceholderSide.ThisFaceOfIts.Text" class="fp-inspector-note" />
+        <ui:Instance template="Row" name="LineIndex">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.LineIndex.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Face">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.Face.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="FacingPolygon">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.FacingPolygon.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="OpposingPolygon">
+            <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.OpposingPolygon.Label.Text" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,3474 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Common_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: 1431de77c0e2c6e4c9b1d55725225dee, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231390
+  - rid: 552786097007231391
+  - rid: 552786097007231392
+  - rid: 552786097007231393
+  - rid: 552786097007231394
+  - rid: 552786097007231395
+  - rid: 552786097007231396
+  - rid: 552786097007231397
+  - rid: 552786097007231398
+  - rid: 552786097007231399
+  - rid: 552786097007231400
+  - rid: 552786097007231401
+  - rid: 552786097007231402
+  - rid: 552786097007231403
+  - rid: 552786097007231404
+  - rid: 552786097007231405
+  - rid: 552786097007231406
+  - rid: 552786097007231407
+  - rid: 552786097007231408
+  - rid: 552786097007231409
+  - rid: 552786097007231410
+  - rid: 552786097007231411
+  - rid: 552786097007231412
+  - rid: 552786097007231413
+  - rid: 552786097007231414
+  - rid: 552786097007231415
+  - rid: 552786097007231416
+  - rid: 552786097007231417
+  - rid: 552786097007231418
+  - rid: 552786097007231419
+  - rid: 552786097007231420
+  - rid: 552786097007231421
+  - rid: 552786097007231422
+  - rid: 552786097007231423
+  - rid: 552786097007231424
+  - rid: 552786097007231425
+  - rid: 552786097007231426
+  - rid: 552786097007231427
+  - rid: 552786097007231428
+  - rid: 552786097007231429
+  - rid: 552786097007231430
+  - rid: 552786097007231431
+  - rid: 552786097007231432
+  - rid: 552786097007231433
+  - rid: 552786097007231434
+  - rid: 552786097007231435
+  - rid: 552786097007231436
+  - rid: 552786097007231437
+  - rid: 552786097007231438
+  - rid: 552786097007231439
+  - rid: 552786097007231440
+  - rid: 552786097007231441
+  - rid: 552786097007231442
+  - rid: 552786097007231443
+  - rid: 552786097007231444
+  - rid: 552786097007231445
+  - rid: 552786097007231446
+  - rid: 552786097007231447
+  - rid: 552786097007231448
+  - rid: 552786097007231449
+  - rid: 552786097007231450
+  - rid: 552786097007231451
+  - rid: 552786097007231452
+  - rid: 552786097007231453
+  - rid: 552786097007231454
+  - rid: 552786097007231455
+  - rid: 552786097007231456
+  - rid: 552786097007231457
+  - rid: 552786097007231458
+  - rid: 552786097007231459
+  - rid: 552786097007231460
+  - rid: 552786097007231461
+  - rid: 552786097007231462
+  - rid: 552786097007231463
+  - rid: 552786097007231464
+  - rid: 552786097007231465
+  - rid: 552786097007231466
+  - rid: 552786097007231467
+  - rid: 552786097007231468
+  - rid: 552786097007231469
+  - rid: 552786097007231470
+  - rid: 552786097007231471
+  - rid: 552786097007231472
+  - rid: 552786097007231473
+  - rid: 552786097007231474
+  - rid: 552786097007231475
+  - rid: 552786097007231476
+  - rid: 552786097007231477
+  - rid: 552786097007231478
+  - rid: 552786097007231502
+  - rid: 552786097007231503
+  - rid: 552786097007231504
+  - rid: 552786097007231505
+  - rid: 552786097007231506
+  - rid: 552786097007231507
+  - rid: 552786097007231508
+  - rid: 552786097007231509
+  - rid: 552786097007231510
+  - rid: 552786097007231511
+  - rid: 552786097007231512
+  - rid: 552786097007231513
+  - rid: 552786097007231514
+  - rid: 552786097007231515
+  - rid: 552786097007231516
+  - rid: 552786097007231517
+  - rid: 552786097007231518
+  - rid: 552786097007231519
+  - rid: 552786097007231520
+  - rid: 552786097007231521
+  - rid: 552786097007231522
+  - rid: 552786097007231523
+  - rid: 552786097007231524
+  - rid: 552786097007231525
+  - rid: 552786097007231526
+  - rid: 552786097007231527
+  - rid: 552786097007231528
+  - rid: 552786097007231529
+  - rid: 552786097007231530
+  - rid: 552786097007231531
+  - rid: 552786097007231532
+  - rid: 552786097007231533
+  - rid: 552786097007231534
+  - rid: 552786097007231535
+  - rid: 552786097007231536
+  - rid: 552786097007231537
+  - rid: 552786097007231538
+  - rid: 552786097007231539
+  - rid: 552786097007231540
+  - rid: 552786097007231541
+  - rid: 552786097007231542
+  - rid: 552786097007231543
+  - rid: 552786097007231544
+  - rid: 552786097007231545
+  - rid: 552786097007231546
+  - rid: 552786097007231547
+  - rid: 552786097007231548
+  - rid: 552786097007231549
+  - rid: 552786097007231550
+  - rid: 552786097007231551
+  - rid: 552786097007231552
+  - rid: 552786097007231553
+  - rid: 552786097007231554
+  - rid: 552786097007231555
+  - rid: 552786097007231556
+  - rid: 552786097007231557
+  - rid: 552786097007231558
+  - rid: 552786097007231559
+  - rid: 552786097007231560
+  - rid: 552786097007231561
+  - rid: 552786097007231562
+  - rid: 552786097007231563
+  - rid: 552786097007231564
+  - rid: 552786097007231565
+  - rid: 552786097007231566
+  - rid: 552786097007231567
+  - rid: 552786097007231568
+  - rid: 552786097007231569
+  - rid: 552786097007231570
+  - rid: 552786097007231571
+  - rid: 552786097007231572
+  - rid: 552786097007231573
+  - rid: 552786097007231574
+  - rid: 552786097007231575
+  - rid: 552786097007231576
+  - rid: 552786097007231577
+  - rid: 552786097007231578
+  - rid: 552786097007231579
+  - rid: 552786097007231580
+  - rid: 552786097007231581
+  - rid: 552786097007231582
+  - rid: 552786097007231583
+  - rid: 552786097007231584
+  - rid: 552786097007231585
+  - rid: 552786097007231586
+  - rid: 552786097007231587
+  - rid: 552786097007231588
+  - rid: 552786097007231589
+  - rid: 552786097007231590
+  - rid: 552786097007231591
+  - rid: 552786097007231592
+  - rid: 552786097007231593
+  - rid: 552786097007231594
+  - rid: 552786097007231595
+  - rid: 552786097007231596
+  - rid: 552786097007231597
+  - rid: 552786097007231598
+  - rid: 552786097007231599
+  - rid: 552786097007231600
+  - rid: 552786097007231601
+  - rid: 552786097007231602
+  - rid: 552786097007231603
+  - rid: 552786097007231604
+  - rid: 552786097007231605
+  - rid: 552786097007231606
+  - rid: 552786097007231607
+  - rid: 552786097007231608
+  - rid: 552786097007231609
+  - rid: 552786097007231610
+  - rid: 552786097007231611
+  - rid: 552786097007231612
+  - rid: 552786097007231613
+  - rid: 552786097007231614
+  - rid: 552786097007231615
+  - rid: 552786097007231616
+  - rid: 552786097007231617
+  - rid: 552786097007231618
+  - rid: 552786097007231619
+  - rid: 552786097007231620
+  - rid: 552786097007231621
+  - rid: 552786097007231622
+  - rid: 552786097007231623
+  - rid: 552786097007231624
+  - rid: 552786097007231625
+  - rid: 552786097007231626
+  - rid: 552786097007231627
+  - rid: 552786097007231628
+  - rid: 552786097007231629
+  - rid: 552786097007231630
+  - rid: 552786097007231631
+  - rid: 552786097007231632
+  - rid: 552786097007231633
+  - rid: 552786097007231634
+  - rid: 552786097007231635
+  - rid: 552786097007231636
+  - rid: 552786097007231637
+  - rid: 552786097007231638
+  - rid: 552786097007231639
+  - rid: 552786097007231640
+  - rid: 552786097007231641
+  - rid: 552786097007231642
+  - rid: 552786097007231643
+  - rid: 552786097007231644
+  - rid: 552786097007231645
+  - rid: 552786097007231646
+  - rid: 552786097007231647
+  - rid: 552786097007231648
+  - rid: 552786097007231649
+  - rid: 552786097007231650
+  - rid: 552786097007231651
+  - rid: 552786097007231652
+  - rid: 552786097007231653
+  - rid: 552786097007231654
+  - rid: 552786097007231655
+  - rid: 552786097007231656
+  - rid: 552786097007231657
+  - rid: 552786097007231658
+  - rid: 552786097007231659
+  - rid: 552786097007231660
+  - rid: 552786097007231661
+  - rid: 552786097007231662
+  - rid: 552786097007231663
+  - rid: 552786097007231664
+  - rid: 552786097007231665
+  - rid: 552786097007231666
+  - rid: 552786097007231667
+  - rid: 552786097007231668
+  - rid: 552786097007231669
+  - rid: 552786097007231670
+  - rid: 552786097007231671
+  - rid: 552786097007231672
+  - rid: 552786097007231673
+  - rid: 552786097007231674
+  - rid: 552786097007231675
+  - rid: 552786097007231676
+  - rid: 552786097007231677
+  - rid: 552786097007231678
+  - rid: 552786097007231679
+  - rid: 552786097007231680
+  - rid: 552786097007231681
+  - rid: 552786097007231682
+  - rid: 552786097007231683
+  - rid: 552786097007231684
+  - rid: 552786097007231685
+  - rid: 552786097007231686
+  - rid: 552786097007231687
+  - rid: 552786097007231688
+  - rid: 552786097007231689
+  - rid: 552786097007231690
+  - rid: 552786097007231691
+  - rid: 552786097007231692
+  - rid: 552786097007231693
+  - rid: 552786097007231694
+  - rid: 552786097007231695
+  - rid: 552786097007231696
+  - rid: 552786097007231697
+  - rid: 552786097007231698
+  - rid: 552786097007231814
+  - rid: 552786097007231815
+  - rid: 552786097007231816
+  - rid: 552786097007231818
+  - rid: 552786097007231819
+  - rid: 552786097007231820
+  - rid: 552786097007231821
+  - rid: 552786097007231822
+  - rid: 552786097007231823
+  - rid: 552786097007231824
+  - rid: 552786097007231825
+  - rid: 552786097007231826
+  - rid: 552786097007231827
+  - rid: 552786097007231828
+  - rid: 552786097007231830
+  - rid: 552786097007231831
+  - rid: 552786097007231832
+  - rid: 552786097007231833
+  - rid: 552786097007231834
+  - rid: 552786097007231835
+  - rid: 552786097007231836
+  - rid: 552786097007231837
+  - rid: 552786097007231838
+  - rid: 552786097007231839
+  - rid: 552786097007231840
+  - rid: 552786097007231842
+  - rid: 552786097007231843
+  - rid: 552786097007231844
+  - rid: 552786097007231845
+  - rid: 552786097007231846
+  - rid: 552786097007231847
+  - rid: 552786097007231848
+  - rid: 552786097007231849
+  - rid: 552786097007231850
+  - rid: 552786097007231851
+  - rid: 552786097007231852
+  - rid: 552786097007231853
+  - rid: 552786097007231854
+  - rid: 552786097007231855
+  - rid: 552786097007231856
+  - rid: 552786097007231857
+  - rid: 552786097007231858
+  - rid: 552786097007231859
+  - rid: 552786097007231860
+  - rid: 552786097007231861
+  - rid: 552786097007231862
+  - rid: 552786097007231863
+  - rid: 552786097007231864
+  - rid: 552786097007231865
+  - rid: 552786097007231866
+  - rid: 552786097007231867
+  - rid: 552786097007231868
+  - rid: 552786097007231869
+  - rid: 552786097007231870
+  - rid: 552786097007231871
+  - rid: 552786097007231872
+  - rid: 552786097007231873
+  - rid: 552786097007231874
+  - rid: 552786097007231875
+  - rid: 552786097007231876
+  - rid: 552786097007231877
+  - rid: 552786097007231878
+  - rid: 552786097007231879
+  - rid: 552786097007231880
+  - rid: 552786097007231881
+  - rid: 552786097007231882
+  - rid: 552786097007231883
+  - rid: 552786097007231884
+  - rid: 552786097007231885
+  - rid: 552786097007231886
+  - rid: 552786097007231887
+  - rid: 552786097007231888
+  - rid: 552786129695801426
+  - rid: 552786129695801427
+  - rid: 552786132139770094
+  - rid: 552786132139770095
+  - rid: 552786132139770096
+  - rid: 552786132139770097
+  - rid: 552786132139770098
+  - rid: 552786132139770099
+  - rid: 552786132139770100
+  - rid: 552786132139770101
+  - rid: 552786132139770102
+  - rid: 552786132139770103
+  - rid: 552786132139770104
+  - rid: 552786132139770105
+  - rid: 552786132139770106
+  - rid: 552786132139770107
+  - rid: 552786132139770108
+  - rid: 552786132139770109
+  - rid: 552786132139770110
+  - rid: 552786132139770111
+  - rid: 552786132139770112
+  - rid: 552786132139770113
+  - rid: 552786132139770114
+  - rid: 552786132139770115
+  - rid: 552786132139770116
+  - rid: 552786132139770117
+  - rid: 552786132139770118
+  - rid: 552786132139770119
+  - rid: 552786132139770120
+  - rid: 552786132139770121
+  - rid: 552786132139770122
+  - rid: 552786132139770123
+  - rid: 552786132139770124
+  - rid: 552786132139770125
+  - rid: 552786132139770126
+  - rid: 552786132139770127
+  - rid: 552786204080472132
+  - rid: 552786204080472133
+  - rid: 552786204080472134
+  - rid: 552786204080472135
+  - rid: 552786204080472136
+  - rid: 552786204080472137
+  - rid: 552786204080472138
+  - rid: 552786204080472139
+  - rid: 552786204080472140
+  - rid: 552786204080472141
+  - rid: 552786204080472142
+  - rid: 552786204080472143
+  - rid: 552786204080472144
+  - rid: 552786204080472145
+  - rid: 552786204080472146
+  - rid: 552786204080472147
+  - rid: 552786204080472148
+  - rid: 552786204080472166
+  - rid: 552786204080472167
+  - rid: 552786204080472170
+  - rid: 552786204080472171
+  - rid: 552786204080472172
+  - rid: 552786204080472173
+  - rid: 552786204080472194
+  - rid: 552786204080472195
+  - rid: 552786204080472196
+  - rid: 552786204080472197
+  - rid: 552786204080472198
+  - rid: 552786204080472199
+  - rid: 552786204080472200
+  - rid: 552786204080472201
+  - rid: 552786204080472202
+  - rid: 552786204080472207
+  - rid: 552786204080472208
+  - rid: 552786204080472209
+  - rid: 552786204080472210
+  - rid: 552786204080472211
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231390
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585184059392
+        m_Metadata:
+          m_Items: []
+        m_Value: Select...
+    - rid: 552786097007231391
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585196642304
+        m_Metadata:
+          m_Items: []
+        m_Value: Checkbox
+    - rid: 552786097007231392
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632192
+        m_Metadata:
+          m_Items: []
+        m_Value: Object
+    - rid: 552786097007231393
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632193
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231394
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632194
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231395
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632195
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Subtype:'
+    - rid: 552786097007231396
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632196
+        m_Metadata:
+          m_Items: []
+        m_Value: Choosing a sound needs a sounds file (Files tab), to know which sounds there are
+    - rid: 552786097007231397
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632197
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Sound:'
+    - rid: 552786097007231398
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632198
+        m_Metadata:
+          m_Items: []
+        m_Value: The sound it plays instead, while its platform moves (its platform's moving sound)
+    - rid: 552786097007231399
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632199
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Plays:'
+    - rid: 552786097007231400
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632200
+        m_Metadata:
+          m_Items: []
+        m_Value: As a platform sound, it plays its platform's moving sound (rather than its own sound) while the platform moves, and nothing while it doesn't.
+    - rid: 552786097007231401
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632201
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Activates On:'
+    - rid: 552786097007231402
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632202
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Angle:'
+    - rid: 552786097007231403
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632203
+        m_Metadata:
+          m_Items: []
+        m_Value: The volume follows a light's intensity while the game runs (saved as the light's index, negated)
+    - rid: 552786097007231404
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632204
+        m_Metadata:
+          m_Items: []
+        m_Value: Volume from Light
+    - rid: 552786097007231405
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632205
+        m_Metadata:
+          m_Items: []
+        m_Value: 0 is silent, and 256 is full volume
+    - rid: 552786097007231406
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632206
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Volume:'
+    - rid: 552786097007231407
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632207
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light ID:'
+    - rid: 552786097007231408
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632208
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Saved As:'
+    - rid: 552786097007231409
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632209
+        m_Metadata:
+          m_Items: []
+        m_Value: 'While the game runs, the sound''s volume follows the light''s intensity: silent while it''s off, and full while it''s fully on. It''s saved as the light''s index, negated (so light 0 can''t be one).'
+    - rid: 552786097007231410
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632210
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Position:'
+    - rid: 552786097007231411
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632211
+        m_Metadata:
+          m_Items: []
+        m_Value: Flags
+    - rid: 552786097007231412
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632212
+        m_Metadata:
+          m_Items: []
+        m_Value: Invisible
+    - rid: 552786097007231413
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632213
+        m_Metadata:
+          m_Items: []
+        m_Value: From Ceiling
+    - rid: 552786097007231414
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632214
+        m_Metadata:
+          m_Items: []
+        m_Value: Blind
+    - rid: 552786097007231415
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632215
+        m_Metadata:
+          m_Items: []
+        m_Value: Deaf
+    - rid: 552786097007231416
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632216
+        m_Metadata:
+          m_Items: []
+        m_Value: Network Only
+    - rid: 552786097007231417
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632217
+        m_Metadata:
+          m_Items: []
+        m_Value: Floats
+    - rid: 552786097007231418
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632218
+        m_Metadata:
+          m_Items: []
+        m_Value: Placement
+    - rid: 552786097007231419
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632219
+        m_Metadata:
+          m_Items: []
+        m_Value: Shared by every object of this type (see Object Placement, with nothing selected)
+    - rid: 552786097007231420
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585498632220
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Polygon ID:'
+    - rid: 552786097007231421
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585557352448
+        m_Metadata:
+          m_Items: []
+        m_Value: Side (None)
+    - rid: 552786097007231422
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585557352449
+        m_Metadata:
+          m_Items: []
+        m_Value: This face of its line has no side in the level, so it has no texture. Its polygons' heights can expose it (as they're shown here, or as platforms move), where the game draws nothing.
+    - rid: 552786097007231423
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585557352450
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Line:'
+    - rid: 552786097007231424
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585557352451
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Face:'
+    - rid: 552786097007231425
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585557352452
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Faces:'
+    - rid: 552786097007231426
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585557352453
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Opposite:'
+    - rid: 552786097007231427
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585796427776
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon
+    - rid: 552786097007231428
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622080
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231429
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622081
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231430
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622082
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Permutation:'
+    - rid: 552786097007231431
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622083
+        m_Metadata:
+          m_Items: []
+        m_Value: Floor
+    - rid: 552786097007231432
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622084
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Height:'
+    - rid: 552786097007231433
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622085
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light:'
+    - rid: 552786097007231434
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622086
+        m_Metadata:
+          m_Items: []
+        m_Value: Ceiling
+    - rid: 552786097007231435
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622087
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Height:'
+    - rid: 552786097007231436
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585800622088
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light:'
+    - rid: 552786097007231437
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585804816384
+        m_Metadata:
+          m_Items: []
+        m_Value: Media
+    - rid: 552786097007231438
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585804816385
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Index:'
+    - rid: 552786097007231439
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585804816386
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light:'
+    - rid: 552786097007231440
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585804816387
+        m_Metadata:
+          m_Items: []
+        m_Value: Sounds
+    - rid: 552786097007231441
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585804816388
+        m_Metadata:
+          m_Items: []
+        m_Value: Its entry in the level's ambient sounds (Sounds mode lists them), which it loops while the player is in it
+    - rid: 552786097007231442
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585809010688
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Ambient:'
+    - rid: 552786097007231443
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585809010689
+        m_Metadata:
+          m_Items: []
+        m_Value: Its entry in the level's random sounds (Sounds mode lists them), which it plays now and then while the player is in it
+    - rid: 552786097007231444
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585809010690
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Random:'
+    - rid: 552786097007231445
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585809010691
+        m_Metadata:
+          m_Items: []
+        m_Value: The sound sources near enough to it to be heard in it (as the level's precalculated map indexes list them)
+    - rid: 552786097007231446
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585809010692
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Hears Sound Sources:'
+    - rid: 552786097007231447
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585955811328
+        m_Metadata:
+          m_Items: []
+        m_Value: Menu
+    - rid: 552786097007231448
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005632
+        m_Metadata:
+          m_Items: []
+        m_Value: Geometry
+    - rid: 552786097007231449
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005633
+        m_Metadata:
+          m_Items: []
+        m_Value: Textures
+    - rid: 552786097007231450
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005634
+        m_Metadata:
+          m_Items: []
+        m_Value: Lights
+    - rid: 552786097007231451
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005635
+        m_Metadata:
+          m_Items: []
+        m_Value: Media
+    - rid: 552786097007231452
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005636
+        m_Metadata:
+          m_Items: []
+        m_Value: Sounds
+    - rid: 552786097007231453
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005637
+        m_Metadata:
+          m_Items: []
+        m_Value: Platforms
+    - rid: 552786097007231454
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005638
+        m_Metadata:
+          m_Items: []
+        m_Value: Objects
+    - rid: 552786097007231455
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005639
+        m_Metadata:
+          m_Items: []
+        m_Value: Annotations
+    - rid: 552786097007231456
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005640
+        m_Metadata:
+          m_Items: []
+        m_Value: Level
+    - rid: 552786097007231457
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005641
+        m_Metadata:
+          m_Items: []
+        m_Value: Map
+    - rid: 552786097007231458
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005642
+        m_Metadata:
+          m_Items: []
+        m_Value: Terminals
+    - rid: 552786097007231459
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005643
+        m_Metadata:
+          m_Items: []
+        m_Value: Save Merged
+    - rid: 552786097007231460
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005644
+        m_Metadata:
+          m_Items: []
+        m_Value: Save Level
+    - rid: 552786097007231461
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585960005645
+        m_Metadata:
+          m_Items: []
+        m_Value: Quit
+    - rid: 552786097007231462
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585968394240
+        m_Metadata:
+          m_Items: []
+        m_Value: Frame Selected
+    - rid: 552786097007231463
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585968394241
+        m_Metadata:
+          m_Items: []
+        m_Value: X
+    - rid: 552786097007231464
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585972588544
+        m_Metadata:
+          m_Items: []
+        m_Value: Y
+    - rid: 552786097007231465
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2585972588545
+        m_Metadata:
+          m_Items: []
+        m_Value: Grid Snap
+    - rid: 552786097007231466
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586052280320
+        m_Metadata:
+          m_Items: []
+        m_Value: Visualization Effect
+    - rid: 552786097007231467
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586052280321
+        m_Metadata:
+          m_Items: []
+        m_Value: Object Icons
+    - rid: 552786097007231468
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586052280322
+        m_Metadata:
+          m_Items: []
+        m_Value: Sprite Previews
+    - rid: 552786097007231469
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586052280323
+        m_Metadata:
+          m_Items: []
+        m_Value: Clip Platform Sides
+    - rid: 552786097007231470
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586052280324
+        m_Metadata:
+          m_Items: []
+        m_Value: Sound Direction
+    - rid: 552786097007231471
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586052280325
+        m_Metadata:
+          m_Items: []
+        m_Value: Sound Volume
+    - rid: 552786097007231472
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586056474624
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Plays what the game would play where the camera is: its polygon''s ambient and random sounds, its media''s and platform''s, and the sound sources it hears (needs a sounds file, in the Files tab)'
+    - rid: 552786097007231473
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586056474625
+        m_Metadata:
+          m_Items: []
+        m_Value: Play Level Audio
+    - rid: 552786097007231474
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586069057536
+        m_Metadata:
+          m_Items: []
+        m_Value: Plays it once (needs a sounds file, in the Files tab)
+    - rid: 552786097007231475
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586077446144
+        m_Metadata:
+          m_Items: []
+        m_Value: to
+    - rid: 552786097007231476
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586081640448
+        m_Metadata:
+          m_Items: []
+        m_Value: Additional Details
+    - rid: 552786097007231477
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586090029056
+        m_Metadata:
+          m_Items: []
+        m_Value: to
+    - rid: 552786097007231478
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2586098417664
+        m_Metadata:
+          m_Items: []
+        m_Value: Plays it once (needs a sounds file, in the Files tab)
+    - rid: 552786097007231502
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003248881664
+        m_Metadata:
+          m_Items: []
+        m_Value: normal
+    - rid: 552786097007231503
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270272
+        m_Metadata:
+          m_Items: []
+        m_Value: item impassable
+    - rid: 552786097007231504
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270273
+        m_Metadata:
+          m_Items: []
+        m_Value: monster impassable
+    - rid: 552786097007231505
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270274
+        m_Metadata:
+          m_Items: []
+        m_Value: hill
+    - rid: 552786097007231506
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270275
+        m_Metadata:
+          m_Items: []
+        m_Value: base
+    - rid: 552786097007231507
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270276
+        m_Metadata:
+          m_Items: []
+        m_Value: platform
+    - rid: 552786097007231508
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270277
+        m_Metadata:
+          m_Items: []
+        m_Value: light on trigger
+    - rid: 552786097007231509
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270278
+        m_Metadata:
+          m_Items: []
+        m_Value: platform on trigger
+    - rid: 552786097007231510
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270279
+        m_Metadata:
+          m_Items: []
+        m_Value: light off trigger
+    - rid: 552786097007231511
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270280
+        m_Metadata:
+          m_Items: []
+        m_Value: platform off trigger
+    - rid: 552786097007231512
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270281
+        m_Metadata:
+          m_Items: []
+        m_Value: teleporter
+    - rid: 552786097007231513
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270282
+        m_Metadata:
+          m_Items: []
+        m_Value: zone border
+    - rid: 552786097007231514
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270283
+        m_Metadata:
+          m_Items: []
+        m_Value: goal
+    - rid: 552786097007231515
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270284
+        m_Metadata:
+          m_Items: []
+        m_Value: visible monster trigger
+    - rid: 552786097007231516
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270285
+        m_Metadata:
+          m_Items: []
+        m_Value: invisible monster trigger
+    - rid: 552786097007231517
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270286
+        m_Metadata:
+          m_Items: []
+        m_Value: dual monster trigger
+    - rid: 552786097007231518
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270287
+        m_Metadata:
+          m_Items: []
+        m_Value: item trigger
+    - rid: 552786097007231519
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270288
+        m_Metadata:
+          m_Items: []
+        m_Value: must be explored
+    - rid: 552786097007231520
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270289
+        m_Metadata:
+          m_Items: []
+        m_Value: automatic exit
+    - rid: 552786097007231521
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270290
+        m_Metadata:
+          m_Items: []
+        m_Value: minor ouch
+    - rid: 552786097007231522
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270291
+        m_Metadata:
+          m_Items: []
+        m_Value: major ouch
+    - rid: 552786097007231523
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270292
+        m_Metadata:
+          m_Items: []
+        m_Value: glue
+    - rid: 552786097007231524
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270293
+        m_Metadata:
+          m_Items: []
+        m_Value: glue trigger
+    - rid: 552786097007231525
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270294
+        m_Metadata:
+          m_Items: []
+        m_Value: superglue
+    - rid: 552786097007231526
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270295
+        m_Metadata:
+          m_Items: []
+        m_Value: full
+    - rid: 552786097007231527
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270296
+        m_Metadata:
+          m_Items: []
+        m_Value: high
+    - rid: 552786097007231528
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270297
+        m_Metadata:
+          m_Items: []
+        m_Value: low
+    - rid: 552786097007231529
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270298
+        m_Metadata:
+          m_Items: []
+        m_Value: composite
+    - rid: 552786097007231530
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270299
+        m_Metadata:
+          m_Items: []
+        m_Value: split
+    - rid: 552786097007231531
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270300
+        m_Metadata:
+          m_Items: []
+        m_Value: normal
+    - rid: 552786097007231532
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270301
+        m_Metadata:
+          m_Items: []
+        m_Value: strobe
+    - rid: 552786097007231533
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270302
+        m_Metadata:
+          m_Items: []
+        m_Value: media
+    - rid: 552786097007231534
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270303
+        m_Metadata:
+          m_Items: []
+        m_Value: constant
+    - rid: 552786097007231535
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270304
+        m_Metadata:
+          m_Items: []
+        m_Value: linear
+    - rid: 552786097007231536
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270305
+        m_Metadata:
+          m_Items: []
+        m_Value: smooth
+    - rid: 552786097007231537
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270306
+        m_Metadata:
+          m_Items: []
+        m_Value: flicker
+    - rid: 552786097007231538
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270307
+        m_Metadata:
+          m_Items: []
+        m_Value: spht door
+    - rid: 552786097007231539
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270308
+        m_Metadata:
+          m_Items: []
+        m_Value: spht split door
+    - rid: 552786097007231540
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270309
+        m_Metadata:
+          m_Items: []
+        m_Value: locked spht door
+    - rid: 552786097007231541
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270310
+        m_Metadata:
+          m_Items: []
+        m_Value: spht platform
+    - rid: 552786097007231542
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270311
+        m_Metadata:
+          m_Items: []
+        m_Value: noisy spht platform
+    - rid: 552786097007231543
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270312
+        m_Metadata:
+          m_Items: []
+        m_Value: heavy spht door
+    - rid: 552786097007231544
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270313
+        m_Metadata:
+          m_Items: []
+        m_Value: pfhor door
+    - rid: 552786097007231545
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270314
+        m_Metadata:
+          m_Items: []
+        m_Value: heavy spht platform
+    - rid: 552786097007231546
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270315
+        m_Metadata:
+          m_Items: []
+        m_Value: pfhor platform
+    - rid: 552786097007231547
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270316
+        m_Metadata:
+          m_Items: []
+        m_Value: player controllable
+    - rid: 552786097007231548
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270317
+        m_Metadata:
+          m_Items: []
+        m_Value: monster controllable
+    - rid: 552786097007231549
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270318
+        m_Metadata:
+          m_Items: []
+        m_Value: locked
+    - rid: 552786097007231550
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270319
+        m_Metadata:
+          m_Items: []
+        m_Value: secret
+    - rid: 552786097007231551
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270320
+        m_Metadata:
+          m_Items: []
+        m_Value: door
+    - rid: 552786097007231552
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270321
+        m_Metadata:
+          m_Items: []
+        m_Value: water
+    - rid: 552786097007231553
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270322
+        m_Metadata:
+          m_Items: []
+        m_Value: lava
+    - rid: 552786097007231554
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270323
+        m_Metadata:
+          m_Items: []
+        m_Value: goo
+    - rid: 552786097007231555
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270324
+        m_Metadata:
+          m_Items: []
+        m_Value: sewage
+    - rid: 552786097007231556
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270325
+        m_Metadata:
+          m_Items: []
+        m_Value: jjaro
+    - rid: 552786097007231557
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270326
+        m_Metadata:
+          m_Items: []
+        m_Value: oxygen refuel
+    - rid: 552786097007231558
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270327
+        m_Metadata:
+          m_Items: []
+        m_Value: shield refuel
+    - rid: 552786097007231559
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270328
+        m_Metadata:
+          m_Items: []
+        m_Value: double shield refuel
+    - rid: 552786097007231560
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270329
+        m_Metadata:
+          m_Items: []
+        m_Value: triple shield refuel
+    - rid: 552786097007231561
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270330
+        m_Metadata:
+          m_Items: []
+        m_Value: light switch
+    - rid: 552786097007231562
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270331
+        m_Metadata:
+          m_Items: []
+        m_Value: platform switch
+    - rid: 552786097007231563
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270332
+        m_Metadata:
+          m_Items: []
+        m_Value: tag switch
+    - rid: 552786097007231564
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270333
+        m_Metadata:
+          m_Items: []
+        m_Value: pattern buffer
+    - rid: 552786097007231565
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270334
+        m_Metadata:
+          m_Items: []
+        m_Value: computer terminal
+    - rid: 552786097007231566
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270335
+        m_Metadata:
+          m_Items: []
+        m_Value: logon
+    - rid: 552786097007231567
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270336
+        m_Metadata:
+          m_Items: []
+        m_Value: unfinished
+    - rid: 552786097007231568
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270337
+        m_Metadata:
+          m_Items: []
+        m_Value: success
+    - rid: 552786097007231569
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270338
+        m_Metadata:
+          m_Items: []
+        m_Value: failure
+    - rid: 552786097007231570
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270339
+        m_Metadata:
+          m_Items: []
+        m_Value: information
+    - rid: 552786097007231571
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270340
+        m_Metadata:
+          m_Items: []
+        m_Value: end
+    - rid: 552786097007231572
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270341
+        m_Metadata:
+          m_Items: []
+        m_Value: interlevel teleport
+    - rid: 552786097007231573
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270342
+        m_Metadata:
+          m_Items: []
+        m_Value: intralevel teleport
+    - rid: 552786097007231574
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270343
+        m_Metadata:
+          m_Items: []
+        m_Value: checkpoint
+    - rid: 552786097007231575
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270344
+        m_Metadata:
+          m_Items: []
+        m_Value: sound
+    - rid: 552786097007231576
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270345
+        m_Metadata:
+          m_Items: []
+        m_Value: movie
+    - rid: 552786097007231577
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270346
+        m_Metadata:
+          m_Items: []
+        m_Value: track
+    - rid: 552786097007231578
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270347
+        m_Metadata:
+          m_Items: []
+        m_Value: pict
+    - rid: 552786097007231579
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270348
+        m_Metadata:
+          m_Items: []
+        m_Value: logoff
+    - rid: 552786097007231580
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270349
+        m_Metadata:
+          m_Items: []
+        m_Value: camera
+    - rid: 552786097007231581
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270350
+        m_Metadata:
+          m_Items: []
+        m_Value: static
+    - rid: 552786097007231582
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270351
+        m_Metadata:
+          m_Items: []
+        m_Value: tag
+    - rid: 552786097007231583
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270352
+        m_Metadata:
+          m_Items: []
+        m_Value: marine
+    - rid: 552786097007231584
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270353
+        m_Metadata:
+          m_Items: []
+        m_Value: tick energy
+    - rid: 552786097007231585
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270354
+        m_Metadata:
+          m_Items: []
+        m_Value: tick oxygen
+    - rid: 552786097007231586
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270355
+        m_Metadata:
+          m_Items: []
+        m_Value: tick kamakazi
+    - rid: 552786097007231587
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270356
+        m_Metadata:
+          m_Items: []
+        m_Value: compiler minor
+    - rid: 552786097007231588
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270357
+        m_Metadata:
+          m_Items: []
+        m_Value: compiler major
+    - rid: 552786097007231589
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270358
+        m_Metadata:
+          m_Items: []
+        m_Value: compiler minor invisible
+    - rid: 552786097007231590
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003257270359
+        m_Metadata:
+          m_Items: []
+        m_Value: compiler major invisible
+    - rid: 552786097007231591
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464576
+        m_Metadata:
+          m_Items: []
+        m_Value: fighter minor
+    - rid: 552786097007231592
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464577
+        m_Metadata:
+          m_Items: []
+        m_Value: fighter major
+    - rid: 552786097007231593
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464578
+        m_Metadata:
+          m_Items: []
+        m_Value: fighter minor projectile
+    - rid: 552786097007231594
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464579
+        m_Metadata:
+          m_Items: []
+        m_Value: fighter major projectile
+    - rid: 552786097007231595
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464580
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian crew
+    - rid: 552786097007231596
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464581
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian science
+    - rid: 552786097007231597
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464582
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian security
+    - rid: 552786097007231598
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464583
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian assimilated
+    - rid: 552786097007231599
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464584
+        m_Metadata:
+          m_Items: []
+        m_Value: hummer minor
+    - rid: 552786097007231600
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464585
+        m_Metadata:
+          m_Items: []
+        m_Value: hummer major
+    - rid: 552786097007231601
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464586
+        m_Metadata:
+          m_Items: []
+        m_Value: hummer big minor
+    - rid: 552786097007231602
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464587
+        m_Metadata:
+          m_Items: []
+        m_Value: hummer big major
+    - rid: 552786097007231603
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464588
+        m_Metadata:
+          m_Items: []
+        m_Value: hummer possessed
+    - rid: 552786097007231604
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464589
+        m_Metadata:
+          m_Items: []
+        m_Value: cyborg minor
+    - rid: 552786097007231605
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464590
+        m_Metadata:
+          m_Items: []
+        m_Value: cyborg major
+    - rid: 552786097007231606
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464591
+        m_Metadata:
+          m_Items: []
+        m_Value: cyborg flame minor
+    - rid: 552786097007231607
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464592
+        m_Metadata:
+          m_Items: []
+        m_Value: cyborg flame major
+    - rid: 552786097007231608
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464593
+        m_Metadata:
+          m_Items: []
+        m_Value: enforcer minor
+    - rid: 552786097007231609
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464594
+        m_Metadata:
+          m_Items: []
+        m_Value: enforcer major
+    - rid: 552786097007231610
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464595
+        m_Metadata:
+          m_Items: []
+        m_Value: hunter minor
+    - rid: 552786097007231611
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464596
+        m_Metadata:
+          m_Items: []
+        m_Value: hunter major
+    - rid: 552786097007231612
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464597
+        m_Metadata:
+          m_Items: []
+        m_Value: trooper minor
+    - rid: 552786097007231613
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464598
+        m_Metadata:
+          m_Items: []
+        m_Value: trooper major
+    - rid: 552786097007231614
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464599
+        m_Metadata:
+          m_Items: []
+        m_Value: mother of all cyborgs
+    - rid: 552786097007231615
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464600
+        m_Metadata:
+          m_Items: []
+        m_Value: mother of all hunters
+    - rid: 552786097007231616
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464601
+        m_Metadata:
+          m_Items: []
+        m_Value: sewage yeti
+    - rid: 552786097007231617
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464602
+        m_Metadata:
+          m_Items: []
+        m_Value: water yeti
+    - rid: 552786097007231618
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464603
+        m_Metadata:
+          m_Items: []
+        m_Value: lava yeti
+    - rid: 552786097007231619
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464604
+        m_Metadata:
+          m_Items: []
+        m_Value: defender minor
+    - rid: 552786097007231620
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464605
+        m_Metadata:
+          m_Items: []
+        m_Value: defender major
+    - rid: 552786097007231621
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464606
+        m_Metadata:
+          m_Items: []
+        m_Value: juggernaut minor
+    - rid: 552786097007231622
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464607
+        m_Metadata:
+          m_Items: []
+        m_Value: juggernaut major
+    - rid: 552786097007231623
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464608
+        m_Metadata:
+          m_Items: []
+        m_Value: tiny fighter
+    - rid: 552786097007231624
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464609
+        m_Metadata:
+          m_Items: []
+        m_Value: tiny bob
+    - rid: 552786097007231625
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464610
+        m_Metadata:
+          m_Items: []
+        m_Value: tiny yeti
+    - rid: 552786097007231626
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464611
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian fusion crew
+    - rid: 552786097007231627
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464612
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian fusion science
+    - rid: 552786097007231628
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464613
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian fusion security
+    - rid: 552786097007231629
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464614
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian fusion assimilated
+    - rid: 552786097007231630
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464615
+        m_Metadata:
+          m_Items: []
+        m_Value: water
+    - rid: 552786097007231631
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464616
+        m_Metadata:
+          m_Items: []
+        m_Value: sewage
+    - rid: 552786097007231632
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464617
+        m_Metadata:
+          m_Items: []
+        m_Value: lava
+    - rid: 552786097007231633
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464618
+        m_Metadata:
+          m_Items: []
+        m_Value: goo
+    - rid: 552786097007231634
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464619
+        m_Metadata:
+          m_Items: []
+        m_Value: under media
+    - rid: 552786097007231635
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464620
+        m_Metadata:
+          m_Items: []
+        m_Value: wind
+    - rid: 552786097007231636
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464621
+        m_Metadata:
+          m_Items: []
+        m_Value: waterfall
+    - rid: 552786097007231637
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464622
+        m_Metadata:
+          m_Items: []
+        m_Value: siren
+    - rid: 552786097007231638
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464623
+        m_Metadata:
+          m_Items: []
+        m_Value: fan
+    - rid: 552786097007231639
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464624
+        m_Metadata:
+          m_Items: []
+        m_Value: spht door
+    - rid: 552786097007231640
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464625
+        m_Metadata:
+          m_Items: []
+        m_Value: spht platform
+    - rid: 552786097007231641
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464626
+        m_Metadata:
+          m_Items: []
+        m_Value: heavy spht door
+    - rid: 552786097007231642
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464627
+        m_Metadata:
+          m_Items: []
+        m_Value: heavy spht platform
+    - rid: 552786097007231643
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464628
+        m_Metadata:
+          m_Items: []
+        m_Value: light machinery
+    - rid: 552786097007231644
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464629
+        m_Metadata:
+          m_Items: []
+        m_Value: heavy machinery
+    - rid: 552786097007231645
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464630
+        m_Metadata:
+          m_Items: []
+        m_Value: transformer
+    - rid: 552786097007231646
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464631
+        m_Metadata:
+          m_Items: []
+        m_Value: sparking transformer
+    - rid: 552786097007231647
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464632
+        m_Metadata:
+          m_Items: []
+        m_Value: machine binder
+    - rid: 552786097007231648
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464633
+        m_Metadata:
+          m_Items: []
+        m_Value: machine bookpress
+    - rid: 552786097007231649
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464634
+        m_Metadata:
+          m_Items: []
+        m_Value: machine puncher
+    - rid: 552786097007231650
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464635
+        m_Metadata:
+          m_Items: []
+        m_Value: electric
+    - rid: 552786097007231651
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464636
+        m_Metadata:
+          m_Items: []
+        m_Value: alarm
+    - rid: 552786097007231652
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464637
+        m_Metadata:
+          m_Items: []
+        m_Value: night wind
+    - rid: 552786097007231653
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464638
+        m_Metadata:
+          m_Items: []
+        m_Value: pfhor door
+    - rid: 552786097007231654
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464639
+        m_Metadata:
+          m_Items: []
+        m_Value: pfhor platform
+    - rid: 552786097007231655
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464640
+        m_Metadata:
+          m_Items: []
+        m_Value: alien noise1
+    - rid: 552786097007231656
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464641
+        m_Metadata:
+          m_Items: []
+        m_Value: alien noise2
+    - rid: 552786097007231657
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464642
+        m_Metadata:
+          m_Items: []
+        m_Value: alien harmonics
+    - rid: 552786097007231658
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464643
+        m_Metadata:
+          m_Items: []
+        m_Value: water drip
+    - rid: 552786097007231659
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464644
+        m_Metadata:
+          m_Items: []
+        m_Value: surface explosion
+    - rid: 552786097007231660
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464645
+        m_Metadata:
+          m_Items: []
+        m_Value: underground explosion
+    - rid: 552786097007231661
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464646
+        m_Metadata:
+          m_Items: []
+        m_Value: owl
+    - rid: 552786097007231662
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464647
+        m_Metadata:
+          m_Items: []
+        m_Value: creak
+    - rid: 552786097007231663
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464648
+        m_Metadata:
+          m_Items: []
+        m_Value: knife
+    - rid: 552786097007231664
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464649
+        m_Metadata:
+          m_Items: []
+        m_Value: magnum
+    - rid: 552786097007231665
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464650
+        m_Metadata:
+          m_Items: []
+        m_Value: magnum magazine
+    - rid: 552786097007231666
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464651
+        m_Metadata:
+          m_Items: []
+        m_Value: plasma pistol
+    - rid: 552786097007231667
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464652
+        m_Metadata:
+          m_Items: []
+        m_Value: plasma magazine
+    - rid: 552786097007231668
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464653
+        m_Metadata:
+          m_Items: []
+        m_Value: assault rifle
+    - rid: 552786097007231669
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464654
+        m_Metadata:
+          m_Items: []
+        m_Value: assault rifle magazine
+    - rid: 552786097007231670
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464655
+        m_Metadata:
+          m_Items: []
+        m_Value: assault grenade magazine
+    - rid: 552786097007231671
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464656
+        m_Metadata:
+          m_Items: []
+        m_Value: missile launcher
+    - rid: 552786097007231672
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464657
+        m_Metadata:
+          m_Items: []
+        m_Value: missile launcher magazine
+    - rid: 552786097007231673
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464658
+        m_Metadata:
+          m_Items: []
+        m_Value: invisibility powerup
+    - rid: 552786097007231674
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464659
+        m_Metadata:
+          m_Items: []
+        m_Value: invincibility powerup
+    - rid: 552786097007231675
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464660
+        m_Metadata:
+          m_Items: []
+        m_Value: infravision powerup
+    - rid: 552786097007231676
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464661
+        m_Metadata:
+          m_Items: []
+        m_Value: alien shotgun
+    - rid: 552786097007231677
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464662
+        m_Metadata:
+          m_Items: []
+        m_Value: alien shotgun magazine
+    - rid: 552786097007231678
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464663
+        m_Metadata:
+          m_Items: []
+        m_Value: flamethrower
+    - rid: 552786097007231679
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464664
+        m_Metadata:
+          m_Items: []
+        m_Value: flamethrower canister
+    - rid: 552786097007231680
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464665
+        m_Metadata:
+          m_Items: []
+        m_Value: extravision powerup
+    - rid: 552786097007231681
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464666
+        m_Metadata:
+          m_Items: []
+        m_Value: oxygen powerup
+    - rid: 552786097007231682
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464667
+        m_Metadata:
+          m_Items: []
+        m_Value: energy powerup
+    - rid: 552786097007231683
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464668
+        m_Metadata:
+          m_Items: []
+        m_Value: double energy powerup
+    - rid: 552786097007231684
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464669
+        m_Metadata:
+          m_Items: []
+        m_Value: triple energy powerup
+    - rid: 552786097007231685
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464670
+        m_Metadata:
+          m_Items: []
+        m_Value: shotgun
+    - rid: 552786097007231686
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464671
+        m_Metadata:
+          m_Items: []
+        m_Value: shotgun magazine
+    - rid: 552786097007231687
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464672
+        m_Metadata:
+          m_Items: []
+        m_Value: spht door key
+    - rid: 552786097007231688
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464673
+        m_Metadata:
+          m_Items: []
+        m_Value: uplink chip
+    - rid: 552786097007231689
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464674
+        m_Metadata:
+          m_Items: []
+        m_Value: light blue ball
+    - rid: 552786097007231690
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464675
+        m_Metadata:
+          m_Items: []
+        m_Value: red ball
+    - rid: 552786097007231691
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464676
+        m_Metadata:
+          m_Items: []
+        m_Value: violet ball
+    - rid: 552786097007231692
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464677
+        m_Metadata:
+          m_Items: []
+        m_Value: yellow ball
+    - rid: 552786097007231693
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464678
+        m_Metadata:
+          m_Items: []
+        m_Value: brown ball
+    - rid: 552786097007231694
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464679
+        m_Metadata:
+          m_Items: []
+        m_Value: orange ball
+    - rid: 552786097007231695
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464680
+        m_Metadata:
+          m_Items: []
+        m_Value: blue ball
+    - rid: 552786097007231696
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464681
+        m_Metadata:
+          m_Items: []
+        m_Value: green ball
+    - rid: 552786097007231697
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464682
+        m_Metadata:
+          m_Items: []
+        m_Value: smg
+    - rid: 552786097007231698
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4003261464683
+        m_Metadata:
+          m_Items: []
+        m_Value: smg ammo
+    - rid: 552786097007231814
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152078901248
+        m_Metadata:
+          m_Items: []
+        m_Value: Click to choose a texture
+    - rid: 552786097007231815
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152087289856
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786097007231816
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152087289857
+        m_Metadata:
+          m_Items: []
+        m_Value: Objects {0}
+    - rid: 552786097007231818
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152087289859
+        m_Metadata:
+          m_Items: []
+        m_Value: Clockwise
+    - rid: 552786097007231819
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152087289860
+        m_Metadata:
+          m_Items: []
+        m_Value: Counterclockwise
+    - rid: 552786097007231820
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152087289861
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786097007231821
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152087289862
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} (Platform {1})'
+    - rid: 552786097007231822
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398720
+        m_Metadata:
+          m_Items: []
+        m_Value: Monster
+    - rid: 552786097007231823
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398721
+        m_Metadata:
+          m_Items: []
+        m_Value: Scenery
+    - rid: 552786097007231824
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398722
+        m_Metadata:
+          m_Items: []
+        m_Value: Item
+    - rid: 552786097007231825
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398723
+        m_Metadata:
+          m_Items: []
+        m_Value: Player
+    - rid: 552786097007231826
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398724
+        m_Metadata:
+          m_Items: []
+        m_Value: Goal
+    - rid: 552786097007231827
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398725
+        m_Metadata:
+          m_Items: []
+        m_Value: Sound
+    - rid: 552786097007231828
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398726
+        m_Metadata:
+          m_Items: []
+        m_Value: Unknown ({0})
+    - rid: 552786097007231830
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398728
+        m_Metadata:
+          m_Items: []
+        m_Value: Invalid
+    - rid: 552786097007231831
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398729
+        m_Metadata:
+          m_Items: []
+        m_Value: None (its polygon isn't a platform, so it never plays)
+    - rid: 552786097007231832
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398730
+        m_Metadata:
+          m_Items: []
+        m_Value: None (its platform makes no moving sound)
+    - rid: 552786097007231833
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398731
+        m_Metadata:
+          m_Items: []
+        m_Value: 'X: {0}
+
+          Y: {1}
+
+          Z: {2}'
+    - rid: 552786097007231834
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398732
+        m_Metadata:
+          m_Items: []
+        m_Value: Platform Sound
+    - rid: 552786097007231835
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398733
+        m_Metadata:
+          m_Items: []
+        m_Value: Invisible
+    - rid: 552786097007231836
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398734
+        m_Metadata:
+          m_Items: []
+        m_Value: Placement (every {0})
+    - rid: 552786097007231837
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398735
+        m_Metadata:
+          m_Items: []
+        m_Value: Player
+    - rid: 552786097007231838
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398736
+        m_Metadata:
+          m_Items: []
+        m_Value: Nearest Hostile
+    - rid: 552786097007231839
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398737
+        m_Metadata:
+          m_Items: []
+        m_Value: Goal
+    - rid: 552786097007231840
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152154398738
+        m_Metadata:
+          m_Items: []
+        m_Value: Random
+    - rid: 552786097007231842
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953153
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786097007231843
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953154
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0}: {1}'
+    - rid: 552786097007231844
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953155
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} (not in the level)'
+    - rid: 552786097007231845
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953156
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Volume: {0}'
+    - rid: 552786097007231846
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953157
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Every: {0}'
+    - rid: 552786097007231847
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953158
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Direction: {0}'
+    - rid: 552786097007231848
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953159
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Direction: None (all around)'
+    - rid: 552786097007231849
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953160
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Pitch: {0}'
+    - rid: 552786097007231850
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953161
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} ({1}%)'
+    - rid: 552786097007231851
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953162
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} s'
+    - rid: 552786097007231852
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152187953163
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} (plus up to {1})'
+    - rid: 552786097007231853
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062016
+        m_Metadata:
+          m_Items: []
+        m_Value: Save with...
+    - rid: 552786097007231854
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062017
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Physics: the physics saved in the level. Resources: what it uses from the map file''s resources (its chapter screen, its terminals'' pictures, its part of the level script, and the end screens).'
+    - rid: 552786097007231855
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062018
+        m_Metadata:
+          m_Items: []
+        m_Value: Map Only
+    - rid: 552786097007231856
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062019
+        m_Metadata:
+          m_Items: []
+        m_Value: Physics
+    - rid: 552786097007231857
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062020
+        m_Metadata:
+          m_Items: []
+        m_Value: Resources
+    - rid: 552786097007231858
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062021
+        m_Metadata:
+          m_Items: []
+        m_Value: Resources and Physics
+    - rid: 552786097007231859
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062022
+        m_Metadata:
+          m_Items: []
+        m_Value: Save Merged
+    - rid: 552786097007231860
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062023
+        m_Metadata:
+          m_Items: []
+        m_Value: Keep the map file's checksum, so saved games, films and physics files made for it still find it (even though its levels may have changed), or regenerate it for the saved file (also naming the map after the saved file)?
+    - rid: 552786097007231861
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062024
+        m_Metadata:
+          m_Items: []
+        m_Value: Keep Checksum
+    - rid: 552786097007231862
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062025
+        m_Metadata:
+          m_Items: []
+        m_Value: Regenerate Checksum
+    - rid: 552786097007231863
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062026
+        m_Metadata:
+          m_Items: []
+        m_Value: Remember my choice (see Settings)
+    - rid: 552786097007231864
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062027
+        m_Metadata:
+          m_Items: []
+        m_Value: Choose {0} save location
+    - rid: 552786097007231865
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062028
+        m_Metadata:
+          m_Items: []
+        m_Value: Choose merged {0} save location
+    - rid: 552786097007231866
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062029
+        m_Metadata:
+          m_Items: []
+        m_Value: Maps
+    - rid: 552786097007231867
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062030
+        m_Metadata:
+          m_Items: []
+        m_Value: Shapes
+    - rid: 552786097007231868
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062031
+        m_Metadata:
+          m_Items: []
+        m_Value: Sounds
+    - rid: 552786097007231869
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062032
+        m_Metadata:
+          m_Items: []
+        m_Value: Physics
+    - rid: 552786097007231870
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152255062033
+        m_Metadata:
+          m_Items: []
+        m_Value: Images
+    - rid: 552786097007231871
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152284422144
+        m_Metadata:
+          m_Items: []
+        m_Value: Cancel
+    - rid: 552786097007231872
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152313782272
+        m_Metadata:
+          m_Items: []
+        m_Value: Paint
+    - rid: 552786097007231873
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152313782273
+        m_Metadata:
+          m_Items: []
+        m_Value: Edit
+    - rid: 552786097007231874
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152313782274
+        m_Metadata:
+          m_Items: []
+        m_Value: Select
+    - rid: 552786097007231875
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152313782275
+        m_Metadata:
+          m_Items: []
+        m_Value: Select All
+    - rid: 552786097007231876
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152313782276
+        m_Metadata:
+          m_Items: []
+        m_Value: Select None
+    - rid: 552786097007231877
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251264
+        m_Metadata:
+          m_Items: []
+        m_Value: Select Destination...
+    - rid: 552786097007231878
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251265
+        m_Metadata:
+          m_Items: []
+        m_Value: Select Source...
+    - rid: 552786097007231879
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251266
+        m_Metadata:
+          m_Items: []
+        m_Value: Inner
+    - rid: 552786097007231880
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251267
+        m_Metadata:
+          m_Items: []
+        m_Value: Outer
+    - rid: 552786097007231881
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251268
+        m_Metadata:
+          m_Items: []
+        m_Value: Primary
+    - rid: 552786097007231882
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251269
+        m_Metadata:
+          m_Items: []
+        m_Value: Secondary
+    - rid: 552786097007231883
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251270
+        m_Metadata:
+          m_Items: []
+        m_Value: Transparent
+    - rid: 552786097007231884
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251271
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} ({1})'
+    - rid: 552786097007231885
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251272
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} (named fork)'
+    - rid: 552786097007231886
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251273
+        m_Metadata:
+          m_Items: []
+        m_Value: MacBinary
+    - rid: 552786097007231887
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251274
+        m_Metadata:
+          m_Items: []
+        m_Value: AppleSingle
+    - rid: 552786097007231888
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6152410251275
+        m_Metadata:
+          m_Items: []
+        m_Value: Data Fork Only
+    - rid: 552786129695801426
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 139743140134912
+        m_Metadata:
+          m_Items: []
+        m_Value: Show Invalid Sides
+    - rid: 552786129695801427
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 139743148523520
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows the sides where a line has no side data for a polygon it faces (drawn untextured)
+    - rid: 552786132139770094
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146240
+        m_Metadata:
+          m_Items: []
+        m_Value: interface
+    - rid: 552786132139770095
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146241
+        m_Metadata:
+          m_Items: []
+        m_Value: weapons in hand
+    - rid: 552786132139770096
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146242
+        m_Metadata:
+          m_Items: []
+        m_Value: juggernaut
+    - rid: 552786132139770097
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146243
+        m_Metadata:
+          m_Items: []
+        m_Value: tick
+    - rid: 552786132139770098
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146244
+        m_Metadata:
+          m_Items: []
+        m_Value: rocket
+    - rid: 552786132139770099
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146245
+        m_Metadata:
+          m_Items: []
+        m_Value: hunter
+    - rid: 552786132139770100
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146246
+        m_Metadata:
+          m_Items: []
+        m_Value: player
+    - rid: 552786132139770101
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146247
+        m_Metadata:
+          m_Items: []
+        m_Value: items
+    - rid: 552786132139770102
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146248
+        m_Metadata:
+          m_Items: []
+        m_Value: trooper
+    - rid: 552786132139770103
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146249
+        m_Metadata:
+          m_Items: []
+        m_Value: fighter
+    - rid: 552786132139770104
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146250
+        m_Metadata:
+          m_Items: []
+        m_Value: defender
+    - rid: 552786132139770105
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146251
+        m_Metadata:
+          m_Items: []
+        m_Value: yeti
+    - rid: 552786132139770106
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146252
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian
+    - rid: 552786132139770107
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146253
+        m_Metadata:
+          m_Items: []
+        m_Value: civilian fusion
+    - rid: 552786132139770108
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146254
+        m_Metadata:
+          m_Items: []
+        m_Value: enforcer
+    - rid: 552786132139770109
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146255
+        m_Metadata:
+          m_Items: []
+        m_Value: hummer
+    - rid: 552786132139770110
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146256
+        m_Metadata:
+          m_Items: []
+        m_Value: compiler
+    - rid: 552786132139770111
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146257
+        m_Metadata:
+          m_Items: []
+        m_Value: walls1
+    - rid: 552786132139770112
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146258
+        m_Metadata:
+          m_Items: []
+        m_Value: walls2
+    - rid: 552786132139770113
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146259
+        m_Metadata:
+          m_Items: []
+        m_Value: walls3
+    - rid: 552786132139770114
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146260
+        m_Metadata:
+          m_Items: []
+        m_Value: walls4
+    - rid: 552786132139770115
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146261
+        m_Metadata:
+          m_Items: []
+        m_Value: walls5
+    - rid: 552786132139770116
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146262
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery1
+    - rid: 552786132139770117
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146263
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery2
+    - rid: 552786132139770118
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146264
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery3
+    - rid: 552786132139770119
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146265
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery4
+    - rid: 552786132139770120
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146266
+        m_Metadata:
+          m_Items: []
+        m_Value: scenery5
+    - rid: 552786132139770121
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146267
+        m_Metadata:
+          m_Items: []
+        m_Value: landscape1
+    - rid: 552786132139770122
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146268
+        m_Metadata:
+          m_Items: []
+        m_Value: landscape2
+    - rid: 552786132139770123
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146269
+        m_Metadata:
+          m_Items: []
+        m_Value: landscape3
+    - rid: 552786132139770124
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146270
+        m_Metadata:
+          m_Items: []
+        m_Value: landscape4
+    - rid: 552786132139770125
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 248518459146271
+        m_Metadata:
+          m_Items: []
+        m_Value: cyborg
+    - rid: 552786132139770126
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 329893195431936
+        m_Metadata:
+          m_Items: []
+        m_Value: 'X:'
+    - rid: 552786132139770127
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 329893212209152
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Y:'
+    - rid: 552786204080472132
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915106050048
+        m_Metadata:
+          m_Items: []
+        m_Value: Not used by this polygon type.
+    - rid: 552786204080472133
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827264
+        m_Metadata:
+          m_Items: []
+        m_Value: The team whose base it is (for Capture the Flag, Rugby and the like).
+    - rid: 552786204080472134
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827265
+        m_Metadata:
+          m_Items: []
+        m_Value: Its platform's index, which making and removing the platform sets.
+    - rid: 552786204080472135
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827266
+        m_Metadata:
+          m_Items: []
+        m_Value: The light that entering it turns on.
+    - rid: 552786204080472136
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827267
+        m_Metadata:
+          m_Items: []
+        m_Value: The light that entering it turns off.
+    - rid: 552786204080472137
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827268
+        m_Metadata:
+          m_Items: []
+        m_Value: The polygon whose platform entering it activates.
+    - rid: 552786204080472138
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827269
+        m_Metadata:
+          m_Items: []
+        m_Value: The polygon whose platform entering it deactivates.
+    - rid: 552786204080472139
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827270
+        m_Metadata:
+          m_Items: []
+        m_Value: The polygon it teleports to (a negative number teleports to another level).
+    - rid: 552786204080472140
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827271
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Negative, so it teleports to another level: level {0} (the level is -permutation - 1).'
+    - rid: 552786204080472141
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827272
+        m_Metadata:
+          m_Items: []
+        m_Value: The level it takes the player to once the level's goals are met.
+    - rid: 552786204080472142
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827273
+        m_Metadata:
+          m_Items: []
+        m_Value: There's no light {0}.
+    - rid: 552786204080472143
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827274
+        m_Metadata:
+          m_Items: []
+        m_Value: There's no polygon {0}.
+    - rid: 552786204080472144
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827275
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon {0} isn't a platform.
+    - rid: 552786204080472145
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827276
+        m_Metadata:
+          m_Items: []
+        m_Value: There's no terminal {0}.
+    - rid: 552786204080472146
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329915122827277
+        m_Metadata:
+          m_Items: []
+        m_Value: There's no goal object {0}.
+    - rid: 552786204080472147
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1335803447492608
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786204080472148
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1335803460075520
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1}'
+    - rid: 552786204080472166
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1413203095076864
+        m_Metadata:
+          m_Items: []
+        m_Value: random
+    - rid: 552786204080472167
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1413203095076865
+        m_Metadata:
+          m_Items: []
+        m_Value: fluorescent
+    - rid: 552786204080472170
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1424381422747648
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Z:'
+    - rid: 552786204080472171
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1424381435330560
+        m_Metadata:
+          m_Items: []
+        m_Value: Team {0}
+    - rid: 552786204080472172
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1424381435330561
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Goal Number:'
+    - rid: 552786204080472173
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1424381435330562
+        m_Metadata:
+          m_Items: []
+        m_Value: The number terminals' checkpoints show this goal's location by.
+    - rid: 552786204080472194
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270592
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0} has no #UNFINISHED group, so the game shows nothing when it''s used: a terminal is read from the group after its #UNFINISHED group (or its #SUCCESS or #FAILURE group, which fall back to #UNFINISHED). The fix adds an #UNFINISHED group at its start.'
+    - rid: 552786204080472195
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270593
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0}: the game never reaches these groups, so they''re never shown: {1}. A section is read from its start (the first #UNFINISHED, #SUCCESS or #FAILURE group) to its #END or teleport, so move them into a section, or remove them.'
+    - rid: 552786204080472196
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270594
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0}: the section before group {1} ({2}) runs on into it, so the game shows a blank page for it, then goes on into its section. The fix adds an #END before it.'
+    - rid: 552786204080472197
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270595
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0}: group {1} ({2}) is read as a blank page, since only the first {2} group (group {3}) starts a section. The fix removes it.'
+    - rid: 552786204080472198
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270596
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0}: group {1} ({2}) never worked in Marathon or Aleph One: reading it leaves the player in the terminal, where no key goes on or leaves. Change its type, or remove it.'
+    - rid: 552786204080472199
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270597
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0}: group {1} (#INTERLEVEL TELEPORT) teleports to level {2}, which the map doesn''t have (it has {3} levels, numbered from 0, and level 256 ends the game). Change its permutation to one of the map''s levels.'
+    - rid: 552786204080472200
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270598
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0}: group {1} (#INTRALEVEL TELEPORT) teleports to polygon {2}, which the level doesn''t have. Change its permutation to one of the level''s polygons.'
+    - rid: 552786204080472201
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270599
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0}: group {1} (#CHECKPOINT) shows where goal object {2} is, but the level has no goal object numbered {2}. Add one (in Objects mode), or change the group''s permutation.'
+    - rid: 552786204080472202
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1593782172270600
+        m_Metadata:
+          m_Items: []
+        m_Value: Side {0} is a terminal's control panel, but it uses terminal {1}, which the level doesn't have (it has {2} terminals, numbered from 0). Change its permutation (in Geometry mode) to one of the level's terminals.
+    - rid: 552786204080472207
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1630401067630592
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} ({1})'
+    - rid: 552786204080472208
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1630401084407808
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786204080472209
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1630401084407809
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} bytes'
+    - rid: 552786204080472210
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1630401084407810
+        m_Metadata:
+          m_Items: []
+        m_Value: "{0}\n\n(\u2026 and {1} more characters)"
+    - rid: 552786204080472211
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1630401084407811
+        m_Metadata:
+          m_Items: []
+        m_Value: There's no level {0}.

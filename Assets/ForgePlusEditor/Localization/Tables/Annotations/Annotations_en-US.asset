@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Annotations_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: 7c9dbdc67a0f08c4abda61a3467b9090, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231381
+  - rid: 552786097007231382
+  - rid: 552786097007231383
+  - rid: 552786097007231384
+  - rid: 552786097007231385
+  - rid: 552786097007231386
+  - rid: 552786097007231387
+  - rid: 552786097007231388
+  - rid: 552786097007231389
+  - rid: 552786097007231813
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231381
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2574534721536
+        m_Metadata:
+          m_Items: []
+        m_Value: Annotation
+    - rid: 552786097007231382
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2574534721537
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231383
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2574534721538
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Text:'
+    - rid: 552786097007231384
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2574534721539
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231385
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2574534721540
+        m_Metadata:
+          m_Items: []
+        m_Value: Position
+    - rid: 552786097007231386
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2574534721541
+        m_Metadata:
+          m_Items: []
+        m_Value: 'X:'
+    - rid: 552786097007231387
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2574534721542
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Y:'
+    - rid: 552786097007231388
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2574534721543
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Polygon:'
+    - rid: 552786097007231389
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2575159672832
+        m_Metadata:
+          m_Items: []
+        m_Value: This level has no annotations
+    - rid: 552786097007231813
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6141656055808
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygons

@@ -1,0 +1,494 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Geometry_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: a23d683cdffb9ad44b1329679558bdc0, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231254
+  - rid: 552786097007231255
+  - rid: 552786097007231256
+  - rid: 552786097007231257
+  - rid: 552786097007231258
+  - rid: 552786097007231259
+  - rid: 552786097007231260
+  - rid: 552786097007231261
+  - rid: 552786097007231262
+  - rid: 552786097007231263
+  - rid: 552786097007231264
+  - rid: 552786097007231265
+  - rid: 552786097007231266
+  - rid: 552786097007231267
+  - rid: 552786097007231268
+  - rid: 552786097007231269
+  - rid: 552786097007231270
+  - rid: 552786097007231271
+  - rid: 552786097007231272
+  - rid: 552786097007231273
+  - rid: 552786097007231274
+  - rid: 552786097007231275
+  - rid: 552786097007231276
+  - rid: 552786097007231277
+  - rid: 552786097007231278
+  - rid: 552786097007231279
+  - rid: 552786097007231280
+  - rid: 552786097007231281
+  - rid: 552786097007231282
+  - rid: 552786097007231283
+  - rid: 552786097007231284
+  - rid: 552786097007231285
+  - rid: 552786097007231286
+  - rid: 552786097007231287
+  - rid: 552786097007231288
+  - rid: 552786097007231289
+  - rid: 552786097007231290
+  - rid: 552786097007231291
+  - rid: 552786204080472125
+  - rid: 552786204080472126
+  - rid: 552786204080472127
+  - rid: 552786204080472128
+  - rid: 552786204080472129
+  - rid: 552786204080472130
+  - rid: 552786204080472131
+  - rid: 552786204080472149
+  - rid: 552786204080472150
+  - rid: 552786204080472151
+  - rid: 552786204080472152
+  - rid: 552786204080472153
+  - rid: 552786204080472154
+  - rid: 552786204080472156
+  - rid: 552786204080472157
+  - rid: 552786204080472158
+  - rid: 552786204080472159
+  - rid: 552786204080472160
+  - rid: 552786204080472161
+  - rid: 552786204080472162
+  - rid: 552786204080472163
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231254
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582931718144
+        m_Metadata:
+          m_Items: []
+        m_Value: Line
+    - rid: 552786097007231255
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582931718145
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231256
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582931718146
+        m_Metadata:
+          m_Items: []
+        m_Value: Flags
+    - rid: 552786097007231257
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582931718147
+        m_Metadata:
+          m_Items: []
+        m_Value: Solid
+    - rid: 552786097007231258
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582931718148
+        m_Metadata:
+          m_Items: []
+        m_Value: Is Transparent
+    - rid: 552786097007231259
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582931718149
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: projectiles always pass through the line''s transparent sides'
+    - rid: 552786097007231260
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2582931718150
+        m_Metadata:
+          m_Items: []
+        m_Value: Decorative
+    - rid: 552786097007231261
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480192
+        m_Metadata:
+          m_Items: []
+        m_Value: Side
+    - rid: 552786097007231262
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480193
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786097007231263
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480194
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231264
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480195
+        m_Metadata:
+          m_Items: []
+        m_Value: Control Panel
+    - rid: 552786097007231265
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480196
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Type:'
+    - rid: 552786097007231266
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480197
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Target ID:'
+    - rid: 552786097007231267
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480198
+        m_Metadata:
+          m_Items: []
+        m_Value: Flags
+    - rid: 552786097007231268
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480199
+        m_Metadata:
+          m_Items: []
+        m_Value: Initially Active
+    - rid: 552786097007231269
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480200
+        m_Metadata:
+          m_Items: []
+        m_Value: Is Repair Switch
+    - rid: 552786097007231270
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480201
+        m_Metadata:
+          m_Items: []
+        m_Value: Can Be Destroyed
+    - rid: 552786097007231271
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480202
+        m_Metadata:
+          m_Items: []
+        m_Value: Light Must Be > 75%
+    - rid: 552786097007231272
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480203
+        m_Metadata:
+          m_Items: []
+        m_Value: Projectiles Only
+    - rid: 552786097007231273
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480204
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: Marathon 1''s lighted switch'
+    - rid: 552786097007231274
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480205
+        m_Metadata:
+          m_Items: []
+        m_Value: Light Must Be > 50%
+    - rid: 552786097007231275
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480206
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: a tag switch that needs an item (such as a chip insertion) works without it, as in Marathon 1'
+    - rid: 552786097007231276
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480207
+        m_Metadata:
+          m_Items: []
+        m_Value: Item Is Optional
+    - rid: 552786097007231277
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480208
+        m_Metadata:
+          m_Items: []
+        m_Value: Is Control Panel
+    - rid: 552786097007231278
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480209
+        m_Metadata:
+          m_Items: []
+        m_Value: Is Destructive Switch
+    - rid: 552786097007231279
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480210
+        m_Metadata:
+          m_Items: []
+        m_Value: Primary Surface
+    - rid: 552786097007231280
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480211
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light:'
+    - rid: 552786097007231281
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480212
+        m_Metadata:
+          m_Items: []
+        m_Value: Secondary Surface
+    - rid: 552786097007231282
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583401480213
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light:'
+    - rid: 552786097007231283
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583405674496
+        m_Metadata:
+          m_Items: []
+        m_Value: Transparent Surface
+    - rid: 552786097007231284
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583405674497
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light:'
+    - rid: 552786097007231285
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583405674498
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Ambient Delta:'
+    - rid: 552786097007231286
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583560863744
+        m_Metadata:
+          m_Items: []
+        m_Value: Show Everything
+    - rid: 552786097007231287
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583560863745
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygons
+    - rid: 552786097007231288
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583560863746
+        m_Metadata:
+          m_Items: []
+        m_Value: Lines
+    - rid: 552786097007231289
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583560863747
+        m_Metadata:
+          m_Items: []
+        m_Value: Sides
+    - rid: 552786097007231290
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583560863748
+        m_Metadata:
+          m_Items: []
+        m_Value: Points
+    - rid: 552786097007231291
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2583560863749
+        m_Metadata:
+          m_Items: []
+        m_Value: Media
+    - rid: 552786204080472125
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329912669159424
+        m_Metadata:
+          m_Items: []
+        m_Value: Not used by this panel type.
+    - rid: 552786204080472126
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329912669159425
+        m_Metadata:
+          m_Items: []
+        m_Value: The light it switches.
+    - rid: 552786204080472127
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329912669159426
+        m_Metadata:
+          m_Items: []
+        m_Value: The polygon whose platform it switches.
+    - rid: 552786204080472128
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329912669159427
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: negative, so Aleph One stops treating it as a switch as the level starts (Marathon 2 and Infinity expect a polygon here).'
+    - rid: 552786204080472129
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329912669159428
+        m_Metadata:
+          m_Items: []
+        m_Value: The tag of the lights and platforms it switches.
+    - rid: 552786204080472130
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329912669159429
+        m_Metadata:
+          m_Items: []
+        m_Value: Tag 0, so it switches nothing (it only makes its sound).
+    - rid: 552786204080472131
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1329912669159430
+        m_Metadata:
+          m_Items: []
+        m_Value: The terminal it shows.
+    - rid: 552786204080472149
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1347040818380800
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} ({2})'
+    - rid: 552786204080472150
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1347040835158016
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} - {1} ({2}, Aleph One only)'
+    - rid: 552786204080472151
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1347040835158017
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0}, takes an item'
+    - rid: 552786204080472152
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1347040839352320
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0}, breakable'
+    - rid: 552786204080472153
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1347040839352321
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: this panel type''s textures are from {0}, which Marathon 2 and Infinity don''t load for this level.'
+    - rid: 552786204080472154
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1347040839352322
+        m_Metadata:
+          m_Items: []
+        m_Value: 'The primary texture isn''t this panel type''s, so the game won''t show it: it sets the texture from the panel type as the level starts and whenever the panel switches.'
+    - rid: 552786204080472156
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1405657890308096
+        m_Metadata:
+          m_Items: []
+        m_Value: All Surfaces
+    - rid: 552786204080472157
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1405657898696704
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Brightens or darkens the side: it''s added to the light of each of its surfaces as they''re drawn (65536 is full light), and the result is kept between dark and full.'
+    - rid: 552786204080472158
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1405657898696705
+        m_Metadata:
+          m_Items: []
+        m_Value: Its surfaces are lit just as their lights are.
+    - rid: 552786204080472159
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1405657898696706
+        m_Metadata:
+          m_Items: []
+        m_Value: Adds {0}% of full light to each surface's light.
+    - rid: 552786204080472160
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1405657898696707
+        m_Metadata:
+          m_Items: []
+        m_Value: Takes {0}% of full light from each surface's light.
+    - rid: 552786204080472161
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1410168277057536
+        m_Metadata:
+          m_Items: []
+        m_Value: Lines with polygons only on one side are always solid.
+    - rid: 552786204080472162
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1410168289640448
+        m_Metadata:
+          m_Items: []
+        m_Value: Beside a platform, which sets whether it's solid as the platform moves.
+    - rid: 552786204080472163
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1410168289640449
+        m_Metadata:
+          m_Items: []
+        m_Value: 'An invisible wall: it blocks movement, but still looks open.'
