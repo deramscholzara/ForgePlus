@@ -107,7 +107,7 @@ namespace ForgePlus.UI
         // The group type as terminal source writes it (#LOGON, #INTERLEVEL TELEPORT)
         public static string GetDirectiveName(short groupType)
         {
-            return "#" + AlephOneNames.TerminalGroupType(groupType).ToUpperInvariant();
+            return "#" + AlephOneNames.TerminalGroupSourceName(groupType).ToUpperInvariant();
         }
 
         // The group as terminal source writes it (#LOGON 1600, #SOUND 12), with its permutation where it uses one

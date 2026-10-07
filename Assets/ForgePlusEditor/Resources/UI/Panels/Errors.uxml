@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- The level's errors (in the menu's place), filtered by the selected tab: all of them, the auto-fixable ones (which
+         each have a fix) or the standard ones (which say how to fix them) -->
+    <ui:VisualElement class="fp-menu" picking-mode="Ignore">
+        <ui:RadioButtonGroup name="tabs" class="fp-radio-group fp-radio-row fp-menu__tabs">
+            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab">
+                <ui:AttributeOverrides element-name="control" text="@Menu/Errors.All.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab">
+                <ui:AttributeOverrides element-name="control" text="@Menu/Errors.AutoFixable.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab">
+                <ui:AttributeOverrides element-name="control" text="@Menu/Errors.Standard.Control.Text" />
+            </ui:Instance>
+        </ui:RadioButtonGroup>
+        <ui:VisualElement class="fp-menu__content" picking-mode="Ignore">
+            <ui:VisualElement class="fp-box fp-box--padded fp-errors__list">
+                <ui:ListView name="errors" fixed-item-height="90" selection-type="None" class="fp-scroll fp-level-list fp-grow" />
+                <ui:Label name="empty" text="@Menu/Errors.Empty.Text" class="fp-errors__empty" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement class="fp-menu__actions" picking-mode="Ignore">
+            <ui:Instance template="Button" name="close" class="fp-menu__action">
+                <ui:AttributeOverrides element-name="control" text="@Menu/Menu.Close.Control.Text" />
+            </ui:Instance>
+            <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
+            <ui:Instance template="Button" name="fix-all" class="fp-menu__action">
+                <ui:AttributeOverrides element-name="control" text="@Menu/Errors.FixAll.Control.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

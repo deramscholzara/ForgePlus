@@ -1,4 +1,5 @@
 ﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.DataFileIO;
 using System;
 using Unity.Properties;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace ForgePlus.UI
         {
             SettingsManager.Instance.OnSettingChanged += Notify;
             SettingsManager.Instance.OnObjectVisibilityChanged += OnObjectVisibilityChanged;
+            SoundsLoading.Instance.OnDataLoadCompleted += OnSoundsLoadCompleted;
         }
 
         [CreateProperty]
@@ -93,6 +95,23 @@ namespace ForgePlus.UI
             }
         }
 
+        // The index of the choice, in the order of MergedSaveChecksums (Ask, Keep, Regenerate)
+        [CreateProperty]
+        public int MergedSaveChecksum
+        {
+            get
+            {
+                return (int) SettingsManager.Instance.MergedSaveChecksum;
+            }
+            set
+            {
+                if (value >= 0)
+                {
+                    SettingsManager.Instance.MergedSaveChecksum = (MergedSaveChecksums) value;
+                }
+            }
+        }
+
         [CreateProperty]
         public bool ClipPlatformSidesEnabled
         {
@@ -103,6 +122,19 @@ namespace ForgePlus.UI
             set
             {
                 SettingsManager.Instance.ClipPlatformSidesEnabled = value;
+            }
+        }
+
+        [CreateProperty]
+        public bool ShowInvalidSidesEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.ShowInvalidSidesEnabled;
+            }
+            set
+            {
+                SettingsManager.Instance.ShowInvalidSidesEnabled = value;
             }
         }
 
@@ -145,6 +177,71 @@ namespace ForgePlus.UI
             }
         }
 
+        // Shown as on while Sounds mode forces sounds' displays on
+        [CreateProperty]
+        public bool SoundDirectionEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.SoundDisplaysForcedOn || SettingsManager.Instance.SoundDirectionEnabled;
+            }
+            set
+            {
+                if (!SettingsManager.Instance.SoundDisplaysForcedOn)
+                {
+                    SettingsManager.Instance.SoundDirectionEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool SoundVolumeEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.SoundDisplaysForcedOn || SettingsManager.Instance.SoundVolumeEnabled;
+            }
+            set
+            {
+                if (!SettingsManager.Instance.SoundDisplaysForcedOn)
+                {
+                    SettingsManager.Instance.SoundVolumeEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool SoundDisplaysEditable
+        {
+            get
+            {
+                return !SettingsManager.Instance.SoundDisplaysForcedOn;
+            }
+        }
+
+        [CreateProperty]
+        public bool PlayLevelAudioEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.PlayLevelAudioEnabled;
+            }
+            set
+            {
+                SettingsManager.Instance.PlayLevelAudioEnabled = value;
+            }
+        }
+
+        // Playing level audio needs a sounds file (Files tab) to play sounds from
+        [CreateProperty]
+        public bool PlayLevelAudioEditable
+        {
+            get
+            {
+                return SoundsLoading.Instance.IsLoaded;
+            }
+        }
+
         public void Dispose()
         {
             var settingsManager = SettingsManager.Instance;
@@ -153,12 +250,23 @@ namespace ForgePlus.UI
                 settingsManager.OnSettingChanged -= Notify;
                 settingsManager.OnObjectVisibilityChanged -= OnObjectVisibilityChanged;
             }
+
+            SoundsLoading.Instance.OnDataLoadCompleted -= OnSoundsLoadCompleted;
         }
 
+        // Also when the mode changes (which may force icons, and sounds' displays, on)
         private void OnObjectVisibilityChanged()
         {
             Notify(nameof(ObjectIconsEnabled));
             Notify(nameof(ObjectIconsEditable));
+            Notify(nameof(SoundDirectionEnabled));
+            Notify(nameof(SoundVolumeEnabled));
+            Notify(nameof(SoundDisplaysEditable));
+        }
+
+        private void OnSoundsLoadCompleted(bool isLoaded)
+        {
+            Notify(nameof(PlayLevelAudioEditable));
         }
     }
 }

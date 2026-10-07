@@ -216,11 +216,42 @@
     font-size: 20px;
 }
 
+/* ---------- Errors toggle (in the bottom right corner), which flashes red while the level has errors the Errors
+   panel isn't open for ---------- */
+
+.fp-errors-toggle-slot {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 50px;
+    height: var(--fp-control-height);
+}
+
+.fp-errors-toggle-slot > .fp-panel,
+.fp-errors-toggle,
+.fp-errors-toggle > * {
+    flex-grow: 1;
+}
+
+.fp-errors-toggle {
+    flex-direction: row;
+}
+
+.fp-errors-toggle--alert > .unity-toggle__input,
+.fp-errors-toggle--alert:hover > .unity-toggle__input {
+    background-color: rgb(210, 40, 40);
+}
+
+.fp-errors-toggle--alert .unity-toggle__text {
+    color: var(--fp-text-bright);
+}
+
 /* ---------- Level name ---------- */
 
+/* Beside the errors toggle */
 .fp-level-name {
     position: absolute;
-    right: 10px;
+    right: 60px;
     bottom: 7px;
     margin: 0;
     padding: 0;
@@ -281,4 +312,94 @@
 .fp-dialog__option {
     height: var(--fp-short-control-height);
     margin: 0 5px 5px 5px;
+}
+
+.fp-dialog__message {
+    margin: 0 5px 10px 5px;
+    padding: 0 5px;
+    color: var(--fp-text-bright);
+    white-space: normal;
+}
+
+.fp-dialog__checkbox {
+    height: var(--fp-short-control-height);
+    margin: 0 5px 10px 5px;
+}
+
+/* ---------- Name tags in the level (WorldLabels) ---------- */
+
+/* Behind every panel, covering the view (WorldLayer, which SoundVisualization's volume bars are in too) */
+.fp-world-layer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* Centered on its point in the level, at the UI's largest text size */
+.fp-world-label {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    translate: -50% -50%;
+    font-size: 24px;
+    color: var(--fp-annotation);
+    white-space: nowrap;
+    -unity-text-align: middle-center;
+}
+
+.fp-world-label--selected {
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: var(--fp-text-bright);
+}
+
+/* ---------- Pop-ups over the whole UI (such as LightPicker's list of lights) ---------- */
+
+/* Covers the UI, so a click outside the pop-up closes it */
+.fp-popup-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.fp-popup {
+    position: absolute;
+    background-color: var(--fp-label-area);
+    padding: 5px;
+    border-width: 1px;
+    border-color: var(--fp-indicator-frame);
+}
+
+/* ChecklistPicker's list, under its Select All and Select None */
+.fp-checklist-picker__actions {
+    flex-direction: row;
+    flex-shrink: 0;
+    margin-bottom: 5px;
+}
+
+.fp-checklist-picker__action {
+    flex-grow: 1;
+    flex-basis: 0;
+    height: var(--fp-short-control-height);
+    margin-right: 5px;
+}
+
+.fp-checklist-picker__item {
+    height: var(--fp-flag-height);
+}
+
+/* ---------- Sounds' volume bars in the level (SoundVisualization) ---------- */
+
+/* Side by side (a polygon's ambient and random sounds'), centered on their point in the level */
+.fp-volume-bars {
+    position: absolute;
+    flex-direction: row;
+    translate: -50% -50%;
+}
+
+.fp-volume-bars > .fp-volume-bar {
+    margin: 0 1px;
 }

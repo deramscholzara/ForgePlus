@@ -1,4 +1,5 @@
 ﻿using ForgePlus.DataFileIO;
+using ForgePlus.Localization;
 using System;
 using Unity.Properties;
 
@@ -6,8 +7,6 @@ namespace ForgePlus.UI
 {
     public class DataFileViewModel : BindableObject, IDisposable
     {
-        private const string NoPathText = "select a file...";
-
         private readonly DataFileTypes type;
         private string path;
 
@@ -23,7 +22,7 @@ namespace ForgePlus.UI
         {
             get
             {
-                return HasPath ? path : NoPathText;
+                return HasPath ? path : Strings.Get(Strings.Menu, "FilesTab.NoPath");
             }
         }
 

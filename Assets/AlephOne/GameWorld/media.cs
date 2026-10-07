@@ -1,12 +1,13 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/media.h, media.cpp (map data)
 //
 // Not ported: the running game (update_medias, update_one_media, get_media_detonation_effect,
-// get_media_sound, get_media_damage, get_media_submerged_fade_effect, get_media_collection,
+// get_media_damage, get_media_submerged_fade_effect, get_media_collection,
 // IsMediaDangerous, media_in_environment), and MML parsing.
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
 using static AlephOne.csmacros;
+using static AlephOne.cstypes;
 using static AlephOne.Packing;
 
 namespace AlephOne
@@ -109,6 +110,20 @@ namespace AlephOne
         public static media_definition get_media_definition(short type)
         {
             return GetMemberWithBounds(media_definitions, type, NUMBER_OF_MEDIA_TYPES);
+        }
+
+        public static short get_media_sound(MapLevel level, short media_index, short type)
+        {
+            media_data media = get_media_data(level, media_index);
+            // LP change: idiot-proofing
+            if (media == null) return NONE;
+
+            media_definition definition = get_media_definition(media.type);
+            if (definition == null) return NONE;
+
+            if (!(type >= 0 && type < NUMBER_OF_MEDIA_SOUNDS)) return NONE;
+
+            return definition.sounds[type];
         }
 
         // light_index must be loaded

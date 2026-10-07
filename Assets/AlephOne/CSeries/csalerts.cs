@@ -27,6 +27,24 @@ namespace AlephOne
             }
         }
 
+        // In place of vassert(expr, csprintf(temporary, format, ...)): the diagnostic is only formatted
+        // when the assertion fails, as formatting it up front would allocate on every call
+        public static void vassert<T0>(bool expr, string format, T0 arg0)
+        {
+            if (!expr)
+            {
+                throw new AlephOneAssertion(string.Format(format, arg0));
+            }
+        }
+
+        public static void vassert<T0, T1>(bool expr, string format, T0 arg0, T1 arg1)
+        {
+            if (!expr)
+            {
+                throw new AlephOneAssertion(string.Format(format, arg0, arg1));
+            }
+        }
+
         public static void vhalt(string diag)
         {
             throw new AlephOneAssertion(diag);

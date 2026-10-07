@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Annotations Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Annotations
+  m_TableCollectionNameGuid: 3095a629b2a3866459e09fd7731eb86f
+  m_KeyGenerator:
+    rid: 552786097007231041
+  m_Entries:
+  - m_Id: 2574534721536
+    m_Key: Inspector.Annotation.Annotation.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2574534721537
+    m_Key: Inspector.Annotation.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2574534721538
+    m_Key: Inspector.Annotation.Text.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2574534721539
+    m_Key: Inspector.Annotation.Type.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2574534721540
+    m_Key: Inspector.Annotation.Position.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2574534721541
+    m_Key: Inspector.Annotation.LocationX.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2574534721542
+    m_Key: Inspector.Annotation.LocationY.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2574534721543
+    m_Key: Inspector.Annotation.PolygonIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2575159672832
+    m_Key: Annotations.Annotations.NoAnnotations.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6141656055808
+    m_Key: Palette.Polygons.Header
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231041
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928705393

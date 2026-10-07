@@ -252,6 +252,19 @@ namespace AlephOne
                 return false;
 
             // Check CRC
+            ushort crc = macbinary_crc(header);
+            if (crc != ((header[124] << 8) | header[125]))
+                return false;
+
+            // CRC valid, extract fork sizes
+            data_length = (header[83] << 24) | (header[84] << 16) | (header[85] << 8) | header[86];
+            rsrc_length = (header[87] << 24) | (header[88] << 16) | (header[89] << 8) | header[90];
+            return true;
+        }
+
+        // ForgePlus: is_macbinary's CRC check, shared with saving MacBinary files
+        public static ushort macbinary_crc(byte[] header)
+        {
             ushort crc = 0;
             for (int i = 0; i < 124; i++)
             {
@@ -265,13 +278,8 @@ namespace AlephOne
                     data <<= 1;
                 }
             }
-            if (crc != ((header[124] << 8) | header[125]))
-                return false;
 
-            // CRC valid, extract fork sizes
-            data_length = (header[83] << 24) | (header[84] << 16) | (header[85] << 8) | header[86];
-            rsrc_length = (header[87] << 24) | (header[88] << 16) | (header[89] << 8) | header[90];
-            return true;
+            return crc;
         }
 
         /*

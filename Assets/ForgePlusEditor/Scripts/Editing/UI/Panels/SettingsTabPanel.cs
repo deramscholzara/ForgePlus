@@ -22,6 +22,7 @@ namespace ForgePlus.UI
             Root.Find<Toggle>("vignette").BindValue(settings, nameof(SettingsViewModel.VignetteEnabled));
             Root.Find<Toggle>("color-adjustment").BindValue(settings, nameof(SettingsViewModel.ColorCorrectionEnabled));
             Root.Find<Toggle>("ambient-occlusion").BindValue(settings, nameof(SettingsViewModel.AmbientOcclusionEnabled));
+            Root.Find<RadioButtonGroup>("merged-save-checksum").BindValue(settings, nameof(SettingsViewModel.MergedSaveChecksum));
         }
     }
 }

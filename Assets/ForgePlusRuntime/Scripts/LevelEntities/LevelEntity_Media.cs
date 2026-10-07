@@ -105,6 +105,15 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // After its flow or type changes (its height follows its data each frame)
+        public void ApplyMaterialProperties()
+        {
+            foreach (var material in subscribedMaterials)
+            {
+                ApplyDirectionFlowAndDepthPropertiesToMaterial(material);
+            }
+        }
+
         public async void BeginRuntimeStyleBehavior()
         {
             synchronizationLoopCTS?.Cancel();

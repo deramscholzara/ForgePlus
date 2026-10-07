@@ -25,6 +25,27 @@
     flex-grow: 1;
 }
 
+/* The menu's actions (closing it) on the left, and the tab's (if it has any) on the right */
+.fp-menu__actions {
+    flex-direction: row;
+    height: var(--fp-control-height);
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+
+.fp-menu__action {
+    width: 100px;
+}
+
+.fp-menu__tab-actions {
+    flex-grow: 1;
+    flex-direction: row;
+}
+
+.fp-menu__tab-actions > * {
+    flex-grow: 1;
+}
+
 
 /* ---------- Files ---------- */
 
@@ -37,7 +58,7 @@
 
 .fp-files__levels {
     flex-grow: 1;
-    margin: 5px 0;
+    margin: 5px 0 0 0;
 }
 
 .fp-files__actions {
@@ -116,6 +137,49 @@
     overflow: hidden;
 }
 
+/* ---------- Errors (in the menu's place) ---------- */
+
+.fp-errors__tab {
+    width: 130px;
+}
+
+.fp-errors__list {
+    flex-grow: 1;
+}
+
+.fp-errors__empty {
+    flex-grow: 1;
+    margin: 0;
+    color: var(--fp-text-faint);
+    -unity-text-align: middle-center;
+}
+
+/* An error's text and, if it has one, its fix: a level item's look, twice as tall */
+.fp-error-item {
+    flex-direction: row;
+    height: 85px;
+    margin-bottom: 5px;
+    background-color: var(--fp-control);
+}
+
+.fp-error-item__description {
+    flex-grow: 1;
+    flex-shrink: 1;
+    margin: 0;
+    padding: 4px 8px;
+    color: var(--fp-control-text);
+    -unity-text-align: middle-left;
+    white-space: normal;
+    overflow: hidden;
+}
+
+.fp-error-item__fix {
+    width: 100px;
+    flex-shrink: 0;
+    border-left-width: 5px;
+    border-color: var(--fp-panel-background);
+}
+
 /* ---------- Inputs ---------- */
 
 .fp-inputs__text {
@@ -134,6 +198,25 @@
 
 .fp-setting {
     height: var(--fp-control-height);
+}
+
+/* A setting's name, above its choices */
+.fp-setting__label {
+    margin: 5px 0 0 0;
+    padding: 0 5px;
+    color: var(--fp-text-bright);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+.fp-setting__choice {
+    flex-grow: 1;
+    flex-basis: 0;
+    margin-right: 4px;
+}
+
+.fp-setting__choice--last {
+    margin-right: 0;
 }
 
 .fp-settings__version {

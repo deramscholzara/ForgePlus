@@ -29,6 +29,10 @@ namespace RuntimeCore.Entities.Geometry
         // Null sides have no texture offsets
         private static readonly side_texture_definition NullSideTexture = new side_texture_definition();
 
+        // Reused for every side's mesh updates, as the mesh copies them (so clipping every frame doesn't allocate)
+        private static readonly Vector3[] ScratchPositions = new Vector3[4];
+        private static readonly Vector4[] ScratchUVs = new Vector4[4];
+
         private int lastLayeredTransparentSideTextureIndex;
         private int lastLayeredTransparentSideLightIndex;
 
@@ -166,6 +170,11 @@ namespace RuntimeCore.Entities.Geometry
             ApplyLight(innerLayer: true);
             ApplyBatchKeyMaterial(innerLayer: true);
 
+            // Tangents follow the UVs, which didn't exist yet when ApplyPositionsAndTriangles calculated them
+            SurfaceMesh.RecalculateTangents(MeshUpdateFlags.DontNotifyMeshUsers |
+                                            MeshUpdateFlags.DontRecalculateBounds |
+                                            MeshUpdateFlags.DontResetBoneBounds);
+
             if (sideEntity.NativeObject.HasLayeredTransparentSide(sideEntity.ParentLevel.Level))
             {
                 ApplyTextureOffset(innerLayer: false);
@@ -252,21 +261,25 @@ namespace RuntimeCore.Entities.Geometry
                 return;
             }
 
+            var opposingPolygonIndex = OpposingPolygonIndex;
+            var level = sideEntity.ParentLevel.Level;
+            var opposingPolygon = opposingPolygonIndex >= 0 ? map.get_polygon_data(level, opposingPolygonIndex) : null;
+            var opposingPolygonIsPlatform = opposingPolygon != null && opposingPolygon.GetPlatform(level) != null;
+
             if (FacingPolygonIsPlatform)
             {
-                // A platform's own sides (such as a door's frame) always cover its whole travel
+                if (!opposingPolygonIsPlatform)
+                {
+                    // A platform's own sides (such as a door's frame) always cover its whole travel
+                    return;
+                }
+
+                // Between two platforms, what's drawn depends on both of their heights (nothing while they're level)
+                AddPlatformSideClipping();
                 return;
             }
 
-            var opposingPolygonIndex = OpposingPolygonIndex;
-            if (opposingPolygonIndex < 0)
-            {
-                return;
-            }
-
-            var level = sideEntity.ParentLevel.Level;
-            var opposingPolygon = map.get_polygon_data(level, opposingPolygonIndex);
-            if (opposingPolygon.GetPlatform(level) == null)
+            if (!opposingPolygonIsPlatform)
             {
                 return;
             }
@@ -317,6 +330,11 @@ namespace RuntimeCore.Entities.Geometry
                     throw new NotImplementedException($"Section '{section}' is not implemented.");
             }
 
+            AddPlatformSideClipping();
+        }
+
+        private void AddPlatformSideClipping()
+        {
             IsStaticBatchable = false;
 
             platformSideClipping = SurfaceRenderer.gameObject.AddComponent<PlatformSideClipping>();
@@ -388,7 +406,7 @@ namespace RuntimeCore.Entities.Geometry
                 return;
             }
 
-            var positions = new Vector3[4];
+            var positions = ScratchPositions;
             for (var i = 0; i < positions.Length; i++)
             {
                 positions[i] = fullSizePositions[i];
@@ -461,13 +479,17 @@ namespace RuntimeCore.Entities.Geometry
                 }
 
                 SurfaceMesh.SetColors(vertexColors);
+                ApplyTransferModeEffects(map._xfer_normal, innerLayer: true);
 
                 return;
             }
 
             if (innerLayer)
             {
-                var vertexColor = GetTransferModeVertexColor(sideEntity.NativeObject.GetTransferMode(dataSource));
+                var transferMode = sideEntity.NativeObject.GetTransferMode(dataSource);
+                ApplyTransferModeEffects(transferMode, innerLayer: true);
+
+                var vertexColor = GetTransferModeVertexColor(transferMode);
 
                 var vertexColors = new Color[4];
                 for (var i = 0; i < 4; i++)
@@ -479,6 +501,8 @@ namespace RuntimeCore.Entities.Geometry
             }
             else
             {
+                ApplyTransferModeEffects(sideEntity.NativeObject.transparent_transfer_mode, innerLayer: false);
+
                 var vertexColor = GetTransferModeVertexColor(sideEntity.NativeObject.transparent_transfer_mode);
 
                 var uv2 = new Vector4[4];
@@ -620,20 +644,6 @@ namespace RuntimeCore.Entities.Geometry
             sideSurface.ParentSide = sideEntity;
             sideSurface.DataSource = dataSource;
             sideSurface.Platform = platformConstraint != null ? platformConstraint.Parent.GetComponent<LevelEntity_Platform>() : null;
-
-            var mediaIndex = map.get_polygon_data(sideEntity.ParentLevel.Level, FacingPolygonIndex).media_index;
-            sideSurface.Media = mediaIndex >= 0 ? sideEntity.ParentLevel.Medias[mediaIndex] : null;
-
-            if (sideEntity.NativeObject == null)
-            {
-                sideSurface.surfaceShapeDescriptor = cstypes.UNONE;
-                sideSurface.RuntimeLight = null;
-            }
-            else
-            {
-                sideSurface.surfaceShapeDescriptor = sideEntity.NativeObject.GetTexture(dataSource).texture;
-                sideSurface.RuntimeLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.GetLightsourceIndex(dataSource)];
-            }
 
             sideEntity.ParentLevel.EditableSurface_Sides.Add(sideSurface);
 
@@ -815,10 +825,11 @@ namespace RuntimeCore.Entities.Geometry
             return innerLayer ? sideEntity.NativeObject.GetTexture(dataSource) : sideEntity.NativeObject.transparent_texture;
         }
 
-        // Heights are relative to the surface's transform, with textureAnchor at the top of the texture
+        // Heights are relative to the surface's transform, with textureAnchor at the top of the texture.
+        // Returns the shared scratch array, so the result must be applied before the next call.
         private Vector4[] BuildUVs(short textureOffsetX, float textureAnchor, float bottom, float top, int lastLight, int lastTexture)
         {
-            var meshUVs = new Vector4[4];
+            var meshUVs = ScratchUVs;
 
             if (sideEntity.NativeObject == null)
             {

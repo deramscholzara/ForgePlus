@@ -1,6 +1,7 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace RuntimeCore.Entities.Geometry
 {
@@ -28,7 +29,7 @@ namespace RuntimeCore.Entities.Geometry
                 entity,
                 dataSource,
                 mesh,
-                gameObject.AddComponent<MeshRenderer>());
+                CreateRenderer());
 
             AssembleSurface();
         }
@@ -51,9 +52,21 @@ namespace RuntimeCore.Entities.Geometry
                 dataSource,
                 section,
                 mesh,
-                gameObject.AddComponent<MeshRenderer>());
+                CreateRenderer());
 
             AssembleSurface();
+        }
+
+        // Surfaces are lit by the level's own light-intensity texture rather than by Unity's lighting,
+        // so Unity's per-renderer lighting features would only add culling and draw costs
+        public static void ConfigureRenderer(MeshRenderer renderer)
+        {
+            renderer.shadowCastingMode = ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            renderer.lightProbeUsage = LightProbeUsage.Off;
+            renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
+            renderer.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
+            renderer.allowOcclusionWhenDynamic = false;
         }
 
         public void PrepareForDestruction()
@@ -117,7 +130,9 @@ namespace RuntimeCore.Entities.Geometry
                     }
                     else
                     {
+                        // Its media (or its media's type) may have changed its texture
                         geometryModule.ApplyBatchKeyMaterial(innerLayer: true);
+                        geometryModule.ApplyRendererMaterials();
                     }
                 });
 
@@ -131,6 +146,14 @@ namespace RuntimeCore.Entities.Geometry
                     SurfaceBatchingManager.Instance.MergeAllBatches();
                 }
             }
+        }
+
+        private MeshRenderer CreateRenderer()
+        {
+            var surfaceRenderer = gameObject.AddComponent<MeshRenderer>();
+            ConfigureRenderer(surfaceRenderer);
+
+            return surfaceRenderer;
         }
 
         private void AssembleSurface()

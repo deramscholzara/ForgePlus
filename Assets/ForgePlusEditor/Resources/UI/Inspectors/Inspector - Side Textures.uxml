@@ -2,65 +2,97 @@
     <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="TextureRow" src="../Templates/InspectorTextureRow.uxml" />
+    <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="IntegerPairRow" src="../Templates/InspectorIntegerPairRow.uxml" />
+    <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <!-- Bound to Inspector_SideTextures -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Side Textures" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SideTextures.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.Id.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Type">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
+            <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.Type.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Primary Surface" />
-        </ui:Instance>
-        <ui:Instance template="TextureRow" name="PrimaryTexture">
-            <ui:AttributeOverrides element-name="label" text="Texture:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="PrimaryOffset">
-            <ui:AttributeOverrides element-name="label" text="Offset:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="PrimaryTransferMode">
-            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="PrimaryLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
-        </ui:Instance>
+        <ui:VisualElement name="Primary" class="fp-inspector-scope">
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimarySurface.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="TextureRow" name="Texture">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryTexture.Label.Text" />
+            </ui:Instance>
+            <ui:Label name="TextureNote" class="fp-inspector-note" />
+            <ui:Instance template="IntegerFieldRow" name="Bitmap" tooltip="@Textures/Inspector.SideTextures.PrimaryBitmap.Tooltip">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryBitmap.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="DropdownRow" name="Collection" class="fp-aleph-one-only" tooltip="@Textures/Inspector.Collection.Tooltip">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
+            </ui:Instance>
+            <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
+            <ui:Instance template="IntegerPairRow" name="Offset">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryOffset.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="DropdownRow" name="TransferMode">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryTransferMode.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="LightRow" name="LightIndex">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.PrimaryLightIndex.Label.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
         <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Secondary Surface" />
-        </ui:Instance>
-        <ui:Instance template="TextureRow" name="SecondaryTexture">
-            <ui:AttributeOverrides element-name="label" text="Texture:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="SecondaryOffset">
-            <ui:AttributeOverrides element-name="label" text="Offset:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="SecondaryTransferMode">
-            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="SecondaryLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
-        </ui:Instance>
+        <ui:VisualElement name="Secondary" class="fp-inspector-scope">
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondarySurface.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="TextureRow" name="Texture">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryTexture.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="IntegerFieldRow" name="Bitmap" tooltip="@Textures/Inspector.SideTextures.SecondaryBitmap.Tooltip">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryBitmap.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="DropdownRow" name="Collection" class="fp-aleph-one-only" tooltip="@Textures/Inspector.Collection.Tooltip">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
+            </ui:Instance>
+            <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
+            <ui:Instance template="IntegerPairRow" name="Offset">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryOffset.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="DropdownRow" name="TransferMode">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryTransferMode.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="LightRow" name="LightIndex">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.SecondaryLightIndex.Label.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
         <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Transparent Surface" />
-        </ui:Instance>
-        <ui:Instance template="TextureRow" name="TransparentTexture">
-            <ui:AttributeOverrides element-name="label" text="Texture:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="TransparentOffset">
-            <ui:AttributeOverrides element-name="label" text="Offset:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="TransparentTransferMode">
-            <ui:AttributeOverrides element-name="label" text="Transfer Mode:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="TransparentLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
-        </ui:Instance>
+        <ui:VisualElement name="Transparent" class="fp-inspector-scope">
+            <ui:Instance template="Subheader">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentSurface.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="TextureRow" name="Texture">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentTexture.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="IntegerFieldRow" name="Bitmap" tooltip="@Textures/Inspector.SideTextures.TransparentBitmap.Tooltip">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentBitmap.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="DropdownRow" name="Collection" class="fp-aleph-one-only" tooltip="@Textures/Inspector.Collection.Tooltip">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
+            </ui:Instance>
+            <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
+            <ui:Instance template="IntegerPairRow" name="Offset">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentOffset.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="DropdownRow" name="TransferMode">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentTransferMode.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="LightRow" name="LightIndex">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.TransparentLightIndex.Label.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

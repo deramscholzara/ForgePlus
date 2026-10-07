@@ -1,4 +1,5 @@
 ﻿#if !NO_EDITING
+using AlephOne;
 using ForgePlus.Extensions;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
@@ -104,17 +105,89 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // A placeholder (with no side data) is inspected as a face of its line
         public void Inspect()
         {
-            var inspector = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry ?
-                            (Inspector_Base)new Inspector_Side(this) :
-                            new Inspector_SideTextures(this);
+            Inspector_Base inspector;
+            if (NativeObject == null)
+            {
+                inspector = new Inspector_PlaceholderSide(this);
+            }
+            else if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
+            {
+                inspector = new Inspector_Side(this);
+            }
+            else
+            {
+                inspector = new Inspector_SideTextures(this);
+            }
+
             InspectorPanel.Instance.AddInspector(inspector);
 
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
             {
-                ParentLevel.Lines[NativeObject.line_index].Inspect();
+                ParentLevel.Lines[ParentLineIndex].Inspect();
             }
+        }
+
+        // The game sets a control panel's primary texture from its type and state (devices.cpp: set_control_panel_texture)
+        public bool PanelSetsPrimaryTexture
+        {
+            get
+            {
+                return TryGetControlPanelDefinition(out _);
+            }
+        }
+
+        // Whether the primary texture is its panel type's (active or inactive)
+        public bool ShowsPanelTexture
+        {
+            get
+            {
+                var texture = NativeObject.primary_texture.texture;
+
+                return TryGetControlPanelDefinition(out var definition) &&
+                       !texture.IsEmptyShapeDescriptor() &&
+                       texture.GetCollection() == definition.collection &&
+                       (texture.GetShape() == definition.active_shape || texture.GetShape() == definition.inactive_shape);
+            }
+        }
+
+        // As the game sets it (devices.cpp: set_control_panel_texture)
+        public void ApplyPanelTexture()
+        {
+            if (!TryGetControlPanelDefinition(out var definition))
+            {
+                return;
+            }
+
+            var shape = map.GET_CONTROL_PANEL_STATUS(NativeObject) ? definition.active_shape : definition.inactive_shape;
+            SetShapeDescriptor(DataSources.Primary, AlephOneExtensions.BuildShapeDescriptor(definition.collection, shape));
+        }
+
+        // A computer terminal panel's permutation (devices.cpp: change_panel_state)
+        public bool TryGetTerminalIndex(out short terminalIndex)
+        {
+            terminalIndex = cstypes.NONE;
+
+            if (!TryGetControlPanelDefinition(out _) ||
+                devices.get_panel_class(NativeObject.control_panel_type) != map._panel_is_computer_terminal)
+            {
+                return false;
+            }
+
+            terminalIndex = NativeObject.control_panel_permutation;
+
+            return true;
+        }
+
+        private bool TryGetControlPanelDefinition(out control_panel_definition definition)
+        {
+            definition = NativeObject != null && map.SIDE_IS_CONTROL_PANEL(NativeObject) ?
+                         devices.get_control_panel_definition(NativeObject.control_panel_type) :
+                         null;
+
+            return definition != null;
         }
 
         // TODO: actually set these up to use the new entity system
@@ -123,7 +196,7 @@ namespace RuntimeCore.Entities.Geometry
             switch (dataSource)
             {
                 case DataSources.Primary:
-                    if (NativeObject.primary_transfer_mode == 9 ||
+                    if (AlephOneExtensions.IsLandscapeTransferMode(NativeObject.primary_transfer_mode) ||
                         NativeObject.primary_texture.texture.UsesLandscapeCollection() ||
                         NativeObject.primary_texture.texture.IsEmptyShapeDescriptor())
                     {
@@ -134,11 +207,14 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.primary_texture.x0 = x;
                     NativeObject.primary_texture.y0 = y;
 
-                    PrimarySurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                    if (PrimarySurface)
+                    {
+                        PrimarySurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                    }
 
                     break;
                 case DataSources.Secondary:
-                    if (NativeObject.secondary_transfer_mode == 9 ||
+                    if (AlephOneExtensions.IsLandscapeTransferMode(NativeObject.secondary_transfer_mode) ||
                         NativeObject.secondary_texture.texture.UsesLandscapeCollection() ||
                         NativeObject.secondary_texture.texture.IsEmptyShapeDescriptor())
                     {
@@ -149,11 +225,14 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.secondary_texture.x0 = x;
                     NativeObject.secondary_texture.y0 = y;
 
-                    SecondarySurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                    if (SecondarySurface)
+                    {
+                        SecondarySurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                    }
 
                     break;
                 case DataSources.Transparent:
-                    if (NativeObject.transparent_transfer_mode == 9 ||
+                    if (AlephOneExtensions.IsLandscapeTransferMode(NativeObject.transparent_transfer_mode) ||
                         NativeObject.transparent_texture.texture.UsesLandscapeCollection() ||
                         NativeObject.transparent_texture.texture.IsEmptyShapeDescriptor())
                     {
@@ -164,8 +243,11 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.transparent_texture.x0 = x;
                     NativeObject.transparent_texture.y0 = y;
 
-                    TransparentSurface.ApplyTextureOffset(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level),
-                                                          rebatchImmediately: rebatch);
+                    if (TransparentSurface)
+                    {
+                        TransparentSurface.ApplyTextureOffset(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level),
+                                                             rebatchImmediately: rebatch);
+                    }
 
                     break;
                 default:
@@ -216,31 +298,90 @@ namespace RuntimeCore.Entities.Geometry
                     return;
             }
 
-            short newTransferMode = 0;
-            if (shapeDescriptor.UsesLandscapeCollection())
+            var newTransferMode = LevelEditing.TransferModeForTexture(shapeDescriptor, transferMode);
+
+            // A surface the side doesn't draw (one the inspector edits) has nothing to update
+            switch (dataSource)
             {
-                newTransferMode = 9;
+                case DataSources.Primary:
+                    NativeObject.primary_transfer_mode = newTransferMode;
+
+                    if (PrimarySurface)
+                    {
+                        PrimarySurface.ApplyTexture();
+                    }
+
+                    break;
+                case DataSources.Secondary:
+                    NativeObject.secondary_transfer_mode = newTransferMode;
+
+                    if (SecondarySurface)
+                    {
+                        SecondarySurface.ApplyTexture();
+                    }
+
+                    break;
+                case DataSources.Transparent:
+                    NativeObject.transparent_transfer_mode = newTransferMode;
+
+                    if (TransparentSurface)
+                    {
+                        TransparentSurface.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+                    }
+
+                    break;
             }
-            else if (transferMode != 9)
+
+            // Whether the line has a transparent side, or a landscape, may have changed
+            LineFlagsEditing.UpdateForSide(ParentLevel.Level, NativeObject);
+        }
+
+        // The material depends on the transfer mode too (a landscape's is its own)
+        public void SetTransferMode(DataSources dataSource, short transferMode)
+        {
+            if (transferMode == NativeObject.GetTransferMode(dataSource))
             {
-                newTransferMode = transferMode;
+                // Transfer mode is not different, so exit
+                return;
             }
 
             switch (dataSource)
             {
-                case LevelEntity_Side.DataSources.Primary:
-                    NativeObject.primary_transfer_mode = newTransferMode;
-                    PrimarySurface.ApplyTexture();
+                case DataSources.Primary:
+                    NativeObject.primary_transfer_mode = transferMode;
+
+                    if (PrimarySurface)
+                    {
+                        PrimarySurface.ApplyTexture();
+                        PrimarySurface.ApplyTransferMode();
+                    }
+
                     break;
-                case LevelEntity_Side.DataSources.Secondary:
-                    NativeObject.secondary_transfer_mode = newTransferMode;
-                    SecondarySurface.ApplyTexture();
+                case DataSources.Secondary:
+                    NativeObject.secondary_transfer_mode = transferMode;
+
+                    if (SecondarySurface)
+                    {
+                        SecondarySurface.ApplyTexture();
+                        SecondarySurface.ApplyTransferMode();
+                    }
+
                     break;
-                case LevelEntity_Side.DataSources.Transparent:
-                    NativeObject.transparent_transfer_mode = newTransferMode;
-                    TransparentSurface.ApplyTexture(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+                case DataSources.Transparent:
+                    var innerLayer = !NativeObject.HasLayeredTransparentSide(ParentLevel.Level);
+                    NativeObject.transparent_transfer_mode = transferMode;
+
+                    if (TransparentSurface)
+                    {
+                        TransparentSurface.ApplyTexture(innerLayer);
+                        TransparentSurface.ApplyTransferMode(innerLayer);
+                    }
+
                     break;
             }
+
+            // Whether the line has a landscape may have changed
+            LineFlagsEditing.UpdateForSide(ParentLevel.Level, NativeObject);
         }
 
         public void SetLight(DataSources dataSource, short lightIndex)
@@ -257,7 +398,10 @@ namespace RuntimeCore.Entities.Geometry
 
                     NativeObject.primary_lightsource_index = lightIndex;
 
-                    PrimarySurface.ApplyLight();
+                    if (PrimarySurface)
+                    {
+                        PrimarySurface.ApplyLight();
+                    }
 
                     break;
                 case DataSources.Secondary:
@@ -270,7 +414,10 @@ namespace RuntimeCore.Entities.Geometry
 
                     NativeObject.secondary_lightsource_index = lightIndex;
 
-                    SecondarySurface.ApplyLight();
+                    if (SecondarySurface)
+                    {
+                        SecondarySurface.ApplyLight();
+                    }
 
                     break;
                 case DataSources.Transparent:
@@ -283,7 +430,10 @@ namespace RuntimeCore.Entities.Geometry
 
                     NativeObject.transparent_lightsource_index = lightIndex;
 
-                    TransparentSurface.ApplyLight(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+                    if (TransparentSurface)
+                    {
+                        TransparentSurface.ApplyLight(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+                    }
 
                     break;
                 default:

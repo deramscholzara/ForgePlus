@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
+    <!-- Bound to Inspector_Placements, which adds each type's placement (an Inspector_Placement, in its own foldout) to
+         the items and monsters foldouts -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placements.ObjectPlacement.Label.Text" />
+        </ui:Instance>
+        <ui:Label text="@Objects/Inspector.Placements.HowTheLevelPlaces.Text" class="fp-inspector-note" />
+        <ui:Instance template="Foldout" name="items">
+            <ui:AttributeOverrides element-name="control" text="@Objects/Inspector.Placements.Items.Control.Text" />
+        </ui:Instance>
+        <ui:Instance template="Foldout" name="monsters">
+            <ui:AttributeOverrides element-name="control" text="@Objects/Inspector.Placements.Monsters.Control.Text" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

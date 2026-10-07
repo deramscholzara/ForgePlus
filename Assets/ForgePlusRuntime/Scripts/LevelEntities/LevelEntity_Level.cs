@@ -22,6 +22,9 @@ namespace RuntimeCore.Entities
         public Dictionary<short, LevelEntity_Line> Lines;
         [System.NonSerialized]
         public Dictionary<short, LevelEntity_Side> Sides;
+        // Exposed faces of lines with no side in the level's data (their NativeIndex is NONE)
+        [System.NonSerialized]
+        public List<LevelEntity_Side> PlaceholderSides;
         [System.NonSerialized]
         public Dictionary<short, LevelEntity_Light> Lights;
         [System.NonSerialized]
@@ -40,6 +43,11 @@ namespace RuntimeCore.Entities
         public List<EditableSurface_Polygon> EditableSurface_Polygons;
         public List<EditableSurface_Side> EditableSurface_Sides;
         public List<EditableSurface_Media> EditableSurface_Medias;
+
+        public static string GameObjectName(string levelName)
+        {
+            return $"Level ({levelName})";
+        }
 
         public void SetSelectability(bool enabled)
         {

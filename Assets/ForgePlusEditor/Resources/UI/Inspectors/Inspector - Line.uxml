@@ -6,20 +6,24 @@
     <!-- Bound to Inspector_Line -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Line" />
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Line.Line.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Line.Id.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Flags" />
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Line.Flags.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="Solid">
-            <ui:AttributeOverrides element-name="flag" text="Solid" />
+            <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Line.Solid.Flag.Text" />
         </ui:Instance>
+        <ui:Label name="SolidCaption" class="fp-inspector-note" />
         <ui:Instance template="Flag" name="Transparent">
-            <ui:AttributeOverrides element-name="flag" text="Is Transparent" />
+            <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Line.Transparent.Flag.Text" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="Decorative" class="fp-aleph-one-only" tooltip="@Geometry/Inspector.Line.Decorative.Tooltip">
+            <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Line.Decorative.Flag.Text" />
         </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

@@ -1,7 +1,9 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
 using RuntimeCore.Entities.Geometry;
 using Unity.Properties;
+using UnityEngine.UIElements;
 
 namespace ForgePlus.Inspection
 {
@@ -9,6 +11,9 @@ namespace ForgePlus.Inspection
     {
         public Inspector_SideTextures(LevelEntity_Side side) : base(side)
         {
+            Primary = new SideSurfaceView(this, LevelEntity_Side.DataSources.Primary);
+            Secondary = new SideSurfaceView(this, LevelEntity_Side.DataSources.Secondary);
+            Transparent = new SideSurfaceView(this, LevelEntity_Side.DataSources.Transparent);
         }
 
         protected override string LayoutPath
@@ -45,122 +50,134 @@ namespace ForgePlus.Inspection
             }
         }
 
-        [CreateProperty]
-        public UnityEngine.Texture PrimaryTexture
+        public SideSurfaceView Primary { get; }
+
+        public SideSurfaceView Secondary { get; }
+
+        public SideSurfaceView Transparent { get; }
+
+        protected override void OnLoaded()
         {
-            get
+            base.OnLoaded();
+
+            Primary.MakeTextureChoosable(Root.Q(nameof(Primary)));
+            Secondary.MakeTextureChoosable(Root.Q(nameof(Secondary)));
+            Transparent.MakeTextureChoosable(Root.Q(nameof(Transparent)));
+        }
+
+        public class SideSurfaceView : SurfaceTextureView
+        {
+            private readonly Inspector_SideTextures inspector;
+            private readonly LevelEntity_Side.DataSources dataSource;
+
+            public SideSurfaceView(Inspector_SideTextures inspector, LevelEntity_Side.DataSources dataSource) : base(inspector)
             {
-                return TextureOrPlaceholder(Side.primary_texture.texture);
+                this.inspector = inspector;
+                this.dataSource = dataSource;
             }
-        }
 
-        [CreateProperty]
-        public string PrimaryOffset
-        {
-            get
+            [CreateProperty]
+            public bool IsBitmapEditable
             {
-                return SurfaceOffset(Side.primary_texture);
+                get
+                {
+                    return IsTextureAssignable;
+                }
             }
-        }
 
-        [CreateProperty]
-        public string PrimaryTransferMode
-        {
-            get
+            [CreateProperty]
+            public string TextureNote
             {
-                return HasData(Side.primary_texture) ? Side.primary_transfer_mode.ToString() : "-";
+                get
+                {
+                    return IsTextureAssignable ? string.Empty : Strings.Get(Strings.Textures, "Inspector.SideTextures.PrimaryTextureNote");
+                }
             }
-        }
 
-        [CreateProperty]
-        public string PrimaryLightIndex
-        {
-            get
+            protected override ushort ShapeDescriptor
             {
-                return HasData(Side.primary_texture) ? Side.primary_lightsource_index.ToString() : "-";
+                get
+                {
+                    return inspector.Side.GetTexture(dataSource).texture;
+                }
             }
-        }
 
-        [CreateProperty]
-        public UnityEngine.Texture SecondaryTexture
-        {
-            get
+            protected override short NativeTransferMode
             {
-                return TextureOrPlaceholder(Side.secondary_texture.texture);
+                get
+                {
+                    return inspector.Side.GetTransferMode(dataSource);
+                }
             }
-        }
 
-        [CreateProperty]
-        public string SecondaryOffset
-        {
-            get
+            protected override short NativeOffsetX
             {
-                return SurfaceOffset(Side.secondary_texture);
+                get
+                {
+                    return inspector.Side.GetTexture(dataSource).x0;
+                }
             }
-        }
 
-        [CreateProperty]
-        public string SecondaryTransferMode
-        {
-            get
+            protected override short NativeOffsetY
             {
-                return HasData(Side.secondary_texture) ? Side.secondary_transfer_mode.ToString() : "-";
+                get
+                {
+                    return inspector.Side.GetTexture(dataSource).y0;
+                }
             }
-        }
 
-        [CreateProperty]
-        public string SecondaryLightIndex
-        {
-            get
+            protected override short NativeLightIndex
             {
-                return HasData(Side.secondary_texture) ? Side.secondary_lightsource_index.ToString() : "-";
+                get
+                {
+                    return inspector.Side.GetLightsourceIndex(dataSource);
+                }
             }
-        }
 
-        [CreateProperty]
-        public UnityEngine.Texture TransparentTexture
-        {
-            get
+            protected override bool IsLit
             {
-                return TextureOrPlaceholder(Side.transparent_texture.texture);
+                get
+                {
+                    return UsesLight(ShapeDescriptor);
+                }
             }
-        }
 
-        [CreateProperty]
-        public string TransparentOffset
-        {
-            get
+            // A control panel's primary texture is set by its panel type and state (in Geometry mode), as the game sets it
+            protected override bool IsTextureAssignable
             {
-                return SurfaceOffset(Side.transparent_texture);
+                get
+                {
+                    return dataSource != LevelEntity_Side.DataSources.Primary || !inspector.Entity.PanelSetsPrimaryTexture;
+                }
             }
-        }
 
-        [CreateProperty]
-        public string TransparentTransferMode
-        {
-            get
+            protected override string TransferModeChoice
             {
-                return HasData(Side.transparent_texture) ? Side.transparent_transfer_mode.ToString() : "-";
+                get
+                {
+                    return HasTexture ? base.TransferModeChoice : "-";
+                }
             }
-        }
 
-        [CreateProperty]
-        public string TransparentLightIndex
-        {
-            get
+            protected override void SetShapeDescriptor(ushort shapeDescriptor)
             {
-                return HasData(Side.transparent_texture) ? Side.transparent_lightsource_index.ToString() : "-";
+                inspector.Edit(side => side.SetShapeDescriptor(dataSource, shapeDescriptor));
             }
-        }
 
-        private static bool HasData(side_texture_definition surface)
-        {
-            return !surface.texture.IsEmptyShapeDescriptor();
-        }
+            protected override void SetOffset(short x, short y)
+            {
+                inspector.Edit(side => side.SetOffset(dataSource, x, y, rebatch: true));
+            }
 
-        private static string SurfaceOffset(side_texture_definition surface)
-        {
-            return HasData(surface) ? $"X: {surface.x0}\nY: {surface.y0}" : "X: -\nY: -";
+            protected override void SetTransferMode(short transferMode)
+            {
+                inspector.Edit(side => side.SetTransferMode(dataSource, transferMode));
+            }
+
+            protected override void SetLight(int lightIndex)
+            {
+                inspector.SetLight(lightIndex, (side, light) => side.SetLight(dataSource, light));
+            }
         }
     }
 }

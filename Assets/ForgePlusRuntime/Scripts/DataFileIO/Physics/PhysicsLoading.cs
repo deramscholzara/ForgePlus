@@ -1,5 +1,4 @@
 ﻿using AlephOne;
-using System;
 using System.Threading.Tasks;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
@@ -16,7 +15,6 @@ namespace ForgePlus.DataFileIO
         private MapLevel openLevel;
         private LoadedPhysicsModel openLevelModel;
 
-        private string failedPath;
         private bool isChangingFile;
 
         public PhysicsModel Model
@@ -60,7 +58,7 @@ namespace ForgePlus.DataFileIO
         {
             get
             {
-                TryLoadFile();
+                TryLoadSelectedFile(() => LoadFileWithoutRefreshing(forceReload: false), "Physics", "engine defaults will be used instead");
 
                 return data?.PhysicsFile?.Model ?? EngineDefaults;
             }
@@ -104,8 +102,6 @@ namespace ForgePlus.DataFileIO
 
         public override void LoadFile(bool forceReload = true)
         {
-            failedPath = null;
-
             LoadFileWithoutRefreshing(forceReload);
 
             RefreshOpenLevel();
@@ -153,37 +149,6 @@ namespace ForgePlus.DataFileIO
             if (openLevel != null)
             {
                 SetLevel(openLevel, SelectedFileModel);
-            }
-        }
-
-        private void TryLoadFile()
-        {
-            if (data != null)
-            {
-                // Already loaded, so exit
-                return;
-            }
-
-            var path = FileSettings.Instance.GetFilePath(DataFileType);
-
-            if (path == failedPath)
-            {
-                // This file already failed to load, so don't retry (and log) for every lookup
-                return;
-            }
-
-            try
-            {
-                LoadFileWithoutRefreshing(forceReload: false);
-            }
-            catch (Exception exception)
-            {
-                // A bad physics file falls back to the engine defaults, as in Aleph One
-                Debug.LogError($"Physics file \"{path}\" could not be loaded, so engine defaults will be used instead: {exception}");
-
-                base.UnloadFile();
-
-                failedPath = path;
             }
         }
     }

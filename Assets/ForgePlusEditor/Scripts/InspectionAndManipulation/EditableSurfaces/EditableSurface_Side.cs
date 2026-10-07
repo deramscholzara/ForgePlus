@@ -4,7 +4,9 @@ using ForgePlus.Extensions;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
+using ForgePlus.Localization;
 using ForgePlus.Palette;
+using ForgePlus.UI;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System;
@@ -12,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace ForgePlus.Entities.Geometry
 {
@@ -33,20 +34,30 @@ namespace ForgePlus.Entities.Geometry
         public LevelEntity_Side ParentSide = null;
         public LevelEntity_Side.DataSources DataSource;
 
-        // TODO: Get rid of these and just attain them on the fly instead of preloading
-        //       Maybe include a reference to the context-typed RuntimeSurfaceGeometry component, to help
-        public ushort surfaceShapeDescriptor = cstypes.UNONE;
-        [System.NonSerialized]
-        public LevelEntity_Light RuntimeLight = null;
-        [System.NonSerialized]
-        public LevelEntity_Media Media = null;
         public LevelEntity_Platform Platform = null;
 
         private UVPlanarDrag uvDragPlane;
 
         private List<AlignmentGroupee> alignmentGroup = new List<AlignmentGroupee>();
 
-        public async override void OnValidatedPointerClick(PointerEventData eventData)
+        // A placeholder (with no side data) has no texture or light
+        public override ushort SurfaceShapeDescriptor
+        {
+            get
+            {
+                return ParentSide.NativeObject != null ? ParentSide.NativeObject.GetTexture(DataSource).texture : cstypes.UNONE;
+            }
+        }
+
+        public override LevelEntity_Light RuntimeLight
+        {
+            get
+            {
+                return ParentSide.NativeObject != null ? ParentSide.ParentLevel.Lights[ParentSide.NativeObject.GetLightsourceIndex(DataSource)] : null;
+            }
+        }
+
+        public async override void OnValidatedPointerClick(WorldPointerEventData eventData)
         {
             switch (ModeManager.Instance.PrimaryMode)
             {
@@ -57,9 +68,9 @@ namespace ForgePlus.Entities.Geometry
                 case ModeManager.PrimaryModes.Textures:
                     if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
                     {
-                        var selectedTexture = PaletteManager.Instance.GetSelectedTexture();
-
-                        if (!selectedTexture.IsEmptyShapeDescriptor())
+                        // A placeholder has nowhere to store a texture
+                        if (ParentSide.NativeObject != null &&
+                            PaletteManager.Instance.TryGetSelectedTexture(out var selectedTexture))
                         {
                             var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
                             var destinationDataSource = DataSource;
@@ -77,6 +88,12 @@ namespace ForgePlus.Entities.Geometry
                                 destinationDataSource = result.Value;
                             }
 
+                            // A control panel's primary texture is set by its panel type and state
+                            if (destinationDataSource == LevelEntity_Side.DataSources.Primary && ParentSide.PanelSetsPrimaryTexture)
+                            {
+                                return;
+                            }
+
                             ParentSide.SetShapeDescriptor(destinationDataSource, selectedTexture);
                         }
                     }
@@ -89,6 +106,12 @@ namespace ForgePlus.Entities.Geometry
                         if (!selectedSourceSide)
                         {
                             // There is no selection to use as a source, so exit
+                            return;
+                        }
+
+                        if (selectedSourceSide.NativeObject == null || ParentSide.NativeObject == null)
+                        {
+                            // A placeholder has no texture to align, so exit
                             return;
                         }
 
@@ -179,10 +202,8 @@ namespace ForgePlus.Entities.Geometry
                         SelectionManager.Instance.ToggleObjectSelection(ParentSide, multiSelect: false);
                         InputListener(ParentSide);
 
-                        if (!surfaceShapeDescriptor.IsEmptyShapeDescriptor())
-                        {
-                            PaletteManager.Instance.SelectSwatchForTexture(surfaceShapeDescriptor);
-                        }
+                        // An unassigned surface selects "None"
+                        PaletteManager.Instance.SelectSwatchForTexture(SurfaceShapeDescriptor);
                     }
 
                     break;
@@ -214,26 +235,34 @@ namespace ForgePlus.Entities.Geometry
                     }
                     else
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(RuntimeLight, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForLight(RuntimeLight);
+                        ToggleLightSelection();
                     }
 
                     break;
                 case ModeManager.PrimaryModes.Media:
-                    if (Media != null)
+                case ModeManager.PrimaryModes.Sounds:
+                case ModeManager.PrimaryModes.Annotations:
+                    if (ParentSide.FacingPolygon)
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(Media, multiSelect: false);
-                        PaletteManager.Instance.SelectSwatchForMedia(Media);
+                        ClickPolygonInMode(ParentSide.FacingPolygon);
                     }
 
                     break;
                 case ModeManager.PrimaryModes.Platforms:
+                    // Any of a platform's faces (including the sides that move with it) selects it
                     if (Platform != null)
                     {
-                        SelectionManager.Instance.ToggleObjectSelection(Platform, multiSelect: false);
+                        SelectionManager.Instance.ToggleObjectSelection(Platform.SelectablePlatform, multiSelect: false);
                     }
 
                     break;
+                case ModeManager.PrimaryModes.Terminals:
+                    if (ParentSide.TryGetTerminalIndex(out var terminalIndex))
+                    {
+                        ForgePlusUI.Instance.ShowTerminal(terminalIndex);
+                    }
+
+                    return;
                 default:
                     Debug.LogError($"Selection in mode \"{ModeManager.Instance.PrimaryMode}\" is not supported.");
                     return;
@@ -242,7 +271,7 @@ namespace ForgePlus.Entities.Geometry
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
-        public override void OnValidatedBeginDrag(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
@@ -277,9 +306,9 @@ namespace ForgePlus.Entities.Geometry
                     }
                 }
 
-                var startingPosition = eventData.pointerPressRaycast.worldPosition;
+                var startingPosition = eventData.PressWorldPosition;
 
-                var surfaceWorldNormal = eventData.pointerCurrentRaycast.worldNormal;
+                var surfaceWorldNormal = eventData.PressWorldNormal;
                 var textureWorldUp = Vector3.up;
 
                 uvDragPlane = new UVPlanarDrag(startingUVs,
@@ -307,14 +336,14 @@ namespace ForgePlus.Entities.Geometry
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
-        public override void OnValidatedDrag(PointerEventData eventData)
+        public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
             {
-                var screenPosition = new Vector3(eventData.pointerCurrentRaycast.screenPosition.x,
-                                                 eventData.pointerCurrentRaycast.screenPosition.y,
+                var screenPosition = new Vector3(eventData.Position.x,
+                                                 eventData.Position.y,
                                                  0f);
 
                 var pointerRay = Camera.main.ScreenPointToRay(screenPosition);
@@ -345,7 +374,7 @@ namespace ForgePlus.Entities.Geometry
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
-        public override void OnValidatedEndDrag(PointerEventData eventData)
+        public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
@@ -424,7 +453,22 @@ namespace ForgePlus.Entities.Geometry
 
         private static string DataSourceDialogTitle(bool isDestination)
         {
-            return isDestination ? "Select Destination..." : "Select Source...";
+            return isDestination ? Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Title.Destination") : Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Title.Source");
+        }
+
+        private static string DataSourceLabel(string dataSource)
+        {
+            switch (dataSource)
+            {
+                case nameof(LevelEntity_Side.DataSources.Primary):
+                    return Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Source.Primary");
+                case nameof(LevelEntity_Side.DataSources.Secondary):
+                    return Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Source.Secondary");
+                case nameof(LevelEntity_Side.DataSources.Transparent):
+                    return Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Source.Transparent");
+                default:
+                    return dataSource;
+            }
         }
 
         private async Task<LevelEntity_Side.DataSources?> ShowLayerSourceDialog(bool isDestination)
@@ -437,8 +481,8 @@ namespace ForgePlus.Entities.Geometry
 
             var dialogOptionLabels = new List<string>()
                                 {
-                                    "Inner",
-                                    "Outer"
+                                    Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Layer.Inner"),
+                                    Strings.Get(Strings.Common, "Surface.Side.DataSourceDialog.Layer.Outer")
                                 };
 
             var result = await DialogManager.Instance.DisplayQueuedDialog(DataSourceDialogTitle(isDestination),
@@ -455,8 +499,11 @@ namespace ForgePlus.Entities.Geometry
 
         private async Task<LevelEntity_Side.DataSources?> ShowVariableDataSourceDialog(List<string> dialogOptions, bool isDestination)
         {
+            var dialogOptionLabels = dialogOptions.Select(DataSourceLabel).ToList();
+
             var result = await DialogManager.Instance.DisplayQueuedDialog(DataSourceDialogTitle(isDestination),
-                                                                          dialogOptions);
+                                                                          dialogOptions,
+                                                                          dialogOptionLabels);
 
             if (result == null)
             {

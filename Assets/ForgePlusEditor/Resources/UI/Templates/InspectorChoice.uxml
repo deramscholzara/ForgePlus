@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A choice of one of its options (InspectorChoiceOption instances, its children), for mutually exclusive settings; an
+         instance is named after the int inspector property it edits (the selected option's index), and is grayed out as a flag is -->
+    <ui:VisualElement class="fp-inspector-choice-area fp-template">
+        <ui:Label name="label" text="Choice:" class="fp-inspector-choice__label" />
+        <ui:RadioButtonGroup name="control" content-container="control" class="fp-radio-group fp-inspector-choice" />
+    </ui:VisualElement>
+</ui:UXML>

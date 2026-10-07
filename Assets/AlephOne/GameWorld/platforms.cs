@@ -3,8 +3,8 @@
 // Not ported (the running platform state machine): update_platforms, platform_was_entered,
 // try_and_change_platform_state, try_and_change_tagged_platform_states, set_platform_state,
 // monster_can_enter/leave_platform, player_touch_platform_state, platform_is_legal_player_target,
-// platform_is_at_initial_state, get_platform_moving_sound, adjust_platform_for_media, platform sounds,
-// and MML parsing.
+// platform_is_at_initial_state, adjust_platform_for_media, and MML parsing. Which sound a platform plays
+// (play_platform_sound) is ported, as get_platform_sound, but not playing it.
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
@@ -14,6 +14,7 @@ using static AlephOne.editor;
 using static AlephOne.map;
 using static AlephOne.map_constructors;
 using static AlephOne.Packing;
+using static AlephOne.SoundManagerEnums;
 using static AlephOne.world;
 
 namespace AlephOne
@@ -273,11 +274,16 @@ namespace AlephOne
         public const short _obstructed_sound = 2;
         public const short _uncontrollable_sound = 3;
 
-        // Only the defaults are ported: the sounds (starting_extension, starting_contraction,
-        // stopping_extension, stopping_contraction, obstructed_sound, uncontrollable_sound, moving_sound),
-        // key_item_index and damage are the running game's.
+        // Not ported: key_item_index and damage (the running game's)
         public class platform_definition
         {
+            /* sounds; specific sounds are played if they can be (i.e., ...at_bottom) otherwise the
+                general sound is played */
+            public short starting_extension, starting_contraction;
+            public short stopping_extension, stopping_contraction;
+            public short obstructed_sound, uncontrollable_sound;
+            public short moving_sound;
+
             public static_platform_data defaults;
         }
 
@@ -285,6 +291,10 @@ namespace AlephOne
         {
             new platform_definition // _platform_is_spht_door
             {
+                starting_extension = _snd_spht_door_opening, starting_contraction = _snd_spht_door_closing,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = _snd_spht_door_obstructed, uncontrollable_sound = _snd_spht_door_obstructed,
+                moving_sound = _ambient_snd_spht_door,
                 defaults = new static_platform_data(
                     _platform_is_spht_door, _fast_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -294,6 +304,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_split_spht_door
             {
+                starting_extension = _snd_spht_door_opening, starting_contraction = _snd_spht_door_closing,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = _snd_spht_door_obstructed, uncontrollable_sound = _snd_spht_door_obstructed,
+                moving_sound = _ambient_snd_spht_door,
                 defaults = new static_platform_data(
                     _platform_is_spht_split_door, _slow_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -304,6 +318,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_locked_spht_door
             {
+                starting_extension = _snd_spht_door_opening, starting_contraction = _snd_spht_door_closing,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = _snd_spht_door_obstructed, uncontrollable_sound = _snd_spht_door_obstructed,
+                moving_sound = _ambient_snd_spht_door,
                 defaults = new static_platform_data(
                     _platform_is_locked_spht_door, _slow_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -314,6 +332,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_spht_platform
             {
+                starting_extension = NONE, starting_contraction = NONE,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = NONE, uncontrollable_sound = NONE,
+                moving_sound = NONE,
                 defaults = new static_platform_data(
                     _platform_is_spht_platform, _slow_platform, _long_delay_platform, NONE, NONE,
                     FLAG(_platform_is_initially_active) | FLAG(_platform_is_initially_extended) | FLAG(_platform_comes_from_floor) |
@@ -321,6 +343,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_noisy_spht_platform
             {
+                starting_extension = _snd_spht_platform_starting, starting_contraction = _snd_spht_platform_starting,
+                stopping_extension = _snd_spht_platform_stopping, stopping_contraction = _snd_spht_platform_stopping,
+                obstructed_sound = _snd_spht_platform_stopping, uncontrollable_sound = NONE,
+                moving_sound = _ambient_snd_spht_platform,
                 defaults = new static_platform_data(
                     _platform_is_noisy_spht_platform, _slow_platform, _long_delay_platform, NONE, NONE,
                     FLAG(_platform_is_initially_active) | FLAG(_platform_is_initially_extended) | FLAG(_platform_comes_from_floor) |
@@ -328,6 +354,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_heavy_spht_door
             {
+                starting_extension = _snd_heavy_spht_door_closing, starting_contraction = _snd_heavy_spht_door_opening,
+                stopping_extension = _snd_heavy_spht_door_closed, stopping_contraction = _snd_heavy_spht_door_open,
+                obstructed_sound = _snd_heavy_spht_door_obstructed, uncontrollable_sound = _snd_heavy_spht_door_obstructed,
+                moving_sound = _ambient_snd_heavy_spht_door,
                 defaults = new static_platform_data(
                     _platform_is_heavy_spht_door, _slow_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -337,6 +367,10 @@ namespace AlephOne
             },
             new platform_definition // pfhor door
             {
+                starting_extension = _snd_pfhor_door_opening, starting_contraction = _snd_pfhor_door_closing,
+                stopping_extension = NONE, stopping_contraction = NONE,
+                obstructed_sound = _snd_pfhor_door_obstructed, uncontrollable_sound = _snd_pfhor_door_obstructed,
+                moving_sound = _ambient_snd_pfhor_door,
                 defaults = new static_platform_data(
                     _platform_is_pfhor_door, _fast_platform, _very_long_delay_platform, NONE, NONE,
                     FLAG(_platform_deactivates_at_initial_level) | FLAG(_platform_extends_floor_to_ceiling) |
@@ -346,6 +380,10 @@ namespace AlephOne
             },
             new platform_definition // _platform_is_heavy_spht_platform
             {
+                starting_extension = _snd_heavy_spht_platform_starting, starting_contraction = _snd_heavy_spht_platform_starting,
+                stopping_extension = _snd_heavy_spht_platform_stopping, stopping_contraction = _snd_heavy_spht_platform_stopping,
+                obstructed_sound = _snd_heavy_spht_platform_stopping, uncontrollable_sound = NONE,
+                moving_sound = _ambient_snd_heavy_spht_platform,
                 defaults = new static_platform_data(
                     _platform_is_heavy_spht_platform, _slow_platform, _long_delay_platform, NONE, NONE,
                     FLAG(_platform_is_initially_active) | FLAG(_platform_is_initially_extended) |
@@ -353,6 +391,10 @@ namespace AlephOne
             },
             new platform_definition // pfhor platform
             {
+                starting_extension = _snd_pfhor_platform_starting, starting_contraction = _snd_pfhor_platform_starting,
+                stopping_extension = _snd_pfhor_platform_stopping, stopping_contraction = _snd_pfhor_platform_stopping,
+                obstructed_sound = _snd_pfhor_platform_stopping, uncontrollable_sound = NONE,
+                moving_sound = _ambient_snd_pfhor_platform,
                 defaults = new static_platform_data(
                     _platform_is_pfhor_platform, _slow_platform, _long_delay_platform, NONE, NONE,
                     FLAG(_platform_is_initially_active) | FLAG(_platform_is_initially_extended) | FLAG(_platform_comes_from_floor) |
@@ -366,7 +408,7 @@ namespace AlephOne
         {
             platform_data platform = GetMemberWithBounds(level.PlatformList, platform_index, level.PlatformList.Count);
 
-            vassert(platform != null, $"platform index #{platform_index} is out of range");
+            vassert(platform != null, "platform index #{0} is out of range", platform_index);
 
             return platform;
         }
@@ -374,6 +416,50 @@ namespace AlephOne
         private static platform_definition get_platform_definition(short type)
         {
             return GetMemberWithBounds(platform_definitions, type, NUMBER_OF_PLATFORM_TYPES);
+        }
+
+        public static short get_platform_moving_sound(MapLevel level, short platform_index)
+        {
+            platform_data platform = get_platform_data(level, platform_index);
+            platform_definition definition = get_platform_definition(platform.type);
+            if (definition == null) return NONE;
+
+            return definition.moving_sound;
+        }
+
+        // play_platform_sound's choice of sound. ForgePlus: with PLATFORM_IS_EXTENDING and PLATFORM_IS_FULLY_CONTRACTED
+        // passed in, as the running game's dynamic flags aren't kept
+        public static short get_platform_sound(MapLevel level, short platform_index, short type, bool is_extending, bool is_fully_contracted)
+        {
+            platform_data platform = get_platform_data(level, platform_index);
+            platform_definition definition = get_platform_definition(platform.type);
+            if (definition == null) return NONE;
+            short sound_code;
+
+            switch (type)
+            {
+                case _obstructed_sound:
+                    sound_code = definition.obstructed_sound;
+                    break;
+
+                case _uncontrollable_sound:
+                    sound_code = definition.uncontrollable_sound;
+                    break;
+
+                case _starting_sound:
+                    sound_code = is_extending ? definition.starting_extension : definition.starting_contraction;
+                    break;
+                case _stopping_sound:
+                    sound_code = is_fully_contracted ? definition.stopping_contraction : definition.stopping_extension;
+                    break;
+
+                default:
+                    assert(false);
+                    sound_code = NONE;
+                    break;
+            }
+
+            return sound_code;
         }
 
         // maximum_platforms_per_map is MAXIMUM_PLATFORMS_PER_MAP, which scan_and_add_platforms() sets to the
@@ -390,71 +476,109 @@ namespace AlephOne
 
             if (level.PlatformList.Count < maximum_platforms_per_map)
             {
-                polygon_data polygon = get_polygon_data(level, polygon_index);
-                short i;
-
                 platform_index = (short) level.PlatformList.Count;
                 platform = new platform_data();
                 level.PlatformList.Add(platform);
 
-                /* remember the platform_index in the polygon's .permutation field */
-                polygon.permutation = platform_index;
-                polygon.type = _polygon_is_platform;
-
-                /* initialize the platform */
-                platform.type = data.type;
-                platform.static_flags = data.static_flags;
-                platform.tag = data.tag;
-                platform.speed = data.speed;
-                platform.delay = data.delay;
-                platform.polygon_index = polygon_index;
-                platform.parent_platform_index = NONE;
-                calculate_platform_extrema(level, platform_index, data.minimum_height, data.maximum_height);
-
-                /* stuff in the correct defaults; if the platform is initially active it begins moving
-                    immediately */
-                platform.dynamic_flags = 0;
-                platform.floor_height = polygon.floor_height;
-                platform.ceiling_height = polygon.ceiling_height;
-                if (PLATFORM_IS_INITIALLY_ACTIVE(platform))
-                {
-                    SET_PLATFORM_IS_ACTIVE(platform, true);
-                    SET_PLATFORM_HAS_BEEN_ACTIVATED(platform);
-                    SET_PLATFORM_IS_MOVING(platform, true);
-                }
-                if (PLATFORM_IS_INITIALLY_EXTENDED(platform))
-                {
-                    if (PLATFORM_COMES_FROM_FLOOR(platform)) platform.floor_height = platform.maximum_floor_height;
-                    if (PLATFORM_COMES_FROM_CEILING(platform)) platform.ceiling_height = platform.minimum_ceiling_height;
-                    SET_PLATFORM_IS_CONTRACTING(platform);
-                    SET_PLATFORM_IS_FULLY_EXTENDED(platform);
-                }
-                else
-                {
-                    if (PLATFORM_COMES_FROM_FLOOR(platform)) platform.floor_height = platform.minimum_floor_height;
-                    if (PLATFORM_COMES_FROM_CEILING(platform)) platform.ceiling_height = platform.maximum_ceiling_height;
-                    SET_PLATFORM_IS_EXTENDING(platform);
-                    SET_PLATFORM_IS_FULLY_CONTRACTED(platform);
-                }
-
-                /* remember what polygons and lines are adjacent to the endpoints of the platform
-                    polygon so we can quickly recalculate heights later */
-                for (i = 0; i < polygon.vertex_count; ++i)
-                {
-                    calculate_endpoint_polygon_owners(level, polygon.endpoint_indexes[i], out platform.endpoint_owners[i].first_polygon_index,
-                        out platform.endpoint_owners[i].polygon_index_count);
-                    calculate_endpoint_line_owners(level, polygon.endpoint_indexes[i], out platform.endpoint_owners[i].first_line_index,
-                        out platform.endpoint_owners[i].line_index_count);
-                }
-
-                // ForgePlus: the polygon keeps its native heights, which export_level() would restore
-                // polygon->floor_height= platform->floor_height;
-                // polygon->ceiling_height= platform->ceiling_height;
-                // adjust_platform_endpoint_and_line_heights(platform_index);
-                // adjust_platform_for_media(platform_index, true);
+                initialize_platform(level, platform_index, data, polygon_index);
             }
 
             return platform_index;
+        }
+
+        // ForgePlus: the rest of new_platform(), so an edited platform can be initialized again from its static data
+        public static void initialize_platform(MapLevel level, short platform_index, static_platform_data data, short polygon_index)
+        {
+            platform_data platform = level.PlatformList[platform_index];
+            polygon_data polygon = get_polygon_data(level, polygon_index);
+            short i;
+
+            /* remember the platform_index in the polygon's .permutation field */
+            polygon.permutation = platform_index;
+            polygon.type = _polygon_is_platform;
+
+            /* initialize the platform */
+            platform.type = data.type;
+            platform.static_flags = data.static_flags;
+            platform.tag = data.tag;
+            platform.speed = data.speed;
+            platform.delay = data.delay;
+            platform.polygon_index = polygon_index;
+            platform.parent_platform_index = NONE;
+            calculate_platform_extrema(level, platform_index, data.minimum_height, data.maximum_height);
+
+            /* stuff in the correct defaults; if the platform is initially active it begins moving
+                immediately */
+            platform.dynamic_flags = 0;
+            platform.floor_height = polygon.floor_height;
+            platform.ceiling_height = polygon.ceiling_height;
+            if (PLATFORM_IS_INITIALLY_ACTIVE(platform))
+            {
+                SET_PLATFORM_IS_ACTIVE(platform, true);
+                SET_PLATFORM_HAS_BEEN_ACTIVATED(platform);
+                SET_PLATFORM_IS_MOVING(platform, true);
+            }
+            if (PLATFORM_IS_INITIALLY_EXTENDED(platform))
+            {
+                if (PLATFORM_COMES_FROM_FLOOR(platform)) platform.floor_height = platform.maximum_floor_height;
+                if (PLATFORM_COMES_FROM_CEILING(platform)) platform.ceiling_height = platform.minimum_ceiling_height;
+                SET_PLATFORM_IS_CONTRACTING(platform);
+                SET_PLATFORM_IS_FULLY_EXTENDED(platform);
+            }
+            else
+            {
+                if (PLATFORM_COMES_FROM_FLOOR(platform)) platform.floor_height = platform.minimum_floor_height;
+                if (PLATFORM_COMES_FROM_CEILING(platform)) platform.ceiling_height = platform.maximum_ceiling_height;
+                SET_PLATFORM_IS_EXTENDING(platform);
+                SET_PLATFORM_IS_FULLY_CONTRACTED(platform);
+            }
+
+            /* remember what polygons and lines are adjacent to the endpoints of the platform
+                polygon so we can quickly recalculate heights later */
+            for (i = 0; i < polygon.vertex_count; ++i)
+            {
+                calculate_endpoint_polygon_owners(level, polygon.endpoint_indexes[i], out platform.endpoint_owners[i].first_polygon_index,
+                    out platform.endpoint_owners[i].polygon_index_count);
+                calculate_endpoint_line_owners(level, polygon.endpoint_indexes[i], out platform.endpoint_owners[i].first_line_index,
+                    out platform.endpoint_owners[i].line_index_count);
+            }
+
+            // ForgePlus: the polygon keeps its native heights, which export_level() would restore
+            // polygon->floor_height= platform->floor_height;
+            // polygon->ceiling_height= platform->ceiling_height;
+            // adjust_platform_endpoint_and_line_heights(platform_index);
+            // adjust_platform_for_media(platform_index, true);
+        }
+
+        // ForgePlus: the static data export_tag_to_global_array_and_size() (game_wad.cpp) saves for a platform, when the
+        // level has no static data of its own for its platforms
+        public static static_platform_data static_platform_data_from_platform(platform_data p)
+        {
+            // ghs: this belongs somewhere else
+            var platform = new static_platform_data(); // obj_clear(platform);
+            platform.type = p.type;
+            platform.speed = p.speed;
+            platform.delay = p.delay;
+            if (PLATFORM_GOES_BOTH_WAYS(p))
+            {
+                platform.maximum_height = p.maximum_ceiling_height;
+                platform.minimum_height = p.minimum_floor_height;
+            }
+            else if (PLATFORM_COMES_FROM_FLOOR(p))
+            {
+                platform.maximum_height = p.maximum_floor_height;
+                platform.minimum_height = p.minimum_floor_height;
+            }
+            else
+            {
+                platform.maximum_height = p.maximum_ceiling_height;
+                platform.minimum_height = p.minimum_floor_height;
+            }
+            platform.static_flags = p.static_flags;
+            platform.polygon_index = p.polygon_index;
+            platform.tag = p.tag;
+
+            return platform;
         }
 
         public static static_platform_data get_defaults_for_platform_type(short type)

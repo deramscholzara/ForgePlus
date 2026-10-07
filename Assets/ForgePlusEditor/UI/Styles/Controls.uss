@@ -2,7 +2,7 @@
 
 .fp-root {
     flex-grow: 1;
-    -unity-font-definition: url("project://database/Assets/ForgePlusEditor/UI/Settings/LiberationSans%20UI%20Font.asset");
+    -unity-font-definition: url("project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf");
     font-size: 14px;
     color: var(--fp-text-light);
 }
@@ -51,6 +51,14 @@
 .fp-space {
     height: 5px;
     flex-shrink: 0;
+}
+
+/* ---------- Focus ---------- */
+
+/* Text fields show focus as the default theme does, in the focus color (which the theme doesn't expose). Prefixed with
+   .fp-root to outrank the theme's rule. */
+.fp-root .unity-base-text-field:focus > .unity-base-text-field__input {
+    border-color: var(--fp-focus);
 }
 
 /* ---------- Text ---------- */
@@ -174,11 +182,13 @@
     border-color: var(--fp-indicator-frame);
 }
 
-/* The theme draws a tick on checkmarks in some states (such as focused and checked), so they never get an image.
-   Selected by name, which outranks the theme's state selectors however many classes and states they combine. */
+/* The theme draws a tick on checkmarks in some states (such as focused and checked), and frames a focused one in its
+   focus color, so they never get an image and keep the indicator's frame. Selected by name, which outranks the
+   theme's state selectors however many classes and states they combine. */
 .fp-root .fp-toggle #unity-checkmark,
 .fp-root .fp-inspector-foldout #unity-checkmark {
     background-image: none;
+    border-color: var(--fp-indicator-frame);
 }
 
 /* The radio button's dot, which RadioButton shows and hides with an inline display style */
@@ -196,6 +206,7 @@
 .unity-collection-view__item--selected .fp-level-item__indicator {
     background-image: none;
     background-color: var(--fp-indicator-on);
+    border-color: var(--fp-indicator-frame);
     border-top-width: 5px;
     border-bottom-width: 5px;
     border-right-width: 5px;

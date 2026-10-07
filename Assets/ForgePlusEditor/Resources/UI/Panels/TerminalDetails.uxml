@@ -4,50 +4,71 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="TextFieldRow" src="../Templates/InspectorTextFieldRow.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
     <!-- Bound to TerminalsViewModel, as inspectors are to theirs: each row and flag is named after its property.
          What's stored for the terminal comes first, then what's stored for the group being previewed. -->
     <ui:VisualElement class="fp-box fp-inspector-column">
         <ui:Instance template="ScrollArea" class="fp-grow">
             <ui:VisualElement name="details" class="fp-inspector">
                 <ui:Instance template="Header">
-                    <ui:AttributeOverrides element-name="label" text="Terminals" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Terminals.Label.Text" />
                 </ui:Instance>
                 <ui:RadioButtonGroup name="terminals" class="fp-radio-group fp-index-list" />
                 <ui:Instance template="Subheader">
-                    <ui:AttributeOverrides element-name="label" text="Terminal" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Terminal.Label.Text" />
                 </ui:Instance>
                 <ui:Instance template="Row" name="LinesPerPage">
-                    <ui:AttributeOverrides element-name="label" text="Lines Per Page:" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.LinesPerPage.Label.Text" />
                 </ui:Instance>
+                <ui:Instance template="Flag" name="TextIsEncoded">
+                    <ui:AttributeOverrides element-name="flag" text="@Terminals/TerminalDetails.TextIsEncoded.Flag.Text" />
+                </ui:Instance>
+                <ui:Label text="@Terminals/TerminalDetails.OnlyForALegacy.Text" class="fp-inspector-note" />
                 <ui:VisualElement class="fp-space" />
                 <ui:Instance template="Subheader">
-                    <ui:AttributeOverrides element-name="label" text="Groups" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Groups.Label.Text" />
                 </ui:Instance>
+                <!-- A group's number can be dragged to another place in the order -->
                 <ui:RadioButtonGroup name="groups" class="fp-radio-group fp-index-list" />
-                <ui:Instance template="Row" name="GroupType">
-                    <ui:AttributeOverrides element-name="label" text="Type:" />
+                <ui:VisualElement name="group-insertion-marker" class="fp-index-list__insertion-marker" picking-mode="Ignore" />
+                <ui:VisualElement class="fp-terminal-group-actions">
+                    <ui:Instance template="Button" name="add-group" class="fp-inspector-action fp-terminal-group-actions__action">
+                        <ui:AttributeOverrides element-name="control" text="@Terminals/TerminalDetails.AddGroup.Control.Text" />
+                    </ui:Instance>
+                    <ui:Instance template="Button" name="remove-group" class="fp-inspector-action fp-terminal-group-actions__action">
+                        <ui:AttributeOverrides element-name="control" text="@Terminals/TerminalDetails.RemoveGroup.Control.Text" />
+                    </ui:Instance>
+                </ui:VisualElement>
+                <ui:Label text="@Terminals/TerminalDetails.ReorderGroups.Text" class="fp-inspector-note" />
+                <ui:Instance template="DropdownRow" name="GroupType">
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.GroupType.Label.Text" />
                 </ui:Instance>
-                <ui:Instance template="Row" name="Permutation">
-                    <ui:AttributeOverrides element-name="label" text="Permutation:" />
+                <ui:Instance template="IntegerFieldRow" name="Permutation">
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Permutation.Label.Text" />
                 </ui:Instance>
-                <ui:Instance template="Row" name="Text" class="fp-inspector-row--vertical">
-                    <ui:AttributeOverrides element-name="label" text="Text:" />
+                <ui:Label name="PermutationCaption" class="fp-inspector-note" />
+                <ui:Instance template="TextFieldRow" name="Text" class="fp-inspector-row--vertical fp-terminal-text">
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.Text.Label.Text" />
                 </ui:Instance>
-                <ui:Instance template="Row" name="TextStyles" class="fp-inspector-row--vertical">
-                    <ui:AttributeOverrides element-name="label" text="Styles (at positions in the text above):" />
-                </ui:Instance>
+                <!-- Buttons that apply each face and color to the selected text (added by the panel) -->
+                <ui:VisualElement name="style-faces" class="fp-terminal-style-buttons" />
+                <ui:VisualElement name="style-colors" class="fp-terminal-style-buttons" />
+                <ui:Label text="@Terminals/TerminalDetails.TextStyles.Note" class="fp-inspector-note" />
                 <ui:VisualElement class="fp-space" />
                 <ui:Instance template="Subheader">
-                    <ui:AttributeOverrides element-name="label" text="Group Flags" />
+                    <ui:AttributeOverrides element-name="label" text="@Terminals/TerminalDetails.GroupFlags.Label.Text" />
                 </ui:Instance>
                 <ui:Instance template="Flag" name="DrawObjectOnRight">
-                    <ui:AttributeOverrides element-name="flag" text="Draw Object On Right" />
+                    <ui:AttributeOverrides element-name="flag" text="@Terminals/TerminalDetails.DrawObjectOnRight.Flag.Text" />
                 </ui:Instance>
                 <ui:Instance template="Flag" name="CenterObject">
-                    <ui:AttributeOverrides element-name="flag" text="Center Object" />
+                    <ui:AttributeOverrides element-name="flag" text="@Terminals/TerminalDetails.CenterObject.Flag.Text" />
                 </ui:Instance>
                 <ui:Instance template="Flag" name="IsMarathon1">
-                    <ui:AttributeOverrides element-name="flag" text="Marathon 1" />
+                    <ui:AttributeOverrides element-name="flag" text="@Terminals/TerminalDetails.IsMarathon1.Flag.Text" />
                 </ui:Instance>
             </ui:VisualElement>
         </ui:Instance>

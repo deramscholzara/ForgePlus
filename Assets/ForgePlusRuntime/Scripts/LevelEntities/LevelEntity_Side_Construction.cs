@@ -29,6 +29,17 @@ namespace RuntimeCore.Entities.Geometry
         public short ParentLineIndex { get; private set; }
         public bool IsClockwise { get; private set; }
 
+        // Its line's polygon on the side's side
+        public LevelEntity_Polygon FacingPolygon
+        {
+            get
+            {
+                var facingPolygonIndex = get_line_data(ParentLevel.Level, ParentLineIndex).GetPolygonOwner(IsClockwise);
+
+                return ParentLevel.Polygons.TryGetValue(facingPolygonIndex, out var polygon) ? polygon : null;
+            }
+        }
+
         public RuntimeSurfaceGeometry TopSurface { get; private set; }
         public RuntimeSurfaceGeometry MiddleSurface { get; private set; }
         public RuntimeSurfaceGeometry BottomSurface { get; private set; }
@@ -218,6 +229,11 @@ namespace RuntimeCore.Entities.Geometry
             }
             #endregion Surface_Assembly
 
+            if (side == null && runtimeSide)
+            {
+                runtimeSide.ApplyPlaceholderVisibility();
+            }
+
             return runtimeSide;
         }
 
@@ -240,7 +256,15 @@ namespace RuntimeCore.Entities.Geometry
 
                 runtimeSide.InitializeEntity(parentLevel, sideIndex, side);
 
-                parentLevel.Sides[sideIndex] = runtimeSide;
+                if (side != null)
+                {
+                    parentLevel.Sides[sideIndex] = runtimeSide;
+                }
+                else
+                {
+                    // Placeholders have no side index to be found by
+                    parentLevel.PlaceholderSides.Add(runtimeSide);
+                }
             }
         }
     }

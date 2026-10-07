@@ -73,6 +73,31 @@ namespace RuntimeCore.Materials
             private bool hasMipLevels;
             private Dictionary<ushort, int> indicesByShapeDescriptor;
             private List<Material> uniqueMaterials;
+            private Material landscapeMaterial;
+
+            // Draws the same array as landscapes, for non-landscape textures in a landscape transfer mode
+            public Material LandscapeMaterial
+            {
+                get
+                {
+                    if (!landscapeMaterial)
+                    {
+                        landscapeMaterial = new Material(OpaqueLandscapeShader)
+                        {
+                            name = $"{SharedMaterial.name} (Landscape)",
+                            enableInstancing = true,
+                            mainTexture = textureArray,
+                        };
+                    }
+
+                    return landscapeMaterial;
+                }
+            }
+
+            public bool UsesMaterial(Material material)
+            {
+                return material == SharedMaterial || (landscapeMaterial && material == landscapeMaterial);
+            }
 
             public Texture2DArrayCollection(
                 ushort firstShapeDescriptor,
@@ -160,6 +185,11 @@ namespace RuntimeCore.Materials
                 }
 
                 SharedMaterial.mainTexture = textureArray;
+
+                if (landscapeMaterial)
+                {
+                    landscapeMaterial.mainTexture = textureArray;
+                }
 
                 foreach (var uniqueMaterial in uniqueMaterials)
                 {
@@ -381,7 +411,7 @@ namespace RuntimeCore.Materials
                     TextureUsageCounter[shapeDescriptor] = 1;
                 }
 
-                var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
+                var landscapeTransferMode = AlephOneExtensions.IsLandscapeTransferMode(transferMode) || shapeDescriptor.UsesLandscapeCollection();
 
                 return GetTrackedMaterial(shapeDescriptor,
                     landscapeTransferMode,
@@ -464,12 +494,10 @@ namespace RuntimeCore.Materials
                 return 0;
             }
 
-            var landscapeTransferMode = transferMode == 9 || shapeDescriptor.UsesLandscapeCollection();
-
             var collectionKey =
                 GetTexture2DArrayKeyDictionary(
                         shapeDescriptor,
-                        landscapeTransferMode: landscapeTransferMode,
+                        landscapeTransferMode: shapeDescriptor.UsesLandscapeCollection(),
                         isOpaqueSurface: isOpaqueSurface,
                         surfaceType)
                     [shapeDescriptor];
@@ -485,7 +513,7 @@ namespace RuntimeCore.Materials
         {
             var matchingCollections =
                 Texture2DArrays.Values.Where(
-                    collection => collection.SharedMaterial == sharedMaterial);
+                    collection => collection.UsesMaterial(sharedMaterial));
 
             foreach (var collection in matchingCollections)
             {
@@ -562,9 +590,14 @@ namespace RuntimeCore.Materials
             SurfaceTypes surfaceType)
         {
 #if USE_TEXTURE_ARRAYS
+            // A texture's array doesn't depend on its transfer mode; a non-landscape texture drawn as a landscape uses its
+            // array's landscape material (so its index is the same either way)
+            var isLandscapeTexture = shapeDescriptor.UsesLandscapeCollection();
+            var usesLandscapeMaterial = landscapeTransferMode && !isLandscapeTexture && surfaceType != SurfaceTypes.Media;
+
             var collectionKeyDictionary = GetTexture2DArrayKeyDictionary(
                 shapeDescriptor,
-                landscapeTransferMode: landscapeTransferMode,
+                landscapeTransferMode: isLandscapeTexture,
                 isOpaqueSurface: isOpaqueSurface,
                 surfaceType);
 
@@ -572,7 +605,7 @@ namespace RuntimeCore.Materials
             {
                 var collectionKey = collectionKeyDictionary[shapeDescriptor];
                 var texture2DArrayCollection = Texture2DArrays[collectionKey];
-                return texture2DArrayCollection.SharedMaterial;
+                return usesLandscapeMaterial ? texture2DArrayCollection.LandscapeMaterial : texture2DArrayCollection.SharedMaterial;
             }
 #endif
 
@@ -593,11 +626,18 @@ namespace RuntimeCore.Materials
             {
                 var texture2DArrayCollection = Texture2DArrays[texture2DArrayCollectionKey];
                 texture2DArrayCollection.AddBitmap(shapeDescriptor);
-                return texture2DArrayCollection.SharedMaterial;
+                return usesLandscapeMaterial ? texture2DArrayCollection.LandscapeMaterial : texture2DArrayCollection.SharedMaterial;
             }
 #endif
 
             Material material;
+
+#if USE_TEXTURE_ARRAYS
+            // Only a landscape texture's own array draws landscapes (others have a landscape material)
+            var drawsLandscape = isLandscapeTexture;
+#else
+            var drawsLandscape = landscapeTransferMode;
+#endif
 
             if (surfaceType == SurfaceTypes.Media)
             {
@@ -607,7 +647,7 @@ namespace RuntimeCore.Materials
                 material = GetTrackedMaterial(shapeDescriptor, textureToUse, MediaShader, MediaMaterials);
 #endif
             }
-            else if (landscapeTransferMode)
+            else if (drawsLandscape)
             {
 #if USE_TEXTURE_ARRAYS
                 material = new Material(OpaqueLandscapeShader);
@@ -662,6 +702,11 @@ namespace RuntimeCore.Materials
                 textureToUse.mipmapCount > 0);
 
             Texture2DArrays[texture2DArrayCollectionKey] = newTexture2DArrayCollection;
+
+            if (usesLandscapeMaterial)
+            {
+                return newTexture2DArrayCollection.LandscapeMaterial;
+            }
 #endif
 
             return material;

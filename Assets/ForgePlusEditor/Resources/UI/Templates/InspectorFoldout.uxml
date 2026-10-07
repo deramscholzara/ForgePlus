@@ -1,4 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <!-- Closed at first; an instance's children go into it -->
-    <ui:Foldout name="control" text="Additional Details" value="false" content-container="control" class="fp-inspector-foldout fp-template" />
+    <ui:Foldout name="control" text="@Common/InspectorFoldout.Control.Text" value="false" content-container="control" class="fp-inspector-foldout fp-template" />
 </ui:UXML>

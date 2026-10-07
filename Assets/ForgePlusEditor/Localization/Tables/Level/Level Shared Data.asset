@@ -1,0 +1,443 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Level Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Level
+  m_TableCollectionNameGuid: 015493dcfae4c6247a47b9504677fb5b
+  m_KeyGenerator:
+    rid: 552786097007231042
+  m_Entries:
+  - m_Id: 2573431619584
+    m_Key: Inspector.Level.Level.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573431619585
+    m_Key: Inspector.Level.Info.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573431619586
+    m_Key: Inspector.Level.Flags.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573431619587
+    m_Key: Inspector.Level.ChapterScreen.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813888
+    m_Key: Inspector.Level.Sounds.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813889
+    m_Key: Inspector.Level.AlephOneOnly.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813890
+    m_Key: Inspector.Level.ShapePatches.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813891
+    m_Key: Inspector.Level.SoundPatches.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813892
+    m_Key: Inspector.Level.MML.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813893
+    m_Key: Inspector.Level.Lua.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813894
+    m_Key: Inspector.Level.Name.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813895
+    m_Key: Inspector.Level.Environment.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813896
+    m_Key: Inspector.Level.Landscape.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813897
+    m_Key: Inspector.Level.PhysicsModel.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813898
+    m_Key: Inspector.Level.EmbeddedPhysics.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813899
+    m_Key: Inspector.Level.EmbeddedPhysics.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813900
+    m_Key: Inspector.Level.PhysicsInUse.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813901
+    m_Key: Inspector.Level.GameTypes.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813902
+    m_Key: Inspector.Level.SinglePlayer.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813903
+    m_Key: Inspector.Level.Cooperative.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813904
+    m_Key: Inspector.Level.Carnage.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813905
+    m_Key: Inspector.Level.KillTheOneWithTheBall.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813906
+    m_Key: Inspector.Level.MonarchOfTheHill.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813907
+    m_Key: Inspector.Level.Defense.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813908
+    m_Key: Inspector.Level.Rugby.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813909
+    m_Key: Inspector.Level.CaptureTheFlag.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813910
+    m_Key: Inspector.Level.Environment.Label.Text2
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813911
+    m_Key: Inspector.Level.Vacuum.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813912
+    m_Key: Inspector.Level.Magnetic.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813913
+    m_Key: Inspector.Level.Rebellion.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813914
+    m_Key: Inspector.Level.LowGravity.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813915
+    m_Key: Inspector.Level.Mission.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813916
+    m_Key: Inspector.Level.Extermination.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813917
+    m_Key: Inspector.Level.Exploration.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573435813918
+    m_Key: Inspector.Level.Retrieval.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008192
+    m_Key: Inspector.Level.Repair.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008193
+    m_Key: Inspector.Level.Rescue.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008194
+    m_Key: Inspector.Level.Marathon1AlephOne.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008195
+    m_Key: Inspector.Level.TerminalPause.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008196
+    m_Key: Inspector.Level.M1Rebellion.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008197
+    m_Key: Inspector.Level.M1Exploration.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008198
+    m_Key: Inspector.Level.M1Repair.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008199
+    m_Key: Inspector.Level.M1Rescue.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573440008200
+    m_Key: Inspector.Level.M1Glue.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202496
+    m_Key: Inspector.Level.M1Ouch.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202497
+    m_Key: Inspector.Level.M1HasMusic.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202498
+    m_Key: Inspector.Level.M1WeaponsStyle.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202499
+    m_Key: Inspector.Level.M1ActivationRange.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202500
+    m_Key: Inspector.Level.ThePictureShownAs.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202501
+    m_Key: Inspector.Level.ShowChapterScreen.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202502
+    m_Key: Inspector.Level.ShowChapterScreen.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202503
+    m_Key: Inspector.Level.ChapterScreenPicture.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202504
+    m_Key: Inspector.Level.TheSoundsTheLevel.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202505
+    m_Key: Inspector.Level.AmbientSoundCount.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202506
+    m_Key: Inspector.Level.RandomSoundCount.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202507
+    m_Key: Inspector.Level.AlephOneOnlyChanges.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202508
+    m_Key: Inspector.Level.ShapePatchSize.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202509
+    m_Key: Inspector.Level.AlephOneOnlyChanges.Text2
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202510
+    m_Key: Inspector.Level.SoundPatchSize.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202511
+    m_Key: Inspector.Level.AlephOneOnlyMML.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202512
+    m_Key: Inspector.Level.MmlSize.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202513
+    m_Key: Inspector.Level.AlephOneOnlyThe.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2573444202514
+    m_Key: Inspector.Level.LuaSize.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461440
+    m_Key: Inspector.Level.Environment.Value
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461441
+    m_Key: Inspector.Level.EmbeddedPhysics.Yes
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461442
+    m_Key: Inspector.Level.EmbeddedPhysics.No
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461443
+    m_Key: Inspector.Level.PhysicsInUse.Level
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461444
+    m_Key: Inspector.Level.PhysicsInUse.PhysicsFile
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461445
+    m_Key: Inspector.Level.PhysicsInUse.EngineDefaults
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461447
+    m_Key: Inspector.Level.ChapterScreen.Picture
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461448
+    m_Key: Inspector.Level.Environment.LhowonWater
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461449
+    m_Key: Inspector.Level.Environment.LhowonLava
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461450
+    m_Key: Inspector.Level.Environment.LhowonSewage
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461451
+    m_Key: Inspector.Level.Environment.Jjaro
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6140326461452
+    m_Key: Inspector.Level.Environment.Pfhor
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428817859723264
+    m_Key: Inspector.Level.Landscape.Choice
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428817863917568
+    m_Key: Inspector.Level.CollectionName
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428817863917569
+    m_Key: Inspector.Level.ChangeEnvironment.Title
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428817863917570
+    m_Key: Inspector.Level.ChangeEnvironment.Message
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428817863917571
+    m_Key: Inspector.Level.ChangeLandscape.Title
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428817863917572
+    m_Key: Inspector.Level.ChangeLandscape.Message
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428817863917573
+    m_Key: Inspector.Level.MoveTextures
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1428817863917574
+    m_Key: Inspector.Level.KeepTextures
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231042
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928705665

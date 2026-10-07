@@ -3,6 +3,7 @@ using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
@@ -66,9 +67,12 @@ namespace ForgePlus.CameraNavigation
 
                 case LevelEntity_Light light:
                     // Lights have no place of their own, so frame everything they light
-                    EncapsulateSurfaces(LevelEntity_Level.Instance.EditableSurface_Polygons, surface => surface.RuntimeLight == light, ref bounds, ref hasBounds);
-                    EncapsulateSurfaces(LevelEntity_Level.Instance.EditableSurface_Sides, surface => surface.RuntimeLight == light, ref bounds, ref hasBounds);
-                    EncapsulateSurfaces(LevelEntity_Level.Instance.EditableSurface_Medias, surface => surface.RuntimeLight == light, ref bounds, ref hasBounds);
+                    var runtimeLevel = LevelEntity_Level.Instance;
+                    var surfaces = runtimeLevel.EditableSurface_Polygons.Cast<EditableSurface_Base>()
+                                                                        .Concat(runtimeLevel.EditableSurface_Sides)
+                                                                        .Concat(runtimeLevel.EditableSurface_Medias);
+
+                    EncapsulateSurfaces(surfaces, surface => surface.RuntimeLight == light, ref bounds, ref hasBounds);
 
                     break;
 
@@ -107,7 +111,7 @@ namespace ForgePlus.CameraNavigation
             return hasBounds;
         }
 
-        private static void EncapsulateSurfaces<T>(List<T> surfaces, Func<T, bool> isFramed, ref Bounds bounds, ref bool hasBounds) where T : Component
+        private static void EncapsulateSurfaces<T>(IEnumerable<T> surfaces,Func<T, bool> isFramed, ref Bounds bounds, ref bool hasBounds) where T : Component
         {
             foreach (var surface in surfaces)
             {

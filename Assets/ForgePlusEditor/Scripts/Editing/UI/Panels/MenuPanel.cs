@@ -5,6 +5,7 @@ namespace ForgePlus.UI
     public class MenuPanel : UIPanel
     {
         private PanelSlot tabSlot;
+        private VisualElement tabActions;
 
         protected override string LayoutPath
         {
@@ -21,6 +22,9 @@ namespace ForgePlus.UI
             Root.Find<RadioButtonGroup>("tabs").BindValue(editor, nameof(EditorViewModel.MenuTabIndex));
 
             tabSlot = new PanelSlot(Root.Q("tab-slot"));
+            tabActions = Root.Q("tab-actions");
+
+            Root.Find<Button>("close").clicked += () => editor.MenuOpen = false;
 
             editor.OnMenuTabChanged += ShowSelectedTab;
             ShowSelectedTab();
@@ -32,10 +36,13 @@ namespace ForgePlus.UI
 
             tabSlot.Hide();
             tabSlot = null;
+            tabActions.Clear();
         }
 
         private void ShowSelectedTab()
         {
+            tabActions.Clear();
+
             switch (ForgePlusUI.Instance.Editor.MenuTabIndex)
             {
                 case 0:
@@ -47,6 +54,11 @@ namespace ForgePlus.UI
                 case 2:
                     tabSlot.Show<SettingsTabPanel>();
                     break;
+            }
+
+            if (tabSlot.Panel is IMenuTab tab && tab.Actions != null)
+            {
+                tabActions.Add(tab.Actions);
             }
         }
     }

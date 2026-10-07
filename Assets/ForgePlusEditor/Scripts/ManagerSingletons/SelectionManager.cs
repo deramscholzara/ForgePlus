@@ -1,4 +1,5 @@
-﻿using ForgePlus.ApplicationGeneral;
+﻿using AlephOne;
+using ForgePlus.ApplicationGeneral;
 using ForgePlus.Entities.Geometry;
 using ForgePlus.Inspection;
 using RuntimeCore.Entities;
@@ -8,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace ForgePlus.LevelManipulation
 {
@@ -26,7 +26,8 @@ namespace ForgePlus.LevelManipulation
 
         private readonly List<ISelectable> SelectedObjects = new List<ISelectable>(500);
 
-        private bool selectionEventStartedOverEmptiness = false;
+        // The face shown as selected for what's selected through it
+        private EditableSurface_Base shownFace;
 
         public ISelectable SelectedObject
         {
@@ -51,167 +52,63 @@ namespace ForgePlus.LevelManipulation
 
         public void UpdateSelectionToMatchMode(ModeManager.PrimaryModes primaryMode)
         {
+            HideTerminalSides();
+
+            // A level opened or closed has none of the previous selection to select again
+            if (primaryMode != carriedSelectionMode)
+            {
+                carriedSelection.Clear();
+            }
+
             DeselectAll();
 
-            if (LevelEntity_Level.Instance)
+            var level = LevelEntity_Level.Instance;
+            if (level)
             {
-                switch (primaryMode)
+                var selectsGeometry = primaryMode == ModeManager.PrimaryModes.Geometry ||
+                                      primaryMode == ModeManager.PrimaryModes.Textures;
+
+                // Clicking a polygon's faces acts on it, or on what's on it
+                var selectsFaces = selectsGeometry ||
+                                   primaryMode == ModeManager.PrimaryModes.Lights ||
+                                   primaryMode == ModeManager.PrimaryModes.Media ||
+                                   primaryMode == ModeManager.PrimaryModes.Sounds ||
+                                   primaryMode == ModeManager.PrimaryModes.Platforms ||
+                                   primaryMode == ModeManager.PrimaryModes.Annotations;
+
+                SetSelectability<LevelEntity_Polygon>(level.Polygons.Values, enabled: selectsGeometry);
+                SetSelectability<LevelEntity_Line>(level.Lines.Values, enabled: primaryMode == ModeManager.PrimaryModes.Geometry);
+                SetSelectability<LevelEntity_Side>(level.Sides.Values, enabled: selectsGeometry);
+                SetSelectability<LevelEntity_Side>(level.PlaceholderSides, enabled: selectsGeometry);
+                SetSelectability<LevelEntity_Light>(level.Lights.Values, enabled: primaryMode == ModeManager.PrimaryModes.Lights);
+                SetSelectability<LevelEntity_Media>(level.Medias.Values, enabled: primaryMode == ModeManager.PrimaryModes.Media);
+                SetSelectability<LevelEntity_Platform>(level.CeilingPlatforms.Values, enabled: primaryMode == ModeManager.PrimaryModes.Platforms);
+                SetSelectability<LevelEntity_Platform>(level.FloorPlatforms.Values, enabled: primaryMode == ModeManager.PrimaryModes.Platforms);
+                SetSelectability<LevelEntity_Annotation>(level.Annotations.Values, enabled: primaryMode == ModeManager.PrimaryModes.Annotations);
+                SetSelectability<LevelEntity_Level>(level, enabled: primaryMode == ModeManager.PrimaryModes.Level);
+
+                // Sound sources are the only objects selected in Sounds mode
+                foreach (var mapObject in level.MapObjects.Values)
                 {
-                    case ModeManager.PrimaryModes.Geometry:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: true);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: true);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: true);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
+                    var isSelectable = primaryMode == ModeManager.PrimaryModes.Objects ||
+                                       (primaryMode == ModeManager.PrimaryModes.Sounds && mapObject.NativeObject.type == map._saved_sound_source);
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        // TODO: Make this true when media subfilter is available
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
-                        break;
-                    case ModeManager.PrimaryModes.Textures:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: true);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: true);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
+                    SetSelectability<LevelEntity_MapObject>(mapObject, enabled: isSelectable);
+                }
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
-                        break;
-                    case ModeManager.PrimaryModes.Lights:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: true); // Shown in right-palette and just selects and inspects the light
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
+                // Terminals mode clicks sides (computer terminal panels) to preview their terminals
+                SetSelectability<EditableSurface_Polygon>(level.EditableSurface_Polygons, enabled: selectsFaces);
+                SetSelectability<EditableSurface_Side>(level.EditableSurface_Sides, enabled: selectsFaces || primaryMode == ModeManager.PrimaryModes.Terminals);
+                SetSelectability<EditableSurface_Media>(level.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
 
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: true);
-                        break;
-                    case ModeManager.PrimaryModes.Media:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: true); // Shown in right-palette and just selects and inspects the media
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
-
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: true);
-                        break;
-                    case ModeManager.PrimaryModes.Platforms:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: true);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: true);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
-
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: true);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: true);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
-                        break;
-                    case ModeManager.PrimaryModes.Objects:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, true);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
-
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
-                        break;
-                    case ModeManager.PrimaryModes.Annotations:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, true);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
-
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
-                        break;
-                    case ModeManager.PrimaryModes.Level:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: true);
-
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
-
-                        // Select the level here, since there's no visual way to select it besides the mode button
-                        if (LevelEntity_Level.Instance)
-                        {
-                            SelectObject(LevelEntity_Level.Instance, multiSelect: false);
-                        }
-                        break;
-                    case ModeManager.PrimaryModes.Terminals:
-                    case ModeManager.PrimaryModes.None:
-                    default:
-                        SetSelectability<LevelEntity_Polygon>(LevelEntity_Level.Instance.Polygons.Values, enabled: false);
-                        SetSelectability<LevelEntity_Line>(LevelEntity_Level.Instance.Lines.Values, enabled: false);
-                        SetSelectability<LevelEntity_Side>(LevelEntity_Level.Instance.Sides.Values, enabled: false);
-                        SetSelectability<LevelEntity_Light>(LevelEntity_Level.Instance.Lights.Values, enabled: false);
-                        SetSelectability<LevelEntity_Media>(LevelEntity_Level.Instance.Medias.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.CeilingPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_Platform>(LevelEntity_Level.Instance.FloorPlatforms.Values, enabled: false);
-                        SetSelectability<LevelEntity_MapObject>(LevelEntity_Level.Instance.MapObjects.Values, false);
-                        SetSelectability<LevelEntity_Annotation>(LevelEntity_Level.Instance.Annotations.Values, false);
-                        SetSelectability<LevelEntity_Level>(LevelEntity_Level.Instance, enabled: false);
-
-                        SetSelectability<EditableSurface_Polygon>(LevelEntity_Level.Instance.EditableSurface_Polygons, enabled: false);
-                        SetSelectability<EditableSurface_Side>(LevelEntity_Level.Instance.EditableSurface_Sides, enabled: false);
-                        SetSelectability<EditableSurface_Media>(LevelEntity_Level.Instance.EditableSurface_Medias, enabled: false);
-                        break;
+                // Select the level here, since there's no visual way to select it besides the mode button
+                if (primaryMode == ModeManager.PrimaryModes.Level)
+                {
+                    SelectObject(level, multiSelect: false);
                 }
             }
+
+            ShowTerminalSides();
         }
 
         public bool GetIsSelected(ISelectable selectable)
@@ -239,7 +136,8 @@ namespace ForgePlus.LevelManipulation
 
                 if (!multiSelect)
                 {
-                    DeselectAll();
+                    // The new selection is inspected instead
+                    DeselectAll(inspectNothingSelected: false);
                 }
 
                 // 1. Update displayed selection
@@ -303,12 +201,16 @@ namespace ForgePlus.LevelManipulation
                     // 3. Inspect selection
                     (selection as IInspectable).Inspect();
                 }
+                else if (SelectedObjects.Count == 0)
+                {
+                    InspectNothingSelected();
+                }
 
                 OnSelectionChanged?.Invoke();
             }
         }
 
-        public void DeselectAll()
+        public void DeselectAll(bool inspectNothingSelected = true)
         {
             InspectorPanel.Instance.ClearAllInspectors();
 
@@ -324,7 +226,97 @@ namespace ForgePlus.LevelManipulation
             // 2. Update actual selection list
             SelectedObjects.Clear();
 
+            if (inspectNothingSelected)
+            {
+                InspectNothingSelected();
+            }
+
             OnSelectionChanged?.Invoke();
+        }
+
+        // With nothing selected, Objects mode inspects the level's item and monster placement
+        private void InspectNothingSelected()
+        {
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Objects && LevelEntity_Level.Instance)
+            {
+                InspectorPanel.Instance.AddInspector(new Inspector_Placements(LevelEntity_Level.Instance));
+            }
+        }
+
+        // Clicking the shown face again deselects the selection, and clicking another of its faces shows that one instead
+        public void ToggleSelectionOnFace(ISelectable selection)
+        {
+            if (SelectedObjects.Count == 1 && SelectedObjects[0] == selection)
+            {
+                var face = GetSelectedFace();
+                if (face && face != shownFace)
+                {
+                    ShowSelectedFace();
+                    return;
+                }
+            }
+
+            ToggleObjectSelection(selection, multiSelect: false);
+        }
+
+        // The face the selected light was clicked on, or the media surface of the polygon the selected media was clicked in
+        private EditableSurface_Base GetSelectedFace()
+        {
+            if (SelectedObjects.Count != 1 || !ClickedSurface)
+            {
+                return null;
+            }
+
+            switch (ModeManager.Instance.PrimaryMode)
+            {
+                case ModeManager.PrimaryModes.Lights:
+                    return SelectedObjects[0] is LevelEntity_Light selectedLight && ClickedSurface.RuntimeLight == selectedLight ?
+                           ClickedSurface :
+                           null;
+                case ModeManager.PrimaryModes.Media:
+                    var mediaSurface = GetSurfaceMediaSurface(ClickedSurface);
+                    return SelectedObjects[0] is LevelEntity_Media selectedMedia && mediaSurface && mediaSurface.Polygon.Media == selectedMedia ?
+                           mediaSurface :
+                           null;
+                default:
+                    return null;
+            }
+        }
+
+        private void ShowSelectedFace()
+        {
+            var face = GetSelectedFace();
+
+            if (face == shownFace)
+            {
+                return;
+            }
+
+            // Not one of a level that's been closed
+            if (shownFace)
+            {
+                shownFace.DisplayFaceSelectionState(false);
+            }
+
+            shownFace = face;
+
+            if (shownFace)
+            {
+                shownFace.DisplayFaceSelectionState(true);
+            }
+        }
+
+        // For a surface made while in a mode (such as by painting media)
+        public void MatchSelectabilityToMode(EditableSurface_Media surface)
+        {
+            surface.SetSelectability(MediaSurfacesAreSelectable(ModeManager.Instance.PrimaryMode));
+        }
+
+        // Otherwise clicks pass through media surfaces to the floor
+        // TODO: Include geometry mode when a media subfilter is available
+        private static bool MediaSurfacesAreSelectable(ModeManager.PrimaryModes primaryMode)
+        {
+            return primaryMode == ModeManager.PrimaryModes.Lights || primaryMode == ModeManager.PrimaryModes.Media || primaryMode == ModeManager.PrimaryModes.Sounds;
         }
 
         private void SetSelectability<T>(T selectable, bool enabled) where T : ISelectable
@@ -353,34 +345,36 @@ namespace ForgePlus.LevelManipulation
             DefaultLayer = LayerMask.NameToLayer("Default");
             SelectionIndicatorLayer = LayerMask.NameToLayer("SelectionVisualization");
 
+            OnSelectionChanged += ShowSelectedFace;
+            ModeManager.Instance.OnPrimaryModeChanging += CollectCarriedSelection;
             ModeManager.Instance.OnPrimaryModeChanged += UpdateSelectionToMatchMode;
+            WorldPointer.Instance.OnClickEmptySpace += OnPointerClickEmptySpace;
         }
 
-        private void Update()
+        // After the rest of the editor (such as the palette) has switched modes
+        private void LateUpdate()
         {
-            // Handling for when the user clicks on empty space
-            if (ForgePlusInput.Editing.Select.WasPressedThisFrame())
+            SelectCarriedSelection();
+        }
+
+        private void OnDestroy()
+        {
+            var worldPointer = WorldPointer.Instance;
+            if (worldPointer)
             {
-                if (!EventSystem.current.IsPointerOverGameObject())
-                {
-                    selectionEventStartedOverEmptiness = true;
-                }
+                worldPointer.OnClickEmptySpace -= OnPointerClickEmptySpace;
+            }
+        }
+
+        // Except in Level mode, where the level is always selected
+        private void OnPointerClickEmptySpace()
+        {
+            if (ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Level)
+            {
+                DeselectAll();
             }
 
-            if (ForgePlusInput.Editing.Select.WasReleasedThisFrame())
-            {
-                if (selectionEventStartedOverEmptiness && !EventSystem.current.IsPointerOverGameObject())
-                {
-                    if (ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Level)
-                    {
-                        DeselectAll();
-                    }
-
-                    OnClickEmptySpace?.Invoke();
-                }
-
-                selectionEventStartedOverEmptiness = false;
-            }
+            OnClickEmptySpace?.Invoke();
         }
     }
 }

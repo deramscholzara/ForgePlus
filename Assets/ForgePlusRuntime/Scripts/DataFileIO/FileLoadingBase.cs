@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace ForgePlus.DataFileIO
 {
@@ -26,8 +27,13 @@ namespace ForgePlus.DataFileIO
 
         protected U data;
 
+        // For TryLoadSelectedFile
+        private string failedPath;
+
         public virtual void LoadFile(bool forceReload = true)
         {
+            failedPath = null;
+
             if (!forceReload && data != null)
             {
                 // Don't load if already loaded, so exit
@@ -52,6 +58,43 @@ namespace ForgePlus.DataFileIO
         }
 
         public virtual void UnloadFile()
+        {
+            UnloadData();
+        }
+
+        // Loads the selected file with load if it isn't loaded, logging a failure once rather than on every lookup
+        // (until LoadFile is called again)
+        protected void TryLoadSelectedFile(Action load, string fileKind, string failureConsequence)
+        {
+            if (data != null)
+            {
+                // Already loaded, so exit
+                return;
+            }
+
+            var path = FileSettings.Instance.GetFilePath(DataFileType);
+
+            if (string.IsNullOrEmpty(path) || path == failedPath)
+            {
+                // No file, or this file already failed to load, so exit
+                return;
+            }
+
+            try
+            {
+                load();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"{fileKind} file \"{path}\" could not be loaded, so {failureConsequence}: {exception}");
+
+                UnloadData();
+
+                failedPath = path;
+            }
+        }
+
+        private void UnloadData()
         {
             if (data == null)
             {

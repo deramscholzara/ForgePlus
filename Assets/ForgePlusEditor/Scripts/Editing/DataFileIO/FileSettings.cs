@@ -1,5 +1,6 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO.Extensions;
+using ForgePlus.Localization;
 using SFB;
 using System;
 using System.IO;
@@ -32,9 +33,9 @@ namespace ForgePlus.DataFileIO
                 value.Invoke(DataFileTypes.Maps, GetFilePath(DataFileTypes.Maps));
                 value.Invoke(DataFileTypes.Shapes, GetFilePath(DataFileTypes.Shapes));
                 value.Invoke(DataFileTypes.Physics, GetFilePath(DataFileTypes.Physics));
+                value.Invoke(DataFileTypes.Sounds, GetFilePath(DataFileTypes.Sounds));
 
-                // TODO: uncomment these when ready for them.
-                ////value.Invoke(DataFileTypes.Sounds, GetFilePath(DataFileTypes.Sounds));
+                // TODO: uncomment this when ready for it.
                 ////value.Invoke(DataFileTypes.Images, GetFilePath(DataFileTypes.Images));
             }
             remove { OnPathChanged_Sender -= value; }
@@ -85,7 +86,7 @@ namespace ForgePlus.DataFileIO
                     PhysicsLoading.Instance.UnloadFile();
                     break;
                 case DataFileTypes.Sounds:
-                    Debug.LogWarning("Sounds unloading not yet supported.");
+                    SoundsLoading.Instance.UnloadFile();
                     break;
                 case DataFileTypes.Images:
                     Debug.LogWarning("Images unloading not yet supported.");
@@ -105,7 +106,7 @@ namespace ForgePlus.DataFileIO
                 : Path.GetDirectoryName(initialDirectory);
 
             StandaloneFileBrowser.OpenFilePanelAsync(
-                title: $"Choose {type} file",
+                title: Strings.Get(Strings.Menu, "FileBrowser.Open.Title", type.DisplayName()),
                 directory: initialDirectory,
                 type.FileExtension(),
                 multiselect: false,
@@ -147,7 +148,7 @@ namespace ForgePlus.DataFileIO
                     PhysicsLoading.Instance.LoadFile();
                     break;
                 case DataFileTypes.Sounds:
-                    Debug.LogWarning("Sounds loading not yet supported.");
+                    SoundsLoading.Instance.LoadFile();
                     break;
                 case DataFileTypes.Images:
                     Debug.LogWarning("Images loading not yet supported.");

@@ -2,81 +2,97 @@
     <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
+    <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
-    <ui:Template name="Foldout" src="../Templates/InspectorFoldout.uxml" />
+    <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
+    <ui:Template name="SliderIntegerRow" src="../Templates/InspectorSliderIntegerRow.uxml" />
     <!-- Bound to Inspector_Side -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
-            <ui:AttributeOverrides element-name="label" text="Side" />
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.Side.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Id">
-            <ui:AttributeOverrides element-name="label" text="ID:" />
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.Id.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="Type">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.Type.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Control Panel" />
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.ControlPanel.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="ControlPanelType">
-            <ui:AttributeOverrides element-name="label" text="Type:" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="ControlPanelPermutation">
-            <ui:AttributeOverrides element-name="label" text="Target ID:" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Flags" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="InitiallyActive">
-            <ui:AttributeOverrides element-name="flag" text="Initially Active" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="IsRepairSwitch">
-            <ui:AttributeOverrides element-name="flag" text="Is Repair Switch" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="CanBeDestroyed">
-            <ui:AttributeOverrides element-name="flag" text="Can Be Destroyed" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="LightedMustBeAbove75Percent">
-            <ui:AttributeOverrides element-name="flag" text="Light Must Be &gt; 75%" />
-        </ui:Instance>
-        <ui:Instance template="Flag" name="ProjectilesOnly">
-            <ui:AttributeOverrides element-name="flag" text="Projectiles Only" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-separator fp-separator--horizontal" />
         <ui:Instance template="Flag" name="IsControlPanel">
-            <ui:AttributeOverrides element-name="flag" text="Is Control Panel" />
+            <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.IsControlPanel.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="IsDestructiveSwitch">
-            <ui:AttributeOverrides element-name="flag" text="Is Destructive Switch" />
+        <ui:Instance template="DropdownRow" name="ControlPanelType">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.ControlPanelType.Label.Text" />
         </ui:Instance>
+        <ui:Label name="ControlPanelTypeNote" class="fp-inspector-note fp-aleph-one-only" />
+        <ui:Instance template="IntegerFieldRow" name="ControlPanelPermutation">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.ControlPanelPermutation.Label.Text" />
+        </ui:Instance>
+        <ui:Label name="ControlPanelPermutationCaption" class="fp-inspector-note" />
+        <ui:Label name="ControlPanelTextureNote" class="fp-inspector-note" />
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Primary Surface" />
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.Flags.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="PrimaryLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Secondary Surface" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="SecondaryLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Subheader">
-            <ui:AttributeOverrides element-name="label" text="Transparent Surface" />
-        </ui:Instance>
-        <ui:Instance template="Row" name="TransparentLightIndex">
-            <ui:AttributeOverrides element-name="label" text="Light Index:" />
-        </ui:Instance>
-        <ui:VisualElement class="fp-space" />
-        <ui:Instance template="Foldout">
-            <ui:Instance template="Row" name="AmbientDelta">
-                <ui:AttributeOverrides element-name="label" text="Ambient Delta:" />
+        <!-- Grayed out while the side isn't a control panel -->
+        <ui:VisualElement name="control-panel-flags" class="fp-inspector-group">
+            <ui:Instance template="Flag" name="InitiallyActive">
+                <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.InitiallyActive.Flag.Text" />
             </ui:Instance>
+            <ui:Instance template="Flag" name="IsRepairSwitch">
+                <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.IsRepairSwitch.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="CanBeDestroyed">
+                <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.CanBeDestroyed.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="LightedMustBeAbove75Percent">
+                <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.LightedMustBeAbove75Percent.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="ProjectilesOnly">
+                <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.ProjectilesOnly.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="LightedMustBeAbove50Percent" class="fp-aleph-one-only" tooltip="@Geometry/Inspector.Side.LightedMustBeAbove50Percent.Tooltip">
+                <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.LightedMustBeAbove50Percent.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="ItemIsOptional" class="fp-aleph-one-only" tooltip="@Geometry/Inspector.Side.ItemIsOptional.Tooltip">
+                <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.ItemIsOptional.Flag.Text" />
+            </ui:Instance>
+            <ui:Instance template="Flag" name="IsDestructiveSwitch">
+                <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.IsDestructiveSwitch.Flag.Text" />
+            </ui:Instance>
+        </ui:VisualElement>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.PrimarySurface.Label.Text" />
         </ui:Instance>
+        <ui:Instance template="LightRow" name="PrimaryLightIndex">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.PrimaryLightIndex.Label.Text" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.SecondarySurface.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="LightRow" name="SecondaryLightIndex">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.SecondaryLightIndex.Label.Text" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.TransparentSurface.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="LightRow" name="TransparentLightIndex">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.TransparentLightIndex.Label.Text" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.AllSurfaces.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="SliderIntegerRow" name="AmbientDelta" tooltip="@Geometry/Inspector.Side.AmbientDelta.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.AmbientDelta.Label.Text" />
+        </ui:Instance>
+        <ui:Label name="AmbientDeltaCaption" class="fp-inspector-note" />
     </ui:VisualElement>
 </ui:UXML>

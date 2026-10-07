@@ -1,7 +1,11 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.CameraNavigation;
+using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
+using ForgePlus.Sound;
 using System.Collections.Generic;
+using Unity.Localization;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -15,6 +19,9 @@ namespace ForgePlus.UI
         [SerializeField]
         private EditorCamera editorCamera = null;
 
+        [SerializeField]
+        private LocalizationSettings localizationSettings = null;
+
         private readonly List<PanelSlot> slots = new List<PanelSlot>();
 
         private VisualElement root;
@@ -27,11 +34,23 @@ namespace ForgePlus.UI
         private PanelSlot toolModesSlot;
         private PanelSlot paletteSlot;
 
+        private bool isBuilt;
+
+        // The open mode's string table, and the mode whose panels were last asked for (while its table loads)
+        private string modeTable;
+        private ModeManager.PrimaryModes shownMode = ModeManager.PrimaryModes.None;
+
         public EditorViewModel Editor { get; private set; }
+
+        public WorldLabels WorldLabels { get; private set; }
+
+        public SoundVisualization SoundVisualization { get; private set; }
 
         public SettingsViewModel Settings { get; private set; }
 
         public TerminalsViewModel Terminals { get; private set; }
+
+        public ErrorsViewModel Errors { get; private set; }
 
         public EditorCamera EditorCamera
         {
@@ -41,23 +60,29 @@ namespace ForgePlus.UI
             }
         }
 
-        // Whether a text field has focus (so hotkeys are typed instead)
+        // Whether a text or number field has focus (so hotkeys are typed instead)
         public bool IsEditingText
         {
             get
             {
-                var focusedElement = root?.focusController?.focusedElement as VisualElement;
-
-                for (var element = focusedElement; element != null; element = element.parent)
-                {
-                    if (element.ClassListContains(TextField.ussClassName))
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
+                return (root?.focusController?.focusedElement as VisualElement).IsInTextInputField();
             }
+        }
+
+        // In Terminals mode, the preview takes the place of the menu (or the Errors panel)
+        public void ShowTerminalPreview()
+        {
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Terminals)
+            {
+                Editor.MenuOpen = false;
+                Editor.ErrorsOpen = false;
+            }
+        }
+
+        public void ShowTerminal(int terminalIndex)
+        {
+            Terminals.TerminalIndex = terminalIndex;
+            ShowTerminalPreview();
         }
 
         // Whether a screen position (pixels, from the bottom left) is over part of the UI that takes the pointer
@@ -74,14 +99,34 @@ namespace ForgePlus.UI
             return panel.Pick(panelPosition) != null;
         }
 
-        private void Start()
+        // Built once the text it shows everywhere (the Common and Menu string tables) is loaded
+        private async void Start()
         {
+            await Strings.InitializeAsync(localizationSettings);
+
+            if (!this)
+            {
+                // Destroyed while the strings loaded, so exit
+                return;
+            }
+
             root = GetComponent<UIDocument>().rootVisualElement;
             root.pickingMode = PickingMode.Ignore;
+
+            WorldLabels = new WorldLabels(root);
+            SoundVisualization = new SoundVisualization(root);
+
+            // The level's sounds are heard at the camera (where its AudioListener is)
+            var soundPlayback = editorCamera.gameObject.AddComponent<LevelSoundPlayback>();
+            soundPlayback.IsListening = SettingsManager.Instance.PlayLevelAudioEnabled;
 
             Editor = new EditorViewModel();
             Settings = new SettingsViewModel();
             Terminals = new TerminalsViewModel();
+            Terminals.OnTerminalChanged += SelectionManager.Instance.ShowTerminalSides;
+            Errors = new ErrorsViewModel();
+            Terminals.OnTerminalEdited += Errors.RequestRefresh;
+            Errors.OnFixApplied += Terminals.ReloadTerminal;
 
             var levelName = root.Q<Label>("level-name");
             levelName.Bind("text", Editor, nameof(EditorViewModel.LevelName));
@@ -89,6 +134,7 @@ namespace ForgePlus.UI
 
             CreateSlot("header-slot").Show<HeaderPanel>();
             CreateSlot("manipulation-slot").Show<ManipulationPanel>();
+            CreateSlot("errors-toggle-slot").Show<ErrorsTogglePanel>();
             CreateSlot("view-options-slot").Show<ViewOptionsPanel>();
             root.Q("mode-settings").AddToClassList("fp-mode-settings--loaded");
 
@@ -106,8 +152,11 @@ namespace ForgePlus.UI
             }
 
             Editor.OnMenuOpenChanged += OnMenuOpenChanged;
+            Editor.OnErrorsOpenChanged += OnMenuOpenChanged;
 
             ModeManager.Instance.OnPrimaryModeChanged += OnPrimaryModeChanged;
+
+            isBuilt = true;
         }
 
         private void OnDestroy()
@@ -128,10 +177,31 @@ namespace ForgePlus.UI
             Editor?.Dispose();
             Settings?.Dispose();
             Terminals?.Dispose();
+            Errors?.Dispose();
+        }
+
+        // After the camera moves (in its Update)
+        private void LateUpdate()
+        {
+            if (!isBuilt)
+            {
+                return;
+            }
+
+            WorldLabels.UpdatePositions();
+            SoundVisualization.Update();
+
+            // Once a frame at most, after what may have changed them
+            Errors.RefreshIfRequested();
         }
 
         private void Update()
         {
+            if (!isBuilt)
+            {
+                return;
+            }
+
             if (Hotkeys.WasPressed(ForgePlusInput.Interface.ToggleUI))
             {
                 SetVisible(!isVisible);
@@ -159,32 +229,38 @@ namespace ForgePlus.UI
             root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
+        // The menu's, or the Errors panel's
         private void OnMenuOpenChanged()
         {
             ShowMenu(Editor.MenuOpen);
 
-            // The camera can't be navigated while the menu is open
-            editorCamera.OnInputBlockerChanged(Editor.MenuOpen);
+            // The camera can't be navigated while the menu (or the Errors panel) is open
+            editorCamera.OnInputBlockerChanged(Editor.MenuOpen || Editor.ErrorsOpen);
         }
 
+        // The Errors panel takes the menu's place
         private void ShowMenu(bool isOpen)
         {
             if (isOpen)
             {
                 menuSlot.Show<MenuPanel>();
             }
+            else if (Editor.ErrorsOpen)
+            {
+                menuSlot.Show<ErrorsPanel>();
+            }
             else
             {
                 menuSlot.Hide();
             }
 
-            ShowTerminal();
+            ShowTerminalSlot();
         }
 
-        // The page being read takes the menu's place, so it's hidden while the menu is open
-        private void ShowTerminal()
+        // The page being read takes the menu's place, so it's hidden while the menu (or the Errors panel) is open
+        private void ShowTerminalSlot()
         {
-            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Terminals && !Editor.MenuOpen)
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Terminals && !Editor.MenuOpen && !Editor.ErrorsOpen)
             {
                 terminalSlot.Show<TerminalPanel>();
             }
@@ -197,18 +273,69 @@ namespace ForgePlus.UI
         // Each mode shows only the panels that apply to it (None, while no level is open, shows none of them)
         private void OnPrimaryModeChanged(ModeManager.PrimaryModes primaryMode)
         {
-            // Terminals aren't selected, so their mode shows the terminal and group being previewed in place of the
-            // inspectors
-            if (primaryMode == ModeManager.PrimaryModes.Terminals)
+            // Terminals mode opens on its preview (switching to it as a level is opened isn't entering it)
+            var isEnteringTerminals = primaryMode == ModeManager.PrimaryModes.Terminals &&
+                                      shownMode != ModeManager.PrimaryModes.Terminals &&
+                                      shownMode != ModeManager.PrimaryModes.None;
+
+            if (isEnteringTerminals && Editor.MenuOpen)
             {
-                inspectorSlot.Show<TerminalDetailsPanel>();
-            }
-            else
-            {
-                inspectorSlot.Show<InspectorColumnPanel>();
+                Editor.MenuOpen = false;
             }
 
-            ShowTerminal();
+            ShowModeWhenItsStringsLoad(primaryMode);
+        }
+
+        // A mode's panels are shown once its string table is loaded (as it's entered), and the last mode's is released
+        private async void ShowModeWhenItsStringsLoad(ModeManager.PrimaryModes primaryMode)
+        {
+            shownMode = primaryMode;
+
+            var table = Strings.TableFor(primaryMode);
+            if (table != modeTable)
+            {
+                Strings.ReleaseTable(modeTable);
+                modeTable = table;
+            }
+
+            if (table != null && !Strings.IsLoaded(table))
+            {
+                await Strings.LoadTableAsync(table);
+
+                if (!this || shownMode != primaryMode)
+                {
+                    // Destroyed, or another mode was entered, while its strings loaded, so exit
+                    return;
+                }
+
+                // Inspectors made while they loaded (such as the level's, as Level mode selects it) show them now
+                InspectorPanel.Instance.RefreshAllInspectors();
+            }
+
+            ShowModePanels(primaryMode);
+        }
+
+        private void ShowModePanels(ModeManager.PrimaryModes primaryMode)
+        {
+            // Terminals aren't selected, so their mode shows the terminal and group being previewed in place of the
+            // inspectors; annotations are listed, and the map file (not in the level) has its own inspector
+            switch (primaryMode)
+            {
+                case ModeManager.PrimaryModes.Terminals:
+                    inspectorSlot.Show<TerminalDetailsPanel>();
+                    break;
+                case ModeManager.PrimaryModes.Map:
+                    inspectorSlot.Show<MapPanel>();
+                    break;
+                case ModeManager.PrimaryModes.Annotations:
+                    inspectorSlot.Show<AnnotationsPanel>();
+                    break;
+                default:
+                    inspectorSlot.Show<InspectorColumnPanel>();
+                    break;
+            }
+
+            ShowTerminalSlot();
 
             switch (primaryMode)
             {
@@ -244,8 +371,17 @@ namespace ForgePlus.UI
                 case ModeManager.PrimaryModes.Media:
                     paletteSlot.Show<MediaPalettePanel>();
                     break;
+                case ModeManager.PrimaryModes.Sounds:
+                    paletteSlot.Show<SoundPalettePanel>();
+                    break;
                 case ModeManager.PrimaryModes.Terminals:
                     paletteSlot.Show<TerminalStylesPanel>();
+                    break;
+                case ModeManager.PrimaryModes.Annotations:
+                    paletteSlot.Show<PolygonPalettePanel>();
+                    break;
+                case ModeManager.PrimaryModes.Platforms:
+                    paletteSlot.Show<PlatformPalettePanel>();
                     break;
                 default:
                     paletteSlot.Hide();

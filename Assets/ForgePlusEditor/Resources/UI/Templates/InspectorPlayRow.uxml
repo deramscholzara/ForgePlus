@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:fp="ForgePlus.UI">
+    <!-- A sound, with a button to play it; an instance is named after the inspector property its value shows. The button
+         calls its Play<Name>() method, and is grayed out while its Is<Name>Playable property is false -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area fp-inspector-row__value-area--playable">
+            <ui:Label name="value" text="value" class="fp-inspector-value" />
+            <fp:PlayButton name="play" text="" tooltip="@Common/InspectorPlayRow.Play.Tooltip" class="fp-inspector-play" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

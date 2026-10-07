@@ -1,6 +1,8 @@
 ﻿using AlephOne;
+using ForgePlus.Extensions;
 using RuntimeCore.Entities.Geometry;
 using Unity.Properties;
+using UnityEngine.UIElements;
 
 namespace ForgePlus.Inspection
 {
@@ -8,6 +10,8 @@ namespace ForgePlus.Inspection
     {
         public Inspector_PolygonTextures(LevelEntity_Polygon polygon) : base(polygon)
         {
+            Floor = new PolygonSurfaceView(this, LevelEntity_Polygon.DataSources.Floor);
+            Ceiling = new PolygonSurfaceView(this, LevelEntity_Polygon.DataSources.Ceiling);
         }
 
         protected override string LayoutPath
@@ -35,75 +39,104 @@ namespace ForgePlus.Inspection
             }
         }
 
-        [CreateProperty]
-        public UnityEngine.Texture FloorTexture
+        public PolygonSurfaceView Floor { get; }
+
+        public PolygonSurfaceView Ceiling { get; }
+
+        protected override void OnLoaded()
         {
-            get
-            {
-                return TextureOrPlaceholder(Polygon.floor_texture);
-            }
+            base.OnLoaded();
+
+            Floor.MakeTextureChoosable(Root.Q(nameof(Floor)));
+            Ceiling.MakeTextureChoosable(Root.Q(nameof(Ceiling)));
         }
 
-        [CreateProperty]
-        public string FloorOffset
+        public class PolygonSurfaceView : SurfaceTextureView
         {
-            get
-            {
-                return $"X: {Polygon.floor_origin.x}\nY: {Polygon.floor_origin.y}";
-            }
-        }
+            private readonly Inspector_PolygonTextures inspector;
+            private readonly LevelEntity_Polygon.DataSources dataSource;
 
-        [CreateProperty]
-        public string FloorTransferMode
-        {
-            get
+            public PolygonSurfaceView(Inspector_PolygonTextures inspector, LevelEntity_Polygon.DataSources dataSource) : base(inspector)
             {
-                return Polygon.floor_transfer_mode.ToString();
+                this.inspector = inspector;
+                this.dataSource = dataSource;
             }
-        }
 
-        [CreateProperty]
-        public string FloorLightIndex
-        {
-            get
+            private bool IsFloor
             {
-                return Polygon.floor_lightsource_index.ToString();
+                get
+                {
+                    return dataSource == LevelEntity_Polygon.DataSources.Floor;
+                }
             }
-        }
 
-        [CreateProperty]
-        public UnityEngine.Texture CeilingTexture
-        {
-            get
+            protected override ushort ShapeDescriptor
             {
-                return TextureOrPlaceholder(Polygon.ceiling_texture);
+                get
+                {
+                    return IsFloor ? inspector.Polygon.floor_texture : inspector.Polygon.ceiling_texture;
+                }
             }
-        }
 
-        [CreateProperty]
-        public string CeilingOffset
-        {
-            get
+            protected override short NativeTransferMode
             {
-                return $"X: {Polygon.ceiling_origin.x}\nY: {Polygon.ceiling_origin.y}";
+                get
+                {
+                    return IsFloor ? inspector.Polygon.floor_transfer_mode : inspector.Polygon.ceiling_transfer_mode;
+                }
             }
-        }
 
-        [CreateProperty]
-        public string CeilingTransferMode
-        {
-            get
+            protected override short NativeOffsetX
             {
-                return Polygon.ceiling_transfer_mode.ToString();
+                get
+                {
+                    return IsFloor ? inspector.Polygon.floor_origin.x : inspector.Polygon.ceiling_origin.x;
+                }
             }
-        }
 
-        [CreateProperty]
-        public string CeilingLightIndex
-        {
-            get
+            protected override short NativeOffsetY
             {
-                return Polygon.ceiling_lightsource_index.ToString();
+                get
+                {
+                    return IsFloor ? inspector.Polygon.floor_origin.y : inspector.Polygon.ceiling_origin.y;
+                }
+            }
+
+            protected override short NativeLightIndex
+            {
+                get
+                {
+                    return IsFloor ? inspector.Polygon.floor_lightsource_index : inspector.Polygon.ceiling_lightsource_index;
+                }
+            }
+
+            // A landscape isn't lit
+            protected override bool IsLit
+            {
+                get
+                {
+                    return !ShapeDescriptor.UsesLandscapeCollection();
+                }
+            }
+
+            protected override void SetShapeDescriptor(ushort shapeDescriptor)
+            {
+                inspector.Edit(polygon => polygon.SetShapeDescriptor(dataSource, shapeDescriptor));
+            }
+
+            protected override void SetOffset(short x, short y)
+            {
+                inspector.Edit(polygon => polygon.SetOffset(dataSource, x, y, rebatch: true));
+            }
+
+            protected override void SetTransferMode(short transferMode)
+            {
+                inspector.Edit(polygon => polygon.SetTransferMode(dataSource, transferMode));
+            }
+
+            protected override void SetLight(int lightIndex)
+            {
+                inspector.SetLight(lightIndex, (polygon, light) => polygon.SetLight(dataSource, light));
             }
         }
     }

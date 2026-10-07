@@ -1,14 +1,28 @@
 ﻿using AlephOne;
+using ForgePlus.ApplicationGeneral;
 using ForgePlus.Extensions;
+using ForgePlus.Localization;
+using ForgePlus.Palette;
 using RuntimeCore.Entities;
+using System;
+using System.Collections.Generic;
 using Unity.Properties;
+using UnityEngine.UIElements;
 
 namespace ForgePlus.Inspection
 {
+    // A light's static data (lightsource.h: static_light_data), which the level's light runs from: an edit restarts the
+    // light, so the level shows it
     public class Inspector_Light : Inspector_Base<LevelEntity_Light>
     {
         public Inspector_Light(LevelEntity_Light light) : base(light)
         {
+            BecomingActive = new LightStateView(this, data => data.becoming_active);
+            PrimaryActive = new LightStateView(this, data => data.primary_active);
+            SecondaryActive = new LightStateView(this, data => data.secondary_active);
+            BecomingInactive = new LightStateView(this, data => data.becoming_inactive);
+            PrimaryInactive = new LightStateView(this, data => data.primary_inactive);
+            SecondaryInactive = new LightStateView(this, data => data.secondary_inactive);
         }
 
         protected override string LayoutPath
@@ -36,15 +50,21 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // What tag switches and terminals switch it by
         [CreateProperty]
-        public string Tag
+        public int Tag
         {
             get
             {
-                return Light.tag.ToString();
+                return Light.tag;
+            }
+            set
+            {
+                EditLight(light => light.tag = ClampToShort(value));
             }
         }
 
+        // Mostly a preset of the six states: choosing one offers to reset them to the type's defaults
         [CreateProperty]
         public string Type
         {
@@ -52,14 +72,35 @@ namespace ForgePlus.Inspection
             {
                 return AlephOneNames.LightType(Light.type);
             }
+            set
+            {
+                if (TryFindChoice(ShortRange(0, lightsource.NUMBER_OF_LIGHT_TYPES), AlephOneNames.LightType, value, out var type) && type != Light.type)
+                {
+                    SetType(type);
+                }
+            }
         }
 
         [CreateProperty]
-        public string Phase
+        public List<string> TypeChoices
         {
             get
             {
-                return Light.phase.ToString();
+                return ChoicesOf(ShortRange(0, lightsource.NUMBER_OF_LIGHT_TYPES), AlephOneNames.LightType);
+            }
+        }
+
+        // How many ticks into its states it starts (so lights can be out of step with each other)
+        [CreateProperty]
+        public int Phase
+        {
+            get
+            {
+                return Light.phase;
+            }
+            set
+            {
+                EditLight(light => light.phase = ClampToNonNegativeShort(value));
             }
         }
 
@@ -70,6 +111,10 @@ namespace ForgePlus.Inspection
             {
                 return lightsource.LIGHT_IS_INITIALLY_ACTIVE(Light);
             }
+            set
+            {
+                EditLight(light => lightsource.SET_LIGHT_IS_INITIALLY_ACTIVE(light, value));
+            }
         }
 
         [CreateProperty]
@@ -79,8 +124,13 @@ namespace ForgePlus.Inspection
             {
                 return csmacros.TEST_FLAG16(Light.flags, lightsource._light_has_slaved_intensities);
             }
+            set
+            {
+                EditLight(light => light.flags = csmacros.SET_FLAG16(light.flags, lightsource._light_has_slaved_intensities, value));
+            }
         }
 
+        // Runs through all six states in turn (rather than staying active or inactive)
         [CreateProperty]
         public bool CycleAllStates
         {
@@ -88,286 +138,198 @@ namespace ForgePlus.Inspection
             {
                 return lightsource.LIGHT_IS_STATELESS(Light);
             }
-        }
-
-        [CreateProperty]
-        public string BecomingActiveFunction
-        {
-            get
+            set
             {
-                return Function(Light.becoming_active);
+                EditLight(light => lightsource.SET_LIGHT_IS_STATELESS(light, value));
             }
         }
 
-        [CreateProperty]
-        public string BecomingActivePeriod
+        public LightStateView BecomingActive { get; }
+
+        public LightStateView PrimaryActive { get; }
+
+        public LightStateView SecondaryActive { get; }
+
+        public LightStateView BecomingInactive { get; }
+
+        public LightStateView PrimaryInactive { get; }
+
+        public LightStateView SecondaryInactive { get; }
+
+        // Changes the light, then restarts it (so the level shows the change) and its palette swatch
+        private void EditLight(Action<static_light_data> edit)
         {
-            get
+            Edit(light =>
             {
-                return Light.becoming_active.period.ToString();
-            }
+                edit(light.NativeObject);
+                light.BeginRuntimeStyleBehavior();
+            });
+
+            PaletteManager.Instance.RefreshSwatches();
         }
 
-        [CreateProperty]
-        public string BecomingActiveDeltaPeriod
+        // Its type changes alone, unless its states are reset to the type's defaults (lightsource.cpp:
+        // get_defaults_for_light_type)
+        private async void SetType(short type)
         {
-            get
+            EditLight(light => light.type = type);
+
+            var defaults = lightsource.get_defaults_for_light_type(type);
+            if (defaults == null)
             {
-                return Light.becoming_active.delta_period.ToString();
+                return;
             }
-        }
 
-        [CreateProperty]
-        public string BecomingActiveIntensity
-        {
-            get
+            var option = await DialogManager.Instance.DisplayQueuedDialog(
+                Strings.Get(Strings.Lights, "Inspector.Light.ResetStates.Title", Entity.NativeIndex, AlephOneNames.LightType(type)),
+                new[] { "Reset" },
+                new[] { Strings.Get(Strings.Lights, "Inspector.Light.ResetStates.Confirm") });
+
+            if (option != "Reset")
             {
-                return Intensity(Light.becoming_active.intensity);
+                return;
             }
-        }
 
-        [CreateProperty]
-        public string BecomingActiveDeltaIntensity
-        {
-            get
+            EditLight(light =>
             {
-                return Intensity(Light.becoming_active.delta_intensity);
-            }
+                CopyState(defaults.becoming_active, light.becoming_active);
+                CopyState(defaults.primary_active, light.primary_active);
+                CopyState(defaults.secondary_active, light.secondary_active);
+                CopyState(defaults.becoming_inactive, light.becoming_inactive);
+                CopyState(defaults.primary_inactive, light.primary_inactive);
+                CopyState(defaults.secondary_inactive, light.secondary_inactive);
+            });
         }
 
-        [CreateProperty]
-        public string PrimaryActiveFunction
+        private static void CopyState(lighting_function_specification source, lighting_function_specification destination)
         {
-            get
+            destination.function = source.function;
+            destination.period = source.period;
+            destination.delta_period = source.delta_period;
+            destination.intensity = source.intensity;
+            destination.delta_intensity = source.delta_intensity;
+        }
+
+        // One of the light's six states, which the inspector's rows in the scope of its name are bound to
+        public class LightStateView : IDataSourceViewHashProvider
+        {
+            private readonly Inspector_Light inspector;
+            private readonly Func<static_light_data, lighting_function_specification> stateOf;
+
+            public LightStateView(Inspector_Light inspector, Func<static_light_data, lighting_function_specification> stateOf)
             {
-                return Function(Light.primary_active);
+                this.inspector = inspector;
+                this.stateOf = stateOf;
             }
-        }
 
-        [CreateProperty]
-        public string PrimaryActivePeriod
-        {
-            get
+            [CreateProperty]
+            public string Function
             {
-                return Light.primary_active.period.ToString();
+                get
+                {
+                    return AlephOneNames.LightingFunction(State.function);
+                }
+                set
+                {
+                    if (TryFindChoice(ShortRange(0, lightsource.NUMBER_OF_LIGHTING_FUNCTIONS), AlephOneNames.LightingFunction, value, out var function))
+                    {
+                        EditState(state => state.function = function);
+                    }
+                }
             }
-        }
 
-        [CreateProperty]
-        public string PrimaryActiveDeltaPeriod
-        {
-            get
+            [CreateProperty]
+            public List<string> FunctionChoices
             {
-                return Light.primary_active.delta_period.ToString();
+                get
+                {
+                    return ChoicesOf(ShortRange(0, lightsource.NUMBER_OF_LIGHTING_FUNCTIONS), AlephOneNames.LightingFunction);
+                }
             }
-        }
 
-        [CreateProperty]
-        public string PrimaryActiveIntensity
-        {
-            get
+            // Random and fluorescent are Aleph One's (added for Marathon 1's lights)
+            [CreateProperty]
+            public List<string> FunctionAlephOneOnlyChoices
             {
-                return Intensity(Light.primary_active.intensity);
+                get
+                {
+                    return new List<string>
+                    {
+                        AlephOneNames.LightingFunction(lightsource._random_lighting_function),
+                        AlephOneNames.LightingFunction(lightsource._fluorescent_lighting_function),
+                    };
+                }
             }
-        }
 
-        [CreateProperty]
-        public string PrimaryActiveDeltaIntensity
-        {
-            get
+            [CreateProperty]
+            public int Period
             {
-                return Intensity(Light.primary_active.delta_intensity);
+                get
+                {
+                    return State.period;
+                }
+                set
+                {
+                    EditState(state => state.period = ClampToNonNegativeShort(value));
+                }
             }
-        }
 
-        [CreateProperty]
-        public string SecondaryActiveFunction
-        {
-            get
+            [CreateProperty]
+            public int DeltaPeriod
             {
-                return Function(Light.secondary_active);
+                get
+                {
+                    return State.delta_period;
+                }
+                set
+                {
+                    EditState(state => state.delta_period = ClampToNonNegativeShort(value));
+                }
             }
-        }
 
-        [CreateProperty]
-        public string SecondaryActivePeriod
-        {
-            get
+            [CreateProperty]
+            public float Intensity
             {
-                return Light.secondary_active.period.ToString();
+                get
+                {
+                    return DisplayedIntensity(State.intensity);
+                }
+                set
+                {
+                    EditState(state => state.intensity = FixedIntensity(value));
+                }
             }
-        }
 
-        [CreateProperty]
-        public string SecondaryActiveDeltaPeriod
-        {
-            get
+            [CreateProperty]
+            public float DeltaIntensity
             {
-                return Light.secondary_active.delta_period.ToString();
+                get
+                {
+                    return DisplayedIntensity(State.delta_intensity);
+                }
+                set
+                {
+                    EditState(state => state.delta_intensity = FixedIntensity(value));
+                }
             }
-        }
 
-        [CreateProperty]
-        public string SecondaryActiveIntensity
-        {
-            get
+            private lighting_function_specification State
             {
-                return Intensity(Light.secondary_active.intensity);
+                get
+                {
+                    return stateOf(inspector.Light);
+                }
             }
-        }
 
-        [CreateProperty]
-        public string SecondaryActiveDeltaIntensity
-        {
-            get
+            public long GetViewHashCode()
             {
-                return Intensity(Light.secondary_active.delta_intensity);
+                return inspector.GetViewHashCode();
             }
-        }
 
-        [CreateProperty]
-        public string BecomingInactiveFunction
-        {
-            get
+            private void EditState(Action<lighting_function_specification> edit)
             {
-                return Function(Light.becoming_inactive);
+                inspector.EditLight(light => edit(stateOf(light)));
             }
-        }
-
-        [CreateProperty]
-        public string BecomingInactivePeriod
-        {
-            get
-            {
-                return Light.becoming_inactive.period.ToString();
-            }
-        }
-
-        [CreateProperty]
-        public string BecomingInactiveDeltaPeriod
-        {
-            get
-            {
-                return Light.becoming_inactive.delta_period.ToString();
-            }
-        }
-
-        [CreateProperty]
-        public string BecomingInactiveIntensity
-        {
-            get
-            {
-                return Intensity(Light.becoming_inactive.intensity);
-            }
-        }
-
-        [CreateProperty]
-        public string BecomingInactiveDeltaIntensity
-        {
-            get
-            {
-                return Intensity(Light.becoming_inactive.delta_intensity);
-            }
-        }
-
-        [CreateProperty]
-        public string PrimaryInactiveFunction
-        {
-            get
-            {
-                return Function(Light.primary_inactive);
-            }
-        }
-
-        [CreateProperty]
-        public string PrimaryInactivePeriod
-        {
-            get
-            {
-                return Light.primary_inactive.period.ToString();
-            }
-        }
-
-        [CreateProperty]
-        public string PrimaryInactiveDeltaPeriod
-        {
-            get
-            {
-                return Light.primary_inactive.delta_period.ToString();
-            }
-        }
-
-        [CreateProperty]
-        public string PrimaryInactiveIntensity
-        {
-            get
-            {
-                return Intensity(Light.primary_inactive.intensity);
-            }
-        }
-
-        [CreateProperty]
-        public string PrimaryInactiveDeltaIntensity
-        {
-            get
-            {
-                return Intensity(Light.primary_inactive.delta_intensity);
-            }
-        }
-
-        [CreateProperty]
-        public string SecondaryInactiveFunction
-        {
-            get
-            {
-                return Function(Light.secondary_inactive);
-            }
-        }
-
-        [CreateProperty]
-        public string SecondaryInactivePeriod
-        {
-            get
-            {
-                return Light.secondary_inactive.period.ToString();
-            }
-        }
-
-        [CreateProperty]
-        public string SecondaryInactiveDeltaPeriod
-        {
-            get
-            {
-                return Light.secondary_inactive.delta_period.ToString();
-            }
-        }
-
-        [CreateProperty]
-        public string SecondaryInactiveIntensity
-        {
-            get
-            {
-                return Intensity(Light.secondary_inactive.intensity);
-            }
-        }
-
-        [CreateProperty]
-        public string SecondaryInactiveDeltaIntensity
-        {
-            get
-            {
-                return Intensity(Light.secondary_inactive.delta_intensity);
-            }
-        }
-
-        private static string Function(lighting_function_specification stateFunction)
-        {
-            return AlephOneNames.LightingFunction(stateFunction.function);
-        }
-
-        private static string Intensity(int fixedIntensity)
-        {
-            return AlephOneExtensions.FixedToFloat(fixedIntensity).ToString();
         }
     }
 }

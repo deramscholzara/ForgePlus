@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A slider with a whole-number field beside it (committed on return or leaving it), for the same value. An instance
+         is named after the inspector property the field edits; the slider edits its <Name>Slider property (which can
+         cover less of the field's range). It's grayed out while the property can't be set, or while its
+         Is<Name>Editable property is false. -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area fp-inspector-row__value-area--row">
+            <ui:SliderInt name="slider" low-value="0" high-value="100" class="fp-inspector-slider" />
+            <ui:IntegerField name="value" is-delayed="true" class="fp-inspector-text-field fp-inspector-slider-number" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

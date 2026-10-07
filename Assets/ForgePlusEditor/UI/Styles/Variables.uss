@@ -12,6 +12,9 @@
     --fp-indicator-frame: rgb(178, 178, 178);
     --fp-indicator-on: rgb(128, 128, 128);
 
+    /* What has focus or is selected is outlined in this (the default theme's own focus color) */
+    --fp-focus: rgb(0, 106, 166);
+
     --fp-text-light: rgb(230, 230, 230);
     --fp-text-bright: rgb(255, 255, 255);
     --fp-text-faint: rgba(255, 255, 255, 0.6);
@@ -39,4 +42,10 @@
     --fp-control-height: 40px;
     --fp-short-control-height: 30px;
     --fp-flag-height: 20px;
+
+    /* What only Aleph One supports (not the original Marathon 2 and Infinity) is marked in this */
+    --fp-aleph-one: rgb(230, 150, 30);
+
+    /* Annotations' name tags in the level (the green they were drawn in before) */
+    --fp-annotation: rgb(0, 179, 0);
 }

@@ -1,0 +1,303 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Platforms Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Platforms
+  m_TableCollectionNameGuid: a29638c87540b554a8fe06664bb42fdb
+  m_KeyGenerator:
+    rid: 552786097007231039
+  m_Entries:
+  - m_Id: 2577231659008
+    m_Key: Inspector.Platform.Platform.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577231659009
+    m_Key: Inspector.Platform.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577231659010
+    m_Key: Inspector.Platform.Type.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577235853312
+    m_Key: Inspector.Platform.Tag.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577235853313
+    m_Key: Inspector.Platform.Speed.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577235853314
+    m_Key: Inspector.Platform.Delay.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047616
+    m_Key: Inspector.Platform.Movement.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047617
+    m_Key: Inspector.Platform.Direction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047618
+    m_Key: Inspector.Platform.Direction.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047619
+    m_Key: Inspector.Platform.FromCeiling.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047620
+    m_Key: Inspector.Platform.FromFloorAndCeiling.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047621
+    m_Key: Inspector.Platform.InitiallyActive.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047622
+    m_Key: Inspector.Platform.InitiallyExtended.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047623
+    m_Key: Inspector.Platform.ExtendsFloorToCeiling.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577240047624
+    m_Key: Inspector.Platform.Heights.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241920
+    m_Key: Inspector.Platform.LowestIsAutomatic.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241921
+    m_Key: Inspector.Platform.Lowest.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241922
+    m_Key: Inspector.Platform.HighestIsAutomatic.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241923
+    m_Key: Inspector.Platform.Highest.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241924
+    m_Key: Inspector.Platform.UsesNativePolygonHeights.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241925
+    m_Key: Inspector.Platform.FloorRange.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241926
+    m_Key: Inspector.Platform.CeilingRange.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241927
+    m_Key: Inspector.Platform.Timing.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577244241928
+    m_Key: Inspector.Platform.DelaysBeforeActivation.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577248436224
+    m_Key: Inspector.Platform.ContractsSlower.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577248436225
+    m_Key: Inspector.Platform.Control.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577248436226
+    m_Key: Inspector.Platform.IsPlayerControllable.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577248436227
+    m_Key: Inspector.Platform.IsMonsterControllable.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577248436228
+    m_Key: Inspector.Platform.CannotBeExternallyDeactivated.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577248436229
+    m_Key: Inspector.Platform.ActivatesOnlyOnce.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577248436230
+    m_Key: Inspector.Platform.IsDoor.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577248436231
+    m_Key: Inspector.Platform.IsLocked.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630528
+    m_Key: Inspector.Platform.IsSecret.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630529
+    m_Key: Inspector.Platform.Obstruction.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630530
+    m_Key: Inspector.Platform.ReversesWhenObstructed.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630531
+    m_Key: Inspector.Platform.CausesDamage.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630532
+    m_Key: Inspector.Platform.Activation.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630533
+    m_Key: Inspector.Platform.DeactivatesAtEachLevel.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630534
+    m_Key: Inspector.Platform.DeactivatesAtInitialLevel.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630535
+    m_Key: Inspector.Platform.WhenActivating.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630536
+    m_Key: Inspector.Platform.WhenActivating.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630537
+    m_Key: Inspector.Platform.ActivatesAdjacentPlatforms.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630538
+    m_Key: Inspector.Platform.DeactivatesAdjacentPlatforms.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630539
+    m_Key: Inspector.Platform.WhenDeactivating.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630540
+    m_Key: Inspector.Platform.WhenDeactivating.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630541
+    m_Key: Inspector.Platform.ActivatesAdjacentAtEachLevel.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630542
+    m_Key: Inspector.Platform.DoesNotActivateParent.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577252630543
+    m_Key: Inspector.Platform.ActivatesLight.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577256824832
+    m_Key: Inspector.Platform.DeactivatesLight.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577256824833
+    m_Key: Inspector.Platform.FloodsM1.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577256824834
+    m_Key: Inspector.Platform.SimulationActions.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577256824835
+    m_Key: Inspector.Platform.SimulationActive.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2577256824836
+    m_Key: Inspector.Platform.Obstruct.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6143694487552
+    m_Key: Inspector.Platform.Range
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6143916785664
+    m_Key: Palette.Platforms.Header
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231039
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928704846

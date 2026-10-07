@@ -1,17 +1,22 @@
 ﻿using ForgePlus.DataFileIO;
+using ForgePlus.Extensions;
 using ForgePlus.LevelManipulation;
+using RuntimeCore.Entities;
 using System;
 using Unity.Properties;
 
 namespace ForgePlus.UI
 {
     // The editor's state that the UI shows and changes: modes, the open level, the selection, axis locks, and the menu
+    // and the Errors panel (which take the same place, so only one is open at a time)
     public class EditorViewModel : BindableObject, IDisposable
     {
         public event Action OnMenuOpenChanged;
         public event Action OnMenuTabChanged;
+        public event Action OnErrorsOpenChanged;
 
         private bool menuOpen = true;
+        private bool errorsOpen = false;
         private int menuTabIndex = 0;
         private string levelName = null;
 
@@ -21,6 +26,7 @@ namespace ForgePlus.UI
             ModeManager.Instance.OnSecondaryModeChanged += OnSecondaryModeChanged;
             MapsLoading.Instance.OnLevelOpened += OnLevelOpened;
             MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
+            MapsLoading.Instance.OnLevelNamesChanged += OnLevelNamesChanged;
             SelectionManager.Instance.OnSelectionChanged += OnSelectionChanged;
             AxisLocks.Instance.OnChanged += OnAxisLocksChanged;
         }
@@ -132,9 +138,37 @@ namespace ForgePlus.UI
             {
                 if (menuOpen != value)
                 {
+                    if (value)
+                    {
+                        ErrorsOpen = false;
+                    }
+
                     menuOpen = value;
                     Notify(nameof(MenuOpen));
                     OnMenuOpenChanged?.Invoke();
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool ErrorsOpen
+        {
+            get
+            {
+                return errorsOpen;
+            }
+            set
+            {
+                if (errorsOpen != value)
+                {
+                    if (value)
+                    {
+                        MenuOpen = false;
+                    }
+
+                    errorsOpen = value;
+                    Notify(nameof(ErrorsOpen));
+                    OnErrorsOpenChanged?.Invoke();
                 }
             }
         }
@@ -169,6 +203,7 @@ namespace ForgePlus.UI
 
             MapsLoading.Instance.OnLevelOpened -= OnLevelOpened;
             MapsLoading.Instance.OnLevelClosed -= OnLevelClosed;
+            MapsLoading.Instance.OnLevelNamesChanged -= OnLevelNamesChanged;
 
             var selectionManager = SelectionManager.Instance;
             if (selectionManager)
@@ -198,6 +233,12 @@ namespace ForgePlus.UI
             levelName = openedLevelName;
             Notify(nameof(LevelName));
             Notify(nameof(IsLevelOpen));
+        }
+
+        // The open level renamed
+        private void OnLevelNamesChanged()
+        {
+            OnLevelOpened(LevelEntity_Level.Instance ? LevelEntity_Level.Instance.Level.GetLevelName() : null);
         }
 
         private void OnLevelClosed()

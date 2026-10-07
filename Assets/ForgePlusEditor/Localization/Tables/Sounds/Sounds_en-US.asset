@@ -1,0 +1,430 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Sounds_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: a7b83e560e44d834db2a3ea8cf3a6b36, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231292
+  - rid: 552786097007231293
+  - rid: 552786097007231294
+  - rid: 552786097007231295
+  - rid: 552786097007231296
+  - rid: 552786097007231297
+  - rid: 552786097007231298
+  - rid: 552786097007231299
+  - rid: 552786097007231300
+  - rid: 552786097007231301
+  - rid: 552786097007231302
+  - rid: 552786097007231303
+  - rid: 552786097007231304
+  - rid: 552786097007231305
+  - rid: 552786097007231306
+  - rid: 552786097007231307
+  - rid: 552786097007231308
+  - rid: 552786097007231309
+  - rid: 552786097007231310
+  - rid: 552786097007231311
+  - rid: 552786097007231312
+  - rid: 552786097007231313
+  - rid: 552786097007231314
+  - rid: 552786097007231315
+  - rid: 552786097007231316
+  - rid: 552786097007231317
+  - rid: 552786097007231318
+  - rid: 552786097007231319
+  - rid: 552786097007231320
+  - rid: 552786097007231321
+  - rid: 552786097007231322
+  - rid: 552786097007231323
+  - rid: 552786097007231324
+  - rid: 552786097007231325
+  - rid: 552786097007231326
+  - rid: 552786097007231327
+  - rid: 552786097007231795
+  - rid: 552786097007231796
+  - rid: 552786097007231797
+  - rid: 552786097007231798
+  - rid: 552786097007231799
+  - rid: 552786097007231800
+  - rid: 552786097007231801
+  - rid: 552786097007231802
+  - rid: 552786097007231803
+  - rid: 552786097007231804
+  - rid: 552786097007231805
+  - rid: 552786097007231806
+  - rid: 552786097007231807
+  - rid: 552786097007231808
+  - rid: 552786097007231809
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231292
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302080
+        m_Metadata:
+          m_Items: []
+        m_Value: Ambient Sound
+    - rid: 552786097007231293
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302081
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: the original Marathon 2 and Infinity hold 64 ambient sounds (0 to 63).'
+    - rid: 552786097007231294
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302082
+        m_Metadata:
+          m_Items: []
+        m_Value: Looped while the player is in a polygon that plays it.
+    - rid: 552786097007231295
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302083
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Index:'
+    - rid: 552786097007231296
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302084
+        m_Metadata:
+          m_Items: []
+        m_Value: Choosing a sound needs a sounds file (Files tab), to know which sounds there are
+    - rid: 552786097007231297
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302085
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Sound:'
+    - rid: 552786097007231298
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302086
+        m_Metadata:
+          m_Items: []
+        m_Value: 0 is silent, and 256 is full volume
+    - rid: 552786097007231299
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302087
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Volume:'
+    - rid: 552786097007231300
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302088
+        m_Metadata:
+          m_Items: []
+        m_Value: 'The polygons that play it: uncheck one to have it play no ambient sound'
+    - rid: 552786097007231301
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302089
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Played In:'
+    - rid: 552786097007231302
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2577936302090
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete
+    - rid: 552786097007231303
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578506727424
+        m_Metadata:
+          m_Items: []
+        m_Value: Random Sound
+    - rid: 552786097007231304
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921728
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: the original Marathon 2 and Infinity hold 64 random sounds (0 to 63).'
+    - rid: 552786097007231305
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921729
+        m_Metadata:
+          m_Items: []
+        m_Value: Played now and then while the player is in a polygon that plays it, each time at a value from each range's first to its second (the same, for no variation). A period of 30 ticks is 1 second.
+    - rid: 552786097007231306
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921730
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Index:'
+    - rid: 552786097007231307
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921731
+        m_Metadata:
+          m_Items: []
+        m_Value: Choosing a sound needs a sounds file (Files tab), to know which sounds there are
+    - rid: 552786097007231308
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921732
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Sound:'
+    - rid: 552786097007231309
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921733
+        m_Metadata:
+          m_Items: []
+        m_Value: 0 is silent, and 256 is full volume
+    - rid: 552786097007231310
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921734
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Volume:'
+    - rid: 552786097007231311
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921735
+        m_Metadata:
+          m_Items: []
+        m_Value: How long it waits between plays, in ticks (30 a second)
+    - rid: 552786097007231312
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921736
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Period (Ticks):'
+    - rid: 552786097007231313
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578510921737
+        m_Metadata:
+          m_Items: []
+        m_Value: Non-Directional
+    - rid: 552786097007231314
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578515116032
+        m_Metadata:
+          m_Items: []
+        m_Value: The direction it comes from, in degrees (grayed out while it's non-directional)
+    - rid: 552786097007231315
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578515116033
+        m_Metadata:
+          m_Items: []
+        m_Value: "Direction (\xB0):"
+    - rid: 552786097007231316
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578515116034
+        m_Metadata:
+          m_Items: []
+        m_Value: A multiple of the sound's own pitch
+    - rid: 552786097007231317
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578515116035
+        m_Metadata:
+          m_Items: []
+        m_Value: "Pitch (\xD7):"
+    - rid: 552786097007231318
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578515116036
+        m_Metadata:
+          m_Items: []
+        m_Value: 'The polygons that play it: uncheck one to have it play no random sound'
+    - rid: 552786097007231319
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578515116037
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Played In:'
+    - rid: 552786097007231320
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578515116038
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete
+    - rid: 552786097007231321
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578687082496
+        m_Metadata:
+          m_Items: []
+        m_Value: Ambient Sounds
+    - rid: 552786097007231322
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578687082497
+        m_Metadata:
+          m_Items: []
+        m_Value: Add
+    - rid: 552786097007231323
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578687082498
+        m_Metadata:
+          m_Items: []
+        m_Value: Duplicate
+    - rid: 552786097007231324
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578687082499
+        m_Metadata:
+          m_Items: []
+        m_Value: Random Sounds
+    - rid: 552786097007231325
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578687082500
+        m_Metadata:
+          m_Items: []
+        m_Value: Add
+    - rid: 552786097007231326
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578687082501
+        m_Metadata:
+          m_Items: []
+        m_Value: Duplicate
+    - rid: 552786097007231327
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2578817105920
+        m_Metadata:
+          m_Items: []
+        m_Value: Plays it once (needs a sounds file, in the Files tab)
+    - rid: 552786097007231795
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144877281280
+        m_Metadata:
+          m_Items: []
+        m_Value: 1 polygon
+    - rid: 552786097007231796
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475584
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} polygons'
+    - rid: 552786097007231797
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475585
+        m_Metadata:
+          m_Items: []
+        m_Value: Ambient Sound {0}
+    - rid: 552786097007231798
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475586
+        m_Metadata:
+          m_Items: []
+        m_Value: Random Sound {0}
+    - rid: 552786097007231799
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475587
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon {0}
+    - rid: 552786097007231800
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475588
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete Ambient Sound {0}?
+    - rid: 552786097007231801
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475589
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete Random Sound {0}?
+    - rid: 552786097007231802
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475590
+        m_Metadata:
+          m_Items: []
+        m_Value: 1 polygon plays it, and will play no ambient sound. Each later ambient sound's index moves down by one (and the polygons that play it follow it).
+    - rid: 552786097007231803
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475591
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} polygons play it, and will play no ambient sound. Each later ambient sound''s index moves down by one (and the polygons that play it follow it).'
+    - rid: 552786097007231804
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475592
+        m_Metadata:
+          m_Items: []
+        m_Value: 1 polygon plays it, and will play no random sound. Each later random sound's index moves down by one (and the polygons that play it follow it).
+    - rid: 552786097007231805
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475593
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} polygons play it, and will play no random sound. Each later random sound''s index moves down by one (and the polygons that play it follow it).'
+    - rid: 552786097007231806
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475594
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete
+    - rid: 552786097007231807
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475595
+        m_Metadata:
+          m_Items: []
+        m_Value: None
+    - rid: 552786097007231808
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475596
+        m_Metadata:
+          m_Items: []
+        m_Value: Add
+    - rid: 552786097007231809
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 6144881475597
+        m_Metadata:
+          m_Items: []
+        m_Value: Add (Aleph One Only)

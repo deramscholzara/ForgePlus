@@ -5,7 +5,6 @@ using RuntimeCore.Materials;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using AlephOne;
 using ForgePlus.Extensions;
 using Rect = UnityEngine.Rect;
@@ -36,6 +35,7 @@ namespace RuntimeCore.Entities.MapObjects
         private const string SpriteObjectName = "Sprite";
 
         private static bool iconsAreVisible = true;
+        private static bool soundSourceIconsAreVisible = false;
         private static bool spritePreviewsAreVisible = true;
 
         private MeshRenderer spritePreviewRenderer;
@@ -62,6 +62,21 @@ namespace RuntimeCore.Entities.MapObjects
             set
             {
                 iconsAreVisible = value;
+
+                ApplyVisibilityToAllObjects();
+            }
+        }
+
+        // Shows sound sources' icons even while IconsAreVisible is off (for Sounds mode)
+        public static bool SoundSourceIconsAreVisible
+        {
+            get
+            {
+                return soundSourceIconsAreVisible;
+            }
+            set
+            {
+                soundSourceIconsAreVisible = value;
 
                 ApplyVisibilityToAllObjects();
             }
@@ -98,22 +113,22 @@ namespace RuntimeCore.Entities.MapObjects
             }
         }
 
-        public override void OnValidatedPointerClick(PointerEventData eventData)
+        public override void OnValidatedPointerClick(WorldPointerEventData eventData)
         {
             SelectionManager.Instance.ToggleObjectSelection(this, multiSelect: false);
         }
 
-        public override void OnValidatedBeginDrag(PointerEventData eventData)
+        public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedDrag(PointerEventData eventData)
+        public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
 
-        public override void OnValidatedEndDrag(PointerEventData eventData)
+        public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
             // Intentionally blank - for now
         }
@@ -151,66 +166,7 @@ namespace RuntimeCore.Entities.MapObjects
 
         public void GenerateObject()
         {
-            switch (NativeObject.type)
-            {
-                case map._saved_player:
-                    if (!PlayerMesh)
-                    {
-                        PlayerMesh = BuildTriangleMesh(Color.yellow);
-                    }
-
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = PlayerMesh;
-                    break;
-                case map._saved_monster:
-                    if (!MonsterMesh)
-                    {
-                        MonsterMesh = BuildTriangleMesh(Color.red);
-                    }
-
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = MonsterMesh;
-                    break;
-                case map._saved_item:
-                    if (!ItemMesh)
-                    {
-                        ItemMesh = Resources.Load<Mesh>("Objects/Item");
-                    }
-
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = ItemMesh;
-                    break;
-                case map._saved_object:
-                    if (!SceneryMesh)
-                    {
-                        SceneryMesh = Resources.Load<Mesh>("Objects/Scenery");
-                    }
-
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = SceneryMesh;
-                    break;
-                case map._saved_sound_source:
-                    if (!SoundMesh)
-                    {
-                        SoundMesh = Resources.Load<Mesh>("Objects/Sound");
-                    }
-
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = SoundMesh;
-                    break;
-                case map._saved_goal:
-                    if (!GoalMesh)
-                    {
-                        GoalMesh = BuildTriangleMesh(Color.white);
-                    }
-
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = GoalMesh;
-                    break;
-                default:
-                    Debug.LogError($"Object type \"{NativeObject.GetTypeName()}\" is not part of the standard Marathon 2 engine - so... be careful.");
-                    if (!GenericMesh)
-                    {
-                        GenericMesh = BuildTriangleMesh(Color.white);
-                    }
-
-                    gameObject.AddComponent<MeshFilter>().sharedMesh = GenericMesh;
-                    break;
-            }
+            gameObject.AddComponent<MeshFilter>().sharedMesh = IconMesh();
 
             if (!MapObjectPlaceholderMaterial)
             {
@@ -224,24 +180,112 @@ namespace RuntimeCore.Entities.MapObjects
 
             gameObject.AddComponent<MeshCollider>().convex = true;
 
+            ApplyPlacement();
+
+            GenerateSprite();
+
+            ApplyVisibility();
+        }
+
+        public void ApplyType()
+        {
+            var iconMesh = IconMesh();
+            GetComponent<MeshFilter>().sharedMesh = iconMesh;
+
+            var meshCollider = GetComponent<MeshCollider>();
+            meshCollider.sharedMesh = null;
+            meshCollider.sharedMesh = iconMesh;
+
+            if (spritePreviewRenderer)
+            {
+                Destroy(spritePreviewRenderer.gameObject);
+                spritePreviewRenderer = null;
+            }
+
+            gameObject.name = GameObjectName(NativeObject, NativeIndex);
+
+            GenerateSprite();
+            ApplyPlacement();
+            ApplyVisibility();
+        }
+
+        public static string GameObjectName(map_object mapObject, short index)
+        {
+            return $"MapObject: {mapObject.GetTypeIdentifier()} ({index})";
+        }
+
+        private Mesh IconMesh()
+        {
+            switch (NativeObject.type)
+            {
+                case map._saved_player:
+                    if (!PlayerMesh)
+                    {
+                        PlayerMesh = BuildTriangleMesh(Color.yellow);
+                    }
+
+                    return PlayerMesh;
+                case map._saved_monster:
+                    if (!MonsterMesh)
+                    {
+                        MonsterMesh = BuildTriangleMesh(Color.red);
+                    }
+
+                    return MonsterMesh;
+                case map._saved_item:
+                    if (!ItemMesh)
+                    {
+                        ItemMesh = Resources.Load<Mesh>("Objects/Item");
+                    }
+
+                    return ItemMesh;
+                case map._saved_object:
+                    if (!SceneryMesh)
+                    {
+                        SceneryMesh = Resources.Load<Mesh>("Objects/Scenery");
+                    }
+
+                    return SceneryMesh;
+                case map._saved_sound_source:
+                    if (!SoundMesh)
+                    {
+                        SoundMesh = Resources.Load<Mesh>("Objects/Sound");
+                    }
+
+                    return SoundMesh;
+                case map._saved_goal:
+                    if (!GoalMesh)
+                    {
+                        GoalMesh = BuildTriangleMesh(Color.white);
+                    }
+
+                    return GoalMesh;
+                default:
+                    Debug.LogError($"Object type \"{NativeObject.GetTypeIdentifier()}\" is not part of the standard Marathon 2 engine - so... be careful.");
+                    if (!GenericMesh)
+                    {
+                        GenericMesh = BuildTriangleMesh(Color.white);
+                    }
+
+                    return GenericMesh;
+            }
+        }
+
+        public void ApplyPlacement()
+        {
             var hangsFromCeiling = (NativeObject.flags & map._map_object_hanging_from_ceiling) != 0;
 
             int elevation = hangsFromCeiling ?
                             ParentLevel.Level.PolygonList[NativeObject.polygon_index].ceiling_height + NativeObject.location.z :
                             ParentLevel.Level.PolygonList[NativeObject.polygon_index].floor_height + NativeObject.location.z;
 
-            if (hangsFromCeiling)
-            {
-                transform.localScale = new Vector3(1f, -1f, 1f);
-            }
+            transform.localScale = new Vector3(1f, hangsFromCeiling ? -1f : 1f, 1f);
 
             transform.position = new Vector3(NativeObject.location.x, elevation, -NativeObject.location.y) / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
-            transform.eulerAngles = new Vector3(0f, AlephOneExtensions.AngleToDegrees(NativeObject.facing) + 90f, 0f);
-
-            GenerateSprite();
-
-            ApplyVisibility();
+            // A sound source's facing is its volume instead, so it isn't turned
+            var facing = NativeObject.type == map._saved_sound_source ? (short) 0 : NativeObject.facing;
+            transform.eulerAngles = new Vector3(0f, AlephOneExtensions.AngleToDegrees(facing) + 90f, 0f);
         }
 
         private static void ApplyVisibilityToAllObjects()
@@ -261,7 +305,7 @@ namespace RuntimeCore.Entities.MapObjects
 
         private void ApplyVisibility()
         {
-            GetComponent<MeshRenderer>().enabled = iconsAreVisible;
+            GetComponent<MeshRenderer>().enabled = iconsAreVisible || (soundSourceIconsAreVisible && NativeObject.type == map._saved_sound_source);
 
             if (spritePreviewRenderer)
             {
@@ -291,7 +335,7 @@ namespace RuntimeCore.Entities.MapObjects
 
         private static Mesh GetSpriteQuadMesh(Rect bounds)
         {
-            if (SpriteQuadMeshes.TryGetValue(bounds, out var mesh))
+            if (SpriteQuadMeshes.TryGetValue(bounds, out var mesh) && mesh)
             {
                 return mesh;
             }
@@ -385,7 +429,7 @@ namespace RuntimeCore.Entities.MapObjects
         {
             var mesh = new Mesh();
 
-            mesh.name = $"{NativeObject.GetTypeName()} ({NativeIndex})";
+            mesh.name = $"{NativeObject.GetTypeIdentifier()} ({NativeIndex})";
 
             return mesh;
         }

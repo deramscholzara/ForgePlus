@@ -32,7 +32,7 @@ namespace RuntimeCore.Entities
         public static Texture2D LightTexture { get; private set; }
         
         // One "tick" = 1/30 seconds.  This is used to maintain classic flicker frequency.
-        private const float mininumFlickerDuration = 1f / 30f;
+        private const float minimumTickDuration = 1f / 30f;
         
         private readonly AnimationCurve smoothLightCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
 
@@ -279,34 +279,35 @@ namespace RuntimeCore.Entities
 
             functionPhaseOffset += remainingPhaseTime;
 
-            // Note: Clamps the randomized phase to no less than 1 tick
-            //       to ensure all phases run for at least 1 tick.
-            var duration = Mathf.Max(1, ((int)lightingFunction.period + Random.Range(-lightingFunction.delta_period, lightingFunction.delta_period))) / 30f;
+            // Each state adds a random part of the deltas (lightsource.cpp: change_light_state), and runs at least a tick
+            var periodTicks = lightingFunction.period + Random.Range(0, lightingFunction.delta_period + 1);
+            var duration = Mathf.Max(1, periodTicks) / 30f;
+            var finalIntensity = Mathf.Clamp01(AlephOneExtensions.FixedToFloat(lightingFunction.intensity + Random.Range(0, lightingFunction.delta_intensity + 1)));
 
             switch (lightingFunction.function)
             {
                 case _constant_lighting_function:
-                    await ConstantIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, AlephOneExtensions.FixedToFloat(lightingFunction.intensity));
+                    await ConstantIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, finalIntensity);
                     return;
                 case _linear_lighting_function:
-                    await LinearIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, AlephOneExtensions.FixedToFloat(lightingFunction.intensity), AlephOneExtensions.FixedToFloat(lightingFunction.delta_intensity));
+                    await LinearIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, finalIntensity);
                     return;
                 case _smooth_lighting_function:
-                    await SmoothIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, AlephOneExtensions.FixedToFloat(lightingFunction.intensity), AlephOneExtensions.FixedToFloat(lightingFunction.delta_intensity));
+                    await SmoothIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, finalIntensity);
                     return;
                 case _flicker_lighting_function:
-                    await FlickerIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, AlephOneExtensions.FixedToFloat(lightingFunction.intensity), AlephOneExtensions.FixedToFloat(lightingFunction.delta_intensity));
+                case _random_lighting_function:
+                case _fluorescent_lighting_function:
+                    await TickingIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, finalIntensity, lightingFunction.function);
                     return;
                 default:
                     throw new System.NotImplementedException($"Lighting Function: {lightingFunction.function}");
             }
         }
 
-        private async Awaitable ConstantIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity)
+        private async Awaitable ConstantIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float finalIntensity)
         {
-            intensity = Mathf.Clamp01(intensity);
-
-            CurrentLinearIntensity = intensity;
+            CurrentLinearIntensity = finalIntensity;
 
             var endTime = Time.realtimeSinceStartup + duration;
 
@@ -323,21 +324,17 @@ namespace RuntimeCore.Entities
             remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
         }
 
-        private async Awaitable LinearIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
+        private async Awaitable LinearIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float finalIntensity)
         {
-            intensity = Mathf.Clamp01(intensity);
-
             var endTime = Time.realtimeSinceStartup + duration;
 
-            var startingIntensity = CurrentLinearIntensity;
-            var actualIntensityDelta = (float)(intensityDelta * intensity);
-            var targetIntensity = (float)intensity + Random.Range(-actualIntensityDelta, actualIntensityDelta);
+            var initialIntensity = CurrentLinearIntensity;
 
             while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
             {
                 var remainingProgress = (endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration;
 
-                CurrentLinearIntensity = Mathf.Lerp(targetIntensity, startingIntensity, remainingProgress);
+                CurrentLinearIntensity = Mathf.Lerp(finalIntensity, initialIntensity, remainingProgress);
 
                 await Awaitable.NextFrameAsync();
 
@@ -350,21 +347,17 @@ namespace RuntimeCore.Entities
             remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
         }
 
-        private async Awaitable SmoothIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
+        private async Awaitable SmoothIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float finalIntensity)
         {
-            intensity = Mathf.Clamp01(intensity);
-
             var endTime = Time.realtimeSinceStartup + duration;
 
-            var startingIntensity = CurrentLinearIntensity;
-            var actualIntensityDelta = (float)(intensityDelta * intensity);
-            var targetIntensity = (float)intensity + Random.Range(-actualIntensityDelta, actualIntensityDelta);
+            var initialIntensity = CurrentLinearIntensity;
 
             while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
             {
                 var elapsedProgress = 1f - ((endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration);
 
-                CurrentLinearIntensity = Mathf.Lerp(startingIntensity, targetIntensity, smoothLightCurve.Evaluate(elapsedProgress));
+                CurrentLinearIntensity = Mathf.Lerp(initialIntensity, finalIntensity, smoothLightCurve.Evaluate(elapsedProgress));
 
                 await Awaitable.NextFrameAsync();
 
@@ -377,33 +370,33 @@ namespace RuntimeCore.Entities
             remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
         }
 
-        private async Awaitable FlickerIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float intensity, float intensityDelta)
+        // A new intensity each tick (lightsource.cpp): flicker's between the smooth and final ones, random's between the
+        // initial and final ones, and fluorescent's either one
+        private async Awaitable TickingIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float finalIntensity, short function)
         {
-            intensity = Mathf.Clamp01(intensity);
-
             var endTime = Time.realtimeSinceStartup + duration;
 
-            var startingIntensity = CurrentLinearIntensity;
-            var actualIntensityDelta = (float)(intensityDelta * intensity);
-            var targetIntensity = (float)intensity + Random.Range(-actualIntensityDelta, actualIntensityDelta);
+            var initialIntensity = CurrentLinearIntensity;
 
             while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
             {
-                var elapsedProgress = 1f - ((endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration);
-
-                var currentInterpolatedIntensity = Mathf.Lerp(startingIntensity, targetIntensity, smoothLightCurve.Evaluate(elapsedProgress));
-
-                var flickerIntensity = currentInterpolatedIntensity;
-                if (Random.Range(0, 2) == 0)
+                switch (function)
                 {
-                    flickerIntensity = (float)intensity + Random.Range(-actualIntensityDelta, 0);
-                    flickerIntensity = Mathf.Clamp01(flickerIntensity);
+                    case _flicker_lighting_function:
+                        var elapsedProgress = 1f - ((endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration);
+                        var smoothIntensity = Mathf.Lerp(initialIntensity, finalIntensity, smoothLightCurve.Evaluate(elapsedProgress));
+                        CurrentLinearIntensity = Mathf.Lerp(smoothIntensity, finalIntensity, Random.value);
+                        break;
+                    case _random_lighting_function:
+                        CurrentLinearIntensity = Mathf.Lerp(initialIntensity, finalIntensity, Random.value);
+                        break;
+                    default:
+                        CurrentLinearIntensity = Random.Range(0, 2) == 0 ? initialIntensity : finalIntensity;
+                        break;
                 }
 
-                CurrentLinearIntensity = flickerIntensity;
-
-                var flickerEndTime = Time.realtimeSinceStartup + mininumFlickerDuration;
-                while (Time.realtimeSinceStartup < flickerEndTime && GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
+                var tickEndTime = Time.realtimeSinceStartup + minimumTickDuration;
+                while (Time.realtimeSinceStartup < tickEndTime && GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
                 {
                     await Awaitable.NextFrameAsync();
 

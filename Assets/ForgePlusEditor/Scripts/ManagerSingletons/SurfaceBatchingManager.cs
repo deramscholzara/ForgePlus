@@ -139,6 +139,7 @@ namespace ForgePlus.ApplicationGeneral
             private List<Surface> surfaces;
             private Dictionary<RuntimeSurfaceGeometry, Surface> surfacesByGeometry;
             private GameObject mergeObject;
+            private Mesh mergedMesh;
 
             private LevelEntity_Media media;
 
@@ -240,88 +241,144 @@ namespace ForgePlus.ApplicationGeneral
                 }
                 else
                 {
-                    var mergedVertices = new List<Vector3>();
-                    var mergedTriangles = new List<int>();
-                    var mergedUVs = new List<Vector4>();
-                    var mergedUV1s = new List<Vector4>();
-                    var mergedUV2s = new List<Vector4>();
-                    var mergedColors = new List<Color>();
+                    mergedMesh = BuildMergedMesh();
+                    mergedMesh.name = "Batched Mesh" + objectDescriptiveName;
 
-                    foreach (var surface in surfaces)
+                    mergeObject.AddComponent<MeshFilter>().sharedMesh = mergedMesh;
+
+                    var mergedRenderer = mergeObject.AddComponent<MeshRenderer>();
+                    mergedRenderer.sharedMaterials = sourceMaterials;
+                    RuntimeSurfaceGeometry.ConfigureRenderer(mergedRenderer);
+
+                    if (deleteOriginalObjects)
                     {
-                        var dynamicMesh = surface.MakeStaticAndGetMesh();
-                        mergedTriangles.AddRange(dynamicMesh.triangles.Select(triangleIndex => triangleIndex + mergedVertices.Count));
-
-                        if (media != null)
-                        {
-                            mergedVertices.AddRange(dynamicMesh.vertices);
-                        }
-                        else
-                        {
-                            mergedVertices.AddRange(dynamicMesh.vertices.Select(position => surface.SurfaceGeometry.transform.localToWorldMatrix.MultiplyPoint(position)));
-                        }
-
-                        if (deleteOriginalObjects)
+                        foreach (var surface in surfaces)
                         {
                             DestroyImmediate(surface.SurfaceGeometry.gameObject);
                         }
-
-                        var uv0s = new List<Vector4>();
-                        dynamicMesh.GetUVs(0, uv0s);
-                        mergedUVs.AddRange(uv0s);
-
-                        if (sourceMaterials.Length > 1)
-                        {
-                            var uv1s = new List<Vector4>();
-                            dynamicMesh.GetUVs(1, uv1s);
-                            mergedUV1s.AddRange(uv1s);
-
-                            var uv2s = new List<Vector4>();
-                            dynamicMesh.GetUVs(2, uv2s);
-                            mergedUV2s.AddRange(uv2s);
-                        }
-
-                        mergedColors.AddRange(dynamicMesh.colors);
                     }
-
-                    var mergedMesh = new Mesh();
-                    mergedMesh.name = "Batched Mesh" + objectDescriptiveName;
-                    mergedMesh.SetVertices(mergedVertices);
-                    mergedMesh.SetTriangles(mergedTriangles, submesh: 0);
-
-                    if (mergedVertices.Count != mergedUVs.Count)
-                    {
-                        Debug.Log($"{mergedVertices.Count} : {mergedUVs.Count}");
-                        foreach (var surface in surfaces)
-                        {
-                            Debug.Log(surface.SurfaceGeometry.gameObject, surface.SurfaceGeometry.gameObject);
-                        }
-                    }
-
-                    mergedMesh.SetUVs(channel: 0, uvs: mergedUVs);
-
-                    if (sourceMaterials.Length > 1)
-                    {
-                        mergedMesh.SetUVs(channel: 1, uvs: mergedUV1s);
-                        mergedMesh.SetUVs(channel: 2, uvs: mergedUV2s);
-                    }
-
-                    mergedMesh.SetColors(mergedColors);
-                    mergedMesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
-                                                  MeshUpdateFlags.DontRecalculateBounds |
-                                                  MeshUpdateFlags.DontResetBoneBounds);
-                    mergedMesh.RecalculateTangents(MeshUpdateFlags.DontNotifyMeshUsers |
-                                                   MeshUpdateFlags.DontRecalculateBounds |
-                                                   MeshUpdateFlags.DontResetBoneBounds);
-
-                    mergeObject.AddComponent<MeshFilter>().sharedMesh = mergedMesh;
-                    mergeObject.AddComponent<MeshRenderer>().sharedMaterials = sourceMaterials;
 
                     if (media != null)
                     {
                         media.SubscribeSurface(mergeObject.transform);
                     }
                 }
+            }
+
+            // Appends each surface's mesh data to the shared scratch buffers, then uploads them to a new mesh.
+            // Normals and tangents are carried over from the surfaces rather than recalculated,
+            // as no vertices are shared between surfaces, so recalculating would only reproduce them.
+            private Mesh BuildMergedMesh()
+            {
+                var hasLayeredTransparentSide = sourceMaterials.Length > 1;
+                var defaultEffects = RuntimeSurfaceGeometryModule_Base.DefaultTransferModeEffects;
+                var defaultTransferModeEffects = new Vector4(defaultEffects.x, defaultEffects.y, defaultEffects.x, defaultEffects.y);
+
+                foreach (var surface in surfaces)
+                {
+                    var dynamicMesh = surface.MakeStaticAndGetMesh();
+                    var vertexOffset = MergedVertices.Count;
+                    var vertexCount = dynamicMesh.vertexCount;
+
+                    dynamicMesh.GetTriangles(SurfaceTriangles, submesh: 0);
+                    foreach (var triangleIndex in SurfaceTriangles)
+                    {
+                        MergedTriangles.Add(triangleIndex + vertexOffset);
+                    }
+
+                    dynamicMesh.GetVertices(SurfaceVertices);
+                    dynamicMesh.GetNormals(SurfaceNormals);
+                    dynamicMesh.GetTangents(SurfaceTangents);
+
+                    if (media != null)
+                    {
+                        // Media surfaces stay in local space, as the media moves the merged object
+                        MergedVertices.AddRange(SurfaceVertices);
+                        MergedNormals.AddRange(SurfaceNormals);
+                        MergedTangents.AddRange(SurfaceTangents);
+                    }
+                    else
+                    {
+                        var localToWorld = surface.SurfaceGeometry.transform.localToWorldMatrix;
+
+                        foreach (var position in SurfaceVertices)
+                        {
+                            MergedVertices.Add(localToWorld.MultiplyPoint3x4(position));
+                        }
+
+                        foreach (var normal in SurfaceNormals)
+                        {
+                            MergedNormals.Add(localToWorld.MultiplyVector(normal).normalized);
+                        }
+
+                        foreach (var tangent in SurfaceTangents)
+                        {
+                            var direction = localToWorld.MultiplyVector(tangent).normalized;
+                            MergedTangents.Add(new Vector4(direction.x, direction.y, direction.z, tangent.w));
+                        }
+                    }
+
+                    dynamicMesh.GetUVs(0, SurfaceUVs);
+                    MergedUV0s.AddRange(SurfaceUVs);
+
+                    if (hasLayeredTransparentSide)
+                    {
+                        dynamicMesh.GetUVs(1, SurfaceUVs);
+                        MergedUV1s.AddRange(SurfaceUVs);
+
+                        dynamicMesh.GetUVs(2, SurfaceUVs);
+                        MergedUV2s.AddRange(SurfaceUVs);
+                    }
+
+                    // Transfer mode effects, which media surfaces don't have
+                    dynamicMesh.GetUVs(3, SurfaceUVs);
+                    if (SurfaceUVs.Count == vertexCount)
+                    {
+                        MergedUV3s.AddRange(SurfaceUVs);
+                    }
+                    else
+                    {
+                        for (var i = 0; i < vertexCount; i++)
+                        {
+                            MergedUV3s.Add(defaultTransferModeEffects);
+                        }
+                    }
+
+                    dynamicMesh.GetColors(SurfaceColors);
+                    MergedColors.AddRange(SurfaceColors);
+                }
+
+                var builtMesh = new Mesh();
+
+                // Large batches can exceed 16-bit indices
+                builtMesh.indexFormat = MergedVertices.Count > ushort.MaxValue ? IndexFormat.UInt32 : IndexFormat.UInt16;
+
+                builtMesh.SetVertices(MergedVertices);
+                builtMesh.SetNormals(MergedNormals);
+                builtMesh.SetTangents(MergedTangents);
+                builtMesh.SetTriangles(MergedTriangles, submesh: 0);
+                builtMesh.SetUVs(channel: 0, uvs: MergedUV0s);
+
+                if (hasLayeredTransparentSide)
+                {
+                    builtMesh.SetUVs(channel: 1, uvs: MergedUV1s);
+                    builtMesh.SetUVs(channel: 2, uvs: MergedUV2s);
+                }
+
+                builtMesh.SetUVs(channel: 3, uvs: MergedUV3s);
+                builtMesh.SetColors(MergedColors);
+
+                MergedVertices.Clear();
+                MergedNormals.Clear();
+                MergedTangents.Clear();
+                MergedTriangles.Clear();
+                MergedUV0s.Clear();
+                MergedUV1s.Clear();
+                MergedUV2s.Clear();
+                MergedUV3s.Clear();
+                MergedColors.Clear();
+
+                return builtMesh;
             }
 
             public void Unmerge()
@@ -340,6 +397,8 @@ namespace ForgePlus.ApplicationGeneral
                 Destroy(mergeObject);
                 mergeObject = null;
 
+                DestroyMergedMesh();
+
                 foreach (var surface in surfaces)
                 {
                     surface.MakeDynamic();
@@ -350,7 +409,36 @@ namespace ForgePlus.ApplicationGeneral
                     }
                 }
             }
+
+            // The merge object is destroyed along with the level, but its mesh is not
+            public void DestroyMergedMesh()
+            {
+                if (mergedMesh)
+                {
+                    Destroy(mergedMesh);
+                }
+
+                mergedMesh = null;
+            }
         }
+
+        // Scratch buffers reused by every merge, to avoid per-surface and per-merge allocations
+        private static readonly List<int> SurfaceTriangles = new List<int>();
+        private static readonly List<Vector3> SurfaceVertices = new List<Vector3>();
+        private static readonly List<Vector3> SurfaceNormals = new List<Vector3>();
+        private static readonly List<Vector4> SurfaceTangents = new List<Vector4>();
+        private static readonly List<Vector4> SurfaceUVs = new List<Vector4>();
+        private static readonly List<Color> SurfaceColors = new List<Color>();
+
+        private static readonly List<int> MergedTriangles = new List<int>();
+        private static readonly List<Vector3> MergedVertices = new List<Vector3>();
+        private static readonly List<Vector3> MergedNormals = new List<Vector3>();
+        private static readonly List<Vector4> MergedTangents = new List<Vector4>();
+        private static readonly List<Vector4> MergedUV0s = new List<Vector4>();
+        private static readonly List<Vector4> MergedUV1s = new List<Vector4>();
+        private static readonly List<Vector4> MergedUV2s = new List<Vector4>();
+        private static readonly List<Vector4> MergedUV3s = new List<Vector4>();
+        private static readonly List<Color> MergedColors = new List<Color>();
 
         public static bool SeparateLights;
         public static bool SeparateTextures;
@@ -548,6 +636,11 @@ namespace ForgePlus.ApplicationGeneral
 
         private void OnLevelClosed()
         {
+            foreach (var batch in StaticBatches.Values)
+            {
+                batch.DestroyMergedMesh();
+            }
+
             SurfaceMaterials.Clear();
             StaticBatches.Clear();
         }

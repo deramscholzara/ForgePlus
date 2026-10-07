@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Objects_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: 290ed7582e1966b4595281f152419ded, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786097007231479
+  - rid: 552786097007231480
+  - rid: 552786097007231481
+  - rid: 552786097007231482
+  - rid: 552786097007231483
+  - rid: 552786097007231484
+  - rid: 552786097007231485
+  - rid: 552786097007231486
+  - rid: 552786097007231487
+  - rid: 552786097007231488
+  - rid: 552786097007231489
+  - rid: 552786097007231490
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231479
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576011116544
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Initial Count:'
+    - rid: 552786097007231480
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576011116545
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Minimum Count:'
+    - rid: 552786097007231481
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576011116546
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Maximum Count:'
+    - rid: 552786097007231482
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576011116547
+        m_Metadata:
+          m_Items: []
+        m_Value: Infinite Random Count
+    - rid: 552786097007231483
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576015310848
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Random Count:'
+    - rid: 552786097007231484
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576015310849
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Random Chance (%):'
+    - rid: 552786097007231485
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576015310850
+        m_Metadata:
+          m_Items: []
+        m_Value: Reappears in Random Location
+    - rid: 552786097007231486
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576023699456
+        m_Metadata:
+          m_Items: []
+        m_Value: Object Placement
+    - rid: 552786097007231487
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576023699457
+        m_Metadata:
+          m_Items: []
+        m_Value: 'How the level places each type of item and monster: at the start, and every 15 seconds after (monsters only when the game''s options have them replenish). Selecting an object shows its type''s.'
+    - rid: 552786097007231488
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576023699458
+        m_Metadata:
+          m_Items: []
+        m_Value: Items
+    - rid: 552786097007231489
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576023699459
+        m_Metadata:
+          m_Items: []
+        m_Value: Monsters
+    - rid: 552786097007231490
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2576451518464
+        m_Metadata:
+          m_Items: []
+        m_Value: Show Everything

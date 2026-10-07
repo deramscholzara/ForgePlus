@@ -1,0 +1,433 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19403, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Textures Shared Data
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.SharedTableData
+  m_TableCollectionName: Textures
+  m_TableCollectionNameGuid: 53d90a99b5908804993e31e636e43a74
+  m_KeyGenerator:
+    rid: 552786097007231035
+  m_Entries:
+  - m_Id: 2582076080128
+    m_Key: Inspector.PolygonTextures.PolygonTextures.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582076080129
+    m_Key: Inspector.PolygonTextures.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582076080130
+    m_Key: Inspector.PolygonTextures.Floor.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582076080131
+    m_Key: Inspector.PolygonTextures.FloorTexture.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582076080132
+    m_Key: Inspector.PolygonTextures.FloorBitmap.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582076080133
+    m_Key: Inspector.PolygonTextures.FloorBitmap.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582080274432
+    m_Key: Inspector.PolygonTextures.FloorOffset.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582080274433
+    m_Key: Inspector.PolygonTextures.FloorTransferMode.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582080274434
+    m_Key: Inspector.PolygonTextures.FloorLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582080274435
+    m_Key: Inspector.PolygonTextures.Ceiling.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582080274436
+    m_Key: Inspector.PolygonTextures.CeilingTexture.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582080274437
+    m_Key: Inspector.PolygonTextures.CeilingBitmap.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582080274438
+    m_Key: Inspector.PolygonTextures.CeilingBitmap.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582084468736
+    m_Key: Inspector.PolygonTextures.CeilingOffset.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582084468737
+    m_Key: Inspector.PolygonTextures.CeilingTransferMode.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582084468738
+    m_Key: Inspector.PolygonTextures.CeilingLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582126411776
+    m_Key: Inspector.SideTextures.SideTextures.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582126411777
+    m_Key: Inspector.SideTextures.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582126411778
+    m_Key: Inspector.SideTextures.Type.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606080
+    m_Key: Inspector.SideTextures.PrimarySurface.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606081
+    m_Key: Inspector.SideTextures.PrimaryTexture.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606082
+    m_Key: Inspector.SideTextures.PrimaryBitmap.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606083
+    m_Key: Inspector.SideTextures.PrimaryBitmap.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606084
+    m_Key: Inspector.SideTextures.PrimaryOffset.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606085
+    m_Key: Inspector.SideTextures.PrimaryTransferMode.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606086
+    m_Key: Inspector.SideTextures.PrimaryLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606087
+    m_Key: Inspector.SideTextures.SecondarySurface.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582130606088
+    m_Key: Inspector.SideTextures.SecondaryTexture.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800384
+    m_Key: Inspector.SideTextures.SecondaryBitmap.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800385
+    m_Key: Inspector.SideTextures.SecondaryBitmap.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800386
+    m_Key: Inspector.SideTextures.SecondaryOffset.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800387
+    m_Key: Inspector.SideTextures.SecondaryTransferMode.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800388
+    m_Key: Inspector.SideTextures.SecondaryLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800389
+    m_Key: Inspector.SideTextures.TransparentSurface.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800390
+    m_Key: Inspector.SideTextures.TransparentTexture.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800391
+    m_Key: Inspector.SideTextures.TransparentBitmap.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800392
+    m_Key: Inspector.SideTextures.TransparentBitmap.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582134800393
+    m_Key: Inspector.SideTextures.TransparentOffset.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582138994688
+    m_Key: Inspector.SideTextures.TransparentTransferMode.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2582138994689
+    m_Key: Inspector.SideTextures.TransparentLightIndex.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468162
+    m_Key: TransferMode.Choice
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468163
+    m_Key: TransferMode.Choice.AlephOneOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468164
+    m_Key: TransferMode.Choice.ObjectsOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468165
+    m_Key: TransferMode.Name.Normal
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468166
+    m_Key: TransferMode.Name.FadeOutToBlack
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468167
+    m_Key: TransferMode.Name.Invisibility
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468168
+    m_Key: TransferMode.Name.SubtleInvisibility
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468169
+    m_Key: TransferMode.Name.Pulsate
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468170
+    m_Key: TransferMode.Name.Wobble
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468171
+    m_Key: TransferMode.Name.FastWobble
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468172
+    m_Key: TransferMode.Name.Static
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468173
+    m_Key: TransferMode.Name.HalfStatic
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468174
+    m_Key: TransferMode.Name.Landscape
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468175
+    m_Key: TransferMode.Name.Smear
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468176
+    m_Key: TransferMode.Name.FadeOutStatic
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468177
+    m_Key: TransferMode.Name.PulsatingStatic
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468178
+    m_Key: TransferMode.Name.FoldIn
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468179
+    m_Key: TransferMode.Name.FoldOut
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468180
+    m_Key: TransferMode.Name.HorizontalSlide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468181
+    m_Key: TransferMode.Name.FastHorizontalSlide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468182
+    m_Key: TransferMode.Name.VerticalSlide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468183
+    m_Key: TransferMode.Name.FastVerticalSlide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468184
+    m_Key: TransferMode.Name.Wander
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468185
+    m_Key: TransferMode.Name.FastWander
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468186
+    m_Key: TransferMode.Name.BigLandscape
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468187
+    m_Key: TransferMode.Name.ReverseHorizontalSlide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468188
+    m_Key: TransferMode.Name.ReverseFastHorizontalSlide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468189
+    m_Key: TransferMode.Name.ReverseVerticalSlide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468190
+    m_Key: TransferMode.Name.ReverseFastVerticalSlide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468191
+    m_Key: TransferMode.Name.Scale2x
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148421468192
+    m_Key: TransferMode.Name.Scale4x
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148610211840
+    m_Key: Palette.Texture.None
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6148610211841
+    m_Key: Palette.Texture.Label
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514709438464
+    m_Key: Inspector.Collection.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021376
+    m_Key: Inspector.Collection.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021377
+    m_Key: Collection.Choice.LevelWalls
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021378
+    m_Key: Collection.Choice.LevelLandscape
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021379
+    m_Key: Collection.Choice.AlephOneOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021380
+    m_Key: Collection.Name
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 248514722021381
+    m_Key: Collection.Note.AlephOneOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1348305329733632
+    m_Key: Inspector.SideTextures.PrimaryTextureNote
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786097007231035
+      type: {class: DistributedUIDGenerator, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_CustomEpoch: 1790928703712
