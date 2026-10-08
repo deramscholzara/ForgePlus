@@ -188,6 +188,40 @@
     background-color: var(--fp-indicator-on);
 }
 
+/* A height swatch: a field for its value after the indicator, looking like a value area (its border only shows focus) */
+.fp-swatch .fp-swatch__height-field {
+    position: absolute;
+    left: 35px;
+    right: 5px;
+    top: 4px;
+    bottom: 4px;
+    margin: 0;
+    padding: 0;
+}
+
+.fp-swatch .fp-swatch__height-field > .unity-base-text-field__input {
+    margin: 0;
+    padding: 0 4px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: var(--fp-value-area);
+    color: var(--fp-value-text);
+    -unity-font-style: bold;
+}
+
+/* The Heights palette's button, under each list */
+.fp-height-palette__actions {
+    flex-direction: row;
+    flex-shrink: 0;
+    margin: 0 0 15px 0;
+}
+
+.fp-height-palette__action {
+    flex-grow: 1;
+    height: var(--fp-short-control-height);
+}
+
 /* The Sounds palette's buttons, under each list */
 .fp-sound-palette__actions {
     flex-direction: row;

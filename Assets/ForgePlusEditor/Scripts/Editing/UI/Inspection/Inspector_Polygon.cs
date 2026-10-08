@@ -290,7 +290,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Polygon.floor_height.ToString();
+                return WorldDistances.Format(Polygon.floor_height);
             }
         }
 
@@ -322,7 +322,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Polygon.ceiling_height.ToString();
+                return WorldDistances.Format(Polygon.ceiling_height);
             }
         }
 

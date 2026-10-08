@@ -177,6 +177,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 1955544801361920
+    m_Key: SettingsTab.ImproperFractions.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1974903057825792
+    m_Key: SettingsTab.ImproperFractions.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

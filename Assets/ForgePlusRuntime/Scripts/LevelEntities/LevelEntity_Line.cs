@@ -6,7 +6,7 @@ using AlephOne;
 namespace RuntimeCore.Entities.Geometry
 {
     // TODO: Should inherit from LevelEntity_Base, and should have a separate EditableSurface component
-    public class LevelEntity_Line : EditableSurface_Base, ISelectionDisplayable, IInspectable
+    public partial class LevelEntity_Line : EditableSurface_Base, ISelectionDisplayable, IInspectable
     {
         public short NativeIndex { get; set; }
         public line_data NativeObject { get; set; }

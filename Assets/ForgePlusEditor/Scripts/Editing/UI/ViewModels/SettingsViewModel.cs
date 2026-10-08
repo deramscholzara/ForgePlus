@@ -126,6 +126,19 @@ namespace ForgePlus.UI
         }
 
         [CreateProperty]
+        public bool ImproperFractionsEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.ImproperFractionsEnabled;
+            }
+            set
+            {
+                SettingsManager.Instance.ImproperFractionsEnabled = value;
+            }
+        }
+
+        [CreateProperty]
         public bool ShowInvalidSidesEnabled
         {
             get

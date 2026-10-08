@@ -23,14 +23,12 @@ MonoBehaviour:
   - rid: 552786097007231217
   - rid: 552786097007231218
   - rid: 552786097007231219
-  - rid: 552786097007231220
   - rid: 552786097007231221
   - rid: 552786097007231222
   - rid: 552786097007231223
   - rid: 552786097007231224
   - rid: 552786097007231225
   - rid: 552786097007231226
-  - rid: 552786097007231227
   - rid: 552786097007231228
   - rid: 552786097007231229
   - rid: 552786097007231230
@@ -40,21 +38,18 @@ MonoBehaviour:
   - rid: 552786097007231234
   - rid: 552786097007231235
   - rid: 552786097007231236
-  - rid: 552786097007231237
   - rid: 552786097007231238
   - rid: 552786097007231239
   - rid: 552786097007231240
   - rid: 552786097007231241
   - rid: 552786097007231242
   - rid: 552786097007231243
-  - rid: 552786097007231244
   - rid: 552786097007231245
   - rid: 552786097007231246
   - rid: 552786097007231247
   - rid: 552786097007231248
   - rid: 552786097007231249
   - rid: 552786097007231250
-  - rid: 552786097007231251
   - rid: 552786097007231252
   - rid: 552786097007231253
   - rid: 552786097007231762
@@ -98,6 +93,8 @@ MonoBehaviour:
   - rid: 552786132139770092
   - rid: 552786132139770093
   - rid: 552786204080472155
+  - rid: 552786240694648882
+  - rid: 552786240694648883
   references:
     version: 2
     RefIds:
@@ -143,13 +140,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Bitmap:'
-    - rid: 552786097007231220
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2582080274432
-        m_Metadata:
-          m_Items: []
-        m_Value: 'Offset:'
     - rid: 552786097007231221
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -192,13 +182,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Bitmap:'
-    - rid: 552786097007231227
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2582084468736
-        m_Metadata:
-          m_Items: []
-        m_Value: 'Offset:'
     - rid: 552786097007231228
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -262,13 +245,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Bitmap:'
-    - rid: 552786097007231237
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2582130606084
-        m_Metadata:
-          m_Items: []
-        m_Value: 'Offset:'
     - rid: 552786097007231238
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -311,13 +287,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Bitmap:'
-    - rid: 552786097007231244
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2582134800386
-        m_Metadata:
-          m_Items: []
-        m_Value: 'Offset:'
     - rid: 552786097007231245
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -360,13 +329,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Bitmap:'
-    - rid: 552786097007231251
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2582134800393
-        m_Metadata:
-          m_Items: []
-        m_Value: 'Offset:'
     - rid: 552786097007231252
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -668,3 +630,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Set by its control panel type and whether it starts on (in Geometry mode), as the game sets it.
+    - rid: 552786240694648882
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1916127797723136
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Offset X:'
+    - rid: 552786240694648883
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1916127797723137
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Offset Y:'

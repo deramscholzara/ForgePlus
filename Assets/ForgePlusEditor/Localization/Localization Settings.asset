@@ -86,6 +86,8 @@ MonoBehaviour:
           Name: Map
         - Guid: 40872e691392b094dab2e5da7f36729d
           Name: Terminals
+        - Guid: cba6bc9c918660e429937ae203d38a21
+          Name: Heights
         m_OwnedCollections:
         - cdc9627813db16c4d82ec20004791906
         - 920d96b35e949f446a2f1219b9456ea0
@@ -100,6 +102,7 @@ MonoBehaviour:
         - 015493dcfae4c6247a47b9504677fb5b
         - 745da985c4962cc4192dbf56ca45a0f3
         - 40872e691392b094dab2e5da7f36729d
+        - cba6bc9c918660e429937ae203d38a21
         m_BakedTables: []
         m_SubPath: LocalizationTables
         m_PlayModeSource: 0

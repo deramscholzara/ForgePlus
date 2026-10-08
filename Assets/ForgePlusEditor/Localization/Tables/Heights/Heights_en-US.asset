@@ -1,0 +1,126 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19402, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: Heights_en-US
+  m_EditorClassIdentifier: UnityEngine.dll::Unity.Localization.ResourceTable
+  m_LocaleCode: en-US
+  m_SharedData: {fileID: 11400000, guid: 37179755548796b4e812177c577fd4ed, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_Entries:
+  - rid: 552786204080472229
+  - rid: 552786204080472230
+  - rid: 552786204080472231
+  - rid: 552786204080472232
+  - rid: 552786204080472239
+  - rid: 552786204080472240
+  - rid: 552786204080472242
+  - rid: 552786204080472243
+  - rid: 552786204080472244
+  - rid: 552786204080472245
+  - rid: 552786204080472246
+  - rid: 552786204080472247
+  - rid: 552786240694648898
+  references:
+    version: 2
+    RefIds:
+    - rid: 552786204080472229
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 126382391296
+        m_Metadata:
+          m_Items: []
+        m_Value: Floor Heights
+    - rid: 552786204080472230
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 126382391297
+        m_Metadata:
+          m_Items: []
+        m_Value: Ceiling Heights
+    - rid: 552786204080472231
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 126382391298
+        m_Metadata:
+          m_Items: []
+        m_Value: Add Floor Height
+    - rid: 552786204080472232
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 126382391299
+        m_Metadata:
+          m_Items: []
+        m_Value: Add Ceiling Height
+    - rid: 552786204080472239
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 126382391306
+        m_Metadata:
+          m_Items: []
+        m_Value: Change All
+    - rid: 552786204080472240
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 126382391307
+        m_Metadata:
+          m_Items: []
+        m_Value: Add New Height
+    - rid: 552786204080472242
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1601821097984
+        m_Metadata:
+          m_Items: []
+        m_Value: Change Floor Height
+    - rid: 552786204080472243
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1601825292288
+        m_Metadata:
+          m_Items: []
+        m_Value: Change Ceiling Height
+    - rid: 552786204080472244
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1601825292289
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0:plural:The floor|All {} floors} at height {1}: change {0:plural:it|them} to {2}, or add {2} as a new floor height?'
+    - rid: 552786204080472245
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1601825292290
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0:plural:The ceiling|All {} ceilings} at height {1}: change {0:plural:it|them} to {2}, or add {2} as a new ceiling height?'
+    - rid: 552786204080472246
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1601825292291
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0:plural:One floor|{} floors} at height {1} would be above {0:plural:its ceiling|their ceilings} at {2}, so they can''t all be changed. Add {2} as a new floor height?'
+    - rid: 552786204080472247
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1601825292292
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0:plural:One ceiling|{} ceilings} at height {1} would be below {0:plural:its floor|their floors} at {2}, so they can''t all be changed. Add {2} as a new ceiling height?'
+    - rid: 552786240694648898
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 188820485718016
+        m_Metadata:
+          m_Items: []
+        m_Value: The height, in 1024ths of a world unit. Type it as whole world units and 1024ths (such as "2 and 512/1024"), as 1024ths alone (such as "2560/1024" or "2560"), as a decimal number of world units (such as "2.5"), as a percentage of a world unit (such as "250%"), or as another fraction (such as "5/2"). Type a new height to change it.

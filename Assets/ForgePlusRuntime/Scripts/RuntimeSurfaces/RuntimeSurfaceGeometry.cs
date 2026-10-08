@@ -87,6 +87,12 @@ namespace RuntimeCore.Entities.Geometry
             ApplyChange(rebatchImmediately, () => geometryModule.ApplyPositionsAndTriangles());
         }
 
+        // For a floor's or ceiling's height
+        public void ApplyHeight(bool rebatchImmediately = true)
+        {
+            ApplyChange(rebatchImmediately, () => geometryModule.ApplyTransformPosition());
+        }
+
         public void ApplyTextureOffset(bool innerLayer = true, bool rebatchImmediately = true)
         {
             ApplyChange(rebatchImmediately, () => geometryModule.ApplyTextureOffset(innerLayer));

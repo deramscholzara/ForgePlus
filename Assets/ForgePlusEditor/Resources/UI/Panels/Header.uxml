@@ -25,6 +25,9 @@
                 <ui:AttributeOverrides element-name="control" text="@Common/Header.Sounds.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Heights.Control.Text" />
+            </ui:Instance>
+            <ui:Instance template="RadioToggle" class="fp-header__mode">
                 <ui:AttributeOverrides element-name="control" text="@Common/Header.Platforms.Control.Text" />
             </ui:Instance>
             <ui:Instance template="RadioToggle" class="fp-header__mode">

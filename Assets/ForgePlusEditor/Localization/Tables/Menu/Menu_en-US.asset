@@ -49,6 +49,8 @@ MonoBehaviour:
   - rid: 552786204080472190
   - rid: 552786204080472191
   - rid: 552786204080472192
+  - rid: 552786240694648889
+  - rid: 552786240694648897
   references:
     version: 2
     RefIds:
@@ -276,3 +278,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: No errors.
+    - rid: 552786240694648889
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1955544801361920
+        m_Metadata:
+          m_Items: []
+        m_Value: Display World-Units as Improper Fractions
+    - rid: 552786240694648897
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1974903057825792
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows heights, positions and other distances as 1024ths alone (such as "6153/1024"), rather than as whole world units and 1024ths (such as "6 and 9/1024"). Either can be typed into a field, as can a bare number of 1024ths (such as "6153"), a decimal number of world units (such as "6.0087"), or a percentage of a world unit (such as "55%").

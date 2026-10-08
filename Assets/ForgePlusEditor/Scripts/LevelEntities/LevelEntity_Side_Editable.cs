@@ -1,5 +1,6 @@
 ﻿#if !NO_EDITING
 using AlephOne;
+using ForgePlus.Entities.Geometry;
 using ForgePlus.Extensions;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
@@ -102,6 +103,41 @@ namespace RuntimeCore.Entities.Geometry
                 }
 
                 selectionVisualizationIndicators.Clear();
+            }
+        }
+
+        // Before it's rebuilt (such as by changing a height), it's taken out of the selection, the level and its batches
+        public void PrepareForDestruction()
+        {
+            var selectionManager = SelectionManager.Instance;
+
+            if (selectionManager.GetIsSelected(this))
+            {
+                selectionManager.DeselectObject(this, multiSelect: true);
+            }
+
+            foreach (var surface in GetComponentsInChildren<EditableSurface_Side>(includeInactive: true))
+            {
+                ParentLevel.EditableSurface_Sides.Remove(surface);
+
+                if (selectionManager.ClickedSurface == surface)
+                {
+                    selectionManager.ClickedSurface = null;
+                }
+            }
+
+            foreach (var surface in GetComponentsInChildren<RuntimeSurfaceGeometry>(includeInactive: true))
+            {
+                surface.PrepareForDestruction();
+            }
+
+            if (NativeObject == null)
+            {
+                ParentLevel.PlaceholderSides.Remove(this);
+            }
+            else if (ParentLevel.Sides.TryGetValue(NativeIndex, out var indexedSide) && indexedSide == this)
+            {
+                ParentLevel.Sides.Remove(NativeIndex);
             }
         }
 

@@ -312,7 +312,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Strings.Get(Strings.Platforms, "Inspector.Platform.Range", Entity.NativeObject.minimum_floor_height, Entity.NativeObject.maximum_floor_height);
+                return Strings.Get(Strings.Platforms, "Inspector.Platform.Range", WorldDistances.Format(Entity.NativeObject.minimum_floor_height), WorldDistances.Format(Entity.NativeObject.maximum_floor_height));
             }
         }
 
@@ -321,7 +321,7 @@ namespace ForgePlus.Inspection
         {
             get
             {
-                return Strings.Get(Strings.Platforms, "Inspector.Platform.Range", Entity.NativeObject.minimum_ceiling_height, Entity.NativeObject.maximum_ceiling_height);
+                return Strings.Get(Strings.Platforms, "Inspector.Platform.Range", WorldDistances.Format(Entity.NativeObject.minimum_ceiling_height), WorldDistances.Format(Entity.NativeObject.maximum_ceiling_height));
             }
         }
 

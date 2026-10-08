@@ -12,16 +12,7 @@ namespace ForgePlus.UI
         {
             generateVisualContent += DrawTriangle;
 
-            RegisterCallback<PointerDownEvent>(StopPropagation);
-            RegisterCallback<PointerUpEvent>(StopPropagation);
-            RegisterCallback<ClickEvent>(StopPropagation);
-            RegisterCallback<MouseDownEvent>(StopPropagation);
-            RegisterCallback<MouseUpEvent>(StopPropagation);
-        }
-
-        private static void StopPropagation(EventBase evt)
-        {
-            evt.StopPropagation();
+            this.KeepsEventsFromParents();
         }
 
         // Pointing right, centered, and most of its height

@@ -47,11 +47,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 2582080274432
-    m_Key: Inspector.PolygonTextures.FloorOffset.Label.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 2582080274433
     m_Key: Inspector.PolygonTextures.FloorTransferMode.Label.Text
     m_Flags: 0
@@ -79,11 +74,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 2582080274438
     m_Key: Inspector.PolygonTextures.CeilingBitmap.Label.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2582084468736
-    m_Key: Inspector.PolygonTextures.CeilingOffset.Label.Text
     m_Flags: 0
     m_Metadata:
       m_Items: []
@@ -132,11 +122,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 2582130606084
-    m_Key: Inspector.SideTextures.PrimaryOffset.Label.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 2582130606085
     m_Key: Inspector.SideTextures.PrimaryTransferMode.Label.Text
     m_Flags: 0
@@ -167,11 +152,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 2582134800386
-    m_Key: Inspector.SideTextures.SecondaryOffset.Label.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 2582134800387
     m_Key: Inspector.SideTextures.SecondaryTransferMode.Label.Text
     m_Flags: 0
@@ -199,11 +179,6 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 2582134800392
     m_Key: Inspector.SideTextures.TransparentBitmap.Label.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2582134800393
-    m_Key: Inspector.SideTextures.TransparentOffset.Label.Text
     m_Flags: 0
     m_Metadata:
       m_Items: []
@@ -419,6 +394,16 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1348305329733632
     m_Key: Inspector.SideTextures.PrimaryTextureNote
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1916127797723136
+    m_Key: Inspector.Textures.OffsetX.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1916127797723137
+    m_Key: Inspector.Textures.OffsetY.Label.Text
     m_Flags: 0
     m_Metadata:
       m_Items: []

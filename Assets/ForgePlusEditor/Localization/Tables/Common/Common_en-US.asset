@@ -37,7 +37,6 @@ MonoBehaviour:
   - rid: 552786097007231407
   - rid: 552786097007231408
   - rid: 552786097007231409
-  - rid: 552786097007231410
   - rid: 552786097007231411
   - rid: 552786097007231412
   - rid: 552786097007231413
@@ -409,8 +408,6 @@ MonoBehaviour:
   - rid: 552786132139770123
   - rid: 552786132139770124
   - rid: 552786132139770125
-  - rid: 552786132139770126
-  - rid: 552786132139770127
   - rid: 552786204080472132
   - rid: 552786204080472133
   - rid: 552786204080472134
@@ -430,7 +427,6 @@ MonoBehaviour:
   - rid: 552786204080472148
   - rid: 552786204080472166
   - rid: 552786204080472167
-  - rid: 552786204080472170
   - rid: 552786204080472171
   - rid: 552786204080472172
   - rid: 552786204080472173
@@ -448,6 +444,12 @@ MonoBehaviour:
   - rid: 552786204080472209
   - rid: 552786204080472210
   - rid: 552786204080472211
+  - rid: 552786204080472241
+  - rid: 552786240694648884
+  - rid: 552786240694648885
+  - rid: 552786240694648886
+  - rid: 552786240694648887
+  - rid: 552786240694648888
   references:
     version: 2
     RefIds:
@@ -591,13 +593,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'While the game runs, the sound''s volume follows the light''s intensity: silent while it''s off, and full while it''s fully on. It''s saved as the light''s index, negated (so light 0 can''t be one).'
-    - rid: 552786097007231410
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2585498632210
-        m_Metadata:
-          m_Items: []
-        m_Value: 'Position:'
     - rid: 552786097007231411
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3199,20 +3194,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: cyborg
-    - rid: 552786132139770126
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 329893195431936
-        m_Metadata:
-          m_Items: []
-        m_Value: 'X:'
-    - rid: 552786132139770127
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 329893212209152
-        m_Metadata:
-          m_Items: []
-        m_Value: 'Y:'
     - rid: 552786204080472132
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3346,13 +3327,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: fluorescent
-    - rid: 552786204080472170
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 1424381422747648
-        m_Metadata:
-          m_Items: []
-        m_Value: 'Z:'
     - rid: 552786204080472171
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3472,3 +3446,45 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: There's no level {0}.
+    - rid: 552786204080472241
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1786210242150400
+        m_Metadata:
+          m_Items: []
+        m_Value: Heights
+    - rid: 552786240694648884
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1916131484516352
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0}/1024'
+    - rid: 552786240694648885
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1916131501293568
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} and {1}/1024'
+    - rid: 552786240694648886
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1916131501293569
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Position X:'
+    - rid: 552786240694648887
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1916131501293570
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Position Y:'
+    - rid: 552786240694648888
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1916131501293571
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Position Z:'

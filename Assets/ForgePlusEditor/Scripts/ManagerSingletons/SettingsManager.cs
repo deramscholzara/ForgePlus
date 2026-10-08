@@ -1,5 +1,7 @@
-﻿using ForgePlus.LevelManipulation;
+﻿using ForgePlus.Inspection;
+using ForgePlus.LevelManipulation;
 using ForgePlus.Sound;
+using ForgePlus.UI;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
 using System;
@@ -37,6 +39,7 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_SoundDirection = "Settings_SoundDirection";
         private const string PlayerPrefsSettingsKey_SoundVolume = "Settings_SoundVolume";
         private const string PlayerPrefsSettingsKey_PlayLevelAudio = "Settings_PlayLevelAudio";
+        private const string PlayerPrefsSettingsKey_ImproperFractions = "Settings_ImproperFractions";
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
 
@@ -221,6 +224,28 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // World distances as 1024ths alone ("6153/1024") rather than with whole world units ("6 and 9/1024"). Fields show
+        // the change themselves, and the inspectors' texts are refreshed.
+        public bool ImproperFractionsEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_ImproperFractions, 0) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_ImproperFractions, value ? 1 : 0);
+
+                if (WorldDistances.UsesImproperFractions != value)
+                {
+                    WorldDistances.UsesImproperFractions = value;
+                    InspectorPanel.Instance.RefreshAllInspectors();
+                }
+
+                OnSettingChanged?.Invoke(nameof(ImproperFractionsEnabled));
+            }
+        }
+
         public MergedSaveChecksums MergedSaveChecksum
         {
             get
@@ -357,6 +382,7 @@ namespace ForgePlus.ApplicationGeneral
             MinimumLight = MinimumLight;
             ClipPlatformSidesEnabled = ClipPlatformSidesEnabled;
             ShowInvalidSidesEnabled = ShowInvalidSidesEnabled;
+            ImproperFractionsEnabled = ImproperFractionsEnabled;
 
             ModeManager.Instance.OnPrimaryModeChanged += OnPrimaryModeChanged;
         }

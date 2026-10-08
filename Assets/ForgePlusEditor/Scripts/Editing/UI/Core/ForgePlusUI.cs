@@ -374,6 +374,9 @@ namespace ForgePlus.UI
                 case ModeManager.PrimaryModes.Sounds:
                     paletteSlot.Show<SoundPalettePanel>();
                     break;
+                case ModeManager.PrimaryModes.Heights:
+                    paletteSlot.Show<HeightPalettePanel>();
+                    break;
                 case ModeManager.PrimaryModes.Terminals:
                     paletteSlot.Show<TerminalStylesPanel>();
                     break;
