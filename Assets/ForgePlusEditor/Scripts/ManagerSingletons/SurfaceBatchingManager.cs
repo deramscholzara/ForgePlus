@@ -469,9 +469,8 @@ namespace ForgePlus.ApplicationGeneral
 
         [Tooltip("For batching purposes, determines whether lights should be treated as distinct (enabled) or identical (disabled).")] [SerializeField]
         private bool separateLights = false;
-        // TODO: !!! - implement lights texture so that this being false by default makes sense with or without texture arrays.
-        // TODO: !!! - UV0.z is the main texture index, so UV1.z should be the layered texture index
-        // TODO: !!! - UV0.w and UV1.w should represent the lights for these layers, respectively.
+        // Surfaces with different lights can share a batch: each one's light index is in its UVs (UV0.z, and UV1.z for a
+        // layered side's outer layer), which the shaders use to read its intensity from LevelEntity_Light's buffer.
 
 #if USE_TEXTURE_ARRAYS
         [Tooltip("For batching purposes, determines whether textures (bitmaps) should be treated as distinct (enabled) or identical (disabled).")] [SerializeField]
