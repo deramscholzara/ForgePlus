@@ -38,10 +38,19 @@ namespace ForgePlus.UI
             }
         }
 
+        // Most lights hold steady, so their previews are left alone until they change
         public static void ShowIntensity(VisualElement preview, LevelEntity_Light light)
         {
             var intensity = light.CurrentDisplayIntensity;
-            preview.style.backgroundColor = new Color(intensity, intensity, intensity, 1f);
+            var color = new Color(intensity, intensity, intensity, 1f);
+
+            var shown = preview.style.backgroundColor;
+            if (shown.keyword == StyleKeyword.Undefined && shown.value == color)
+            {
+                return;
+            }
+
+            preview.style.backgroundColor = color;
         }
     }
 }

@@ -1,12 +1,13 @@
-﻿using ForgePlus.Inspection;
+using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using RuntimeCore.Common;
+using System;
 using System.Collections.Generic;
-using System.Threading;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
 using AlephOne;
 using static AlephOne.lightsource;
 using ForgePlus.Extensions;
@@ -27,14 +28,33 @@ namespace RuntimeCore.Entities
             PrimaryInactive,
             SecondaryInactive,
         }
-        
-        public static readonly int lightIntensityGlobalPropertyId = Shader.PropertyToID("_LightIntensity");
-        public static Texture2D LightTexture { get; private set; }
-        
+
+        // Every light's display intensity, read by GetLightIntensityFromStructuredBuffer.hlsl using the light index
+        // that each surface stores in its UVs (UV0.z, or UV1.z for a layered side's outer layer)
+        public static readonly int lightIntensitiesGlobalPropertyId = Shader.PropertyToID("_LightIntensities");
+        private const int minimumIntensitiesCapacity = 256;
+
+        private static GraphicsBuffer intensitiesBuffer;
+        private static float[] intensities = Array.Empty<float>();
+
+        // Range of intensities changed since the last upload (start inclusive, end exclusive), so however many lights
+        // change in a frame, they are sent to the GPU together, once, just before rendering
+        private static int dirtyStart = int.MaxValue;
+        private static int dirtyEnd = 0;
+
         // One "tick" = 1/30 seconds.  This is used to maintain classic flicker frequency.
         private const float minimumTickDuration = 1f / 30f;
-        
-        private readonly AnimationCurve smoothLightCurve = new AnimationCurve(new Keyframe(0f, 0f), new Keyframe(1f, 1f));
+
+        // After a stall longer than this (such as the Editor being paused), lights carry on from the current time
+        // rather than playing through every phase they missed
+        private const float maximumCatchUpTime = 1f;
+
+        // All animating lights advance together, from one loop, once per frame
+        private static readonly List<LevelEntity_Light> animatingLights = new List<LevelEntity_Light>();
+        private static bool animationLoopIsRunning;
+
+        // Changes when Play mode ends, so a loop left waiting from that session stops rather than running alongside a new one
+        private static int animationLoopGeneration;
 
         public short NativeIndex { get; set; }
         public static_light_data NativeObject { get; set; }
@@ -58,40 +78,39 @@ namespace RuntimeCore.Entities
                     // Square to convert to gamma-space values (only needed if the project is in Linear space)
                     CurrentDisplayIntensity = currentLinearIntensity * currentLinearIntensity;
                 }
-                
-                LightTexture.SetPixel(NativeIndex, 0, new Color(CurrentDisplayIntensity, 0f, 0f, 0f), 0);
-                LightTexture.Apply();
+                else
+                {
+                    CurrentDisplayIntensity = currentLinearIntensity;
+                }
+
+                SetIntensity(NativeIndex, CurrentDisplayIntensity);
             }
         }
 
         private float currentLinearIntensity = 0f;
 
         private States currentState = States.BecomingActive;
-        private short remainingPhaseOffset;
-        private float remainingPhaseTime = 0f;
+        private bool loopsCurrentState;
+        private int remainingPhaseOffset;
+        private bool isAnimating;
 
-        private CancellationTokenSource lightPhaseCTS;
+        // The current State's running phase. Until it starts, the next phase starts at phaseStartTime + phaseDuration.
+        private bool phaseIsStarted;
+        private lighting_function_specification phaseFunction;
+        private float phaseStartTime;
+        private float phaseDuration;
+        private float phaseInitialIntensity;
+        private float phaseFinalIntensity;
+        private float nextTickTime;
 
         public LevelEntity_Light(short index, static_light_data light, LevelEntity_Level level)
         {
-            if (!LightTexture)
-            {
-                LightTexture = new Texture2D(
-                    width: 256,
-                    height: 1,
-                    textureFormat: TextureFormat.R16,
-                    mipChain: false,
-                    linear: false);
+            EnsureIntensitiesCapacity(index + 1);
 
-                LightTexture.wrapMode = TextureWrapMode.Clamp;
-                LightTexture.filterMode = FilterMode.Point;
-                Shader.SetGlobalTexture(lightIntensityGlobalPropertyId, LightTexture);
-            }
-            
             NativeIndex = index;
             NativeObject = light;
             ParentLevel = level;
-            
+
             BeginRuntimeStyleBehavior();
         }
 
@@ -108,8 +127,7 @@ namespace RuntimeCore.Entities
 
         public void PrepareForDestruction()
         {
-            lightPhaseCTS?.Cancel();
-            lightPhaseCTS = null;
+            StopAnimating();
         }
 
         public void BeginRuntimeStyleBehavior()
@@ -126,293 +144,437 @@ namespace RuntimeCore.Entities
             }
         }
 
-        public async void BeginPhase(States state, bool loop = false)
+        public void BeginPhase(States state, bool loop = false)
         {
-            lightPhaseCTS?.Cancel();
+            StopAnimating();
 
-            // Each phase loop cancels only its own token source: the field may be replaced by a newer loop,
-            // or cleared by PrepareForDestruction, while this one is awaiting
-            var phaseCTS = new CancellationTokenSource();
-            lightPhaseCTS = phaseCTS;
-            var cancellationToken = phaseCTS.Token;
-
-            remainingPhaseOffset = NativeObject.phase;
-
-            if (loop)
+            if (!Application.isPlaying)
             {
-                // If we're looping (such as for an editor state-preview mode)
-                // then we should not incur any "phase" offset to adjust the
-                // current State or position therein.
-                remainingPhaseOffset = 0;
+                return;
             }
 
-            remainingPhaseTime = 0f;
-
             currentState = state;
+            loopsCurrentState = loop;
 
-            while (!cancellationToken.IsCancellationRequested && Application.isPlaying)
+            // If we're looping (such as for an editor state-preview mode)
+            // then we should not incur any "phase" offset to adjust the
+            // current State or position therein.
+            remainingPhaseOffset = loop ? 0 : NativeObject.phase;
+
+            var now = Time.realtimeSinceStartup;
+
+            phaseIsStarted = false;
+            phaseStartTime = now;
+            phaseDuration = 0f;
+
+            // The first phase starts now, so the light changes right away rather than on the next frame
+            try
             {
-                switch (currentState)
+                if (Advance(now))
                 {
-                    case States.BecomingActive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.becoming_active);
+                    StartAnimating();
+                }
+            }
+            catch (Exception exception)
+            {
+                // A broken light stays as it is, rather than stopping whatever started it (such as loading the level)
+                Debug.LogException(exception);
+            }
+        }
 
-                        if (!loop)
+        // Plays the light up to the given time, through as many phases as have ended by then. Returns false when the
+        // light has nothing more to change, so it no longer needs advancing.
+        private bool Advance(float now)
+        {
+            var skippedPhases = 0;
+
+            while (true)
+            {
+                if (!phaseIsStarted)
+                {
+                    var startTime = phaseStartTime + phaseDuration;
+
+                    if (now - startTime > maximumCatchUpTime)
+                    {
+                        startTime = now;
+                    }
+
+                    var secondsIntoPhase = 0f;
+
+                    // Phase is a "backwards" shift through time, which skips the States it covers entirely, then
+                    // starts partway into the State it ends in
+                    if (remainingPhaseOffset > 0)
+                    {
+                        var period = GetFunction(currentState).period;
+                        remainingPhaseOffset -= period;
+
+                        if (remainingPhaseOffset > 0)
                         {
-                            currentState = States.PrimaryActive;
+                            // Without any periods to use it up (all are 0), the offset would never run out
+                            if (++skippedPhases > 6)
+                            {
+                                remainingPhaseOffset = 0;
+                            }
+
+                            if (!MoveToNextState())
+                            {
+                                return false;
+                            }
+
+                            continue;
                         }
 
-                        break;
-                    case States.PrimaryActive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.primary_active);
+                        secondsIntoPhase = (period + remainingPhaseOffset) * minimumTickDuration;
+                    }
 
-                        if (!loop)
-                        {
-                            if (LIGHT_IS_STATELESS(NativeObject) ||
-                                (NativeObject.secondary_active.period > 0 &&
-                                 (NativeObject.secondary_active.function != _constant_lighting_function ||
-                                  NativeObject.secondary_active.intensity != NativeObject.primary_active.intensity)))
-                            {
-                                // Only go to the second phase if it has a lasting duration
-                                // and if it's not constant at the same intensity as the primary phase.
-                                currentState = States.SecondaryActive;
-                            }
-                            else if (NativeObject.primary_inactive.function == _constant_lighting_function)
-                            {
-                                // If there's no second phase, and the primary phase is constant,
-                                // then there's no reason to keep updating lighting values.
-                                phaseCTS.Cancel();
-                            }
-                        }
+                    StartPhase(startTime - secondsIntoPhase);
+                }
 
-                        break;
-                    case States.SecondaryActive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.secondary_active);
+                var elapsed = now - phaseStartTime;
 
-                        if (!loop)
-                        {
-                            if (LIGHT_IS_STATELESS(NativeObject))
-                            {
-                                currentState = States.BecomingInactive;
-                            }
-                            else
-                            {
-                                currentState = States.PrimaryActive;
-                            }
-                        }
+                if (elapsed < phaseDuration)
+                {
+                    ShowPhase(now, elapsed / phaseDuration);
+                    return true;
+                }
 
-                        break;
-                    case States.BecomingInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.becoming_inactive);
+                // Lights that move to an intensity end the phase exactly on it, which the next phase starts from
+                if (phaseFunction.function == _linear_lighting_function || phaseFunction.function == _smooth_lighting_function)
+                {
+                    CurrentLinearIntensity = phaseFinalIntensity;
+                }
 
-                        if (!loop)
-                        {
-                            currentState = States.PrimaryInactive;
-                        }
+                phaseIsStarted = false;
 
-                        break;
-                    case States.PrimaryInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.primary_inactive);
-
-                        if (!loop)
-                        {
-                            if (LIGHT_IS_STATELESS(NativeObject) ||
-                                (NativeObject.secondary_inactive.period > 0 &&
-                                 (NativeObject.secondary_inactive.function != _constant_lighting_function ||
-                                  NativeObject.secondary_inactive.intensity != NativeObject.primary_inactive.intensity)))
-                            {
-                                // Only go to the second phase if it has a lasting duration
-                                // and if it's not constant at the same intensity as the primary phase.
-                                currentState = States.SecondaryInactive;
-                            }
-                            else if (NativeObject.primary_inactive.function == _constant_lighting_function)
-                            {
-                                // If there's no second phase, and the primary phase is constant,
-                                // then there's no reason to keep updating lighting values.
-                                phaseCTS.Cancel();
-                            }
-                        }
-
-                        break;
-                    case States.SecondaryInactive:
-                        await RunIntensityPhaseFunction(cancellationToken, NativeObject.secondary_inactive);
-
-                        if (!loop)
-                        {
-                            if (LIGHT_IS_STATELESS(NativeObject))
-                            {
-                                currentState = States.BecomingActive;
-                            }
-                            else
-                            {
-                                currentState = States.PrimaryInactive;
-                            }
-                        }
-
-                        break;
-                    default:
-                        throw new System.Exception($"Light State: {currentState}");
+                if (!MoveToNextState())
+                {
+                    return false;
                 }
             }
         }
 
-        private async Awaitable RunIntensityPhaseFunction(CancellationToken cancellationToken, lighting_function_specification lightingFunction)
+        // Each state adds a random part of the deltas (lightsource.cpp: change_light_state), and runs at least a tick
+        private void StartPhase(float startTime)
         {
-            var functionPhaseOffset = 0f;
+            phaseFunction = GetFunction(currentState);
 
-            if (remainingPhaseOffset > 0)
-            {
-                remainingPhaseOffset -= (short)(lightingFunction.period);
+            var periodTicks = phaseFunction.period + Random.Range(0, phaseFunction.delta_period + 1);
 
-                if (remainingPhaseOffset > 0)
-                {
-                    // There's still offset time remaining, so continue to the next State
-                    return;
-                }
-                else
-                {
-                    // Note: This adds any remaining offset, which will be <= 0,
-                    //       because Phase is intended to be a "backwards" shift through time
-                    functionPhaseOffset = (float)(lightingFunction.period + remainingPhaseOffset) / 30f;
-                }
-            }
+            phaseStartTime = startTime;
+            phaseDuration = Mathf.Max(1, periodTicks) * minimumTickDuration;
+            phaseInitialIntensity = CurrentLinearIntensity;
+            phaseFinalIntensity = Mathf.Clamp01(AlephOneExtensions.FixedToFloat(phaseFunction.intensity + Random.Range(0, phaseFunction.delta_intensity + 1)));
+            nextTickTime = float.MinValue;
+            phaseIsStarted = true;
 
-            functionPhaseOffset += remainingPhaseTime;
-
-            // Each state adds a random part of the deltas (lightsource.cpp: change_light_state), and runs at least a tick
-            var periodTicks = lightingFunction.period + Random.Range(0, lightingFunction.delta_period + 1);
-            var duration = Mathf.Max(1, periodTicks) / 30f;
-            var finalIntensity = Mathf.Clamp01(AlephOneExtensions.FixedToFloat(lightingFunction.intensity + Random.Range(0, lightingFunction.delta_intensity + 1)));
-
-            switch (lightingFunction.function)
+            switch (phaseFunction.function)
             {
                 case _constant_lighting_function:
-                    await ConstantIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, finalIntensity);
-                    return;
+                    CurrentLinearIntensity = phaseFinalIntensity;
+                    break;
                 case _linear_lighting_function:
-                    await LinearIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, finalIntensity);
-                    return;
                 case _smooth_lighting_function:
-                    await SmoothIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, finalIntensity);
-                    return;
                 case _flicker_lighting_function:
                 case _random_lighting_function:
                 case _fluorescent_lighting_function:
-                    await TickingIntensityPhaseFunction(cancellationToken, duration, functionPhaseOffset, finalIntensity, lightingFunction.function);
-                    return;
+                    break;
                 default:
-                    throw new System.NotImplementedException($"Lighting Function: {lightingFunction.function}");
+                    throw new NotImplementedException($"Lighting Function: {phaseFunction.function}");
             }
         }
 
-        private async Awaitable ConstantIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float finalIntensity)
+        private void ShowPhase(float now, float progress)
         {
-            CurrentLinearIntensity = finalIntensity;
-
-            var endTime = Time.realtimeSinceStartup + duration;
-
-            while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
+            switch (phaseFunction.function)
             {
-                await Awaitable.NextFrameAsync();
+                case _linear_lighting_function:
+                    CurrentLinearIntensity = Mathf.Lerp(phaseInitialIntensity, phaseFinalIntensity, progress);
+                    break;
+                case _smooth_lighting_function:
+                    CurrentLinearIntensity = Mathf.Lerp(phaseInitialIntensity, phaseFinalIntensity, SmoothProgress(progress));
+                    break;
+                case _flicker_lighting_function:
+                case _random_lighting_function:
+                case _fluorescent_lighting_function:
+                    if (now >= nextTickTime)
+                    {
+                        nextTickTime = now + minimumTickDuration;
+                        ShowTick(progress);
+                    }
 
-                if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
-                {
-                    return;
-                }
+                    break;
             }
-
-            remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
-        }
-
-        private async Awaitable LinearIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float finalIntensity)
-        {
-            var endTime = Time.realtimeSinceStartup + duration;
-
-            var initialIntensity = CurrentLinearIntensity;
-
-            while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
-            {
-                var remainingProgress = (endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration;
-
-                CurrentLinearIntensity = Mathf.Lerp(finalIntensity, initialIntensity, remainingProgress);
-
-                await Awaitable.NextFrameAsync();
-
-                if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
-                {
-                    return;
-                }
-            }
-
-            remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
-        }
-
-        private async Awaitable SmoothIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float finalIntensity)
-        {
-            var endTime = Time.realtimeSinceStartup + duration;
-
-            var initialIntensity = CurrentLinearIntensity;
-
-            while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
-            {
-                var elapsedProgress = 1f - ((endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration);
-
-                CurrentLinearIntensity = Mathf.Lerp(initialIntensity, finalIntensity, smoothLightCurve.Evaluate(elapsedProgress));
-
-                await Awaitable.NextFrameAsync();
-
-                if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
-                {
-                    return;
-                }
-            }
-
-            remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
         }
 
         // A new intensity each tick (lightsource.cpp): flicker's between the smooth and final ones, random's between the
         // initial and final ones, and fluorescent's either one
-        private async Awaitable TickingIntensityPhaseFunction(CancellationToken cancellationToken, float duration, float phaseOffset, float finalIntensity, short function)
+        private void ShowTick(float progress)
         {
-            var endTime = Time.realtimeSinceStartup + duration;
-
-            var initialIntensity = CurrentLinearIntensity;
-
-            while (GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
+            switch (phaseFunction.function)
             {
-                switch (function)
-                {
-                    case _flicker_lighting_function:
-                        var elapsedProgress = 1f - ((endTime - GetPhaseOffsetRealTimeSinceStartup(phaseOffset)) / duration);
-                        var smoothIntensity = Mathf.Lerp(initialIntensity, finalIntensity, smoothLightCurve.Evaluate(elapsedProgress));
-                        CurrentLinearIntensity = Mathf.Lerp(smoothIntensity, finalIntensity, Random.value);
-                        break;
-                    case _random_lighting_function:
-                        CurrentLinearIntensity = Mathf.Lerp(initialIntensity, finalIntensity, Random.value);
-                        break;
-                    default:
-                        CurrentLinearIntensity = Random.Range(0, 2) == 0 ? initialIntensity : finalIntensity;
-                        break;
-                }
+                case _flicker_lighting_function:
+                    var smoothIntensity = Mathf.Lerp(phaseInitialIntensity, phaseFinalIntensity, SmoothProgress(progress));
+                    CurrentLinearIntensity = Mathf.Lerp(smoothIntensity, phaseFinalIntensity, Random.value);
+                    break;
+                case _random_lighting_function:
+                    CurrentLinearIntensity = Mathf.Lerp(phaseInitialIntensity, phaseFinalIntensity, Random.value);
+                    break;
+                default:
+                    CurrentLinearIntensity = Random.Range(0, 2) == 0 ? phaseInitialIntensity : phaseFinalIntensity;
+                    break;
+            }
+        }
 
-                var tickEndTime = Time.realtimeSinceStartup + minimumTickDuration;
-                while (Time.realtimeSinceStartup < tickEndTime && GetPhaseOffsetRealTimeSinceStartup(phaseOffset) < endTime)
+        // The "sine transition" of smooth (and flicker's) phases (lightsource.cpp), as a half
+        // cosine wave from 0 to 1
+        private static float SmoothProgress(float progress)
+        {
+            return 0.5f - 0.5f * Mathf.Cos(Mathf.PI * progress);
+        }
+
+        // Returns false when the light can stay as it is from now on
+        private bool MoveToNextState()
+        {
+            if (loopsCurrentState)
+            {
+                return true;
+            }
+
+            switch (currentState)
+            {
+                case States.BecomingActive:
+                    currentState = States.PrimaryActive;
+                    return true;
+                case States.PrimaryActive:
+                    if (GoesToSecondaryPhase(NativeObject.primary_active, NativeObject.secondary_active))
+                    {
+                        currentState = States.SecondaryActive;
+                        return true;
+                    }
+
+                    return !IsUnchanging(NativeObject.primary_active);
+                case States.SecondaryActive:
+                    currentState = LIGHT_IS_STATELESS(NativeObject) ? States.BecomingInactive : States.PrimaryActive;
+                    return true;
+                case States.BecomingInactive:
+                    currentState = States.PrimaryInactive;
+                    return true;
+                case States.PrimaryInactive:
+                    if (GoesToSecondaryPhase(NativeObject.primary_inactive, NativeObject.secondary_inactive))
+                    {
+                        currentState = States.SecondaryInactive;
+                        return true;
+                    }
+
+                    return !IsUnchanging(NativeObject.primary_inactive);
+                case States.SecondaryInactive:
+                    currentState = LIGHT_IS_STATELESS(NativeObject) ? States.BecomingActive : States.PrimaryInactive;
+                    return true;
+                default:
+                    throw new Exception($"Light State: {currentState}");
+            }
+        }
+
+        // Only go to the second phase if it has a lasting duration
+        // and if it's not constant at the same intensity as the primary phase.
+        private bool GoesToSecondaryPhase(lighting_function_specification primary, lighting_function_specification secondary)
+        {
+            return LIGHT_IS_STATELESS(NativeObject) ||
+                   (secondary.period > 0 &&
+                    (secondary.function != _constant_lighting_function ||
+                     secondary.intensity != primary.intensity));
+        }
+
+        // Repeating a constant phase with no random intensity changes nothing, so there's no reason to keep updating it
+        private static bool IsUnchanging(lighting_function_specification lightingFunction)
+        {
+            return lightingFunction.function == _constant_lighting_function && lightingFunction.delta_intensity == 0;
+        }
+
+        private lighting_function_specification GetFunction(States state)
+        {
+            switch (state)
+            {
+                case States.BecomingActive:
+                    return NativeObject.becoming_active;
+                case States.PrimaryActive:
+                    return NativeObject.primary_active;
+                case States.SecondaryActive:
+                    return NativeObject.secondary_active;
+                case States.BecomingInactive:
+                    return NativeObject.becoming_inactive;
+                case States.PrimaryInactive:
+                    return NativeObject.primary_inactive;
+                case States.SecondaryInactive:
+                    return NativeObject.secondary_inactive;
+                default:
+                    throw new Exception($"Light State: {state}");
+            }
+        }
+
+        private void StartAnimating()
+        {
+            if (isAnimating)
+            {
+                return;
+            }
+
+            isAnimating = true;
+            animatingLights.Add(this);
+
+            if (!animationLoopIsRunning)
+            {
+                RunAnimationLoop();
+            }
+        }
+
+        private void StopAnimating()
+        {
+            if (!isAnimating)
+            {
+                return;
+            }
+
+            isAnimating = false;
+            animatingLights.Remove(this);
+        }
+
+        private static async void RunAnimationLoop()
+        {
+            var generation = animationLoopGeneration;
+            animationLoopIsRunning = true;
+
+            // In the Editor this is when Play mode ends
+            Application.quitting -= StopAllAnimation;
+            Application.quitting += StopAllAnimation;
+
+            try
+            {
+                while (animatingLights.Count > 0 && Application.isPlaying)
                 {
                     await Awaitable.NextFrameAsync();
 
-                    if (cancellationToken.IsCancellationRequested || !Application.isPlaying)
+                    if (generation != animationLoopGeneration)
                     {
                         return;
                     }
+
+                    var now = Time.realtimeSinceStartup;
+
+                    // Backwards, so a finished light can be swapped out for the last one, which has already advanced
+                    for (var i = animatingLights.Count - 1; i >= 0; i--)
+                    {
+                        var light = animatingLights[i];
+                        bool keepsAnimating;
+
+                        try
+                        {
+                            keepsAnimating = light.Advance(now);
+                        }
+                        catch (Exception exception)
+                        {
+                            // One broken light stops alone, rather than stopping every light
+                            Debug.LogException(exception);
+                            keepsAnimating = false;
+                        }
+
+                        if (!keepsAnimating)
+                        {
+                            light.isAnimating = false;
+
+                            var lastIndex = animatingLights.Count - 1;
+                            animatingLights[i] = animatingLights[lastIndex];
+                            animatingLights.RemoveAt(lastIndex);
+                        }
+                    }
                 }
             }
-
-            remainingPhaseTime = GetPhaseOffsetRealTimeSinceStartup(phaseOffset) - endTime;
+            finally
+            {
+                if (generation == animationLoopGeneration)
+                {
+                    animationLoopIsRunning = false;
+                }
+            }
         }
 
-        private float GetPhaseOffsetRealTimeSinceStartup(float phaseOffset)
+        private static void StopAllAnimation()
         {
-            return Time.realtimeSinceStartup + phaseOffset;
+            Application.quitting -= StopAllAnimation;
+
+            animationLoopGeneration++;
+            animationLoopIsRunning = false;
+
+            foreach (var light in animatingLights)
+            {
+                light.isAnimating = false;
+            }
+
+            animatingLights.Clear();
+        }
+
+        private static void SetIntensity(int index, float intensity)
+        {
+            if (intensities[index] == intensity)
+            {
+                return;
+            }
+
+            intensities[index] = intensity;
+            dirtyStart = Mathf.Min(dirtyStart, index);
+            dirtyEnd = Mathf.Max(dirtyEnd, index + 1);
+        }
+
+        // The buffer keeps its intensities when it grows, and is never shrunk, so it can be reused by every level
+        private static void EnsureIntensitiesCapacity(int count)
+        {
+            if (intensitiesBuffer != null && intensitiesBuffer.IsValid() && intensitiesBuffer.count >= count)
+            {
+                return;
+            }
+
+            var capacity = Mathf.Max(minimumIntensitiesCapacity, Mathf.NextPowerOfTwo(count));
+
+            Array.Resize(ref intensities, capacity);
+
+            intensitiesBuffer?.Release();
+            intensitiesBuffer = new GraphicsBuffer(GraphicsBuffer.Target.Structured, capacity, sizeof(float));
+            Shader.SetGlobalBuffer(lightIntensitiesGlobalPropertyId, intensitiesBuffer);
+
+            dirtyStart = 0;
+            dirtyEnd = capacity;
+
+            RenderPipelineManager.beginContextRendering -= UploadIntensities;
+            RenderPipelineManager.beginContextRendering += UploadIntensities;
+
+            // In the Editor this is when Play mode ends
+            Application.quitting -= ReleaseIntensities;
+            Application.quitting += ReleaseIntensities;
+        }
+
+        private static void UploadIntensities(ScriptableRenderContext context, List<Camera> cameras)
+        {
+            if (dirtyEnd <= dirtyStart || intensitiesBuffer == null)
+            {
+                return;
+            }
+
+            intensitiesBuffer.SetData(intensities, dirtyStart, dirtyStart, dirtyEnd - dirtyStart);
+
+            dirtyStart = int.MaxValue;
+            dirtyEnd = 0;
+        }
+
+        private static void ReleaseIntensities()
+        {
+            RenderPipelineManager.beginContextRendering -= UploadIntensities;
+            Application.quitting -= ReleaseIntensities;
+
+            intensitiesBuffer?.Release();
+            intensitiesBuffer = null;
+            intensities = Array.Empty<float>();
+            dirtyStart = int.MaxValue;
+            dirtyEnd = 0;
         }
     }
 }
