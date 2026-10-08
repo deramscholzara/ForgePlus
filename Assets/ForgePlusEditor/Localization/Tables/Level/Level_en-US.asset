@@ -100,6 +100,45 @@ MonoBehaviour:
   - rid: 552786204080472179
   - rid: 552786204080472180
   - rid: 552786204080472181
+  - rid: 552786204080472182
+  - rid: 552786204080472183
+  - rid: 552786204080472184
+  - rid: 552786204080472185
+  - rid: 552786204080472186
+  - rid: 552786204080472187
+  - rid: 552786204080472188
+  - rid: 552786204080472189
+  - rid: 552786204080472190
+  - rid: 552786204080472191
+  - rid: 552786204080472192
+  - rid: 552786204080472193
+  - rid: 552786204080472194
+  - rid: 552786204080472195
+  - rid: 552786204080472196
+  - rid: 552786204080472197
+  - rid: 552786204080472198
+  - rid: 552786204080472199
+  - rid: 552786204080472200
+  - rid: 552786204080472201
+  - rid: 552786204080472202
+  - rid: 552786204080472203
+  - rid: 552786204080472204
+  - rid: 552786204080472205
+  - rid: 552786204080472206
+  - rid: 552786204080472207
+  - rid: 552786204080472208
+  - rid: 552786204080472209
+  - rid: 552786204080472210
+  - rid: 552786204080472211
+  - rid: 552786204080472212
+  - rid: 552786204080472213
+  - rid: 552786204080472214
+  - rid: 552786204080472215
+  - rid: 552786204080472216
+  - rid: 552786204080472217
+  - rid: 552786204080472218
+  - rid: 552786204080472219
+  - rid: 552786204080472220
   references:
     version: 2
     RefIds:
@@ -684,3 +723,276 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Keep Textures (Aleph One Only)
+    - rid: 552786204080472182
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890688
+        m_Metadata:
+          m_Items: []
+        m_Value: Saved in the level and in the map's list of levels. It can't be emptied, as a level with no name ends the list.
+    - rid: 552786204080472183
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890689
+        m_Metadata:
+          m_Items: []
+        m_Value: Its walls and scenery collections. Choosing another offers to move the level's textures (and control panels and media) to the new walls collection.
+    - rid: 552786204080472184
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890690
+        m_Metadata:
+          m_Items: []
+        m_Value: The landscape collection the level's song index picks. Choosing another offers to move the level's landscape textures to it.
+    - rid: 552786204080472185
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890691
+        m_Metadata:
+          m_Items: []
+        m_Value: The physics model number saved in the level's data
+    - rid: 552786204080472186
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890692
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Where the physics the level is shown with come from: the level''s own, the selected physics file (Files tab), or the engine''s defaults'
+    - rid: 552786204080472187
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890693
+        m_Metadata:
+          m_Items: []
+        m_Value: The level can be played in single player games
+    - rid: 552786204080472188
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890694
+        m_Metadata:
+          m_Items: []
+        m_Value: The level can be played in cooperative network games
+    - rid: 552786204080472189
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890695
+        m_Metadata:
+          m_Items: []
+        m_Value: The level can be played in Every Man for Himself (carnage) network games
+    - rid: 552786204080472190
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890696
+        m_Metadata:
+          m_Items: []
+        m_Value: The level can be played in Kill the Man with the Ball network games
+    - rid: 552786204080472191
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890697
+        m_Metadata:
+          m_Items: []
+        m_Value: The level can be played in King of the Hill network games (it needs hill polygons)
+    - rid: 552786204080472192
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890698
+        m_Metadata:
+          m_Items: []
+        m_Value: The level can be played in Defense network games (it needs base polygons)
+    - rid: 552786204080472193
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890699
+        m_Metadata:
+          m_Items: []
+        m_Value: The level can be played in Rugby network games (it needs base polygons)
+    - rid: 552786204080472194
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890700
+        m_Metadata:
+          m_Items: []
+        m_Value: The level can be played in Capture the Flag network games (it needs base polygons)
+    - rid: 552786204080472195
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890701
+        m_Metadata:
+          m_Items: []
+        m_Value: 'There''s no air: the player uses oxygen the whole time, and some weapons don''t work'
+    - rid: 552786204080472196
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890702
+        m_Metadata:
+          m_Items: []
+        m_Value: The motion sensor works poorly
+    - rid: 552786204080472197
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890703
+        m_Metadata:
+          m_Items: []
+        m_Value: The BOBs fight the Pfhor, and the player starts without their items and health
+    - rid: 552786204080472198
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890704
+        m_Metadata:
+          m_Items: []
+        m_Value: Gravity is lower than usual
+    - rid: 552786204080472199
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890705
+        m_Metadata:
+          m_Items: []
+        m_Value: The level is finished once its aliens are dead
+    - rid: 552786204080472200
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890706
+        m_Metadata:
+          m_Items: []
+        m_Value: The level is finished once the player has been in each of its Must Be Explored polygons
+    - rid: 552786204080472201
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890707
+        m_Metadata:
+          m_Items: []
+        m_Value: The level is finished once the player has picked up its items to retrieve
+    - rid: 552786204080472202
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890708
+        m_Metadata:
+          m_Items: []
+        m_Value: The level is finished once its repair switches are switched on
+    - rid: 552786204080472203
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890709
+        m_Metadata:
+          m_Items: []
+        m_Value: The level is finished once its BOBs are rescued
+    - rid: 552786204080472204
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890710
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: time stops while the player reads a terminal (in single player games)'
+    - rid: 552786204080472205
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890711
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: Marathon 1''s rebellion, which doesn''t take away the player''s items and health'
+    - rid: 552786204080472206
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890712
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: Marathon 1''s exploration mission (Aleph One sets it on a Marathon 1 level''s exploration missions)'
+    - rid: 552786204080472207
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890713
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: Marathon 1''s repair mission (Aleph One sets it on a Marathon 1 level''s repair missions)'
+    - rid: 552786204080472208
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890714
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: Marathon 1''s rescue mission (Aleph One sets it on a Marathon 1 level''s rescue missions)'
+    - rid: 552786204080472209
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890715
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: glue polygons work as Marathon 1''s do'
+    - rid: 552786204080472210
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890716
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: the floor hurts, as on Marathon 1''s lava levels'
+    - rid: 552786204080472211
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890717
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: the level plays music, as Marathon 1''s levels can'
+    - rid: 552786204080472212
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890718
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: weapons work as Marathon 1''s do (such as picking up more than one of a two-handed weapon, and grenades in low gravity)'
+    - rid: 552786204080472213
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890719
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: monsters are activated within Marathon 1''s limits'
+    - rid: 552786204080472214
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890720
+        m_Metadata:
+          m_Items: []
+        m_Value: The chapter screen's resource ID, and the bit depth of the deepest version the map has
+    - rid: 552786204080472215
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890721
+        m_Metadata:
+          m_Items: []
+        m_Value: How many ambient sounds the level has (Sounds mode lists them)
+    - rid: 552786204080472216
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890722
+        m_Metadata:
+          m_Items: []
+        m_Value: How many random sounds the level has (Sounds mode lists them)
+    - rid: 552786204080472217
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890723
+        m_Metadata:
+          m_Items: []
+        m_Value: How big the level's shape patches are, kept and saved as they were loaded
+    - rid: 552786204080472218
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890724
+        m_Metadata:
+          m_Items: []
+        m_Value: How big the level's sound patches are, kept and saved as they were loaded
+    - rid: 552786204080472219
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890725
+        m_Metadata:
+          m_Items: []
+        m_Value: How big the level's MML is, kept and saved as it was loaded
+    - rid: 552786204080472220
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151319883890726
+        m_Metadata:
+          m_Items: []
+        m_Value: How big the level's Lua script is, kept and saved as it was loaded

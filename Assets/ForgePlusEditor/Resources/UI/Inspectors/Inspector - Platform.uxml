@@ -14,26 +14,26 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Platform.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Platforms/Inspector.Platform.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Id.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="Type">
+        <ui:Instance template="DropdownRow" name="Type" tooltip="@Platforms/Inspector.Platform.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Type.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="Tag">
+        <ui:Instance template="IntegerFieldRow" name="Tag" tooltip="@Platforms/Inspector.Platform.Tag.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Tag.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="Speed">
+        <ui:Instance template="IntegerFieldRow" name="Speed" tooltip="@Platforms/Inspector.Platform.Speed.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Speed.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="Delay">
+        <ui:Instance template="IntegerFieldRow" name="Delay" tooltip="@Platforms/Inspector.Platform.Delay.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Delay.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Movement.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Choice" name="Direction">
+        <ui:Instance template="Choice" name="Direction" tooltip="@Platforms/Inspector.Platform.Direction.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Direction.Label.Text" />
             <ui:Instance template="ChoiceOption">
                 <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.Direction.Control.Text" />
@@ -45,96 +45,96 @@
                 <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.FromFloorAndCeiling.Control.Text" />
             </ui:Instance>
         </ui:Instance>
-        <ui:Instance template="Flag" name="InitiallyActive">
+        <ui:Instance template="Flag" name="InitiallyActive" tooltip="@Platforms/Inspector.Platform.InitiallyActive.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.InitiallyActive.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="InitiallyExtended">
+        <ui:Instance template="Flag" name="InitiallyExtended" tooltip="@Platforms/Inspector.Platform.InitiallyExtended.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.InitiallyExtended.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="ExtendsFloorToCeiling">
+        <ui:Instance template="Flag" name="ExtendsFloorToCeiling" tooltip="@Platforms/Inspector.Platform.ExtendsFloorToCeiling.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ExtendsFloorToCeiling.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Heights.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="LowestIsAutomatic">
+        <ui:Instance template="Flag" name="LowestIsAutomatic" tooltip="@Platforms/Inspector.Platform.LowestIsAutomatic.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.LowestIsAutomatic.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="Lowest">
+        <ui:Instance template="DistanceFieldRow" name="Lowest" tooltip="@Platforms/Inspector.Platform.Lowest.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Lowest.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="HighestIsAutomatic">
+        <ui:Instance template="Flag" name="HighestIsAutomatic" tooltip="@Platforms/Inspector.Platform.HighestIsAutomatic.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.HighestIsAutomatic.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="Highest">
+        <ui:Instance template="DistanceFieldRow" name="Highest" tooltip="@Platforms/Inspector.Platform.Highest.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Highest.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="UsesNativePolygonHeights">
+        <ui:Instance template="Flag" name="UsesNativePolygonHeights" tooltip="@Platforms/Inspector.Platform.UsesNativePolygonHeights.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.UsesNativePolygonHeights.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="FloorRange">
+        <ui:Instance template="Row" name="FloorRange" tooltip="@Platforms/Inspector.Platform.FloorRange.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.FloorRange.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="CeilingRange">
+        <ui:Instance template="Row" name="CeilingRange" tooltip="@Platforms/Inspector.Platform.CeilingRange.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.CeilingRange.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Timing.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="DelaysBeforeActivation">
+        <ui:Instance template="Flag" name="DelaysBeforeActivation" tooltip="@Platforms/Inspector.Platform.DelaysBeforeActivation.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DelaysBeforeActivation.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="ContractsSlower">
+        <ui:Instance template="Flag" name="ContractsSlower" tooltip="@Platforms/Inspector.Platform.ContractsSlower.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ContractsSlower.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Control.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="IsPlayerControllable">
+        <ui:Instance template="Flag" name="IsPlayerControllable" tooltip="@Platforms/Inspector.Platform.IsPlayerControllable.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsPlayerControllable.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="IsMonsterControllable">
+        <ui:Instance template="Flag" name="IsMonsterControllable" tooltip="@Platforms/Inspector.Platform.IsMonsterControllable.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsMonsterControllable.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="CannotBeExternallyDeactivated">
+        <ui:Instance template="Flag" name="CannotBeExternallyDeactivated" tooltip="@Platforms/Inspector.Platform.CannotBeExternallyDeactivated.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.CannotBeExternallyDeactivated.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="ActivatesOnlyOnce">
+        <ui:Instance template="Flag" name="ActivatesOnlyOnce" tooltip="@Platforms/Inspector.Platform.ActivatesOnlyOnce.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ActivatesOnlyOnce.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="IsDoor">
+        <ui:Instance template="Flag" name="IsDoor" tooltip="@Platforms/Inspector.Platform.IsDoor.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsDoor.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="IsLocked">
+        <ui:Instance template="Flag" name="IsLocked" tooltip="@Platforms/Inspector.Platform.IsLocked.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsLocked.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="IsSecret">
+        <ui:Instance template="Flag" name="IsSecret" tooltip="@Platforms/Inspector.Platform.IsSecret.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.IsSecret.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Obstruction.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="ReversesWhenObstructed">
+        <ui:Instance template="Flag" name="ReversesWhenObstructed" tooltip="@Platforms/Inspector.Platform.ReversesWhenObstructed.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ReversesWhenObstructed.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="CausesDamage">
+        <ui:Instance template="Flag" name="CausesDamage" tooltip="@Platforms/Inspector.Platform.CausesDamage.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.CausesDamage.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Activation.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="DeactivatesAtEachLevel">
+        <ui:Instance template="Flag" name="DeactivatesAtEachLevel" tooltip="@Platforms/Inspector.Platform.DeactivatesAtEachLevel.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DeactivatesAtEachLevel.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="DeactivatesAtInitialLevel">
+        <ui:Instance template="Flag" name="DeactivatesAtInitialLevel" tooltip="@Platforms/Inspector.Platform.DeactivatesAtInitialLevel.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DeactivatesAtInitialLevel.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Choice" name="WhenActivating">
+        <ui:Instance template="Choice" name="WhenActivating" tooltip="@Platforms/Inspector.Platform.WhenActivating.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.WhenActivating.Label.Text" />
             <ui:Instance template="ChoiceOption">
                 <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.WhenActivating.Control.Text" />
@@ -146,7 +146,7 @@
                 <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.DeactivatesAdjacentPlatforms.Control.Text" />
             </ui:Instance>
         </ui:Instance>
-        <ui:Instance template="Choice" name="WhenDeactivating">
+        <ui:Instance template="Choice" name="WhenDeactivating" tooltip="@Platforms/Inspector.Platform.WhenDeactivating.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.WhenDeactivating.Label.Text" />
             <ui:Instance template="ChoiceOption">
                 <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.WhenDeactivating.Control.Text" />
@@ -158,29 +158,29 @@
                 <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.DeactivatesAdjacentPlatforms.Control.Text" />
             </ui:Instance>
         </ui:Instance>
-        <ui:Instance template="Flag" name="ActivatesAdjacentAtEachLevel">
+        <ui:Instance template="Flag" name="ActivatesAdjacentAtEachLevel" tooltip="@Platforms/Inspector.Platform.ActivatesAdjacentAtEachLevel.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ActivatesAdjacentAtEachLevel.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="DoesNotActivateParent">
+        <ui:Instance template="Flag" name="DoesNotActivateParent" tooltip="@Platforms/Inspector.Platform.DoesNotActivateParent.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DoesNotActivateParent.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="ActivatesLight">
+        <ui:Instance template="Flag" name="ActivatesLight" tooltip="@Platforms/Inspector.Platform.ActivatesLight.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.ActivatesLight.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="DeactivatesLight">
+        <ui:Instance template="Flag" name="DeactivatesLight" tooltip="@Platforms/Inspector.Platform.DeactivatesLight.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.DeactivatesLight.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="FloodsM1" class="fp-aleph-one-only">
+        <ui:Instance template="Flag" name="FloodsM1" class="fp-aleph-one-only" tooltip="@Platforms/Inspector.Platform.FloodsM1.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.FloodsM1.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.SimulationActions.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="SimulationActive">
+        <ui:Instance template="Flag" name="SimulationActive" tooltip="@Platforms/Inspector.Platform.SimulationActive.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.SimulationActive.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Button" name="obstruct" class="fp-inspector-action">
+        <ui:Instance template="Button" name="obstruct" class="fp-inspector-action" tooltip="@Platforms/Inspector.Platform.Obstruct.Tooltip">
             <ui:AttributeOverrides element-name="control" text="@Platforms/Inspector.Platform.Obstruct.Control.Text" />
         </ui:Instance>
     </ui:VisualElement>

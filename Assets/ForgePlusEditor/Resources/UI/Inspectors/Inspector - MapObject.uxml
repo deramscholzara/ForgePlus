@@ -17,13 +17,13 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Object.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Common/Inspector.MapObject.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Id.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="Type">
+        <ui:Instance template="DropdownRow" name="Type" tooltip="@Common/Inspector.MapObject.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Type.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="Subtype">
+        <ui:Instance template="DropdownRow" name="Subtype" tooltip="@Common/Inspector.MapObject.Subtype.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Subtype.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="GoalNumber" tooltip="@Common/Inspector.MapObject.GoalNumber.Tooltip">
@@ -36,10 +36,10 @@
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PlatformMovingSound.Label.Text" />
         </ui:Instance>
         <ui:Label name="platform-sound-note" text="@Common/Inspector.MapObject.PlatformSoundNote.Text" class="fp-inspector-note" />
-        <ui:Instance template="DropdownRow" name="ActivationBias">
+        <ui:Instance template="DropdownRow" name="ActivationBias" tooltip="@Common/Inspector.MapObject.ActivationBias.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.ActivationBias.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="FloatFieldRow" name="Angle">
+        <ui:Instance template="FloatFieldRow" name="Angle" tooltip="@Common/Inspector.MapObject.Angle.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Angle.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="VolumeFromLight" tooltip="@Common/Inspector.MapObject.VolumeFromLight.Tooltip">
@@ -48,20 +48,20 @@
         <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="@Common/Inspector.MapObject.Volume.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Volume.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="LightRow" name="VolumeLight">
+        <ui:Instance template="LightRow" name="VolumeLight" tooltip="@Common/Inspector.MapObject.VolumeLight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.VolumeLight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="SavedVolume">
+        <ui:Instance template="Row" name="SavedVolume" tooltip="@Common/Inspector.MapObject.SavedVolume.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.SavedVolume.Label.Text" />
         </ui:Instance>
         <ui:Label name="volume-light-note" text="@Common/Inspector.MapObject.VolumeLightNote.Text" class="fp-inspector-note" />
-        <ui:Instance template="DistanceFieldRow" name="PositionX">
+        <ui:Instance template="DistanceFieldRow" name="PositionX" tooltip="@Common/Inspector.MapObject.PositionX.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PositionX.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="PositionY">
+        <ui:Instance template="DistanceFieldRow" name="PositionY" tooltip="@Common/Inspector.MapObject.PositionY.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PositionY.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="PositionZ">
+        <ui:Instance template="DistanceFieldRow" name="PositionZ" tooltip="@Common/Inspector.MapObject.PositionZ.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PositionZ.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
@@ -69,25 +69,25 @@
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Flags.Label.Text" />
         </ui:Instance>
         <!-- Labelled "Platform Sound" for a sound source (see Inspector_MapObject.Invisible) -->
-        <ui:Instance template="Flag" name="Invisible">
+        <ui:Instance template="Flag" name="Invisible" tooltip="@Common/Inspector.MapObject.Invisible.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.Invisible.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="FromCeiling">
+        <ui:Instance template="Flag" name="FromCeiling" tooltip="@Common/Inspector.MapObject.FromCeiling.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.FromCeiling.Flag.Text" />
         </ui:Instance>
         <!-- Grayed out while the object isn't a monster -->
         <ui:VisualElement name="monster-flags" class="fp-inspector-group">
-            <ui:Instance template="Flag" name="Blind">
+            <ui:Instance template="Flag" name="Blind" tooltip="@Common/Inspector.MapObject.Blind.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.Blind.Flag.Text" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="Deaf">
+            <ui:Instance template="Flag" name="Deaf" tooltip="@Common/Inspector.MapObject.Deaf.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.Deaf.Flag.Text" />
             </ui:Instance>
         </ui:VisualElement>
-        <ui:Instance template="Flag" name="NetworkOnly">
+        <ui:Instance template="Flag" name="NetworkOnly" tooltip="@Common/Inspector.MapObject.NetworkOnly.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.NetworkOnly.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="Floats">
+        <ui:Instance template="Flag" name="Floats" tooltip="@Common/Inspector.MapObject.Floats.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.Floats.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement name="Placement">
@@ -100,7 +100,7 @@
         </ui:VisualElement>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Foldout">
-            <ui:Instance template="Row" name="PolygonIndex">
+            <ui:Instance template="Row" name="PolygonIndex" tooltip="@Common/Inspector.MapObject.PolygonIndex.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PolygonIndex.Label.Text" />
             </ui:Instance>
         </ui:Instance>

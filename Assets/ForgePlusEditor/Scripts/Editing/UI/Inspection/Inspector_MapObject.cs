@@ -608,6 +608,7 @@ namespace ForgePlus.Inspection
             Root.Find<LightIndexField>(nameof(VolumeLight)).MinimumLight = 1;
 
             Strings.SetText(Root.Find<Toggle>(nameof(Invisible)), IsSoundSource ? Strings.Get(Strings.Common, "Inspector.MapObject.Flag.PlatformSound") : Strings.Get(Strings.Common, "Inspector.MapObject.Flag.Invisible"));
+            Strings.SetTooltip(Root.Q(nameof(Invisible)), IsSoundSource ? Strings.Get(Strings.Common, "Inspector.MapObject.PlatformSound.Tooltip") : Strings.Get(Strings.Common, "Inspector.MapObject.Invisible.Tooltip"));
 
             // Items and monsters are placed by type
             Root.Q("Placement").style.display = HasPlacement ? DisplayStyle.Flex : DisplayStyle.None;

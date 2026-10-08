@@ -12,24 +12,24 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.Side.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Geometry/Inspector.Side.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.Id.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Type">
+        <ui:Instance template="Row" name="Type" tooltip="@Geometry/Inspector.Side.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.Type.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.ControlPanel.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="IsControlPanel">
+        <ui:Instance template="Flag" name="IsControlPanel" tooltip="@Geometry/Inspector.Side.IsControlPanel.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.IsControlPanel.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="ControlPanelType">
+        <ui:Instance template="DropdownRow" name="ControlPanelType" tooltip="@Geometry/Inspector.Side.ControlPanelType.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.ControlPanelType.Label.Text" />
         </ui:Instance>
         <ui:Label name="ControlPanelTypeNote" class="fp-inspector-note fp-aleph-one-only" />
-        <ui:Instance template="IntegerFieldRow" name="ControlPanelPermutation">
+        <ui:Instance template="IntegerFieldRow" name="ControlPanelPermutation" tooltip="@Geometry/Inspector.Side.ControlPanelPermutation.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.ControlPanelPermutation.Label.Text" />
         </ui:Instance>
         <ui:Label name="ControlPanelPermutationCaption" class="fp-inspector-note" />
@@ -40,19 +40,19 @@
         </ui:Instance>
         <!-- Grayed out while the side isn't a control panel -->
         <ui:VisualElement name="control-panel-flags" class="fp-inspector-group">
-            <ui:Instance template="Flag" name="InitiallyActive">
+            <ui:Instance template="Flag" name="InitiallyActive" tooltip="@Geometry/Inspector.Side.InitiallyActive.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.InitiallyActive.Flag.Text" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="IsRepairSwitch">
+            <ui:Instance template="Flag" name="IsRepairSwitch" tooltip="@Geometry/Inspector.Side.IsRepairSwitch.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.IsRepairSwitch.Flag.Text" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="CanBeDestroyed">
+            <ui:Instance template="Flag" name="CanBeDestroyed" tooltip="@Geometry/Inspector.Side.CanBeDestroyed.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.CanBeDestroyed.Flag.Text" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="LightedMustBeAbove75Percent">
+            <ui:Instance template="Flag" name="LightedMustBeAbove75Percent" tooltip="@Geometry/Inspector.Side.LightedMustBeAbove75Percent.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.LightedMustBeAbove75Percent.Flag.Text" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="ProjectilesOnly">
+            <ui:Instance template="Flag" name="ProjectilesOnly" tooltip="@Geometry/Inspector.Side.ProjectilesOnly.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.ProjectilesOnly.Flag.Text" />
             </ui:Instance>
             <ui:Instance template="Flag" name="LightedMustBeAbove50Percent" class="fp-aleph-one-only" tooltip="@Geometry/Inspector.Side.LightedMustBeAbove50Percent.Tooltip">
@@ -61,7 +61,7 @@
             <ui:Instance template="Flag" name="ItemIsOptional" class="fp-aleph-one-only" tooltip="@Geometry/Inspector.Side.ItemIsOptional.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.ItemIsOptional.Flag.Text" />
             </ui:Instance>
-            <ui:Instance template="Flag" name="IsDestructiveSwitch">
+            <ui:Instance template="Flag" name="IsDestructiveSwitch" tooltip="@Geometry/Inspector.Side.IsDestructiveSwitch.Tooltip">
                 <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.IsDestructiveSwitch.Flag.Text" />
             </ui:Instance>
         </ui:VisualElement>
@@ -69,21 +69,21 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.PrimarySurface.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="LightRow" name="PrimaryLightIndex">
+        <ui:Instance template="LightRow" name="PrimaryLightIndex" tooltip="@Geometry/Inspector.Side.PrimaryLightIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.PrimaryLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.SecondarySurface.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="LightRow" name="SecondaryLightIndex">
+        <ui:Instance template="LightRow" name="SecondaryLightIndex" tooltip="@Geometry/Inspector.Side.SecondaryLightIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.SecondaryLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.TransparentSurface.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="LightRow" name="TransparentLightIndex">
+        <ui:Instance template="LightRow" name="TransparentLightIndex" tooltip="@Geometry/Inspector.Side.TransparentLightIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.TransparentLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />

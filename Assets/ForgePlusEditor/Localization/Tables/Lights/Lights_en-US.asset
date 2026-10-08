@@ -65,6 +65,18 @@ MonoBehaviour:
   - rid: 552786097007231716
   - rid: 552786204080472164
   - rid: 552786204080472165
+  - rid: 552786204080472166
+  - rid: 552786204080472167
+  - rid: 552786204080472168
+  - rid: 552786204080472169
+  - rid: 552786204080472170
+  - rid: 552786204080472171
+  - rid: 552786204080472172
+  - rid: 552786204080472173
+  - rid: 552786204080472174
+  - rid: 552786204080472175
+  - rid: 552786204080472176
+  - rid: 552786204080472177
   references:
     version: 2
     RefIds:
@@ -404,3 +416,87 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Reset States
+    - rid: 552786204080472166
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212544
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's lights, which surfaces, media and switches pick it by
+    - rid: 552786204080472167
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212545
+        m_Metadata:
+          m_Items: []
+        m_Value: What tag switches and terminals switch it by (0 is untagged)
+    - rid: 552786204080472168
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212546
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Mostly a preset of its six states: choosing one offers to reset them to the type''s defaults.'
+    - rid: 552786204080472169
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212547
+        m_Metadata:
+          m_Items: []
+        m_Value: How many ticks into its states it starts (so lights can be out of step with each other)
+    - rid: 552786204080472170
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212548
+        m_Metadata:
+          m_Items: []
+        m_Value: It's active (on) as the level starts
+    - rid: 552786204080472171
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212549
+        m_Metadata:
+          m_Items: []
+        m_Value: Its intensities are slaved (each of Marathon's own light types has it set)
+    - rid: 552786204080472172
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212550
+        m_Metadata:
+          m_Items: []
+        m_Value: Runs through all six states in turn, rather than staying active or inactive
+    - rid: 552786204080472173
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212551
+        m_Metadata:
+          m_Items: []
+        m_Value: 'How its intensity changes through the state: constant, linear, smooth, flicker (and Aleph One''s random and fluorescent)'
+    - rid: 552786204080472174
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212552
+        m_Metadata:
+          m_Items: []
+        m_Value: How long the state lasts, in ticks (30 a second)
+    - rid: 552786204080472175
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212553
+        m_Metadata:
+          m_Items: []
+        m_Value: The most a random amount added to the period each time can be, in ticks (30 a second)
+    - rid: 552786204080472176
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212554
+        m_Metadata:
+          m_Items: []
+        m_Value: The intensity the state goes to, from 0 (dark) to 1 (full light)
+    - rid: 552786204080472177
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151326863212555
+        m_Metadata:
+          m_Items: []
+        m_Value: The most a random amount added to the intensity each time can be (1 is full light)

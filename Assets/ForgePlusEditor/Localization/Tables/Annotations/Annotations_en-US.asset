@@ -27,6 +27,12 @@ MonoBehaviour:
   - rid: 552786097007231388
   - rid: 552786097007231389
   - rid: 552786097007231813
+  - rid: 552786097007231814
+  - rid: 552786097007231815
+  - rid: 552786097007231816
+  - rid: 552786097007231817
+  - rid: 552786097007231818
+  - rid: 552786097007231819
   references:
     version: 2
     RefIds:
@@ -100,3 +106,45 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Polygons
+    - rid: 552786097007231814
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151321012158464
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's annotations
+    - rid: 552786097007231815
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151321012158465
+        m_Metadata:
+          m_Items: []
+        m_Value: The text the map shows. Aleph One draws it on one line, in Mac Roman.
+    - rid: 552786097007231816
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151321012158466
+        m_Metadata:
+          m_Items: []
+        m_Value: Its annotation style. Aleph One has one (0), and its map doesn't draw an annotation of another type.
+    - rid: 552786097007231817
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151321012158467
+        m_Metadata:
+          m_Items: []
+        m_Value: Where the map draws the text's lower left, across the level
+    - rid: 552786097007231818
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151321012158468
+        m_Metadata:
+          m_Items: []
+        m_Value: Where the map draws the text's lower left, down the level
+    - rid: 552786097007231819
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151321012158469
+        m_Metadata:
+          m_Items: []
+        m_Value: 'The polygon it belongs to: the map only shows the annotation once this polygon is on the map'

@@ -312,6 +312,91 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151329300103168
+    m_Key: Inspector.Line.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103169
+    m_Key: Inspector.Line.Solid.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103170
+    m_Key: Inspector.Line.Transparent.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103171
+    m_Key: Inspector.Side.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103172
+    m_Key: Inspector.Side.Type.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103173
+    m_Key: Inspector.Side.IsControlPanel.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103174
+    m_Key: Inspector.Side.ControlPanelType.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103175
+    m_Key: Inspector.Side.ControlPanelPermutation.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103176
+    m_Key: Inspector.Side.InitiallyActive.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103177
+    m_Key: Inspector.Side.IsRepairSwitch.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103178
+    m_Key: Inspector.Side.CanBeDestroyed.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103179
+    m_Key: Inspector.Side.LightedMustBeAbove75Percent.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103180
+    m_Key: Inspector.Side.ProjectilesOnly.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103181
+    m_Key: Inspector.Side.IsDestructiveSwitch.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103182
+    m_Key: Inspector.Side.PrimaryLightIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103183
+    m_Key: Inspector.Side.SecondaryLightIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151329300103184
+    m_Key: Inspector.Side.TransparentLightIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

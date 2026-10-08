@@ -77,6 +77,41 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151322228506624
+    m_Key: Inspector.Placement.InitialCount.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151322228506625
+    m_Key: Inspector.Placement.MinimumCount.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151322228506626
+    m_Key: Inspector.Placement.MaximumCount.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151322228506627
+    m_Key: Inspector.Placement.RandomCountIsInfinite.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151322228506628
+    m_Key: Inspector.Placement.RandomCount.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151322228506629
+    m_Key: Inspector.Placement.RandomChance.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151322228506630
+    m_Key: Inspector.Placement.ReappearsInRandomLocation.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

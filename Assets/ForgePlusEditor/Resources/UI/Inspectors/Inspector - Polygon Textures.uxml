@@ -12,7 +12,7 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.PolygonTextures.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Textures/Inspector.PolygonTextures.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.Id.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
@@ -20,7 +20,7 @@
             <ui:Instance template="Subheader">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.Floor.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="TextureRow" name="Texture">
+            <ui:Instance template="TextureRow" name="Texture" tooltip="@Textures/Inspector.Textures.Texture.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorTexture.Label.Text" />
             </ui:Instance>
             <ui:Instance template="IntegerFieldRow" name="Bitmap" tooltip="@Textures/Inspector.PolygonTextures.FloorBitmap.Tooltip">
@@ -30,16 +30,16 @@
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
             </ui:Instance>
             <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
-            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX">
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX" tooltip="@Textures/Inspector.Textures.OffsetX.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetX.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY">
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY" tooltip="@Textures/Inspector.Textures.OffsetY.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetY.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="DropdownRow" name="TransferMode">
+            <ui:Instance template="DropdownRow" name="TransferMode" tooltip="@Textures/Inspector.Textures.TransferMode.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorTransferMode.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="LightRow" name="LightIndex">
+            <ui:Instance template="LightRow" name="LightIndex" tooltip="@Textures/Inspector.Textures.LightIndex.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorLightIndex.Label.Text" />
             </ui:Instance>
         </ui:VisualElement>
@@ -48,7 +48,7 @@
             <ui:Instance template="Subheader">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.Ceiling.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="TextureRow" name="Texture">
+            <ui:Instance template="TextureRow" name="Texture" tooltip="@Textures/Inspector.Textures.Texture.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingTexture.Label.Text" />
             </ui:Instance>
             <ui:Instance template="IntegerFieldRow" name="Bitmap" tooltip="@Textures/Inspector.PolygonTextures.CeilingBitmap.Tooltip">
@@ -58,16 +58,16 @@
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
             </ui:Instance>
             <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
-            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX">
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX" tooltip="@Textures/Inspector.Textures.OffsetX.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetX.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY">
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY" tooltip="@Textures/Inspector.Textures.OffsetY.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetY.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="DropdownRow" name="TransferMode">
+            <ui:Instance template="DropdownRow" name="TransferMode" tooltip="@Textures/Inspector.Textures.TransferMode.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingTransferMode.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="LightRow" name="LightIndex">
+            <ui:Instance template="LightRow" name="LightIndex" tooltip="@Textures/Inspector.Textures.LightIndex.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingLightIndex.Label.Text" />
             </ui:Instance>
         </ui:VisualElement>

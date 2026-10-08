@@ -10,26 +10,26 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Annotation.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Annotations/Inspector.Annotation.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Id.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="TextFieldRow" name="Text" class="fp-inspector-row--vertical">
+        <ui:Instance template="TextFieldRow" name="Text" class="fp-inspector-row--vertical" tooltip="@Annotations/Inspector.Annotation.Text.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Text.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Type">
+        <ui:Instance template="Row" name="Type" tooltip="@Annotations/Inspector.Annotation.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Type.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Position.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="LocationX">
+        <ui:Instance template="DistanceFieldRow" name="LocationX" tooltip="@Annotations/Inspector.Annotation.LocationX.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.LocationX.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="LocationY">
+        <ui:Instance template="DistanceFieldRow" name="LocationY" tooltip="@Annotations/Inspector.Annotation.LocationY.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.LocationY.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="PolygonIndex">
+        <ui:Instance template="IntegerFieldRow" name="PolygonIndex" tooltip="@Annotations/Inspector.Annotation.PolygonIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.PolygonIndex.Label.Text" />
         </ui:Instance>
     </ui:VisualElement>

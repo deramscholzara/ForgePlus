@@ -2,25 +2,25 @@
     <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
     <!-- Bound to Inspector_Placement (one type's placement, placed under a heading naming the type) -->
-    <ui:Instance template="IntegerFieldRow" name="InitialCount">
+    <ui:Instance template="IntegerFieldRow" name="InitialCount" tooltip="@Objects/Inspector.Placement.InitialCount.Tooltip">
         <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.InitialCount.Label.Text" />
     </ui:Instance>
-    <ui:Instance template="IntegerFieldRow" name="MinimumCount">
+    <ui:Instance template="IntegerFieldRow" name="MinimumCount" tooltip="@Objects/Inspector.Placement.MinimumCount.Tooltip">
         <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.MinimumCount.Label.Text" />
     </ui:Instance>
-    <ui:Instance template="IntegerFieldRow" name="MaximumCount">
+    <ui:Instance template="IntegerFieldRow" name="MaximumCount" tooltip="@Objects/Inspector.Placement.MaximumCount.Tooltip">
         <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.MaximumCount.Label.Text" />
     </ui:Instance>
-    <ui:Instance template="Flag" name="RandomCountIsInfinite">
+    <ui:Instance template="Flag" name="RandomCountIsInfinite" tooltip="@Objects/Inspector.Placement.RandomCountIsInfinite.Tooltip">
         <ui:AttributeOverrides element-name="flag" text="@Objects/Inspector.Placement.RandomCountIsInfinite.Flag.Text" />
     </ui:Instance>
-    <ui:Instance template="IntegerFieldRow" name="RandomCount">
+    <ui:Instance template="IntegerFieldRow" name="RandomCount" tooltip="@Objects/Inspector.Placement.RandomCount.Tooltip">
         <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.RandomCount.Label.Text" />
     </ui:Instance>
-    <ui:Instance template="IntegerFieldRow" name="RandomChance">
+    <ui:Instance template="IntegerFieldRow" name="RandomChance" tooltip="@Objects/Inspector.Placement.RandomChance.Tooltip">
         <ui:AttributeOverrides element-name="label" text="@Objects/Inspector.Placement.RandomChance.Label.Text" />
     </ui:Instance>
-    <ui:Instance template="Flag" name="ReappearsInRandomLocation">
+    <ui:Instance template="Flag" name="ReappearsInRandomLocation" tooltip="@Objects/Inspector.Placement.ReappearsInRandomLocation.Tooltip">
         <ui:AttributeOverrides element-name="flag" text="@Objects/Inspector.Placement.ReappearsInRandomLocation.Flag.Text" />
     </ui:Instance>
 </ui:UXML>

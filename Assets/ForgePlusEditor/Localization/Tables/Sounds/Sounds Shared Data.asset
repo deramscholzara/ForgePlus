@@ -272,6 +272,31 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151324447293440
+    m_Key: Inspector.AmbientSound.Index.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151324447293441
+    m_Key: Inspector.AmbientSound.Delete.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151324447293442
+    m_Key: Inspector.RandomSound.Index.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151324447293443
+    m_Key: Inspector.RandomSound.NonDirectional.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151324447293444
+    m_Key: Inspector.RandomSound.Delete.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

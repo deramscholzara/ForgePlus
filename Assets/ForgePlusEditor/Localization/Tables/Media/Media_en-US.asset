@@ -32,6 +32,15 @@ MonoBehaviour:
   - rid: 552786097007231890
   - rid: 552786204080472168
   - rid: 552786204080472169
+  - rid: 552786204080472170
+  - rid: 552786204080472171
+  - rid: 552786204080472172
+  - rid: 552786204080472173
+  - rid: 552786204080472174
+  - rid: 552786204080472175
+  - rid: 552786204080472176
+  - rid: 552786204080472177
+  - rid: 552786204080472178
   references:
     version: 2
     RefIds:
@@ -140,3 +149,66 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Aleph One only: this media''s texture is from {0}, which Marathon 2 and Infinity don''t load for this level.'
+    - rid: 552786204080472170
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030208
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's media, which polygons pick it by
+    - rid: 552786204080472171
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030209
+        m_Metadata:
+          m_Items: []
+        m_Value: Its kind of liquid, which gives it its texture, sounds and effects
+    - rid: 552786204080472172
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030210
+        m_Metadata:
+          m_Items: []
+        m_Value: Its height while its light is off
+    - rid: 552786204080472173
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030211
+        m_Metadata:
+          m_Items: []
+        m_Value: Its height while its light is fully on
+    - rid: 552786204080472174
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030212
+        m_Metadata:
+          m_Items: []
+        m_Value: The way it flows, in degrees
+    - rid: 552786204080472175
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030213
+        m_Metadata:
+          m_Items: []
+        m_Value: How fast it flows, in world units per tick, which pushes what's in it
+    - rid: 552786204080472176
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030214
+        m_Metadata:
+          m_Items: []
+        m_Value: The light whose intensity sets its height (between its low and high heights)
+    - rid: 552786204080472177
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030215
+        m_Metadata:
+          m_Items: []
+        m_Value: The least of its light's intensity it rises to, from 0 to 1
+    - rid: 552786204080472178
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151325672030216
+        m_Metadata:
+          m_Items: []
+        m_Value: It makes no sound while it's below the floor

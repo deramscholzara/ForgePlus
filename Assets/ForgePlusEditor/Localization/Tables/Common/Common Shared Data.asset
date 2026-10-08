@@ -2182,6 +2182,161 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151331820879872
+    m_Key: Inspector.MapObject.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879873
+    m_Key: Inspector.MapObject.Type.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879874
+    m_Key: Inspector.MapObject.Subtype.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879875
+    m_Key: Inspector.MapObject.ActivationBias.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879876
+    m_Key: Inspector.MapObject.Angle.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879877
+    m_Key: Inspector.MapObject.VolumeLight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879878
+    m_Key: Inspector.MapObject.SavedVolume.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879879
+    m_Key: Inspector.MapObject.PositionX.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879880
+    m_Key: Inspector.MapObject.PositionY.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879881
+    m_Key: Inspector.MapObject.PositionZ.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879882
+    m_Key: Inspector.MapObject.Invisible.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879883
+    m_Key: Inspector.MapObject.FromCeiling.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879884
+    m_Key: Inspector.MapObject.Blind.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879885
+    m_Key: Inspector.MapObject.Deaf.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879886
+    m_Key: Inspector.MapObject.NetworkOnly.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879887
+    m_Key: Inspector.MapObject.Floats.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879888
+    m_Key: Inspector.MapObject.PolygonIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879889
+    m_Key: Inspector.PlaceholderSide.LineIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879890
+    m_Key: Inspector.PlaceholderSide.Face.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879891
+    m_Key: Inspector.PlaceholderSide.FacingPolygon.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879892
+    m_Key: Inspector.PlaceholderSide.OpposingPolygon.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879893
+    m_Key: Inspector.Polygon.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879894
+    m_Key: Inspector.Polygon.Type.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879895
+    m_Key: Inspector.Polygon.Permutation.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879896
+    m_Key: Inspector.Polygon.FloorHeight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879897
+    m_Key: Inspector.Polygon.FloorLightIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879898
+    m_Key: Inspector.Polygon.CeilingHeight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879899
+    m_Key: Inspector.Polygon.CeilingLightIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879900
+    m_Key: Inspector.Polygon.MediaIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879901
+    m_Key: Inspector.Polygon.MediaLight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879902
+    m_Key: Inspector.MapObject.PlatformSound.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

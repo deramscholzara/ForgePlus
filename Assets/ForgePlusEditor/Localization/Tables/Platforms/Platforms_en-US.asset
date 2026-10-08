@@ -72,6 +72,44 @@ MonoBehaviour:
   - rid: 552786097007231380
   - rid: 552786097007231810
   - rid: 552786097007231812
+  - rid: 552786097007231813
+  - rid: 552786097007231814
+  - rid: 552786097007231815
+  - rid: 552786097007231816
+  - rid: 552786097007231817
+  - rid: 552786097007231818
+  - rid: 552786097007231819
+  - rid: 552786097007231820
+  - rid: 552786097007231821
+  - rid: 552786097007231822
+  - rid: 552786097007231823
+  - rid: 552786097007231824
+  - rid: 552786097007231825
+  - rid: 552786097007231826
+  - rid: 552786097007231827
+  - rid: 552786097007231828
+  - rid: 552786097007231829
+  - rid: 552786097007231830
+  - rid: 552786097007231831
+  - rid: 552786097007231832
+  - rid: 552786097007231833
+  - rid: 552786097007231834
+  - rid: 552786097007231835
+  - rid: 552786097007231836
+  - rid: 552786097007231837
+  - rid: 552786097007231838
+  - rid: 552786097007231839
+  - rid: 552786097007231840
+  - rid: 552786097007231841
+  - rid: 552786097007231842
+  - rid: 552786097007231843
+  - rid: 552786097007231844
+  - rid: 552786097007231845
+  - rid: 552786097007231846
+  - rid: 552786097007231847
+  - rid: 552786097007231848
+  - rid: 552786097007231849
+  - rid: 552786097007231850
   references:
     version: 2
     RefIds:
@@ -460,3 +498,269 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Platforms
+    - rid: 552786097007231813
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328832
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's platforms, which its polygon's permutation is
+    - rid: 552786097007231814
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328833
+        m_Metadata:
+          m_Items: []
+        m_Value: Its kind of platform, which gives it its sounds
+    - rid: 552786097007231815
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328834
+        m_Metadata:
+          m_Items: []
+        m_Value: Tagged switches and lights change every platform with its tag (0 is untagged)
+    - rid: 552786097007231816
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328835
+        m_Metadata:
+          m_Items: []
+        m_Value: How fast it moves, in world units per tick (30 a second)
+    - rid: 552786097007231817
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328836
+        m_Metadata:
+          m_Items: []
+        m_Value: How long it waits at each level, in ticks (30 a second)
+    - rid: 552786097007231818
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328837
+        m_Metadata:
+          m_Items: []
+        m_Value: Whether its floor rises, its ceiling lowers, or both
+    - rid: 552786097007231819
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328838
+        m_Metadata:
+          m_Items: []
+        m_Value: It's moving as the level starts
+    - rid: 552786097007231820
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328839
+        m_Metadata:
+          m_Items: []
+        m_Value: 'It starts extended: high for floor platforms, low for ceiling platforms, closed for platforms that go both ways'
+    - rid: 552786097007231821
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328840
+        m_Metadata:
+          m_Items: []
+        m_Value: Extended, its floor meets its ceiling
+    - rid: 552786097007231822
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328841
+        m_Metadata:
+          m_Items: []
+        m_Value: Its lowest height is worked out from the adjacent polygons as the level loads
+    - rid: 552786097007231823
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328842
+        m_Metadata:
+          m_Items: []
+        m_Value: How low the moving surface goes (for a platform that goes both ways, the floor's lowest)
+    - rid: 552786097007231824
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328843
+        m_Metadata:
+          m_Items: []
+        m_Value: Its highest height is worked out from the adjacent polygons as the level loads
+    - rid: 552786097007231825
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328844
+        m_Metadata:
+          m_Items: []
+        m_Value: How high the moving surface goes (for a platform that goes both ways, the ceiling's highest)
+    - rid: 552786097007231826
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328845
+        m_Metadata:
+          m_Items: []
+        m_Value: Its polygon's own heights are used when working out an automatic height (for a platform that goes one way)
+    - rid: 552786097007231827
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328846
+        m_Metadata:
+          m_Items: []
+        m_Value: The heights its floor moves between, as the level works them out
+    - rid: 552786097007231828
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328847
+        m_Metadata:
+          m_Items: []
+        m_Value: The heights its ceiling moves between, as the level works them out
+    - rid: 552786097007231829
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328848
+        m_Metadata:
+          m_Items: []
+        m_Value: Waits for its delay before it starts moving
+    - rid: 552786097007231830
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328849
+        m_Metadata:
+          m_Items: []
+        m_Value: Contracts at a quarter of its speed
+    - rid: 552786097007231831
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328850
+        m_Metadata:
+          m_Items: []
+        m_Value: Players can activate it
+    - rid: 552786097007231832
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328851
+        m_Metadata:
+          m_Items: []
+        m_Value: Monsters can activate it
+    - rid: 552786097007231833
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328852
+        m_Metadata:
+          m_Items: []
+        m_Value: Switches, tags and other platforms can't deactivate it (it still deactivates itself)
+    - rid: 552786097007231834
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328853
+        m_Metadata:
+          m_Items: []
+        m_Value: It can only be activated once
+    - rid: 552786097007231835
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328854
+        m_Metadata:
+          m_Items: []
+        m_Value: The action key opens it. Other platforms activate when they're walked onto.
+    - rid: 552786097007231836
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328855
+        m_Metadata:
+          m_Items: []
+        m_Value: Players can't open it themselves (a switch or another platform has to)
+    - rid: 552786097007231837
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328856
+        m_Metadata:
+          m_Items: []
+        m_Value: The map doesn't show it as a platform
+    - rid: 552786097007231838
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328857
+        m_Metadata:
+          m_Items: []
+        m_Value: It turns back when something is in its way, rather than waiting
+    - rid: 552786097007231839
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328858
+        m_Metadata:
+          m_Items: []
+        m_Value: Crushes monsters and players in its way
+    - rid: 552786097007231840
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328859
+        m_Metadata:
+          m_Items: []
+        m_Value: Stops each time it reaches its highest or lowest height
+    - rid: 552786097007231841
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328860
+        m_Metadata:
+          m_Items: []
+        m_Value: Stops when it gets back to where it started
+    - rid: 552786097007231842
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328861
+        m_Metadata:
+          m_Items: []
+        m_Value: What it does to the adjacent platforms as it's activated
+    - rid: 552786097007231843
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328862
+        m_Metadata:
+          m_Items: []
+        m_Value: What it does to the adjacent platforms as it's deactivated
+    - rid: 552786097007231844
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328863
+        m_Metadata:
+          m_Items: []
+        m_Value: Activates the adjacent platforms each time it reaches its highest or lowest height
+    - rid: 552786097007231845
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328864
+        m_Metadata:
+          m_Items: []
+        m_Value: Skips the platform that activated this one, when this one changes the adjacent platforms
+    - rid: 552786097007231846
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328865
+        m_Metadata:
+          m_Items: []
+        m_Value: Activating it activates its polygon's floor and ceiling lights
+    - rid: 552786097007231847
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328866
+        m_Metadata:
+          m_Items: []
+        m_Value: Deactivating it deactivates its polygon's floor and ceiling lights
+    - rid: 552786097007231848
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328867
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: Marathon 1''s flooding platforms (Aleph One reads Marathon 1''s locked platforms as these)'
+    - rid: 552786097007231849
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328868
+        m_Metadata:
+          m_Items: []
+        m_Value: Whether it's moving in the simulation (which isn't saved)
+    - rid: 552786097007231850
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151323390328869
+        m_Metadata:
+          m_Items: []
+        m_Value: Simulates something in its way as it extends, which turns back one that reverses when obstructed (it isn't saved)

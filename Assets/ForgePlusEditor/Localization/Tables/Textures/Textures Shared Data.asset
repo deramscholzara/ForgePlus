@@ -407,6 +407,46 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151328155058176
+    m_Key: Inspector.PolygonTextures.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151328155058177
+    m_Key: Inspector.Textures.Texture.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151328155058178
+    m_Key: Inspector.Textures.OffsetX.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151328155058179
+    m_Key: Inspector.Textures.OffsetY.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151328155058180
+    m_Key: Inspector.Textures.TransferMode.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151328155058181
+    m_Key: Inspector.Textures.LightIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151328155058182
+    m_Key: Inspector.SideTextures.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151328155058183
+    m_Key: Inspector.SideTextures.Type.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

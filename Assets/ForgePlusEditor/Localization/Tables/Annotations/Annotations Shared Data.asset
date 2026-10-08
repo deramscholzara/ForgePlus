@@ -67,6 +67,36 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151321012158464
+    m_Key: Inspector.Annotation.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151321012158465
+    m_Key: Inspector.Annotation.Text.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151321012158466
+    m_Key: Inspector.Annotation.Type.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151321012158467
+    m_Key: Inspector.Annotation.LocationX.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151321012158468
+    m_Key: Inspector.Annotation.LocationY.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151321012158469
+    m_Key: Inspector.Annotation.PolygonIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

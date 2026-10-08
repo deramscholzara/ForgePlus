@@ -9,29 +9,29 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Map.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="TextFieldRow" name="Name" class="fp-inspector-row--vertical">
+        <ui:Instance template="TextFieldRow" name="Name" class="fp-inspector-row--vertical" tooltip="@Map/Inspector.Map.Name.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Name.Label.Text" />
         </ui:Instance>
         <ui:Label text="@Map/Inspector.Map.TheNameInThe.Text" class="fp-inspector-note" />
-        <ui:Instance template="Row" name="FileName">
+        <ui:Instance template="Row" name="FileName" tooltip="@Map/Inspector.Map.FileName.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.FileName.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="LevelCount">
+        <ui:Instance template="Row" name="LevelCount" tooltip="@Map/Inspector.Map.LevelCount.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.LevelCount.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Row" name="EmbeddedPhysicsLevelCount" tooltip="@Map/Inspector.Map.EmbeddedPhysicsLevelCount.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.EmbeddedPhysicsLevelCount.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="FileVersion">
+        <ui:Instance template="Row" name="FileVersion" tooltip="@Map/Inspector.Map.FileVersion.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.FileVersion.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="DataVersion">
+        <ui:Instance template="Row" name="DataVersion" tooltip="@Map/Inspector.Map.DataVersion.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.DataVersion.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Checksum">
+        <ui:Instance template="Row" name="Checksum" tooltip="@Map/Inspector.Map.Checksum.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Checksum.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="ParentChecksum">
+        <ui:Instance template="Row" name="ParentChecksum" tooltip="@Map/Inspector.Map.ParentChecksum.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.ParentChecksum.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
@@ -39,13 +39,13 @@
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.MacFile.Label.Text" />
         </ui:Instance>
         <ui:Label text="@Map/Inspector.Map.TheResourceForkHolds.Text" class="fp-inspector-note" />
-        <ui:Instance template="Row" name="Container">
+        <ui:Instance template="Row" name="Container" tooltip="@Map/Inspector.Map.Container.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Container.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="ResourceFork">
+        <ui:Instance template="Row" name="ResourceFork" tooltip="@Map/Inspector.Map.ResourceFork.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.ResourceFork.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Version">
+        <ui:Instance template="Row" name="Version" tooltip="@Map/Inspector.Map.Version.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.Version.Label.Text" />
         </ui:Instance>
         <!-- A row for each type of resource (added by Inspector_Map) -->
@@ -55,7 +55,7 @@
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.LevelScriptAlephOne.Label.Text" />
         </ui:Instance>
         <ui:Label text="@Map/Inspector.Map.AlephOneOnlyMML.Text" class="fp-inspector-note fp-aleph-one-only" />
-        <ui:Instance template="Row" name="LevelScriptSize">
+        <ui:Instance template="Row" name="LevelScriptSize" tooltip="@Map/Inspector.Map.LevelScriptSize.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Map/Inspector.Map.LevelScriptSize.Label.Text" />
         </ui:Instance>
         <ui:Instance template="TextBlock" name="LevelScriptText" />
