@@ -95,6 +95,14 @@ MonoBehaviour:
   - rid: 552786204080472155
   - rid: 552786240694648882
   - rid: 552786240694648883
+  - rid: 552786240694648884
+  - rid: 552786240694648885
+  - rid: 552786240694648886
+  - rid: 552786240694648887
+  - rid: 552786240694648888
+  - rid: 552786240694648889
+  - rid: 552786240694648890
+  - rid: 552786240694648891
   references:
     version: 2
     RefIds:
@@ -644,3 +652,59 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Offset Y:'
+    - rid: 552786240694648884
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058176
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's polygons
+    - rid: 552786240694648885
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058177
+        m_Metadata:
+          m_Items: []
+        m_Value: The texture it's drawn with. Click it to choose another.
+    - rid: 552786240694648886
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058178
+        m_Metadata:
+          m_Items: []
+        m_Value: How far its texture is shifted across. It wraps around at a world unit.
+    - rid: 552786240694648887
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058179
+        m_Metadata:
+          m_Items: []
+        m_Value: How far its texture is shifted down. It wraps around at a world unit.
+    - rid: 552786240694648888
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058180
+        m_Metadata:
+          m_Items: []
+        m_Value: How its texture is drawn (such as normal, landscape, static or pulsating)
+    - rid: 552786240694648889
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058181
+        m_Metadata:
+          m_Items: []
+        m_Value: The light it's lit by (a surface without a texture, or a landscape, doesn't use one)
+    - rid: 552786240694648890
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058182
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's sides
+    - rid: 552786240694648891
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058183
+        m_Metadata:
+          m_Items: []
+        m_Value: Which of its surfaces it draws, as its polygons' heights expose them

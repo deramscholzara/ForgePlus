@@ -115,6 +115,8 @@ namespace ForgePlus.UI
 
             WorldLabels = new WorldLabels(root);
             SoundVisualization = new SoundVisualization(root);
+            // Kept alive by its callbacks on the root
+            new TooltipLayer(root);
 
             // The level's sounds are heard at the camera (where its AudioListener is)
             var soundPlayback = editorCamera.gameObject.AddComponent<LevelSoundPlayback>();

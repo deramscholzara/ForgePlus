@@ -92,6 +92,51 @@ MonoBehaviour:
     m_Flags: 1
     m_Metadata:
       m_Items: []
+  - m_Id: 2151325672030208
+    m_Key: Inspector.Media.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151325672030209
+    m_Key: Inspector.Media.Type.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151325672030210
+    m_Key: Inspector.Media.LowHeight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151325672030211
+    m_Key: Inspector.Media.HighHeight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151325672030212
+    m_Key: Inspector.Media.FlowDirection.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151325672030213
+    m_Key: Inspector.Media.FlowMagnitude.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151325672030214
+    m_Key: Inspector.Media.LightIndex.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151325672030215
+    m_Key: Inspector.Media.MinimumLightIntensity.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151325672030216
+    m_Key: Inspector.Media.FloorObstructsSound.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

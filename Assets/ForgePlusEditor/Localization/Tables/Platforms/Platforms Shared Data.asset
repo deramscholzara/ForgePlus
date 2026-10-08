@@ -292,6 +292,196 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151323390328832
+    m_Key: Inspector.Platform.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328833
+    m_Key: Inspector.Platform.Type.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328834
+    m_Key: Inspector.Platform.Tag.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328835
+    m_Key: Inspector.Platform.Speed.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328836
+    m_Key: Inspector.Platform.Delay.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328837
+    m_Key: Inspector.Platform.Direction.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328838
+    m_Key: Inspector.Platform.InitiallyActive.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328839
+    m_Key: Inspector.Platform.InitiallyExtended.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328840
+    m_Key: Inspector.Platform.ExtendsFloorToCeiling.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328841
+    m_Key: Inspector.Platform.LowestIsAutomatic.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328842
+    m_Key: Inspector.Platform.Lowest.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328843
+    m_Key: Inspector.Platform.HighestIsAutomatic.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328844
+    m_Key: Inspector.Platform.Highest.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328845
+    m_Key: Inspector.Platform.UsesNativePolygonHeights.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328846
+    m_Key: Inspector.Platform.FloorRange.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328847
+    m_Key: Inspector.Platform.CeilingRange.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328848
+    m_Key: Inspector.Platform.DelaysBeforeActivation.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328849
+    m_Key: Inspector.Platform.ContractsSlower.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328850
+    m_Key: Inspector.Platform.IsPlayerControllable.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328851
+    m_Key: Inspector.Platform.IsMonsterControllable.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328852
+    m_Key: Inspector.Platform.CannotBeExternallyDeactivated.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328853
+    m_Key: Inspector.Platform.ActivatesOnlyOnce.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328854
+    m_Key: Inspector.Platform.IsDoor.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328855
+    m_Key: Inspector.Platform.IsLocked.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328856
+    m_Key: Inspector.Platform.IsSecret.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328857
+    m_Key: Inspector.Platform.ReversesWhenObstructed.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328858
+    m_Key: Inspector.Platform.CausesDamage.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328859
+    m_Key: Inspector.Platform.DeactivatesAtEachLevel.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328860
+    m_Key: Inspector.Platform.DeactivatesAtInitialLevel.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328861
+    m_Key: Inspector.Platform.WhenActivating.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328862
+    m_Key: Inspector.Platform.WhenDeactivating.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328863
+    m_Key: Inspector.Platform.ActivatesAdjacentAtEachLevel.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328864
+    m_Key: Inspector.Platform.DoesNotActivateParent.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328865
+    m_Key: Inspector.Platform.ActivatesLight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328866
+    m_Key: Inspector.Platform.DeactivatesLight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328867
+    m_Key: Inspector.Platform.FloodsM1.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328868
+    m_Key: Inspector.Platform.SimulationActive.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151323390328869
+    m_Key: Inspector.Platform.Obstruct.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

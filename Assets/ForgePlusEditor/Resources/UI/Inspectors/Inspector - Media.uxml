@@ -13,36 +13,36 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Media.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Media/Inspector.Media.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Id.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="Type">
+        <ui:Instance template="DropdownRow" name="Type" tooltip="@Media/Inspector.Media.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Type.Label.Text" />
         </ui:Instance>
         <ui:Label name="TypeNote" class="fp-inspector-note fp-aleph-one-only" />
-        <ui:Instance template="DistanceFieldRow" name="LowHeight">
+        <ui:Instance template="DistanceFieldRow" name="LowHeight" tooltip="@Media/Inspector.Media.LowHeight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.LowHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="HighHeight">
+        <ui:Instance template="DistanceFieldRow" name="HighHeight" tooltip="@Media/Inspector.Media.HighHeight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.HighHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="FloatFieldRow" name="FlowDirection">
+        <ui:Instance template="FloatFieldRow" name="FlowDirection" tooltip="@Media/Inspector.Media.FlowDirection.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.FlowDirection.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="FlowMagnitude">
+        <ui:Instance template="IntegerFieldRow" name="FlowMagnitude" tooltip="@Media/Inspector.Media.FlowMagnitude.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.FlowMagnitude.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="LightRow" name="LightIndex">
+        <ui:Instance template="LightRow" name="LightIndex" tooltip="@Media/Inspector.Media.LightIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.LightIndex.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="FloatFieldRow" name="MinimumLightIntensity">
+        <ui:Instance template="FloatFieldRow" name="MinimumLightIntensity" tooltip="@Media/Inspector.Media.MinimumLightIntensity.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.MinimumLightIntensity.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Flags.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="FloorObstructsSound">
+        <ui:Instance template="Flag" name="FloorObstructsSound" tooltip="@Media/Inspector.Media.FloorObstructsSound.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Media/Inspector.Media.FloorObstructsSound.Flag.Text" />
         </ui:Instance>
     </ui:VisualElement>

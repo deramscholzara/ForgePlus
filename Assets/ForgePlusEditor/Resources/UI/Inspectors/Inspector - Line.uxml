@@ -8,18 +8,18 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Line.Line.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Geometry/Inspector.Line.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Line.Id.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Line.Flags.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="Solid">
+        <ui:Instance template="Flag" name="Solid" tooltip="@Geometry/Inspector.Line.Solid.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Line.Solid.Flag.Text" />
         </ui:Instance>
         <ui:Label name="SolidCaption" class="fp-inspector-note" />
-        <ui:Instance template="Flag" name="Transparent">
+        <ui:Instance template="Flag" name="Transparent" tooltip="@Geometry/Inspector.Line.Transparent.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Line.Transparent.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="Decorative" class="fp-aleph-one-only" tooltip="@Geometry/Inspector.Line.Decorative.Tooltip">

@@ -29,6 +29,13 @@ MonoBehaviour:
   - rid: 552786097007231488
   - rid: 552786097007231489
   - rid: 552786097007231490
+  - rid: 552786097007231491
+  - rid: 552786097007231492
+  - rid: 552786097007231493
+  - rid: 552786097007231494
+  - rid: 552786097007231495
+  - rid: 552786097007231496
+  - rid: 552786097007231497
   references:
     version: 2
     RefIds:
@@ -116,3 +123,52 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Show Everything
+    - rid: 552786097007231491
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151322228506624
+        m_Metadata:
+          m_Items: []
+        m_Value: How many the level starts with (it can be more than the maximum count)
+    - rid: 552786097007231492
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151322228506625
+        m_Metadata:
+          m_Items: []
+        m_Value: How many are kept in the level (replacing ones that are destroyed or picked up), whatever the maximum count
+    - rid: 552786097007231493
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151322228506626
+        m_Metadata:
+          m_Items: []
+        m_Value: The most there can be, which only limits the ones added at random
+    - rid: 552786097007231494
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151322228506627
+        m_Metadata:
+          m_Items: []
+        m_Value: Keeps adding them at random for as long as the level lasts
+    - rid: 552786097007231495
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151322228506628
+        m_Metadata:
+          m_Items: []
+        m_Value: How many can be added at random
+    - rid: 552786097007231496
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151322228506629
+        m_Metadata:
+          m_Items: []
+        m_Value: The chance of adding one at random, at each check (every 15 seconds)
+    - rid: 552786097007231497
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151322228506630
+        m_Metadata:
+          m_Items: []
+        m_Value: Ones that aren't there from the start appear anywhere at random. Otherwise, they appear where the level places objects of the type.

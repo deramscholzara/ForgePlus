@@ -373,6 +373,19 @@
     border-color: var(--fp-indicator-frame);
 }
 
+/* TooltipLayer's tooltip, over everything, by the pointer */
+.fp-tooltip {
+    position: absolute;
+    max-width: 400px;
+    margin: 0;
+    padding: 4px 8px;
+    background-color: var(--fp-label-area);
+    border-width: 1px;
+    border-color: var(--fp-indicator-frame);
+    color: var(--fp-text-light);
+    white-space: normal;
+}
+
 /* ChecklistPicker's list, under its Select All and Select None */
 .fp-checklist-picker__actions {
     flex-direction: row;

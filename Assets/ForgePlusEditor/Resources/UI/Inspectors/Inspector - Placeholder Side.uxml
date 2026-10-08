@@ -7,16 +7,16 @@
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.SideNone.Label.Text" />
         </ui:Instance>
         <ui:Label text="@Common/Inspector.PlaceholderSide.ThisFaceOfIts.Text" class="fp-inspector-note" />
-        <ui:Instance template="Row" name="LineIndex">
+        <ui:Instance template="Row" name="LineIndex" tooltip="@Common/Inspector.PlaceholderSide.LineIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.LineIndex.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Face">
+        <ui:Instance template="Row" name="Face" tooltip="@Common/Inspector.PlaceholderSide.Face.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.Face.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="FacingPolygon">
+        <ui:Instance template="Row" name="FacingPolygon" tooltip="@Common/Inspector.PlaceholderSide.FacingPolygon.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.FacingPolygon.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="OpposingPolygon">
+        <ui:Instance template="Row" name="OpposingPolygon" tooltip="@Common/Inspector.PlaceholderSide.OpposingPolygon.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.PlaceholderSide.OpposingPolygon.Label.Text" />
         </ui:Instance>
     </ui:VisualElement>

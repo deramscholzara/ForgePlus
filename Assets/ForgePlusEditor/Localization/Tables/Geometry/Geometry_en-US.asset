@@ -76,6 +76,23 @@ MonoBehaviour:
   - rid: 552786204080472161
   - rid: 552786204080472162
   - rid: 552786204080472163
+  - rid: 552786204080472164
+  - rid: 552786204080472165
+  - rid: 552786204080472166
+  - rid: 552786204080472167
+  - rid: 552786204080472168
+  - rid: 552786204080472169
+  - rid: 552786204080472170
+  - rid: 552786204080472171
+  - rid: 552786204080472172
+  - rid: 552786204080472173
+  - rid: 552786204080472174
+  - rid: 552786204080472175
+  - rid: 552786204080472176
+  - rid: 552786204080472177
+  - rid: 552786204080472178
+  - rid: 552786204080472179
+  - rid: 552786204080472180
   references:
     version: 2
     RefIds:
@@ -492,3 +509,122 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'An invisible wall: it blocks movement, but still looks open.'
+    - rid: 552786204080472164
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103168
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's lines
+    - rid: 552786204080472165
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103169
+        m_Metadata:
+          m_Items: []
+        m_Value: Nothing can pass through it. Between two polygons, a solid line is an invisible wall. A wall is always solid, and a platform beside it sets it as it moves.
+    - rid: 552786204080472166
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103170
+        m_Metadata:
+          m_Items: []
+        m_Value: Between two polygons, it can be seen through (what's beyond it is drawn)
+    - rid: 552786204080472167
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103171
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's sides
+    - rid: 552786204080472168
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103172
+        m_Metadata:
+          m_Items: []
+        m_Value: Which of its surfaces it draws, as its polygons' heights expose them
+    - rid: 552786204080472169
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103173
+        m_Metadata:
+          m_Items: []
+        m_Value: Makes it a switch, terminal or recharger, giving it one of the level's panel types and that type's texture
+    - rid: 552786204080472170
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103174
+        m_Metadata:
+          m_Items: []
+        m_Value: Gives the panel its class, textures and sounds. Choosing one gives the side its texture.
+    - rid: 552786204080472171
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103175
+        m_Metadata:
+          m_Items: []
+        m_Value: What the panel acts on, by its class (such as a light, platform, tag or terminal)
+    - rid: 552786204080472172
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103176
+        m_Metadata:
+          m_Items: []
+        m_Value: A tag switch starts on (a light or platform switch starts as its light or platform is), and its texture shows it
+    - rid: 552786204080472173
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103177
+        m_Metadata:
+          m_Items: []
+        m_Value: It must be switched on to finish a repair mission
+    - rid: 552786204080472174
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103178
+        m_Metadata:
+          m_Items: []
+        m_Value: A projectile that hits it switches it and breaks it
+    - rid: 552786204080472175
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103179
+        m_Metadata:
+          m_Items: []
+        m_Value: It only works while its primary surface's light is above 75%
+    - rid: 552786204080472176
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103180
+        m_Metadata:
+          m_Items: []
+        m_Value: Only a projectile hitting it switches it (the action key doesn't)
+    - rid: 552786204080472177
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103181
+        m_Metadata:
+          m_Items: []
+        m_Value: Uses up the item it takes (such as a chip)
+    - rid: 552786204080472178
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103182
+        m_Metadata:
+          m_Items: []
+        m_Value: The light its primary surface is lit by (a surface without a texture, or a landscape, doesn't use one)
+    - rid: 552786204080472179
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103183
+        m_Metadata:
+          m_Items: []
+        m_Value: The light its secondary surface is lit by (a surface without a texture, or a landscape, doesn't use one)
+    - rid: 552786204080472180
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151329300103184
+        m_Metadata:
+          m_Items: []
+        m_Value: The light its transparent surface is lit by (a surface without a texture, or a landscape, doesn't use one)

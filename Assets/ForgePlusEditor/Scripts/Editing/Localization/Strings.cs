@@ -170,6 +170,13 @@ namespace ForgePlus.Localization
             field.text = text;
         }
 
+        // In place of the element's "@Table/Key" tooltip, whose binding would otherwise put it back
+        public static void SetTooltip(VisualElement element, string tooltip)
+        {
+            element.ClearBinding("tooltip");
+            element.tooltip = tooltip;
+        }
+
         private static void LocalizeElement(VisualElement element)
         {
             if (TryParseKey(element.tooltip, out var tooltipTable, out var tooltipKey))

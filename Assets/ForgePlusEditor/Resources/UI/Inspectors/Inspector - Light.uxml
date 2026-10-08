@@ -11,29 +11,29 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.Light.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Lights/Inspector.Light.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.Id.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="Tag">
+        <ui:Instance template="IntegerFieldRow" name="Tag" tooltip="@Lights/Inspector.Light.Tag.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.Tag.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="Type">
+        <ui:Instance template="DropdownRow" name="Type" tooltip="@Lights/Inspector.Light.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.Type.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="Phase">
+        <ui:Instance template="IntegerFieldRow" name="Phase" tooltip="@Lights/Inspector.Light.Phase.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.Phase.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.Flags.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="StartsActive">
+        <ui:Instance template="Flag" name="StartsActive" tooltip="@Lights/Inspector.Light.StartsActive.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Lights/Inspector.Light.StartsActive.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="SlavedIntensities">
+        <ui:Instance template="Flag" name="SlavedIntensities" tooltip="@Lights/Inspector.Light.SlavedIntensities.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Lights/Inspector.Light.SlavedIntensities.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="CycleAllStates">
+        <ui:Instance template="Flag" name="CycleAllStates" tooltip="@Lights/Inspector.Light.CycleAllStates.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Lights/Inspector.Light.CycleAllStates.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
@@ -41,19 +41,19 @@
             <ui:Instance template="Subheader">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.StateBecomingActive.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="DropdownRow" name="Function">
+            <ui:Instance template="DropdownRow" name="Function" tooltip="@Lights/Inspector.Light.StateFunction.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingActiveFunction.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="Period">
+            <ui:Instance template="IntegerFieldRow" name="Period" tooltip="@Lights/Inspector.Light.StatePeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingActivePeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod">
+            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod" tooltip="@Lights/Inspector.Light.StateDeltaPeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingActiveDeltaPeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="Intensity">
+            <ui:Instance template="FloatFieldRow" name="Intensity" tooltip="@Lights/Inspector.Light.StateIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingActiveIntensity.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="DeltaIntensity">
+            <ui:Instance template="FloatFieldRow" name="DeltaIntensity" tooltip="@Lights/Inspector.Light.StateDeltaIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingActiveDeltaIntensity.Label.Text" />
             </ui:Instance>
         </ui:VisualElement>
@@ -62,19 +62,19 @@
             <ui:Instance template="Subheader">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.StatePrimaryActive.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="DropdownRow" name="Function">
+            <ui:Instance template="DropdownRow" name="Function" tooltip="@Lights/Inspector.Light.StateFunction.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryActiveFunction.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="Period">
+            <ui:Instance template="IntegerFieldRow" name="Period" tooltip="@Lights/Inspector.Light.StatePeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryActivePeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod">
+            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod" tooltip="@Lights/Inspector.Light.StateDeltaPeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryActiveDeltaPeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="Intensity">
+            <ui:Instance template="FloatFieldRow" name="Intensity" tooltip="@Lights/Inspector.Light.StateIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryActiveIntensity.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="DeltaIntensity">
+            <ui:Instance template="FloatFieldRow" name="DeltaIntensity" tooltip="@Lights/Inspector.Light.StateDeltaIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryActiveDeltaIntensity.Label.Text" />
             </ui:Instance>
         </ui:VisualElement>
@@ -83,19 +83,19 @@
             <ui:Instance template="Subheader">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.StateSecondaryActive.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="DropdownRow" name="Function">
+            <ui:Instance template="DropdownRow" name="Function" tooltip="@Lights/Inspector.Light.StateFunction.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryActiveFunction.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="Period">
+            <ui:Instance template="IntegerFieldRow" name="Period" tooltip="@Lights/Inspector.Light.StatePeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryActivePeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod">
+            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod" tooltip="@Lights/Inspector.Light.StateDeltaPeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryActiveDeltaPeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="Intensity">
+            <ui:Instance template="FloatFieldRow" name="Intensity" tooltip="@Lights/Inspector.Light.StateIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryActiveIntensity.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="DeltaIntensity">
+            <ui:Instance template="FloatFieldRow" name="DeltaIntensity" tooltip="@Lights/Inspector.Light.StateDeltaIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryActiveDeltaIntensity.Label.Text" />
             </ui:Instance>
         </ui:VisualElement>
@@ -104,19 +104,19 @@
             <ui:Instance template="Subheader">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.StateBecomingInactive.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="DropdownRow" name="Function">
+            <ui:Instance template="DropdownRow" name="Function" tooltip="@Lights/Inspector.Light.StateFunction.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingInactiveFunction.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="Period">
+            <ui:Instance template="IntegerFieldRow" name="Period" tooltip="@Lights/Inspector.Light.StatePeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingInactivePeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod">
+            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod" tooltip="@Lights/Inspector.Light.StateDeltaPeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingInactiveDeltaPeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="Intensity">
+            <ui:Instance template="FloatFieldRow" name="Intensity" tooltip="@Lights/Inspector.Light.StateIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingInactiveIntensity.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="DeltaIntensity">
+            <ui:Instance template="FloatFieldRow" name="DeltaIntensity" tooltip="@Lights/Inspector.Light.StateDeltaIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.BecomingInactiveDeltaIntensity.Label.Text" />
             </ui:Instance>
         </ui:VisualElement>
@@ -125,19 +125,19 @@
             <ui:Instance template="Subheader">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.StatePrimaryInactive.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="DropdownRow" name="Function">
+            <ui:Instance template="DropdownRow" name="Function" tooltip="@Lights/Inspector.Light.StateFunction.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryInactiveFunction.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="Period">
+            <ui:Instance template="IntegerFieldRow" name="Period" tooltip="@Lights/Inspector.Light.StatePeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryInactivePeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod">
+            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod" tooltip="@Lights/Inspector.Light.StateDeltaPeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryInactiveDeltaPeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="Intensity">
+            <ui:Instance template="FloatFieldRow" name="Intensity" tooltip="@Lights/Inspector.Light.StateIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryInactiveIntensity.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="DeltaIntensity">
+            <ui:Instance template="FloatFieldRow" name="DeltaIntensity" tooltip="@Lights/Inspector.Light.StateDeltaIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.PrimaryInactiveDeltaIntensity.Label.Text" />
             </ui:Instance>
         </ui:VisualElement>
@@ -146,19 +146,19 @@
             <ui:Instance template="Subheader">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.StateSecondaryInactive.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="DropdownRow" name="Function">
+            <ui:Instance template="DropdownRow" name="Function" tooltip="@Lights/Inspector.Light.StateFunction.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryInactiveFunction.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="Period">
+            <ui:Instance template="IntegerFieldRow" name="Period" tooltip="@Lights/Inspector.Light.StatePeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryInactivePeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod">
+            <ui:Instance template="IntegerFieldRow" name="DeltaPeriod" tooltip="@Lights/Inspector.Light.StateDeltaPeriod.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryInactiveDeltaPeriod.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="Intensity">
+            <ui:Instance template="FloatFieldRow" name="Intensity" tooltip="@Lights/Inspector.Light.StateIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryInactiveIntensity.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="FloatFieldRow" name="DeltaIntensity">
+            <ui:Instance template="FloatFieldRow" name="DeltaIntensity" tooltip="@Lights/Inspector.Light.StateDeltaIntensity.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Lights/Inspector.Light.SecondaryInactiveDeltaIntensity.Label.Text" />
             </ui:Instance>
         </ui:VisualElement>

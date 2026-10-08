@@ -167,6 +167,61 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151318780788736
+    m_Key: Inspector.Map.Name.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788737
+    m_Key: Inspector.Map.FileName.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788738
+    m_Key: Inspector.Map.LevelCount.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788739
+    m_Key: Inspector.Map.FileVersion.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788740
+    m_Key: Inspector.Map.DataVersion.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788741
+    m_Key: Inspector.Map.Checksum.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788742
+    m_Key: Inspector.Map.ParentChecksum.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788743
+    m_Key: Inspector.Map.Container.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788744
+    m_Key: Inspector.Map.ResourceFork.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788745
+    m_Key: Inspector.Map.Version.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151318780788746
+    m_Key: Inspector.Map.LevelScriptSize.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

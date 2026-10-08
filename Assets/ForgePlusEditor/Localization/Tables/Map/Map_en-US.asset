@@ -47,6 +47,17 @@ MonoBehaviour:
   - rid: 552786097007231757
   - rid: 552786097007231758
   - rid: 552786097007231759
+  - rid: 552786097007231760
+  - rid: 552786097007231761
+  - rid: 552786097007231762
+  - rid: 552786097007231763
+  - rid: 552786097007231764
+  - rid: 552786097007231765
+  - rid: 552786097007231766
+  - rid: 552786097007231767
+  - rid: 552786097007231768
+  - rid: 552786097007231769
+  - rid: 552786097007231770
   references:
     version: 2
     RefIds:
@@ -260,3 +271,80 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: versions
+    - rid: 552786097007231760
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788736
+        m_Metadata:
+          m_Items: []
+        m_Value: The name saved in the map file's header
+    - rid: 552786097007231761
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788737
+        m_Metadata:
+          m_Items: []
+        m_Value: The name of the file it was loaded from
+    - rid: 552786097007231762
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788738
+        m_Metadata:
+          m_Items: []
+        m_Value: How many levels the map has
+    - rid: 552786097007231763
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788739
+        m_Metadata:
+          m_Items: []
+        m_Value: The version of the map file's format, which saving writes as Marathon Infinity's
+    - rid: 552786097007231764
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788740
+        m_Metadata:
+          m_Items: []
+        m_Value: The version of the levels' data
+    - rid: 552786097007231765
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788741
+        m_Metadata:
+          m_Items: []
+        m_Value: What saved games, films and physics files made for the map find it by. Saving merged can keep it.
+    - rid: 552786097007231766
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788742
+        m_Metadata:
+          m_Items: []
+        m_Value: The checksum of the map a patch file (such as a physics file) is for
+    - rid: 552786097007231767
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788743
+        m_Metadata:
+          m_Items: []
+        m_Value: How the file holds the Mac file's data and resource forks (such as MacBinary or AppleSingle), or plain data
+    - rid: 552786097007231768
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788744
+        m_Metadata:
+          m_Items: []
+        m_Value: Where the map's resources (such as its chapter screens and level script) come from
+    - rid: 552786097007231769
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788745
+        m_Metadata:
+          m_Items: []
+        m_Value: The file's version information, as the Finder shows it
+    - rid: 552786097007231770
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151318780788746
+        m_Metadata:
+          m_Items: []
+        m_Value: How big the map's level script (MML) is, kept and saved as it was loaded

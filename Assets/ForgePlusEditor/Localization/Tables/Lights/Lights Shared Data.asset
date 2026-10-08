@@ -257,6 +257,66 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151326863212544
+    m_Key: Inspector.Light.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212545
+    m_Key: Inspector.Light.Tag.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212546
+    m_Key: Inspector.Light.Type.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212547
+    m_Key: Inspector.Light.Phase.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212548
+    m_Key: Inspector.Light.StartsActive.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212549
+    m_Key: Inspector.Light.SlavedIntensities.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212550
+    m_Key: Inspector.Light.CycleAllStates.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212551
+    m_Key: Inspector.Light.StateFunction.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212552
+    m_Key: Inspector.Light.StatePeriod.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212553
+    m_Key: Inspector.Light.StateDeltaPeriod.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212554
+    m_Key: Inspector.Light.StateIntensity.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151326863212555
+    m_Key: Inspector.Light.StateDeltaIntensity.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

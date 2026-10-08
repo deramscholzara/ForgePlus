@@ -11,13 +11,13 @@
         <ui:Instance template="Header">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Polygon.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="Id">
+        <ui:Instance template="Row" name="Id" tooltip="@Common/Inspector.Polygon.Id.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Id.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="Type">
+        <ui:Instance template="DropdownRow" name="Type" tooltip="@Common/Inspector.Polygon.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Type.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="Permutation">
+        <ui:Instance template="IntegerFieldRow" name="Permutation" tooltip="@Common/Inspector.Polygon.Permutation.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Permutation.Label.Text" />
         </ui:Instance>
         <ui:Label name="PermutationCaption" class="fp-inspector-note" />
@@ -25,30 +25,30 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Floor.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="FloorHeight">
+        <ui:Instance template="Row" name="FloorHeight" tooltip="@Common/Inspector.Polygon.FloorHeight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.FloorHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="LightRow" name="FloorLightIndex">
+        <ui:Instance template="LightRow" name="FloorLightIndex" tooltip="@Common/Inspector.Polygon.FloorLightIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.FloorLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Ceiling.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="CeilingHeight">
+        <ui:Instance template="Row" name="CeilingHeight" tooltip="@Common/Inspector.Polygon.CeilingHeight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.CeilingHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="LightRow" name="CeilingLightIndex">
+        <ui:Instance template="LightRow" name="CeilingLightIndex" tooltip="@Common/Inspector.Polygon.CeilingLightIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.CeilingLightIndex.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Media.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DropdownRow" name="MediaIndex">
+        <ui:Instance template="DropdownRow" name="MediaIndex" tooltip="@Common/Inspector.Polygon.MediaIndex.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.MediaIndex.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="LightRow" name="MediaLight">
+        <ui:Instance template="LightRow" name="MediaLight" tooltip="@Common/Inspector.Polygon.MediaLight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.MediaLight.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />

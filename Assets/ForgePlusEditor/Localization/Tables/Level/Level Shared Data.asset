@@ -432,6 +432,201 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151319883890688
+    m_Key: Inspector.Level.Name.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890689
+    m_Key: Inspector.Level.Environment.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890690
+    m_Key: Inspector.Level.Landscape.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890691
+    m_Key: Inspector.Level.PhysicsModel.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890692
+    m_Key: Inspector.Level.PhysicsInUse.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890693
+    m_Key: Inspector.Level.SinglePlayer.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890694
+    m_Key: Inspector.Level.Cooperative.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890695
+    m_Key: Inspector.Level.Carnage.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890696
+    m_Key: Inspector.Level.KillTheOneWithTheBall.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890697
+    m_Key: Inspector.Level.MonarchOfTheHill.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890698
+    m_Key: Inspector.Level.Defense.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890699
+    m_Key: Inspector.Level.Rugby.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890700
+    m_Key: Inspector.Level.CaptureTheFlag.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890701
+    m_Key: Inspector.Level.Vacuum.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890702
+    m_Key: Inspector.Level.Magnetic.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890703
+    m_Key: Inspector.Level.Rebellion.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890704
+    m_Key: Inspector.Level.LowGravity.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890705
+    m_Key: Inspector.Level.Extermination.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890706
+    m_Key: Inspector.Level.Exploration.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890707
+    m_Key: Inspector.Level.Retrieval.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890708
+    m_Key: Inspector.Level.Repair.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890709
+    m_Key: Inspector.Level.Rescue.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890710
+    m_Key: Inspector.Level.TerminalPause.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890711
+    m_Key: Inspector.Level.M1Rebellion.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890712
+    m_Key: Inspector.Level.M1Exploration.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890713
+    m_Key: Inspector.Level.M1Repair.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890714
+    m_Key: Inspector.Level.M1Rescue.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890715
+    m_Key: Inspector.Level.M1Glue.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890716
+    m_Key: Inspector.Level.M1Ouch.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890717
+    m_Key: Inspector.Level.M1HasMusic.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890718
+    m_Key: Inspector.Level.M1WeaponsStyle.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890719
+    m_Key: Inspector.Level.M1ActivationRange.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890720
+    m_Key: Inspector.Level.ChapterScreenPicture.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890721
+    m_Key: Inspector.Level.AmbientSoundCount.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890722
+    m_Key: Inspector.Level.RandomSoundCount.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890723
+    m_Key: Inspector.Level.ShapePatchSize.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890724
+    m_Key: Inspector.Level.SoundPatchSize.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890725
+    m_Key: Inspector.Level.MmlSize.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151319883890726
+    m_Key: Inspector.Level.LuaSize.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

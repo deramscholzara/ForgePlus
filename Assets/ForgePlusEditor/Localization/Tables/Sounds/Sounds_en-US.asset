@@ -68,6 +68,11 @@ MonoBehaviour:
   - rid: 552786097007231807
   - rid: 552786097007231808
   - rid: 552786097007231809
+  - rid: 552786097007231810
+  - rid: 552786097007231811
+  - rid: 552786097007231812
+  - rid: 552786097007231813
+  - rid: 552786097007231814
   references:
     version: 2
     RefIds:
@@ -428,3 +433,38 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Add (Aleph One Only)
+    - rid: 552786097007231810
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151324447293440
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's ambient sounds, which polygons pick it by
+    - rid: 552786097007231811
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151324447293441
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Deletes it from the level (after asking): the polygons that play it play no ambient sound, and each later ambient sound''s index moves down by one'
+    - rid: 552786097007231812
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151324447293442
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's random sounds, which polygons pick it by
+    - rid: 552786097007231813
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151324447293443
+        m_Metadata:
+          m_Items: []
+        m_Value: Plays from no particular direction, rather than from its direction
+    - rid: 552786097007231814
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151324447293444
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Deletes it from the level (after asking): the polygons that play it play no random sound, and each later random sound''s index moves down by one'

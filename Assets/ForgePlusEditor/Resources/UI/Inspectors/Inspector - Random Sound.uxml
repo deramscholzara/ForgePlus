@@ -15,7 +15,7 @@
         </ui:Instance>
         <ui:Label name="aleph-one-note" text="@Sounds/Inspector.RandomSound.AlephOneNote.Text" class="fp-inspector-note fp-aleph-one-only" />
         <ui:Label text="@Sounds/Inspector.RandomSound.PlayedNowAndThen.Text" class="fp-inspector-note" />
-        <ui:Instance template="Row" name="Index">
+        <ui:Instance template="Row" name="Index" tooltip="@Sounds/Inspector.RandomSound.Index.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Index.Label.Text" />
         </ui:Instance>
         <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="@Sounds/Inspector.RandomSound.Sound.Tooltip">
@@ -27,7 +27,7 @@
         <ui:Instance template="IntegerRangeRow" name="Period" tooltip="@Sounds/Inspector.RandomSound.Period.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Period.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Flag" name="NonDirectional">
+        <ui:Instance template="Flag" name="NonDirectional" tooltip="@Sounds/Inspector.RandomSound.NonDirectional.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Sounds/Inspector.RandomSound.NonDirectional.Flag.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerRangeRow" name="Direction" tooltip="@Sounds/Inspector.RandomSound.Direction.Tooltip">
@@ -39,7 +39,7 @@
         <ui:Instance template="ButtonRow" name="PlayedIn" tooltip="@Sounds/Inspector.RandomSound.PlayedIn.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.PlayedIn.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Button" name="delete" class="fp-inspector-action">
+        <ui:Instance template="Button" name="delete" class="fp-inspector-action" tooltip="@Sounds/Inspector.RandomSound.Delete.Tooltip">
             <ui:AttributeOverrides element-name="control" text="@Sounds/Inspector.RandomSound.Delete.Control.Text" />
         </ui:Instance>
     </ui:VisualElement>

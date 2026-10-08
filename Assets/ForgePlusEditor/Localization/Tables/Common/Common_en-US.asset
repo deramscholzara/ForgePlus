@@ -450,6 +450,37 @@ MonoBehaviour:
   - rid: 552786240694648886
   - rid: 552786240694648887
   - rid: 552786240694648888
+  - rid: 552786240694648889
+  - rid: 552786240694648890
+  - rid: 552786240694648891
+  - rid: 552786240694648892
+  - rid: 552786240694648893
+  - rid: 552786240694648894
+  - rid: 552786240694648895
+  - rid: 552786240694648896
+  - rid: 552786240694648897
+  - rid: 552786240694648898
+  - rid: 552786240694648899
+  - rid: 552786240694648900
+  - rid: 552786240694648901
+  - rid: 552786240694648902
+  - rid: 552786240694648903
+  - rid: 552786240694648904
+  - rid: 552786240694648905
+  - rid: 552786240694648906
+  - rid: 552786240694648907
+  - rid: 552786240694648908
+  - rid: 552786240694648909
+  - rid: 552786240694648910
+  - rid: 552786240694648911
+  - rid: 552786240694648912
+  - rid: 552786240694648913
+  - rid: 552786240694648914
+  - rid: 552786240694648915
+  - rid: 552786240694648916
+  - rid: 552786240694648917
+  - rid: 552786240694648918
+  - rid: 552786240694648919
   references:
     version: 2
     RefIds:
@@ -3488,3 +3519,220 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Position Z:'
+    - rid: 552786240694648889
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879872
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's objects
+    - rid: 552786240694648890
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879873
+        m_Metadata:
+          m_Items: []
+        m_Value: Whether it's a monster, item, scenery, player start, goal or sound source. Choosing another starts its subtype at the type's first.
+    - rid: 552786240694648891
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879874
+        m_Metadata:
+          m_Items: []
+        m_Value: What kind of monster, item or scenery it is, or a player start's team
+    - rid: 552786240694648892
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879875
+        m_Metadata:
+          m_Items: []
+        m_Value: What it goes for once it's activated
+    - rid: 552786240694648893
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879876
+        m_Metadata:
+          m_Items: []
+        m_Value: The way it faces, in degrees
+    - rid: 552786240694648894
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879877
+        m_Metadata:
+          m_Items: []
+        m_Value: The light whose intensity its volume follows while the game runs (light 0 can't be one)
+    - rid: 552786240694648895
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879878
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Its volume as it''s saved: the light''s index, negated'
+    - rid: 552786240694648896
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879879
+        m_Metadata:
+          m_Items: []
+        m_Value: Where it is across the level (moving it moves it to the polygon it's then in)
+    - rid: 552786240694648897
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879880
+        m_Metadata:
+          m_Items: []
+        m_Value: Where it is down the level (moving it moves it to the polygon it's then in)
+    - rid: 552786240694648898
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879881
+        m_Metadata:
+          m_Items: []
+        m_Value: How far above its polygon's floor it is (or below its ceiling, for one hanging from it)
+    - rid: 552786240694648899
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879882
+        m_Metadata:
+          m_Items: []
+        m_Value: A monster teleports in when it's activated, rather than being there from the start
+    - rid: 552786240694648900
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879883
+        m_Metadata:
+          m_Items: []
+        m_Value: It hangs from its polygon's ceiling, and its height is measured down from it
+    - rid: 552786240694648901
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879884
+        m_Metadata:
+          m_Items: []
+        m_Value: The monster can't see what would activate it
+    - rid: 552786240694648902
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879885
+        m_Metadata:
+          m_Items: []
+        m_Value: The monster can't hear what would activate it
+    - rid: 552786240694648903
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879886
+        m_Metadata:
+          m_Items: []
+        m_Value: An item only placed in network (multiplayer) games
+    - rid: 552786240694648904
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879887
+        m_Metadata:
+          m_Items: []
+        m_Value: The game uses it for the sound sources media make as the level runs
+    - rid: 552786240694648905
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879888
+        m_Metadata:
+          m_Items: []
+        m_Value: The polygon it's in
+    - rid: 552786240694648906
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879889
+        m_Metadata:
+          m_Items: []
+        m_Value: The line it's on. It's drawn (its polygons' heights expose it), but the level has no side for it, so it has no texture or light.
+    - rid: 552786240694648907
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879890
+        m_Metadata:
+          m_Items: []
+        m_Value: Which face of the line it is
+    - rid: 552786240694648908
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879891
+        m_Metadata:
+          m_Items: []
+        m_Value: The polygon it faces
+    - rid: 552786240694648909
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879892
+        m_Metadata:
+          m_Items: []
+        m_Value: The polygon on the line's other side
+    - rid: 552786240694648910
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879893
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's polygons
+    - rid: 552786240694648911
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879894
+        m_Metadata:
+          m_Items: []
+        m_Value: What it does in the game. Choosing Platform makes it a platform (with a S'pht door's settings), and choosing another type for a platform removes its platform.
+    - rid: 552786240694648912
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879895
+        m_Metadata:
+          m_Items: []
+        m_Value: What it means depends on the type (such as the light or platform a trigger switches). A platform's is its platform's index.
+    - rid: 552786240694648913
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879896
+        m_Metadata:
+          m_Items: []
+        m_Value: Its floor's height (Heights mode edits it)
+    - rid: 552786240694648914
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879897
+        m_Metadata:
+          m_Items: []
+        m_Value: The light its floor is lit by (a landscape doesn't use one)
+    - rid: 552786240694648915
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879898
+        m_Metadata:
+          m_Items: []
+        m_Value: Its ceiling's height (Heights mode edits it)
+    - rid: 552786240694648916
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879899
+        m_Metadata:
+          m_Items: []
+        m_Value: The light its ceiling is lit by (a landscape doesn't use one)
+    - rid: 552786240694648917
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879900
+        m_Metadata:
+          m_Items: []
+        m_Value: The media (liquid) in it, which Media mode paints
+    - rid: 552786240694648918
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879901
+        m_Metadata:
+          m_Items: []
+        m_Value: The light its media's surface is lit by (only a polygon with media uses it)
+    - rid: 552786240694648919
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879902
+        m_Metadata:
+          m_Items: []
+        m_Value: The sound source plays its platform's moving sound instead of its own, while the platform moves
