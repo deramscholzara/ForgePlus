@@ -1,0 +1,36 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- The level's floor and ceiling heights (swatches added by HeightPalettePanel), each list with a button for adding
+         a height to it -->
+    <ui:VisualElement class="fp-palette" picking-mode="Ignore">
+        <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
+        <ui:VisualElement class="fp-box fp-palette__box">
+            <ui:Instance template="ScrollArea" name="swatches" class="fp-grow">
+                <ui:VisualElement class="fp-inspector">
+                    <ui:Instance template="Header">
+                        <ui:AttributeOverrides element-name="label" text="@Heights/HeightPalette.Floors.Label.Text" />
+                    </ui:Instance>
+                </ui:VisualElement>
+                <ui:VisualElement name="floor-swatches" class="fp-palette__swatches" />
+                <ui:VisualElement class="fp-height-palette__actions">
+                    <ui:Instance template="Button" name="add-floor" class="fp-height-palette__action">
+                        <ui:AttributeOverrides element-name="control" text="@Heights/HeightPalette.AddFloor.Control.Text" />
+                    </ui:Instance>
+                </ui:VisualElement>
+                <ui:VisualElement class="fp-inspector">
+                    <ui:Instance template="Header">
+                        <ui:AttributeOverrides element-name="label" text="@Heights/HeightPalette.Ceilings.Label.Text" />
+                    </ui:Instance>
+                </ui:VisualElement>
+                <ui:VisualElement name="ceiling-swatches" class="fp-palette__swatches" />
+                <ui:VisualElement class="fp-height-palette__actions">
+                    <ui:Instance template="Button" name="add-ceiling" class="fp-height-palette__action">
+                        <ui:AttributeOverrides element-name="control" text="@Heights/HeightPalette.AddCeiling.Control.Text" />
+                    </ui:Instance>
+                </ui:VisualElement>
+            </ui:Instance>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

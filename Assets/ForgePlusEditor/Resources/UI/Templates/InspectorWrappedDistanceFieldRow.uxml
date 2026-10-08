@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:fp="ForgePlus.UI">
+    <!-- A world distance that wraps every world unit (such as a texture offset), as a distance row is otherwise -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area">
+            <fp:WorldDistanceField name="value" wraps="true" is-delayed="true" class="fp-inspector-text-field" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

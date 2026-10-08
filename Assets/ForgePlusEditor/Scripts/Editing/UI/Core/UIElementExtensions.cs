@@ -43,6 +43,23 @@ namespace ForgePlus.UI
             return element.GetAncestorWithClass(TextInputBaseField<string>.ussClassName) != null;
         }
 
+        // Its presses (and keys typed into it) stay its own, so a toggle it's in (such as a swatch) isn't also clicked
+        public static void KeepsEventsFromParents(this VisualElement element)
+        {
+            element.RegisterCallback<PointerDownEvent>(StopPropagation);
+            element.RegisterCallback<PointerUpEvent>(StopPropagation);
+            element.RegisterCallback<ClickEvent>(StopPropagation);
+            element.RegisterCallback<MouseDownEvent>(StopPropagation);
+            element.RegisterCallback<MouseUpEvent>(StopPropagation);
+            element.RegisterCallback<NavigationSubmitEvent>(StopPropagation);
+            element.RegisterCallback<KeyDownEvent>(StopPropagation);
+        }
+
+        private static void StopPropagation(EventBase evt)
+        {
+            evt.StopPropagation();
+        }
+
         // Calls open as the element is pressed, or submitted from the keyboard (such as with return, while it has
         // focus). Replacing the element's own handling sees the events first, and keeps them from the element.
         public static void OpensOnPress(this VisualElement element, Action open, bool replacesOwnHandling = false)
@@ -138,15 +155,13 @@ namespace ForgePlus.UI
 
             BindEach<TextField>(root, dataSource, "fp-inspector-text-field", BindInspectorField);
             BindEach<IntegerField>(root, dataSource, "fp-inspector-text-field", BindInspectorField);
+            BindEach<WorldDistanceField>(root, dataSource, "fp-inspector-text-field", BindInspectorField);
             BindEach<FloatField>(root, dataSource, "fp-inspector-text-field", BindInspectorField);
 
             // A range's second field edits the source's <Name>Maximum property
             BindEach<IntegerField>(root, dataSource, "fp-inspector-range-maximum", BindInspectorRangeMaximum);
             BindEach<FloatField>(root, dataSource, "fp-inspector-range-maximum", BindInspectorRangeMaximum);
             BindEach<DropdownField>(root, dataSource, "fp-inspector-dropdown", BindInspectorDropdown);
-
-            // A pair's fields edit the source's <Name>X and <Name>Y properties (each named after its part)
-            BindEach<IntegerField>(root, dataSource, "fp-inspector-pair-field", BindInspectorPairField);
 
             // A note named after one of the source's text properties shows it (the others are fixed text)
             BindEach<Label>(root, dataSource, "fp-inspector-note", BindInspectorNote);
@@ -255,16 +270,6 @@ namespace ForgePlus.UI
 
             var shown = note.Bind("style.display", dataSource, note.name);
             shown.sourceToUiConverters.AddConverter((ref string text) => new StyleEnum<DisplayStyle>(string.IsNullOrEmpty(text) ? DisplayStyle.None : DisplayStyle.Flex));
-        }
-
-        // The row is editable while its parts can be set
-        private static void BindInspectorPairField(IntegerField field, object dataSource)
-        {
-            var row = field.GetFirstAncestorOfType<TemplateContainer>();
-            var partProperty = row.name + field.name;
-            var isEditable = BindEditability(row, dataSource, partProperty);
-
-            BindTextInput(field, dataSource, partProperty, isEditable);
         }
 
         // A dropdown chooses from its source's <Name>Choices, as a field edits its source property

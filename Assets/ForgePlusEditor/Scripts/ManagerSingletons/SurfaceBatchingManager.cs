@@ -175,7 +175,7 @@ namespace ForgePlus.ApplicationGeneral
                 surfaces.Add(surface);
                 surfacesByGeometry.Add(surfaceGeometry, surface);
 
-                if (isMerged)
+                if (isMerged && !Instance.mergingIsDeferred)
                 {
                     Merge(deleteOriginalObjects);
                 }
@@ -203,7 +203,7 @@ namespace ForgePlus.ApplicationGeneral
                 surfaces.Remove(surface);
                 surfacesByGeometry.Remove(surfaceGeometry);
 
-                if (isMerged)
+                if (isMerged && !Instance.mergingIsDeferred)
                 {
                     // Re-Merge if it was merged prior to this removal
                     Merge(deleteOriginalObjects);
@@ -488,7 +488,26 @@ namespace ForgePlus.ApplicationGeneral
         private readonly Dictionary<BatchKey, Material[]> SurfaceMaterials = new Dictionary<BatchKey, Material[]>();
         private readonly Dictionary<BatchKey, SurfaceBatch> StaticBatches = new Dictionary<BatchKey, SurfaceBatch>();
 
+        // While deferred, a merged batch that gains or loses a surface stays unmerged until merging resumes
+        private bool mergingIsDeferred;
+
         public static bool BatchingEnabled => Instance.batchingEnabled;
+
+        // For an edit that changes many surfaces at once, or over many frames (such as dragging a height)
+        public void DeferMerging(bool isDeferred)
+        {
+            if (mergingIsDeferred == isDeferred)
+            {
+                return;
+            }
+
+            mergingIsDeferred = isDeferred;
+
+            if (!isDeferred && batchingEnabled)
+            {
+                MergeAllBatches();
+            }
+        }
 
         public Material[] GetUniqueMaterials(BatchKey key)
         {
@@ -660,6 +679,8 @@ namespace ForgePlus.ApplicationGeneral
 
             SurfaceMaterials.Clear();
             StaticBatches.Clear();
+
+            mergingIsDeferred = false;
         }
 
         private void Start()

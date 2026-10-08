@@ -5,7 +5,7 @@
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="TextureRow" src="../Templates/InspectorTextureRow.uxml" />
     <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
-    <ui:Template name="IntegerPairRow" src="../Templates/InspectorIntegerPairRow.uxml" />
+    <ui:Template name="WrappedDistanceFieldRow" src="../Templates/InspectorWrappedDistanceFieldRow.uxml" />
     <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <!-- Bound to Inspector_PolygonTextures -->
     <ui:VisualElement class="fp-inspector">
@@ -30,8 +30,11 @@
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
             </ui:Instance>
             <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
-            <ui:Instance template="IntegerPairRow" name="Offset">
-                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorOffset.Label.Text" />
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetX.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetY.Label.Text" />
             </ui:Instance>
             <ui:Instance template="DropdownRow" name="TransferMode">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.FloorTransferMode.Label.Text" />
@@ -55,8 +58,11 @@
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
             </ui:Instance>
             <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
-            <ui:Instance template="IntegerPairRow" name="Offset">
-                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingOffset.Label.Text" />
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetX.Label.Text" />
+            </ui:Instance>
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY">
+                <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetY.Label.Text" />
             </ui:Instance>
             <ui:Instance template="DropdownRow" name="TransferMode">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.PolygonTextures.CeilingTransferMode.Label.Text" />

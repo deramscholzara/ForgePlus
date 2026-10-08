@@ -161,6 +161,8 @@ namespace ForgePlus.LevelManipulation
                     }
 
                     return context.Polygon;
+                case ModeManager.PrimaryModes.Heights:
+                    return HeightsEditing.CanEdit(context.Polygon) ? context.Polygon : null;
                 case ModeManager.PrimaryModes.Platforms:
                     return context.Platform;
                 case ModeManager.PrimaryModes.Objects:
@@ -203,6 +205,13 @@ namespace ForgePlus.LevelManipulation
                     break;
                 case ModeManager.PrimaryModes.Media:
                     PaletteManager.Instance.SelectSwatchForMedia(target as LevelEntity_Media);
+                    break;
+                case ModeManager.PrimaryModes.Heights:
+                    if (surface is EditableSurface_Polygon polygonSurface)
+                    {
+                        PaletteManager.Instance.SelectSwatchForHeight(polygonSurface.ParentPolygon, polygonSurface.DataSource);
+                    }
+
                     break;
             }
 

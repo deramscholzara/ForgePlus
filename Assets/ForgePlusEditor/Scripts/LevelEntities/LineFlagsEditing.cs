@@ -62,14 +62,60 @@ namespace ForgePlus.LevelManipulation
                 }
                 else if (LINE_IS_VARIABLE_ELEVATION(line))
                 {
-                    var highestFloor = Math.Max(clockwisePolygon.floor_height, counterclockwisePolygon.floor_height);
-                    var lowestCeiling = Math.Min(clockwisePolygon.ceiling_height, counterclockwisePolygon.ceiling_height);
+                    var isClosed = LeaveNoOpening(clockwisePolygon, counterclockwisePolygon);
 
                     SET_LINE_VARIABLE_ELEVATION(line, false);
-                    SET_LINE_TRANSPARENCY(line, highestFloor < lowestCeiling);
-                    SET_LINE_SOLIDITY(line, highestFloor >= lowestCeiling);
+                    SET_LINE_TRANSPARENCY(line, !isClosed);
+                    SET_LINE_SOLIDITY(line, isClosed);
                 }
             }
+        }
+
+        // Between two polygons (neither a platform) whose heights leave no opening
+        public static bool IsClosedByHeights(MapLevel level, short lineIndex)
+        {
+            var line = level.LineList[lineIndex];
+            var clockwisePolygon = PolygonOf(level, line.clockwise_polygon_owner);
+            var counterclockwisePolygon = PolygonOf(level, line.counterclockwise_polygon_owner);
+
+            return clockwisePolygon != null && counterclockwisePolygon != null &&
+                   clockwisePolygon.type != _polygon_is_platform && counterclockwisePolygon.type != _polygon_is_platform &&
+                   LeaveNoOpening(clockwisePolygon, counterclockwisePolygon);
+        }
+
+        // Its adjacent heights and elevation (map_constructors.cpp: recalculate_redundant_line_data), and its solidity as
+        // the heights close or open it, so a line made solid on purpose stays solid
+        public static void UpdateForHeightChange(MapLevel level, short lineIndex, bool wasClosed)
+        {
+            var line = level.LineList[lineIndex];
+            var clockwisePolygon = PolygonOf(level, line.clockwise_polygon_owner);
+            var counterclockwisePolygon = PolygonOf(level, line.counterclockwise_polygon_owner);
+
+            if (clockwisePolygon == null || counterclockwisePolygon == null)
+            {
+                var polygon = clockwisePolygon ?? counterclockwisePolygon;
+                line.highest_adjacent_floor = polygon != null ? polygon.floor_height : (short) 0;
+                line.lowest_adjacent_ceiling = polygon != null ? polygon.ceiling_height : (short) 0;
+                SET_LINE_ELEVATION(line, true);
+
+                return;
+            }
+
+            line.highest_adjacent_floor = Math.Max(clockwisePolygon.floor_height, counterclockwisePolygon.floor_height);
+            line.lowest_adjacent_ceiling = Math.Min(clockwisePolygon.ceiling_height, counterclockwisePolygon.ceiling_height);
+            SET_LINE_ELEVATION(line, clockwisePolygon.floor_height != counterclockwisePolygon.floor_height);
+
+            var isClosed = IsClosedByHeights(level, lineIndex);
+            if (isClosed != wasClosed)
+            {
+                SET_LINE_SOLIDITY(line, isClosed);
+                SET_LINE_TRANSPARENCY(line, !isClosed);
+            }
+        }
+
+        private static bool LeaveNoOpening(polygon_data polygonA, polygon_data polygonB)
+        {
+            return Math.Max(polygonA.floor_height, polygonB.floor_height) >= Math.Min(polygonA.ceiling_height, polygonB.ceiling_height);
         }
 
         // Its endpoints are solid when any of their lines is (map_constructors.cpp: recalculate_redundant_endpoint_data)

@@ -23,6 +23,7 @@ namespace ForgePlus.Localization
         public const string Lights = nameof(ModeManager.PrimaryModes.Lights);
         public const string Media = nameof(ModeManager.PrimaryModes.Media);
         public const string Sounds = nameof(ModeManager.PrimaryModes.Sounds);
+        public const string Heights = nameof(ModeManager.PrimaryModes.Heights);
         public const string Platforms = nameof(ModeManager.PrimaryModes.Platforms);
         public const string Objects = nameof(ModeManager.PrimaryModes.Objects);
         public const string Annotations = nameof(ModeManager.PrimaryModes.Annotations);

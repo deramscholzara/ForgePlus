@@ -19,6 +19,7 @@ namespace ForgePlus.LevelManipulation
         public LevelEntity_Platform Platform = null;
 
         private UVPlanarDrag uvDragPlane;
+        private HeightDrag heightDrag;
 
         private readonly List<LevelEntity_Polygon> alignmentGroupedPolygons = new List<LevelEntity_Polygon>();
 
@@ -110,6 +111,10 @@ namespace ForgePlus.LevelManipulation
                     ClickPolygonInMode(ParentPolygon);
 
                     break;
+                case ModeManager.PrimaryModes.Heights:
+                    ClickInHeightsMode();
+
+                    break;
                 case ModeManager.PrimaryModes.Platforms:
                     // Any of a platform's faces (including the sides that move with it) selects it
                     if (Platform != null)
@@ -128,6 +133,12 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Heights)
+            {
+                BeginHeightDrag(eventData);
+                return;
+            }
+
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
             {
@@ -152,7 +163,7 @@ namespace ForgePlus.LevelManipulation
                 {
                     alignmentGroupedPolygons.Clear();
 
-                    CollectSimilarAdjacentPolygons(GetElevation(ParentPolygon), GetShapeDescriptor(ParentPolygon));
+                    CollectSimilarAdjacentPolygons(HeightsEditing.GetHeight(ParentPolygon, DataSource), GetShapeDescriptor(ParentPolygon));
                 }
             }
             else
@@ -165,6 +176,12 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
+            if (heightDrag != null)
+            {
+                DragHeight(eventData);
+                return;
+            }
+
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
@@ -201,6 +218,12 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
+            if (heightDrag != null)
+            {
+                EndHeightDrag();
+                return;
+            }
+
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
@@ -252,6 +275,69 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        // Paints the palette's height onto the floor or ceiling its swatch is for, or picks the clicked face's height (the
+        // selected polygon's other face picks that one's, rather than deselecting it)
+        private void ClickInHeightsMode()
+        {
+            if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
+            {
+                if (PaletteManager.Instance.TryGetSelectedHeight(out var dataSource, out var height))
+                {
+                    HeightsEditing.SetHeights(new[] { ParentPolygon }, dataSource, height);
+                }
+
+                return;
+            }
+
+            if (SelectionManager.Instance.GetIsSelected(ParentPolygon) && !PaletteManager.Instance.ShowsHeightOf(ParentPolygon, DataSource))
+            {
+                PaletteManager.Instance.SelectSwatchForHeight(ParentPolygon, DataSource);
+                return;
+            }
+
+            SelectionManager.Instance.ToggleObjectSelection(ParentPolygon, multiSelect: false);
+
+            if (SelectionManager.Instance.GetIsSelected(ParentPolygon))
+            {
+                PaletteManager.Instance.SelectSwatchForHeight(ParentPolygon, DataSource);
+            }
+        }
+
+        // In Select mode, dragging the face raises or lowers it
+        private void BeginHeightDrag(WorldPointerEventData eventData)
+        {
+            if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Selection || !HeightsEditing.CanEdit(ParentPolygon))
+            {
+                return;
+            }
+
+            SelectionManager.Instance.ClickedSurface = this;
+            SelectionManager.Instance.SelectObject(ParentPolygon, multiSelect: false);
+            PaletteManager.Instance.SelectSwatchForHeight(ParentPolygon, DataSource);
+
+            heightDrag = new HeightDrag(eventData.PressWorldPosition, HeightsEditing.GetHeight(ParentPolygon, DataSource), Camera.main);
+            HeightsEditing.BeginDrag();
+        }
+
+        private void DragHeight(WorldPointerEventData eventData)
+        {
+            var pointerRay = Camera.main.ScreenPointToRay(new Vector3(eventData.Position.x, eventData.Position.y, 0f));
+            var height = HeightsEditing.ClampHeight(ParentPolygon, DataSource, heightDrag.DraggedHeight(pointerRay));
+
+            HeightsEditing.DragHeight(ParentPolygon, DataSource, height);
+
+            InspectorPanel.Instance.RefreshAllInspectors();
+        }
+
+        private void EndHeightDrag()
+        {
+            heightDrag = null;
+
+            HeightsEditing.EndDrag();
+
+            PaletteManager.Instance.SelectSwatchForHeight(ParentPolygon, DataSource);
+        }
+
         // Every polygon this surface continues into through shared edges (at the same height, with the same texture)
         private void CollectSimilarAdjacentPolygons(short commonElevation, ushort commonShapeDescriptor)
         {
@@ -272,7 +358,7 @@ namespace ForgePlus.LevelManipulation
                         continue;
                     }
 
-                    if (GetElevation(adjacentPolygon) != commonElevation ||
+                    if (HeightsEditing.GetHeight(adjacentPolygon, DataSource) != commonElevation ||
                         !GetShapeDescriptor(adjacentPolygon).Equals(commonShapeDescriptor))
                     {
                         continue;
@@ -282,13 +368,6 @@ namespace ForgePlus.LevelManipulation
                     polygonsToSpreadFrom.Push(adjacentPolygon);
                 }
             }
-        }
-
-        private short GetElevation(LevelEntity_Polygon polygon)
-        {
-            return DataSource == LevelEntity_Polygon.DataSources.Floor ?
-                   polygon.NativeObject.floor_height :
-                   polygon.NativeObject.ceiling_height;
         }
 
         private ushort GetShapeDescriptor(LevelEntity_Polygon polygon)

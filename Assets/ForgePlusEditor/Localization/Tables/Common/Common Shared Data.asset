@@ -117,11 +117,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 2585498632210
-    m_Key: Inspector.MapObject.Position.Label.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 2585498632211
     m_Key: Inspector.MapObject.Flags.Label.Text
     m_Flags: 0
@@ -1977,16 +1972,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 329893195431936
-    m_Key: InspectorIntegerPairRow.X.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 329893212209152
-    m_Key: InspectorIntegerPairRow.Y.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 1329915106050048
     m_Key: Permutation.Polygon.Unused
     m_Flags: 0
@@ -2082,11 +2067,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 1424381422747648
-    m_Key: InspectorIntegerTripleRow.Z.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 1424381435330560
     m_Key: Inspector.MapObject.Team
     m_Flags: 1
@@ -2170,6 +2150,36 @@ MonoBehaviour:
   - m_Id: 1630401084407811
     m_Key: Permutation.Problem.NoLevel
     m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1786210242150400
+    m_Key: Header.Heights.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1916131484516352
+    m_Key: WorldDistance.Fraction
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1916131501293568
+    m_Key: WorldDistance.Mixed
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1916131501293569
+    m_Key: Inspector.MapObject.PositionX.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1916131501293570
+    m_Key: Inspector.MapObject.PositionY.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1916131501293571
+    m_Key: Inspector.MapObject.PositionZ.Label.Text
+    m_Flags: 0
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -65,16 +65,7 @@ namespace ForgePlus.LevelManipulation
             var level = LevelEntity_Level.Instance;
             if (level)
             {
-                var selectsGeometry = primaryMode == ModeManager.PrimaryModes.Geometry ||
-                                      primaryMode == ModeManager.PrimaryModes.Textures;
-
-                // Clicking a polygon's faces acts on it, or on what's on it
-                var selectsFaces = selectsGeometry ||
-                                   primaryMode == ModeManager.PrimaryModes.Lights ||
-                                   primaryMode == ModeManager.PrimaryModes.Media ||
-                                   primaryMode == ModeManager.PrimaryModes.Sounds ||
-                                   primaryMode == ModeManager.PrimaryModes.Platforms ||
-                                   primaryMode == ModeManager.PrimaryModes.Annotations;
+                var selectsGeometry = SelectsGeometry(primaryMode);
 
                 SetSelectability<LevelEntity_Polygon>(level.Polygons.Values, enabled: selectsGeometry);
                 SetSelectability<LevelEntity_Line>(level.Lines.Values, enabled: primaryMode == ModeManager.PrimaryModes.Geometry);
@@ -96,9 +87,12 @@ namespace ForgePlus.LevelManipulation
                     SetSelectability<LevelEntity_MapObject>(mapObject, enabled: isSelectable);
                 }
 
-                // Terminals mode clicks sides (computer terminal panels) to preview their terminals
-                SetSelectability<EditableSurface_Polygon>(level.EditableSurface_Polygons, enabled: selectsFaces);
-                SetSelectability<EditableSurface_Side>(level.EditableSurface_Sides, enabled: selectsFaces || primaryMode == ModeManager.PrimaryModes.Terminals);
+                foreach (var polygonSurface in level.EditableSurface_Polygons)
+                {
+                    SetSelectability<EditableSurface_Polygon>(polygonSurface, enabled: PolygonSurfaceIsSelectable(primaryMode, polygonSurface));
+                }
+
+                SetSelectability<EditableSurface_Side>(level.EditableSurface_Sides, enabled: SideSurfacesAreSelectable(primaryMode));
                 SetSelectability<EditableSurface_Media>(level.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(primaryMode));
 
                 // Select the level here, since there's no visual way to select it besides the mode button
@@ -310,6 +304,53 @@ namespace ForgePlus.LevelManipulation
         public void MatchSelectabilityToMode(EditableSurface_Media surface)
         {
             surface.SetSelectability(MediaSurfacesAreSelectable(ModeManager.Instance.PrimaryMode));
+        }
+
+        // For a side rebuilt while in a mode (such as by changing a height)
+        public void MatchSelectabilityToMode(LevelEntity_Side side)
+        {
+            var primaryMode = ModeManager.Instance.PrimaryMode;
+
+            side.SetSelectability(SelectsGeometry(primaryMode));
+
+            foreach (var surface in side.GetComponentsInChildren<EditableSurface_Side>(includeInactive: true))
+            {
+                surface.SetSelectability(SideSurfacesAreSelectable(primaryMode));
+            }
+        }
+
+        private static bool SelectsGeometry(ModeManager.PrimaryModes primaryMode)
+        {
+            return primaryMode == ModeManager.PrimaryModes.Geometry ||
+                   primaryMode == ModeManager.PrimaryModes.Textures;
+        }
+
+        // Clicking a polygon's faces acts on it, or on what's on it
+        private static bool SelectsFaces(ModeManager.PrimaryModes primaryMode)
+        {
+            return SelectsGeometry(primaryMode) ||
+                   primaryMode == ModeManager.PrimaryModes.Lights ||
+                   primaryMode == ModeManager.PrimaryModes.Media ||
+                   primaryMode == ModeManager.PrimaryModes.Sounds ||
+                   primaryMode == ModeManager.PrimaryModes.Platforms ||
+                   primaryMode == ModeManager.PrimaryModes.Annotations;
+        }
+
+        // Heights mode clicks floors and ceilings, except a platform's (whose heights are its platform's)
+        private static bool PolygonSurfaceIsSelectable(ModeManager.PrimaryModes primaryMode, EditableSurface_Polygon surface)
+        {
+            if (primaryMode == ModeManager.PrimaryModes.Heights)
+            {
+                return HeightsEditing.CanEdit(surface.ParentPolygon);
+            }
+
+            return SelectsFaces(primaryMode);
+        }
+
+        // Terminals mode clicks sides (computer terminal panels) to preview their terminals
+        private static bool SideSurfacesAreSelectable(ModeManager.PrimaryModes primaryMode)
+        {
+            return SelectsFaces(primaryMode) || primaryMode == ModeManager.PrimaryModes.Terminals;
         }
 
         // Otherwise clicks pass through media surfaces to the floor

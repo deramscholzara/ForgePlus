@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:fp="ForgePlus.UI">
+    <!-- A floor or ceiling height: a field for its value, and (while faces use it) the in-use mark -->
+    <ui:Toggle name="control" class="fp-toggle fp-toggle--wide-short fp-swatch fp-template">
+        <fp:WorldDistanceField name="value" is-delayed="true" tooltip="@Heights/SwatchHeight.Value.Tooltip" class="fp-swatch__height-field" />
+        <ui:VisualElement name="in-use" picking-mode="Ignore" class="fp-swatch__content fp-swatch__in-use" />
+    </ui:Toggle>
+</ui:UXML>

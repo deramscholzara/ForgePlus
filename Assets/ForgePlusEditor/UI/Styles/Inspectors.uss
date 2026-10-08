@@ -133,14 +133,12 @@
 }
 
 /* A text or number field in a row's value area, looking like the row's value (its border only shows focus) */
-.fp-inspector-text-field,
-.fp-inspector-pair-field {
+.fp-inspector-text-field {
     margin: 0;
     padding: 0;
 }
 
-.fp-inspector-text-field > .unity-base-text-field__input,
-.fp-inspector-pair-field > .unity-base-text-field__input {
+.fp-inspector-text-field > .unity-base-text-field__input {
     margin: 0;
     padding: 0;
     border-width: 1px;
@@ -151,9 +149,7 @@
 }
 
 .fp-inspector-row:disabled .fp-inspector-text-field,
-.fp-inspector-row:disabled .fp-inspector-text-field > .unity-base-text-field__input,
-.fp-inspector-row:disabled .fp-inspector-pair-field,
-.fp-inspector-row:disabled .fp-inspector-pair-field > .unity-base-text-field__input {
+.fp-inspector-row:disabled .fp-inspector-text-field > .unity-base-text-field__input {
     opacity: 1;
     color: var(--fp-value-text-disabled);
 }
@@ -453,18 +449,6 @@
     flex-grow: 1;
     flex-basis: 0;
     min-width: 0;
-}
-
-/* Names a pair's field (X: and Y:), in the value's color */
-.fp-inspector-pair-label {
-    flex-shrink: 0;
-    padding: 0 3px 0 0;
-    margin: 0;
-    color: var(--fp-value-text);
-}
-
-.fp-inspector-pair-label--second {
-    padding-left: 8px;
 }
 
 .fp-inspector-range-separator {

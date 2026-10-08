@@ -3,6 +3,7 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="DistanceFieldRow" src="../Templates/InspectorDistanceFieldRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
     <ui:Template name="Choice" src="../Templates/InspectorChoice.uxml" />
@@ -60,13 +61,13 @@
         <ui:Instance template="Flag" name="LowestIsAutomatic">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.LowestIsAutomatic.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="Lowest">
+        <ui:Instance template="DistanceFieldRow" name="Lowest">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Lowest.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="HighestIsAutomatic">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.HighestIsAutomatic.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="Highest">
+        <ui:Instance template="DistanceFieldRow" name="Highest">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Highest.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="UsesNativePolygonHeights">

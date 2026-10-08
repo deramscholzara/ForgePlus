@@ -25,6 +25,8 @@ namespace ForgePlus.Palette
             Platform,
             AmbientSound,
             RandomSound,
+            FloorHeight,
+            CeilingHeight,
         }
 
         // A texture or media swatch with none is the palette's "None", for removing what's assigned
@@ -44,6 +46,25 @@ namespace ForgePlus.Palette
 
             // NONE for the list's "None"
             public short SoundIndex = cstypes.NONE;
+
+            // A floor or ceiling height swatch's
+            public short Height;
+
+            public bool IsHeight
+            {
+                get
+                {
+                    return Kind == SwatchKinds.FloorHeight || Kind == SwatchKinds.CeilingHeight;
+                }
+            }
+
+            public LevelEntity_Polygon.DataSources HeightDataSource
+            {
+                get
+                {
+                    return Kind == SwatchKinds.CeilingHeight ? LevelEntity_Polygon.DataSources.Ceiling : LevelEntity_Polygon.DataSources.Floor;
+                }
+            }
 
             public bool IsSound
             {
@@ -235,6 +256,58 @@ namespace ForgePlus.Palette
             return swatches.FirstOrDefault(swatch => swatch.IsSound && swatch.SoundKind == kind && swatch.SoundIndex == index);
         }
 
+        // The Heights palette's set of floors or of ceilings (one swatch is selected across both)
+        public static int HeightGroup(LevelEntity_Polygon.DataSources dataSource)
+        {
+            return dataSource == LevelEntity_Polygon.DataSources.Ceiling ? 1 : 0;
+        }
+
+        // The face's height (no polygon deselects the swatches)
+        public void SelectSwatchForHeight(LevelEntity_Polygon polygon, LevelEntity_Polygon.DataSources dataSource)
+        {
+            if (!polygon)
+            {
+                ClearSelection(updateLevelSelection: false);
+                return;
+            }
+
+            Select(FindHeightSwatch(dataSource, HeightsEditing.GetHeight(polygon, dataSource)), updateLevelSelection: false);
+        }
+
+        // Whether the selected swatch is the face's height
+        public bool ShowsHeightOf(LevelEntity_Polygon polygon, LevelEntity_Polygon.DataSources dataSource)
+        {
+            var swatch = GetSelectedSwatch(HeightGroup(dataSource));
+
+            return swatch != null && swatch.IsHeight && swatch.Height == HeightsEditing.GetHeight(polygon, dataSource);
+        }
+
+        // Whether a height swatch is selected (for painting floors or ceilings, as its set is)
+        public bool TryGetSelectedHeight(out LevelEntity_Polygon.DataSources dataSource, out short height)
+        {
+            var swatch = selectedSwatches.Values.FirstOrDefault(selected => selected.IsHeight);
+
+            dataSource = swatch != null ? swatch.HeightDataSource : LevelEntity_Polygon.DataSources.Floor;
+            height = swatch != null ? swatch.Height : (short) 0;
+
+            return swatch != null;
+        }
+
+        // Selects the height's swatch as clicking it does (such as for one just added)
+        public void ClickHeight(LevelEntity_Polygon.DataSources dataSource, short height)
+        {
+            var swatch = FindHeightSwatch(dataSource, height);
+            if (swatch != null && !IsSelected(swatch))
+            {
+                Select(swatch, updateLevelSelection: true);
+            }
+        }
+
+        private Swatch FindHeightSwatch(LevelEntity_Polygon.DataSources dataSource, short height)
+        {
+            return swatches.FirstOrDefault(swatch => swatch.IsHeight && swatch.HeightDataSource == dataSource && swatch.Height == height);
+        }
+
         // For a swatch's contents changing (such as a platform's type)
         public void RefreshSwatches()
         {
@@ -280,8 +353,8 @@ namespace ForgePlus.Palette
             {
                 selectedSwatches[group] = swatch;
 
-                // Painting paints with one swatch, so choosing one in a set deselects the others'
-                if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting)
+                // Painting paints with one swatch, so choosing one in a set deselects the others' (as heights always do)
+                if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Painting || swatch.IsHeight)
                 {
                     KeepOnlyGroup(group);
                 }
@@ -323,6 +396,12 @@ namespace ForgePlus.Palette
         // polygons link to the selected annotation
         private void UpdateLevelSelection(Swatch swatch, bool isSelected)
         {
+            // A height is picked to paint with or to change, not to select anything
+            if (swatch.IsHeight)
+            {
+                return;
+            }
+
             if (swatch.Kind == SwatchKinds.Texture || (swatch.IsNone && isSelected))
             {
                 SelectionManager.Instance.DeselectAll();
@@ -457,6 +536,20 @@ namespace ForgePlus.Palette
                         }
 
                         break;
+                    case ModeManager.PrimaryModes.Heights:
+                        allowSwitchOff = true;
+
+                        foreach (var dataSource in new[] { LevelEntity_Polygon.DataSources.Floor, LevelEntity_Polygon.DataSources.Ceiling })
+                        {
+                            var swatchKind = dataSource == LevelEntity_Polygon.DataSources.Floor ? SwatchKinds.FloorHeight : SwatchKinds.CeilingHeight;
+
+                            foreach (var height in HeightSwatches.Heights(dataSource))
+                            {
+                                swatches.Add(new Swatch { Kind = swatchKind, Height = height, Group = HeightGroup(dataSource) });
+                            }
+                        }
+
+                        break;
                     case ModeManager.PrimaryModes.Platforms:
                         allowSwitchOff = true;
 
@@ -532,6 +625,31 @@ namespace ForgePlus.Palette
             SelectionManager.Instance.OnClickEmptySpace += OnClickEmptySpace;
             SelectionManager.Instance.OnSelectionChanged += OnLevelSelectionChanged;
             SoundImageEditing.OnChanged += OnSoundImagesChanged;
+            HeightSwatches.OnChanged += OnHeightsChanged;
+            HeightsEditing.OnHeightsChanged += OnHeightsChanged;
+        }
+
+        private void OnDestroy()
+        {
+            HeightSwatches.OnChanged -= OnHeightsChanged;
+            HeightsEditing.OnHeightsChanged -= OnHeightsChanged;
+        }
+
+        // The listed heights follow the level's, keeping the selected one
+        private void OnHeightsChanged()
+        {
+            if (ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Heights)
+            {
+                return;
+            }
+
+            var previous = selectedSwatches.Values.Where(swatch => swatch.IsHeight).ToList();
+            UpdatePaletteToMatchMode(ModeManager.PrimaryModes.Heights);
+
+            foreach (var swatch in previous)
+            {
+                SetSelected(swatch.Group, FindHeightSwatch(swatch.HeightDataSource, swatch.Height), updateLevelSelection: false);
+            }
         }
 
         // The palette shows what's selected in the level
@@ -545,6 +663,16 @@ namespace ForgePlus.Palette
                     break;
                 case ModeManager.PrimaryModes.Platforms:
                     SelectSwatchForPlatform(SelectionManager.Instance.SelectedObject as LevelEntity_Platform);
+                    break;
+                case ModeManager.PrimaryModes.Heights:
+                    // Deselecting the polygon deselects its height, unless that's picked for painting
+                    if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Painting &&
+                        !isUpdatingLevelSelection &&
+                        SelectionManager.Instance.SelectedObject == null)
+                    {
+                        ClearSelection(updateLevelSelection: false);
+                    }
+
                     break;
                 case ModeManager.PrimaryModes.Sounds:
                     // The swatches picked for painting stay picked; otherwise the palette shows the selection's sounds

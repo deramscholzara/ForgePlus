@@ -5,6 +5,7 @@
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="DistanceFieldRow" src="../Templates/InspectorDistanceFieldRow.uxml" />
     <ui:Template name="FloatFieldRow" src="../Templates/InspectorFloatFieldRow.uxml" />
     <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
     <!-- Bound to Inspector_Media -->
@@ -19,10 +20,10 @@
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Type.Label.Text" />
         </ui:Instance>
         <ui:Label name="TypeNote" class="fp-inspector-note fp-aleph-one-only" />
-        <ui:Instance template="IntegerFieldRow" name="LowHeight">
+        <ui:Instance template="DistanceFieldRow" name="LowHeight">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.LowHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="HighHeight">
+        <ui:Instance template="DistanceFieldRow" name="HighHeight">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.HighHeight.Label.Text" />
         </ui:Instance>
         <ui:Instance template="FloatFieldRow" name="FlowDirection">

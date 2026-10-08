@@ -4,6 +4,7 @@
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="TextFieldRow" src="../Templates/InspectorTextFieldRow.uxml" />
     <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="DistanceFieldRow" src="../Templates/InspectorDistanceFieldRow.uxml" />
     <!-- Bound to Inspector_Annotation -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -22,10 +23,10 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Position.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="LocationX">
+        <ui:Instance template="DistanceFieldRow" name="LocationX">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.LocationX.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerFieldRow" name="LocationY">
+        <ui:Instance template="DistanceFieldRow" name="LocationY">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.LocationY.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="PolygonIndex">

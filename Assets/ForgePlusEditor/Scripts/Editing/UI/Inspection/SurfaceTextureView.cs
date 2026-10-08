@@ -155,6 +155,25 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Each of the offset's rows
+        [CreateProperty]
+        public bool IsOffsetXEditable
+        {
+            get
+            {
+                return IsOffsetEditable;
+            }
+        }
+
+        [CreateProperty]
+        public bool IsOffsetYEditable
+        {
+            get
+            {
+                return IsOffsetEditable;
+            }
+        }
+
         [CreateProperty]
         public string TransferMode
         {
