@@ -3,8 +3,8 @@
 
 StructuredBuffer<float> _LightIntensities;
 
-// The index arrives through an interpolated UV, which can land slightly off its integer value (such as 10.9999),
-// so it's rounded rather than truncated, or neighboring pixels can read different lights
+// The index arrives through a UV, which can hold slightly off its integer value (such as 10.9999),
+// so it's rounded rather than truncated, or a surface's vertices can read different lights
 void GetLightIntensity_float(float LightIndex, out float Intensity)
 {
     Intensity = _LightIntensities[(uint)round(LightIndex)];

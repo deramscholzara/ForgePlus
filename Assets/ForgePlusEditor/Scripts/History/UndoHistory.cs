@@ -9,7 +9,7 @@ namespace ForgePlus.History
     // The actions that can be undone (newest last) and redone (next to redo last). Recording an action forgets what
     // could be redone, and the oldest actions past the capacity are forgotten.
     [AutoStaticsCleanup]
-    public static class UndoHistory
+    public static partial class UndoHistory
     {
         // How many actions can be undone (the Undo Steps setting, which SettingsManager applies)
         public const int MinimumCapacity = 1;

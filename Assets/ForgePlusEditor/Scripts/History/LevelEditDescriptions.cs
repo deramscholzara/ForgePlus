@@ -38,6 +38,13 @@ namespace ForgePlus.History
             (LevelHistory.MapNameData, "Map"),
         };
 
+        // Polygon fields worked out from other data, whose changes alone don't make a polygon one the edit was of (such
+        // as the polygon facing a side that a height edit added)
+        private static readonly HashSet<string> derivedPolygonFields = new HashSet<string>
+        {
+            nameof(polygon_data.side_indexes),
+        };
+
         public static string Describe(IReadOnlyList<DataChange> changes)
         {
             foreach (var (data, name) in listNames)
@@ -46,9 +53,15 @@ namespace ForgePlus.History
                 {
                     if (change.Data.Name == data && change is TrackedList.ListChange listChange)
                     {
-                        return listChange.Elements.Count == 1 ?
-                               Strings.Get(Strings.Common, $"History.{name}", listChange.Elements[0].Index) :
-                               Strings.Get(Strings.Common, $"History.{name}.Many", listChange.Elements.Count);
+                        var editedIndexes = EditedIndexes(listChange);
+                        if (editedIndexes.Count == 0)
+                        {
+                            continue;
+                        }
+
+                        return editedIndexes.Count == 1 ?
+                               Strings.Get(Strings.Common, $"History.{name}", editedIndexes[0]) :
+                               Strings.Get(Strings.Common, $"History.{name}.Many", editedIndexes.Count);
                     }
                 }
             }
@@ -66,6 +79,26 @@ namespace ForgePlus.History
 
             // Anything else in the level
             return Strings.Get(Strings.Common, "History.Level");
+        }
+
+        private static List<int> EditedIndexes(TrackedList.ListChange change)
+        {
+            var indexes = new List<int>();
+            var isPolygons = change.Data.Name == nameof(MapLevel.PolygonList);
+
+            for (var elementIndex = 0; elementIndex < change.Elements.Count; elementIndex++)
+            {
+                var element = change.Elements[elementIndex];
+
+                if (isPolygons && !element.IsAddedOrRemoved && change.ChangedFields(elementIndex).IsSubsetOf(derivedPolygonFields))
+                {
+                    continue;
+                }
+
+                indexes.Add(element.Index);
+            }
+
+            return indexes;
         }
     }
 }

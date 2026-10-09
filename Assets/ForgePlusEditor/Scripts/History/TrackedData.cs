@@ -240,6 +240,14 @@ namespace ForgePlus.History
             public object Before { get; }
 
             public object After { get; }
+
+            public bool IsAddedOrRemoved
+            {
+                get
+                {
+                    return Before == null || After == null;
+                }
+            }
         }
 
         public class ListChange : DataChange

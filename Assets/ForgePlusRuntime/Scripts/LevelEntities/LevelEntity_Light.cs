@@ -34,6 +34,8 @@ namespace RuntimeCore.Entities
         public static readonly int lightIntensitiesGlobalPropertyId = Shader.PropertyToID("_LightIntensities");
         private const int minimumIntensitiesCapacity = 256;
 
+        // Released by ReleaseIntensities when Play mode ends
+        [NoAutoStaticsCleanup]
         private static GraphicsBuffer intensitiesBuffer;
         private static float[] intensities = Array.Empty<float>();
 

@@ -194,6 +194,10 @@ namespace ForgePlus.UI
                 return;
             }
 
+#if UNITY_EDITOR
+            KeepRootInDocument();
+#endif
+
             WorldLabels.UpdatePositions();
             SoundVisualization.Update();
 
@@ -230,6 +234,27 @@ namespace ForgePlus.UI
                 UndoHistory.Undo();
             }
         }
+
+#if UNITY_EDITOR
+        // The Editor's own Undo (which Ctrl+Z also does while playing) re-enables the document, which builds a new tree and
+        // leaves the UI's detached, so the UI's tree goes back in the new one
+        private void KeepRootInDocument()
+        {
+            if (root.panel != null)
+            {
+                return;
+            }
+
+            var documentRoot = GetComponent<UIDocument>().rootVisualElement;
+            if (documentRoot == null || documentRoot == root)
+            {
+                return;
+            }
+
+            documentRoot.Clear();
+            documentRoot.Add(root);
+        }
+#endif
 
         private PanelSlot CreateSlot(string slotName)
         {
