@@ -134,7 +134,8 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
-            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Heights)
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Heights ||
+                ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
             {
                 BeginHeightDrag(eventData);
                 return;
@@ -312,7 +313,8 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        // In Select mode, dragging the face raises or lowers it
+        // In Select mode, dragging the face raises or lowers it (in Geometry mode, only once its polygon is selected, so
+        // dragging across unselected geometry can't change it by accident)
         private void BeginHeightDrag(WorldPointerEventData eventData)
         {
             if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Selection || !HeightsEditing.CanEdit(ParentPolygon))
@@ -320,12 +322,25 @@ namespace ForgePlus.LevelManipulation
                 return;
             }
 
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
+            {
+                if (!SelectionManager.Instance.GetIsSelected(ParentPolygon))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                SelectionManager.Instance.SelectObject(ParentPolygon, multiSelect: false);
+            }
+
             SelectionManager.Instance.ClickedSurface = this;
-            SelectionManager.Instance.SelectObject(ParentPolygon, multiSelect: false);
-            PaletteManager.Instance.SelectSwatchForHeight(ParentPolygon, DataSource);
+            SelectHeightSwatch();
 
             heightDrag = new HeightDrag(eventData.PressWorldPosition, HeightsEditing.GetHeight(ParentPolygon, DataSource), Camera.main);
             HeightsEditing.BeginDrag();
+
+            InspectorPanel.Instance.RefreshAllInspectors();
         }
 
         private void DragHeight(WorldPointerEventData eventData)
@@ -344,7 +359,16 @@ namespace ForgePlus.LevelManipulation
 
             HeightsEditing.EndDrag();
 
-            PaletteManager.Instance.SelectSwatchForHeight(ParentPolygon, DataSource);
+            SelectHeightSwatch();
+        }
+
+        // Only the Heights palette lists heights
+        private void SelectHeightSwatch()
+        {
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Heights)
+            {
+                PaletteManager.Instance.SelectSwatchForHeight(ParentPolygon, DataSource);
+            }
         }
 
         // Every polygon this surface continues into through shared edges (at the same height, with the same texture)
