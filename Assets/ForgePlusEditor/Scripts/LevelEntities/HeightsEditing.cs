@@ -1,6 +1,7 @@
 #if !NO_EDITING
 using AlephOne;
 using ForgePlus.ApplicationGeneral;
+using ForgePlus.History;
 using ForgePlus.Inspection;
 using ForgePlus.PolygonContainment;
 using RuntimeCore.Entities;
@@ -67,8 +68,16 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        // After heights change (including by undoing)
+        public static void NotifyHeightsChanged()
+        {
+            OnHeightsChanged?.Invoke();
+        }
+
         public static void BeginDrag()
         {
+            // Recorded as one action when it ends
+            LevelHistory.BeginGesture();
             draggedPolygons.Clear();
             SurfaceBatchingManager.Instance.DeferMerging(true);
         }
@@ -82,6 +91,7 @@ namespace ForgePlus.LevelManipulation
         {
             Commit(draggedPolygons.ToList());
             draggedPolygons.Clear();
+            LevelHistory.EndGesture();
         }
 
         // Returns the polygons whose height changed
@@ -183,21 +193,12 @@ namespace ForgePlus.LevelManipulation
 
             PolygonContainmentMap.MarkChanged();
 
-            OnHeightsChanged?.Invoke();
+            NotifyHeightsChanged();
             InspectorPanel.Instance.RefreshAllInspectors();
 
             if (platformsChanged)
             {
-                var selectedPolygon = SelectionManager.Instance.SelectedObject as LevelEntity_Polygon;
-                var selectedPolygonIndex = selectedPolygon ? selectedPolygon.NativeIndex : cstypes.NONE;
-
-                LevelEditing.RebuildLevel(() =>
-                {
-                    if (LevelEntity_Level.Instance.Polygons.TryGetValue(selectedPolygonIndex, out var polygon))
-                    {
-                        SelectionManager.Instance.SelectObject(polygon, multiSelect: false);
-                    }
-                });
+                LevelEditing.RebuildLevelKeepingSelection();
             }
         }
 

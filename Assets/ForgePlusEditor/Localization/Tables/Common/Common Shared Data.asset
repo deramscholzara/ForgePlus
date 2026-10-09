@@ -2337,6 +2337,171 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2151331820879903
+    m_Key: History.Undo.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879904
+    m_Key: History.Redo.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879905
+    m_Key: History.Undo.Tooltip
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879906
+    m_Key: History.Undo.Tooltip.Nothing
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879907
+    m_Key: History.Redo.Tooltip
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879908
+    m_Key: History.Redo.Tooltip.Nothing
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879909
+    m_Key: History.Platform
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879910
+    m_Key: History.Platform.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879911
+    m_Key: History.Polygon
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879912
+    m_Key: History.Polygon.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879913
+    m_Key: History.Side
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879914
+    m_Key: History.Side.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879915
+    m_Key: History.Line
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879916
+    m_Key: History.Line.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879917
+    m_Key: History.Object
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879918
+    m_Key: History.Object.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879919
+    m_Key: History.Annotation
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879920
+    m_Key: History.Annotation.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879921
+    m_Key: History.Light
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879922
+    m_Key: History.Light.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879923
+    m_Key: History.Media
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879924
+    m_Key: History.Media.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879925
+    m_Key: History.AmbientSound
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879926
+    m_Key: History.AmbientSound.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879927
+    m_Key: History.RandomSound
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879928
+    m_Key: History.RandomSound.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879929
+    m_Key: History.Terminal
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879930
+    m_Key: History.Terminal.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879931
+    m_Key: History.Endpoint
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879932
+    m_Key: History.Endpoint.Many
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879933
+    m_Key: History.Placements
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879934
+    m_Key: History.Level
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2151331820879935
+    m_Key: History.Map
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

@@ -223,7 +223,19 @@ namespace RuntimeCore.Entities.Geometry
 
             NativeObject.media_index = mediaIndex;
 
-            if (media == null)
+            // The media surface is lit by the polygon's media light, which a polygon that had no media may not have
+            if (media != null && !ParentLevel.Lights.ContainsKey(NativeObject.media_lightsource_index))
+            {
+                NativeObject.media_lightsource_index = NativeObject.floor_lightsource_index;
+            }
+
+            ApplyMedia();
+        }
+
+        // Its media surface made, updated or removed to match its media (or lack of one)
+        public void ApplyMedia()
+        {
+            if (!ParentLevel.Medias.ContainsKey(NativeObject.media_index))
             {
                 if (MediaSurface)
                 {
@@ -237,21 +249,38 @@ namespace RuntimeCore.Entities.Geometry
                 return;
             }
 
-            // The media surface is lit by the polygon's media light, which a polygon that had no media may not have
-            if (!ParentLevel.Lights.ContainsKey(NativeObject.media_lightsource_index))
-            {
-                NativeObject.media_lightsource_index = NativeObject.floor_lightsource_index;
-            }
-
             if (MediaSurface)
             {
                 MediaSurface.ApplyMedia();
+                MediaSurface.ApplyLight();
             }
             else
             {
                 CreateMediaSurface();
                 SelectionManager.Instance.MatchSelectabilityToMode(MediaSurface.GetComponent<EditableSurface_Media>());
             }
+        }
+
+        // For data changed elsewhere (such as by undoing). Its sides are its lines' to rebuild.
+        public void ApplyAllSurfaces()
+        {
+            ApplySurface(FloorSurface);
+            ApplySurface(CeilingSurface);
+            ApplyMedia();
+        }
+
+        private static void ApplySurface(RuntimeSurfaceGeometry surface)
+        {
+            if (!surface)
+            {
+                return;
+            }
+
+            surface.ApplyHeight(rebatchImmediately: false);
+            surface.ApplyTexture(rebatchImmediately: false);
+            surface.ApplyTransferMode(rebatchImmediately: false);
+            surface.ApplyTextureOffset(rebatchImmediately: false);
+            surface.ApplyLight(rebatchImmediately: false);
         }
 
         private void CreateSelectionIndicators(RuntimeSurfaceGeometry surface, bool isfloor)

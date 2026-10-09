@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A labeled whole-number setting, committed on return or leaving the field -->
+    <ui:IntegerField name="control" label="Label" is-delayed="true" class="fp-number-row fp-template" />
+</ui:UXML>

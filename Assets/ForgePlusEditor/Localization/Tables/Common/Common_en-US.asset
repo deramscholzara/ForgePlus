@@ -481,6 +481,39 @@ MonoBehaviour:
   - rid: 552786240694648917
   - rid: 552786240694648918
   - rid: 552786240694648919
+  - rid: 552786240694648920
+  - rid: 552786240694648921
+  - rid: 552786240694648922
+  - rid: 552786240694648923
+  - rid: 552786240694648924
+  - rid: 552786240694648925
+  - rid: 552786240694648926
+  - rid: 552786240694648927
+  - rid: 552786240694648928
+  - rid: 552786240694648929
+  - rid: 552786240694648930
+  - rid: 552786240694648931
+  - rid: 552786240694648932
+  - rid: 552786240694648933
+  - rid: 552786240694648934
+  - rid: 552786240694648935
+  - rid: 552786240694648936
+  - rid: 552786240694648937
+  - rid: 552786240694648938
+  - rid: 552786240694648939
+  - rid: 552786240694648940
+  - rid: 552786240694648941
+  - rid: 552786240694648942
+  - rid: 552786240694648943
+  - rid: 552786240694648944
+  - rid: 552786240694648945
+  - rid: 552786240694648946
+  - rid: 552786240694648947
+  - rid: 552786240694648948
+  - rid: 552786240694648949
+  - rid: 552786240694648950
+  - rid: 552786240694648951
+  - rid: 552786240694648952
   references:
     version: 2
     RefIds:
@@ -3736,3 +3769,234 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: The sound source plays its platform's moving sound instead of its own, while the platform moves
+    - rid: 552786240694648920
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879903
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Undo'
+    - rid: 552786240694648921
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879904
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Redo'
+    - rid: 552786240694648922
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879905
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Undo the last change: {0} (Ctrl+Z)'
+    - rid: 552786240694648923
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879906
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Undo the last change (Ctrl+Z). There''s nothing to undo yet.'
+    - rid: 552786240694648924
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879907
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Redo the change that was undone: {0} (Ctrl+Y or Ctrl+Shift+Z)'
+    - rid: 552786240694648925
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879908
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Redo the change that was undone (Ctrl+Y or Ctrl+Shift+Z). There''s nothing to redo.'
+    - rid: 552786240694648926
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879909
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Platform {0}'
+    - rid: 552786240694648927
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879910
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} platforms'
+    - rid: 552786240694648928
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879911
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Polygon {0}'
+    - rid: 552786240694648929
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879912
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} polygons'
+    - rid: 552786240694648930
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879913
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Side {0}'
+    - rid: 552786240694648931
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879914
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} sides'
+    - rid: 552786240694648932
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879915
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Line {0}'
+    - rid: 552786240694648933
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879916
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} lines'
+    - rid: 552786240694648934
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879917
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Object {0}'
+    - rid: 552786240694648935
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879918
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} objects'
+    - rid: 552786240694648936
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879919
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Annotation {0}'
+    - rid: 552786240694648937
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879920
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} annotations'
+    - rid: 552786240694648938
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879921
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light {0}'
+    - rid: 552786240694648939
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879922
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} lights'
+    - rid: 552786240694648940
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879923
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Media {0}'
+    - rid: 552786240694648941
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879924
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} media'
+    - rid: 552786240694648942
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879925
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Ambient sound {0}'
+    - rid: 552786240694648943
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879926
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} ambient sounds'
+    - rid: 552786240694648944
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879927
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Random sound {0}'
+    - rid: 552786240694648945
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879928
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} random sounds'
+    - rid: 552786240694648946
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879929
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Terminal {0}'
+    - rid: 552786240694648947
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879930
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} terminals'
+    - rid: 552786240694648948
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879931
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Endpoint {0}'
+    - rid: 552786240694648949
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879932
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} endpoints'
+    - rid: 552786240694648950
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879933
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Item and monster placements'
+    - rid: 552786240694648951
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879934
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Level'
+    - rid: 552786240694648952
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151331820879935
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Map'

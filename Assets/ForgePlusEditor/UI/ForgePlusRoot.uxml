@@ -24,6 +24,7 @@
         </ui:VisualElement>
         <ui:VisualElement name="manipulation-slot" class="fp-slot fp-manipulation-slot" picking-mode="Ignore" />
         <ui:VisualElement name="errors-toggle-slot" class="fp-slot fp-errors-toggle-slot" picking-mode="Ignore" />
+        <ui:VisualElement name="history-slot" class="fp-slot fp-history-slot" picking-mode="Ignore" />
         <ui:Label name="level-name" class="fp-faint-text fp-level-name" picking-mode="Ignore" />
         <ui:VisualElement name="input-blocker" class="fp-input-blocker" picking-mode="Ignore">
             <ui:VisualElement class="fp-input-blocker__fill" picking-mode="Ignore" />

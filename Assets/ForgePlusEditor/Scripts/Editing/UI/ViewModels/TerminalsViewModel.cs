@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.DataFileIO;
+using ForgePlus.History;
 using ForgePlus.Inspection;
 using ForgePlus.Localization;
 using RuntimeCore.Entities;
@@ -154,6 +155,7 @@ namespace ForgePlus.UI
                 {
                     Terminal.encode_when_saved = value;
                     Notify(nameof(TextIsEncoded));
+                    LevelHistory.MarkEdited();
                 }
             }
         }
@@ -642,6 +644,7 @@ namespace ForgePlus.UI
             var isSameGroup = !groupsChanged && groupIndex == previousGroupIndex;
             ShowGroupAgain(groupIndex, groupsChanged, isSameGroup ? previousPageOfGroup : 0);
             OnTerminalEdited?.Invoke();
+            LevelHistory.MarkEdited();
         }
 
         // Lays out the terminal's pages again, and previews the group (from a later page of it, where it has that many)

@@ -24,6 +24,7 @@ namespace ForgePlus.UI
             Root.Find<Toggle>("ambient-occlusion").BindValue(settings, nameof(SettingsViewModel.AmbientOcclusionEnabled));
             Root.Find<Toggle>("improper-fractions").BindValue(settings, nameof(SettingsViewModel.ImproperFractionsEnabled));
             Root.Find<RadioButtonGroup>("merged-save-checksum").BindValue(settings, nameof(SettingsViewModel.MergedSaveChecksum));
+            Root.Find<IntegerField>("undo-steps").BindValue(settings, nameof(SettingsViewModel.UndoSteps));
         }
     }
 }

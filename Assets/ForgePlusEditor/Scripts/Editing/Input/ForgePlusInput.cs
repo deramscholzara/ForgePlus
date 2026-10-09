@@ -184,21 +184,47 @@ namespace ForgePlus.ApplicationGeneral
                     return Find("Interface/ToggleMenu");
                 }
             }
+
+            // Ctrl+Z (Command+Z), which redoes with Shift
+            public static InputAction Undo
+            {
+                get
+                {
+                    return Find("Interface/Undo");
+                }
+            }
+
+            // Ctrl+Y
+            public static InputAction Redo
+            {
+                get
+                {
+                    return Find("Interface/Redo");
+                }
+            }
         }
 
         // Looked up once each, since they're read every frame
         private static Dictionary<string, InputAction> actionsByPath;
 
+        // The action maps they were found in. Reimporting the actions asset (even during a Play session) replaces its maps,
+        // leaving the found actions without input state, so they're found again.
+        private static InputActionMap firstActionMap;
+
         private static InputAction Find(string actionPath)
         {
-            if (actionsByPath == null)
+            var asset = InputSystem.actions;
+            var currentFirstActionMap = asset.actionMaps.Count > 0 ? asset.actionMaps[0] : null;
+
+            if (actionsByPath == null || firstActionMap != currentFirstActionMap)
             {
                 actionsByPath = new Dictionary<string, InputAction>();
+                firstActionMap = currentFirstActionMap;
             }
 
             if (!actionsByPath.TryGetValue(actionPath, out var action))
             {
-                action = InputSystem.actions.FindAction(actionPath, throwIfNotFound: true);
+                action = asset.FindAction(actionPath, throwIfNotFound: true);
                 actionsByPath[actionPath] = action;
             }
 

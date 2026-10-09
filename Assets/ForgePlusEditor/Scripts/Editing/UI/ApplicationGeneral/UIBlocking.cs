@@ -45,6 +45,15 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // While anything (such as a dialog, or loading) blocks input
+        public bool IsBlocking
+        {
+            get
+            {
+                return currentBlockingCount > 0;
+            }
+        }
+
         public async void Block()
         {
             currentBlockingCount++;
@@ -73,6 +82,13 @@ namespace ForgePlus.ApplicationGeneral
 
         public async void Unblock()
         {
+            // Unblocking more than was blocked would leave later blocks (such as a dialog's) uncounted
+            if (currentBlockingCount == 0)
+            {
+                Debug.LogWarning("UIBlocking was unblocked more times than it was blocked.");
+                return;
+            }
+
             currentBlockingCount--;
             if (currentBlockingCount > 0)
             {

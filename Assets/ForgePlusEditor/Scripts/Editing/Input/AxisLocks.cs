@@ -88,6 +88,12 @@ namespace ForgePlus.LevelManipulation
 
         private void Update()
         {
+            // Ctrl+Y is Redo
+            if (Hotkeys.IsShortcutModifierPressed)
+            {
+                return;
+            }
+
             if (Hotkeys.WasPressed(ForgePlusInput.Editing.LockX))
             {
                 XLocked = !XLocked;

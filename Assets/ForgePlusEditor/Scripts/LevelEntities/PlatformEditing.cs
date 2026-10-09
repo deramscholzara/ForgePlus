@@ -52,7 +52,7 @@ namespace ForgePlus.LevelManipulation
 
             if (changesShape)
             {
-                LevelEditing.RebuildLevel(() => SelectPlatform(platformIndex));
+                LevelEditing.RebuildLevelKeepingSelection();
                 return;
             }
 
@@ -84,8 +84,7 @@ namespace ForgePlus.LevelManipulation
             level.static_platforms.Add(staticData);
             LineFlagsEditing.UpdateForPlatformChange(level, polygon.NativeObject);
 
-            var polygonIndex = polygon.NativeIndex;
-            LevelEditing.RebuildLevel(() => SelectPolygon(polygonIndex));
+            LevelEditing.RebuildLevelKeepingSelection();
         }
 
         // Makes a platform polygon another type. Later platforms move down an index, as do their polygons' permutations.
@@ -113,8 +112,7 @@ namespace ForgePlus.LevelManipulation
             polygon.NativeObject.permutation = 0;
             LineFlagsEditing.UpdateForPlatformChange(level, polygon.NativeObject);
 
-            var polygonIndex = polygon.NativeIndex;
-            LevelEditing.RebuildLevel(() => SelectPolygon(polygonIndex));
+            LevelEditing.RebuildLevelKeepingSelection();
         }
 
         // From the first platform edit on, the level saves static data (which every engine prefers), in the running
@@ -169,24 +167,6 @@ namespace ForgePlus.LevelManipulation
             }
 
             return staticData;
-        }
-
-        private static void SelectPlatform(short platformIndex)
-        {
-            var platform = LevelEntity_Platform.GetSelectablePlatform(LevelEntity_Level.Instance, platformIndex);
-
-            if (platform)
-            {
-                SelectionManager.Instance.SelectObject(platform, multiSelect: false);
-            }
-        }
-
-        private static void SelectPolygon(short polygonIndex)
-        {
-            if (LevelEntity_Level.Instance.Polygons.TryGetValue(polygonIndex, out var polygon))
-            {
-                SelectionManager.Instance.SelectObject(polygon, multiSelect: false);
-            }
         }
     }
 }

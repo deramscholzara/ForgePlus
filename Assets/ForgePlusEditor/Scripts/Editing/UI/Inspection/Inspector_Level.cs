@@ -2,6 +2,7 @@
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
+using ForgePlus.History;
 using ForgePlus.LevelManipulation;
 using ForgePlus.Localization;
 using ForgePlus.UI;
@@ -585,6 +586,7 @@ namespace ForgePlus.Inspection
                 if (ChapterScreenId >= 0)
                 {
                     MapsFile.SetChapterScreenShown(LevelIndex, value);
+                    LevelHistory.MarkEdited();
                     RefreshValuesInInspector();
                     ShowChapterScreenPreview();
                 }

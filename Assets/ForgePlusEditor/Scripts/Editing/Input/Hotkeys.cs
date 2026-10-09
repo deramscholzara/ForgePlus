@@ -16,6 +16,25 @@ namespace ForgePlus.ApplicationGeneral
             return action.WasPressedThisFrame() && !IsTypingInInputField();
         }
 
+        // Ctrl or Command, held for a shortcut (whose key then isn't its own hotkey)
+        public static bool IsShortcutModifierPressed
+        {
+            get
+            {
+                var keyboard = Keyboard.current;
+
+                return keyboard != null && (keyboard.ctrlKey.isPressed || keyboard.leftMetaKey.isPressed || keyboard.rightMetaKey.isPressed);
+            }
+        }
+
+        public static bool IsShiftPressed
+        {
+            get
+            {
+                return Keyboard.current != null && Keyboard.current.shiftKey.isPressed;
+            }
+        }
+
         public static float ReadAxis(InputAction action)
         {
             return IsTypingInInputField() ? 0f : action.ReadValue<float>();

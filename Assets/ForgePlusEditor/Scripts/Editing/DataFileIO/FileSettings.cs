@@ -111,8 +111,6 @@ namespace ForgePlus.DataFileIO
                 type.FileExtension(),
                 multiselect: false,
                 cb: openPaths => HandleSelectionBrowserResponse(openPaths, type));
-
-            UIBlocking.Instance.Unblock();
         }
 
         private void HandleSelectionBrowserResponse(string[] openPaths, DataFileTypes type)

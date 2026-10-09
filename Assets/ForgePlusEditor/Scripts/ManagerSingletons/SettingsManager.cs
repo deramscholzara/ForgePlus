@@ -1,4 +1,5 @@
-﻿using ForgePlus.Inspection;
+﻿using ForgePlus.History;
+using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.Sound;
 using ForgePlus.UI;
@@ -40,6 +41,7 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_SoundVolume = "Settings_SoundVolume";
         private const string PlayerPrefsSettingsKey_PlayLevelAudio = "Settings_PlayLevelAudio";
         private const string PlayerPrefsSettingsKey_ImproperFractions = "Settings_ImproperFractions";
+        private const string PlayerPrefsSettingsKey_UndoSteps = "Settings_UndoSteps";
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
 
@@ -246,6 +248,24 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // How many changes can be undone (each kept change takes memory, more for bigger changes)
+        public int UndoSteps
+        {
+            get
+            {
+                return Math.Clamp(PlayerPrefs.GetInt(PlayerPrefsSettingsKey_UndoSteps, UndoHistory.DefaultCapacity), UndoHistory.MinimumCapacity, UndoHistory.MaximumCapacity);
+            }
+            set
+            {
+                var steps = Math.Clamp(value, UndoHistory.MinimumCapacity, UndoHistory.MaximumCapacity);
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_UndoSteps, steps);
+
+                UndoHistory.Capacity = steps;
+
+                OnSettingChanged?.Invoke(nameof(UndoSteps));
+            }
+        }
+
         public MergedSaveChecksums MergedSaveChecksum
         {
             get
@@ -383,6 +403,7 @@ namespace ForgePlus.ApplicationGeneral
             ClipPlatformSidesEnabled = ClipPlatformSidesEnabled;
             ShowInvalidSidesEnabled = ShowInvalidSidesEnabled;
             ImproperFractionsEnabled = ImproperFractionsEnabled;
+            UndoSteps = UndoSteps;
 
             ModeManager.Instance.OnPrimaryModeChanged += OnPrimaryModeChanged;
         }

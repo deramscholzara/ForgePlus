@@ -1,5 +1,6 @@
 ﻿#if !NO_EDITING
 using AlephOne;
+using ForgePlus.History;
 using ForgePlus.Inspection;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
@@ -244,6 +245,12 @@ namespace ForgePlus.LevelManipulation
             Changed(shapeChanged: false);
         }
 
+        // After its data is restored (such as by undoing)
+        public static void NotifyRestored()
+        {
+            Changed(shapeChanged: true);
+        }
+
         private static void Changed(bool shapeChanged)
         {
             if (shapeChanged)
@@ -252,6 +259,7 @@ namespace ForgePlus.LevelManipulation
                 entries.Clear();
             }
 
+            LevelHistory.MarkEdited();
             OnChanged?.Invoke();
         }
     }

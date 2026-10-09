@@ -1,6 +1,7 @@
 ﻿using AlephOne;
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.Extensions;
+using ForgePlus.History;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Palette;
@@ -159,6 +160,9 @@ namespace ForgePlus.LevelManipulation
                                                surfaceWorldNormal,
                                                textureWorldUp);
 
+                // Recorded as one action when it ends
+                LevelHistory.BeginGesture();
+
                 if (ForgePlusInput.Editing.AlignContiguous.IsPressed())
                 {
                     alignmentGroupedPolygons.Clear();
@@ -218,6 +222,11 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
+            if (uvDragPlane != null)
+            {
+                LevelHistory.EndGesture();
+            }
+
             if (heightDrag != null)
             {
                 EndHeightDrag();
