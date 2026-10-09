@@ -143,13 +143,5 @@ namespace ForgePlus.ApplicationGeneral
 
             fadePosition = Mathf.Clamp01(fadePosition);
         }
-
-        private void Start()
-        {
-            if (fadeCTS == null)
-            {
-                Unblock();
-            }
-        }
     }
 }

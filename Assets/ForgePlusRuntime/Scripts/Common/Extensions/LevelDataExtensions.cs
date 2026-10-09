@@ -107,6 +107,18 @@ namespace ForgePlus.Extensions
             return clockwise ? line.clockwise_polygon_side_index : line.counterclockwise_polygon_side_index;
         }
 
+        public static void SetSideIndex(this line_data line, bool clockwise, short sideIndex)
+        {
+            if (clockwise)
+            {
+                line.clockwise_polygon_side_index = sideIndex;
+            }
+            else
+            {
+                line.counterclockwise_polygon_side_index = sideIndex;
+            }
+        }
+
         public static LevelEntity_Side GetRuntimeSide(this line_data line, bool clockwiseSide)
         {
             var sideIndex = line.GetSideIndex(clockwiseSide);

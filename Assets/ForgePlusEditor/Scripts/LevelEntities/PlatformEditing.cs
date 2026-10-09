@@ -45,13 +45,22 @@ namespace ForgePlus.LevelManipulation
 
             SaveStaticData(level);
 
+            // Its travel reaches the faces around it, which gain or lose sides as it reveals or hides them
+            SideExposure sideExposure = null;
+            if (changesShape)
+            {
+                sideExposure = new SideExposure();
+                sideExposure.RecordPolygon(level, level.PolygonList[level.PlatformList[platformIndex].polygon_index]);
+            }
+
             var staticData = GetStaticData(level, platformIndex);
             edit(staticData);
 
             platforms.initialize_platform(level, platformIndex, staticData, level.PlatformList[platformIndex].polygon_index);
 
-            if (changesShape)
+            if (sideExposure != null)
             {
+                sideExposure.ApplyToSides(level);
                 LevelEditing.RebuildLevelKeepingSelection();
                 return;
             }

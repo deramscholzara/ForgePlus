@@ -463,7 +463,7 @@ namespace AlephOne
             return (short) polygon.vertex_count;
         }
 
-        private static void calculate_adjacent_sides(MapLevel level, short polygon_index, short[] side_indexes)
+        public static void calculate_adjacent_sides(MapLevel level, short polygon_index, short[] side_indexes)
         {
             polygon_data polygon = get_polygon_data(level, polygon_index);
 

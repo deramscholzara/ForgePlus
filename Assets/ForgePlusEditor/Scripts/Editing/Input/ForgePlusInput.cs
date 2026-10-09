@@ -209,6 +209,8 @@ namespace ForgePlus.ApplicationGeneral
 
         // The action maps they were found in. Reimporting the actions asset (even during a Play session) replaces its maps,
         // leaving the found actions without input state, so they're found again.
+        // The asset owns the map, so it isn't disposed (resetting actionsByPath is enough to find it again).
+        [NoAutoStaticsCleanup]
         private static InputActionMap firstActionMap;
 
         private static InputAction Find(string actionPath)

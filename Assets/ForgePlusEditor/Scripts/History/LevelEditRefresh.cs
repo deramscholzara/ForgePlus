@@ -50,6 +50,9 @@ namespace ForgePlus.History
             nameof(polygon_data.sound_source_indexes),
             nameof(polygon_data.ambient_sound_image_index),
             nameof(polygon_data.random_sound_image_index),
+
+            // Worked out from its lines, which are rebuilt for their own changes
+            nameof(polygon_data.side_indexes),
         };
 
         private static readonly HashSet<string> polygonHeightFields = new HashSet<string>
@@ -64,10 +67,19 @@ namespace ForgePlus.History
             nameof(polygon_data.random_sound_image_index),
         };
 
-        // A changed type rebuilds the side's line (which surfaces it has depends on it), and the others are re-applied
-        private static readonly HashSet<string> refreshableSideFields = new HashSet<string>
+        // A changed type or place rebuilds the side's line (which surfaces it has depends on them), and the others are re-applied
+        private static readonly HashSet<string> sideLineFields = new HashSet<string>
         {
             nameof(side_data.type),
+            nameof(side_data.line_index),
+            nameof(side_data.polygon_index),
+
+            // Worked out from its line (map_constructors.cpp: recalculate_redundant_side_data)
+            nameof(side_data.exclusion_zone),
+        };
+
+        private static readonly HashSet<string> refreshableSideFields = new HashSet<string>(sideLineFields)
+        {
             nameof(side_data.flags),
             nameof(side_data.primary_texture),
             nameof(side_data.secondary_texture),
@@ -83,13 +95,11 @@ namespace ForgePlus.History
             nameof(side_data.ambient_delta),
         };
 
-        // A line's other fields only rebuild its sides
+        // A line's other fields (including which sides it has) only rebuild its sides
         private static readonly HashSet<string> structuralLineFields = new HashSet<string>
         {
             nameof(line_data.endpoint_indexes),
             nameof(line_data.length),
-            nameof(line_data.clockwise_polygon_side_index),
-            nameof(line_data.counterclockwise_polygon_side_index),
             nameof(line_data.clockwise_polygon_owner),
             nameof(line_data.counterclockwise_polygon_owner),
         };
@@ -186,7 +196,8 @@ namespace ForgePlus.History
 
                         continue;
                     case nameof(MapLevel.SideList):
-                        if (listChange.CountChanged || AnyChangedFields(listChange, fields => !fields.IsSubsetOf(refreshableSideFields)))
+                        // Sides added or removed (as heights reveal or hide faces) only rebuild their lines' sides
+                        if (AnyChangedFields(listChange, fields => !fields.IsSubsetOf(refreshableSideFields), skipAddedOrRemoved: true))
                         {
                             return true;
                         }
@@ -273,9 +284,20 @@ namespace ForgePlus.History
                                 soundsChanged |= changedFields.Overlaps(polygonSoundFields);
                                 break;
                             case nameof(MapLevel.SideList):
-                                if (changedFields.Contains(nameof(side_data.type)) || !level.Sides.TryGetValue(index, out var side) || !side)
+                                var element = listChange.Elements[elementIndex];
+
+                                if (element.IsAddedOrRemoved ||
+                                    changedFields.Overlaps(sideLineFields) ||
+                                    !level.Sides.TryGetValue(index, out var side) || !side)
                                 {
-                                    linesToRegenerate.Add(level.Level.SideList[index].line_index);
+                                    // Added, removed or moved between lines: on the line it was on, and the one it's on
+                                    foreach (var state in new[] { element.Before, element.After })
+                                    {
+                                        if (state is side_data sideState)
+                                        {
+                                            linesToRegenerate.Add(sideState.line_index);
+                                        }
+                                    }
                                 }
                                 else
                                 {
@@ -385,11 +407,17 @@ namespace ForgePlus.History
             }
         }
 
-        // Elements added or removed change the list's count, which is checked first
-        private static bool AnyChangedFields(TrackedList.ListChange change, Func<HashSet<string>, bool> isMatch)
+        // Elements added or removed change the list's count, which is checked first (unless they're skipped here)
+        private static bool AnyChangedFields(TrackedList.ListChange change, Func<HashSet<string>, bool> isMatch, bool skipAddedOrRemoved = false)
         {
             for (var elementIndex = 0; elementIndex < change.Elements.Count; elementIndex++)
             {
+                var element = change.Elements[elementIndex];
+                if (skipAddedOrRemoved && element.IsAddedOrRemoved)
+                {
+                    continue;
+                }
+
                 if (isMatch(change.ChangedFields(elementIndex)))
                 {
                     return true;

@@ -65,60 +65,17 @@ namespace RuntimeCore.Entities.Geometry
             // Note: A null-side may still be created as an untextured side
             var side = GetMemberWithBounds(level.Level.SideList, sideIndex, level.Level.SideList.Count);
 
-            #region Facing_Elevations
-            var facingPolygonIndex = line.GetPolygonOwner(isClockwise);
-
-            if (facingPolygonIndex < 0)
+            if (!TryGetFaceElevations(level.Level, line, isClockwise, out var elevations))
             {
                 return null;
             }
 
-            // Span the platforms' whole travel.
-            // Note: A platform that goes both ways meets at the midpoint of its travel, which its extrema already
-            //       account for (platforms.cpp: calculate_platform_extrema).
-            var facingPolygon = get_polygon_data(level.Level, facingPolygonIndex);
-            facingPolygon.GetHeightRange(level.Level, out var lowestFacingFloor, out _, out _, out var highestFacingCeiling);
-            #endregion Facing_Elevations
-
-            #region Opposing_Elevations
-            var opposingPolygonIndex = line.GetPolygonOwner(!isClockwise);
-            var hasOpposingPolygon = opposingPolygonIndex >= 0;
-
-            var lowestOpposingFloor = lowestFacingFloor;
-            var highestOpposingFloor = lowestFacingFloor;
-            var lowestOpposingCeiling = highestFacingCeiling;
-            var highestOpposingCeiling = highestFacingCeiling;
-
-            if (hasOpposingPolygon)
-            {
-                var opposingPolygon = get_polygon_data(level.Level, opposingPolygonIndex);
-                opposingPolygon.GetHeightRange(level.Level, out lowestOpposingFloor, out highestOpposingFloor, out lowestOpposingCeiling, out highestOpposingCeiling);
-            }
-            #endregion Opposing_Elevations
-
-            #region Exposure_Determination
-            // Data-driven surface-exposure
-            var dataExpectsFullSide = side != null &&
-                                      side.type == _full_side;
+            var dataExpectsFullSide = DataExpectsFullSide(side);
             var dataExpectsTop = !dataExpectsFullSide &&
                                  side != null &&
                                  (side.type == _high_side || side.type == _split_side);
 
-            // Geometry-driven surface-exposure
-            var exposesTop = !dataExpectsFullSide &&
-                             hasOpposingPolygon &&
-                             highestFacingCeiling > lowestOpposingCeiling;
-
-            var exposesMiddle = (!hasOpposingPolygon ||
-                                LINE_HAS_TRANSPARENT_SIDE(line) ||
-                                dataExpectsFullSide) &&
-                                highestFacingCeiling > lowestFacingFloor &&
-                                (highestOpposingCeiling > lowestOpposingFloor || dataExpectsFullSide);
-
-            var exposesBottom = !dataExpectsFullSide &&
-                                hasOpposingPolygon &&
-                                highestOpposingFloor > lowestFacingFloor;
-            #endregion Exposure_Determination
+            GetExposure(line, side, elevations, out var exposesTop, out var exposesMiddle, out var exposesBottom);
 
             #region Surface_Assembly
             LevelEntity_Side runtimeSide = null;
@@ -128,8 +85,8 @@ namespace RuntimeCore.Entities.Geometry
                 // Top is always Primary
                 var sideDataSource = DataSources.Primary;
 
-                var highHeight = highestFacingCeiling;
-                var lowHeight = lowestOpposingCeiling;
+                var highHeight = elevations.HighestFacingCeiling;
+                var lowHeight = elevations.LowestOpposingCeiling;
 
                 CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level, lineIndex);
 
@@ -147,18 +104,18 @@ namespace RuntimeCore.Entities.Geometry
             if (exposesMiddle)
             {
                 // Primary if there's no opposing polygon or it's explicitly "full", Transparent otherwise
-                var sideDataSource = (!hasOpposingPolygon) ? DataSources.Primary : DataSources.Transparent;
+                var sideDataSource = (!elevations.HasOpposingPolygon) ? DataSources.Primary : DataSources.Transparent;
 
                 var hasLayeredTransparentSide = side.HasLayeredTransparentSide(level.Level);
 
                 // The opening across the platforms' travel, as the line's adjacent heights are only their saved state
-                var openingCeiling = hasOpposingPolygon ? (short)Mathf.Min(highestFacingCeiling, highestOpposingCeiling) : highestFacingCeiling;
-                var openingFloor = hasOpposingPolygon ? (short)Mathf.Max(lowestFacingFloor, lowestOpposingFloor) : lowestFacingFloor;
+                var openingCeiling = elevations.HasOpposingPolygon ? (short)Mathf.Min(elevations.HighestFacingCeiling, elevations.HighestOpposingCeiling) : elevations.HighestFacingCeiling;
+                var openingFloor = elevations.HasOpposingPolygon ? (short)Mathf.Max(elevations.LowestFacingFloor, elevations.LowestOpposingFloor) : elevations.LowestFacingFloor;
 
-                var highHeight = dataExpectsFullSide ? highestFacingCeiling : openingCeiling;
-                var lowHeight = dataExpectsFullSide ? lowestFacingFloor : openingFloor;
+                var highHeight = dataExpectsFullSide ? elevations.HighestFacingCeiling : openingCeiling;
+                var lowHeight = dataExpectsFullSide ? elevations.LowestFacingFloor : openingFloor;
 
-                var typeDescriptor = hasOpposingPolygon ? $"Transparent - HasTransparentSide - Source:{sideDataSource}" : $"Full - Unopposed - Source:{sideDataSource}";
+                var typeDescriptor = elevations.HasOpposingPolygon ? $"Transparent - HasTransparentSide - Source:{sideDataSource}" : $"Full - Unopposed - Source:{sideDataSource}";
 
                 CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level, lineIndex);
 
@@ -196,8 +153,8 @@ namespace RuntimeCore.Entities.Geometry
                 // Secondary if there is an exposable or expected (in data) top section
                 var sideDataSource = dataExpectsTop ? DataSources.Secondary : DataSources.Primary;
 
-                var highHeight = highestOpposingFloor;
-                var lowHeight = lowestFacingFloor;
+                var highHeight = elevations.HighestOpposingFloor;
+                var lowHeight = elevations.LowestFacingFloor;
 
                 CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level, lineIndex);
 
@@ -235,6 +192,99 @@ namespace RuntimeCore.Entities.Geometry
             }
 
             return runtimeSide;
+        }
+
+        // Whether its polygons' heights expose any of a line's face (so it needs side data to be textured, lit and so on),
+        // apart from what its side data says. A face that's only drawn because its side is full isn't exposed.
+        public static bool IsFaceExposed(MapLevel level, short lineIndex, bool isClockwise)
+        {
+            var line = get_line_data(level, lineIndex);
+
+            if (!TryGetFaceElevations(level, line, isClockwise, out var elevations))
+            {
+                return false;
+            }
+
+            GetExposure(line, side: null, elevations, out var exposesTop, out var exposesMiddle, out var exposesBottom);
+
+            return exposesTop || exposesMiddle || exposesBottom;
+        }
+
+        // The heights a line's face spans, across its polygons' platforms' whole travel.
+        // Note: A platform that goes both ways meets at the midpoint of its travel, which its extrema already
+        //       account for (platforms.cpp: calculate_platform_extrema).
+        private struct FaceElevations
+        {
+            public bool HasOpposingPolygon;
+            public short LowestFacingFloor;
+            public short HighestFacingCeiling;
+            public short LowestOpposingFloor;
+            public short HighestOpposingFloor;
+            public short LowestOpposingCeiling;
+            public short HighestOpposingCeiling;
+        }
+
+        // False when no polygon faces it
+        private static bool TryGetFaceElevations(MapLevel level, line_data line, bool isClockwise, out FaceElevations elevations)
+        {
+            elevations = default;
+
+            var facingPolygonIndex = line.GetPolygonOwner(isClockwise);
+
+            if (facingPolygonIndex < 0)
+            {
+                return false;
+            }
+
+            var facingPolygon = get_polygon_data(level, facingPolygonIndex);
+            facingPolygon.GetHeightRange(level, out elevations.LowestFacingFloor, out _, out _, out elevations.HighestFacingCeiling);
+
+            var opposingPolygonIndex = line.GetPolygonOwner(!isClockwise);
+            elevations.HasOpposingPolygon = opposingPolygonIndex >= 0;
+
+            if (elevations.HasOpposingPolygon)
+            {
+                var opposingPolygon = get_polygon_data(level, opposingPolygonIndex);
+                opposingPolygon.GetHeightRange(level,
+                                               out elevations.LowestOpposingFloor,
+                                               out elevations.HighestOpposingFloor,
+                                               out elevations.LowestOpposingCeiling,
+                                               out elevations.HighestOpposingCeiling);
+            }
+            else
+            {
+                elevations.LowestOpposingFloor = elevations.LowestFacingFloor;
+                elevations.HighestOpposingFloor = elevations.LowestFacingFloor;
+                elevations.LowestOpposingCeiling = elevations.HighestFacingCeiling;
+                elevations.HighestOpposingCeiling = elevations.HighestFacingCeiling;
+            }
+
+            return true;
+        }
+
+        private static bool DataExpectsFullSide(side_data side)
+        {
+            return side != null && side.type == _full_side;
+        }
+
+        // Geometry-driven surface-exposure, which a full side's data overrides with its middle alone
+        private static void GetExposure(line_data line, side_data side, FaceElevations elevations, out bool exposesTop, out bool exposesMiddle, out bool exposesBottom)
+        {
+            var dataExpectsFullSide = DataExpectsFullSide(side);
+
+            exposesTop = !dataExpectsFullSide &&
+                         elevations.HasOpposingPolygon &&
+                         elevations.HighestFacingCeiling > elevations.LowestOpposingCeiling;
+
+            exposesMiddle = (!elevations.HasOpposingPolygon ||
+                            LINE_HAS_TRANSPARENT_SIDE(line) ||
+                            dataExpectsFullSide) &&
+                            elevations.HighestFacingCeiling > elevations.LowestFacingFloor &&
+                            (elevations.HighestOpposingCeiling > elevations.LowestOpposingFloor || dataExpectsFullSide);
+
+            exposesBottom = !dataExpectsFullSide &&
+                            elevations.HasOpposingPolygon &&
+                            elevations.HighestOpposingFloor > elevations.LowestFacingFloor;
         }
 
         protected override void AssembleEntity()

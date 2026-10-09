@@ -24,6 +24,10 @@ namespace ForgePlus.History
 
         private readonly List<TrackedData> trackedData = new List<TrackedData>();
 
+        // The level and map file being tracked, or null while none is
+        private MapLevel trackedLevel;
+        private MapsFile trackedMapsFile;
+
         private bool isEditMarked;
 
         // Drags in progress
@@ -166,6 +170,15 @@ namespace ForgePlus.History
                 return;
             }
 
+            // Being enabled again (as the Unity Editor's own Undo does to the UI's components, even while playing) finds
+            // the level it's already tracking, whose history is kept. Opening a level (even the same one) loads new data.
+            var level = LevelEntity_Level.Instance ? LevelEntity_Level.Instance.Level : null;
+            if (level != null && level == trackedLevel && MapsLoading.Instance.MapsFile == trackedMapsFile)
+            {
+                RecordPendingEdit();
+                return;
+            }
+
             StartTracking();
         }
 
@@ -231,6 +244,9 @@ namespace ForgePlus.History
                 data.Capture();
             }
 
+            trackedLevel = level;
+            trackedMapsFile = mapsFile;
+
             Debug.Log($"--- LevelHistory: Captured level state in timespan: {DateTime.Now - captureStartTime}");
         }
 
@@ -239,6 +255,8 @@ namespace ForgePlus.History
             isEditMarked = false;
             gestureCount = 0;
             trackedData.Clear();
+            trackedLevel = null;
+            trackedMapsFile = null;
 
             UndoHistory.Clear();
         }

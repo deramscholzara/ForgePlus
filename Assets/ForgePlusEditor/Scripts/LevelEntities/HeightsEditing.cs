@@ -28,6 +28,9 @@ namespace ForgePlus.LevelManipulation
 
         private static readonly HashSet<LevelEntity_Polygon> draggedPolygons = new HashSet<LevelEntity_Polygon>();
 
+        // How the faces the edit may reveal or hide were before it (or before the drag), whose sides follow when it's committed
+        private static readonly SideExposure sideExposure = new SideExposure();
+
         // A platform's heights are its platform's
         public static bool CanEdit(LevelEntity_Polygon polygon)
         {
@@ -105,6 +108,18 @@ namespace ForgePlus.LevelManipulation
                                                             GetHeight(polygon, dataSource) != height)
                                           .ToList();
 
+            // Before any height changes: the faces around the polygons, and around platforms next to them (whose travel
+            // follows their neighbors' heights)
+            foreach (var polygon in changedPolygons)
+            {
+                sideExposure.RecordPolygon(data, polygon.NativeObject);
+
+                foreach (var platformPolygon in AdjacentPlatformPolygons(data, polygon.NativeObject))
+                {
+                    sideExposure.RecordPolygon(data, platformPolygon);
+                }
+            }
+
             // Whether each line was closed off by its polygons' heights before any of them changed
             var lineClosures = new Dictionary<short, bool>();
             var endpointIndexes = new HashSet<short>();
@@ -179,16 +194,42 @@ namespace ForgePlus.LevelManipulation
             return changedPolygons;
         }
 
-        // A platform whose travel changed changes the sides around it, so the level is rebuilt
+        // A platform whose travel changed changes the sides around it, so the level is rebuilt. Sides revealed or hidden
+        // are added or removed here, as part of the same edit.
         private static void Commit(List<LevelEntity_Polygon> changedPolygons)
         {
-            var platformsChanged = changedPolygons.Count > 0 && RefreshAdjacentPlatforms(changedPolygons);
+            bool platformsChanged;
 
-            SurfaceBatchingManager.Instance.DeferMerging(false);
-
-            if (changedPolygons.Count == 0)
+            try
             {
-                return;
+                if (changedPolygons.Count == 0)
+                {
+                    return;
+                }
+
+                platformsChanged = RefreshAdjacentPlatforms(changedPolygons);
+
+                var linesWithChangedSides = sideExposure.ApplyToSides(LevelEntity_Level.Instance.Level);
+
+                // Otherwise the whole level is rebuilt below
+                if (!platformsChanged)
+                {
+                    var lines = LevelEntity_Level.Instance.Lines;
+
+                    foreach (var lineIndex in linesWithChangedSides)
+                    {
+                        if (lines.TryGetValue(lineIndex, out var line))
+                        {
+                            line.RegenerateSurfaces();
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                // Including faces recorded by an edit that failed partway, which the next edit mustn't start from
+                sideExposure.Clear();
+                SurfaceBatchingManager.Instance.DeferMerging(false);
             }
 
             PolygonContainmentMap.MarkChanged();
@@ -216,6 +257,18 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        private static IEnumerable<polygon_data> AdjacentPlatformPolygons(MapLevel data, polygon_data polygon)
+        {
+            for (var i = 0; i < polygon.vertex_count; i++)
+            {
+                var adjacentPolygonIndex = polygon.adjacent_polygon_indexes[i];
+                if (adjacentPolygonIndex != cstypes.NONE && data.PolygonList[adjacentPolygonIndex].type == _polygon_is_platform)
+                {
+                    yield return data.PolygonList[adjacentPolygonIndex];
+                }
+            }
+        }
+
         // Neighboring platforms that work out their travel from the polygons around them (platforms.cpp:
         // calculate_platform_extrema) are initialized again, as loading the level would. Returns whether any travel changed.
         private static bool RefreshAdjacentPlatforms(List<LevelEntity_Polygon> changedPolygons)
@@ -231,15 +284,9 @@ namespace ForgePlus.LevelManipulation
             var platformIndexes = new HashSet<short>();
             foreach (var polygon in changedPolygons)
             {
-                var nativePolygon = polygon.NativeObject;
-
-                for (var i = 0; i < nativePolygon.vertex_count; i++)
+                foreach (var platformPolygon in AdjacentPlatformPolygons(data, polygon.NativeObject))
                 {
-                    var adjacentPolygonIndex = nativePolygon.adjacent_polygon_indexes[i];
-                    if (adjacentPolygonIndex != cstypes.NONE && data.PolygonList[adjacentPolygonIndex].type == _polygon_is_platform)
-                    {
-                        platformIndexes.Add(data.PolygonList[adjacentPolygonIndex].permutation);
-                    }
+                    platformIndexes.Add(platformPolygon.permutation);
                 }
             }
 
