@@ -783,8 +783,8 @@ namespace ForgePlus.Inspection
         // Moving it in the level moves it to the polygon it's then in (it can't be moved out of the level's polygons)
         private void Move(short x, short y)
         {
-            var level = LevelEntity_Level.Instance.Level;
-            var polygonIndex = map.world_point_to_polygon_index(level, new world_point2d { x = x, y = y });
+            var location = new world_point2d(x, y);
+            var polygonIndex = map.world_point_to_polygon_index(Entity.Level, location);
 
             if (polygonIndex == cstypes.NONE)
             {
@@ -792,29 +792,17 @@ namespace ForgePlus.Inspection
                 return;
             }
 
-            Edit(mapObject =>
-            {
-                mapObject.NativeObject.location.x = x;
-                mapObject.NativeObject.location.y = y;
-                mapObject.NativeObject.polygon_index = polygonIndex;
-            });
-
-            Entity.ApplyPlacement();
+            Edit(mapObject => mapObject.MoveTo(location, polygonIndex, mapObject.NativeObject.location.z));
             UpdateSoundSources();
         }
 
-        // A sound source is heard from the polygons near it, which each polygon lists with the level's other map indexes
-        // (map_constructors.cpp: precalculate_polygon_sound_sources)
+        // Which polygons hear its sound, if it's a sound source
         private void UpdateSoundSources(bool force = false)
         {
-            if (!force && !IsSoundSource)
+            if (force || IsSoundSource)
             {
-                return;
+                LevelEntity_MapObject.RecalculateHeardSoundSources(Entity.Level);
             }
-
-            var level = LevelEntity_Level.Instance.Level;
-            level.MapIndexList.Clear();
-            map_constructors.precalculate_map_indexes(level);
         }
 
         private void SetFlag(ushort flag, bool isSet)

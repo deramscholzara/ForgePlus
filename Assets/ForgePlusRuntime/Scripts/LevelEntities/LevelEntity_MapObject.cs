@@ -120,17 +120,17 @@ namespace RuntimeCore.Entities.MapObjects
 
         public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
-            // Intentionally blank - for now
+            BeginMoveDrag(eventData);
         }
 
         public override void OnValidatedDrag(WorldPointerEventData eventData)
         {
-            // Intentionally blank - for now
+            MoveDrag(eventData);
         }
 
         public override void OnValidatedEndDrag(WorldPointerEventData eventData)
         {
-            // Intentionally blank - for now
+            EndMoveDrag();
         }
 
         public override void SetSelectability(bool enabled)

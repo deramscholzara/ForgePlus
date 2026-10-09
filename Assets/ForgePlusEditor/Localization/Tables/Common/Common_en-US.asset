@@ -3623,7 +3623,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879881
         m_Metadata:
           m_Items: []
-        m_Value: How far above its polygon's floor it is (or below its ceiling, for one hanging from it)
+        m_Value: How far above its polygon's floor it is (or below its ceiling, when From Ceiling is enabled)
     - rid: 552786240694648899
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:

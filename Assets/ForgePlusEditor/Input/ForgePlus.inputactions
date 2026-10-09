@@ -368,6 +368,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "KeepRelativeHeight",
+                    "type": "Button",
+                    "id": "3ac2214d-75dc-4c9c-8e0f-d2dd49382013",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -500,6 +510,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "AlignContiguous",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c2fa614-0f89-4d84-bf4b-f2afa3872a15",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "KeepRelativeHeight",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
