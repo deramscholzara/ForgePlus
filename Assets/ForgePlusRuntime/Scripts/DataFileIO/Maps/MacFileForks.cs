@@ -177,6 +177,15 @@ namespace ForgePlus.DataFileIO
             return removedResources.Contains((type, id));
         }
 
+        // The resources left out
+        public HashSet<(uint Type, short Id)> RemovedResources
+        {
+            get
+            {
+                return removedResources;
+            }
+        }
+
         // As resource_manager.is_applesingle does, for the data fork (as FileHandler opens a map)
         private static bool IsAppleSingle(byte[] bytes)
         {

@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.History;
 using ForgePlus.Localization;
 using ForgePlus.UI;
 using System;
@@ -31,6 +32,8 @@ namespace ForgePlus.Inspection
         // Refreshes every inspector showing what was edited (such as its selection inspector and its entry in a list)
         public static void RefreshInspectorsOf(object inspectedObject)
         {
+            LevelHistory.MarkEdited();
+
             // An edit may have changed the level's errors
             var ui = ForgePlusUI.Instance;
             if (ui && ui.Errors != null)

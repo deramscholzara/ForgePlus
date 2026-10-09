@@ -1,5 +1,6 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.CameraNavigation;
+using ForgePlus.History;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.Localization;
@@ -122,6 +123,8 @@ namespace ForgePlus.UI
             var soundPlayback = editorCamera.gameObject.AddComponent<LevelSoundPlayback>();
             soundPlayback.IsListening = SettingsManager.Instance.PlayLevelAudioEnabled;
 
+            gameObject.AddComponent<LevelHistory>();
+
             Editor = new EditorViewModel();
             Settings = new SettingsViewModel();
             Terminals = new TerminalsViewModel();
@@ -137,6 +140,7 @@ namespace ForgePlus.UI
             CreateSlot("header-slot").Show<HeaderPanel>();
             CreateSlot("manipulation-slot").Show<ManipulationPanel>();
             CreateSlot("errors-toggle-slot").Show<ErrorsTogglePanel>();
+            CreateSlot("history-slot").Show<HistoryPanel>();
             CreateSlot("view-options-slot").Show<ViewOptionsPanel>();
             root.Q("mode-settings").AddToClassList("fp-mode-settings--loaded");
 
@@ -214,6 +218,16 @@ namespace ForgePlus.UI
             {
                 SetVisible(true);
                 Editor.MenuOpen = !Editor.MenuOpen;
+            }
+
+            // Ctrl+Shift+Z redoes too
+            if (Hotkeys.WasPressed(ForgePlusInput.Interface.Redo) || Hotkeys.WasPressed(ForgePlusInput.Interface.Undo) && Hotkeys.IsShiftPressed)
+            {
+                UndoHistory.Redo();
+            }
+            else if (Hotkeys.WasPressed(ForgePlusInput.Interface.Undo))
+            {
+                UndoHistory.Undo();
             }
         }
 

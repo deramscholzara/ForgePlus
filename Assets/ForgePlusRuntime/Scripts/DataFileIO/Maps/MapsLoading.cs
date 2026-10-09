@@ -116,6 +116,7 @@ namespace ForgePlus.DataFileIO
             {
                 Debug.LogError($"Tried opening level index {levelIndex} with no loaded Maps file.  You may need to call LoadData() first.");
                 // No maps data is loaded, so exit
+                UIBlocking.Instance.Unblock();
                 return;
             }
 

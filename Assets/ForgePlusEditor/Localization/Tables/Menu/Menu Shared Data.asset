@@ -187,6 +187,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 1974903057825793
+    m_Key: SettingsTab.UndoSteps.Control.Label
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1974903057825794
+    m_Key: SettingsTab.UndoSteps.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

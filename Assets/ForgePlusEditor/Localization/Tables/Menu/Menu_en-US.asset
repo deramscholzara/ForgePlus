@@ -51,6 +51,8 @@ MonoBehaviour:
   - rid: 552786204080472192
   - rid: 552786240694648889
   - rid: 552786240694648897
+  - rid: 552786240694648898
+  - rid: 552786240694648899
   references:
     version: 2
     RefIds:
@@ -292,3 +294,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Shows heights, positions and other distances as 1024ths alone (such as "6153/1024"), rather than as whole world units and 1024ths (such as "6 and 9/1024"). Either can be typed into a field, as can a bare number of 1024ths (such as "6153"), a decimal number of world units (such as "6.0087"), or a percentage of a world unit (such as "55%").
+    - rid: 552786240694648898
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1974903057825793
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Undo Steps'
+    - rid: 552786240694648899
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 1974903057825794
+        m_Metadata:
+          m_Items: []
+        m_Value: 'How many changes can be undone, from 1 to 10,000 (50 by default). Each change kept takes memory (a change to much of the level takes more), so very high values can use a lot of it.'

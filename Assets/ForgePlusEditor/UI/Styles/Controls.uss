@@ -277,6 +277,43 @@
     display: none;
 }
 
+/* ---------- Number field (a labeled row, like a slider's) ---------- */
+
+.fp-number-row {
+    flex-grow: 1;
+    margin: 0;
+    padding: 5px;
+    background-color: var(--fp-slider-background);
+}
+
+.fp-number-row > .unity-base-field__label {
+    min-width: 150px;
+    width: 150px;
+    margin: 0;
+    padding: 0;
+    color: var(--fp-control-text);
+    font-size: 14px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+/* A small box at the row's end, with dark text (on the row's light background) */
+.fp-number-row > .unity-base-text-field__input {
+    flex-grow: 0;
+    width: 100px;
+    min-width: 100px;
+    margin: 0 0 0 auto;
+    border-width: 1px;
+    border-radius: 0;
+    border-color: rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.06);
+    -unity-text-align: middle-right;
+}
+
+.fp-number-row .unity-text-element {
+    color: var(--fp-control-text);
+}
+
 /* ---------- Slider (a labeled row) ---------- */
 
 .fp-slider {

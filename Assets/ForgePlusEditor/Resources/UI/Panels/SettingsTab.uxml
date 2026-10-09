@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
     <ui:Template name="SliderRow" src="../Templates/SliderRow.uxml" />
+    <ui:Template name="IntegerFieldRow" src="../Templates/IntegerFieldRow.uxml" />
     <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
     <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
     <ui:VisualElement class="fp-grow" picking-mode="Ignore">
@@ -29,6 +30,10 @@
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <ui:Instance template="Toggle" name="improper-fractions" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.ImproperFractions.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.ImproperFractions.Control.Text" />
+                </ui:Instance>
+                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <ui:Instance template="IntegerFieldRow" name="undo-steps" class="fp-setting" tooltip="@Menu/SettingsTab.UndoSteps.Tooltip">
+                    <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.UndoSteps.Control.Label" />
                 </ui:Instance>
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <!-- What Save Merged does with the map file's checksum (Ask until its dialog's choice is remembered), in the

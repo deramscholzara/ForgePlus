@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- Undoes and redoes the last change (in the bottom left corner, opposite the errors toggle) -->
+    <ui:VisualElement class="fp-history" picking-mode="Ignore">
+        <ui:Instance template="Button" name="undo" class="fp-history__action">
+            <ui:AttributeOverrides element-name="control" text="@Common/History.Undo.Control.Text" />
+        </ui:Instance>
+        <ui:Instance template="Button" name="redo" class="fp-history__action fp-history__action--last">
+            <ui:AttributeOverrides element-name="control" text="@Common/History.Redo.Control.Text" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

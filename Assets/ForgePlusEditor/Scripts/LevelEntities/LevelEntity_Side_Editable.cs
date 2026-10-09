@@ -226,6 +226,35 @@ namespace RuntimeCore.Entities.Geometry
             return definition != null;
         }
 
+        // For data changed elsewhere (such as by undoing). Which surfaces it has is its line's to rebuild.
+        public void ApplyAllSurfaces()
+        {
+            ApplySurface(PrimarySurface, innerLayer: true);
+            ApplySurface(SecondarySurface, innerLayer: true);
+            ApplySurface(TransparentSurface, innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
+
+            foreach (var surface in new[] { TopSurface, MiddleSurface, BottomSurface })
+            {
+                if (surface)
+                {
+                    surface.ApplyAmbientDelta(rebatchImmediately: false);
+                }
+            }
+        }
+
+        private static void ApplySurface(RuntimeSurfaceGeometry surface, bool innerLayer)
+        {
+            if (!surface)
+            {
+                return;
+            }
+
+            surface.ApplyTexture(innerLayer, rebatchImmediately: false);
+            surface.ApplyTransferMode(innerLayer, rebatchImmediately: false);
+            surface.ApplyTextureOffset(innerLayer, rebatchImmediately: false);
+            surface.ApplyLight(innerLayer, rebatchImmediately: false);
+        }
+
         // TODO: actually set these up to use the new entity system
         public void SetOffset(DataSources dataSource, short x, short y, bool rebatch)
         {

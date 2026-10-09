@@ -1,4 +1,5 @@
-﻿using RuntimeCore.Common;
+﻿using ForgePlus.History;
+using RuntimeCore.Common;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
 
@@ -42,6 +43,8 @@ namespace ForgePlus.Inspection
 
         public void RefreshAllInspectors()
         {
+            LevelHistory.MarkEdited();
+
             foreach (var inspector in inspectors)
             {
                 inspector.RefreshValuesInInspector();

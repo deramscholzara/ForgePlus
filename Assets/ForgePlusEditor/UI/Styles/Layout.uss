@@ -246,6 +246,33 @@
     color: var(--fp-text-bright);
 }
 
+/* ---------- Undo and Redo (in the bottom left corner, opposite the errors toggle) ---------- */
+
+.fp-history-slot {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: var(--fp-control-height);
+}
+
+.fp-history-slot > .fp-panel,
+.fp-history {
+    flex-grow: 1;
+}
+
+.fp-history {
+    flex-direction: row;
+}
+
+.fp-history__action {
+    width: 70px;
+    margin-right: 5px;
+}
+
+.fp-history__action--last {
+    margin-right: 0;
+}
+
 /* ---------- Level name ---------- */
 
 /* Beside the errors toggle */

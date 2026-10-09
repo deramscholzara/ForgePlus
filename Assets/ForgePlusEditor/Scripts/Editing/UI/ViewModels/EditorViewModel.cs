@@ -1,6 +1,8 @@
 ﻿using ForgePlus.DataFileIO;
 using ForgePlus.Extensions;
+using ForgePlus.History;
 using ForgePlus.LevelManipulation;
+using ForgePlus.Localization;
 using RuntimeCore.Entities;
 using System;
 using Unity.Properties;
@@ -29,6 +31,7 @@ namespace ForgePlus.UI
             MapsLoading.Instance.OnLevelNamesChanged += OnLevelNamesChanged;
             SelectionManager.Instance.OnSelectionChanged += OnSelectionChanged;
             AxisLocks.Instance.OnChanged += OnAxisLocksChanged;
+            UndoHistory.OnChanged += OnUndoHistoryChanged;
         }
 
         // Primary modes in their order in the header (Geometry is 0)
@@ -85,6 +88,50 @@ namespace ForgePlus.UI
             get
             {
                 return SelectionManager.Instance.SelectedObject != null;
+            }
+        }
+
+        [CreateProperty]
+        public bool CanUndo
+        {
+            get
+            {
+                return UndoHistory.CanUndo;
+            }
+        }
+
+        [CreateProperty]
+        public bool CanRedo
+        {
+            get
+            {
+                return UndoHistory.CanRedo;
+            }
+        }
+
+        [CreateProperty]
+        public string UndoTooltip
+        {
+            get
+            {
+                var description = UndoHistory.UndoDescription;
+
+                return description != null ?
+                       Strings.Get(Strings.Common, "History.Undo.Tooltip", description) :
+                       Strings.Get(Strings.Common, "History.Undo.Tooltip.Nothing");
+            }
+        }
+
+        [CreateProperty]
+        public string RedoTooltip
+        {
+            get
+            {
+                var description = UndoHistory.RedoDescription;
+
+                return description != null ?
+                       Strings.Get(Strings.Common, "History.Redo.Tooltip", description) :
+                       Strings.Get(Strings.Common, "History.Redo.Tooltip.Nothing");
             }
         }
 
@@ -216,6 +263,8 @@ namespace ForgePlus.UI
             {
                 axisLocks.OnChanged -= OnAxisLocksChanged;
             }
+
+            UndoHistory.OnChanged -= OnUndoHistoryChanged;
         }
 
         private void OnPrimaryModeChanged(ModeManager.PrimaryModes primaryMode)
@@ -256,6 +305,14 @@ namespace ForgePlus.UI
             Notify(nameof(XLocked));
             Notify(nameof(YLocked));
             Notify(nameof(SnapToGrid));
+        }
+
+        private void OnUndoHistoryChanged()
+        {
+            Notify(nameof(CanUndo));
+            Notify(nameof(CanRedo));
+            Notify(nameof(UndoTooltip));
+            Notify(nameof(RedoTooltip));
         }
     }
 }

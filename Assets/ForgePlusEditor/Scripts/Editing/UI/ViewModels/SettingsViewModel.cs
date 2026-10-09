@@ -126,6 +126,19 @@ namespace ForgePlus.UI
         }
 
         [CreateProperty]
+        public int UndoSteps
+        {
+            get
+            {
+                return SettingsManager.Instance.UndoSteps;
+            }
+            set
+            {
+                SettingsManager.Instance.UndoSteps = value;
+            }
+        }
+
+        [CreateProperty]
         public bool ImproperFractionsEnabled
         {
             get
