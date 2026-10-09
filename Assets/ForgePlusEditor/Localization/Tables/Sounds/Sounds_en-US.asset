@@ -236,7 +236,7 @@ MonoBehaviour:
         m_KeyId: 2578515116032
         m_Metadata:
           m_Items: []
-        m_Value: The direction it comes from, in degrees (grayed out while it's non-directional)
+        m_Value: The sound is heard from the opposite side of these angles, where the arrows point (with Sound Direction on), as the game saves the way the sound travels. Grayed out while it's non-directional.
     - rid: 552786097007231315
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -460,7 +460,7 @@ MonoBehaviour:
         m_KeyId: 2151324447293443
         m_Metadata:
           m_Items: []
-        m_Value: Plays from no particular direction, rather than from its direction
+        m_Value: Plays equally in both speakers, rather than panned by its direction
     - rid: 552786097007231814
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:

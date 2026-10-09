@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A range of numbers, as InspectorIntegerSliderRangeRow is of whole numbers -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area fp-inspector-row__value-area--row">
+            <ui:FloatField name="value" is-delayed="true" class="fp-inspector-text-field fp-inspector-slider-number" />
+            <ui:MinMaxSlider name="slider" low-limit="0" high-limit="100" class="fp-inspector-range-slider" />
+            <ui:FloatField name="maximum" is-delayed="true" class="fp-inspector-range-maximum fp-inspector-slider-number" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

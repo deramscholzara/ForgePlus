@@ -20,13 +20,13 @@
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.Type.Label.Text" />
         </ui:Instance>
         <ui:Label name="TypeNote" class="fp-inspector-note fp-aleph-one-only" />
-        <ui:Instance template="DistanceFieldRow" name="LowHeight" tooltip="@Media/Inspector.Media.LowHeight.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="LowHeight" class="fp-inspector-row--draggable" tooltip="@Media/Inspector.Media.LowHeight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.LowHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="HighHeight" tooltip="@Media/Inspector.Media.HighHeight.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="HighHeight" class="fp-inspector-row--draggable" tooltip="@Media/Inspector.Media.HighHeight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.HighHeight.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="FloatFieldRow" name="FlowDirection" tooltip="@Media/Inspector.Media.FlowDirection.Tooltip">
+        <ui:Instance template="FloatFieldRow" name="FlowDirection" class="fp-inspector-row--draggable" tooltip="@Media/Inspector.Media.FlowDirection.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Media/Inspector.Media.FlowDirection.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="FlowMagnitude" tooltip="@Media/Inspector.Media.FlowMagnitude.Tooltip">

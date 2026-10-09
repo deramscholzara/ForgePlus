@@ -100,6 +100,11 @@
 }
 
 /* Above its value, a label can be as wide as its text */
+/* A position's or direction's label, which can be dragged to adjust it (LabelDragger) */
+.fp-inspector-row__label--draggable:hover {
+    color: var(--fp-text-bright);
+}
+
 .fp-inspector-row--vertical .fp-inspector-row__label {
     width: auto;
 }
@@ -408,6 +413,14 @@
     margin: 0 5px 0 0;
 }
 
+/* A range's slider, between the fields for its ends */
+.fp-inspector-range-slider {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    margin: 0 5px;
+}
+
 .fp-inspector-slider-number {
     width: 50px;
     flex-shrink: 0;
@@ -444,21 +457,7 @@
     opacity: 1;
 }
 
-/* A range's fields share the value area, with "to" between them; the second looks like the first */
-.fp-inspector-range-field {
-    flex-grow: 1;
-    flex-basis: 0;
-    min-width: 0;
-}
-
-.fp-inspector-range-separator {
-    flex-shrink: 0;
-    padding: 0 5px;
-    margin: 0;
-    color: var(--fp-value-text);
-    -unity-text-align: middle-center;
-}
-
+/* A range's second field (beside its slider) looks like the first */
 .fp-inspector-range-maximum {
     margin: 0;
     padding: 0;

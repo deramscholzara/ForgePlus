@@ -39,13 +39,13 @@
         <ui:Instance template="DropdownRow" name="ActivationBias" tooltip="@Common/Inspector.MapObject.ActivationBias.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.ActivationBias.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="FloatFieldRow" name="Angle" tooltip="@Common/Inspector.MapObject.Angle.Tooltip">
+        <ui:Instance template="FloatFieldRow" name="Angle" class="fp-inspector-row--draggable" tooltip="@Common/Inspector.MapObject.Angle.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Angle.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="VolumeFromLight" tooltip="@Common/Inspector.MapObject.VolumeFromLight.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Common/Inspector.MapObject.VolumeFromLight.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="@Common/Inspector.MapObject.Volume.Tooltip">
+        <ui:Instance template="SliderIntegerRow" name="Volume" class="fp-inspector-row--draggable" tooltip="@Common/Inspector.MapObject.Volume.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.Volume.Label.Text" />
         </ui:Instance>
         <ui:Instance template="LightRow" name="VolumeLight" tooltip="@Common/Inspector.MapObject.VolumeLight.Tooltip">
@@ -55,13 +55,13 @@
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.SavedVolume.Label.Text" />
         </ui:Instance>
         <ui:Label name="volume-light-note" text="@Common/Inspector.MapObject.VolumeLightNote.Text" class="fp-inspector-note" />
-        <ui:Instance template="DistanceFieldRow" name="PositionX" tooltip="@Common/Inspector.MapObject.PositionX.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="PositionX" class="fp-inspector-row--draggable" tooltip="@Common/Inspector.MapObject.PositionX.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PositionX.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="PositionY" tooltip="@Common/Inspector.MapObject.PositionY.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="PositionY" class="fp-inspector-row--draggable" tooltip="@Common/Inspector.MapObject.PositionY.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PositionY.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="PositionZ" tooltip="@Common/Inspector.MapObject.PositionZ.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="PositionZ" class="fp-inspector-row--draggable" tooltip="@Common/Inspector.MapObject.PositionZ.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.MapObject.PositionZ.Label.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />

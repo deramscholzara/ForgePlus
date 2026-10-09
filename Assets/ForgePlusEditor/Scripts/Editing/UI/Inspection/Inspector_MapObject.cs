@@ -261,10 +261,18 @@ namespace ForgePlus.Inspection
             }
             set
             {
-                var angle = AlephOneExtensions.DegreesToAngle(value);
+                var angle = AngleFromDegrees(value);
 
                 Edit(mapObject => mapObject.NativeObject.facing = angle);
                 Entity.ApplyPlacement();
+            }
+        }
+
+        public float AngleDragWrap
+        {
+            get
+            {
+                return DegreesPerTurn;
             }
         }
 

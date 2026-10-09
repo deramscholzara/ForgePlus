@@ -13,7 +13,7 @@
             <ui:AttributeOverrides element-name="control" text="@Common/Manipulation.LockY.Control.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-separator fp-separator--vertical" />
-        <ui:Instance template="Toggle" name="snap" class="fp-manipulation__snap fp-text-16 fp-manipulation--last">
+        <ui:Instance template="Toggle" name="snap" class="fp-manipulation__snap fp-text-16 fp-manipulation--last" tooltip="@Common/Manipulation.Snap.Tooltip">
             <ui:AttributeOverrides element-name="control" text="@Common/Manipulation.Snap.Control.Text" />
         </ui:Instance>
     </ui:VisualElement>

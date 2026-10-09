@@ -124,10 +124,18 @@ namespace ForgePlus.Inspection
             }
             set
             {
-                var angle = AlephOneExtensions.DegreesToAngle(value);
+                var angle = AngleFromDegrees(value);
 
                 Edit(media => media.NativeObject.current_direction = angle);
                 Entity.ApplyMaterialProperties();
+            }
+        }
+
+        public float FlowDirectionDragWrap
+        {
+            get
+            {
+                return DegreesPerTurn;
             }
         }
 

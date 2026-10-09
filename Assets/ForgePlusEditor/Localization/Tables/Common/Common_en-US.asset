@@ -101,9 +101,7 @@ MonoBehaviour:
   - rid: 552786097007231472
   - rid: 552786097007231473
   - rid: 552786097007231474
-  - rid: 552786097007231475
   - rid: 552786097007231476
-  - rid: 552786097007231477
   - rid: 552786097007231478
   - rid: 552786097007231502
   - rid: 552786097007231503
@@ -516,6 +514,7 @@ MonoBehaviour:
   - rid: 552786240694648952
   - rid: 552786269510828085
   - rid: 552786269510828086
+  - rid: 552786279223525425
   references:
     version: 2
     RefIds:
@@ -1043,7 +1042,7 @@ MonoBehaviour:
         m_KeyId: 2585972588545
         m_Metadata:
           m_Items: []
-        m_Value: Grid Snap
+        m_Value: Snapping
     - rid: 552786097007231466
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -1107,13 +1106,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Plays it once (needs a sounds file, in the Files tab)
-    - rid: 552786097007231475
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2586077446144
-        m_Metadata:
-          m_Items: []
-        m_Value: to
     - rid: 552786097007231476
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -1121,13 +1113,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Additional Details
-    - rid: 552786097007231477
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2586090029056
-        m_Metadata:
-          m_Items: []
-        m_Value: to
     - rid: 552786097007231478
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3553,7 +3538,7 @@ MonoBehaviour:
         m_KeyId: 1916131501293571
         m_Metadata:
           m_Items: []
-        m_Value: 'Position Z:'
+        m_Value: 'Vertical Distance:'
     - rid: 552786240694648889
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3728,7 +3713,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879896
         m_Metadata:
           m_Items: []
-        m_Value: Its floor's height (Heights mode edits it)
+        m_Value: Its floor's height, which can't pass its ceiling (a platform's is set by its platform)
     - rid: 552786240694648914
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3742,7 +3727,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879898
         m_Metadata:
           m_Items: []
-        m_Value: Its ceiling's height (Heights mode edits it)
+        m_Value: Its ceiling's height, which can't pass its floor (a platform's is set by its platform)
     - rid: 552786240694648916
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -4016,3 +4001,10 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: What the level view shows. Every option is listed; those the current mode decides are grayed out (and shown on where the mode always shows them).
+    - rid: 552786279223525425
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2532770391408640
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Snaps what you drag to even steps: positions and heights to sixteenths of a world unit, and angles, volumes and other numbers to steps of 5 (pitch to 0.05). Hold alt/option to invert it.'

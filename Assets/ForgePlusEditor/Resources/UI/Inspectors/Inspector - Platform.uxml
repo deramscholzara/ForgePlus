@@ -61,13 +61,13 @@
         <ui:Instance template="Flag" name="LowestIsAutomatic" tooltip="@Platforms/Inspector.Platform.LowestIsAutomatic.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.LowestIsAutomatic.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="Lowest" tooltip="@Platforms/Inspector.Platform.Lowest.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="Lowest" class="fp-inspector-row--draggable" tooltip="@Platforms/Inspector.Platform.Lowest.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Lowest.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="HighestIsAutomatic" tooltip="@Platforms/Inspector.Platform.HighestIsAutomatic.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Platforms/Inspector.Platform.HighestIsAutomatic.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="Highest" tooltip="@Platforms/Inspector.Platform.Highest.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="Highest" class="fp-inspector-row--draggable" tooltip="@Platforms/Inspector.Platform.Highest.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Platforms/Inspector.Platform.Highest.Label.Text" />
         </ui:Instance>
         <ui:Instance template="Flag" name="UsesNativePolygonHeights" tooltip="@Platforms/Inspector.Platform.UsesNativePolygonHeights.Tooltip">

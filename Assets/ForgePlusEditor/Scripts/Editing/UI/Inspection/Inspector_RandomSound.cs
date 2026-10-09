@@ -6,6 +6,7 @@ using ForgePlus.UI;
 using System;
 using System.Collections.Generic;
 using Unity.Properties;
+using UnityEngine;
 
 namespace ForgePlus.Inspection
 {
@@ -15,6 +16,10 @@ namespace ForgePlus.Inspection
     public class Inspector_RandomSound : Inspector_SoundImage
     {
         private const float AngleUnitsPerDegree = world.NUMBER_OF_ANGLES / 360f;
+
+        // A pitch is dragged (by its label or slider) a hundredth at a time, and snaps to twentieths
+        private const float PitchStepPerPixel = 0.01f;
+        private const float PitchSnapIncrement = 0.05f;
 
         public Inspector_RandomSound(SoundImageEntry entry) : base(entry)
         {
@@ -89,6 +94,23 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Both ends at once (as its slider's thumbs set them)
+        [CreateProperty]
+        public Vector2 VolumeRange
+        {
+            get
+            {
+                return new Vector2(Volume, VolumeMaximum);
+            }
+            set
+            {
+                if (IsChange(value, Volume, VolumeMaximum, out var minimum, out var maximum))
+                {
+                    SetRange(minimum, maximum, 0, SoundManagerEnums.MAXIMUM_SOUND_VOLUME, (lowest, delta) => { Image.volume = lowest; Image.delta_volume = delta; });
+                }
+            }
+        }
+
         // In ticks (30 a second)
         [CreateProperty]
         public int Period
@@ -118,6 +140,22 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
+        public Vector2 PeriodRange
+        {
+            get
+            {
+                return new Vector2(Period, PeriodMaximum);
+            }
+            set
+            {
+                if (IsChange(value, Period, PeriodMaximum, out var minimum, out var maximum))
+                {
+                    SetRange(minimum, maximum, 0, short.MaxValue, (lowest, delta) => { Image.period = lowest; Image.delta_period = delta; });
+                }
+            }
+        }
+
+        [CreateProperty]
         public bool NonDirectional
         {
             get
@@ -139,7 +177,9 @@ namespace ForgePlus.Inspection
             }
         }
 
-        // In degrees (saved as angle units, 512 a turn)
+        // In degrees (saved as angle units, 512 a turn), from a turn below 0 to a turn above it, so a range can cross 0 (or
+        // 360) either way. A range covers at most a turn (its delta is at most a turn of angle units), as more would only
+        // repeat directions.
         [CreateProperty]
         public int Direction
         {
@@ -149,8 +189,7 @@ namespace ForgePlus.Inspection
             }
             set
             {
-                var maximum = Maximum(Image.direction, Image.delta_direction);
-                SetRange(AngleUnits(value), maximum, short.MinValue, short.MaxValue, (minimum, delta) => { Image.direction = minimum; Image.delta_direction = delta; });
+                SetDirectionRange(AngleUnits(value), Maximum(Image.direction, Image.delta_direction));
             }
         }
 
@@ -163,7 +202,23 @@ namespace ForgePlus.Inspection
             }
             set
             {
-                SetRange(Image.direction, AngleUnits(value), short.MinValue, short.MaxValue, (minimum, delta) => Image.delta_direction = delta);
+                SetDirectionRange(Image.direction, AngleUnits(value));
+            }
+        }
+
+        [CreateProperty]
+        public Vector2 DirectionRange
+        {
+            get
+            {
+                return new Vector2(Direction, DirectionMaximum);
+            }
+            set
+            {
+                if (IsChange(value, Direction, DirectionMaximum, out var minimum, out var maximum))
+                {
+                    SetDirectionRange(AngleUnits(minimum), AngleUnits(maximum));
+                }
             }
         }
 
@@ -178,14 +233,7 @@ namespace ForgePlus.Inspection
             }
             set
             {
-                var pitch = Math.Max(1, (int) Math.Round(value * cstypes.FIXED_ONE));
-                var maximum = Image.pitch + Image.delta_pitch;
-
-                EditEntry(() =>
-                {
-                    Image.pitch = pitch;
-                    Image.delta_pitch = Math.Max(0, maximum - pitch);
-                });
+                SetPitchRange(value, PitchMaximum);
             }
         }
 
@@ -204,21 +252,80 @@ namespace ForgePlus.Inspection
             }
         }
 
+        [CreateProperty]
+        public Vector2 PitchRange
+        {
+            get
+            {
+                return new Vector2(Pitch, PitchMaximum);
+            }
+            set
+            {
+                if (!Mathf.Approximately(value.x, Pitch) || !Mathf.Approximately(value.y, PitchMaximum))
+                {
+                    SetPitchRange(value.x, value.y);
+                }
+            }
+        }
+
+        public float PitchDragStep
+        {
+            get
+            {
+                return PitchStepPerPixel;
+            }
+        }
+
+        public float PitchDragSnap
+        {
+            get
+            {
+                return PitchSnapIncrement;
+            }
+        }
+
         // The highest a value reaches with its delta
         private static int Maximum(short value, short delta)
         {
             return delta > 1 ? value + delta - 1 : value;
         }
 
-        // Sets a range's value and delta from its first and second values, kept to the bounds (a second value below the
-        // first means no variation)
-        private void SetRange(int minimum, int maximum, int lowest, int highest, Action<short, short> set)
+        // Whether a slider's range (rounded to whole numbers) differs from the current one
+        private static bool IsChange(Vector2 range, int currentMinimum, int currentMaximum, out int minimum, out int maximum)
+        {
+            minimum = Mathf.RoundToInt(range.x);
+            maximum = Mathf.RoundToInt(range.y);
+
+            return minimum != currentMinimum || maximum != currentMaximum;
+        }
+
+        // Sets a range's value and delta from its first and second values, kept to the bounds, and to the largest delta
+        // (a second value below the first means no variation)
+        private void SetRange(int minimum, int maximum, int lowest, int highest, Action<short, short> set, int largestDelta = short.MaxValue)
         {
             var clampedMinimum = (short) Math.Clamp(minimum, lowest, highest);
-            var clampedMaximum = Math.Clamp(maximum, clampedMinimum, highest);
+            var clampedMaximum = Math.Clamp(maximum, clampedMinimum, Math.Min(highest, clampedMinimum + largestDelta - 1));
             var delta = (short) Math.Min(short.MaxValue, clampedMaximum > clampedMinimum ? clampedMaximum - clampedMinimum + 1 : 0);
 
             EditEntry(() => set(clampedMinimum, delta));
+        }
+
+        private void SetDirectionRange(int minimum, int maximum)
+        {
+            SetRange(minimum, maximum, -world.NUMBER_OF_ANGLES, world.NUMBER_OF_ANGLES, (lowest, delta) => { Image.direction = lowest; Image.delta_direction = delta; }, world.NUMBER_OF_ANGLES);
+        }
+
+        // At least the smallest fixed-point step (a pitch of 0 would be silent), and its maximum at least it
+        private void SetPitchRange(float pitch, float maximum)
+        {
+            var fixedPitch = Math.Max(1, (int) Math.Round(pitch * cstypes.FIXED_ONE));
+            var fixedMaximum = (int) Math.Round(maximum * cstypes.FIXED_ONE);
+
+            EditEntry(() =>
+            {
+                Image.pitch = fixedPitch;
+                Image.delta_pitch = Math.Max(0, fixedMaximum - fixedPitch);
+            });
         }
 
         private static int Degrees(short angle)

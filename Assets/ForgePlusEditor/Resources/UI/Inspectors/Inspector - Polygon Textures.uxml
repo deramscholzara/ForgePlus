@@ -30,10 +30,10 @@
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
             </ui:Instance>
             <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
-            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX" tooltip="@Textures/Inspector.Textures.OffsetX.Tooltip">
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX" class="fp-inspector-row--draggable" tooltip="@Textures/Inspector.Textures.OffsetX.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetX.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY" tooltip="@Textures/Inspector.Textures.OffsetY.Tooltip">
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY" class="fp-inspector-row--draggable" tooltip="@Textures/Inspector.Textures.OffsetY.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetY.Label.Text" />
             </ui:Instance>
             <ui:Instance template="DropdownRow" name="TransferMode" tooltip="@Textures/Inspector.Textures.TransferMode.Tooltip">
@@ -58,10 +58,10 @@
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Collection.Label.Text" />
             </ui:Instance>
             <ui:Label name="CollectionNote" class="fp-inspector-note fp-aleph-one-only" />
-            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX" tooltip="@Textures/Inspector.Textures.OffsetX.Tooltip">
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetX" class="fp-inspector-row--draggable" tooltip="@Textures/Inspector.Textures.OffsetX.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetX.Label.Text" />
             </ui:Instance>
-            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY" tooltip="@Textures/Inspector.Textures.OffsetY.Tooltip">
+            <ui:Instance template="WrappedDistanceFieldRow" name="OffsetY" class="fp-inspector-row--draggable" tooltip="@Textures/Inspector.Textures.OffsetY.Tooltip">
                 <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.Textures.OffsetY.Label.Text" />
             </ui:Instance>
             <ui:Instance template="DropdownRow" name="TransferMode" tooltip="@Textures/Inspector.Textures.TransferMode.Tooltip">

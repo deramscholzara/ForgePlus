@@ -184,6 +184,17 @@ namespace ForgePlus.Inspection
             return (int) Math.Round(Math.Clamp(intensity, 0f, 1f) * cstypes.FIXED_ONE);
         }
 
+        // A single angle's label wraps around a turn while it's dragged (as <Name>DragWrap)
+        protected const float DegreesPerTurn = 360f;
+
+        // A single angle, from 0 up to the last angle before a full turn (which would be 0 again), rather than wrapping
+        protected static short AngleFromDegrees(float degrees)
+        {
+            var lastDegrees = AlephOneExtensions.AngleToDegrees((short) (world.NUMBER_OF_ANGLES - 1));
+
+            return AlephOneExtensions.DegreesToAngle(Math.Clamp(degrees, 0f, lastDegrees));
+        }
+
         // "lava (3)"
         protected static string NameAndNumber(string name, int number)
         {

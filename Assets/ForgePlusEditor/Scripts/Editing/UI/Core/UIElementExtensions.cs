@@ -9,6 +9,7 @@ namespace ForgePlus.UI
     public static class UIElementExtensions
     {
         private const string InspectorScopeClassName = "fp-inspector-scope";
+        private const string DraggableRowClassName = "fp-inspector-row--draggable";
 
         // A named element, or the control inside the template instance of that name
         public static T Find<T>(this VisualElement root, string name) where T : VisualElement
@@ -169,11 +170,20 @@ namespace ForgePlus.UI
             BindEach<Toggle>(root, dataSource, "fp-inspector-flag", BindInspectorValue);
             BindEach<LightIndexField>(root, dataSource, "fp-inspector-light", BindInspectorValue);
             BindEach<SliderInt>(root, dataSource, "fp-inspector-slider", BindInspectorSlider);
+            BindEach<MinMaxSlider>(root, dataSource, "fp-inspector-range-slider", BindInspectorRangeSlider);
 
             // A choice of one (mutually exclusive options), as the index of its selected option
             BindEach<RadioButtonGroup>(root, dataSource, "fp-inspector-choice", BindInspectorValue);
 
             BindEach<PlayButton>(root, dataSource, "fp-inspector-play", BindInspectorPlayButton);
+
+            BindEach<TemplateContainer>(root, dataSource, DraggableRowClassName, AddLabelDragger);
+        }
+
+        // Dragging the label of a row marked draggable adjusts its value (LabelDragger)
+        private static void AddLabelDragger(TemplateContainer row, object dataSource)
+        {
+            LabelDragger.AttachToRow(row, dataSource);
         }
 
         private static void BindEach<T>(VisualElement root, object dataSource, string className, Action<T, object> bind) where T : VisualElement
@@ -248,6 +258,25 @@ namespace ForgePlus.UI
             var sliderProperty = slider.GetFirstAncestorOfType<TemplateContainer>().name + "Slider";
 
             slider.Bind("value", dataSource, sliderProperty, ModeFor(HasSetter(dataSource, sliderProperty)));
+        }
+
+        // Both ends of the row's range at once, as its source's <Name>Range property (whose editability is the row's). Its
+        // limits (from its layout) widen to show a range beyond them, rather than narrowing it. Its label and middle bar
+        // drag the range as a whole (LabelDragger).
+        private static void BindInspectorRangeSlider(MinMaxSlider slider, object dataSource)
+        {
+            var row = slider.GetFirstAncestorOfType<TemplateContainer>();
+            var rangeProperty = row.name + "Range";
+
+            var binding = slider.Bind("value", dataSource, rangeProperty, ModeFor(HasSetter(dataSource, rangeProperty)));
+            binding.sourceToUiConverters.AddConverter((ref UnityEngine.Vector2 range) =>
+            {
+                slider.lowLimit = Math.Min(slider.lowLimit, range.x);
+                slider.highLimit = Math.Max(slider.highLimit, range.y);
+                return range;
+            });
+
+            LabelDragger.AttachToRangeRow(row, slider, dataSource);
         }
 
         // The row's editability is its first field's
