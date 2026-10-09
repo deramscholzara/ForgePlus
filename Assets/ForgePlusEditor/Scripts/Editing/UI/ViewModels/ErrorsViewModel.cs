@@ -1,4 +1,5 @@
 ﻿using ForgePlus.DataFileIO;
+using ForgePlus.LevelManipulation;
 using RuntimeCore.Entities;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,9 @@ using Unity.Properties;
 
 namespace ForgePlus.UI
 {
-    // The open level's errors (LevelError), found again once after whatever could change them, and the Errors panel's
-    // filter of them
+    // The open level's errors and warnings (LevelError), found again once after whatever could change them (errors first,
+    // then warnings), and the Errors panel's filter of them. Warnings are shown unless Show Warnings is off (for the
+    // session).
     public class ErrorsViewModel : BindableObject, IDisposable
     {
         // A fix that leads to another problem (which its own fix resolves) is followed by that one's, up to this many
@@ -30,6 +32,7 @@ namespace ForgePlus.UI
         private readonly List<LevelError> errors = new List<LevelError>();
         private bool isRefreshRequested = true;
         private int filterIndex = 0;
+        private bool showWarnings = true;
 
         public ErrorsViewModel()
         {
@@ -37,12 +40,41 @@ namespace ForgePlus.UI
             MapsLoading.Instance.OnLevelClosed += OnLevelClosed;
         }
 
+        // Errors (not warnings), which make the errors toggle flash
         [CreateProperty]
         public bool HasErrors
         {
             get
             {
+                return errors.Any(error => !error.IsWarning);
+            }
+        }
+
+        // Errors or warnings, either of which the Errors panel can be opened for
+        [CreateProperty]
+        public bool HasProblems
+        {
+            get
+            {
                 return errors.Count > 0;
+            }
+        }
+
+        [CreateProperty]
+        public bool ShowWarnings
+        {
+            get
+            {
+                return showWarnings;
+            }
+            set
+            {
+                if (showWarnings != value)
+                {
+                    showWarnings = value;
+                    Notify(nameof(ShowWarnings));
+                    NotifyAll();
+                }
             }
         }
 
@@ -69,14 +101,16 @@ namespace ForgePlus.UI
         {
             get
             {
+                var shown = errors.Where(error => showWarnings || !error.IsWarning);
+
                 switch ((Filter) filterIndex)
                 {
                     case Filter.AutoFixable:
-                        return errors.Where(error => error.IsAutoFixable).ToList();
+                        return shown.Where(error => error.IsAutoFixable).ToList();
                     case Filter.Standard:
-                        return errors.Where(error => !error.IsAutoFixable).ToList();
+                        return shown.Where(error => !error.IsAutoFixable).ToList();
                     default:
-                        return errors;
+                        return shown.ToList();
                 }
             }
         }
@@ -96,7 +130,7 @@ namespace ForgePlus.UI
         {
             get
             {
-                return errors.Any(error => error.IsAutoFixable);
+                return errors.Any(error => error.IsAutoFixable && (showWarnings || !error.IsWarning));
             }
         }
 
@@ -133,8 +167,8 @@ namespace ForgePlus.UI
             string lastFixed = null;
             for (var fixCount = 0; fixCount < MaximumFixes; fixCount++)
             {
-                // Done when none is left, or when one's fix didn't resolve it
-                var error = FindErrors().FirstOrDefault(found => found.IsAutoFixable);
+                // Done when none is left, or when one's fix didn't resolve it (hidden warnings aren't fixed)
+                var error = FindErrors().FirstOrDefault(found => found.IsAutoFixable && (showWarnings || !found.IsWarning));
                 if (error == null || error.Description == lastFixed)
                 {
                     break;
@@ -166,16 +200,24 @@ namespace ForgePlus.UI
             NotifyAll();
         }
 
+        // Errors before warnings (each kept in the order they're found)
         private static List<LevelError> FindErrors()
         {
             var level = LevelEntity_Level.Instance;
+            if (!level || LevelEditing.IsRebuildPending)
+            {
+                return new List<LevelError>();
+            }
 
-            return level ? TerminalErrors.Find(level.Level).ToList() : new List<LevelError>();
+            return TerminalErrors.Find(level.Level).Concat(GeometryErrors.Find(level))
+                                 .OrderBy(error => error.IsWarning)
+                                 .ToList();
         }
 
         private void NotifyAll()
         {
             Notify(nameof(HasErrors));
+            Notify(nameof(HasProblems));
             Notify(nameof(IsFixAllShown));
             Notify(nameof(CanFixAll));
             OnErrorsChanged?.Invoke();

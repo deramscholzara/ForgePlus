@@ -49,6 +49,40 @@ namespace RuntimeCore.Entities.Geometry
 
         private CancellationTokenSource synchronizationLoopCTS;
 
+        private static bool surfacesAreVisible = true;
+
+        // Hidden media surfaces aren't drawn (whether batched or not), though they're still there
+        public static bool SurfacesAreVisible
+        {
+            get
+            {
+                return surfacesAreVisible;
+            }
+            set
+            {
+                if (surfacesAreVisible == value)
+                {
+                    return;
+                }
+
+                surfacesAreVisible = value;
+
+                var level = LevelEntity_Level.Instance;
+                if (!level || level.Medias == null)
+                {
+                    return;
+                }
+
+                foreach (var media in level.Medias.Values)
+                {
+                    foreach (var surface in media.subscribedSurfaces)
+                    {
+                        ApplyVisibility(surface);
+                    }
+                }
+            }
+        }
+
         public LevelEntity_Media(short index, media_data media, LevelEntity_Level level)
         {
             NativeIndex = index;
@@ -94,6 +128,7 @@ namespace RuntimeCore.Entities.Geometry
                 subscribedSurfaces.Add(surface);
 
                 surface.position = new Vector3(0f, CurrentHeight, 0f);
+                ApplyVisibility(surface);
             }
         }
 
@@ -134,6 +169,15 @@ namespace RuntimeCore.Entities.Geometry
                 CurrentHeight = currentHeight;
 
                 await Awaitable.NextFrameAsync();
+            }
+        }
+
+        // A surface, or the merged batch it's drawn in
+        private static void ApplyVisibility(Transform surface)
+        {
+            if (surface && surface.TryGetComponent<MeshRenderer>(out var surfaceRenderer))
+            {
+                surfaceRenderer.forceRenderingOff = !surfacesAreVisible;
             }
         }
 

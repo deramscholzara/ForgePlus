@@ -14,6 +14,8 @@ namespace ForgePlus.History
         // Each tracked list's entries, as "History.{Name}" (one) and "History.{Name}.Many" (several)
         private static readonly (string Data, string Name)[] listNames =
         {
+            // Moving points changes much of the data around them
+            (nameof(MapLevel.EndpointList), "Endpoint"),
             (nameof(MapLevel.PlatformList), "Platform"),
             (nameof(MapLevel.static_platforms), "Platform"),
             (nameof(MapLevel.PolygonList), "Polygon"),
@@ -26,7 +28,6 @@ namespace ForgePlus.History
             (nameof(MapLevel.AmbientSoundImageList), "AmbientSound"),
             (nameof(MapLevel.RandomSoundImageList), "RandomSound"),
             (nameof(MapLevel.map_terminal_text), "Terminal"),
-            (nameof(MapLevel.EndpointList), "Endpoint"),
         };
 
         // Single values, as "History.{Name}"
@@ -38,11 +39,52 @@ namespace ForgePlus.History
             (LevelHistory.MapNameData, "Map"),
         };
 
-        // Polygon fields worked out from other data, whose changes alone don't make a polygon one the edit was of (such
-        // as the polygon facing a side that a height edit added)
-        private static readonly HashSet<string> derivedPolygonFields = new HashSet<string>
+        // Fields worked out from other data, whose changes alone don't make an entry one the edit was of (such as the
+        // polygon facing a side that a height edit added, or the points around a polygon whose height changed)
+        private static readonly Dictionary<string, HashSet<string>> derivedFields = new Dictionary<string, HashSet<string>>
         {
-            nameof(polygon_data.side_indexes),
+            {
+                nameof(MapLevel.PolygonList), new HashSet<string>
+                {
+                    nameof(polygon_data.side_indexes),
+                    nameof(polygon_data.area),
+                    nameof(polygon_data.center),
+                    nameof(polygon_data.first_exclusion_zone_index),
+                    nameof(polygon_data.line_exclusion_zone_count),
+                    nameof(polygon_data.point_exclusion_zone_count),
+                    nameof(polygon_data.first_neighbor_index),
+                    nameof(polygon_data.neighbor_count),
+                    nameof(polygon_data.sound_source_indexes),
+                }
+            },
+            {
+                nameof(MapLevel.EndpointList), new HashSet<string>
+                {
+                    nameof(endpoint_data.flags),
+                    nameof(endpoint_data.highest_adjacent_floor_height),
+                    nameof(endpoint_data.lowest_adjacent_ceiling_height),
+                    nameof(endpoint_data.transformed),
+                    nameof(endpoint_data.supporting_polygon_index),
+                }
+            },
+            {
+                nameof(MapLevel.PlatformList), new HashSet<string>
+                {
+                    nameof(platform_data.endpoint_owners),
+                }
+            },
+            {
+                nameof(MapLevel.LineList), new HashSet<string>
+                {
+                    nameof(line_data.length),
+                }
+            },
+            {
+                nameof(MapLevel.SideList), new HashSet<string>
+                {
+                    nameof(side_data.exclusion_zone),
+                }
+            },
         };
 
         public static string Describe(IReadOnlyList<DataChange> changes)
@@ -84,13 +126,13 @@ namespace ForgePlus.History
         private static List<int> EditedIndexes(TrackedList.ListChange change)
         {
             var indexes = new List<int>();
-            var isPolygons = change.Data.Name == nameof(MapLevel.PolygonList);
+            derivedFields.TryGetValue(change.Data.Name, out var derived);
 
             for (var elementIndex = 0; elementIndex < change.Elements.Count; elementIndex++)
             {
                 var element = change.Elements[elementIndex];
 
-                if (isPolygons && !element.IsAddedOrRemoved && change.ChangedFields(elementIndex).IsSubsetOf(derivedPolygonFields))
+                if (derived != null && !element.IsAddedOrRemoved && change.ChangedFields(elementIndex).IsSubsetOf(derived))
                 {
                     continue;
                 }

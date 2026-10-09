@@ -666,8 +666,9 @@ namespace RuntimeCore.Entities.Geometry
 
             sideEntity.ParentLevel.EditableSurface_Sides.Add(sideSurface);
 
-            // PhysX can't make a collider from a surface with no area ("cleaning the mesh failed")
-            if (HighElevation > LowElevation)
+            // PhysX can't make a collider from a surface with no area ("cleaning the mesh failed"), as a side of a line with
+            // no length (or no height) has
+            if (HighElevation > LowElevation && RuntimeSurfaceGeometry.HasArea(SurfaceMesh))
             {
                 SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
             }

@@ -1,8 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <!-- An item in the error list (twice a level item's height): what's wrong and how to fix it, and, for an
-         auto-fixable error, a button that fixes it (without which the text takes the button's place too) -->
+    <!-- An item in the error list (twice a level item's height), marked as an error (red) or a warning (yellow) on its left
+         edge: what's wrong and how to fix it, a button that shows what it's in (where there's something to show), and,
+         for an auto-fixable error, a button that fixes it (the text takes the place of any button it doesn't have) -->
     <ui:VisualElement class="fp-error-item fp-template">
         <ui:Label name="description" text="Description" class="fp-error-item__description" />
+        <ui:Button name="show" text="Show" class="fp-button fp-error-item__fix" />
         <ui:Button name="fix" text="Fix" class="fp-button fp-error-item__fix" />
     </ui:VisualElement>
 </ui:UXML>

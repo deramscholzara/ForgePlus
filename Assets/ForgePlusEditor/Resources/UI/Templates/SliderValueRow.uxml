@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A labeled whole-number slider (like SliderRow's), with its value shown as text at its end (such as a percentage) -->
+    <ui:VisualElement class="fp-slider-row fp-template">
+        <ui:SliderInt name="control" label="Label" low-value="0" high-value="1" class="fp-slider fp-slider-row__slider" />
+        <ui:Label name="value" class="fp-slider-row__value" />
+    </ui:VisualElement>
+</ui:UXML>

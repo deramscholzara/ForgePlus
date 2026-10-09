@@ -3,7 +3,8 @@
 namespace ForgePlus.UI
 {
     // The toggle (in the screen's bottom right corner) that opens and closes the Errors panel. While the panel is closed,
-    // it flashes red if the level has errors, and can't be pressed if it hasn't (there being nothing to show).
+    // it flashes red if the level has errors (not for warnings alone), and can't be pressed if it has neither errors nor
+    // warnings (there being nothing to show).
     public class ErrorsTogglePanel : UIPanel
     {
         // Milliseconds between the flash's changes
@@ -51,7 +52,7 @@ namespace ForgePlus.UI
         {
             var isOpen = editor.ErrorsOpen;
 
-            toggle.SetEnabled(isOpen || errors.HasErrors);
+            toggle.SetEnabled(isOpen || errors.HasProblems);
 
             isFlashing = !isOpen && errors.HasErrors;
             if (!isFlashing)

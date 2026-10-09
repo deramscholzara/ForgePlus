@@ -353,11 +353,36 @@ namespace ForgePlus.LevelManipulation
             return SelectsFaces(primaryMode) || primaryMode == ModeManager.PrimaryModes.Terminals;
         }
 
-        // Otherwise clicks pass through media surfaces to the floor
-        // TODO: Include geometry mode when a media subfilter is available
+        // Otherwise clicks pass through media surfaces to the floor, as they do while media is hidden (Geometry mode's
+        // Media visualization option)
         private static bool MediaSurfacesAreSelectable(ModeManager.PrimaryModes primaryMode)
         {
-            return primaryMode == ModeManager.PrimaryModes.Lights || primaryMode == ModeManager.PrimaryModes.Media || primaryMode == ModeManager.PrimaryModes.Sounds;
+            if (!SettingsManager.Instance.MediaIsShown)
+            {
+                return false;
+            }
+
+            return primaryMode == ModeManager.PrimaryModes.Geometry ||
+                   primaryMode == ModeManager.PrimaryModes.Lights ||
+                   primaryMode == ModeManager.PrimaryModes.Media ||
+                   primaryMode == ModeManager.PrimaryModes.Sounds;
+        }
+
+        // Hidden media can't be clicked, and hidden points can't stay selected
+        private void OnGeometryVisibilityChanged()
+        {
+            var level = LevelEntity_Level.Instance;
+            if (!level || level.EditableSurface_Medias == null)
+            {
+                return;
+            }
+
+            SetSelectability<EditableSurface_Media>(level.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(ModeManager.Instance.PrimaryMode));
+
+            if (!SettingsManager.Instance.PointsAreShown && SelectedObjects.Exists(selected => selected is LevelEntity_Point))
+            {
+                DeselectAll();
+            }
         }
 
         private void SetSelectability<T>(T selectable, bool enabled) where T : ISelectable
@@ -390,6 +415,7 @@ namespace ForgePlus.LevelManipulation
             ModeManager.Instance.OnPrimaryModeChanging += CollectCarriedSelection;
             ModeManager.Instance.OnPrimaryModeChanged += UpdateSelectionToMatchMode;
             WorldPointer.Instance.OnClickEmptySpace += OnPointerClickEmptySpace;
+            SettingsManager.Instance.OnGeometryVisibilityChanged += OnGeometryVisibilityChanged;
         }
 
         // After the rest of the editor (such as the palette) has switched modes
@@ -404,6 +430,12 @@ namespace ForgePlus.LevelManipulation
             if (worldPointer)
             {
                 worldPointer.OnClickEmptySpace -= OnPointerClickEmptySpace;
+            }
+
+            var settingsManager = SettingsManager.Instance;
+            if (settingsManager)
+            {
+                settingsManager.OnGeometryVisibilityChanged -= OnGeometryVisibilityChanged;
             }
         }
 

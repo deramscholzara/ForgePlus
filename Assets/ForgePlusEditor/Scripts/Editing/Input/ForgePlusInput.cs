@@ -173,6 +173,22 @@ namespace ForgePlus.ApplicationGeneral
                     return Find("Editing/KeepRelativeHeight");
                 }
             }
+
+            public static InputAction KeepTexturesWithPoint
+            {
+                get
+                {
+                    return Find("Editing/KeepTexturesWithPoint");
+                }
+            }
+
+            public static InputAction AllowInvalidGeometry
+            {
+                get
+                {
+                    return Find("Editing/AllowInvalidGeometry");
+                }
+            }
         }
 
         public static class Interface

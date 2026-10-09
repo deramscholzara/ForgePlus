@@ -1,4 +1,5 @@
 ﻿using ForgePlus.LevelManipulation;
+using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System;
@@ -79,6 +80,23 @@ namespace ForgePlus.CameraNavigation
                 case LevelEntity_Media media:
                     // Media have no place of their own, so frame everywhere they are
                     EncapsulateSurfaces(LevelEntity_Level.Instance.EditableSurface_Medias, surface => surface.Media == media, ref bounds, ref hasBounds);
+
+                    break;
+
+                case LevelEntity_Point point:
+                    // Where it is, from the lowest floor to the highest ceiling of its polygons
+                    foreach (var polygon in point.ParentLevel.Polygons.Values)
+                    {
+                        var polygonData = polygon.NativeObject;
+                        if (System.Array.IndexOf(polygonData.endpoint_indexes, point.NativeIndex, 0, polygonData.vertex_count) < 0)
+                        {
+                            continue;
+                        }
+
+                        var position = GeometryUtilities.GetMeshVertex(point.ParentLevel.Level, point.NativeIndex);
+                        Encapsulate(new Bounds(new Vector3(position.x, polygonData.floor_height / GeometryUtilities.WorldUnitIncrementsPerMeter, position.z), Vector3.zero), ref bounds, ref hasBounds);
+                        Encapsulate(new Bounds(new Vector3(position.x, polygonData.ceiling_height / GeometryUtilities.WorldUnitIncrementsPerMeter, position.z), Vector3.zero), ref bounds, ref hasBounds);
+                    }
 
                     break;
 

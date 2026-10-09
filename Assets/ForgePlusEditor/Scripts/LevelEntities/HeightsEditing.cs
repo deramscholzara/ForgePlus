@@ -31,6 +31,10 @@ namespace ForgePlus.LevelManipulation
         // How the faces the edit may reveal or hide were before it (or before the drag), whose sides follow when it's committed
         private static readonly SideExposure sideExposure = new SideExposure();
 
+        // Whether the objects on the faces were within their polygons' heights before the edit (those the edit leaves
+        // outside are put back within them once it's committed)
+        private static ObjectPlacement.Snapshot objectPlacements = new ObjectPlacement.Snapshot();
+
         // A platform's heights are its platform's
         public static bool CanEdit(LevelEntity_Polygon polygon)
         {
@@ -110,6 +114,8 @@ namespace ForgePlus.LevelManipulation
 
             // Before any height changes: the faces around the polygons, and around platforms next to them (whose travel
             // follows their neighbors' heights)
+            objectPlacements.Record(data, changedPolygons.Select(polygon => polygon.NativeIndex).ToList());
+
             foreach (var polygon in changedPolygons)
             {
                 sideExposure.RecordPolygon(data, polygon.NativeObject);
@@ -209,6 +215,15 @@ namespace ForgePlus.LevelManipulation
 
                 platformsChanged = RefreshAdjacentPlatforms(changedPolygons);
 
+                var level = LevelEntity_Level.Instance;
+                foreach (var objectIndex in ObjectPlacement.Apply(level.Level, objectPlacements).Objects)
+                {
+                    if (level.MapObjects.TryGetValue(objectIndex, out var mapObject))
+                    {
+                        mapObject.ApplyPlacement();
+                    }
+                }
+
                 var linesWithChangedSides = sideExposure.ApplyToSides(LevelEntity_Level.Instance.Level);
 
                 // Otherwise the whole level is rebuilt below
@@ -229,6 +244,7 @@ namespace ForgePlus.LevelManipulation
             {
                 // Including faces recorded by an edit that failed partway, which the next edit mustn't start from
                 sideExposure.Clear();
+                objectPlacements = new ObjectPlacement.Snapshot();
                 SurfaceBatchingManager.Instance.DeferMerging(false);
             }
 
@@ -269,12 +285,15 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        // Neighboring platforms that work out their travel from the polygons around them (platforms.cpp:
-        // calculate_platform_extrema) are initialized again, as loading the level would. Returns whether any travel changed.
         private static bool RefreshAdjacentPlatforms(List<LevelEntity_Polygon> changedPolygons)
         {
-            var data = LevelEntity_Level.Instance.Level;
+            return RefreshPlatformsAround(LevelEntity_Level.Instance.Level, changedPolygons.Select(polygon => polygon.NativeIndex));
+        }
 
+        // Platforms (among or beside the polygons) that work out their travel from the polygons around them (platforms.cpp:
+        // calculate_platform_extrema) are initialized again, as loading the level would. Returns whether any travel changed.
+        public static bool RefreshPlatformsAround(MapLevel data, IEnumerable<short> polygonIndexes)
+        {
             // Running state ('PLAT') keeps the travel it was saved with
             if (!PlatformEditing.SavesStaticData(data))
             {
@@ -282,9 +301,15 @@ namespace ForgePlus.LevelManipulation
             }
 
             var platformIndexes = new HashSet<short>();
-            foreach (var polygon in changedPolygons)
+            foreach (var polygonIndex in polygonIndexes)
             {
-                foreach (var platformPolygon in AdjacentPlatformPolygons(data, polygon.NativeObject))
+                var polygon = data.PolygonList[polygonIndex];
+                if (polygon.type == _polygon_is_platform)
+                {
+                    platformIndexes.Add(polygon.permutation);
+                }
+
+                foreach (var platformPolygon in AdjacentPlatformPolygons(data, polygon))
                 {
                     platformIndexes.Add(platformPolygon.permutation);
                 }

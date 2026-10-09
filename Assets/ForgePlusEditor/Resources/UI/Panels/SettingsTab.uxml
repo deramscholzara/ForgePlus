@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
     <ui:Template name="SliderRow" src="../Templates/SliderRow.uxml" />
+    <ui:Template name="SliderValueRow" src="../Templates/SliderValueRow.uxml" />
     <ui:Template name="IntegerFieldRow" src="../Templates/IntegerFieldRow.uxml" />
     <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
     <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
@@ -34,6 +35,14 @@
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <ui:Instance template="IntegerFieldRow" name="undo-steps" class="fp-setting" tooltip="@Menu/SettingsTab.UndoSteps.Tooltip">
                     <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.UndoSteps.Control.Label" />
+                </ui:Instance>
+                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <ui:Instance template="Toggle" name="prevent-invalid-geometry" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.PreventInvalidGeometry.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.PreventInvalidGeometry.Control.Text" />
+                </ui:Instance>
+                <!-- From a point's drawn size (100%) to twice that (200%), in steps of a ninth (SettingsManager) -->
+                <ui:Instance template="SliderValueRow" name="point-click-area" class="fp-setting" tooltip="@Menu/SettingsTab.PointClickArea.Tooltip">
+                    <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.PointClickArea.Control.Label" high-value="9" />
                 </ui:Instance>
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <!-- What Save Merged does with the map file's checksum (Ask until its dialog's choice is remembered), in the

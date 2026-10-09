@@ -1,5 +1,6 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO;
+using ForgePlus.Localization;
 using System;
 using Unity.Properties;
 using UnityEngine;
@@ -11,9 +12,110 @@ namespace ForgePlus.UI
     {
         public SettingsViewModel()
         {
-            SettingsManager.Instance.OnSettingChanged += Notify;
+            SettingsManager.Instance.OnSettingChanged += OnSettingChanged;
             SettingsManager.Instance.OnObjectVisibilityChanged += OnObjectVisibilityChanged;
+            SettingsManager.Instance.OnGeometryVisibilityChanged += OnGeometryVisibilityChanged;
             SoundsLoading.Instance.OnDataLoadCompleted += OnSoundsLoadCompleted;
+        }
+
+        // Geometry mode's visualization options. Show Everything is on while every other one is, and turning it on turns
+        // them all on (turning it off does nothing, so it stays on).
+        [CreateProperty]
+        public bool ShowEverythingEnabled
+        {
+            get
+            {
+                return PointsEnabled && MediaEnabled;
+            }
+            set
+            {
+                if (value)
+                {
+                    PointsEnabled = true;
+                    MediaEnabled = true;
+                }
+
+                Notify(nameof(ShowEverythingEnabled));
+            }
+        }
+
+        [CreateProperty]
+        public bool PointsEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.PointsEnabled;
+            }
+            set
+            {
+                if (value != SettingsManager.Instance.PointsEnabled)
+                {
+                    SettingsManager.Instance.PointsEnabled = value;
+                }
+            }
+        }
+
+        // Shown as on while Media mode forces media on
+        [CreateProperty]
+        public bool MediaEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.MediaIsShown;
+            }
+            set
+            {
+                if (!SettingsManager.Instance.MediaForcedOn && value != SettingsManager.Instance.MediaEnabled)
+                {
+                    SettingsManager.Instance.MediaEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool MediaEditable
+        {
+            get
+            {
+                return !SettingsManager.Instance.MediaForcedOn;
+            }
+        }
+
+        // The slider's position, in ninths of a point's size added to its click area
+        [CreateProperty]
+        public int PointClickAreaSteps
+        {
+            get
+            {
+                return SettingsManager.Instance.PointClickAreaSteps;
+            }
+            set
+            {
+                SettingsManager.Instance.PointClickAreaSteps = value;
+            }
+        }
+
+        [CreateProperty]
+        public bool PreventInvalidGeometryEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.PreventInvalidGeometryEnabled;
+            }
+            set
+            {
+                SettingsManager.Instance.PreventInvalidGeometryEnabled = value;
+            }
+        }
+
+        // As a whole percentage of a point's size ("114%")
+        [CreateProperty]
+        public string PointClickAreaText
+        {
+            get
+            {
+                return Strings.Get(Strings.Menu, "SettingsTab.PointClickArea.Value", Mathf.RoundToInt(SettingsManager.Instance.PointClickAreaScale * 100f));
+            }
         }
 
         [CreateProperty]
@@ -273,11 +375,31 @@ namespace ForgePlus.UI
             var settingsManager = SettingsManager.Instance;
             if (settingsManager)
             {
-                settingsManager.OnSettingChanged -= Notify;
+                settingsManager.OnSettingChanged -= OnSettingChanged;
                 settingsManager.OnObjectVisibilityChanged -= OnObjectVisibilityChanged;
+                settingsManager.OnGeometryVisibilityChanged -= OnGeometryVisibilityChanged;
             }
 
             SoundsLoading.Instance.OnDataLoadCompleted -= OnSoundsLoadCompleted;
+        }
+
+        private void OnSettingChanged(string setting)
+        {
+            Notify(setting);
+
+            if (setting == nameof(PointClickAreaSteps))
+            {
+                Notify(nameof(PointClickAreaText));
+            }
+        }
+
+        // Also when the mode changes (which may force media on)
+        private void OnGeometryVisibilityChanged()
+        {
+            Notify(nameof(ShowEverythingEnabled));
+            Notify(nameof(PointsEnabled));
+            Notify(nameof(MediaEnabled));
+            Notify(nameof(MediaEditable));
         }
 
         // Also when the mode changes (which may force icons, and sounds' displays, on)

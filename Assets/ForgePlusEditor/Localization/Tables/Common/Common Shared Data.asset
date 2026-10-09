@@ -2507,6 +2507,121 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2724799310348288
+    m_Key: Errors.Geometry.InsideOutPolygon
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736896
+    m_Key: Errors.Geometry.InsideOutPolygon.Short
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736897
+    m_Key: Errors.Geometry.PolygonWithoutArea
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736898
+    m_Key: Errors.Geometry.PolygonWithoutArea.Short
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736899
+    m_Key: Errors.Geometry.ConcaveCorner
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736900
+    m_Key: Errors.Geometry.ConcaveCorner.Short
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736901
+    m_Key: Errors.Geometry.CrossingEdges
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736902
+    m_Key: Errors.Geometry.CrossingEdges.Short
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736903
+    m_Key: Errors.Geometry.ZeroLengthLine
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736904
+    m_Key: Errors.Geometry.ZeroLengthLine.Short
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736905
+    m_Key: Errors.Geometry.ZeroLengthLine.CantCollapse
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736906
+    m_Key: Errors.Geometry.LineTooLong
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736907
+    m_Key: Errors.Geometry.LineTooLong.Short
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736908
+    m_Key: Errors.Geometry.TooManyMapIndexes
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736909
+    m_Key: Errors.Geometry.MapIndexesAlephOneOnly
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736910
+    m_Key: Errors.Geometry.RedundantStraightCorner
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736911
+    m_Key: Errors.Geometry.RedundantStraightCorner.Short
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736912
+    m_Key: Errors.Geometry.PointNearLine
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736913
+    m_Key: Errors.Geometry.PointNearLine.Short
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736914
+    m_Key: Errors.Geometry.ObjectOutsidePolygons
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736915
+    m_Key: Errors.Geometry.AnnotationOutsidePolygon
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736916
+    m_Key: PointMove.Blocked
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724799318736917
+    m_Key: PointMove.More
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

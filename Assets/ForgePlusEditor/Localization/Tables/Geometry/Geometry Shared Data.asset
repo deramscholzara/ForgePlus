@@ -397,6 +397,76 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2693705659727872
+    m_Key: VisualizationGeometry.ShowEverything.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922176
+    m_Key: VisualizationGeometry.Polygons.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922177
+    m_Key: VisualizationGeometry.Lines.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922178
+    m_Key: VisualizationGeometry.Sides.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922179
+    m_Key: VisualizationGeometry.Points.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922180
+    m_Key: VisualizationGeometry.Media.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922181
+    m_Key: Inspector.Point.Point.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922182
+    m_Key: Inspector.Point.Id.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922183
+    m_Key: Inspector.Point.Id.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922184
+    m_Key: Inspector.Point.Position.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922185
+    m_Key: Inspector.Point.LocationX.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922186
+    m_Key: Inspector.Point.LocationX.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922187
+    m_Key: Inspector.Point.LocationY.Label.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693705663922188
+    m_Key: Inspector.Point.LocationY.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

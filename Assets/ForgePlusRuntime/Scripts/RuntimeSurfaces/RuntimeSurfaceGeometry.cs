@@ -87,6 +87,50 @@ namespace RuntimeCore.Entities.Geometry
             ApplyChange(rebatchImmediately, () => geometryModule.ApplyPositionsAndTriangles());
         }
 
+        // For a floor's, ceiling's or media's corners that moved: its positions, the texture coordinates that follow them,
+        // and its collider
+        public void ApplyShape(bool rebatchImmediately = true)
+        {
+            ApplyChange(rebatchImmediately, () =>
+            {
+                geometryModule.ApplyPositionsAndTriangles();
+                geometryModule.ApplyTextureOffset(innerLayer: true);
+            });
+
+            if (!TryGetComponent<MeshCollider>(out var meshCollider) && HasArea(SurfaceMesh))
+            {
+                gameObject.AddComponent<MeshCollider>();
+            }
+            else if (meshCollider)
+            {
+                // The collider only takes a mesh's new shape as it's assigned, and PhysX can't make one with no area (as a
+                // polygon whose corners are in a line has, while it's being moved)
+                meshCollider.sharedMesh = null;
+                if (HasArea(SurfaceMesh))
+                {
+                    meshCollider.sharedMesh = SurfaceMesh;
+                }
+            }
+        }
+
+        // Whether any of the mesh's triangles has area
+        public static bool HasArea(Mesh mesh)
+        {
+            var vertices = mesh.vertices;
+            var triangles = mesh.triangles;
+
+            for (var i = 0; i + 2 < triangles.Length; i += 3)
+            {
+                var a = vertices[triangles[i]];
+                if (Vector3.Cross(vertices[triangles[i + 1]] - a, vertices[triangles[i + 2]] - a).sqrMagnitude > 1e-10f)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         // For a floor's or ceiling's height
         public void ApplyHeight(bool rebatchImmediately = true)
         {

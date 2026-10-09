@@ -25,6 +25,12 @@ namespace ForgePlus.UI
             Root.Find<Toggle>("improper-fractions").BindValue(settings, nameof(SettingsViewModel.ImproperFractionsEnabled));
             Root.Find<RadioButtonGroup>("merged-save-checksum").BindValue(settings, nameof(SettingsViewModel.MergedSaveChecksum));
             Root.Find<IntegerField>("undo-steps").BindValue(settings, nameof(SettingsViewModel.UndoSteps));
+
+            Root.Find<Toggle>("prevent-invalid-geometry").BindValue(settings, nameof(SettingsViewModel.PreventInvalidGeometryEnabled));
+
+            var pointClickArea = Root.Q("point-click-area");
+            pointClickArea.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.PointClickAreaSteps));
+            pointClickArea.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.PointClickAreaText));
         }
     }
 }

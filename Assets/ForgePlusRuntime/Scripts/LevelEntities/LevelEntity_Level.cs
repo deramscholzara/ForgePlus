@@ -40,6 +40,12 @@ namespace RuntimeCore.Entities
 
         public List<short>[] EndpointLines;
 
+#if !NO_EDITING
+        // Its endpoints, as points to select and move (in Geometry mode)
+        [System.NonSerialized]
+        public Dictionary<short, LevelEntity_Point> Points;
+#endif
+
         public List<EditableSurface_Polygon> EditableSurface_Polygons;
         public List<EditableSurface_Side> EditableSurface_Sides;
         public List<EditableSurface_Media> EditableSurface_Medias;

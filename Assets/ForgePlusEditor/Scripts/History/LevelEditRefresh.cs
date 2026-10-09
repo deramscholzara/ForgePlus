@@ -53,6 +53,21 @@ namespace ForgePlus.History
 
             // Worked out from its lines, which are rebuilt for their own changes
             nameof(polygon_data.side_indexes),
+
+            // Worked out from where its corners are (which are refreshed for their own changes), and the map indexes
+            nameof(polygon_data.area),
+            nameof(polygon_data.center),
+            nameof(polygon_data.first_exclusion_zone_index),
+            nameof(polygon_data.line_exclusion_zone_count),
+            nameof(polygon_data.point_exclusion_zone_count),
+            nameof(polygon_data.first_neighbor_index),
+            nameof(polygon_data.neighbor_count),
+        };
+
+        // Where its corners' polygons and lines are listed in the map indexes
+        private static readonly HashSet<string> platformMapIndexFields = new HashSet<string>
+        {
+            nameof(platform_data.endpoint_owners),
         };
 
         private static readonly HashSet<string> polygonHeightFields = new HashSet<string>
@@ -95,11 +110,11 @@ namespace ForgePlus.History
             nameof(side_data.ambient_delta),
         };
 
-        // A line's other fields (including which sides it has) only rebuild its sides
+        // A line's other fields (including which sides it has, and its length, which follows its points) only rebuild its
+        // sides
         private static readonly HashSet<string> structuralLineFields = new HashSet<string>
         {
             nameof(line_data.endpoint_indexes),
-            nameof(line_data.length),
             nameof(line_data.clockwise_polygon_owner),
             nameof(line_data.counterclockwise_polygon_owner),
         };
@@ -211,8 +226,16 @@ namespace ForgePlus.History
 
                         continue;
                     case nameof(MapLevel.EndpointList):
-                        // The rest of an endpoint's data is worked out from where it is
-                        if (listChange.CountChanged || AnyChangedFields(listChange, fields => fields.Contains(nameof(endpoint_data.vertex))))
+                        // Moved points are refreshed (the rest of a point's data is worked out from its polygons)
+                        if (listChange.CountChanged)
+                        {
+                            return true;
+                        }
+
+                        continue;
+                    case nameof(MapLevel.PlatformList):
+                        // Map indexes worked out again (as moving points does) don't change the platform itself
+                        if (listChange.CountChanged || AnyChangedFields(listChange, fields => !fields.IsSubsetOf(platformMapIndexFields)))
                         {
                             return true;
                         }
@@ -243,6 +266,7 @@ namespace ForgePlus.History
         {
             var linesToRegenerate = new HashSet<short>();
             var polygonsWithChangedHeights = new HashSet<short>();
+            var movedPoints = new HashSet<short>();
             var soundsChanged = false;
 
             SurfaceBatchingManager.Instance.DeferMerging(true);
@@ -308,6 +332,13 @@ namespace ForgePlus.History
                             case nameof(MapLevel.LineList):
                                 linesToRegenerate.Add(index);
                                 break;
+                            case nameof(MapLevel.EndpointList):
+                                if (changedFields.Contains(nameof(endpoint_data.vertex)))
+                                {
+                                    movedPoints.Add(index);
+                                }
+
+                                break;
                             case nameof(MapLevel.SavedObjectList):
                                 if (level.MapObjects.TryGetValue(index, out var mapObject))
                                 {
@@ -360,6 +391,11 @@ namespace ForgePlus.History
                                 break;
                         }
                     }
+                }
+
+                if (movedPoints.Count > 0)
+                {
+                    PointEditing.ApplyShapes(level, movedPoints, linesToRegenerate);
                 }
 
                 foreach (var lineIndex in linesToRegenerate)

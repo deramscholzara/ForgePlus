@@ -53,6 +53,18 @@ MonoBehaviour:
   - rid: 552786240694648897
   - rid: 552786240694648898
   - rid: 552786240694648899
+  - rid: 552786288315990065
+  - rid: 552786288315990066
+  - rid: 552786288315990067
+  - rid: 552786288315990082
+  - rid: 552786288315990083
+  - rid: 552786288315990084
+  - rid: 552786288315990085
+  - rid: 552786288315990086
+  - rid: 552786288315990087
+  - rid: 552786288315990088
+  - rid: 552786288315990089
+  - rid: 552786288315990090
   references:
     version: 2
     RefIds:
@@ -97,7 +109,7 @@ MonoBehaviour:
         m_KeyId: 2584642994176
         m_Metadata:
           m_Items: []
-        m_Value: "Note: this will be configurable eventually.\n\nWith menu closed\n    Movement:\n        - Forward/Back/Left/Right: WASD\n        - Down/Up: Q/E\n        - Go faster: Hold Shift\n        - Forward/Back in steps: Mouse wheel (when the pointer isn't over the UI)\n\n    Looking:\n        - Move mouse while holding RMB or Space\n\nUI Controls:\n    - Open/Close Menu: Tab or Escape\n    - Show/Hide All UI: ` (~ key without Shift)\n\nSurface Dragging:\n    - You can drag on a surface to adjust textures in Texture mode, when the Palette mode (right side) is set to Edit.\n        - If you hold the control key while starting to drag (you can let go after the drag starts) then contiguous surfaces with the same bitmap will also align to the dragged surface.\n        - With the surface selected in this mode, you can also use arrow keys to nudge and snap it in 128th increments (classic pixel distance).\n\nObject Dragging:\n    - In Objects mode (and for sound sources in Sounds mode), with the Select tool, drag an object to move it. It moves across the level at the height it was grabbed, into whichever polygon it's over.\n        - With Snapping on (alt/option inverts it), it snaps to the nearest sixteenth of a world unit along X and Y.\n        - Moving into another polygon, it keeps its height in the world, kept within that polygon's floor and ceiling. With Snapping on (the setting itself) or while holding control, it instead keeps its distance from the polygon's floor (or ceiling, when From Ceiling is enabled).\n\nHotkeys:\n    - Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be held):\n    - Invert Snapping Setting: alt/option\n    - In Texture > Edit Mode, you can select a surface (normal click) then alt-click a surface of the same geometry type (Polygon or Side) to align that surface's texture to the selected one.  SIdes must be neighbors, but polygons (ceilings and floors) can be anywhere.  The assigned textures are not required to be the same, and will not be updated when aligning.\n    - In Texture > Edit Mode, if you hold control while beginning to drag on a surface, all contiguous surfaces with the same bitmap will also be aligned to the dragged surface.\n    - When dragging an object into another polygon, hold control to keep its distance from the polygon's floor (or ceiling) instead of its height in the world.\n\nPainting:\n    - In Texture > Paint Mode, you can click on surfaces to assign the selected texture swatch to those surfaces."
+        m_Value: "Note: this will be configurable eventually.\n\nWith menu closed\n    Movement:\n        - Forward/Back/Left/Right: WASD\n        - Down/Up: Q/E\n        - Go faster: Hold Shift\n        - Forward/Back in steps: Mouse wheel (when the pointer isn't over the UI)\n\n    Looking:\n        - Move mouse while holding RMB or Space\n\nUI Controls:\n    - Open/Close Menu: Tab or Escape\n    - Show/Hide All UI: ` (~ key without Shift)\n\nSurface Dragging:\n    - You can drag on a surface to adjust textures in Texture mode, when the Palette mode (right side) is set to Edit.\n        - If you hold the control key while starting to drag (you can let go after the drag starts) then contiguous surfaces with the same bitmap will also align to the dragged surface.\n        - With the surface selected in this mode, you can also use arrow keys to nudge and snap it in 128th increments (classic pixel distance).\n\nObject Dragging:\n    - In Objects mode (and for sound sources in Sounds mode), with the Select tool, drag an object to move it. It moves across the level at the height it was grabbed, into whichever polygon it's over.\n        - With Snapping on (alt/option inverts it), it snaps to the nearest sixteenth of a world unit along X and Y.\n        - Moving into another polygon, it keeps its height in the world, kept within that polygon's floor and ceiling. With Snapping on (the setting itself) or while holding control, it instead keeps its distance from the polygon's floor (or ceiling, when From Ceiling is enabled).\n\nPoint Dragging:\n    - In Geometry mode, with the Select tool and Points shown (the visualization options on the left), drag a point's handle to move it. It moves across the level at the height of the corner it was grabbed by.\n        - With Snapping on (alt/option inverts it), it snaps to the nearest sixteenth of a world unit along X and Y.\n        - Its sides' textures stay where they were at the lines' other ends, and floors' and ceilings' textures stay where they were in the world. While holding control, they move with the point instead (pressing or letting go of control during the drag switches between the two, as though it had been that way for the whole drag).\n        - With Prevent Invalid Moves on (Settings), it stops short of where it would make a polygon around it invalid (concave, inside out, crossing itself, or without area), showing what's wrong where it's held back from. Hold shift while dragging to let it go there anyway (shown in red, with a marker where it last was valid).\n        - Dropping it on a neighboring point collapses the line between them: the two points become one, and a polygon left with fewer than three corners is removed.\n\nHotkeys:\n    - Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be held):\n    - Invert Snapping Setting: alt/option\n    - In Texture > Edit Mode, you can select a surface (normal click) then alt-click a surface of the same geometry type (Polygon or Side) to align that surface's texture to the selected one.  SIdes must be neighbors, but polygons (ceilings and floors) can be anywhere.  The assigned textures are not required to be the same, and will not be updated when aligning.\n    - In Texture > Edit Mode, if you hold control while beginning to drag on a surface, all contiguous surfaces with the same bitmap will also be aligned to the dragged surface.\n    - When dragging an object into another polygon, hold control to keep its distance from the polygon's floor (or ceiling) instead of its height in the world.\n    - When dragging a point, hold control to move the textures around it with the point.\n    - When dragging a point, hold shift to let it go where it would make a polygon invalid.\n\nPainting:\n    - In Texture > Paint Mode, you can click on surfaces to assign the selected texture swatch to those surfaces."
     - rid: 552786097007231051
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -308,3 +320,87 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: How many changes can be undone, from 1 to 10,000 (50 by default). Each change kept takes memory (a change to much of the level takes more), so very high values can use a lot of it.
+    - rid: 552786288315990065
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693706842521600
+        m_Metadata:
+          m_Items: []
+        m_Value: Point Click Area
+    - rid: 552786288315990066
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693706842521601
+        m_Metadata:
+          m_Items: []
+        m_Value: How big the area that clicks a point (in Geometry mode) is, from the size it's drawn (100%) to twice that (200%). The point is drawn the same size either way.
+    - rid: 552786288315990067
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693706842521602
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0}%'
+    - rid: 552786288315990082
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724797997531136
+        m_Metadata:
+          m_Items: []
+        m_Value: Show Warnings
+    - rid: 552786288315990083
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724797997531137
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Lists warnings (marked in yellow, after the errors): what''s legal, but probably not meant. On each time ForgePlus starts.'
+    - rid: 552786288315990084
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724797997531138
+        m_Metadata:
+          m_Items: []
+        m_Value: Show
+    - rid: 552786288315990085
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724797997531139
+        m_Metadata:
+          m_Items: []
+        m_Value: Selects what it's about, and frames it in the view
+    - rid: 552786288315990086
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724797997531140
+        m_Metadata:
+          m_Items: []
+        m_Value: Every error (marked in red) and warning (marked in yellow)
+    - rid: 552786288315990087
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724797997531141
+        m_Metadata:
+          m_Items: []
+        m_Value: Those with a Fix button, which fixes them for you
+    - rid: 552786288315990088
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724798001725440
+        m_Metadata:
+          m_Items: []
+        m_Value: Those you fix yourself, as each says how
+    - rid: 552786288315990089
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724798001725441
+        m_Metadata:
+          m_Items: []
+        m_Value: Prevent Invalid Moves
+    - rid: 552786288315990090
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724798001725442
+        m_Metadata:
+          m_Items: []
+        m_Value: Moving a point stops short of where it would make a polygon invalid (concave, inside out, crossing itself, or without area) or a line too long. Hold Shift while dragging a point to allow it anyway.

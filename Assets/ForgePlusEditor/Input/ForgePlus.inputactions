@@ -378,6 +378,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "KeepTexturesWithPoint",
+                    "type": "Button",
+                    "id": "52bb32d6-cd8c-462e-89a9-727477ebec27",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "AllowInvalidGeometry",
+                    "type": "Button",
+                    "id": "f6e2ecfe-4ffb-42c9-8af7-de0bf536f143",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -521,6 +541,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "KeepRelativeHeight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0006bd3c-93cb-436e-a867-d88855be7e8b",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "KeepTexturesWithPoint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "84f25d31-80e5-4458-983e-b37fa3b15b69",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AllowInvalidGeometry",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

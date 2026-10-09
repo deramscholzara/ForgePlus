@@ -1,28 +1,30 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
-    <!-- Geometry mode's visualization options (placeholders, which don't filter anything yet) -->
+    <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
+    <!-- Geometry mode's visualization options (VisualizationGeometryPanel), which show and hide kinds of geometry. Show
+         Everything is on while all the others are, and turns them all on. Polygons, Lines and Sides are placeholders,
+         which don't filter anything yet. -->
     <ui:VisualElement class="fp-visualization" picking-mode="Ignore">
         <ui:VisualElement class="fp-box fp-box--padded fp-visualization__options">
-            <ui:RadioButtonGroup name="visualization" value="0" class="fp-radio-group fp-visualization__grid">
-                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__everything fp-visualization__everything--in-grid">
+            <ui:VisualElement class="fp-visualization__grid" picking-mode="Ignore">
+                <ui:Instance template="Toggle" name="show-everything" class="fp-toggle--wide-short fp-visualization__everything fp-visualization__everything--in-grid" tooltip="@Geometry/VisualizationGeometry.ShowEverything.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.ShowEverything.Control.Text" />
                 </ui:Instance>
-                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
-                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Polygons.Control.Text" />
+                <ui:Instance template="Toggle" name="polygons" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left" tooltip="@Geometry/VisualizationGeometry.Polygons.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Polygons.Control.Text" value="true" />
                 </ui:Instance>
-                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right">
-                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Lines.Control.Text" />
+                <ui:Instance template="Toggle" name="lines" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right" tooltip="@Geometry/VisualizationGeometry.Lines.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Lines.Control.Text" value="true" />
                 </ui:Instance>
-                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
-                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Sides.Control.Text" />
+                <ui:Instance template="Toggle" name="sides" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left" tooltip="@Geometry/VisualizationGeometry.Sides.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Sides.Control.Text" value="true" />
                 </ui:Instance>
-                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right">
+                <ui:Instance template="Toggle" name="points" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right" tooltip="@Geometry/VisualizationGeometry.Points.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Points.Control.Text" />
                 </ui:Instance>
-                <ui:Instance template="RadioToggle" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left">
+                <ui:Instance template="Toggle" name="media" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left" tooltip="@Geometry/VisualizationGeometry.Media.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Media.Control.Text" />
                 </ui:Instance>
-            </ui:RadioButtonGroup>
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
     </ui:VisualElement>

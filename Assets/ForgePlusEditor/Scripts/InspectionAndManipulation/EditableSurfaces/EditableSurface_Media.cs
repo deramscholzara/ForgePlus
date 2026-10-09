@@ -66,7 +66,11 @@ namespace ForgePlus.LevelManipulation
         {
             base.SetSelectability(enabled);
 
-            GetComponent<MeshCollider>().enabled = enabled;
+            // A surface with no area has no collider
+            if (TryGetComponent<MeshCollider>(out var meshCollider))
+            {
+                meshCollider.enabled = enabled;
+            }
         }
     }
 }

@@ -356,6 +356,15 @@ namespace ForgePlus.DataFileIO
 
             #endregion Annotations
 
+#if !NO_EDITING
+            // Drawn over the level (rather than having objects of their own)
+            runtimeLevel.Points = new Dictionary<short, LevelEntity_Point>(level.EndpointList.Count);
+            for (short endpointIndex = 0; endpointIndex < level.EndpointList.Count; endpointIndex++)
+            {
+                runtimeLevel.Points[endpointIndex] = new LevelEntity_Point(runtimeLevel, endpointIndex);
+            }
+#endif
+
             // Only editing uses these, so they're the last thing the build waits for
             runtimeLevel.EndpointLines = endpointLines.GetAwaiter().GetResult();
 
