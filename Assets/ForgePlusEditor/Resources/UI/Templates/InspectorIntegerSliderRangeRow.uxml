@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A range of whole numbers on one slider track (its thumbs the lowest and highest), with a field for each end on
+         either side (committed on return or leaving it). An instance is named after the inspector property the first
+         field edits; the second edits its <Name>Maximum property, and the slider its <Name>Range property (both ends at
+         once). The slider's limits are set on the instance (low-limit and high-limit, on "slider"). It's grayed out
+         while the property can't be set, or while its Is<Name>Editable property is false. -->
+    <ui:VisualElement class="fp-inspector-row fp-template">
+        <ui:Label name="label" text="Label:" class="fp-inspector-row__label" />
+        <ui:VisualElement class="fp-inspector-row__value-area fp-inspector-row__value-area--row">
+            <ui:IntegerField name="value" is-delayed="true" class="fp-inspector-text-field fp-inspector-slider-number" />
+            <ui:MinMaxSlider name="slider" low-limit="0" high-limit="100" class="fp-inspector-range-slider" />
+            <ui:IntegerField name="maximum" is-delayed="true" class="fp-inspector-range-maximum fp-inspector-slider-number" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

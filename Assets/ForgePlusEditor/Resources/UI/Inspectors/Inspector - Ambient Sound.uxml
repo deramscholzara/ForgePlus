@@ -19,7 +19,7 @@
         <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="@Sounds/Inspector.AmbientSound.Sound.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.AmbientSound.Sound.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="SliderIntegerRow" name="Volume" tooltip="@Sounds/Inspector.AmbientSound.Volume.Tooltip">
+        <ui:Instance template="SliderIntegerRow" name="Volume" class="fp-inspector-row--draggable" tooltip="@Sounds/Inspector.AmbientSound.Volume.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.AmbientSound.Volume.Label.Text" />
         </ui:Instance>
         <ui:Instance template="ButtonRow" name="PlayedIn" tooltip="@Sounds/Inspector.AmbientSound.PlayedIn.Tooltip">

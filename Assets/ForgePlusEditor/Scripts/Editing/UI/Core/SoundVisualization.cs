@@ -3,6 +3,7 @@ using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
+using ForgePlus.Sound;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
@@ -33,6 +34,12 @@ namespace ForgePlus.UI
         private const float FloorOffset = 0.02f;
         private const int CircleSegments = 64;
 
+        // A random sound's direction is the way it travels, so it's heard from half a turn around
+        private const int HalfTurn = world.NUMBER_OF_ANGLES / 2;
+
+        // Where the arc over a random sound's range is drawn, as a fraction of its arrow's length
+        private const float ArcRadius = 0.8f;
+
         // The farthest a sound source is heard from, in world units (map_constructors.cpp: ZERO_VOLUME_DISTANCE)
         private const float MaximumSourceDistance = 10f;
 
@@ -47,6 +54,7 @@ namespace ForgePlus.UI
         private readonly Dictionary<short, VisualElement> sourceBars = new Dictionary<short, VisualElement>();
 
         private readonly Dictionary<short, (GameObject Arrow, short Direction, short Delta)> arrows = new Dictionary<short, (GameObject, short, short)>();
+        private readonly Dictionary<short, (GameObject Line, short Direction)> playingLines = new Dictionary<short, (GameObject, short)>();
         private readonly Dictionary<short, (GameObject Radii, short Behavior)> radii = new Dictionary<short, (GameObject, short)>();
 
         private readonly HashSet<short> selectedPolygons = new HashSet<short>();
@@ -135,8 +143,14 @@ namespace ForgePlus.UI
                 DestroyMesh(shown.Radii);
             }
 
+            foreach (var playing in playingLines.Values)
+            {
+                DestroyMesh(playing.Line);
+            }
+
             arrows.Clear();
             radii.Clear();
+            playingLines.Clear();
 
             if (root)
             {
@@ -274,6 +288,7 @@ namespace ForgePlus.UI
                     arrow.Arrow.SetActive(false);
                 }
 
+                ShowPlayingDirection(index, randomIndex, isShown: false);
                 return;
             }
 
@@ -291,6 +306,48 @@ namespace ForgePlus.UI
 
             arrow.Arrow.transform.position = PolygonAnchor(polygon, FloorOffset);
             arrow.Arrow.SetActive(true);
+
+            ShowPlayingDirection(index, randomIndex, isShown: true, arrow.Arrow.transform.position);
+        }
+
+        // While the polygon's random sound plays, a line from its arrow's center to its arc, toward where this play of it
+        // is heard from (the direction picked from its range)
+        private void ShowPlayingDirection(short index, short randomIndex, bool isShown, Vector3 position = default)
+        {
+            playingLines.TryGetValue(index, out var playing);
+
+            var playback = LevelSoundPlayback.Instance;
+            short playedDirection = 0;
+            var isPlaying = isShown && playback && playback.TryGetPlayingRandomSound(out var playingRandom, out playedDirection) &&
+                            playingRandom == randomIndex;
+
+            if (!isPlaying)
+            {
+                if (playing.Line)
+                {
+                    playing.Line.SetActive(false);
+                }
+
+                return;
+            }
+
+            if (!playing.Line || playing.Direction != playedDirection)
+            {
+                if (!playing.Line)
+                {
+                    playing.Line = CreateIndicator($"Sound Playing Direction - Polygon {index}");
+                }
+
+                var builder = new LineMeshBuilder();
+                builder.AddLine(Vector3.zero, AngleDirection(playedDirection + HalfTurn) * ArrowLength * ArcRadius);
+                SetMesh(playing.Line, builder.Build("Sound Playing Direction"));
+
+                playing = (playing.Line, playedDirection);
+                playingLines[index] = playing;
+            }
+
+            playing.Line.transform.position = position;
+            playing.Line.SetActive(true);
         }
 
         private void ShowRadii(LevelEntity_MapObject mapObject, bool isShown)
@@ -382,10 +439,13 @@ namespace ForgePlus.UI
             return new Vector3(Mathf.Cos(radians), 0f, -Mathf.Sin(radians));
         }
 
-        // An arrow pointing where the sound comes from, and an arc over the range it varies by (if it does)
+        // An arrow pointing where the sound is heard from, and an arc over the range that varies by (if it does). That's
+        // half a turn from its direction, which is the way it travels (the game uses it as the angle from the sound to the
+        // listener, SoundManager.cpp: AngleAndVolumeToStereoVolume).
         private static Mesh BuildArrowMesh(short direction, short delta)
         {
             var builder = new LineMeshBuilder();
+            direction += HalfTurn;
             var forward = AngleDirection(direction);
             var tip = forward * ArrowLength;
             var side = Vector3.Cross(Vector3.up, forward);
@@ -398,7 +458,7 @@ namespace ForgePlus.UI
             {
                 var highest = direction + delta - 1;
                 var segments = Mathf.Max(2, Mathf.CeilToInt((delta - 1) * CircleSegments / (float) world.NUMBER_OF_ANGLES));
-                var radius = ArrowLength * 0.8f;
+                var radius = ArrowLength * ArcRadius;
 
                 builder.AddLine(Vector3.zero, AngleDirection(highest) * ArrowLength);
                 for (var i = 0; i < segments; i++)

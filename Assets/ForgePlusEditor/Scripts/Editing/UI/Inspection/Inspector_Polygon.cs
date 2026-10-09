@@ -10,10 +10,13 @@ using Unity.Properties;
 
 namespace ForgePlus.Inspection
 {
-    public class Inspector_Polygon : Inspector_Base<LevelEntity_Polygon>
+    public class Inspector_Polygon : Inspector_Base<LevelEntity_Polygon>, ILabelDragHandler
     {
         // Aleph One's polygon types run from _polygon_is_normal to _polygon_is_superglue
         private const short NumberOfPolygonTypes = map._polygon_is_superglue + 1;
+
+        // While a height is dragged by its label, which commits it once the drag ends (as dragging the face does)
+        private bool isDraggingHeight;
 
         public Inspector_Polygon(LevelEntity_Polygon polygon) : base(polygon)
         {
@@ -285,12 +288,27 @@ namespace ForgePlus.Inspection
             }
         }
 
+        // Kept from passing its ceiling, as in Heights mode
         [CreateProperty]
-        public string FloorHeight
+        public int FloorHeight
         {
             get
             {
-                return WorldDistances.Format(Polygon.floor_height);
+                return Polygon.floor_height;
+            }
+            set
+            {
+                SetHeight(LevelEntity_Polygon.DataSources.Floor, value);
+            }
+        }
+
+        // A platform's heights are its platform's
+        [CreateProperty]
+        public bool IsFloorHeightEditable
+        {
+            get
+            {
+                return HeightsEditing.CanEdit(Entity);
             }
         }
 
@@ -318,11 +336,24 @@ namespace ForgePlus.Inspection
         }
 
         [CreateProperty]
-        public string CeilingHeight
+        public int CeilingHeight
         {
             get
             {
-                return WorldDistances.Format(Polygon.ceiling_height);
+                return Polygon.ceiling_height;
+            }
+            set
+            {
+                SetHeight(LevelEntity_Polygon.DataSources.Ceiling, value);
+            }
+        }
+
+        [CreateProperty]
+        public bool IsCeilingHeightEditable
+        {
+            get
+            {
+                return HeightsEditing.CanEdit(Entity);
             }
         }
 
@@ -345,6 +376,38 @@ namespace ForgePlus.Inspection
             get
             {
                 return !Polygon.ceiling_texture.UsesLandscapeCollection();
+            }
+        }
+
+        public void BeginLabelDrag(string property)
+        {
+            if (property == nameof(FloorHeight) || property == nameof(CeilingHeight))
+            {
+                HeightsEditing.BeginDrag();
+                isDraggingHeight = true;
+            }
+        }
+
+        public void EndLabelDrag(string property)
+        {
+            if (isDraggingHeight)
+            {
+                isDraggingHeight = false;
+                HeightsEditing.EndDrag();
+            }
+        }
+
+        private void SetHeight(LevelEntity_Polygon.DataSources dataSource, int height)
+        {
+            var clampedHeight = HeightsEditing.ClampHeight(Entity, dataSource, height);
+
+            if (isDraggingHeight)
+            {
+                Edit(polygon => HeightsEditing.DragHeight(polygon, dataSource, clampedHeight));
+            }
+            else
+            {
+                Edit(polygon => HeightsEditing.SetHeights(new[] { polygon }, dataSource, clampedHeight));
             }
         }
 

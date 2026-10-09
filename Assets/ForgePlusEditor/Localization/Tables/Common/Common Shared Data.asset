@@ -437,18 +437,8 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 2586077446144
-    m_Key: InspectorFloatRangeRow.To.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 2586081640448
     m_Key: InspectorFoldout.Control.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2586090029056
-    m_Key: InspectorIntegerRangeRow.To.Text
     m_Flags: 0
     m_Metadata:
       m_Items: []
@@ -2509,6 +2499,11 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 2506192999563264
     m_Key: ViewOptions.DisplayOptions.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2532770391408640
+    m_Key: Manipulation.Snap.Tooltip
     m_Flags: 0
     m_Metadata:
       m_Items: []

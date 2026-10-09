@@ -3,6 +3,7 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
+    <ui:Template name="DistanceFieldRow" src="../Templates/InspectorDistanceFieldRow.uxml" />
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="DropdownPlayRow" src="../Templates/InspectorDropdownPlayRow.uxml" />
     <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
@@ -25,7 +26,7 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Floor.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="FloorHeight" tooltip="@Common/Inspector.Polygon.FloorHeight.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="FloorHeight" class="fp-inspector-row--draggable" tooltip="@Common/Inspector.Polygon.FloorHeight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.FloorHeight.Label.Text" />
         </ui:Instance>
         <ui:Instance template="LightRow" name="FloorLightIndex" tooltip="@Common/Inspector.Polygon.FloorLightIndex.Tooltip">
@@ -35,7 +36,7 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.Ceiling.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="Row" name="CeilingHeight" tooltip="@Common/Inspector.Polygon.CeilingHeight.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="CeilingHeight" class="fp-inspector-row--draggable" tooltip="@Common/Inspector.Polygon.CeilingHeight.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Common/Inspector.Polygon.CeilingHeight.Label.Text" />
         </ui:Instance>
         <ui:Instance template="LightRow" name="CeilingLightIndex" tooltip="@Common/Inspector.Polygon.CeilingLightIndex.Tooltip">

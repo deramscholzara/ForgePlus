@@ -4,8 +4,8 @@
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="DropdownPlayRow" src="../Templates/InspectorDropdownPlayRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
-    <ui:Template name="IntegerRangeRow" src="../Templates/InspectorIntegerRangeRow.uxml" />
-    <ui:Template name="FloatRangeRow" src="../Templates/InspectorFloatRangeRow.uxml" />
+    <ui:Template name="IntegerSliderRangeRow" src="../Templates/InspectorIntegerSliderRangeRow.uxml" />
+    <ui:Template name="FloatSliderRangeRow" src="../Templates/InspectorFloatSliderRangeRow.uxml" />
     <ui:Template name="ButtonRow" src="../Templates/InspectorButtonRow.uxml" />
     <ui:Template name="Button" src="../Templates/Button.uxml" />
     <!-- Bound to Inspector_RandomSound -->
@@ -21,20 +21,28 @@
         <ui:Instance template="DropdownPlayRow" name="Sound" tooltip="@Sounds/Inspector.RandomSound.Sound.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Sound.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerRangeRow" name="Volume" tooltip="@Sounds/Inspector.RandomSound.Volume.Tooltip">
+        <!-- From silent to full volume (MAXIMUM_SOUND_VOLUME) -->
+        <ui:Instance template="IntegerSliderRangeRow" name="Volume" tooltip="@Sounds/Inspector.RandomSound.Volume.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Volume.Label.Text" />
+            <ui:AttributeOverrides element-name="slider" low-limit="0" high-limit="256" />
         </ui:Instance>
-        <ui:Instance template="IntegerRangeRow" name="Period" tooltip="@Sounds/Inspector.RandomSound.Period.Tooltip">
+        <!-- Up to a minute (it can be longer, which widens the slider to show it) -->
+        <ui:Instance template="IntegerSliderRangeRow" name="Period" tooltip="@Sounds/Inspector.RandomSound.Period.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Period.Label.Text" />
+            <ui:AttributeOverrides element-name="slider" low-limit="0" high-limit="1800" />
         </ui:Instance>
         <ui:Instance template="Flag" name="NonDirectional" tooltip="@Sounds/Inspector.RandomSound.NonDirectional.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Sounds/Inspector.RandomSound.NonDirectional.Flag.Text" />
         </ui:Instance>
-        <ui:Instance template="IntegerRangeRow" name="Direction" tooltip="@Sounds/Inspector.RandomSound.Direction.Tooltip">
+        <!-- Up to a turn either way, so a range can cross 0 (or 360) degrees -->
+        <ui:Instance template="IntegerSliderRangeRow" name="Direction" tooltip="@Sounds/Inspector.RandomSound.Direction.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Direction.Label.Text" />
+            <ui:AttributeOverrides element-name="slider" low-limit="-360" high-limit="360" />
         </ui:Instance>
-        <ui:Instance template="FloatRangeRow" name="Pitch" tooltip="@Sounds/Inspector.RandomSound.Pitch.Tooltip">
+        <!-- Up to twice the sound's own (it can be higher, which widens the slider to show it) -->
+        <ui:Instance template="FloatSliderRangeRow" name="Pitch" tooltip="@Sounds/Inspector.RandomSound.Pitch.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.Pitch.Label.Text" />
+            <ui:AttributeOverrides element-name="slider" low-limit="0" high-limit="2" />
         </ui:Instance>
         <ui:Instance template="ButtonRow" name="PlayedIn" tooltip="@Sounds/Inspector.RandomSound.PlayedIn.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Sounds/Inspector.RandomSound.PlayedIn.Label.Text" />

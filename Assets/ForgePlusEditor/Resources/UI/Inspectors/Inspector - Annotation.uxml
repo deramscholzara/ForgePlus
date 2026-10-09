@@ -23,10 +23,10 @@
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.Position.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="LocationX" tooltip="@Annotations/Inspector.Annotation.LocationX.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="LocationX" class="fp-inspector-row--draggable" tooltip="@Annotations/Inspector.Annotation.LocationX.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.LocationX.Label.Text" />
         </ui:Instance>
-        <ui:Instance template="DistanceFieldRow" name="LocationY" tooltip="@Annotations/Inspector.Annotation.LocationY.Tooltip">
+        <ui:Instance template="DistanceFieldRow" name="LocationY" class="fp-inspector-row--draggable" tooltip="@Annotations/Inspector.Annotation.LocationY.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Annotations/Inspector.Annotation.LocationY.Label.Text" />
         </ui:Instance>
         <ui:Instance template="IntegerFieldRow" name="PolygonIndex" tooltip="@Annotations/Inspector.Annotation.PolygonIndex.Tooltip">

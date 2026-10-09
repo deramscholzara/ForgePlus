@@ -51,7 +51,25 @@ namespace ForgePlus.Sound
         // Listening, in a polygon, with a sounds file to play from (this frame)
         private bool isHearing;
 
+        // The random sound entry last played with a direction, the direction picked for it, and its voice (for showing
+        // the direction while it plays)
+        private short playingRandomSound = NONE;
+        private short playingRandomDirection;
+        private short playingRandomSoundIndex = NONE;
+        private LevelSoundVoice playingRandomVoice;
+
         public static LevelSoundPlayback Instance { get; private set; }
+
+        // The random sound entry playing now with a direction, and the direction picked for it from its range (until it
+        // ends, or its voice plays something else)
+        public bool TryGetPlayingRandomSound(out short randomSound, out short direction)
+        {
+            randomSound = playingRandomSound;
+            direction = playingRandomDirection;
+
+            return playingRandomSound != NONE && playingRandomVoice != null && playingRandomVoice.IsPlaying &&
+                   playingRandomVoice.SoundIndex == playingRandomSoundIndex;
+        }
 
         public PolygonContainmentTracker Tracker
         {
@@ -305,7 +323,16 @@ namespace ForgePlus.Sound
             if (direction != NONE)
             {
                 AngleAndVolumeToStereoVolume((short) (direction - soundWorld.Listener.yaw), volume, out var rightVolume, out var leftVolume);
-                BufferSound(soundIndex, pitch, LevelSoundVoice.ToGain(volume), LevelSoundVoice.Pan(leftVolume, rightVolume), isPanning: true);
+                var voice = BufferSound(soundIndex, pitch, LevelSoundVoice.ToGain(volume), LevelSoundVoice.Pan(leftVolume, rightVolume), isPanning: true);
+
+                // Only random sounds are played this way, from the entry of the polygon the listener is in
+                if (voice != null)
+                {
+                    playingRandomSound = worldLevel.Level.PolygonList[soundWorld.Listener.polygon_index].random_sound_image_index;
+                    playingRandomDirection = direction;
+                    playingRandomSoundIndex = soundIndex;
+                    playingRandomVoice = voice;
+                }
             }
             else
             {
@@ -330,12 +357,13 @@ namespace ForgePlus.Sound
         // SoundManager::BufferSound and ManageSound: a sound already playing (unless it doesn't self-abort) restarts
         // rather than playing twice, unless it can't be restarted, or it's panned and the new one isn't louder by more
         // than the abort threshold (UpdateExistingPlayer)
-        private void BufferSound(short soundIndex, int pitch, float gain, float pan, bool isPanning)
+        // The voice it plays in, or null if it isn't played
+        private LevelSoundVoice BufferSound(short soundIndex, int pitch, float gain, float pan, bool isPanning)
         {
             var file = SoundsLoading.Instance.File;
             if (soundIndex == NONE || file == null || !TryGetClip(file, soundIndex, out var definition, out var clip) || gain <= 0f)
             {
-                return;
+                return null;
             }
 
             LevelSoundVoice voice = null;
@@ -347,7 +375,7 @@ namespace ForgePlus.Sound
                     ((definition.flags & sound_definitions._sound_cannot_be_restarted) != 0 ||
                      (isPanning && gain + AbortAmplitudeThreshold <= voice.Volume)))
                 {
-                    return;
+                    return null;
                 }
             }
 
@@ -355,6 +383,8 @@ namespace ForgePlus.Sound
             voice = FreeVoice(oneShotVoices);
             voice.SetVolume(gain, pan);
             voice.Play(soundIndex, clip, CalculatePitchModifier(definition, pitch), softStart: false);
+
+            return voice;
         }
 
         // As play_platform_sound (platforms.cpp), from the platform's polygon
