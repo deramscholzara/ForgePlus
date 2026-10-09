@@ -165,6 +165,14 @@ namespace ForgePlus.ApplicationGeneral
                     return Find("Editing/AlignContiguous");
                 }
             }
+
+            public static InputAction KeepRelativeHeight
+            {
+                get
+                {
+                    return Find("Editing/KeepRelativeHeight");
+                }
+            }
         }
 
         public static class Interface
