@@ -2502,6 +2502,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2506128390504448
+    m_Key: ViewOptions.DisplayOptions.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2506192999563264
+    m_Key: ViewOptions.DisplayOptions.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:
