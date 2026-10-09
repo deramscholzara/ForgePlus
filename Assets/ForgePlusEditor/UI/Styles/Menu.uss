@@ -173,6 +173,23 @@
     overflow: hidden;
 }
 
+/* An error's or a warning's mark, on its left edge */
+.fp-error-item--error {
+    border-left-width: 6px;
+    border-left-color: var(--fp-error);
+}
+
+.fp-error-item--warning {
+    border-left-width: 6px;
+    border-left-color: var(--fp-warning);
+}
+
+.fp-errors__show-warnings {
+    height: var(--fp-short-control-height);
+    flex-shrink: 0;
+    margin-bottom: 5px;
+}
+
 .fp-error-item__fix {
     width: 100px;
     flex-shrink: 0;

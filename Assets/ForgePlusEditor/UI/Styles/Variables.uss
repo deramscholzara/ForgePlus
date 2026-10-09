@@ -48,4 +48,9 @@
 
     /* Annotations' name tags in the level (the green they were drawn in before) */
     --fp-annotation: rgb(0, 179, 0);
+
+    /* Errors (what the engines don't play as it looks) and warnings (what's probably not meant), as the Errors panel
+       and the level view mark them */
+    --fp-error: rgb(210, 40, 40);
+    --fp-warning: rgb(240, 200, 30);
 }

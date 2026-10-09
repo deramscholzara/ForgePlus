@@ -1,21 +1,26 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
     <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
     <!-- The level's errors (in the menu's place), filtered by the selected tab: all of them, the auto-fixable ones (which
-         each have a fix) or the standard ones (which say how to fix them) -->
+         each have a fix) or the standard ones (which say how to fix them). Warnings are listed after the errors, unless
+         Show Warnings is off. -->
     <ui:VisualElement class="fp-menu" picking-mode="Ignore">
         <ui:RadioButtonGroup name="tabs" class="fp-radio-group fp-radio-row fp-menu__tabs">
-            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab">
+            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab" tooltip="@Menu/Errors.All.Tooltip">
                 <ui:AttributeOverrides element-name="control" text="@Menu/Errors.All.Control.Text" />
             </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab">
+            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab" tooltip="@Menu/Errors.AutoFixable.Tooltip">
                 <ui:AttributeOverrides element-name="control" text="@Menu/Errors.AutoFixable.Control.Text" />
             </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab">
+            <ui:Instance template="RadioToggle" class="fp-menu__tab fp-errors__tab" tooltip="@Menu/Errors.Standard.Tooltip">
                 <ui:AttributeOverrides element-name="control" text="@Menu/Errors.Standard.Control.Text" />
             </ui:Instance>
         </ui:RadioButtonGroup>
         <ui:VisualElement class="fp-menu__content" picking-mode="Ignore">
+            <ui:Instance template="Toggle" name="show-warnings" class="fp-toggle--wide-short fp-errors__show-warnings" tooltip="@Menu/Errors.ShowWarnings.Tooltip">
+                <ui:AttributeOverrides element-name="control" text="@Menu/Errors.ShowWarnings.Control.Text" />
+            </ui:Instance>
             <ui:VisualElement class="fp-box fp-box--padded fp-errors__list">
                 <ui:ListView name="errors" fixed-item-height="90" selection-type="None" class="fp-scroll fp-level-list fp-grow" />
                 <ui:Label name="empty" text="@Menu/Errors.Empty.Text" class="fp-errors__empty" />

@@ -269,6 +269,31 @@ namespace RuntimeCore.Entities.Geometry
             ApplyMedia();
         }
 
+        // After its corners move (its sides are its lines' to rebuild)
+        public void ApplyShape()
+        {
+            foreach (var surface in new[] { FloorSurface, CeilingSurface, MediaSurface })
+            {
+                if (surface)
+                {
+                    surface.ApplyShape(rebatchImmediately: false);
+                }
+            }
+
+            // A collider it gained (having had no area) is clickable as the mode has it
+            if (MediaSurface)
+            {
+                SelectionManager.Instance.MatchSelectabilityToMode(MediaSurface.GetComponent<EditableSurface_Media>());
+            }
+
+            // Its corners' indicators follow them
+            if (selectionVisualizationIndicators.Count > 0)
+            {
+                DisplaySelectionState(false);
+                DisplaySelectionState(true);
+            }
+        }
+
         private static void ApplySurface(RuntimeSurfaceGeometry surface)
         {
             if (!surface)

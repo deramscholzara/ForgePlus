@@ -197,6 +197,66 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2693706842521600
+    m_Key: SettingsTab.PointClickArea.Control.Label
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693706842521601
+    m_Key: SettingsTab.PointClickArea.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2693706842521602
+    m_Key: SettingsTab.PointClickArea.Value
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724797997531136
+    m_Key: Errors.ShowWarnings.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724797997531137
+    m_Key: Errors.ShowWarnings.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724797997531138
+    m_Key: Errors.Show.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724797997531139
+    m_Key: Errors.Show.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724797997531140
+    m_Key: Errors.All.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724797997531141
+    m_Key: Errors.AutoFixable.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724798001725440
+    m_Key: Errors.Standard.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724798001725441
+    m_Key: SettingsTab.PreventInvalidGeometry.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2724798001725442
+    m_Key: SettingsTab.PreventInvalidGeometry.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

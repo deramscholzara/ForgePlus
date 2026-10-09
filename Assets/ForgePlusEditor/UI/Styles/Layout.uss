@@ -124,7 +124,7 @@
     padding-bottom: 5px;
 }
 
-.fp-visualization__grid #contentContainer {
+.fp-visualization__grid {
     flex-direction: row;
     flex-wrap: wrap;
 }
@@ -409,6 +409,29 @@
     color: var(--fp-annotation);
     white-space: nowrap;
     -unity-text-align: middle-center;
+}
+
+/* What a point's move would break (or breaks), beside the point (PointHandles) */
+.fp-point-status {
+    position: absolute;
+    margin: 0;
+    padding: 2px 6px;
+    background-color: var(--fp-panel-background);
+    border-left-width: 4px;
+    font-size: 14px;
+    -unity-font-style: bold;
+    white-space: nowrap;
+    color: var(--fp-text-bright);
+}
+
+.fp-point-status--error {
+    border-left-color: var(--fp-error);
+    color: var(--fp-error);
+}
+
+.fp-point-status--warning {
+    border-left-color: var(--fp-warning);
+    color: var(--fp-warning);
 }
 
 .fp-world-label--selected {

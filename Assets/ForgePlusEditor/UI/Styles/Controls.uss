@@ -365,6 +365,26 @@
     display: none;
 }
 
+/* A slider with its value shown as text at its end, on the slider's background */
+.fp-slider-row {
+    flex-direction: row;
+    background-color: var(--fp-slider-background);
+}
+
+.fp-slider-row__slider {
+    flex-grow: 1;
+}
+
+.fp-slider-row__value {
+    width: 50px;
+    margin: 0;
+    padding: 0 5px 0 0;
+    color: var(--fp-control-text);
+    font-size: 14px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-right;
+}
+
 /* ---------- Scroll areas ---------- */
 
 .fp-scroll {

@@ -99,10 +99,18 @@ namespace ForgePlus.LevelManipulation
         // Makes a platform polygon another type. Later platforms move down an index, as do their polygons' permutations.
         public static void RemovePlatform(LevelEntity_Polygon polygon, short newType)
         {
-            var level = polygon.ParentLevel.Level;
+            RemovePlatformData(polygon.ParentLevel.Level, polygon.NativeIndex, newType);
+
+            LevelEditing.RebuildLevelKeepingSelection();
+        }
+
+        // The level's data alone (its structure is then rebuilt by whoever's removing it)
+        public static void RemovePlatformData(MapLevel level, short polygonIndex, short newType)
+        {
             SaveStaticData(level);
 
-            var platformIndex = polygon.NativeObject.permutation;
+            var polygon = level.PolygonList[polygonIndex];
+            var platformIndex = polygon.permutation;
             var platform = level.PlatformList[platformIndex];
 
             level.static_platforms.RemoveAll(staticData => staticData.polygon_index == platform.polygon_index);
@@ -117,11 +125,9 @@ namespace ForgePlus.LevelManipulation
             }
 
             // Its permutation was its platform's index, which means nothing to other types
-            polygon.NativeObject.type = newType;
-            polygon.NativeObject.permutation = 0;
-            LineFlagsEditing.UpdateForPlatformChange(level, polygon.NativeObject);
-
-            LevelEditing.RebuildLevelKeepingSelection();
+            polygon.type = newType;
+            polygon.permutation = 0;
+            LineFlagsEditing.UpdateForPlatformChange(level, polygon);
         }
 
         // From the first platform edit on, the level saves static data (which every engine prefers), in the running

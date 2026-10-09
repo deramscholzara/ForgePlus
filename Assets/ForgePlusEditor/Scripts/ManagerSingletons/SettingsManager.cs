@@ -42,6 +42,11 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_PlayLevelAudio = "Settings_PlayLevelAudio";
         private const string PlayerPrefsSettingsKey_ImproperFractions = "Settings_ImproperFractions";
         private const string PlayerPrefsSettingsKey_UndoSteps = "Settings_UndoSteps";
+        private const string PlayerPrefsSettingsKey_PointClickAreaSteps = "Settings_PointClickAreaSteps";
+        private const string PlayerPrefsSettingsKey_PreventInvalidGeometry = "Settings_PreventInvalidGeometry";
+
+        // A point's click area grows from its drawn size (100%) to twice that (200%), in steps of a ninth (a pixel each)
+        public const int MaximumPointClickAreaSteps = 9;
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
 
@@ -62,9 +67,27 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Which geometry the level shows (and can be clicked), as the visualization options set it; also when the mode
+        // changes (which may force some on)
+        private event Action OnGeometryVisibilityChanged_Sender;
+        public event Action OnGeometryVisibilityChanged
+        {
+            add
+            {
+                OnGeometryVisibilityChanged_Sender += value;
+                value.Invoke();
+            }
+            remove
+            {
+                OnGeometryVisibilityChanged_Sender -= value;
+            }
+        }
+
         // These last for the session only (they aren't saved)
         private bool objectIconsEnabled = true;
         private bool spritePreviewsEnabled = true;
+        private bool pointsEnabled = true;
+        private bool mediaEnabled = true;
 
         public bool IsFullScreen
         {
@@ -266,6 +289,46 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // How many ninths of a point's drawn size its click area adds (PointHandles), from 0 (100%) to 9 (200%)
+        public int PointClickAreaSteps
+        {
+            get
+            {
+                return Math.Clamp(PlayerPrefs.GetInt(PlayerPrefsSettingsKey_PointClickAreaSteps, 0), 0, MaximumPointClickAreaSteps);
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_PointClickAreaSteps, Math.Clamp(value, 0, MaximumPointClickAreaSteps));
+
+                OnSettingChanged?.Invoke(nameof(PointClickAreaSteps));
+            }
+        }
+
+        // Moving a point stops short of where it would make a polygon invalid (PointEditing), unless Allow Invalid Move
+        // (shift) is held while dragging its handle
+        public bool PreventInvalidGeometryEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_PreventInvalidGeometry, 1) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_PreventInvalidGeometry, value ? 1 : 0);
+
+                OnSettingChanged?.Invoke(nameof(PreventInvalidGeometryEnabled));
+            }
+        }
+
+        // The click area's size, as a multiple of a point's drawn size
+        public float PointClickAreaScale
+        {
+            get
+            {
+                return 1f + (float) PointClickAreaSteps / MaximumPointClickAreaSteps;
+            }
+        }
+
         public MergedSaveChecksums MergedSaveChecksum
         {
             get
@@ -382,6 +445,65 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Points (polygons' corners) are only shown in Geometry mode
+        public bool PointsEnabled
+        {
+            get
+            {
+                return pointsEnabled;
+            }
+            set
+            {
+                pointsEnabled = value;
+
+                ApplyGeometryVisibility();
+
+                OnSettingChanged?.Invoke(nameof(PointsEnabled));
+            }
+        }
+
+        public bool PointsAreShown
+        {
+            get
+            {
+                return pointsEnabled && ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry;
+            }
+        }
+
+        // Hidden media surfaces can't be clicked either
+        public bool MediaEnabled
+        {
+            get
+            {
+                return mediaEnabled;
+            }
+            set
+            {
+                mediaEnabled = value;
+
+                ApplyGeometryVisibility();
+
+                OnSettingChanged?.Invoke(nameof(MediaEnabled));
+            }
+        }
+
+        // Media mode always shows media, since it's what the mode edits
+        public bool MediaForcedOn
+        {
+            get
+            {
+                return ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Media;
+            }
+        }
+
+        public bool MediaIsShown
+        {
+            get
+            {
+                return mediaEnabled || MediaForcedOn;
+            }
+        }
+
         private void ApplyObjectVisibility()
         {
             LevelEntity_MapObject.SoundSourceIconsAreVisible = SoundDisplaysForcedOn;
@@ -391,9 +513,17 @@ namespace ForgePlus.ApplicationGeneral
             OnObjectVisibilityChanged_Sender?.Invoke();
         }
 
+        private void ApplyGeometryVisibility()
+        {
+            LevelEntity_Media.SurfacesAreVisible = MediaIsShown;
+
+            OnGeometryVisibilityChanged_Sender?.Invoke();
+        }
+
         private void OnPrimaryModeChanged(ModeManager.PrimaryModes primaryMode)
         {
             ApplyObjectVisibility();
+            ApplyGeometryVisibility();
         }
 
         private void Start()

@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Header" src="../Templates/InspectorHeader.uxml" />
+    <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
+    <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
+    <ui:Template name="DistanceFieldRow" src="../Templates/InspectorDistanceFieldRow.uxml" />
+    <!-- Bound to Inspector_Point -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Instance template="Header">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Point.Point.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="Row" name="Id" tooltip="@Geometry/Inspector.Point.Id.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Point.Id.Label.Text" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <ui:Instance template="Subheader">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Point.Position.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="DistanceFieldRow" name="LocationX" class="fp-inspector-row--draggable" tooltip="@Geometry/Inspector.Point.LocationX.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Point.LocationX.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="DistanceFieldRow" name="LocationY" class="fp-inspector-row--draggable" tooltip="@Geometry/Inspector.Point.LocationY.Tooltip">
+            <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Point.LocationY.Label.Text" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

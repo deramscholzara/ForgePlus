@@ -28,8 +28,16 @@ namespace ForgePlus.LevelManipulation
         void OnWorldPointerEndDrag(WorldPointerEventData eventData);
     }
 
-    // Clicks and drags (with the Select input) on the level's colliders, for the handler under the pointer when it was
-    // pressed (presses over the UI are the UI's). A drag starts once the pointer moves far enough from the press.
+    // Something drawn over the level on screen (such as points' handles), which takes presses before the level's colliders
+    public interface IScreenPointerPicker
+    {
+        // The handler drawn at a screen position (pixels, from the bottom left), and where in the level it's drawn
+        bool TryPick(Vector2 screenPosition, out IWorldPointerHandler handler, out Vector3 worldPosition);
+    }
+
+    // Clicks and drags (with the Select input) on what's drawn over the level (ScreenPicker), or else on the level's
+    // colliders, for the handler under the pointer when it was pressed (presses over the UI are the UI's). A drag starts
+    // once the pointer moves far enough from the press.
     public class WorldPointer : SingletonMonoBehaviour<WorldPointer>
     {
         // Pixels
@@ -54,6 +62,8 @@ namespace ForgePlus.LevelManipulation
         private IWorldPointerHandler pressedHandler;
         private WorldPointerEventData eventData;
         private Vector2 pressPosition;
+
+        public IScreenPointerPicker ScreenPicker { get; set; }
 
         private void Update()
         {
@@ -109,18 +119,17 @@ namespace ForgePlus.LevelManipulation
                 return;
             }
 
-            if (!Raycast(position, out var hit))
+            if (!TryGetHandler(position, out pressedHandler, out var worldPosition, out var worldNormal))
             {
                 pressStartedOverEmptiness = true;
                 return;
             }
 
-            pressedHandler = hit.collider.GetComponentInParent<IWorldPointerHandler>();
             eventData = new WorldPointerEventData
             {
                 Position = position,
-                PressWorldPosition = hit.point,
-                PressWorldNormal = hit.normal,
+                PressWorldPosition = worldPosition,
+                PressWorldNormal = worldNormal,
             };
         }
 
@@ -135,23 +144,42 @@ namespace ForgePlus.LevelManipulation
                     pressedHandler.OnWorldPointerEndDrag(eventData);
                 }
                 else if (!IsOverUI(position) &&
-                         Raycast(position, out var hit) &&
-                         hit.collider.GetComponentInParent<IWorldPointerHandler>() == pressedHandler)
+                         TryGetHandler(position, out var releasedHandler, out _, out _) &&
+                         releasedHandler == pressedHandler)
                 {
                     pressedHandler.OnWorldPointerClick(eventData);
                 }
 
                 pressedHandler = null;
             }
-            else if (pressStartedOverEmptiness && !IsOverUI(position) && !Raycast(position, out _))
+            else if (pressStartedOverEmptiness && !IsOverUI(position) && !TryGetHandler(position, out _, out _, out _))
             {
                 OnClickEmptySpace?.Invoke();
             }
         }
 
-        private bool Raycast(Vector2 position, out RaycastHit hit)
+        // What's drawn over the level comes first, then the level's colliders. Something (a collider) can be hit without
+        // having a handler.
+        private bool TryGetHandler(Vector2 position, out IWorldPointerHandler handler, out Vector3 worldPosition, out Vector3 worldNormal)
         {
-            return Physics.Raycast(mainCamera.ScreenPointToRay(position), out hit, mainCamera.farClipPlane, raycastLayers);
+            if (ScreenPicker != null && ScreenPicker.TryPick(position, out handler, out worldPosition))
+            {
+                worldNormal = Vector3.up;
+                return true;
+            }
+
+            if (Physics.Raycast(mainCamera.ScreenPointToRay(position), out var hit, mainCamera.farClipPlane, raycastLayers))
+            {
+                handler = hit.collider.GetComponentInParent<IWorldPointerHandler>();
+                worldPosition = hit.point;
+                worldNormal = hit.normal;
+                return true;
+            }
+
+            handler = null;
+            worldPosition = default;
+            worldNormal = default;
+            return false;
         }
 
         private bool IsOverUI(Vector2 position)

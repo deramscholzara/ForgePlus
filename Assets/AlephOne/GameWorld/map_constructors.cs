@@ -510,7 +510,8 @@ namespace AlephOne
         }
 
         /* returns area of the given polygon */
-        private static int calculate_polygon_area(MapLevel level, short polygon_index)
+        // ForgePlus: public, for a polygon whose corners were moved
+        public static int calculate_polygon_area(MapLevel level, short polygon_index)
         {
             int area = 0;
             world_point2d first_point, point, next_point;

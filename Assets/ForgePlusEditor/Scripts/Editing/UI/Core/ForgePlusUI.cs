@@ -45,6 +45,8 @@ namespace ForgePlus.UI
 
         public WorldLabels WorldLabels { get; private set; }
 
+        public PointHandles PointHandles { get; private set; }
+
         public SoundVisualization SoundVisualization { get; private set; }
 
         public SettingsViewModel Settings { get; private set; }
@@ -116,6 +118,10 @@ namespace ForgePlus.UI
 
             WorldLabels = new WorldLabels(root);
             SoundVisualization = new SoundVisualization(root);
+
+            // Its handles are clicked before the level is
+            PointHandles = new PointHandles(root);
+            WorldPointer.Instance.ScreenPicker = PointHandles;
             // Kept alive by its callbacks on the root
             new TooltipLayer(root);
 
@@ -200,6 +206,7 @@ namespace ForgePlus.UI
 
             WorldLabels.UpdatePositions();
             SoundVisualization.Update();
+            PointHandles.Update();
 
             // Once a frame at most, after what may have changed them
             Errors.RefreshIfRequested();
@@ -381,7 +388,7 @@ namespace ForgePlus.UI
             switch (primaryMode)
             {
                 case ModeManager.PrimaryModes.Geometry:
-                    visualizationSlot.Show(new LayoutPanel("UI/Panels/VisualizationGeometry"));
+                    visualizationSlot.Show<VisualizationGeometryPanel>();
                     break;
                 case ModeManager.PrimaryModes.Objects:
                     visualizationSlot.Show(new LayoutPanel("UI/Panels/VisualizationObjects"));

@@ -93,6 +93,20 @@ MonoBehaviour:
   - rid: 552786204080472178
   - rid: 552786204080472179
   - rid: 552786204080472180
+  - rid: 552786288315990068
+  - rid: 552786288315990069
+  - rid: 552786288315990070
+  - rid: 552786288315990071
+  - rid: 552786288315990072
+  - rid: 552786288315990073
+  - rid: 552786288315990074
+  - rid: 552786288315990075
+  - rid: 552786288315990076
+  - rid: 552786288315990077
+  - rid: 552786288315990078
+  - rid: 552786288315990079
+  - rid: 552786288315990080
+  - rid: 552786288315990081
   references:
     version: 2
     RefIds:
@@ -628,3 +642,101 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: The light its transparent surface is lit by (a surface without a texture, or a landscape, doesn't use one)
+    - rid: 552786288315990068
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705659727872
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows every kind of geometry. It's on while all the others are.
+    - rid: 552786288315990069
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922176
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows polygons' floors and ceilings (not implemented yet)
+    - rid: 552786288315990070
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922177
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows lines (not implemented yet)
+    - rid: 552786288315990071
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922178
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows sides (not implemented yet)
+    - rid: 552786288315990072
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922179
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows the points where polygons' corners meet, at the top corners, to select and drag (Geometry mode only)
+    - rid: 552786288315990073
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922180
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows media (liquids). Hidden media can't be clicked, and lets clicks through to what's under it. Applies in every mode, though Media mode always shows media.
+    - rid: 552786288315990074
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922181
+        m_Metadata:
+          m_Items: []
+        m_Value: Point
+    - rid: 552786288315990075
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922182
+        m_Metadata:
+          m_Items: []
+        m_Value: 'ID:'
+    - rid: 552786288315990076
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922183
+        m_Metadata:
+          m_Items: []
+        m_Value: Its index in the level's points (endpoints)
+    - rid: 552786288315990077
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922184
+        m_Metadata:
+          m_Items: []
+        m_Value: Position
+    - rid: 552786288315990078
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922185
+        m_Metadata:
+          m_Items: []
+        m_Value: 'X:'
+    - rid: 552786288315990079
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922186
+        m_Metadata:
+          m_Items: []
+        m_Value: Where it is across the level. Its lines, polygons and sides follow it, and objects and annotations in its polygons move to whichever polygon they end up in.
+    - rid: 552786288315990080
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922187
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Y:'
+    - rid: 552786288315990081
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2693705663922188
+        m_Metadata:
+          m_Items: []
+        m_Value: Where it is down the level. Its lines, polygons and sides follow it, and objects and annotations in its polygons move to whichever polygon they end up in.

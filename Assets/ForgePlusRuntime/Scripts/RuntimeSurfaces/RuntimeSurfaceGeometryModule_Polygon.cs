@@ -508,7 +508,12 @@ namespace RuntimeCore.Entities.Geometry
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
 
-            SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
+            // PhysX can't make a collider from a surface with no area ("cleaning the mesh failed"); one is added if it
+            // gets some (RuntimeSurfaceGeometry.ApplyShape)
+            if (RuntimeSurfaceGeometry.HasArea(SurfaceMesh))
+            {
+                SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
+            }
         }
 
         private void AssignVertexPosition(int vertexIndex, polygon_data polygon, Vector3[] vertexPositions)

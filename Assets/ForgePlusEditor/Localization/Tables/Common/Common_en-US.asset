@@ -515,6 +515,29 @@ MonoBehaviour:
   - rid: 552786269510828085
   - rid: 552786269510828086
   - rid: 552786279223525425
+  - rid: 552786288315990091
+  - rid: 552786288315990092
+  - rid: 552786288315990093
+  - rid: 552786288315990094
+  - rid: 552786288315990095
+  - rid: 552786288315990096
+  - rid: 552786288315990097
+  - rid: 552786288315990098
+  - rid: 552786288315990099
+  - rid: 552786288315990100
+  - rid: 552786288315990101
+  - rid: 552786288315990102
+  - rid: 552786288315990103
+  - rid: 552786288315990104
+  - rid: 552786288315990105
+  - rid: 552786288315990106
+  - rid: 552786288315990107
+  - rid: 552786288315990108
+  - rid: 552786288315990109
+  - rid: 552786288315990110
+  - rid: 552786288315990111
+  - rid: 552786288315990112
+  - rid: 552786288315990113
   references:
     version: 2
     RefIds:
@@ -3958,14 +3981,14 @@ MonoBehaviour:
         m_KeyId: 2151331820879931
         m_Metadata:
           m_Items: []
-        m_Value: Endpoint {0}
+        m_Value: Point {0}
     - rid: 552786240694648949
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 2151331820879932
         m_Metadata:
           m_Items: []
-        m_Value: '{0} endpoints'
+        m_Value: '{0} points'
     - rid: 552786240694648950
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -4008,3 +4031,164 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Snaps what you drag to even steps: positions and heights to sixteenths of a world unit, and angles, volumes and other numbers to steps of 5 (pitch to 0.05). Hold alt/option to invert it.'
+    - rid: 552786288315990091
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799310348288
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Polygon {0} is inside out: its corners go counterclockwise, so the engine can''t tell what''s inside it. Move its points back so they go clockwise.'
+    - rid: 552786288315990092
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736896
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon {0} inside out
+    - rid: 552786288315990093
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736897
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Polygon {0} has no area: its corners are all in a line. Move one of its points out of line with the others.'
+    - rid: 552786288315990094
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736898
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon {0} without area
+    - rid: 552786288315990095
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736899
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon {0} is concave at point {1}. Polygons must be convex, or the engine draws them and collides with them wrongly (and can put things in the wrong polygon). Move the point (or its neighbors) so the corner bends outward.
+    - rid: 552786288315990096
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736900
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon {0} concave at point {1}
+    - rid: 552786288315990097
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736901
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon {0}'s lines {1} and {2} cross each other. Move its points so its edges don't cross.
+    - rid: 552786288315990098
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736902
+        m_Metadata:
+          m_Items: []
+        m_Value: Polygon {0}'s lines {1} and {2} crossing
+    - rid: 552786288315990099
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736903
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Line {0} has no length: its points ({1} and {2}) are in the same place. Fixing collapses them into one point, without the line (polygons along it lose that corner).'
+    - rid: 552786288315990100
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736904
+        m_Metadata:
+          m_Items: []
+        m_Value: Line {0} without length
+    - rid: 552786288315990101
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736905
+        m_Metadata:
+          m_Items: []
+        m_Value: 'It can''t be collapsed for you, since a polygon has both points without the line between them: move one of its points.'
+    - rid: 552786288315990102
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736906
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Line {0} is longer than 32 world units (32,767 units), the farthest a distance can be: Marathon 2''s and Infinity''s distances wrap around past that, and Aleph One''s stop there, so it''s measured wrong. Move its points closer together.'
+    - rid: 552786288315990103
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736907
+        m_Metadata:
+          m_Items: []
+        m_Value: Line {0} too long
+    - rid: 552786288315990104
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736908
+        m_Metadata:
+          m_Items: []
+        m_Value: The level needs {0} map indexes (what's near each polygon, and the sound sources each hears), more than even Aleph One allows (65,534). Fewer, larger polygons need fewer.
+    - rid: 552786288315990105
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736909
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: the level needs {0} map indexes (what''s near each polygon, and the sound sources each hears), more than Marathon 2 and Infinity allow (32,767). Fewer, larger polygons need fewer.'
+    - rid: 552786288315990106
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736910
+        m_Metadata:
+          m_Items: []
+        m_Value: Point {1} is in the middle of a straight edge of polygon {0}, and nothing else meets it (its lines have the same sides and neighbors), so it could be removed without changing anything.
+    - rid: 552786288315990107
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736911
+        m_Metadata:
+          m_Items: []
+        m_Value: Point {1} a redundant straight corner
+    - rid: 552786288315990108
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736912
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Point {0} is less than 1/64 of a world unit from line {1} (of polygon {2}) without being on it, which leaves a sliver of a gap: move it onto the line, or away from it.'
+    - rid: 552786288315990109
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736913
+        m_Metadata:
+          m_Items: []
+        m_Value: Point {0} almost on line {1}
+    - rid: 552786288315990110
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736914
+        m_Metadata:
+          m_Items: []
+        m_Value: Object {0} is outside every polygon. Fixing puts it back inside its polygon ({1}), at the nearest place inside its edge.
+    - rid: 552786288315990111
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736915
+        m_Metadata:
+          m_Items: []
+        m_Value: Annotation {0} isn't in its polygon ({1}). Fixing gives it the polygon it's in, or else puts it back inside its polygon's edge.
+    - rid: 552786288315990112
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736916
+        m_Metadata:
+          m_Items: []
+        m_Value: Can't move there ({0}). Hold Shift to allow it.
+    - rid: 552786288315990113
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2724799318736917
+        m_Metadata:
+          m_Items: []
+        m_Value: ', +{0} more'

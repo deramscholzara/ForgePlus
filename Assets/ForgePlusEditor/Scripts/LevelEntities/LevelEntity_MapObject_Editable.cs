@@ -34,8 +34,7 @@ namespace RuntimeCore.Entities.MapObjects
         // (map_constructors.cpp: precalculate_polygon_sound_sources)
         public static void RecalculateHeardSoundSources(MapLevel level)
         {
-            level.MapIndexList.Clear();
-            map_constructors.precalculate_map_indexes(level);
+            LevelEditing.RecalculateMapIndexes(level);
         }
 
         // In Select mode, dragging it moves it (recorded as one action when it ends)

@@ -4,7 +4,8 @@ using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
 {
-    // The level's errors (in the menu's place), as its tab filters them, each with its fix where it has one, and a fix
+    // The level's errors (in the menu's place), as its tab filters them (with warnings after them, unless they're hidden),
+    // each marked as an error or a warning, with its fix where it has one and a button that shows what it's in, and a fix
     // for all the auto-fixable ones
     public class ErrorsPanel : UIPanel
     {
@@ -27,9 +28,12 @@ namespace ForgePlus.UI
             errors = ForgePlusUI.Instance.Errors;
 
             Root.Find<RadioButtonGroup>("tabs").BindValue(errors, nameof(ErrorsViewModel.FilterIndex));
+            Root.Find<Toggle>("show-warnings").BindValue(errors, nameof(ErrorsViewModel.ShowWarnings));
 
             var itemTemplate = LoadTemplate("ErrorItem");
             var fixText = Strings.Get(Strings.Menu, "Errors.Fix.Control.Text");
+            var showText = Strings.Get(Strings.Menu, "Errors.Show.Control.Text");
+            var showTooltip = Strings.Get(Strings.Menu, "Errors.Show.Tooltip");
 
             errorList = Root.Q<ListView>("errors");
             errorList.itemsSource = shownErrors;
@@ -46,12 +50,31 @@ namespace ForgePlus.UI
                     }
                 };
 
+                var show = item.Q<Button>("show");
+                show.text = showText;
+                show.tooltip = showTooltip;
+                show.clicked += () =>
+                {
+                    if (show.userData is LevelError error)
+                    {
+                        error.Show?.Invoke(ShownViewArea());
+                    }
+                };
+
                 return item;
             };
             errorList.bindItem = (item, index) =>
             {
                 var error = shownErrors[index];
                 item.Q<Label>("description").text = error.Description;
+
+                var errorItem = item.Q(className: "fp-error-item");
+                errorItem.EnableInClassList("fp-error-item--error", !error.IsWarning);
+                errorItem.EnableInClassList("fp-error-item--warning", error.IsWarning);
+
+                var show = item.Q<Button>("show");
+                show.userData = error;
+                show.style.display = error.Show != null ? DisplayStyle.Flex : DisplayStyle.None;
 
                 var fix = item.Q<Button>("fix");
                 fix.userData = error;
@@ -74,6 +97,16 @@ namespace ForgePlus.UI
         protected override void OnUnloading()
         {
             errors.OnErrorsChanged -= ShowErrors;
+        }
+
+        // What's shown is framed beside the panel (to its right), or in the whole view if there isn't room there
+        private UnityEngine.Rect ShownViewArea()
+        {
+            var panelBounds = Root.panel.visualTree.worldBound;
+            var bounds = Root.worldBound;
+            var left = bounds.xMax / panelBounds.width;
+
+            return left < 0.8f ? new UnityEngine.Rect(left, 0f, 1f - left, 1f) : new UnityEngine.Rect(0f, 0f, 1f, 1f);
         }
 
         private void ShowErrors()
