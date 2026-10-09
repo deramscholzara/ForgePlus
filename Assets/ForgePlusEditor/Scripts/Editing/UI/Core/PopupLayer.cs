@@ -1,4 +1,5 @@
-﻿using Unity.Scripting.LifecycleManagement;
+﻿using System;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -10,9 +11,11 @@ namespace ForgePlus.UI
     public static partial class PopupLayer
     {
         private static VisualElement openLayer;
+        private static Action onClosed;
 
-        // The pop-up's box, or null if there's no UI to open it in
-        public static ScrollView Open(VisualElement anchor, float minimumWidth, float maximumHeight)
+        // The pop-up's box, or null if there's no UI to open it in. onClosed is called as it closes (such as to unload
+        // what was shown in it).
+        public static ScrollView Open(VisualElement anchor, float minimumWidth, float maximumHeight, Action onClosed = null)
         {
             Close();
 
@@ -49,6 +52,7 @@ namespace ForgePlus.UI
 
             root.Add(layer);
             openLayer = layer;
+            PopupLayer.onClosed = onClosed;
 
             // At least as wide as the field
             var anchorBounds = anchor.worldBound;
@@ -79,6 +83,10 @@ namespace ForgePlus.UI
 
         public static void Close()
         {
+            var closed = onClosed;
+            onClosed = null;
+            closed?.Invoke();
+
             openLayer?.RemoveFromHierarchy();
             openLayer = null;
         }

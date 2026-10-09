@@ -514,6 +514,8 @@ MonoBehaviour:
   - rid: 552786240694648950
   - rid: 552786240694648951
   - rid: 552786240694648952
+  - rid: 552786269510828085
+  - rid: 552786269510828086
   references:
     version: 2
     RefIds:
@@ -3775,14 +3777,14 @@ MonoBehaviour:
         m_KeyId: 2151331820879903
         m_Metadata:
           m_Items: []
-        m_Value: 'Undo'
+        m_Value: Undo
     - rid: 552786240694648921
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 2151331820879904
         m_Metadata:
           m_Items: []
-        m_Value: 'Redo'
+        m_Value: Redo
     - rid: 552786240694648922
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3796,7 +3798,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879906
         m_Metadata:
           m_Items: []
-        m_Value: 'Undo the last change (Ctrl+Z). There''s nothing to undo yet.'
+        m_Value: Undo the last change (Ctrl+Z). There's nothing to undo yet.
     - rid: 552786240694648924
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3810,14 +3812,14 @@ MonoBehaviour:
         m_KeyId: 2151331820879908
         m_Metadata:
           m_Items: []
-        m_Value: 'Redo the change that was undone (Ctrl+Y or Ctrl+Shift+Z). There''s nothing to redo.'
+        m_Value: Redo the change that was undone (Ctrl+Y or Ctrl+Shift+Z). There's nothing to redo.
     - rid: 552786240694648926
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 2151331820879909
         m_Metadata:
           m_Items: []
-        m_Value: 'Platform {0}'
+        m_Value: Platform {0}
     - rid: 552786240694648927
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3831,7 +3833,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879911
         m_Metadata:
           m_Items: []
-        m_Value: 'Polygon {0}'
+        m_Value: Polygon {0}
     - rid: 552786240694648929
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3845,7 +3847,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879913
         m_Metadata:
           m_Items: []
-        m_Value: 'Side {0}'
+        m_Value: Side {0}
     - rid: 552786240694648931
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3859,7 +3861,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879915
         m_Metadata:
           m_Items: []
-        m_Value: 'Line {0}'
+        m_Value: Line {0}
     - rid: 552786240694648933
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3873,7 +3875,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879917
         m_Metadata:
           m_Items: []
-        m_Value: 'Object {0}'
+        m_Value: Object {0}
     - rid: 552786240694648935
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3887,7 +3889,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879919
         m_Metadata:
           m_Items: []
-        m_Value: 'Annotation {0}'
+        m_Value: Annotation {0}
     - rid: 552786240694648937
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3901,7 +3903,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879921
         m_Metadata:
           m_Items: []
-        m_Value: 'Light {0}'
+        m_Value: Light {0}
     - rid: 552786240694648939
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3915,7 +3917,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879923
         m_Metadata:
           m_Items: []
-        m_Value: 'Media {0}'
+        m_Value: Media {0}
     - rid: 552786240694648941
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3929,7 +3931,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879925
         m_Metadata:
           m_Items: []
-        m_Value: 'Ambient sound {0}'
+        m_Value: Ambient sound {0}
     - rid: 552786240694648943
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3943,7 +3945,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879927
         m_Metadata:
           m_Items: []
-        m_Value: 'Random sound {0}'
+        m_Value: Random sound {0}
     - rid: 552786240694648945
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3957,7 +3959,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879929
         m_Metadata:
           m_Items: []
-        m_Value: 'Terminal {0}'
+        m_Value: Terminal {0}
     - rid: 552786240694648947
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3971,7 +3973,7 @@ MonoBehaviour:
         m_KeyId: 2151331820879931
         m_Metadata:
           m_Items: []
-        m_Value: 'Endpoint {0}'
+        m_Value: Endpoint {0}
     - rid: 552786240694648949
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -3985,18 +3987,32 @@ MonoBehaviour:
         m_KeyId: 2151331820879933
         m_Metadata:
           m_Items: []
-        m_Value: 'Item and monster placements'
+        m_Value: Item and monster placements
     - rid: 552786240694648951
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 2151331820879934
         m_Metadata:
           m_Items: []
-        m_Value: 'Level'
+        m_Value: Level
     - rid: 552786240694648952
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 2151331820879935
         m_Metadata:
           m_Items: []
-        m_Value: 'Map'
+        m_Value: Map
+    - rid: 552786269510828085
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2506128390504448
+        m_Metadata:
+          m_Items: []
+        m_Value: Display Options
+    - rid: 552786269510828086
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2506192999563264
+        m_Metadata:
+          m_Items: []
+        m_Value: What the level view shows. Every option is listed; those the current mode decides are grayed out (and shown on where the mode always shows them).

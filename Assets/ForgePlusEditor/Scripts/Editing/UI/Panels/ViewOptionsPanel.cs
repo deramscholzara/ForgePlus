@@ -1,9 +1,14 @@
-﻿using UnityEngine.UIElements;
+﻿using ForgePlus.Localization;
+using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
 {
+    // The Display Options dropdown, which shows the view options (DisplayOptionsPanel) in a pop-up while open
     public class ViewOptionsPanel : UIPanel
     {
+        private const float MinimumWidth = 200f;
+        private const float MaximumHeight = 400f;
+
         protected override string LayoutPath
         {
             get
@@ -14,30 +19,20 @@ namespace ForgePlus.UI
 
         protected override void OnLoaded()
         {
-            var settings = ForgePlusUI.Instance.Settings;
+            var displayOptions = Root.Find<DropdownField>("display-options");
+            displayOptions.SetValueWithoutNotify(Strings.Get(Strings.Common, "ViewOptions.DisplayOptions.Text"));
+            displayOptions.OpensOnPress(() => ShowDisplayOptions(displayOptions), replacesOwnHandling: true);
+        }
 
-            // Not implemented yet
-            Root.Find<Toggle>("visualization-effect").SetEnabled(false);
-
-            var objectIcons = Root.Find<Toggle>("object-icons");
-            objectIcons.BindValue(settings, nameof(SettingsViewModel.ObjectIconsEnabled));
-            objectIcons.BindEnabled(settings, nameof(SettingsViewModel.ObjectIconsEditable));
-
-            Root.Find<Toggle>("sprite-previews").BindValue(settings, nameof(SettingsViewModel.SpritePreviewsEnabled));
-            Root.Find<Toggle>("clip-platform-sides").BindValue(settings, nameof(SettingsViewModel.ClipPlatformSidesEnabled));
-            Root.Find<Toggle>("show-invalid-sides").BindValue(settings, nameof(SettingsViewModel.ShowInvalidSidesEnabled));
-
-            var soundDirection = Root.Find<Toggle>("sound-direction");
-            soundDirection.BindValue(settings, nameof(SettingsViewModel.SoundDirectionEnabled));
-            soundDirection.BindEnabled(settings, nameof(SettingsViewModel.SoundDisplaysEditable));
-
-            var soundVolume = Root.Find<Toggle>("sound-volume");
-            soundVolume.BindValue(settings, nameof(SettingsViewModel.SoundVolumeEnabled));
-            soundVolume.BindEnabled(settings, nameof(SettingsViewModel.SoundDisplaysEditable));
-
-            var playLevelAudio = Root.Find<Toggle>("play-level-audio");
-            playLevelAudio.BindValue(settings, nameof(SettingsViewModel.PlayLevelAudioEnabled));
-            playLevelAudio.BindEnabled(settings, nameof(SettingsViewModel.PlayLevelAudioEditable));
+        // Unloaded (with its bindings) as the pop-up closes
+        private static void ShowDisplayOptions(VisualElement anchor)
+        {
+            var options = new DisplayOptionsPanel();
+            var box = PopupLayer.Open(anchor, MinimumWidth, MaximumHeight, options.Unload);
+            if (box != null)
+            {
+                options.Load(box);
+            }
         }
     }
 }

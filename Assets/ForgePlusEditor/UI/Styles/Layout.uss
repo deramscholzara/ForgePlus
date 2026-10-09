@@ -158,6 +158,41 @@
     margin-right: 0;
 }
 
+/* The Display Options dropdown, drawn as a control (whose pop-up lists the view options) */
+.fp-display-options {
+    height: var(--fp-short-control-height);
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.fp-display-options > .unity-base-popup-field__input {
+    margin: 0;
+    padding: 0 5px;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0);
+    border-radius: 0;
+    background-color: var(--fp-control);
+    color: var(--fp-control-text);
+}
+
+.fp-display-options > .unity-base-popup-field__input:hover {
+    background-color: var(--fp-control-hover);
+}
+
+.fp-root .fp-display-options:focus > .unity-base-popup-field__input {
+    border-color: var(--fp-focus);
+}
+
+.fp-display-options .unity-base-popup-field__text {
+    font-size: 14px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+.fp-display-options .unity-base-popup-field__arrow {
+    -unity-background-image-tint-color: var(--fp-control-text);
+}
+
 .fp-view-option {
     height: var(--fp-short-control-height);
     margin-bottom: 5px;

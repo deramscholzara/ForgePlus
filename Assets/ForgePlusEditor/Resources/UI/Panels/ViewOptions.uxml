@@ -1,33 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
+    <!-- Opens the view options (DisplayOptions) in a pop-up -->
     <ui:VisualElement picking-mode="Ignore">
-        <!-- A placeholder, which doesn't change anything yet -->
-        <ui:Instance template="Toggle" name="visualization-effect" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.VisualizationEffect.Control.Text" value="false" />
-        </ui:Instance>
-        <ui:Instance template="Toggle" name="object-icons" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.ObjectIcons.Control.Text" />
-        </ui:Instance>
-        <ui:Instance template="Toggle" name="sprite-previews" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SpritePreviews.Control.Text" />
-        </ui:Instance>
-        <ui:Instance template="Toggle" name="clip-platform-sides" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.ClipPlatformSides.Control.Text" />
-        </ui:Instance>
-        <!-- Sides a line has no side data for -->
-        <ui:Instance template="Toggle" name="show-invalid-sides" class="fp-toggle--wide-short fp-view-option" tooltip="@Common/ViewOptions.ShowInvalidSides.Tooltip">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.ShowInvalidSides.Control.Text" />
-        </ui:Instance>
-        <!-- Always on in Sounds mode -->
-        <ui:Instance template="Toggle" name="sound-direction" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SoundDirection.Control.Text" />
-        </ui:Instance>
-        <ui:Instance template="Toggle" name="sound-volume" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SoundVolume.Control.Text" />
-        </ui:Instance>
-        <!-- Needs a sounds file (Files tab) to play sounds from -->
-        <ui:Instance template="Toggle" name="play-level-audio" class="fp-toggle--wide-short fp-view-option fp-view-option--last" tooltip="@Common/ViewOptions.PlayLevelAudio.Tooltip">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.PlayLevelAudio.Control.Text" />
-        </ui:Instance>
+        <ui:DropdownField name="display-options" class="fp-display-options" tooltip="@Common/ViewOptions.DisplayOptions.Tooltip" />
     </ui:VisualElement>
 </ui:UXML>

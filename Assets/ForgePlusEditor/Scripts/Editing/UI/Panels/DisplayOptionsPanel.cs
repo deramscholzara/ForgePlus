@@ -1,0 +1,45 @@
+﻿using UnityEngine.UIElements;
+
+namespace ForgePlus.UI
+{
+    // The view options, in the Display Options pop-up (ViewOptionsPanel), each grayed out (and shown on, where the mode
+    // always shows it) by the settings' rules
+    public class DisplayOptionsPanel : UIPanel
+    {
+        protected override string LayoutPath
+        {
+            get
+            {
+                return "UI/Panels/DisplayOptions";
+            }
+        }
+
+        protected override void OnLoaded()
+        {
+            var settings = ForgePlusUI.Instance.Settings;
+
+            // Not implemented yet
+            Root.Find<Toggle>("visualization-effect").SetEnabled(false);
+
+            var objectIcons = Root.Find<Toggle>("object-icons");
+            objectIcons.BindValue(settings, nameof(SettingsViewModel.ObjectIconsEnabled));
+            objectIcons.BindEnabled(settings, nameof(SettingsViewModel.ObjectIconsEditable));
+
+            Root.Find<Toggle>("sprite-previews").BindValue(settings, nameof(SettingsViewModel.SpritePreviewsEnabled));
+            Root.Find<Toggle>("clip-platform-sides").BindValue(settings, nameof(SettingsViewModel.ClipPlatformSidesEnabled));
+            Root.Find<Toggle>("show-invalid-sides").BindValue(settings, nameof(SettingsViewModel.ShowInvalidSidesEnabled));
+
+            var soundDirection = Root.Find<Toggle>("sound-direction");
+            soundDirection.BindValue(settings, nameof(SettingsViewModel.SoundDirectionEnabled));
+            soundDirection.BindEnabled(settings, nameof(SettingsViewModel.SoundDisplaysEditable));
+
+            var soundVolume = Root.Find<Toggle>("sound-volume");
+            soundVolume.BindValue(settings, nameof(SettingsViewModel.SoundVolumeEnabled));
+            soundVolume.BindEnabled(settings, nameof(SettingsViewModel.SoundDisplaysEditable));
+
+            var playLevelAudio = Root.Find<Toggle>("play-level-audio");
+            playLevelAudio.BindValue(settings, nameof(SettingsViewModel.PlayLevelAudioEnabled));
+            playLevelAudio.BindEnabled(settings, nameof(SettingsViewModel.PlayLevelAudioEditable));
+        }
+    }
+}
