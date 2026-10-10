@@ -75,7 +75,8 @@ namespace ForgePlus.LevelManipulation
 
             var position = pointer.position.ReadValue();
 
-            if (ForgePlusInput.Editing.Select.WasPressedThisFrame())
+            // Pressing while holding Pan Modifier (space) pans the camera instead (EditorCamera)
+            if (ForgePlusInput.Editing.Select.WasPressedThisFrame() && !Hotkeys.IsPressed(ForgePlusInput.Camera.PanModifier))
             {
                 Press(position);
             }

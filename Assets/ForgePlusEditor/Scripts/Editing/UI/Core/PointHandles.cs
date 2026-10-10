@@ -17,6 +17,9 @@ namespace ForgePlus.UI
     // pole, a vertical line from its lowest handle to its highest, drawn behind all handles, that selects and drags it as
     // they do (where no handle is clicked).
     //
+    // Looking straight down (the camera's orthographic view), only each point's uppermost handle (of those below the
+    // camera) is shown, none fade with distance, and there are no poles.
+    //
     // While a point is moved, what the move would break (or breaks) is shown (PointEditing.Feedback): the lines involved
     // are outlined (red for errors, yellow for warnings), a ghost of the point shows where it's held back from (or where
     // it last was valid), its handles are ringed, and a note beside it says what's wrong.
@@ -106,6 +109,11 @@ namespace ForgePlus.UI
 
         // Each point's heights that have a handle (as point index and height, in world units)
         private readonly HashSet<long> placedCorners = new HashSet<long>();
+
+        // Each point's highest handle in view, while looking straight down
+        private readonly Dictionary<short, float> uppermostHeights = new Dictionary<short, float>();
+
+        private bool isOrthographic;
 
         // Those in view, and each point's lowest and highest handle heights (in meters) they're found from
         private readonly List<Pole> poles = new List<Pole>();
@@ -248,6 +256,9 @@ namespace ForgePlus.UI
             placedCorners.Clear();
             poleHeights.Clear();
 
+            var editorCamera = ForgePlusUI.Instance.EditorCamera;
+            isOrthographic = editorCamera && editorCamera.IsOrthographic;
+
             var viewRect = camera.pixelRect;
 
             foreach (var polygon in level.Polygons.Values)
@@ -256,9 +267,33 @@ namespace ForgePlus.UI
                 CollectCorners(level, polygon, polygon.CeilingSurface, camera, panel, viewRect);
             }
 
+            if (isOrthographic)
+            {
+                KeepUppermostHandles();
+                return;
+            }
+
             handles.Sort((a, b) => b.Depth.CompareTo(a.Depth));
 
             CollectPoles(level, camera, panel, viewRect);
+        }
+
+        // Its others are right under it
+        private void KeepUppermostHandles()
+        {
+            uppermostHeights.Clear();
+
+            foreach (var handle in handles)
+            {
+                var pointIndex = handle.Point.NativeIndex;
+                if (!uppermostHeights.TryGetValue(pointIndex, out var height) || handle.WorldPosition.y > height)
+                {
+                    uppermostHeights[pointIndex] = handle.WorldPosition.y;
+                }
+            }
+
+            handles.RemoveAll(handle => handle.WorldPosition.y < uppermostHeights[handle.Point.NativeIndex]);
+            handles.Sort((a, b) => b.Depth.CompareTo(a.Depth));
         }
 
         // From each point's lowest handle to its highest, wherever its handles are (in view or not)
@@ -371,7 +406,7 @@ namespace ForgePlus.UI
                 }
 
                 var distance = Vector3.Distance(camera.transform.position, worldPosition);
-                if (distance > FadeEndDistance && !point.IsSelected)
+                if (distance > FadeEndDistance && !point.IsSelected && !isOrthographic)
                 {
                     continue;
                 }
@@ -384,7 +419,7 @@ namespace ForgePlus.UI
                     WorldPosition = worldPosition,
                     Corner = new Vector2(Mathf.Floor(panelPosition.x) - Mathf.Floor(Size * 0.5f), Mathf.Floor(panelPosition.y) - Mathf.Floor(Size * 0.5f)),
                     Depth = screenPosition.z,
-                    Opacity = OpacityAt(point, distance),
+                    Opacity = isOrthographic ? 1f : OpacityAt(point, distance),
                 });
             }
         }

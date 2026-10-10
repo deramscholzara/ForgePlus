@@ -74,6 +74,24 @@ namespace ForgePlus.ApplicationGeneral
                     return Find("Camera/FrameSelected");
                 }
             }
+
+            // Held while pressing Select (the left mouse button), it grabs the level to pan across it
+            public static InputAction PanModifier
+            {
+                get
+                {
+                    return Find("Camera/PanModifier");
+                }
+            }
+
+            // The middle mouse button, which grabs the level to pan across it on its own
+            public static InputAction Pan
+            {
+                get
+                {
+                    return Find("Camera/Pan");
+                }
+            }
         }
 
         public static class Editing

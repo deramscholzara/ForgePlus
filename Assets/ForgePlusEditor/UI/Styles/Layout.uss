@@ -253,6 +253,10 @@
     width: 100px;
 }
 
+.fp-manipulation__orthographic {
+    width: 140px;
+}
+
 .fp-text-16 .unity-toggle__text {
     font-size: 16px;
 }

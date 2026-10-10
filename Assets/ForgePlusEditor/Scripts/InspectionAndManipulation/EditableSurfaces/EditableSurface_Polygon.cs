@@ -5,6 +5,7 @@ using ForgePlus.History;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Palette;
+using ForgePlus.UI;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace ForgePlus.LevelManipulation
 
         private UVPlanarDrag uvDragPlane;
         private HeightDrag heightDrag;
+        private PolygonMove polygonMove;
 
         private readonly List<LevelEntity_Polygon> alignmentGroupedPolygons = new List<LevelEntity_Polygon>();
 
@@ -134,6 +136,13 @@ namespace ForgePlus.LevelManipulation
 
         public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
+            // Looking straight down, there's no raising or lowering it, so in Geometry mode it moves across the level instead
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry && ForgePlusUI.Instance.EditorCamera.IsOrthographic)
+            {
+                BeginPolygonMove(eventData);
+                return;
+            }
+
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Heights ||
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
             {
@@ -187,6 +196,13 @@ namespace ForgePlus.LevelManipulation
                 return;
             }
 
+            if (polygonMove != null)
+            {
+                polygonMove.Drag(Camera.main.ScreenPointToRay(new Vector3(eventData.Position.x, eventData.Position.y, 0f)));
+                InspectorPanel.Instance.RefreshAllInspectors();
+                return;
+            }
+
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
@@ -231,6 +247,16 @@ namespace ForgePlus.LevelManipulation
             if (heightDrag != null)
             {
                 EndHeightDrag();
+                return;
+            }
+
+            if (polygonMove != null)
+            {
+                var move = polygonMove;
+                polygonMove = null;
+                move.End();
+
+                InspectorPanel.Instance.RefreshAllInspectors();
                 return;
             }
 
@@ -341,6 +367,18 @@ namespace ForgePlus.LevelManipulation
             HeightsEditing.BeginDrag();
 
             InspectorPanel.Instance.RefreshAllInspectors();
+        }
+
+        // In Select mode, once its polygon is selected (so dragging across unselected geometry can't move it by accident)
+        private void BeginPolygonMove(WorldPointerEventData eventData)
+        {
+            if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Selection || !SelectionManager.Instance.GetIsSelected(ParentPolygon))
+            {
+                return;
+            }
+
+            SelectionManager.Instance.ClickedSurface = this;
+            polygonMove = new PolygonMove(ParentPolygon, eventData.PressWorldPosition);
         }
 
         private void DragHeight(WorldPointerEventData eventData)

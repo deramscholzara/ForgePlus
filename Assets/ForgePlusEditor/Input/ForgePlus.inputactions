@@ -85,6 +85,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "PanModifier",
+                    "type": "Button",
+                    "id": "fa3a6744-cf07-4129-872c-b3ca21407469",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "Pan",
+                    "type": "Button",
+                    "id": "2886b599-ae61-4cb0-ad92-34b52d8b0683",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -216,7 +236,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "EnableLook",
+                    "action": "PanModifier",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c4ccd928-a9ba-4d51-8022-6aff24c99b9e",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pan",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
