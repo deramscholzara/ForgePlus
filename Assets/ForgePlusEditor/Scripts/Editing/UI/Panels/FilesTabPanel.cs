@@ -28,6 +28,8 @@ namespace ForgePlus.UI
 
         protected override void OnLoaded()
         {
+            Root.Find<Button>("find-in-directory").clicked += () => FileSettings.Instance.ShowDirectorySearchBrowser();
+
             BindDataFile("maps", DataFileTypes.Maps);
             BindDataFile("shapes", DataFileTypes.Shapes);
             BindDataFile("physics", DataFileTypes.Physics);

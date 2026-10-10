@@ -30,10 +30,12 @@ namespace ForgePlus.DataFileIO
             add
             {
                 OnPathChanged_Sender += value;
-                value.Invoke(DataFileTypes.Maps, GetFilePath(DataFileTypes.Maps));
-                value.Invoke(DataFileTypes.Shapes, GetFilePath(DataFileTypes.Shapes));
-                value.Invoke(DataFileTypes.Physics, GetFilePath(DataFileTypes.Physics));
-                value.Invoke(DataFileTypes.Sounds, GetFilePath(DataFileTypes.Sounds));
+
+                // Files that are no longer there aren't shown
+                value.Invoke(DataFileTypes.Maps, GetLoadableFilePath(DataFileTypes.Maps));
+                value.Invoke(DataFileTypes.Shapes, GetLoadableFilePath(DataFileTypes.Shapes));
+                value.Invoke(DataFileTypes.Physics, GetLoadableFilePath(DataFileTypes.Physics));
+                value.Invoke(DataFileTypes.Sounds, GetLoadableFilePath(DataFileTypes.Sounds));
 
                 // TODO: uncomment this when ready for it.
                 ////value.Invoke(DataFileTypes.Images, GetFilePath(DataFileTypes.Images));
@@ -46,9 +48,36 @@ namespace ForgePlus.DataFileIO
             ShowSelectionBrowserCoroutine(type);
         }
 
+        // Browses for a folder, and loads the first file of each type found in it (unloading the types it doesn't have)
+        public void ShowDirectorySearchBrowser()
+        {
+            UIBlocking.Instance.Block();
+
+            StandaloneFileBrowser.OpenFolderPanelAsync(
+                title: Strings.Get(Strings.Menu, "FileBrowser.FindInDirectory.Title"),
+                directory: InitialSearchDirectory(),
+                multiselect: false,
+                cb: HandleDirectorySearchBrowserResponse);
+        }
+
         public string GetFilePath(DataFileTypes type)
         {
             return PlayerPrefs.GetString(GetPlayerPrefsKey(type), string.Empty);
+        }
+
+        // The path to load the type from, or empty if there's none. A file that's no longer there (moved, deleted, or on a
+        // disconnected drive) has its path cleared, rather than failing to load.
+        public string GetLoadableFilePath(DataFileTypes type)
+        {
+            var path = GetFilePath(type);
+
+            if (!string.IsNullOrEmpty(path) && !File.Exists(path))
+            {
+                UpdateFilePath(type, filePath: string.Empty, loadFile: false);
+                return string.Empty;
+            }
+
+            return path;
         }
 
         public void UpdateFilePath(DataFileTypes type, string filePath, bool loadFile)
@@ -108,7 +137,7 @@ namespace ForgePlus.DataFileIO
             StandaloneFileBrowser.OpenFilePanelAsync(
                 title: Strings.Get(Strings.Menu, "FileBrowser.Open.Title", type.DisplayName()),
                 directory: initialDirectory,
-                type.FileExtension(),
+                type.OpenFileFilters(),
                 multiselect: false,
                 cb: openPaths => HandleSelectionBrowserResponse(openPaths, type));
         }
@@ -125,6 +154,52 @@ namespace ForgePlus.DataFileIO
             }
 
             UIBlocking.Instance.Unblock();
+        }
+
+        private void HandleDirectorySearchBrowserResponse(string[] openPaths)
+        {
+            try
+            {
+                var directory = openPaths.Length > 0 ? openPaths[0] : null;
+                if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
+                {
+                    return;
+                }
+
+                var foundPaths = DataFileDiscovery.Find(directory);
+
+                // Maps last, after the files its levels are shown with
+                foreach (var type in new[] { DataFileTypes.Shapes, DataFileTypes.Physics, DataFileTypes.Sounds, DataFileTypes.Maps })
+                {
+                    if (foundPaths.TryGetValue(type, out var path))
+                    {
+                        UpdateFilePath(type, filePath: path, loadFile: true);
+                    }
+                    else
+                    {
+                        UnloadFile(type);
+                    }
+                }
+            }
+            finally
+            {
+                UIBlocking.Instance.Unblock();
+            }
+        }
+
+        // The first loaded file's folder (or the desktop)
+        private string InitialSearchDirectory()
+        {
+            foreach (var type in DataFileDiscovery.SearchedTypes)
+            {
+                var path = GetFilePath(type);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    return Path.GetDirectoryName(path);
+                }
+            }
+
+            return Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
         }
 
         private string GetPlayerPrefsKey(DataFileTypes type)

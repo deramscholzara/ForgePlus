@@ -65,9 +65,17 @@ namespace ForgePlus.UI
                     show = area => LevelFocus.ShowPolygon(issue.Polygon, area);
                     break;
                 case GeometryIssueKind.ConcaveCorner:
-                case GeometryIssueKind.RedundantStraightCorner:
                 case GeometryIssueKind.PointNearLine:
                     show = area => LevelFocus.ShowPoint(issue.Point, area);
+                    break;
+                case GeometryIssueKind.RedundantStraightCorner:
+                    show = area => LevelFocus.ShowPoint(issue.Point, area);
+
+                    if (GeometryValidation.IsRemovableStraightCorner(level.Level, issue.Point))
+                    {
+                        fix = () => GeometryRepair.RemoveStraightCorner(LevelEntity_Level.Instance, issue.Point);
+                    }
+
                     break;
                 case GeometryIssueKind.ZeroLengthLine:
                     show = area => LevelFocus.ShowPoint(issue.Point, area);

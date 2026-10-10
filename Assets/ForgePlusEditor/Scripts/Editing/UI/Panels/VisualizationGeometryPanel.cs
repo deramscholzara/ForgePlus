@@ -25,10 +25,15 @@ namespace ForgePlus.UI
             media.BindValue(settings, nameof(SettingsViewModel.MediaEnabled));
             media.BindEnabled(settings, nameof(SettingsViewModel.MediaEditable));
 
+            Root.Find<Toggle>("simple-visuals").BindValue(settings, nameof(SettingsViewModel.SimpleVisualsEnabled));
+            Root.Find<Toggle>("show-lighting").BindValue(settings, nameof(SettingsViewModel.ShowLightingEnabled));
+            Root.Find<Toggle>("diagnostic-visuals").BindValue(settings, nameof(SettingsViewModel.DiagnosticVisualsEnabled));
+
             // Not implemented yet (shown on, as everything of theirs is shown)
             Root.Find<Toggle>("polygons").SetEnabled(false);
             Root.Find<Toggle>("lines").SetEnabled(false);
             Root.Find<Toggle>("sides").SetEnabled(false);
+
         }
     }
 }

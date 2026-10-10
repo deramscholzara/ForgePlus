@@ -65,6 +65,9 @@ MonoBehaviour:
   - rid: 552786288315990088
   - rid: 552786288315990089
   - rid: 552786288315990090
+  - rid: 552786288315990120
+  - rid: 552786288315990121
+  - rid: 552786288315990122
   references:
     version: 2
     RefIds:
@@ -404,3 +407,24 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Moving a point stops short of where it would make a polygon invalid (concave, inside out, crossing itself, or without area) or a line too long. Hold Shift while dragging a point to allow it anyway.
+    - rid: 552786288315990120
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2758288646750208
+        m_Metadata:
+          m_Items: []
+        m_Value: Find In Directory
+    - rid: 552786288315990121
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2758288650944512
+        m_Metadata:
+          m_Items: []
+        m_Value: Choose a folder to search for the first Maps, Shapes, Physics and Sounds files, looking through shallower subfolders before deeper ones. Files are recognized by their extensions, or (for files without one) by their contents. Any type that isn't found is unloaded.
+    - rid: 552786288315990122
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2758288650944513
+        m_Metadata:
+          m_Items: []
+        m_Value: Choose a folder to find files in

@@ -83,9 +83,10 @@ namespace ForgePlus.LevelManipulation
                 CheckLine(level, lineIndex, issues);
             }
 
+            var pointPolygons = PolygonsAtPoints(level);
             for (short pointIndex = 0; pointIndex < level.EndpointList.Count; pointIndex++)
             {
-                CheckPointNearLines(level, pointIndex, issues);
+                CheckPointNearLines(level, pointIndex, issues, pointPolygons[pointIndex]);
             }
 
             CheckMapIndexes(level, issues);
@@ -266,15 +267,19 @@ namespace ForgePlus.LevelManipulation
 
         // Near the inside of a line of a polygon beside its own (not one it's a corner of), without being on it: what's
         // meant to be a T-junction, missed. Overlapping space (polygons that aren't beside each other) isn't checked.
-        public static void CheckPointNearLines(MapLevel level, short pointIndex, List<GeometryIssue> issues)
+        // (The polygons it's a corner of are found, unless they're given)
+        public static void CheckPointNearLines(MapLevel level, short pointIndex, List<GeometryIssue> issues, ICollection<short> ownPolygons = null)
         {
-            var ownPolygons = new HashSet<short>();
-            for (short polygonIndex = 0; polygonIndex < level.PolygonList.Count; polygonIndex++)
+            if (ownPolygons == null)
             {
-                var polygon = level.PolygonList[polygonIndex];
-                if (Array.IndexOf(polygon.endpoint_indexes, pointIndex, 0, polygon.vertex_count) >= 0)
+                ownPolygons = new HashSet<short>();
+                for (short polygonIndex = 0; polygonIndex < level.PolygonList.Count; polygonIndex++)
                 {
-                    ownPolygons.Add(polygonIndex);
+                    var polygon = level.PolygonList[polygonIndex];
+                    if (Array.IndexOf(polygon.endpoint_indexes, pointIndex, 0, polygon.vertex_count) >= 0)
+                    {
+                        ownPolygons.Add(polygonIndex);
+                    }
                 }
             }
 
@@ -352,6 +357,31 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        // The polygons each point is a corner of
+        public static List<short>[] PolygonsAtPoints(MapLevel level)
+        {
+            var polygons = new List<short>[level.EndpointList.Count];
+            for (var i = 0; i < polygons.Length; i++)
+            {
+                polygons[i] = new List<short>(4);
+            }
+
+            for (short polygonIndex = 0; polygonIndex < level.PolygonList.Count; polygonIndex++)
+            {
+                var polygon = level.PolygonList[polygonIndex];
+                for (var i = 0; i < polygon.vertex_count; i++)
+                {
+                    var pointIndex = polygon.endpoint_indexes[i];
+                    if (pointIndex >= 0 && pointIndex < polygons.Length && !polygons[pointIndex].Contains(polygonIndex))
+                    {
+                        polygons[pointIndex].Add(polygonIndex);
+                    }
+                }
+            }
+
+            return polygons;
+        }
+
         // How many lines meet at each point
         public static int[] LineCountsAtPoints(MapLevel level)
         {
@@ -366,7 +396,45 @@ namespace ForgePlus.LevelManipulation
         }
 
         // A point in a straight edge, that nothing else meets, between two lines with the same polygons on each side and the
-        // same sides: removing it wouldn't change anything (rather than one that splits a wall's textures or neighbors)
+        // same sides, whose textures carry on across it: removing it wouldn't change anything (rather than one that splits a
+        // wall's textures, their alignment, or its neighbors)
+        // Whether a point could be removed without changing anything: its only two lines are in line, on either side of
+        // it, and it's a redundant straight corner of each of its polygons
+        public static bool IsRemovableStraightCorner(MapLevel level, short pointIndex)
+        {
+            var lineCounts = LineCountsAtPoints(level);
+            if (pointIndex < 0 || pointIndex >= lineCounts.Length || lineCounts[pointIndex] != 2)
+            {
+                return false;
+            }
+
+            var hasPolygon = false;
+            for (short polygonIndex = 0; polygonIndex < level.PolygonList.Count; polygonIndex++)
+            {
+                var polygon = level.PolygonList[polygonIndex];
+                var corner = Array.IndexOf(polygon.endpoint_indexes, pointIndex, 0, polygon.vertex_count);
+                if (corner < 0)
+                {
+                    continue;
+                }
+
+                hasPolygon = true;
+
+                var previous = Vertex(level, polygon.endpoint_indexes[(corner + polygon.vertex_count - 1) % polygon.vertex_count]);
+                var current = Vertex(level, pointIndex);
+                var next = Vertex(level, polygon.endpoint_indexes[(corner + 1) % polygon.vertex_count]);
+                var dot = (long) (current.x - previous.x) * (next.x - current.x) + (long) (current.y - previous.y) * (next.y - current.y);
+
+                if (Cross(previous, current, next) != 0 || dot <= 0 || polygon.vertex_count <= 3 ||
+                    !IsRedundantStraightCorner(level, polygonIndex, corner, lineCounts))
+                {
+                    return false;
+                }
+            }
+
+            return hasPolygon;
+        }
+
         private static bool IsRedundantStraightCorner(MapLevel level, short polygonIndex, int corner, int[] lineCounts)
         {
             var polygon = level.PolygonList[polygonIndex];
@@ -380,9 +448,53 @@ namespace ForgePlus.LevelManipulation
             var otherBefore = before.clockwise_polygon_owner == polygonIndex ? before.counterclockwise_polygon_owner : before.clockwise_polygon_owner;
             var otherAfter = after.clockwise_polygon_owner == polygonIndex ? after.counterclockwise_polygon_owner : after.clockwise_polygon_owner;
 
+            var pointIndex = polygon.endpoint_indexes[corner];
+
             return otherBefore == otherAfter && before.flags == after.flags &&
-                   HaveSameSides(level, before, after, polygonIndex) &&
-                   (otherBefore == cstypes.NONE || HaveSameSides(level, before, after, otherBefore));
+                   HaveSameSides(level, before, after, polygonIndex) && TexturesContinue(level, before, after, polygonIndex, pointIndex) &&
+                   (otherBefore == cstypes.NONE || (HaveSameSides(level, before, after, otherBefore) && TexturesContinue(level, before, after, otherBefore, pointIndex)));
+        }
+
+        // A face's textures are at the same place in themselves at the point, from either line (each is offset from its
+        // face's start: a line's first point for its clockwise side, and its second for its other side)
+        private static bool TexturesContinue(MapLevel level, line_data before, line_data after, short polygonIndex, short pointIndex)
+        {
+            var sideBefore = before.clockwise_polygon_owner == polygonIndex ? before.clockwise_polygon_side_index : before.counterclockwise_polygon_side_index;
+            var sideAfter = after.clockwise_polygon_owner == polygonIndex ? after.clockwise_polygon_side_index : after.counterclockwise_polygon_side_index;
+            if (sideBefore < 0 || sideAfter < 0)
+            {
+                return true;
+            }
+
+            var point = Vertex(level, pointIndex);
+            double DistanceFromStart(line_data line)
+            {
+                var start = Vertex(level, line.clockwise_polygon_owner == polygonIndex ? line.endpoint_indexes[0] : line.endpoint_indexes[1]);
+
+                return Length(start, point);
+            }
+
+            var distanceBefore = DistanceFromStart(before);
+            var distanceAfter = DistanceFromStart(after);
+            var a = level.SideList[sideBefore];
+            var b = level.SideList[sideAfter];
+
+            bool Continues(side_texture_definition textureBefore, side_texture_definition textureAfter)
+            {
+                if (textureBefore.texture == cstypes.UNONE)
+                {
+                    return true;
+                }
+
+                var difference = (textureBefore.x0 + distanceBefore) - (textureAfter.x0 + distanceAfter);
+                var wrapped = difference - Math.Round(difference / world.WORLD_ONE) * world.WORLD_ONE;
+
+                return textureBefore.y0 == textureAfter.y0 && Math.Abs(wrapped) <= 1.0;
+            }
+
+            return Continues(a.primary_texture, b.primary_texture) &&
+                   Continues(a.secondary_texture, b.secondary_texture) &&
+                   Continues(a.transparent_texture, b.transparent_texture);
         }
 
         private static bool HaveSameSides(MapLevel level, line_data before, line_data after, short polygonIndex)

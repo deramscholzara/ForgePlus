@@ -129,6 +129,11 @@
     flex-wrap: wrap;
 }
 
+/* Set apart from the grid above it */
+.fp-visualization__grid--spaced {
+    margin-top: 5px;
+}
+
 .fp-visualization__type {
     width: 50%;
     height: var(--fp-short-control-height);
@@ -141,6 +146,11 @@
 
 .fp-visualization__type--right {
     padding-left: 2.5px;
+}
+
+/* A row of its own (for a name too long for half of one) */
+.fp-visualization__type--full {
+    width: 100%;
 }
 
 /* Tool modes and view options, in the right column's first box */

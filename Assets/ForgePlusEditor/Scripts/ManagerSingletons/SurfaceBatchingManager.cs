@@ -492,6 +492,9 @@ namespace ForgePlus.ApplicationGeneral
 
         public static bool BatchingEnabled => Instance.batchingEnabled;
 
+        // Every material surfaces (and their batches) are drawn with
+        public IEnumerable<Material> SurfaceMaterialsInUse => SurfaceMaterials.Values.SelectMany(materials => materials);
+
         // For an edit that changes many surfaces at once, or over many frames (such as dragging a height)
         public void DeferMerging(bool isDeferred)
         {
@@ -560,6 +563,12 @@ namespace ForgePlus.ApplicationGeneral
             SurfaceMaterials[key] = uniqueMaterials;
 
             key.SourceMedia?.SubscribeMaterial(uniqueMaterials[0]);
+
+            // Drawn with the grid while Simple Visuals is on
+            foreach (var uniqueMaterial in uniqueMaterials)
+            {
+                SimpleVisuals.Apply(uniqueMaterial);
+            }
 
             return uniqueMaterials;
         }
@@ -678,6 +687,7 @@ namespace ForgePlus.ApplicationGeneral
 
             SurfaceMaterials.Clear();
             StaticBatches.Clear();
+            SimpleVisuals.Forget();
 
             mergingIsDeferred = false;
         }

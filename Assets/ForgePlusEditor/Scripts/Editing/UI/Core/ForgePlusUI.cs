@@ -137,6 +137,9 @@ namespace ForgePlus.UI
             Terminals.OnTerminalChanged += SelectionManager.Instance.ShowTerminalSides;
             Errors = new ErrorsViewModel();
             Terminals.OnTerminalEdited += Errors.RequestRefresh;
+
+            // Problem geometry is marked in the level as it's found
+            Errors.OnErrorsChanged += DiagnosticVisuals.Refresh;
             Errors.OnFixApplied += Terminals.ReloadTerminal;
 
             var levelName = root.Q<Label>("level-name");

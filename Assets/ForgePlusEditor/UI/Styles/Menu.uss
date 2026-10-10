@@ -49,6 +49,12 @@
 
 /* ---------- Files ---------- */
 
+.fp-files__find {
+    height: var(--fp-control-height);
+    flex-shrink: 0;
+    margin-bottom: 5px;
+}
+
 .fp-files__selection {
     min-height: 255px;
     height: 255px;

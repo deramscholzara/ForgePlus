@@ -88,6 +88,9 @@ namespace ForgePlus.ApplicationGeneral
         private bool spritePreviewsEnabled = true;
         private bool pointsEnabled = true;
         private bool mediaEnabled = true;
+        private bool diagnosticVisualsEnabled = true;
+        private bool simpleVisualsEnabled = false;
+        private bool showLightingEnabled = true;
 
         public bool IsFullScreen
         {
@@ -118,7 +121,7 @@ namespace ForgePlus.ApplicationGeneral
             {
                 PlayerPrefs.SetFloat(PlayerPrefsSettingsKey_MinimumLight, value);
 
-                Shader.SetGlobalFloat(minimumLightPropertyId, value);
+                ApplyMinimumLight();
 
                 OnSettingChanged?.Invoke(nameof(MinimumLight));
             }
@@ -154,11 +157,7 @@ namespace ForgePlus.ApplicationGeneral
             {
                 PlayerPrefs.SetInt(PlayerPrefsSettingsKey_Bloom, value ? 1 : 0);
 
-                if (effectsDisabledVolumeProfile.TryGet<Bloom>(out var profileComponent))
-                {
-                    profileComponent.active = !value;
-                    mainCamera.UpdateVolumeStack();
-                }
+                ApplyBloomAndColorAdjustment();
 
                 OnSettingChanged?.Invoke(nameof(BloomEnabled));
             }
@@ -174,11 +173,7 @@ namespace ForgePlus.ApplicationGeneral
             {
                 PlayerPrefs.SetInt(PlayerPrefsSettingsKey_ColorAdjustment, value ? 1 : 0);
 
-                if (effectsDisabledVolumeProfile.TryGet<SplitToning>(out var profileComponent))
-                {
-                    profileComponent.active = !value;
-                    mainCamera.UpdateVolumeStack();
-                }
+                ApplyBloomAndColorAdjustment();
 
                 OnSettingChanged?.Invoke(nameof(ColorCorrectionEnabled));
             }
@@ -487,6 +482,87 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Every surface is drawn with the grid texture instead of its own (SimpleVisuals), in every mode
+        public bool SimpleVisualsEnabled
+        {
+            get
+            {
+                return simpleVisualsEnabled;
+            }
+            set
+            {
+                simpleVisualsEnabled = value;
+
+                SimpleVisuals.SetEnabled(value, SurfaceBatchingManager.Instance.SurfaceMaterialsInUse);
+                ApplyBloomAndColorAdjustment();
+
+                OnSettingChanged?.Invoke(nameof(SimpleVisualsEnabled));
+            }
+        }
+
+        // Surfaces (textured, or the grid of Simple Visuals) are lit by their lights; otherwise they're drawn at full
+        // brightness. Diagnostic overlays are never lit.
+        public bool ShowLightingEnabled
+        {
+            get
+            {
+                return showLightingEnabled;
+            }
+            set
+            {
+                showLightingEnabled = value;
+
+                ApplyMinimumLight();
+
+                OnSettingChanged?.Invoke(nameof(ShowLightingEnabled));
+            }
+        }
+
+        // Each is drawn while its setting is on, except while Simple Visuals is (whose grid they'd only blur and tint). The
+        // effects-disabled profile's override of each turns it off.
+        private void ApplyBloomAndColorAdjustment()
+        {
+            if (effectsDisabledVolumeProfile.TryGet<Bloom>(out var bloom))
+            {
+                bloom.active = !(BloomEnabled && !simpleVisualsEnabled);
+            }
+
+            if (effectsDisabledVolumeProfile.TryGet<SplitToning>(out var colorAdjustment))
+            {
+                colorAdjustment.active = !(ColorCorrectionEnabled && !simpleVisualsEnabled);
+            }
+
+            // The camera takes it up itself once the render pipeline has started (which it may not have, as ForgePlus starts)
+            if (VolumeManager.instance.isInitialized)
+            {
+                mainCamera.UpdateVolumeStack();
+            }
+        }
+
+        // Surfaces are lit from this up to full brightness (the shaders' lerp from it), so full brightness everywhere
+        // while lighting isn't shown
+        private void ApplyMinimumLight()
+        {
+            Shader.SetGlobalFloat(minimumLightPropertyId, showLightingEnabled ? MinimumLight : 1f);
+        }
+
+        // Problem geometry is marked in the level view (DiagnosticVisuals), in every mode
+        public bool DiagnosticVisualsEnabled
+        {
+            get
+            {
+                return diagnosticVisualsEnabled;
+            }
+            set
+            {
+                diagnosticVisualsEnabled = value;
+
+                ApplyGeometryVisibility();
+
+                OnSettingChanged?.Invoke(nameof(DiagnosticVisualsEnabled));
+            }
+        }
+
         // Media mode always shows media, since it's what the mode edits
         public bool MediaForcedOn
         {
@@ -516,6 +592,7 @@ namespace ForgePlus.ApplicationGeneral
         private void ApplyGeometryVisibility()
         {
             LevelEntity_Media.SurfacesAreVisible = MediaIsShown;
+            DiagnosticVisuals.Refresh();
 
             OnGeometryVisibilityChanged_Sender?.Invoke();
         }
@@ -536,6 +613,9 @@ namespace ForgePlus.ApplicationGeneral
             UndoSteps = UndoSteps;
 
             ModeManager.Instance.OnPrimaryModeChanged += OnPrimaryModeChanged;
+
+            // The profile keeps what it was last set to (such as off, while Simple Visuals was on when ForgePlus closed)
+            ApplyBloomAndColorAdjustment();
         }
     }
 }

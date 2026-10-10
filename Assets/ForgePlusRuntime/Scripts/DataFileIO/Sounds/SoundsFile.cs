@@ -8,13 +8,14 @@ using Random = System.Random;
 
 namespace ForgePlus.DataFileIO
 {
-    // A Marathon 2/Infinity sounds file's definitions (which sounds a level can use), and their permutations as clips
+    // A sounds file's definitions (which sounds a level can use), and their permutations as clips. Marathon 2 and Infinity
+    // sounds files have a header and definitions; Marathon 1's are 'snd ' resources.
     [NoAutoStaticsCleanup]
     public class SoundsFile : IFileLoadable
     {
         private static readonly Random random = new Random();
 
-        private readonly M2SoundFile soundFile = new M2SoundFile();
+        private SoundFile soundFile = new M2SoundFile();
 
         // By sound and permutation (null for one that couldn't be read)
         private readonly Dictionary<(short Sound, short Permutation), AudioClip> clips = new Dictionary<(short Sound, short Permutation), AudioClip>();
@@ -37,9 +38,21 @@ namespace ForgePlus.DataFileIO
 
         public void Load(string fileName)
         {
+            // As SoundManager::OpenSoundFile tries them
+            soundFile.Close();
+            soundFile = new M2SoundFile();
+
             if (!soundFile.Open(new FileSpecifier(fileName)))
             {
-                throw new IOException($"\"{fileName}\" is not a readable Marathon 2 or Infinity sounds file.");
+                // try M1 sounds
+                var m1SoundFile = new M1SoundFile();
+                soundFile = m1SoundFile;
+
+                if (!m1SoundFile.Open(new FileSpecifier(fileName)) || !m1SoundFile.HasSounds())
+                {
+                    m1SoundFile.Close();
+                    throw new IOException($"\"{fileName}\" is not a readable Marathon sounds file.");
+                }
             }
 
             Path = fileName;
@@ -90,11 +103,15 @@ namespace ForgePlus.DataFileIO
             }
 
             var definition = Definition(soundIndex);
-            if (definition != null && definition.sound_code != cstypes.NONE && permutation >= 0 && permutation < definition.sounds.Count)
+            if (definition != null && definition.sound_code != cstypes.NONE && permutation >= 0 && permutation < definition.permutations)
             {
                 try
                 {
-                    clip = CreateClip($"Sound {soundIndex} ({permutation})", definition.sounds[permutation], soundFile.GetSoundData(definition, permutation));
+                    var header = soundFile.GetSoundHeader(definition, permutation);
+                    if (header != null)
+                    {
+                        clip = CreateClip($"Sound {soundIndex} ({permutation})", header, soundFile.GetSoundData(definition, permutation));
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -105,6 +122,13 @@ namespace ForgePlus.DataFileIO
             clips[(soundIndex, permutation)] = clip;
 
             return clip;
+        }
+
+        // Its clips go with it (and a Marathon 1 file's resources)
+        public void Close()
+        {
+            ReleaseClips();
+            soundFile.Close();
         }
 
         public void ReleaseClips()

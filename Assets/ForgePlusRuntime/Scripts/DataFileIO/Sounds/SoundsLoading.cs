@@ -36,8 +36,7 @@ namespace ForgePlus.DataFileIO
 
         public override void UnloadFile()
         {
-            // Its clips go with it
-            data?.LoadedFile?.ReleaseClips();
+            data?.LoadedFile?.Close();
 
             base.UnloadFile();
         }
