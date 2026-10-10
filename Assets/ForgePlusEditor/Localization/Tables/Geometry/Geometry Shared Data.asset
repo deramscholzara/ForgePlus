@@ -467,6 +467,36 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2738074370588672
+    m_Key: VisualizationGeometry.SimpleVisuals.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2738074378977280
+    m_Key: VisualizationGeometry.SimpleVisuals.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2738074378977281
+    m_Key: VisualizationGeometry.DiagnosticVisuals.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2738074378977282
+    m_Key: VisualizationGeometry.DiagnosticVisuals.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2744532449509376
+    m_Key: VisualizationGeometry.ShowLighting.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2744532457897984
+    m_Key: VisualizationGeometry.ShowLighting.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

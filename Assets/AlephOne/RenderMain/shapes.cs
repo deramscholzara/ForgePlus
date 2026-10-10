@@ -5,9 +5,6 @@
 // _change_clut, get_global_shading_table), infravision MML, get_shape_surface(), OpenGL and software
 // renderer extras, and plugins' shapes patches. So bitmaps keep the shapes file's palette indexes and
 // the color tables their .value fields.
-//
-// Not ported: opening Marathon 1 shapes files, whose collections are '.256' resources (FileHandler.cs
-// has no resource forks). The Marathon 1 RLE conversion is ported.
 using System;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
@@ -46,7 +43,10 @@ namespace AlephOne
 
         // LP addition: opened-shapes-file object
         private static readonly OpenedFile ShapesFile = new OpenedFile();
-        // Not ported: OpenedResourceFile M1ShapesFile;
+        private static readonly OpenedResourceFile M1ShapesFile = new OpenedResourceFile();
+
+        // ForgePlus: the type of the resources Marathon 1 shapes files keep their collections in, as 128 + the collection
+        private static readonly uint M1_COLLECTION_RESOURCE_TYPE = FOUR_CHARS_TO_INT('.', '2', '5', '6');
 
         public const int M1_SHAPES_VERSION = 1;
         public const int M2_SHAPES_VERSION = 2;
@@ -375,8 +375,14 @@ namespace AlephOne
             if (shapes_file_version == M1_SHAPES_VERSION)
             {
                 // Collections are stored in .256 resources
-                // Not ported: reading resource forks (M1ShapesFile.Get('.', '2', '5', '6', 128 + collection_index, r))
-                return false;
+                var r = new LoadedResource();
+                if (!M1ShapesFile.Get(M1_COLLECTION_RESOURCE_TYPE, (short) (128 + collection_index), r))
+                {
+                    return false;
+                }
+
+                p = SDL_RWFromConstMem(r.GetPointer(), r.GetLength());
+                src_offset = 0;
             }
             else
             {
@@ -655,7 +661,27 @@ namespace AlephOne
         public static void open_shapes_file(FileSpecifier File)
         {
             bool m1_loaded = false;
-            // Not ported: if (File.Open(M1ShapesFile) && M1ShapesFile.Check('.','2','5','6',128)) ...
+            if (File.Open(M1ShapesFile) && M1ShapesFile.Check(M1_COLLECTION_RESOURCE_TYPE, 128))
+            {
+                shapes_file_version = M1_SHAPES_VERSION;
+                m1_loaded = true;
+
+                // ForgePlus: Marathon 1 shapes files have no collection headers, so none are left from a previous file
+                for (int k = 0; k < MAXIMUM_COLLECTIONS; k++)
+                {
+                    collection_header ObjPtr = collection_headers[k];
+                    ObjPtr.status = markNONE;
+                    ObjPtr.flags = 0;
+                    ObjPtr.offset = ObjPtr.offset16 = -1;
+                    ObjPtr.length = ObjPtr.length16 = 0;
+                    ObjPtr.collection = null;
+                    ObjPtr.shading_tables = new byte[0];
+                }
+            }
+            else
+            {
+                M1ShapesFile.Close();
+            }
 
             if (!m1_loaded && File.Open(ShapesFile))
             {
@@ -702,7 +728,7 @@ namespace AlephOne
         {
             if (shapes_file_version == M1_SHAPES_VERSION)
             {
-                // Not ported: M1ShapesFile.Close();
+                M1ShapesFile.Close();
             }
             else
             {
@@ -726,6 +752,12 @@ namespace AlephOne
         {
             if (collection_index >= 0 && collection_index < NUMBER_OF_COLLECTIONS)
             {
+                // Marathon 1's collections are stored in .256 resources
+                if (shapes_file_version == M1_SHAPES_VERSION)
+                {
+                    return M1ShapesFile.Check(M1_COLLECTION_RESOURCE_TYPE, (short) (128 + collection_index));
+                }
+
                 collection_header header = get_collection_header(collection_index);
                 if (header != null)
                 {

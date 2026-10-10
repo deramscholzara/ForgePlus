@@ -107,6 +107,12 @@ MonoBehaviour:
   - rid: 552786288315990079
   - rid: 552786288315990080
   - rid: 552786288315990081
+  - rid: 552786288315990114
+  - rid: 552786288315990115
+  - rid: 552786288315990116
+  - rid: 552786288315990117
+  - rid: 552786288315990118
+  - rid: 552786288315990119
   references:
     version: 2
     RefIds:
@@ -740,3 +746,45 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Where it is down the level. Its lines, polygons and sides follow it, and objects and annotations in its polygons move to whichever polygon they end up in.
+    - rid: 552786288315990114
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2738074370588672
+        m_Metadata:
+          m_Items: []
+        m_Value: Simple Visuals
+    - rid: 552786288315990115
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2738074378977280
+        m_Metadata:
+          m_Items: []
+        m_Value: Draws every surface with the grid texture instead of its own, for seeing the level's shapes. Applies in every mode.
+    - rid: 552786288315990116
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2738074378977281
+        m_Metadata:
+          m_Items: []
+        m_Value: Diagnostic Visuals
+    - rid: 552786288315990117
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2738074378977282
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Marks problem geometry in the level itself, in every mode: a concave polygon''s floor is overlaid in red.'
+    - rid: 552786288315990118
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2744532449509376
+        m_Metadata:
+          m_Items: []
+        m_Value: Show Lighting
+    - rid: 552786288315990119
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2744532457897984
+        m_Metadata:
+          m_Items: []
+        m_Value: Lights surfaces (textured, or the grid of Simple Visuals) by their lights. Off, they're drawn at full brightness. Applies in every mode.

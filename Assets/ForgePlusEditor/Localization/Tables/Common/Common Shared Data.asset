@@ -2622,6 +2622,11 @@ MonoBehaviour:
     m_Flags: 1
     m_Metadata:
       m_Items: []
+  - m_Id: 2778199876059136
+    m_Key: FileBrowser.Filter.AllFiles
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

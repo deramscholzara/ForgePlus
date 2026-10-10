@@ -19,8 +19,7 @@ namespace ForgePlus.DataFileIO
 
         public void Load(string fileName)
         {
-            // Aleph One keeps the previous file's collection headers when it can't read these ones
-            if (!File.Exists(fileName) || new FileInfo(fileName).Length < MinimumShapesFileLength)
+            if (!File.Exists(fileName))
             {
                 throw new IOException($"\"{fileName}\" is not a readable Marathon shapes file.");
             }
@@ -30,6 +29,14 @@ namespace ForgePlus.DataFileIO
             // Use the same color depth as modern Aleph One, which loads 16-bit data where a collection has it
             screen.bit_depth = 32;
             shapes.open_shapes_file(new FileSpecifier(fileName));
+
+            // Marathon 2 and Infinity shapes files start with their collection headers, and Aleph One keeps the previous
+            // file's when it can't read these ones. (Marathon 1's keep their collections in their resource forks.)
+            if (!shapes.shapes_file_is_m1() && new FileInfo(fileName).Length < MinimumShapesFileLength)
+            {
+                Close();
+                throw new IOException($"\"{fileName}\" is not a readable Marathon shapes file.");
+            }
 
             var loadableCollections = 0;
             for (short collection = 0; collection < shape_descriptors.MAXIMUM_COLLECTIONS; collection++)

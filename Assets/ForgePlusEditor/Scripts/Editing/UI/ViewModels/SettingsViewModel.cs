@@ -73,6 +73,54 @@ namespace ForgePlus.UI
         }
 
         [CreateProperty]
+        public bool SimpleVisualsEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.SimpleVisualsEnabled;
+            }
+            set
+            {
+                if (value != SettingsManager.Instance.SimpleVisualsEnabled)
+                {
+                    SettingsManager.Instance.SimpleVisualsEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool ShowLightingEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.ShowLightingEnabled;
+            }
+            set
+            {
+                if (value != SettingsManager.Instance.ShowLightingEnabled)
+                {
+                    SettingsManager.Instance.ShowLightingEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool DiagnosticVisualsEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.DiagnosticVisualsEnabled;
+            }
+            set
+            {
+                if (value != SettingsManager.Instance.DiagnosticVisualsEnabled)
+                {
+                    SettingsManager.Instance.DiagnosticVisualsEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
         public bool MediaEditable
         {
             get

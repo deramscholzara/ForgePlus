@@ -1,9 +1,7 @@
 ﻿// Port of Aleph One: Source_Files/Sound/SoundFile.h, SoundFile.cpp (the sound definitions)
 //
 // SoundData is a byte array. M2SoundFile doesn't keep the sound file opened (GetSoundData opens it again to load a
-// sound's data).
-//
-// Not ported: M2SoundFile::GetSoundHeader, and M1SoundFile (Marathon 1's resource-fork sounds).
+// sound's data). GetSoundHeader returns null for a permutation it doesn't have, rather than failing.
 using System;
 using System.Collections.Generic;
 using static AlephOne.cstypes;
@@ -155,6 +153,7 @@ namespace AlephOne
         private const byte stdSH = 0x00; // standard sound header
         private const byte extSH = 0xFF; // extended sound header
         private const byte cmpSH = 0xFE; // compressed sound header
+        private const ushort bufferCmd = 0x8051;
 
         // The largest header (an extended or compressed one)
         private const int MaximumHeaderSize = 64;
@@ -299,6 +298,94 @@ namespace AlephOne
             return p;
         }
 
+        // Finds the System 7 header in a 'snd ' resource (a format 1 or 2 resource, whose bufferCmd gives the header's offset)
+        public bool Load(LoadedResource rsrc)
+        {
+            Clear();
+
+            byte[] data = rsrc.GetPointer();
+            if (data == null) return false;
+
+            try
+            {
+                var s = new StreamPointer(data);
+
+                // Get resource format
+                StreamToValue(s, out ushort format);
+                if (format != 1 && format != 2)
+                {
+                    // Not ported: logWarning("Unknown sound resource format %d", format)
+                    return false;
+                }
+
+                // Skip sound data types or reference count
+                if (format == 1)
+                {
+                    StreamToValue(s, out ushort num_data_formats);
+                    s.Skip(num_data_formats * 6);
+                }
+                else if (format == 2)
+                {
+                    s.Skip(2);
+                }
+
+                // Scan sound commands for bufferCmd
+                StreamToValue(s, out ushort num_cmds);
+                for (int i = 0; i < num_cmds; ++i)
+                {
+                    StreamToValue(s, out ushort cmd);
+                    StreamToValue(s, out ushort param1);
+                    StreamToValue(s, out uint param2);
+
+                    if (cmd == bufferCmd)
+                    {
+                        // ForgePlus: from as much of the largest header as the resource has after the offset
+                        int count = Math.Min(MaximumHeaderSize, rsrc.GetLength() - (int) param2);
+                        if (count < 22) return false;
+
+                        var buffer = new byte[MaximumHeaderSize];
+                        Array.Copy(data, (int) param2, buffer, 0, count);
+
+                        if (Load(buffer))
+                        {
+                            data_offset += (int) param2;
+                            return true;
+                        }
+                    }
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                // A truncated resource
+            }
+            catch (ArgumentException)
+            {
+                // A truncated resource
+            }
+
+            return false;
+        }
+
+        // ForgePlus: as LoadData(OpenedFile) does, from the resource's start
+        public byte[] LoadData(LoadedResource rsrc)
+        {
+            byte[] data = rsrc.GetPointer();
+            if (data == null || data_offset == 0 || length <= 0 || data_offset + length > rsrc.GetLength())
+            {
+                return null;
+            }
+
+            var p = new byte[length];
+            Array.Copy(data, data_offset, p, 0, length);
+
+            if (audio_format == AudioFormat._8_bit && signed_8bits)
+            {
+                ConvertSignedToUnsignedByte(p, length);
+            }
+
+            return p;
+        }
+
         private static void ConvertSignedToUnsignedByte(byte[] data, int length)
         {
             for (int i = 0; i < length; i++)
@@ -313,8 +400,121 @@ namespace AlephOne
         public abstract bool Open(FileSpecifier SoundFile);
         public abstract void Close();
         public abstract SoundDefinition GetSoundDefinition(int source, int sound_index);
+        public abstract SoundHeader GetSoundHeader(SoundDefinition definition, int permutation);
+
+        // Null if they can't be loaded
+        public abstract byte[] GetSoundData(SoundDefinition definition, short permutation);
 
         public virtual int SourceCount() { return 1; }
+    }
+
+    // Marathon 1's sounds, which are 'snd ' resources, each sound's permutations following it
+    public class M1SoundFile : SoundFile
+    {
+        private static readonly uint SOUND_RESOURCE_TYPE = FOUR_CHARS_TO_INT('s', 'n', 'd', ' ');
+
+        private const int MAXIMUM_PERMUTATIONS_PER_SOUND = 5;
+
+        private readonly OpenedResourceFile resource_file = new OpenedResourceFile();
+        private readonly LoadedResource cached_rsrc = new LoadedResource();
+        private short cached_sound_code = -1;
+
+        private readonly Dictionary<short, SoundDefinition> definitions = new Dictionary<short, SoundDefinition>();
+        private readonly Dictionary<short, SoundHeader> headers = new Dictionary<short, SoundHeader>();
+
+        public override bool Open(FileSpecifier SoundFile)
+        {
+            Close();
+            return SoundFile.Open(resource_file);
+        }
+
+        // ForgePlus: whether it has any sounds (any file with resources opens as one)
+        public bool HasSounds()
+        {
+            resource_file.Push();
+            int count = resource_manager.count_1_resources(SOUND_RESOURCE_TYPE);
+            resource_file.Pop();
+
+            return count > 0;
+        }
+
+        public override void Close()
+        {
+            headers.Clear();
+            definitions.Clear();
+            cached_sound_code = -1;
+            cached_rsrc.Unload();
+            resource_file.Close();
+        }
+
+        public override SoundDefinition GetSoundDefinition(int source, int sound_index)
+        {
+            // ForgePlus: resource IDs are 16-bit
+            if (sound_index < short.MinValue || sound_index > short.MaxValue) return null;
+
+            if (resource_file.Check(SOUND_RESOURCE_TYPE, (short) sound_index))
+            {
+                if (!definitions.TryGetValue((short) sound_index, out var definition))
+                {
+                    definition = new SoundDefinition();
+                    definition.behavior_index = 2; // sound_is_loud
+                    definition.sound_code = (short) sound_index;
+                    // look for permutations
+                    definition.permutations = 1;
+                    while (resource_file.Check(SOUND_RESOURCE_TYPE, (short) (sound_index + definition.permutations)) && definition.permutations < MAXIMUM_PERMUTATIONS_PER_SOUND)
+                    {
+                        ++definition.permutations;
+                    }
+
+                    definitions.Add((short) sound_index, definition);
+                }
+
+                return definition;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public override SoundHeader GetSoundHeader(SoundDefinition definition, int permutation)
+        {
+            short sound_index = (short) (definition.sound_code + Math.Min(permutation, MAXIMUM_PERMUTATIONS_PER_SOUND));
+
+            if (!headers.TryGetValue(sound_index, out var header))
+            {
+                LoadResource(sound_index);
+
+                header = new SoundHeader();
+                header.Load(cached_rsrc);
+                headers.Add(sound_index, header);
+            }
+
+            return header;
+        }
+
+        public override byte[] GetSoundData(SoundDefinition definition, short permutation)
+        {
+            short sound_index = (short) (definition.sound_code + Math.Min((int) permutation, MAXIMUM_PERMUTATIONS_PER_SOUND));
+
+            LoadResource(sound_index);
+
+            return GetSoundHeader(definition, permutation).LoadData(cached_rsrc);
+        }
+
+        private void LoadResource(short sound_index)
+        {
+            if (cached_sound_code != sound_index)
+            {
+                // ForgePlus: one that can't be loaded leaves nothing, rather than the previous sound's resource
+                if (!resource_file.Get(SOUND_RESOURCE_TYPE, sound_index, cached_rsrc))
+                {
+                    cached_rsrc.Unload();
+                }
+
+                cached_sound_code = sound_index;
+            }
+        }
     }
 
     public class M2SoundFile : SoundFile
@@ -411,8 +611,12 @@ namespace AlephOne
             sound_definitions.Clear();
         }
 
-        // Null if they can't be loaded
-        public byte[] GetSoundData(SoundDefinition definition, short permutation)
+        public override SoundHeader GetSoundHeader(SoundDefinition definition, int permutation)
+        {
+            return (uint) permutation < (uint) definition.sounds.Count ? definition.sounds[permutation] : null;
+        }
+
+        public override byte[] GetSoundData(SoundDefinition definition, short permutation)
         {
             if (sound_file_spec == null) return null;
 

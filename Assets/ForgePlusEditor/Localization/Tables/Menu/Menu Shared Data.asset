@@ -257,6 +257,21 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 2758288646750208
+    m_Key: FilesTab.FindInDirectory.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2758288650944512
+    m_Key: FilesTab.FindInDirectory.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2758288650944513
+    m_Key: FileBrowser.FindInDirectory.Title
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

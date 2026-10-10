@@ -42,7 +42,7 @@ namespace ForgePlus.DataFileIO
 
             UnloadFile();
 
-            var path = FileSettings.Instance.GetFilePath(DataFileType);
+            var path = FileSettings.Instance.GetLoadableFilePath(DataFileType);
 
             if (string.IsNullOrEmpty(path))
             {
@@ -72,7 +72,7 @@ namespace ForgePlus.DataFileIO
                 return;
             }
 
-            var path = FileSettings.Instance.GetFilePath(DataFileType);
+            var path = FileSettings.Instance.GetLoadableFilePath(DataFileType);
 
             if (string.IsNullOrEmpty(path) || path == failedPath)
             {
