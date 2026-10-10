@@ -668,7 +668,7 @@ MonoBehaviour:
         m_KeyId: 2693705663922177
         m_Metadata:
           m_Items: []
-        m_Value: Shows lines (not implemented yet)
+        m_Value: 'Shows lines along polygons'' edges, at their floors and ceilings (Geometry mode only): white where there''s a polygon on only one side, light blue where the floors (or ceilings) on both sides are at the same height, and light green where they aren''t. They fade with distance, like points'' vertical lines (which the Points option shows).'
     - rid: 552786288315990071
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:

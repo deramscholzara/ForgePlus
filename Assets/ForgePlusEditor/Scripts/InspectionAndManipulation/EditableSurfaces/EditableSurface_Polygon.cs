@@ -22,7 +22,7 @@ namespace ForgePlus.LevelManipulation
 
         private UVPlanarDrag uvDragPlane;
         private HeightDrag heightDrag;
-        private PolygonMove polygonMove;
+        private PointsMove polygonMove;
 
         private readonly List<LevelEntity_Polygon> alignmentGroupedPolygons = new List<LevelEntity_Polygon>();
 
@@ -378,7 +378,7 @@ namespace ForgePlus.LevelManipulation
             }
 
             SelectionManager.Instance.ClickedSurface = this;
-            polygonMove = new PolygonMove(ParentPolygon, eventData.PressWorldPosition);
+            polygonMove = PointsMove.ForPolygon(ParentPolygon, eventData.PressWorldPosition);
         }
 
         private void DragHeight(WorldPointerEventData eventData)

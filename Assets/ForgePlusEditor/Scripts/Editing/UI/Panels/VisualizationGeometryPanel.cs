@@ -20,6 +20,7 @@ namespace ForgePlus.UI
 
             Root.Find<Toggle>("show-everything").BindValue(settings, nameof(SettingsViewModel.ShowEverythingEnabled));
             Root.Find<Toggle>("points").BindValue(settings, nameof(SettingsViewModel.PointsEnabled));
+            Root.Find<Toggle>("lines").BindValue(settings, nameof(SettingsViewModel.LinesEnabled));
 
             var media = Root.Find<Toggle>("media");
             media.BindValue(settings, nameof(SettingsViewModel.MediaEnabled));
@@ -31,7 +32,6 @@ namespace ForgePlus.UI
 
             // Not implemented yet (shown on, as everything of theirs is shown)
             Root.Find<Toggle>("polygons").SetEnabled(false);
-            Root.Find<Toggle>("lines").SetEnabled(false);
             Root.Find<Toggle>("sides").SetEnabled(false);
 
         }
