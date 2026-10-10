@@ -57,7 +57,7 @@ namespace ForgePlus.UI
                 {
                     if (show.userData is LevelError error)
                     {
-                        error.Show?.Invoke(ShownViewArea());
+                        error.Show?.Invoke();
                     }
                 };
 
@@ -99,15 +99,6 @@ namespace ForgePlus.UI
             errors.OnErrorsChanged -= ShowErrors;
         }
 
-        // What's shown is framed beside the panel (to its right), or in the whole view if there isn't room there
-        private UnityEngine.Rect ShownViewArea()
-        {
-            var panelBounds = Root.panel.visualTree.worldBound;
-            var bounds = Root.worldBound;
-            var left = bounds.xMax / panelBounds.width;
-
-            return left < 0.8f ? new UnityEngine.Rect(left, 0f, 1f - left, 1f) : new UnityEngine.Rect(0f, 0f, 1f, 1f);
-        }
 
         private void ShowErrors()
         {

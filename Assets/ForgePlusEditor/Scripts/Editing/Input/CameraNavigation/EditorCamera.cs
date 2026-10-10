@@ -5,6 +5,7 @@ using ForgePlus.LevelManipulation;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Rect = UnityEngine.Rect;
@@ -44,11 +45,13 @@ namespace ForgePlus.CameraNavigation
         private Vector3 framingTargetPosition;
         private float framingStartTime;
 
+        // Focusing on something flashes it (FocusFlash), to tell it from what else is in view
         public void FrameSelected()
         {
             if (SelectionFramingBounds.TryGetBounds(SelectionManager.Instance.Selection, out var bounds))
             {
                 Frame(bounds);
+                FocusFlash.Flash(SelectionManager.Instance.Selection.ToList(), FramingTimeLeft);
             }
         }
 
@@ -58,6 +61,7 @@ namespace ForgePlus.CameraNavigation
             if (SelectionFramingBounds.TryGetBounds(targets, out var bounds))
             {
                 Frame(bounds, viewportArea);
+                FocusFlash.Flash(targets, FramingTimeLeft);
             }
         }
 
@@ -76,6 +80,15 @@ namespace ForgePlus.CameraNavigation
             else
             {
                 blockerCount--;
+            }
+        }
+
+        // So what's framed flashes once it's in view
+        private float FramingTimeLeft
+        {
+            get
+            {
+                return isFraming ? framingDuration : 0f;
             }
         }
 

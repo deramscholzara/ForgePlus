@@ -1,16 +1,14 @@
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.LevelManipulation;
 using RuntimeCore.Entities;
-using RuntimeCore.Entities.Geometry;
-using UnityEngine;
 
 namespace ForgePlus.UI
 {
     // Shows something in the level (for an error's Show button): switches to the mode that selects it, selects it, and
-    // frames it in the given part of the view (viewport coordinates, 0 to 1 from the bottom left)
+    // focuses on it as Frame Selected does (framing it, and flashing it)
     public static class LevelFocus
     {
-        public static void ShowPoint(short pointIndex, Rect viewportArea)
+        public static void ShowPoint(short pointIndex)
         {
             SwitchMode(ModeManager.PrimaryModes.Geometry);
 
@@ -20,23 +18,23 @@ namespace ForgePlus.UI
             var level = LevelEntity_Level.Instance;
             if (level && level.Points.TryGetValue(pointIndex, out var point))
             {
-                SelectAndFrame(point, viewportArea);
+                SelectAndFocus(point);
             }
         }
 
-        public static void ShowPolygon(short polygonIndex, Rect viewportArea)
+        public static void ShowPolygon(short polygonIndex)
         {
             SwitchMode(ModeManager.PrimaryModes.Geometry);
 
             var level = LevelEntity_Level.Instance;
             if (level && level.Polygons.TryGetValue(polygonIndex, out var polygon))
             {
-                SelectAndFrame(polygon, viewportArea);
+                SelectAndFocus(polygon);
             }
         }
 
-        // Lines aren't selected themselves, so their first side is (if they have one), and the line is framed
-        public static void ShowLine(short lineIndex, Rect viewportArea)
+        // Lines aren't selected themselves, so their first side is (or, if they have none, the polygon on either side)
+        public static void ShowLine(short lineIndex)
         {
             SwitchMode(ModeManager.PrimaryModes.Geometry);
 
@@ -46,36 +44,39 @@ namespace ForgePlus.UI
                 return;
             }
 
-            SelectionManager.Instance.DeselectAll();
-
             var side = line.ClockwiseSide ? line.ClockwiseSide : line.CounterclockwiseSide;
             if (side)
             {
-                SelectionManager.Instance.SelectObject(side, multiSelect: false);
+                SelectAndFocus(side);
+                return;
             }
 
-            ForgePlusUI.Instance.EditorCamera.Frame(new ISelectable[] { line }, viewportArea);
+            var owner = line.NativeObject.clockwise_polygon_owner >= 0 ? line.NativeObject.clockwise_polygon_owner : line.NativeObject.counterclockwise_polygon_owner;
+            if (level.Polygons.TryGetValue(owner, out var polygon))
+            {
+                SelectAndFocus(polygon);
+            }
         }
 
-        public static void ShowObject(short objectIndex, Rect viewportArea)
+        public static void ShowObject(short objectIndex)
         {
             SwitchMode(ModeManager.PrimaryModes.Objects);
 
             var level = LevelEntity_Level.Instance;
             if (level && level.MapObjects.TryGetValue(objectIndex, out var mapObject))
             {
-                SelectAndFrame(mapObject, viewportArea);
+                SelectAndFocus(mapObject);
             }
         }
 
-        public static void ShowAnnotation(short annotationIndex, Rect viewportArea)
+        public static void ShowAnnotation(short annotationIndex)
         {
             SwitchMode(ModeManager.PrimaryModes.Annotations);
 
             var level = LevelEntity_Level.Instance;
             if (level && level.Annotations.TryGetValue(annotationIndex, out var annotation))
             {
-                SelectAndFrame(annotation, viewportArea);
+                SelectAndFocus(annotation);
             }
         }
 
@@ -92,10 +93,10 @@ namespace ForgePlus.UI
             ModeManager.Instance.PrimaryMode = mode;
         }
 
-        private static void SelectAndFrame(ISelectable selectable, Rect viewportArea)
+        private static void SelectAndFocus(ISelectable selectable)
         {
             SelectionManager.Instance.SelectObject(selectable, multiSelect: false);
-            ForgePlusUI.Instance.EditorCamera.Frame(new[] { selectable }, viewportArea);
+            ForgePlusUI.Instance.EditorCamera.FrameSelected();
         }
     }
 }

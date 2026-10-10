@@ -84,7 +84,8 @@ namespace ForgePlus.CameraNavigation
                     break;
 
                 case LevelEntity_Point point:
-                    // Where it is, from the lowest floor to the highest ceiling of its polygons
+                    // Where its handles are drawn: at the top and bottom corners of its polygons (where their floors and
+                    // ceilings are now, as a platform's move)
                     foreach (var polygon in point.ParentLevel.Polygons.Values)
                     {
                         var polygonData = polygon.NativeObject;
@@ -93,9 +94,15 @@ namespace ForgePlus.CameraNavigation
                             continue;
                         }
 
-                        var position = GeometryUtilities.GetMeshVertex(point.ParentLevel.Level, point.NativeIndex);
-                        Encapsulate(new Bounds(new Vector3(position.x, polygonData.floor_height / GeometryUtilities.WorldUnitIncrementsPerMeter, position.z), Vector3.zero), ref bounds, ref hasBounds);
-                        Encapsulate(new Bounds(new Vector3(position.x, polygonData.ceiling_height / GeometryUtilities.WorldUnitIncrementsPerMeter, position.z), Vector3.zero), ref bounds, ref hasBounds);
+                        foreach (Component surface in new Component[] { polygon.FloorSurface, polygon.CeilingSurface })
+                        {
+                            if (surface)
+                            {
+                                var position = GeometryUtilities.GetMeshVertex(point.ParentLevel.Level, point.NativeIndex);
+                                position.y = surface.transform.position.y;
+                                Encapsulate(new Bounds(position, Vector3.zero), ref bounds, ref hasBounds);
+                            }
+                        }
                     }
 
                     break;

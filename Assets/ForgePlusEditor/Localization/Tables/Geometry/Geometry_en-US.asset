@@ -682,7 +682,7 @@ MonoBehaviour:
         m_KeyId: 2693705663922179
         m_Metadata:
           m_Items: []
-        m_Value: Shows the points where polygons' corners meet, at the top corners, to select and drag (Geometry mode only)
+        m_Value: Shows the points where polygons' corners meet, at their top and bottom corners, to select and drag (Geometry mode only)
     - rid: 552786288315990073
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:

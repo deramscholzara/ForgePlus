@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 
 namespace ForgePlus.UI
 {
@@ -8,7 +7,7 @@ namespace ForgePlus.UI
     // and doesn't make the errors toggle flash. One with something to show selects and frames it.
     public class LevelError
     {
-        public LevelError(string description, Action fix = null, bool isWarning = false, Action<Rect> show = null)
+        public LevelError(string description, Action fix = null, bool isWarning = false, Action show = null)
         {
             Description = description;
             Fix = fix;
@@ -22,8 +21,7 @@ namespace ForgePlus.UI
 
         public bool IsWarning { get; }
 
-        // Given the part of the view (viewport coordinates) left showing the level
-        public Action<Rect> Show { get; }
+        public Action Show { get; }
 
         public bool IsAutoFixable
         {

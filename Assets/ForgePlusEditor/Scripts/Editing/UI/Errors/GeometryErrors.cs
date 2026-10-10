@@ -28,7 +28,7 @@ namespace ForgePlus.UI
                 {
                     var index = objectIndex;
                     yield return new LevelError(Get("Errors.Geometry.ObjectOutsidePolygons", objectIndex, mapObject.polygon_index),
-                                                () => PutObjectInPolygon(index), isWarning: true, show: area => LevelFocus.ShowObject(index, area));
+                                                () => PutObjectInPolygon(index), isWarning: true, show: () => LevelFocus.ShowObject(index));
                 }
             }
 
@@ -40,7 +40,7 @@ namespace ForgePlus.UI
                 {
                     var index = annotationIndex;
                     yield return new LevelError(Get("Errors.Geometry.AnnotationOutsidePolygon", annotationIndex, annotation.polygon_index),
-                                                () => PutAnnotationInPolygon(index), isWarning: true, show: area => LevelFocus.ShowAnnotation(index, area));
+                                                () => PutAnnotationInPolygon(index), isWarning: true, show: () => LevelFocus.ShowAnnotation(index));
                 }
             }
         }
@@ -55,21 +55,21 @@ namespace ForgePlus.UI
         {
             var description = Describe(issue, string.Empty);
             System.Action fix = null;
-            System.Action<UnityEngine.Rect> show = null;
+            System.Action show = null;
 
             switch (issue.Kind)
             {
                 case GeometryIssueKind.InsideOutPolygon:
                 case GeometryIssueKind.PolygonWithoutArea:
                 case GeometryIssueKind.CrossingEdges:
-                    show = area => LevelFocus.ShowPolygon(issue.Polygon, area);
+                    show = () => LevelFocus.ShowPolygon(issue.Polygon);
                     break;
                 case GeometryIssueKind.ConcaveCorner:
                 case GeometryIssueKind.PointNearLine:
-                    show = area => LevelFocus.ShowPoint(issue.Point, area);
+                    show = () => LevelFocus.ShowPoint(issue.Point);
                     break;
                 case GeometryIssueKind.RedundantStraightCorner:
-                    show = area => LevelFocus.ShowPoint(issue.Point, area);
+                    show = () => LevelFocus.ShowPoint(issue.Point);
 
                     if (GeometryValidation.IsRemovableStraightCorner(level.Level, issue.Point))
                     {
@@ -78,7 +78,7 @@ namespace ForgePlus.UI
 
                     break;
                 case GeometryIssueKind.ZeroLengthLine:
-                    show = area => LevelFocus.ShowPoint(issue.Point, area);
+                    show = () => LevelFocus.ShowPoint(issue.Point);
 
                     if (LineCollapse.CanCollapse(level.Level, issue.Line))
                     {
@@ -91,11 +91,11 @@ namespace ForgePlus.UI
 
                     break;
                 case GeometryIssueKind.LineTooLong:
-                    show = area => LevelFocus.ShowLine(issue.Line, area);
+                    show = () => LevelFocus.ShowLine(issue.Line);
                     break;
                 case GeometryIssueKind.TooManyMapIndexes:
                 case GeometryIssueKind.MapIndexesAlephOneOnly:
-                    show = area => LevelFocus.ShowLevel();
+                    show = () => LevelFocus.ShowLevel();
                     break;
             }
 
