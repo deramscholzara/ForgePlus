@@ -368,7 +368,7 @@ namespace ForgePlus.LevelManipulation
                    primaryMode == ModeManager.PrimaryModes.Sounds;
         }
 
-        // Hidden media can't be clicked, and hidden points can't stay selected
+        // Hidden media can't be clicked, and hidden points (or lines) can't stay selected
         private void OnGeometryVisibilityChanged()
         {
             var level = LevelEntity_Level.Instance;
@@ -379,7 +379,8 @@ namespace ForgePlus.LevelManipulation
 
             SetSelectability<EditableSurface_Media>(level.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(ModeManager.Instance.PrimaryMode));
 
-            if (!SettingsManager.Instance.PointsAreShown && SelectedObjects.Exists(selected => selected is LevelEntity_Point))
+            if ((!SettingsManager.Instance.PointsAreShown && SelectedObjects.Exists(selected => selected is LevelEntity_Point)) ||
+                (!SettingsManager.Instance.LinesAreShown && SelectedObjects.Exists(selected => selected is LevelEntity_Line)))
             {
                 DeselectAll();
             }

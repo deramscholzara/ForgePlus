@@ -25,13 +25,14 @@ namespace ForgePlus.UI
         {
             get
             {
-                return PointsEnabled && MediaEnabled;
+                return PointsEnabled && LinesEnabled && MediaEnabled;
             }
             set
             {
                 if (value)
                 {
                     PointsEnabled = true;
+                    LinesEnabled = true;
                     MediaEnabled = true;
                 }
 
@@ -51,6 +52,22 @@ namespace ForgePlus.UI
                 if (value != SettingsManager.Instance.PointsEnabled)
                 {
                     SettingsManager.Instance.PointsEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool LinesEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.LinesEnabled;
+            }
+            set
+            {
+                if (value != SettingsManager.Instance.LinesEnabled)
+                {
+                    SettingsManager.Instance.LinesEnabled = value;
                 }
             }
         }
@@ -446,6 +463,7 @@ namespace ForgePlus.UI
         {
             Notify(nameof(ShowEverythingEnabled));
             Notify(nameof(PointsEnabled));
+            Notify(nameof(LinesEnabled));
             Notify(nameof(MediaEnabled));
             Notify(nameof(MediaEditable));
         }

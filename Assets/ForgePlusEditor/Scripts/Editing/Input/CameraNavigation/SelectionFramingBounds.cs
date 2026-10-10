@@ -107,6 +107,34 @@ namespace ForgePlus.CameraNavigation
 
                     break;
 
+                case LevelEntity_Line line:
+                    // Where its lines are drawn: its ends, at the floors and ceilings of the polygons on either side
+                    var lineLevel = LevelEntity_Level.Instance;
+                    foreach (var owner in new[] { line.NativeObject.clockwise_polygon_owner, line.NativeObject.counterclockwise_polygon_owner })
+                    {
+                        if (!lineLevel.Polygons.TryGetValue(owner, out var ownerPolygon))
+                        {
+                            continue;
+                        }
+
+                        foreach (Component surface in new Component[] { ownerPolygon.FloorSurface, ownerPolygon.CeilingSurface })
+                        {
+                            if (!surface)
+                            {
+                                continue;
+                            }
+
+                            foreach (var endpointIndex in line.NativeObject.endpoint_indexes)
+                            {
+                                var position = GeometryUtilities.GetMeshVertex(lineLevel.Level, endpointIndex);
+                                position.y = surface.transform.position.y;
+                                Encapsulate(new Bounds(position, Vector3.zero), ref bounds, ref hasBounds);
+                            }
+                        }
+                    }
+
+                    break;
+
                 case LevelEntity_Level level:
                     foreach (var surface in level.EditableSurface_Polygons)
                     {

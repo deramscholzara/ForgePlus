@@ -9,11 +9,12 @@ using UnityEngine;
 
 namespace ForgePlus.LevelManipulation
 {
-    // Dragging a polygon whole across the level: its corners move together (PointEditing, which stretches the polygons
-    // around it that share them, and holds them back from making polygons invalid unless Allow Invalid Move is held), and
-    // what's in it (its objects and annotations) moves along with it. Grid snapping snaps how far it moves, so a polygon
-    // off the grid stays as far off it. Recorded as one action when it ends.
-    public sealed class PolygonMove
+    // Dragging points together across the level, such as a polygon's corners or a line's ends: they move by the same amount
+    // (PointEditing, which stretches the polygons around them that share them, and holds them back from making polygons
+    // invalid unless Allow Invalid Move is held), and what's in a dragged polygon (its objects and annotations) moves along
+    // with it. Grid snapping snaps how far they move, so points off the grid stay as far off it. Recorded as one action
+    // when it ends.
+    public sealed class PointsMove
     {
         private readonly LevelEntity_Level level;
         private readonly LevelPlaneDrag drag;
@@ -21,37 +22,52 @@ namespace ForgePlus.LevelManipulation
         private readonly short referenceIndex;
         private readonly world_point2d referenceStart;
 
-        // What's in it, and where each began
+        // What's in the polygon, and where each began
         private readonly List<(LevelEntity_MapObject MapObject, world_point3d Start)> objects = new List<(LevelEntity_MapObject, world_point3d)>();
         private readonly List<(LevelEntity_Annotation Annotation, world_point2d Start)> annotations = new List<(LevelEntity_Annotation, world_point2d)>();
 
-        public PolygonMove(LevelEntity_Polygon polygon, Vector3 pressWorldPosition)
+        // Its corners, with what's in it
+        public static PointsMove ForPolygon(LevelEntity_Polygon polygon, Vector3 pressWorldPosition)
         {
-            level = polygon.ParentLevel;
+            var polygonData = polygon.NativeObject;
+            return new PointsMove(polygon.ParentLevel, polygonData.endpoint_indexes.Take(polygonData.vertex_count), pressWorldPosition, polygon.NativeIndex);
+        }
+
+        // Its ends
+        public static PointsMove ForLine(LevelEntity_Level level, LevelEntity_Line line, Vector3 pressWorldPosition)
+        {
+            return new PointsMove(level, line.NativeObject.endpoint_indexes, pressWorldPosition, cstypes.NONE);
+        }
+
+        private PointsMove(LevelEntity_Level level, IEnumerable<short> points, Vector3 pressWorldPosition, short carriedPolygonIndex)
+        {
+            this.level = level;
 
             var data = level.Level;
-            var polygonData = polygon.NativeObject;
-            pointIndexes = polygonData.endpoint_indexes.Take(polygonData.vertex_count).Distinct().ToArray();
+            pointIndexes = points.Distinct().ToArray();
             referenceIndex = pointIndexes[0];
             referenceStart = data.EndpointList[referenceIndex].vertex;
 
             // Dragged as a movement (from nothing), so it's the movement that snaps
             drag = new LevelPlaneDrag(pressWorldPosition, new world_point2d(0, 0));
 
-            foreach (var mapObject in level.MapObjects.Values)
+            if (carriedPolygonIndex != cstypes.NONE)
             {
-                if (mapObject && mapObject.NativeObject.polygon_index == polygon.NativeIndex)
+                foreach (var mapObject in level.MapObjects.Values)
                 {
-                    var location = mapObject.NativeObject.location;
-                    objects.Add((mapObject, new world_point3d(location.x, location.y, location.z)));
+                    if (mapObject && mapObject.NativeObject.polygon_index == carriedPolygonIndex)
+                    {
+                        var location = mapObject.NativeObject.location;
+                        objects.Add((mapObject, new world_point3d(location.x, location.y, location.z)));
+                    }
                 }
-            }
 
-            foreach (var annotation in level.Annotations.Values)
-            {
-                if (annotation && annotation.NativeObject.polygon_index == polygon.NativeIndex)
+                foreach (var annotation in level.Annotations.Values)
                 {
-                    annotations.Add((annotation, annotation.NativeObject.location));
+                    if (annotation && annotation.NativeObject.polygon_index == carriedPolygonIndex)
+                    {
+                        annotations.Add((annotation, annotation.NativeObject.location));
+                    }
                 }
             }
 

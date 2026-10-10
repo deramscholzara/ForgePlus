@@ -12,7 +12,8 @@ namespace ForgePlus.LevelManipulation
 {
     // What's focused on (framed, as Frame Selected frames it) flashes green three times, so it stands out from what else is
     // in view: its surfaces (a polygon's floor and ceiling, a side's faces, a platform's moving surfaces, what a light lights
-    // or a media covers), an object's icon, and a point's handles (PointHandles reads PointIntensity). Surfaces and icons
+    // or a media covers), an object's icon, and a point's handles or a line's lines drawn over the level (PointHandles
+    // reads PointIntensity and LineIntensity). Surfaces and icons
     // are overlaid with their own meshes, so the flash follows them.
     [AutoStaticsCleanup]
     public static partial class FocusFlash
@@ -30,6 +31,7 @@ namespace ForgePlus.LevelManipulation
 
         private static List<GameObject> overlays = new List<GameObject>();
         private static HashSet<LevelEntity_Point> points = new HashSet<LevelEntity_Point>();
+        private static HashSet<LevelEntity_Line> lines = new HashSet<LevelEntity_Line>();
         private static float intensity;
 
         // Each flash's, so a flash left from an earlier one stops
@@ -42,6 +44,12 @@ namespace ForgePlus.LevelManipulation
         }
 
         // After the delay (such as while the camera moves to frame them, so all three pulses are seen)
+        // How far toward the flash color a line's lines are now (0 while it isn't flashing)
+        public static float LineIntensity(LevelEntity_Line line)
+        {
+            return lines.Contains(line) ? intensity : 0f;
+        }
+
         public static void Flash(IEnumerable<ISelectable> targets, float delay = 0f)
         {
             Stop();
@@ -54,13 +62,19 @@ namespace ForgePlus.LevelManipulation
                     continue;
                 }
 
+                if (target is LevelEntity_Line line)
+                {
+                    lines.Add(line);
+                    continue;
+                }
+
                 foreach (var meshFilter in MeshesOf(target))
                 {
                     overlays.Add(CreateOverlay(meshFilter));
                 }
             }
 
-            if (overlays.Count > 0 || points.Count > 0)
+            if (overlays.Count > 0 || points.Count > 0 || lines.Count > 0)
             {
                 Animate(++flashNumber, delay);
             }
@@ -103,6 +117,7 @@ namespace ForgePlus.LevelManipulation
 
             overlays.Clear();
             points.Clear();
+            lines.Clear();
             intensity = 0f;
         }
 

@@ -87,6 +87,7 @@ namespace ForgePlus.ApplicationGeneral
         private bool objectIconsEnabled = true;
         private bool spritePreviewsEnabled = true;
         private bool pointsEnabled = true;
+        private bool linesEnabled = true;
         private bool mediaEnabled = true;
         private bool diagnosticVisualsEnabled = true;
         private bool simpleVisualsEnabled = false;
@@ -462,6 +463,32 @@ namespace ForgePlus.ApplicationGeneral
             get
             {
                 return pointsEnabled && ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry;
+            }
+        }
+
+        // Lines (drawn along polygons' edges, at their floors and ceilings) are only shown in Geometry mode. Points' poles
+        // are the Points option's.
+        public bool LinesEnabled
+        {
+            get
+            {
+                return linesEnabled;
+            }
+            set
+            {
+                linesEnabled = value;
+
+                ApplyGeometryVisibility();
+
+                OnSettingChanged?.Invoke(nameof(LinesEnabled));
+            }
+        }
+
+        public bool LinesAreShown
+        {
+            get
+            {
+                return linesEnabled && ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry;
             }
         }
 

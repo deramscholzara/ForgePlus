@@ -17,8 +17,14 @@ namespace ForgePlus.UI
     // pole, a vertical line from its lowest handle to its highest, drawn behind all handles, that selects and drags it as
     // they do (where no handle is clicked).
     //
+    // Lines (shown while Geometry mode shows lines) are drawn the same way along polygons' edges, at their floors and
+    // ceilings, behind the poles: white where there's a polygon on only one side, light blue where the floors (or
+    // ceilings) on either side are at the same height, and light green at both heights where they aren't (red while
+    // selected). They fade with distance as handles do (from fully opaque). Clicking or dragging one (where no handle or
+    // pole is clicked) selects its line, or moves it.
+    //
     // Looking straight down (the camera's orthographic view), only each point's uppermost handle (of those below the
-    // camera) is shown, none fade with distance, and there are no poles.
+    // camera) is shown, only each line's lowest (at a floor), there are no poles, and nothing fades with distance.
     //
     // While a point is moved, what the move would break (or breaks) is shown (PointEditing.Feedback): the lines involved
     // are outlined (red for errors, yellow for warnings), a ghost of the point shows where it's held back from (or where
@@ -58,8 +64,15 @@ namespace ForgePlus.UI
         private const float PoleMaximumOpacity = 0.3f;
         private const float PoleMinimumOpacity = 0.015f;
 
-        // Each pole has 20 vertices (5 rectangles)
-        private const int PolesPerAllocation = 3000;
+        // Each pole (or line) has 20 vertices (5 rectangles)
+        private const int SegmentsPerAllocation = 3000;
+
+        private static readonly Color OneSidedLineColor = Color.white;
+        private static readonly Color LevelLineColor = new Color(0.6f, 0.82f, 1f);
+        private static readonly Color StepLineColor = new Color(0.6f, 1f, 0.6f);
+
+        // Meters apart that heights count as the same
+        private const float SameHeightTolerance = 0.0005f;
 
         private const float RingWidth = 2f;
         private const float OutlineWidth = 2f;
@@ -82,17 +95,23 @@ namespace ForgePlus.UI
             public float Opacity;
         }
 
-        private struct Pole
+        // A pole (for its point, which it flashes with) or a line (for its line, which it also flashes with)
+        private struct Segment
         {
             public LevelEntity_Point Point;
+            public LevelEntity_Line Line;
+            public Color Fill;
 
-            // Its bottom and top ends (in front of the camera), in the world and in panel space, and how faded each is
-            public Vector3 BottomWorld;
-            public Vector3 TopWorld;
-            public Vector2 Bottom;
-            public Vector2 Top;
-            public float BottomOpacity;
-            public float TopOpacity;
+            // Its ends (a pole's bottom first; in front of the camera), in the world and in panel space, and how faded each is
+            public Vector3 StartWorld;
+            public Vector3 EndWorld;
+            public Vector2 Start;
+            public Vector2 End;
+            public float StartOpacity;
+            public float EndOpacity;
+
+            // Along the camera's view, at its middle
+            public float Depth;
         }
 
         private readonly VisualElement layer;
@@ -116,7 +135,11 @@ namespace ForgePlus.UI
         private bool isOrthographic;
 
         // Those in view, and each point's lowest and highest handle heights (in meters) they're found from
-        private readonly List<Pole> poles = new List<Pole>();
+        private readonly List<Segment> poles = new List<Segment>();
+
+        // Those in view (farthest first), and the heights (and colors) of the line being collected
+        private readonly List<Segment> lines = new List<Segment>();
+        private readonly List<(float Height, Color Fill)> lineHeights = new List<(float, Color)>();
         private readonly Dictionary<short, (float Bottom, float Top)> poleHeights = new Dictionary<short, (float, float)>();
 
         public PointHandles(VisualElement root)
@@ -134,9 +157,10 @@ namespace ForgePlus.UI
         // After the camera has moved for the frame (and platforms, whose floors and ceilings carry their handles)
         public void Update()
         {
-            var hadHandles = handles.Count > 0 || poles.Count > 0;
+            var hadHandles = handles.Count > 0 || poles.Count > 0 || lines.Count > 0;
             handles.Clear();
             poles.Clear();
+            lines.Clear();
 
             var level = LevelEntity_Level.Instance;
             var camera = Camera.main;
@@ -148,13 +172,24 @@ namespace ForgePlus.UI
             ringedPoint = cstypes.NONE;
             status.style.display = DisplayStyle.None;
 
-            if (IsShown(level) && camera && panel != null)
+            var editorCamera = ForgePlusUI.Instance.EditorCamera;
+            isOrthographic = editorCamera && editorCamera.IsOrthographic;
+
+            if (IsLayerShown(level) && camera && panel != null)
             {
-                CollectHandles(level, camera, panel);
-                CollectFeedback(level, camera, panel);
+                if (SettingsManager.Instance.PointsAreShown)
+                {
+                    CollectHandles(level, camera, panel);
+                    CollectFeedback(level, camera, panel);
+                }
+
+                if (SettingsManager.Instance.LinesAreShown)
+                {
+                    CollectLines(level, camera, panel);
+                }
             }
 
-            if (hadHandles || handles.Count > 0 || poles.Count > 0 || hadFeedback)
+            if (hadHandles || handles.Count > 0 || poles.Count > 0 || lines.Count > 0 || hadFeedback)
             {
                 layer.MarkDirtyRepaint();
             }
@@ -167,7 +202,7 @@ namespace ForgePlus.UI
             worldPosition = default;
 
             var panel = layer.panel;
-            if (handles.Count == 0 || panel == null || !IsShown(LevelEntity_Level.Instance))
+            if (handles.Count == 0 || panel == null || !IsLayerShown(LevelEntity_Level.Instance) || !SettingsManager.Instance.PointsAreShown)
             {
                 return false;
             }
@@ -188,7 +223,66 @@ namespace ForgePlus.UI
                 }
             }
 
-            return TryPickPole(screenPosition, position, out handler, out worldPosition);
+            return TryPickPole(screenPosition, position, out handler, out worldPosition) ||
+                   TryPickLine(screenPosition, position, out handler, out worldPosition);
+        }
+
+        // Over its width, scaled as handles' click areas are (the nearest, where several are), and from where it's clicked
+        // (for dragging at that height)
+        private bool TryPickLine(Vector2 screenPosition, Vector2 panelPosition, out IWorldPointerHandler handler, out Vector3 worldPosition)
+        {
+            handler = null;
+            worldPosition = default;
+
+            var camera = Camera.main;
+            if (!camera || !SettingsManager.Instance.LinesAreShown)
+            {
+                return false;
+            }
+
+            var halfClickWidth = PoleWidth * SettingsManager.Instance.PointClickAreaScale * 0.5f;
+            var ray = camera.ScreenPointToRay(screenPosition);
+            var nearestDistance = float.MaxValue;
+
+            foreach (var line in lines)
+            {
+                var along = line.End - line.Start;
+                var t = along.sqrMagnitude > 0f ? Mathf.Clamp01(Vector2.Dot(panelPosition - line.Start, along) / along.sqrMagnitude) : 0f;
+                if (Vector2.Distance(panelPosition, line.Start + along * t) > halfClickWidth)
+                {
+                    continue;
+                }
+
+                var clicked = NearestToRay(ray, line.StartWorld, line.EndWorld);
+                var distance = Vector3.Distance(ray.origin, clicked);
+
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    handler = line.Line;
+                    worldPosition = clicked;
+                }
+            }
+
+            return handler != null;
+        }
+
+        // Where on the segment the ray passes nearest
+        private static Vector3 NearestToRay(Ray ray, Vector3 start, Vector3 end)
+        {
+            var along = end - start;
+            var toStart = start - ray.origin;
+            var a = Vector3.Dot(along, along);
+            var b = Vector3.Dot(along, ray.direction);
+            var denominator = a - b * b;
+
+            if (a <= 0f || denominator <= 0.000001f)
+            {
+                return start;
+            }
+
+            var t = (b * Vector3.Dot(toStart, ray.direction) - Vector3.Dot(toStart, along)) / denominator;
+            return start + along * Mathf.Clamp01(t);
         }
 
         // Over its width, scaled as handles' click areas are, and from where it's clicked (for dragging at that height)
@@ -209,16 +303,16 @@ namespace ForgePlus.UI
 
             foreach (var pole in poles)
             {
-                var along = pole.Top - pole.Bottom;
-                var t = along.sqrMagnitude > 0f ? Mathf.Clamp01(Vector2.Dot(panelPosition - pole.Bottom, along) / along.sqrMagnitude) : 0f;
-                if (Vector2.Distance(panelPosition, pole.Bottom + along * t) > halfClickWidth)
+                var along = pole.End - pole.Start;
+                var t = along.sqrMagnitude > 0f ? Mathf.Clamp01(Vector2.Dot(panelPosition - pole.Start, along) / along.sqrMagnitude) : 0f;
+                if (Vector2.Distance(panelPosition, pole.Start + along * t) > halfClickWidth)
                 {
                     continue;
                 }
 
                 // Where along it (a vertical line) the pointer's ray passes nearest
-                var height = HeightNearestRay(ray, pole.BottomWorld, pole.TopWorld);
-                var clicked = new Vector3(pole.BottomWorld.x, height, pole.BottomWorld.z);
+                var height = HeightNearestRay(ray, pole.StartWorld, pole.EndWorld);
+                var clicked = new Vector3(pole.StartWorld.x, height, pole.StartWorld.z);
                 var distance = Vector3.Distance(ray.origin, clicked);
 
                 if (distance < nearestDistance)
@@ -244,10 +338,9 @@ namespace ForgePlus.UI
         }
 
         // Not while the UI is hidden, or while the level's data is ahead of its (soon rebuilt) entities
-        private bool IsShown(LevelEntity_Level level)
+        private bool IsLayerShown(LevelEntity_Level level)
         {
             return level && level.Points != null && !LevelEditing.IsRebuildPending &&
-                   SettingsManager.Instance.PointsAreShown &&
                    layer.parent != null && layer.parent.resolvedStyle.display != DisplayStyle.None;
         }
 
@@ -255,9 +348,6 @@ namespace ForgePlus.UI
         {
             placedCorners.Clear();
             poleHeights.Clear();
-
-            var editorCamera = ForgePlusUI.Instance.EditorCamera;
-            isOrthographic = editorCamera && editorCamera.IsOrthographic;
 
             var viewRect = camera.pixelRect;
 
@@ -299,12 +389,6 @@ namespace ForgePlus.UI
         // From each point's lowest handle to its highest, wherever its handles are (in view or not)
         private void CollectPoles(LevelEntity_Level level, Camera camera, IPanel panel, UnityEngine.Rect viewRect)
         {
-            var cameraPosition = camera.transform.position;
-            var cameraForward = camera.transform.forward;
-            var nearDepth = camera.nearClipPlane * 1.01f;
-
-            float DepthOf(Vector3 position) => Vector3.Dot(position - cameraPosition, cameraForward);
-
             foreach (var pair in poleHeights)
             {
                 var (bottomHeight, topHeight) = pair.Value;
@@ -317,58 +401,225 @@ namespace ForgePlus.UI
                 bottom.y = bottomHeight;
                 var top = new Vector3(bottom.x, topHeight, bottom.z);
 
-                // Shown while any of it is near enough (as handles are)
-                var nearest = new Vector3(bottom.x, Mathf.Clamp(cameraPosition.y, bottomHeight, topHeight), bottom.z);
-                if (Vector3.Distance(cameraPosition, nearest) > FadeEndDistance && !point.IsSelected)
-                {
-                    continue;
-                }
-
-                // Only what's in front of the camera
-                var bottomDepth = DepthOf(bottom);
-                var topDepth = DepthOf(top);
-                if (bottomDepth < nearDepth && topDepth < nearDepth)
-                {
-                    continue;
-                }
-
-                if (bottomDepth < nearDepth)
-                {
-                    bottom = Vector3.Lerp(bottom, top, (nearDepth - bottomDepth) / (topDepth - bottomDepth));
-                }
-                else if (topDepth < nearDepth)
-                {
-                    top = Vector3.Lerp(top, bottom, (nearDepth - topDepth) / (bottomDepth - topDepth));
-                }
-
-                var bottomScreen = camera.WorldToScreenPoint(bottom);
-                var topScreen = camera.WorldToScreenPoint(top);
-                if ((bottomScreen.x < viewRect.xMin && topScreen.x < viewRect.xMin) || (bottomScreen.x > viewRect.xMax && topScreen.x > viewRect.xMax) ||
-                    (bottomScreen.y < viewRect.yMin && topScreen.y < viewRect.yMin) || (bottomScreen.y > viewRect.yMax && topScreen.y > viewRect.yMax))
-                {
-                    continue;
-                }
-
                 // Centered on whole pixels, so the edges of its (even) width are sharp where it's upright on screen
-                var bottomPanel = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(bottomScreen.x, Screen.height - bottomScreen.y));
-                var topPanel = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(topScreen.x, Screen.height - topScreen.y));
-
-                poles.Add(new Pole
+                if (TryProjectSegment(camera, panel, viewRect, bottom, top, point, null, point.IsSelected ? SelectedFillColor : FillColor, roundsToPixels: true, out var pole))
                 {
-                    Point = point,
-                    BottomWorld = bottom,
-                    TopWorld = top,
-                    Bottom = new Vector2(Mathf.Round(bottomPanel.x), bottomPanel.y),
-                    Top = new Vector2(Mathf.Round(topPanel.x), topPanel.y),
-                    BottomOpacity = OpacityAt(point, Vector3.Distance(cameraPosition, bottom), PoleMaximumOpacity, PoleMinimumOpacity),
-                    TopOpacity = OpacityAt(point, Vector3.Distance(cameraPosition, top), PoleMaximumOpacity, PoleMinimumOpacity),
-                });
+                    poles.Add(pole);
+                }
             }
+        }
+
+        // Each line's at its polygons' floors and ceilings (where they're drawn, as platforms' floors and ceilings move)
+        private void CollectLines(LevelEntity_Level level, Camera camera, IPanel panel)
+        {
+            var data = level.Level;
+            var viewRect = camera.pixelRect;
+
+            for (short lineIndex = 0; lineIndex < data.LineList.Count; lineIndex++)
+            {
+                var line = data.LineList[lineIndex];
+                level.Polygons.TryGetValue(line.clockwise_polygon_owner, out var clockwisePolygon);
+                level.Polygons.TryGetValue(line.counterclockwise_polygon_owner, out var counterclockwisePolygon);
+
+                lineHeights.Clear();
+
+                if (clockwisePolygon && counterclockwisePolygon)
+                {
+                    AddLineHeights(SurfaceHeight(clockwisePolygon, isFloor: true), SurfaceHeight(counterclockwisePolygon, isFloor: true));
+                    AddLineHeights(SurfaceHeight(clockwisePolygon, isFloor: false), SurfaceHeight(counterclockwisePolygon, isFloor: false));
+                }
+                else if (clockwisePolygon || counterclockwisePolygon)
+                {
+                    var polygon = clockwisePolygon ? clockwisePolygon : counterclockwisePolygon;
+                    AddLineHeight(SurfaceHeight(polygon, isFloor: true), OneSidedLineColor);
+                    AddLineHeight(SurfaceHeight(polygon, isFloor: false), OneSidedLineColor);
+                }
+                else
+                {
+                    // With no polygon on either side, it's at no height
+                    continue;
+                }
+
+                // Looking straight down, the others are right over its lowest (a floor)
+                if (isOrthographic)
+                {
+                    KeepLowestLineHeight();
+                }
+
+                var start = GeometryUtilities.GetMeshVertex(data, line.endpoint_indexes[0]);
+                var end = GeometryUtilities.GetMeshVertex(data, line.endpoint_indexes[1]);
+
+                level.Lines.TryGetValue(lineIndex, out var lineEntity);
+                var isSelected = lineEntity && lineEntity.IsSelected;
+
+                foreach (var (height, fill) in lineHeights)
+                {
+                    start.y = height;
+                    end.y = height;
+
+                    if (TryProjectSegment(camera, panel, viewRect, start, end, null, lineEntity, isSelected ? SelectedFillColor : fill, roundsToPixels: false, out var segment))
+                    {
+                        lines.Add(segment);
+                    }
+                }
+            }
+
+            // A selected line's over the others
+            lines.Sort((a, b) =>
+            {
+                var aSelected = a.Line && a.Line.IsSelected;
+                var bSelected = b.Line && b.Line.IsSelected;
+
+                return aSelected != bSelected ? aSelected.CompareTo(bSelected) : b.Depth.CompareTo(a.Depth);
+            });
+        }
+
+        // The floors (or ceilings) on either side of a line: at one height, or a step between two
+        private void AddLineHeights(float a, float b)
+        {
+            if (Mathf.Abs(a - b) <= SameHeightTolerance)
+            {
+                AddLineHeight(a, LevelLineColor);
+            }
+            else
+            {
+                AddLineHeight(a, StepLineColor);
+                AddLineHeight(b, StepLineColor);
+            }
+        }
+
+        private void KeepLowestLineHeight()
+        {
+            var lowest = 0;
+            for (var i = 1; i < lineHeights.Count; i++)
+            {
+                if (lineHeights[i].Height < lineHeights[lowest].Height)
+                {
+                    lowest = i;
+                }
+            }
+
+            var kept = lineHeights[lowest];
+            lineHeights.Clear();
+            lineHeights.Add(kept);
+        }
+
+        // Once at each height (a floor can meet a ceiling, where one polygon is closed off)
+        private void AddLineHeight(float height, Color fill)
+        {
+            foreach (var (existing, _) in lineHeights)
+            {
+                if (Mathf.Abs(existing - height) <= SameHeightTolerance)
+                {
+                    return;
+                }
+            }
+
+            lineHeights.Add((height, fill));
+        }
+
+        private static float SurfaceHeight(LevelEntity_Polygon polygon, bool isFloor)
+        {
+            Component surface = isFloor ? polygon.FloorSurface : polygon.CeilingSurface;
+            if (surface)
+            {
+                return surface.transform.position.y;
+            }
+
+            return (isFloor ? polygon.NativeObject.floor_height : polygon.NativeObject.ceiling_height) / GeometryUtilities.WorldUnitIncrementsPerMeter;
+        }
+
+        // A pole (or line) between two places in the level, cut to what's in front of the camera, while it's in view and
+        // any of it is near enough (as handles are; looking straight down, it's always near enough and doesn't fade)
+        private bool TryProjectSegment(Camera camera, IPanel panel, UnityEngine.Rect viewRect, Vector3 start, Vector3 end, LevelEntity_Point point, LevelEntity_Line line, Color fill, bool roundsToPixels, out Segment segment)
+        {
+            segment = default;
+
+            var cameraPosition = camera.transform.position;
+            var cameraForward = camera.transform.forward;
+            var isSelected = (point != null && point.IsSelected) || (line && line.IsSelected);
+            var isAlwaysShown = isOrthographic || isSelected;
+
+            if (!isAlwaysShown)
+            {
+                var along = end - start;
+                var t = along.sqrMagnitude > 0f ? Mathf.Clamp01(Vector3.Dot(cameraPosition - start, along) / along.sqrMagnitude) : 0f;
+                if (Vector3.Distance(cameraPosition, start + along * t) > FadeEndDistance)
+                {
+                    return false;
+                }
+            }
+
+            // Only what's in front of the camera
+            var nearDepth = camera.nearClipPlane * 1.01f;
+            var startDepth = Vector3.Dot(start - cameraPosition, cameraForward);
+            var endDepth = Vector3.Dot(end - cameraPosition, cameraForward);
+            if (startDepth < nearDepth && endDepth < nearDepth)
+            {
+                return false;
+            }
+
+            if (startDepth < nearDepth)
+            {
+                start = Vector3.Lerp(start, end, (nearDepth - startDepth) / (endDepth - startDepth));
+            }
+            else if (endDepth < nearDepth)
+            {
+                end = Vector3.Lerp(end, start, (nearDepth - endDepth) / (startDepth - endDepth));
+            }
+
+            var startScreen = camera.WorldToScreenPoint(start);
+            var endScreen = camera.WorldToScreenPoint(end);
+            if ((startScreen.x < viewRect.xMin && endScreen.x < viewRect.xMin) || (startScreen.x > viewRect.xMax && endScreen.x > viewRect.xMax) ||
+                (startScreen.y < viewRect.yMin && endScreen.y < viewRect.yMin) || (startScreen.y > viewRect.yMax && endScreen.y > viewRect.yMax))
+            {
+                return false;
+            }
+
+            var startPanel = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(startScreen.x, Screen.height - startScreen.y));
+            var endPanel = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(endScreen.x, Screen.height - endScreen.y));
+            if (roundsToPixels)
+            {
+                startPanel.x = Mathf.Round(startPanel.x);
+                endPanel.x = Mathf.Round(endPanel.x);
+            }
+
+            segment = new Segment
+            {
+                Point = point,
+                Line = line,
+                Fill = fill,
+                StartWorld = start,
+                EndWorld = end,
+                Start = startPanel,
+                End = endPanel,
+                StartOpacity = isSelected ? 1f : SegmentOpacityAt(point, Vector3.Distance(cameraPosition, start)),
+                EndOpacity = isSelected ? 1f : SegmentOpacityAt(point, Vector3.Distance(cameraPosition, end)),
+                Depth = (startScreen.z + endScreen.z) * 0.5f,
+            };
+
+            return true;
+        }
+
+        // Poles (with points) are fainter; lines fade as handles do (their fills alone set them apart)
+        private float SegmentOpacityAt(LevelEntity_Point point, float distance)
+        {
+            if (point == null)
+            {
+                return isOrthographic ? 1f : OpacityAt(null, distance);
+            }
+
+            if (isOrthographic)
+            {
+                return point.IsSelected ? 1f : PoleMaximumOpacity;
+            }
+
+            return OpacityAt(point, distance, PoleMaximumOpacity, PoleMinimumOpacity);
         }
 
         private static float OpacityAt(LevelEntity_Point point, float distance, float maximumOpacity = 1f, float minimumOpacity = MinimumOpacity)
         {
-            return point.IsSelected ? 1f : Mathf.Lerp(maximumOpacity, minimumOpacity, Mathf.InverseLerp(FadeStartDistance, FadeEndDistance, distance));
+            return point != null && point.IsSelected ? 1f : Mathf.Lerp(maximumOpacity, minimumOpacity, Mathf.InverseLerp(FadeStartDistance, FadeEndDistance, distance));
         }
 
         // A polygon's corners at its floor or ceiling (where it's drawn, as a platform's floor and ceiling move)
@@ -511,18 +762,9 @@ namespace ForgePlus.UI
 
         private void GenerateVisualContent(MeshGenerationContext context)
         {
-            // Behind every handle
-            for (var start = 0; start < poles.Count; start += PolesPerAllocation)
-            {
-                var end = Mathf.Min(start + PolesPerAllocation, poles.Count);
-                var mesh = context.Allocate((end - start) * 5 * 4, (end - start) * 5 * 6);
-                var vertexCount = 0;
-
-                for (var i = start; i < end; i++)
-                {
-                    AddPole(mesh, ref vertexCount, poles[i]);
-                }
-            }
+            // Behind every handle: lines, then poles
+            AddSegments(context, lines);
+            AddSegments(context, poles);
 
             for (var start = 0; start < handles.Count; start += HandlesPerAllocation)
             {
@@ -625,12 +867,27 @@ namespace ForgePlus.UI
 
         // An outlined line, with the pieces of its outline apart from its fill (so they fade evenly), flashing green (but
         // not growing) while its point is focused on (FocusFlash)
-        private static void AddPole(MeshWriteData mesh, ref int vertexCount, Pole pole)
+        private static void AddSegments(MeshGenerationContext context, List<Segment> segments)
         {
-            var bottom = pole.Bottom;
-            var top = pole.Top;
-            var length = Vector2.Distance(bottom, top);
-            var direction = length > 0.001f ? (top - bottom) / length : Vector2.down;
+            for (var start = 0; start < segments.Count; start += SegmentsPerAllocation)
+            {
+                var end = Mathf.Min(start + SegmentsPerAllocation, segments.Count);
+                var mesh = context.Allocate((end - start) * 5 * 4, (end - start) * 5 * 6);
+                var vertexCount = 0;
+
+                for (var i = start; i < end; i++)
+                {
+                    AddSegment(mesh, ref vertexCount, segments[i]);
+                }
+            }
+        }
+
+        private static void AddSegment(MeshWriteData mesh, ref int vertexCount, Segment segment)
+        {
+            var start = segment.Start;
+            var end = segment.End;
+            var length = Vector2.Distance(start, end);
+            var direction = length > 0.001f ? (end - start) / length : Vector2.down;
             var across = new Vector2(-direction.y, direction.x);
 
             var outlineWidth = (PoleWidth - PoleFillWidth) * 0.5f;
@@ -638,20 +895,21 @@ namespace ForgePlus.UI
             var halfFillWidth = PoleFillWidth * 0.5f;
 
             // The outline caps its ends, too
-            var outerBottom = bottom - direction * outlineWidth;
-            var outerTop = top + direction * outlineWidth;
+            var outerStart = start - direction * outlineWidth;
+            var outerEnd = end + direction * outlineWidth;
 
-            var bottomBorder = WithOpacity(BorderColor, pole.BottomOpacity);
-            var topBorder = WithOpacity(BorderColor, pole.TopOpacity);
-            var fill = Color.Lerp(pole.Point.IsSelected ? SelectedFillColor : FillColor, FocusFlash.FlashColor, FocusFlash.PointIntensity(pole.Point));
-            var bottomFill = WithOpacity(fill, pole.BottomOpacity);
-            var topFill = WithOpacity(fill, pole.TopOpacity);
+            var startBorder = WithOpacity(BorderColor, segment.StartOpacity);
+            var endBorder = WithOpacity(BorderColor, segment.EndOpacity);
+            var flashIntensity = segment.Point != null ? FocusFlash.PointIntensity(segment.Point) : segment.Line ? FocusFlash.LineIntensity(segment.Line) : 0f;
+            var fill = Color.Lerp(segment.Fill, FocusFlash.FlashColor, flashIntensity);
+            var startFill = WithOpacity(fill, segment.StartOpacity);
+            var endFill = WithOpacity(fill, segment.EndOpacity);
 
-            AddStrip(mesh, ref vertexCount, outerBottom, outerTop, across, halfWidth, halfFillWidth, bottomBorder, topBorder);
-            AddStrip(mesh, ref vertexCount, outerBottom, outerTop, across, -halfFillWidth, -halfWidth, bottomBorder, topBorder);
-            AddStrip(mesh, ref vertexCount, outerBottom, bottom, across, halfFillWidth, -halfFillWidth, bottomBorder, bottomBorder);
-            AddStrip(mesh, ref vertexCount, top, outerTop, across, halfFillWidth, -halfFillWidth, topBorder, topBorder);
-            AddStrip(mesh, ref vertexCount, bottom, top, across, halfFillWidth, -halfFillWidth, bottomFill, topFill);
+            AddStrip(mesh, ref vertexCount, outerStart, outerEnd, across, halfWidth, halfFillWidth, startBorder, endBorder);
+            AddStrip(mesh, ref vertexCount, outerStart, outerEnd, across, -halfFillWidth, -halfWidth, startBorder, endBorder);
+            AddStrip(mesh, ref vertexCount, outerStart, start, across, halfFillWidth, -halfFillWidth, startBorder, startBorder);
+            AddStrip(mesh, ref vertexCount, end, outerEnd, across, halfFillWidth, -halfFillWidth, endBorder, endBorder);
+            AddStrip(mesh, ref vertexCount, start, end, across, halfFillWidth, -halfFillWidth, startFill, endFill);
         }
 
         // Along a line from start to end, between two offsets across it (the first greater, wound as AddLine is)

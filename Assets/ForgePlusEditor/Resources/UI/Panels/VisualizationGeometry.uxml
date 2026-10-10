@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
     <!-- Geometry mode's visualization options (VisualizationGeometryPanel), which show and hide kinds of geometry. Show
-         Everything is on while all the others are, and turns them all on. Polygons, Lines and Sides are placeholders,
-         which don't filter anything yet. Below them, how the level is drawn (in every mode): Simple Visuals (with the grid
+         Everything is on while all the others are, and turns them all on. Polygons and Sides are placeholders, which
+         don't filter anything yet. Below them, how the level is drawn (in every mode): Simple Visuals (with the grid
          texture), Show Lighting, and Diagnostic Visuals (which marks problem geometry in the level). -->
     <ui:VisualElement class="fp-visualization" picking-mode="Ignore">
         <ui:VisualElement class="fp-box fp-box--padded fp-visualization__options">
@@ -14,7 +14,7 @@
                     <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Polygons.Control.Text" value="true" />
                 </ui:Instance>
                 <ui:Instance template="Toggle" name="lines" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--right" tooltip="@Geometry/VisualizationGeometry.Lines.Tooltip">
-                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Lines.Control.Text" value="true" />
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Lines.Control.Text" />
                 </ui:Instance>
                 <ui:Instance template="Toggle" name="sides" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--left" tooltip="@Geometry/VisualizationGeometry.Sides.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.Sides.Control.Text" value="true" />
