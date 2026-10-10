@@ -32,6 +32,7 @@ namespace ForgePlus.UI
             SelectionManager.Instance.OnSelectionChanged += OnSelectionChanged;
             AxisLocks.Instance.OnChanged += OnAxisLocksChanged;
             UndoHistory.OnChanged += OnUndoHistoryChanged;
+            ForgePlusUI.Instance.EditorCamera.OnOrthographicChanged += OnOrthographicChanged;
         }
 
         // Primary modes in their order in the header (Geometry is 0)
@@ -174,6 +175,20 @@ namespace ForgePlus.UI
             }
         }
 
+        // The camera's top-down view (on for this session only)
+        [CreateProperty]
+        public bool Orthographic
+        {
+            get
+            {
+                return ForgePlusUI.Instance.EditorCamera.IsOrthographic;
+            }
+            set
+            {
+                ForgePlusUI.Instance.EditorCamera.IsOrthographic = value;
+            }
+        }
+
         [CreateProperty]
         public bool MenuOpen
         {
@@ -265,6 +280,17 @@ namespace ForgePlus.UI
             }
 
             UndoHistory.OnChanged -= OnUndoHistoryChanged;
+
+            var ui = ForgePlusUI.Instance;
+            if (ui && ui.EditorCamera)
+            {
+                ui.EditorCamera.OnOrthographicChanged -= OnOrthographicChanged;
+            }
+        }
+
+        private void OnOrthographicChanged()
+        {
+            Notify(nameof(Orthographic));
         }
 
         private void OnPrimaryModeChanged(ModeManager.PrimaryModes primaryMode)

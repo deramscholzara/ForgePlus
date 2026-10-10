@@ -17,15 +17,17 @@ using UnityEngine;
 
 namespace ForgePlus.LevelManipulation
 {
-    // Moving points (the level's endpoints). What's worked out from where they are is kept up to date as they move (lines'
+    // Moving points (the level's endpoints), one at a time or several together (such as a polygon's corners, by the same
+    // amount). What's worked out from where they are is kept up to date as they move (lines'
     // lengths, sides' exclusion zones, polygons' areas and centers, and the faces that meet them), and the rest once a
     // move is put down: lines left with no length collapse into single points (GeometryRepair), objects and annotations
     // the move left outside their polygons (or heights) are put back in (ObjectPlacement), and the map indexes (what's
     // near each polygon, and which sound sources it hears) are worked out again.
     //
-    // While Prevent Invalid Moves is on (the setting), a point stops short of where it would make a polygon around it
-    // invalid (GeometryValidation's errors that weren't there before the move); holding Allow Invalid Move (shift) while
-    // dragging its handle lets it go there anyway. What a move would break, or breaks, is shown as it goes (Feedback).
+    // While Prevent Invalid Moves is on (the setting), a point (or points moved together) stops short of where it would
+    // make a polygon around it invalid (GeometryValidation's errors that weren't there before the move); holding Allow
+    // Invalid Move (shift) while dragging lets it go there anyway. What a move would break, or breaks, is shown as it goes
+    // (Feedback).
     //
     // Textures stay where they were at the lines' other ends (for sides) and in the world (for floors and ceilings), or
     // while Keep Textures With Point (ctrl) is held, move with the point instead. Each step of a move works them out from
@@ -138,38 +140,72 @@ namespace ForgePlus.LevelManipulation
         // Dragging a handle can let a point go where it'd make a polygon invalid (while Allow Invalid Move is held)
         public static void DragPoint(LevelEntity_Point point, world_point2d location, bool canBeAllowedInvalid = false)
         {
-            var level = point.ParentLevel;
-            var endpoint = point.NativeObject;
+            DragPoints(point.ParentLevel, new[] { point.NativeIndex }, point.NativeIndex, location, snapsMovement: false, canBeAllowedInvalid);
+        }
 
-            if (!movedPoints.TryGetValue(point.NativeIndex, out var movedPoint))
+        // Moves the points together, each as far as the reference point moves to the location (from where they all were
+        // when the move began). The movement itself is what snaps to the grid, if snapsMovement, so points off the grid
+        // stay as far off it; otherwise the reference point's location is what snaps. Returns how far they moved.
+        public static Vector2Int DragPoints(LevelEntity_Level level, IReadOnlyList<short> pointIndexes, short referenceIndex, world_point2d location, bool snapsMovement, bool canBeAllowedInvalid = false)
+        {
+            var data = level.Level;
+            var reference = data.EndpointList[referenceIndex].vertex;
+
+            if (!movedPoints.ContainsKey(referenceIndex) && reference.x == location.x && reference.y == location.y)
             {
-                if (endpoint.vertex.x == location.x && endpoint.vertex.y == location.y)
+                return Vector2Int.zero;
+            }
+
+            var group = new List<(short Index, MovedPoint Moved)>();
+            foreach (var pointIndex in pointIndexes)
+            {
+                if (!movedPoints.TryGetValue(pointIndex, out var movedPoint))
                 {
-                    return;
+                    movedPoint = Capture(level, pointIndex);
+                    movedPoints[pointIndex] = movedPoint;
                 }
 
-                movedPoint = Capture(level, point.NativeIndex);
-                movedPoints[point.NativeIndex] = movedPoint;
+                group.Add((pointIndex, movedPoint));
             }
 
-            var target = location;
+            var referenceStart = movedPoints[referenceIndex].StartingLocation;
+            var target = new Vector2Int(location.x - referenceStart.x, location.y - referenceStart.y);
+            var current = new Vector2Int(reference.x - referenceStart.x, reference.y - referenceStart.y);
+
+            var movement = target;
             if (PreventsInvalidMoves(canBeAllowedInvalid))
             {
-                location = LimitToValid(level, point.NativeIndex, movedPoint, endpoint.vertex, target);
+                movement = LimitToValid(level, group, referenceIndex, current, target, snapsMovement);
             }
 
-            var isBlocked = location.x != target.x || location.y != target.y;
+            var isBlocked = movement != target;
 
-            if (endpoint.vertex.x != location.x || endpoint.vertex.y != location.y)
+            if (movement != current)
             {
-                endpoint.vertex = location;
+                foreach (var (pointIndex, movedPoint) in group)
+                {
+                    data.EndpointList[pointIndex].vertex = Moved(movedPoint.StartingLocation, movement);
+                }
 
-                RecalculateAround(level, point.NativeIndex);
-                ApplyTextures(level, point.NativeIndex, movedPoint, TexturesFollowPoints);
-                ApplyGeometry(level, new[] { point.NativeIndex });
+                RecalculateAround(level, pointIndexes);
+
+                foreach (var (pointIndex, movedPoint) in group)
+                {
+                    ApplyTextures(level, pointIndex, movedPoint, TexturesFollowPoints);
+                }
+
+                ApplyGeometry(level, pointIndexes);
             }
 
-            UpdateFeedback(level, point.NativeIndex, movedPoint, isBlocked, target);
+            UpdateFeedback(level, group, referenceIndex, isBlocked, target);
+
+            return movement;
+        }
+
+        private static world_point2d Moved(world_point2d start, Vector2Int movement)
+        {
+            return new world_point2d((short) Mathf.Clamp(start.x + movement.x, short.MinValue, short.MaxValue),
+                                     (short) Mathf.Clamp(start.y + movement.y, short.MinValue, short.MaxValue));
         }
 
         public static void EndDrag()
@@ -203,42 +239,78 @@ namespace ForgePlus.LevelManipulation
             return issues.Where(issue => issue.Kind != GeometryIssueKind.ZeroLengthLine && (includeWarnings || !issue.IsWarning));
         }
 
-        // Whether the point, put there, would leave no errors around it that weren't there before the move
-        private static bool IsValidAt(LevelEntity_Level level, short pointIndex, MovedPoint movedPoint, world_point2d location)
+        // The points, each moved this far from where it began, while the move is checked (and then put back)
+        private static T WithMovement<T>(LevelEntity_Level level, List<(short Index, MovedPoint Moved)> group, Vector2Int movement, System.Func<T> check)
         {
-            var endpoint = level.Level.EndpointList[pointIndex];
-            var current = endpoint.vertex;
-            endpoint.vertex = location;
+            var endpoints = level.Level.EndpointList;
+            var currents = new world_point2d[group.Count];
+
+            for (var i = 0; i < group.Count; i++)
+            {
+                currents[i] = endpoints[group[i].Index].vertex;
+                endpoints[group[i].Index].vertex = Moved(group[i].Moved.StartingLocation, movement);
+            }
 
             try
             {
-                return ProblemsAround(level, pointIndex, includeWarnings: false).All(issue => movedPoint.StartingProblems.Contains(issue.Key));
+                return check();
             }
             finally
             {
-                endpoint.vertex = current;
+                for (var i = 0; i < group.Count; i++)
+                {
+                    endpoints[group[i].Index].vertex = currents[i];
+                }
             }
         }
 
-        // As far toward the target as the point can go without new errors (on the grid, while snapping), from where it
-        // is (or, if it's somewhere invalid, as allowed before, from where it last wasn't)
-        private static world_point2d LimitToValid(LevelEntity_Level level, short pointIndex, MovedPoint movedPoint, world_point2d from, world_point2d target)
+        // The errors (and warnings, if included) around the points that weren't there before the move, each once
+        private static List<GeometryIssue> NewProblems(LevelEntity_Level level, List<(short Index, MovedPoint Moved)> group, bool includeWarnings)
         {
-            if (IsValidAt(level, pointIndex, movedPoint, target))
+            var keys = new HashSet<(GeometryIssueKind, short, short, short, short)>();
+            var problems = new List<GeometryIssue>();
+
+            foreach (var (pointIndex, movedPoint) in group)
+            {
+                foreach (var issue in ProblemsAround(level, pointIndex, includeWarnings))
+                {
+                    if (!group.Any(member => member.Moved.StartingProblems.Contains(issue.Key)) && keys.Add(issue.Key))
+                    {
+                        problems.Add(issue);
+                    }
+                }
+            }
+
+            return problems;
+        }
+
+        // Whether the points, moved this far, would leave no errors around them that weren't there before the move
+        private static bool IsValidAt(LevelEntity_Level level, List<(short Index, MovedPoint Moved)> group, Vector2Int movement)
+        {
+            return WithMovement(level, group, movement, () => NewProblems(level, group, includeWarnings: false).Count == 0);
+        }
+
+        // As far toward the target as the points can go without new errors (on the grid, while snapping), from where they
+        // are (or, if they're somewhere invalid, as allowed before, from where they last weren't)
+        private static Vector2Int LimitToValid(LevelEntity_Level level, List<(short Index, MovedPoint Moved)> group, short referenceIndex, Vector2Int from, Vector2Int target, bool snapsMovement)
+        {
+            if (IsValidAt(level, group, target))
             {
                 return target;
             }
 
-            if (!IsValidAt(level, pointIndex, movedPoint, from))
+            var referenceMoved = movedPoints[referenceIndex];
+            if (!IsValidAt(level, group, from))
             {
-                from = movedPoint.LastValidLocation;
+                var lastValid = referenceMoved.LastValidLocation;
+                from = new Vector2Int(lastValid.x - referenceMoved.StartingLocation.x, lastValid.y - referenceMoved.StartingLocation.y);
             }
 
             float valid = 0f, invalid = 1f;
             for (var step = 0; step < 16; step++)
             {
                 var middle = (valid + invalid) * 0.5f;
-                if (IsValidAt(level, pointIndex, movedPoint, Between(from, target, middle)))
+                if (IsValidAt(level, group, Between(from, target, middle)))
                 {
                     valid = middle;
                 }
@@ -253,14 +325,16 @@ namespace ForgePlus.LevelManipulation
                 return Between(from, target, valid);
             }
 
-            // Back along the way, the first grid mark that's valid
-            var distance = Mathf.Sqrt(Mathf.Pow(target.x - from.x, 2f) + Mathf.Pow(target.y - from.y, 2f));
+            // Back along the way, the first grid mark that's valid (for the movement, or the reference point)
+            var distance = Vector2.Distance(from, target);
             var stepFraction = distance > 0f ? HeightsEditing.SnapIncrement / distance : 1f;
+            var referenceStart = new Vector2Int(referenceMoved.StartingLocation.x, referenceMoved.StartingLocation.y);
 
             for (var fraction = valid; fraction >= 0f; fraction -= stepFraction * 0.5f)
             {
-                var snapped = Snap(Between(from, target, fraction));
-                if (IsValidAt(level, pointIndex, movedPoint, snapped))
+                var between = Between(from, target, fraction);
+                var snapped = snapsMovement ? Snap(between) : Snap(referenceStart + between) - referenceStart;
+                if (IsValidAt(level, group, snapped))
                 {
                     return snapped;
                 }
@@ -269,58 +343,49 @@ namespace ForgePlus.LevelManipulation
             return from;
         }
 
-        private static world_point2d Between(world_point2d from, world_point2d to, float fraction)
+        private static Vector2Int Between(Vector2Int from, Vector2Int to, float fraction)
         {
-            return new world_point2d((short) Mathf.RoundToInt(Mathf.Lerp(from.x, to.x, fraction)), (short) Mathf.RoundToInt(Mathf.Lerp(from.y, to.y, fraction)));
+            return new Vector2Int(Mathf.RoundToInt(Mathf.Lerp(from.x, to.x, fraction)), Mathf.RoundToInt(Mathf.Lerp(from.y, to.y, fraction)));
         }
 
-        private static world_point2d Snap(world_point2d location)
+        private static Vector2Int Snap(Vector2Int value)
         {
-            short SnapCoordinate(short coordinate)
+            int SnapCoordinate(int coordinate)
             {
-                return (short) Mathf.Clamp(Mathf.Round((float) coordinate / HeightsEditing.SnapIncrement) * HeightsEditing.SnapIncrement, short.MinValue, short.MaxValue);
+                return Mathf.RoundToInt(Mathf.Round((float) coordinate / HeightsEditing.SnapIncrement) * HeightsEditing.SnapIncrement);
             }
 
-            return new world_point2d(SnapCoordinate(location.x), SnapCoordinate(location.y));
+            return new Vector2Int(SnapCoordinate(value.x), SnapCoordinate(value.y));
         }
 
-        // New errors and warnings where the point is (or where it's held back from), for showing as it goes
-        private static void UpdateFeedback(LevelEntity_Level level, short pointIndex, MovedPoint movedPoint, bool isBlocked, world_point2d target)
+        // New errors and warnings where the points are (or where they're held back from), for showing as they go, by the
+        // reference point
+        private static void UpdateFeedback(LevelEntity_Level level, List<(short Index, MovedPoint Moved)> group, short referenceIndex, bool isBlocked, Vector2Int target)
         {
-            var endpoint = level.Level.EndpointList[pointIndex];
+            var referenceMoved = movedPoints[referenceIndex];
+            var current = level.Level.EndpointList[referenceIndex].vertex;
             var feedback = new MoveFeedback
             {
-                PointIndex = pointIndex,
+                PointIndex = referenceIndex,
                 IsBlocked = isBlocked,
-                BlockedLocation = target,
-                Height = DragHeight ?? movedPoint.TopHeight,
+                BlockedLocation = Moved(referenceMoved.StartingLocation, target),
+                Height = DragHeight ?? group.Max(member => member.Moved.TopHeight),
             };
 
-            var current = endpoint.vertex;
-            if (isBlocked)
-            {
-                endpoint.vertex = target;
-            }
-
-            try
-            {
-                feedback.Issues.AddRange(ProblemsAround(level, pointIndex, includeWarnings: true).Where(issue => !movedPoint.StartingProblems.Contains(issue.Key)));
-            }
-            finally
-            {
-                endpoint.vertex = current;
-            }
+            feedback.Issues.AddRange(isBlocked ?
+                                     WithMovement(level, group, target, () => NewProblems(level, group, includeWarnings: true)) :
+                                     NewProblems(level, group, includeWarnings: true));
 
             if (!isBlocked)
             {
                 if (feedback.HasErrors)
                 {
                     feedback.IsInvalid = true;
-                    feedback.LastValidLocation = movedPoint.LastValidLocation;
+                    feedback.LastValidLocation = referenceMoved.LastValidLocation;
                 }
                 else
                 {
-                    movedPoint.LastValidLocation = current;
+                    referenceMoved.LastValidLocation = current;
                 }
             }
 
@@ -407,14 +472,15 @@ namespace ForgePlus.LevelManipulation
             PolygonContainmentMap.MarkChanged();
         }
 
-        // The data worked out from the point's position, in the lines and polygons that meet it (map_constructors.cpp:
-        // recalculate_redundant_line_data and recalculate_redundant_polygon_data, without what doesn't depend on where it is)
-        private static void RecalculateAround(LevelEntity_Level level, short pointIndex)
+        // The data worked out from the points' positions, in the lines and polygons that meet them (map_constructors.cpp:
+        // recalculate_redundant_line_data and recalculate_redundant_polygon_data, without what doesn't depend on where they
+        // are)
+        private static void RecalculateAround(LevelEntity_Level level, IEnumerable<short> pointIndexes)
         {
             var data = level.Level;
             var lineIndexes = new HashSet<short>();
             var polygonIndexes = new HashSet<short>();
-            CollectAround(level, new[] { pointIndex }, lineIndexes, polygonIndexes);
+            CollectAround(level, pointIndexes, lineIndexes, polygonIndexes);
 
             foreach (var lineIndex in lineIndexes)
             {

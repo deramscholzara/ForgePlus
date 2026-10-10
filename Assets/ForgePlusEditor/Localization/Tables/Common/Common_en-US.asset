@@ -539,6 +539,8 @@ MonoBehaviour:
   - rid: 552786288315990112
   - rid: 552786288315990113
   - rid: 552786288315990123
+  - rid: 552786288315990124
+  - rid: 552786288315990125
   references:
     version: 2
     RefIds:
@@ -4200,3 +4202,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: All Files
+    - rid: 552786288315990124
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2833534309515264
+        m_Metadata:
+          m_Items: []
+        m_Value: Orthographic
+    - rid: 552786288315990125
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2833534313709568
+        m_Metadata:
+          m_Items: []
+        m_Value: Looks straight down on the level from above it, without perspective, with the map's up at the top. W and S move up and down the view, Q and E raise and lower the camera (what's above it isn't drawn), and the mouse wheel zooms. In Geometry mode, drag a selected polygon to move it. Turning it off goes back to perspective, looking at what was last selected.
