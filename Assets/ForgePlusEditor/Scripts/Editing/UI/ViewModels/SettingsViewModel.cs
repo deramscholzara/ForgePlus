@@ -25,7 +25,7 @@ namespace ForgePlus.UI
         {
             get
             {
-                return PointsEnabled && LinesEnabled && MediaEnabled;
+                return PointsEnabled && LinesEnabled && MediaEnabled && ObjectIconsEnabled;
             }
             set
             {
@@ -34,6 +34,7 @@ namespace ForgePlus.UI
                     PointsEnabled = true;
                     LinesEnabled = true;
                     MediaEnabled = true;
+                    ObjectIconsEnabled = true;
                 }
 
                 Notify(nameof(ShowEverythingEnabled));
@@ -170,6 +171,52 @@ namespace ForgePlus.UI
             set
             {
                 SettingsManager.Instance.PreventInvalidGeometryEnabled = value;
+            }
+        }
+
+        [CreateProperty]
+        public bool GridEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.GridEnabled;
+            }
+            set
+            {
+                SettingsManager.Instance.GridEnabled = value;
+            }
+        }
+
+        // Points and lines are only shown in Geometry mode
+        [CreateProperty]
+        public bool IsGeometryMode
+        {
+            get
+            {
+                return LevelManipulation.ModeManager.Instance.PrimaryMode == LevelManipulation.ModeManager.PrimaryModes.Geometry;
+            }
+        }
+
+        [CreateProperty]
+        public int OrthographicGridOpacityPercent
+        {
+            get
+            {
+                return SettingsManager.Instance.OrthographicGridOpacityPercent;
+            }
+            set
+            {
+                SettingsManager.Instance.OrthographicGridOpacityPercent = value;
+            }
+        }
+
+        // "40%"
+        [CreateProperty]
+        public string OrthographicGridOpacityText
+        {
+            get
+            {
+                return Strings.Get(Strings.Menu, "SettingsTab.OrthographicGridOpacity.Value", SettingsManager.Instance.OrthographicGridOpacityPercent);
             }
         }
 
@@ -456,11 +503,17 @@ namespace ForgePlus.UI
             {
                 Notify(nameof(PointClickAreaText));
             }
+
+            if (setting == nameof(OrthographicGridOpacityPercent))
+            {
+                Notify(nameof(OrthographicGridOpacityText));
+            }
         }
 
         // Also when the mode changes (which may force media on)
         private void OnGeometryVisibilityChanged()
         {
+            Notify(nameof(IsGeometryMode));
             Notify(nameof(ShowEverythingEnabled));
             Notify(nameof(PointsEnabled));
             Notify(nameof(LinesEnabled));
@@ -473,6 +526,7 @@ namespace ForgePlus.UI
         {
             Notify(nameof(ObjectIconsEnabled));
             Notify(nameof(ObjectIconsEditable));
+            Notify(nameof(ShowEverythingEnabled));
             Notify(nameof(SoundDirectionEnabled));
             Notify(nameof(SoundVolumeEnabled));
             Notify(nameof(SoundDisplaysEditable));

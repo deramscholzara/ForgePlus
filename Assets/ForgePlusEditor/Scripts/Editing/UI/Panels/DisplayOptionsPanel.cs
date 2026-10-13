@@ -2,8 +2,8 @@
 
 namespace ForgePlus.UI
 {
-    // The view options, in the Display Options pop-up (ViewOptionsPanel), each grayed out (and shown on, where the mode
-    // always shows it) by the settings' rules
+    // The view options, in the More Display Options pop-up (ViewOptionsPanel), each grayed out (and shown on, where the
+    // mode always shows it) by the settings' rules
     public class DisplayOptionsPanel : UIPanel
     {
         protected override string LayoutPath
@@ -18,12 +18,13 @@ namespace ForgePlus.UI
         {
             var settings = ForgePlusUI.Instance.Settings;
 
+            Root.Find<Toggle>("grid").BindValue(settings, nameof(SettingsViewModel.GridEnabled));
+            Root.Find<Toggle>("simple-visuals").BindValue(settings, nameof(SettingsViewModel.SimpleVisualsEnabled));
+            Root.Find<Toggle>("diagnostic-visuals").BindValue(settings, nameof(SettingsViewModel.DiagnosticVisualsEnabled));
+            Root.Find<Toggle>("show-lighting").BindValue(settings, nameof(SettingsViewModel.ShowLightingEnabled));
+
             // Not implemented yet
             Root.Find<Toggle>("visualization-effect").SetEnabled(false);
-
-            var objectIcons = Root.Find<Toggle>("object-icons");
-            objectIcons.BindValue(settings, nameof(SettingsViewModel.ObjectIconsEnabled));
-            objectIcons.BindEnabled(settings, nameof(SettingsViewModel.ObjectIconsEditable));
 
             Root.Find<Toggle>("sprite-previews").BindValue(settings, nameof(SettingsViewModel.SpritePreviewsEnabled));
             Root.Find<Toggle>("clip-platform-sides").BindValue(settings, nameof(SettingsViewModel.ClipPlatformSidesEnabled));

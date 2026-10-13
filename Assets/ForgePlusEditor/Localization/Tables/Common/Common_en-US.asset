@@ -544,6 +544,8 @@ MonoBehaviour:
   - rid: 552786377617702961
   - rid: 552786377617702962
   - rid: 552786377617702963
+  - rid: 552786377617702969
+  - rid: 552786377617702970
   references:
     version: 2
     RefIds:
@@ -4022,7 +4024,7 @@ MonoBehaviour:
         m_KeyId: 2506128390504448
         m_Metadata:
           m_Items: []
-        m_Value: Display Options
+        m_Value: More Display Options
     - rid: 552786269510828086
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -4240,3 +4242,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Inspection of multiple objects is not presently supported.
+    - rid: 552786377617702969
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206720620052480
+        m_Metadata:
+          m_Items: []
+        m_Value: Grid
+    - rid: 552786377617702970
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206720624246784
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows the grid under the level in the Orthographic view (one square per world unit), as see-through as the Orthographic Grid Opacity setting.

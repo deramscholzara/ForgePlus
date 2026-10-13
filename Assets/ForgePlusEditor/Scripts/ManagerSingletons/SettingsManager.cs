@@ -44,6 +44,9 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_UndoSteps = "Settings_UndoSteps";
         private const string PlayerPrefsSettingsKey_PointClickAreaSteps = "Settings_PointClickAreaSteps";
         private const string PlayerPrefsSettingsKey_PreventInvalidGeometry = "Settings_PreventInvalidGeometry";
+        private const string PlayerPrefsSettingsKey_OrthographicGridOpacity = "Settings_OrthographicGridOpacity";
+
+        public const int DefaultOrthographicGridOpacityPercent = 40;
 
         // A point's click area grows from its drawn size (100%) to twice that (200%), in steps of a ninth (a pixel each)
         public const int MaximumPointClickAreaSteps = 9;
@@ -92,6 +95,7 @@ namespace ForgePlus.ApplicationGeneral
         private bool diagnosticVisualsEnabled = true;
         private bool simpleVisualsEnabled = false;
         private bool showLightingEnabled = true;
+        private bool gridEnabled = true;
 
         public bool IsFullScreen
         {
@@ -317,6 +321,44 @@ namespace ForgePlus.ApplicationGeneral
         }
 
         // The click area's size, as a multiple of a point's drawn size
+        // The grid under the level in the orthographic view (OrthographicGrid)
+        public bool GridEnabled
+        {
+            get
+            {
+                return gridEnabled;
+            }
+            set
+            {
+                gridEnabled = value;
+
+                OnSettingChanged?.Invoke(nameof(GridEnabled));
+            }
+        }
+
+        // How see-through the grid under the level is in the orthographic view (OrthographicGrid), as a whole percentage
+        public int OrthographicGridOpacityPercent
+        {
+            get
+            {
+                return Math.Clamp(PlayerPrefs.GetInt(PlayerPrefsSettingsKey_OrthographicGridOpacity, DefaultOrthographicGridOpacityPercent), 0, 100);
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_OrthographicGridOpacity, Math.Clamp(value, 0, 100));
+
+                OnSettingChanged?.Invoke(nameof(OrthographicGridOpacityPercent));
+            }
+        }
+
+        public float OrthographicGridOpacity
+        {
+            get
+            {
+                return OrthographicGridOpacityPercent / 100f;
+            }
+        }
+
         public float PointClickAreaScale
         {
             get

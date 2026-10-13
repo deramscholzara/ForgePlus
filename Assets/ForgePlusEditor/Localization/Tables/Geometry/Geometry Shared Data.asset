@@ -497,6 +497,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4206718124441600
+    m_Key: VisualizationGeometry.Objects.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635904
+    m_Key: VisualizationGeometry.Objects.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

@@ -17,7 +17,6 @@
             <ui:VisualElement name="right-column" class="fp-column fp-column--right" picking-mode="Ignore">
                 <ui:VisualElement name="mode-settings" class="fp-box fp-box--padded fp-mode-settings">
                     <ui:VisualElement name="tool-modes-slot" class="fp-slot" picking-mode="Ignore" />
-                    <ui:VisualElement name="view-options-slot" class="fp-slot" picking-mode="Ignore" />
                 </ui:VisualElement>
                 <ui:VisualElement name="palette-slot" class="fp-slot fp-slot--fill" picking-mode="Ignore" />
             </ui:VisualElement>

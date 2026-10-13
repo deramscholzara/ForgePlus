@@ -68,6 +68,9 @@ MonoBehaviour:
   - rid: 552786288315990120
   - rid: 552786288315990121
   - rid: 552786288315990122
+  - rid: 552786377617702964
+  - rid: 552786377617702965
+  - rid: 552786377617702966
   references:
     version: 2
     RefIds:
@@ -428,3 +431,24 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Choose a folder to find files in
+    - rid: 552786377617702964
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4202966390816768
+        m_Metadata:
+          m_Items: []
+        m_Value: Orthographic Grid Opacity
+    - rid: 552786377617702965
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4202966395011072
+        m_Metadata:
+          m_Items: []
+        m_Value: How see-through the grid drawn under the level in the Orthographic view is (one square per world unit). At 0%, it isn't drawn.
+    - rid: 552786377617702966
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4202966395011073
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0}%'

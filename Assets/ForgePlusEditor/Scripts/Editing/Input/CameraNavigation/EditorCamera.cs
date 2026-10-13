@@ -748,7 +748,12 @@ namespace ForgePlus.CameraNavigation
         // After everything that moves it (including framing and the orthographic transition)
         private void LateUpdate()
         {
-            if (TryGetLevelBounds(out var bounds))
+            var hasBounds = TryGetLevelBounds(out var bounds);
+
+            // Shown under the level while looking straight down
+            OrthographicGrid.Update(isOrthographic, hasBounds ? bounds : (Bounds?) null);
+
+            if (hasBounds)
             {
                 var position = transform.position;
                 var clamped = new Vector3(Mathf.Clamp(position.x, bounds.min.x, bounds.max.x),

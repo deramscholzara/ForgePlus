@@ -153,6 +153,11 @@
     width: 100%;
 }
 
+/* The More Display Options dropdown, under the visualization options */
+.fp-visualization__view-options {
+    margin-top: 5px;
+}
+
 /* Tool modes and view options, in the right column's first box */
 .fp-tool-modes {
     height: var(--fp-control-height);

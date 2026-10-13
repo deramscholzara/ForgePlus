@@ -272,6 +272,21 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4202966390816768
+    m_Key: SettingsTab.OrthographicGridOpacity.Control.Label
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4202966395011072
+    m_Key: SettingsTab.OrthographicGridOpacity.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4202966395011073
+    m_Key: SettingsTab.OrthographicGridOpacity.Value
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:
