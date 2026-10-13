@@ -155,8 +155,6 @@ namespace ForgePlus.UI
             CreateSlot("manipulation-slot").Show<ManipulationPanel>();
             CreateSlot("errors-toggle-slot").Show<ErrorsTogglePanel>();
             CreateSlot("history-slot").Show<HistoryPanel>();
-            CreateSlot("view-options-slot").Show<ViewOptionsPanel>();
-            root.Q("mode-settings").AddToClassList("fp-mode-settings--loaded");
 
             visualizationSlot = CreateSlot("visualization-slot");
             inspectorSlot = CreateSlot("inspector-slot");
@@ -404,21 +402,19 @@ namespace ForgePlus.UI
 
             ShowTerminalSlot();
 
-            switch (primaryMode)
+            // In every mode (with the More Display Options dropdown)
+            if (primaryMode != ModeManager.PrimaryModes.None)
             {
-                case ModeManager.PrimaryModes.Geometry:
-                    visualizationSlot.Show<VisualizationGeometryPanel>();
-                    break;
-                case ModeManager.PrimaryModes.Objects:
-                    visualizationSlot.Show(new LayoutPanel("UI/Panels/VisualizationObjects"));
-                    break;
-                default:
-                    visualizationSlot.Hide();
-                    break;
+                visualizationSlot.Show<VisualizationGeometryPanel>();
+            }
+            else
+            {
+                visualizationSlot.Hide();
             }
 
-            // Reloaded for each mode, since each has its own tool modes
-            if (primaryMode != ModeManager.PrimaryModes.None && ModeManager.Instance.AvailableSecondaryModes.Count > 1)
+            // Reloaded for each mode, since each has its own tool modes (and their box is only shown with them)
+            var showsToolModes = primaryMode != ModeManager.PrimaryModes.None && ModeManager.Instance.AvailableSecondaryModes.Count > 1;
+            if (showsToolModes)
             {
                 toolModesSlot.Show(new ToolModesPanel());
             }
@@ -426,6 +422,8 @@ namespace ForgePlus.UI
             {
                 toolModesSlot.Hide();
             }
+
+            root.Q("mode-settings").EnableInClassList("fp-mode-settings--loaded", showsToolModes);
 
             switch (primaryMode)
             {

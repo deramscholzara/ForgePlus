@@ -31,6 +31,10 @@ namespace ForgePlus.UI
             var pointClickArea = Root.Q("point-click-area");
             pointClickArea.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.PointClickAreaSteps));
             pointClickArea.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.PointClickAreaText));
+
+            var orthographicGridOpacity = Root.Q("orthographic-grid-opacity");
+            orthographicGridOpacity.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.OrthographicGridOpacityPercent));
+            orthographicGridOpacity.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.OrthographicGridOpacityText));
         }
     }
 }

@@ -3,7 +3,8 @@ using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
 {
-    // The Display Options dropdown, which shows the view options (DisplayOptionsPanel) in a pop-up while open
+    // The More Display Options dropdown (under the visualization options), which shows the view options
+    // (DisplayOptionsPanel) in a pop-up while open
     public class ViewOptionsPanel : UIPanel
     {
         private const float MinimumWidth = 200f;

@@ -45,6 +45,11 @@
                     <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.PointClickArea.Control.Label" high-value="9" />
                 </ui:Instance>
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <!-- From invisible (0%) to opaque (100%) -->
+                <ui:Instance template="SliderValueRow" name="orthographic-grid-opacity" class="fp-setting" tooltip="@Menu/SettingsTab.OrthographicGridOpacity.Tooltip">
+                    <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.OrthographicGridOpacity.Control.Label" high-value="100" />
+                </ui:Instance>
+                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <!-- What Save Merged does with the map file's checksum (Ask until its dialog's choice is remembered), in the
                      order of MergedSaveChecksums -->
                 <ui:Label text="@Menu/SettingsTab.UpdateMergeChecksumOn.Text" class="fp-setting__label" />

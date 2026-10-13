@@ -113,6 +113,8 @@ MonoBehaviour:
   - rid: 552786288315990117
   - rid: 552786288315990118
   - rid: 552786288315990119
+  - rid: 552786377617702967
+  - rid: 552786377617702968
   references:
     version: 2
     RefIds:
@@ -788,3 +790,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Lights surfaces (textured, or the grid of Simple Visuals) by their lights. Off, they're drawn at full brightness. Applies in every mode.
+    - rid: 552786377617702967
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718124441600
+        m_Metadata:
+          m_Items: []
+        m_Value: Objects
+    - rid: 552786377617702968
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635904
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows objects' icons (Objects and Sounds modes always show them). Their sprite previews are a separate option, under More Display Options.

@@ -1,14 +1,26 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <ui:Template name="Toggle" src="../Templates/Toggle.uxml" />
-    <!-- The view options, which the Display Options dropdown (ViewOptions) shows in a pop-up. Each is always listed, and
-         grayed out where the mode decides it (shown on, where the mode always shows it). -->
+    <!-- The view options, which the More Display Options dropdown (ViewOptions) shows in a pop-up. Each is always listed,
+         and grayed out where the mode decides it (shown on, where the mode always shows it). First, how the level is drawn
+         (in every mode): the Grid under it in the orthographic view, Simple Visuals (with the grid texture), Diagnostic
+         Visuals (which marks problem geometry in the level), and Show Lighting. -->
     <ui:VisualElement picking-mode="Ignore">
+        <ui:Instance template="Toggle" name="grid" class="fp-toggle--wide-short fp-view-option" tooltip="@Common/ViewOptions.Grid.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.Grid.Control.Text" />
+        </ui:Instance>
+        <ui:Instance template="Toggle" name="simple-visuals" class="fp-toggle--wide-short fp-view-option" tooltip="@Geometry/VisualizationGeometry.SimpleVisuals.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.SimpleVisuals.Control.Text" />
+        </ui:Instance>
+        <ui:Instance template="Toggle" name="diagnostic-visuals" class="fp-toggle--wide-short fp-view-option" tooltip="@Geometry/VisualizationGeometry.DiagnosticVisuals.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.DiagnosticVisuals.Control.Text" />
+        </ui:Instance>
+        <ui:Instance template="Toggle" name="show-lighting" class="fp-toggle--wide-short fp-view-option" tooltip="@Geometry/VisualizationGeometry.ShowLighting.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.ShowLighting.Control.Text" />
+        </ui:Instance>
+        <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
         <!-- A placeholder, which doesn't change anything yet -->
         <ui:Instance template="Toggle" name="visualization-effect" class="fp-toggle--wide-short fp-view-option">
             <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.VisualizationEffect.Control.Text" value="false" />
-        </ui:Instance>
-        <ui:Instance template="Toggle" name="object-icons" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.ObjectIcons.Control.Text" />
         </ui:Instance>
         <ui:Instance template="Toggle" name="sprite-previews" class="fp-toggle--wide-short fp-view-option">
             <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SpritePreviews.Control.Text" />
