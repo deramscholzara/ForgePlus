@@ -16,7 +16,7 @@ namespace RuntimeCore.Entities.Geometry
         }
 
         // In Select mode, dragging it moves both its ends together across the level (at the height of the line it was
-        // grabbed by), recorded as one action when it ends
+        // grabbed by), with the rest of the selection if it's selected (PointsMove), recorded as one action when it ends
         private void BeginLineMove(WorldPointerEventData eventData)
         {
             if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Selection)
@@ -25,7 +25,7 @@ namespace RuntimeCore.Entities.Geometry
             }
 
             SelectionManager.Instance.SelectObject(this, multiSelect: false);
-            move = PointsMove.ForLine(LevelEntity_Level.Instance, this, eventData.PressWorldPosition);
+            move = PointsMove.ForSelection(LevelEntity_Level.Instance, this, eventData.PressWorldPosition);
         }
 
         private void DragLineMove(WorldPointerEventData eventData)

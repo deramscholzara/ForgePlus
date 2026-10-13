@@ -2647,6 +2647,11 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4118659823452160
+    m_Key: Inspector.Multiple.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

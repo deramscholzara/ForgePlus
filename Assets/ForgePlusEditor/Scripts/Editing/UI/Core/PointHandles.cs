@@ -42,7 +42,7 @@ namespace ForgePlus.UI
         // Meters from the camera: fully opaque nearer than the start, faded to the minimum opacity at the end, and not shown
         // (or clickable) beyond it. Selected ones are always shown, fully opaque.
         private const float FadeStartDistance = 5f;
-        private const float FadeEndDistance = 20f;
+        public const float FadeEndDistance = 20f;
         private const float MinimumOpacity = 0.05f;
 
         private static readonly Color BorderColor = Color.black;
@@ -134,6 +134,11 @@ namespace ForgePlus.UI
 
         private bool isOrthographic;
 
+        // While points (or lines) are hidden (their visualization options), only selected ones are shown, so what's selected
+        // is always seen
+        private bool showsOnlySelectedPoints;
+        private bool showsOnlySelectedLines;
+
         // Those in view, and each point's lowest and highest handle heights (in meters) they're found from
         private readonly List<Segment> poles = new List<Segment>();
 
@@ -175,18 +180,14 @@ namespace ForgePlus.UI
             var editorCamera = ForgePlusUI.Instance.EditorCamera;
             isOrthographic = editorCamera && editorCamera.IsOrthographic;
 
-            if (IsLayerShown(level) && camera && panel != null)
+            if (IsLayerShown(level) && camera && panel != null && ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry)
             {
-                if (SettingsManager.Instance.PointsAreShown)
-                {
-                    CollectHandles(level, camera, panel);
-                    CollectFeedback(level, camera, panel);
-                }
+                showsOnlySelectedPoints = !SettingsManager.Instance.PointsAreShown;
+                showsOnlySelectedLines = !SettingsManager.Instance.LinesAreShown;
 
-                if (SettingsManager.Instance.LinesAreShown)
-                {
-                    CollectLines(level, camera, panel);
-                }
+                CollectHandles(level, camera, panel);
+                CollectFeedback(level, camera, panel);
+                CollectLines(level, camera, panel);
             }
 
             if (hadHandles || handles.Count > 0 || poles.Count > 0 || lines.Count > 0 || hadFeedback)
@@ -202,7 +203,8 @@ namespace ForgePlus.UI
             worldPosition = default;
 
             var panel = layer.panel;
-            if (handles.Count == 0 || panel == null || !IsLayerShown(LevelEntity_Level.Instance) || !SettingsManager.Instance.PointsAreShown)
+            // Only what's drawn (hidden points' selected ones among them)
+            if (handles.Count == 0 || panel == null || !IsLayerShown(LevelEntity_Level.Instance))
             {
                 return false;
             }
@@ -227,6 +229,156 @@ namespace ForgePlus.UI
                    TryPickLine(screenPosition, position, out handler, out worldPosition);
         }
 
+        // The points and lines drawn (handles, poles and lines) any part of which the rectangle (in panel space) covers,
+        // within the fade distance (looking straight down, anywhere)
+        public void CollectInRectangle(UnityEngine.Rect panelRectangle, ICollection<ISelectable> results)
+        {
+            var camera = Camera.main;
+            var panel = layer.panel;
+            if (!camera || panel == null)
+            {
+                return;
+            }
+
+            var cameraPosition = camera.transform.position;
+
+            foreach (var handle in handles)
+            {
+                var box = new UnityEngine.Rect(handle.Corner, new Vector2(Size, Size));
+                if (box.Overlaps(panelRectangle) && (isOrthographic || Vector3.Distance(cameraPosition, handle.WorldPosition) <= FadeEndDistance))
+                {
+                    results.Add(handle.Point);
+                }
+            }
+
+            foreach (var pole in poles)
+            {
+                if (SegmentCoversRectangle(camera, panel, pole.StartWorld, pole.EndWorld, panelRectangle))
+                {
+                    results.Add(pole.Point);
+                }
+            }
+
+            foreach (var line in lines)
+            {
+                if (line.Line && SegmentCoversRectangle(camera, panel, line.StartWorld, line.EndWorld, panelRectangle))
+                {
+                    results.Add(line.Line);
+                }
+            }
+        }
+
+        // Whether the part of the segment within the fade distance (and in front of the camera) crosses the rectangle
+        private bool SegmentCoversRectangle(Camera camera, IPanel panel, Vector3 start, Vector3 end, UnityEngine.Rect panelRectangle)
+        {
+            if (!isOrthographic && !ClipToSphere(camera.transform.position, FadeEndDistance, ref start, ref end))
+            {
+                return false;
+            }
+
+            if (!ClipToFront(camera, ref start, ref end))
+            {
+                return false;
+            }
+
+            TryProject(start, camera, panel, out var startPanel);
+            TryProject(end, camera, panel, out var endPanel);
+
+            return SegmentIntersectsRectangle(startPanel, endPanel, panelRectangle);
+        }
+
+        // The part of the segment in front of the camera's near plane (false if none is)
+        public static bool ClipToFront(Camera camera, ref Vector3 start, ref Vector3 end)
+        {
+            var cameraPosition = camera.transform.position;
+            var cameraForward = camera.transform.forward;
+            var nearDepth = camera.nearClipPlane * 1.01f;
+            var startDepth = Vector3.Dot(start - cameraPosition, cameraForward);
+            var endDepth = Vector3.Dot(end - cameraPosition, cameraForward);
+
+            if (startDepth < nearDepth && endDepth < nearDepth)
+            {
+                return false;
+            }
+
+            if (startDepth < nearDepth)
+            {
+                start = Vector3.Lerp(start, end, (nearDepth - startDepth) / (endDepth - startDepth));
+            }
+            else if (endDepth < nearDepth)
+            {
+                end = Vector3.Lerp(end, start, (nearDepth - endDepth) / (startDepth - endDepth));
+            }
+
+            return true;
+        }
+
+        // The part of the segment within the sphere (false if none is)
+        public static bool ClipToSphere(Vector3 center, float radius, ref Vector3 start, ref Vector3 end)
+        {
+            var along = end - start;
+            var a = Vector3.Dot(along, along);
+            var toStart = start - center;
+            var b = 2f * Vector3.Dot(along, toStart);
+            var c = Vector3.Dot(toStart, toStart) - radius * radius;
+
+            if (a <= 0f)
+            {
+                return c <= 0f;
+            }
+
+            var discriminant = b * b - 4f * a * c;
+            if (discriminant < 0f)
+            {
+                return false;
+            }
+
+            var root = Mathf.Sqrt(discriminant);
+            var t0 = Mathf.Max(0f, (-b - root) / (2f * a));
+            var t1 = Mathf.Min(1f, (-b + root) / (2f * a));
+            if (t0 > t1)
+            {
+                return false;
+            }
+
+            var clippedStart = start + along * t0;
+            end = start + along * t1;
+            start = clippedStart;
+
+            return true;
+        }
+
+        public static bool SegmentIntersectsRectangle(Vector2 start, Vector2 end, UnityEngine.Rect rectangle)
+        {
+            if (rectangle.Contains(start) || rectangle.Contains(end))
+            {
+                return true;
+            }
+
+            var corners = new[] { new Vector2(rectangle.xMin, rectangle.yMin), new Vector2(rectangle.xMax, rectangle.yMin), new Vector2(rectangle.xMax, rectangle.yMax), new Vector2(rectangle.xMin, rectangle.yMax) };
+            for (var i = 0; i < 4; i++)
+            {
+                if (SegmentsCross(start, end, corners[i], corners[(i + 1) % 4]))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool SegmentsCross(Vector2 a, Vector2 b, Vector2 c, Vector2 d)
+        {
+            float Cross(Vector2 o, Vector2 p, Vector2 q) => (p.x - o.x) * (q.y - o.y) - (p.y - o.y) * (q.x - o.x);
+
+            var d1 = Cross(c, d, a);
+            var d2 = Cross(c, d, b);
+            var d3 = Cross(a, b, c);
+            var d4 = Cross(a, b, d);
+
+            return ((d1 > 0f) != (d2 > 0f)) && ((d3 > 0f) != (d4 > 0f));
+        }
+
         // Over its width, scaled as handles' click areas are (the nearest, where several are), and from where it's clicked
         // (for dragging at that height)
         private bool TryPickLine(Vector2 screenPosition, Vector2 panelPosition, out IWorldPointerHandler handler, out Vector3 worldPosition)
@@ -235,7 +387,7 @@ namespace ForgePlus.UI
             worldPosition = default;
 
             var camera = Camera.main;
-            if (!camera || !SettingsManager.Instance.LinesAreShown)
+            if (!camera)
             {
                 return false;
             }
@@ -418,6 +570,14 @@ namespace ForgePlus.UI
             for (short lineIndex = 0; lineIndex < data.LineList.Count; lineIndex++)
             {
                 var line = data.LineList[lineIndex];
+
+                level.Lines.TryGetValue(lineIndex, out var lineEntity);
+                var isSelected = lineEntity && lineEntity.IsSelected;
+                if (showsOnlySelectedLines && !isSelected)
+                {
+                    continue;
+                }
+
                 level.Polygons.TryGetValue(line.clockwise_polygon_owner, out var clockwisePolygon);
                 level.Polygons.TryGetValue(line.counterclockwise_polygon_owner, out var counterclockwisePolygon);
 
@@ -448,9 +608,6 @@ namespace ForgePlus.UI
 
                 var start = GeometryUtilities.GetMeshVertex(data, line.endpoint_indexes[0]);
                 var end = GeometryUtilities.GetMeshVertex(data, line.endpoint_indexes[1]);
-
-                level.Lines.TryGetValue(lineIndex, out var lineEntity);
-                var isSelected = lineEntity && lineEntity.IsSelected;
 
                 foreach (var (height, fill) in lineHeights)
                 {
@@ -640,7 +797,8 @@ namespace ForgePlus.UI
                 var pointIndex = nativePolygon.endpoint_indexes[i];
 
                 if (!placedCorners.Add(((long) pointIndex << 32) | heightKey) ||
-                    !level.Points.TryGetValue(pointIndex, out var point))
+                    !level.Points.TryGetValue(pointIndex, out var point) ||
+                    (showsOnlySelectedPoints && !point.IsSelected))
                 {
                     continue;
                 }

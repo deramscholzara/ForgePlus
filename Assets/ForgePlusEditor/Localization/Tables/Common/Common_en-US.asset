@@ -543,6 +543,7 @@ MonoBehaviour:
   - rid: 552786288315990125
   - rid: 552786377617702961
   - rid: 552786377617702962
+  - rid: 552786377617702963
   references:
     version: 2
     RefIds:
@@ -4232,3 +4233,10 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Deselection
+    - rid: 552786377617702963
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4118659823452160
+        m_Metadata:
+          m_Items: []
+        m_Value: Inspection of multiple objects is not presently supported.

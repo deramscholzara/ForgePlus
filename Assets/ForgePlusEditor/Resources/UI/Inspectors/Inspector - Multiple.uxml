@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- Bound to Inspector_Multiple, shown while more than one thing is selected -->
+    <ui:VisualElement class="fp-inspector">
+        <ui:Label class="fp-inspector-note" text="@Common/Inspector.Multiple.Text" />
+    </ui:VisualElement>
+</ui:UXML>

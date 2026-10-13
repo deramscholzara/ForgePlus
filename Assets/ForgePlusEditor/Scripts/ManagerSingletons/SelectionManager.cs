@@ -110,8 +110,15 @@ namespace ForgePlus.LevelManipulation
             return SelectedObjects.Contains(selectable);
         }
 
+        // Clicking with shift held adds it to the selection (or takes it out), whatever kind of thing it is (only what the
+        // mode selects can be clicked)
         public void ToggleObjectSelection(ISelectable selection, bool multiSelect = false)
         {
+            if (!multiSelect && Hotkeys.IsShiftPressed)
+            {
+                multiSelect = true;
+            }
+
             if (SelectedObjects.Contains(selection))
             {
                 DeselectObject(selection, multiSelect);
@@ -143,11 +150,8 @@ namespace ForgePlus.LevelManipulation
                 // 2. Update actual selection list
                 SelectedObjects.Add(selection);
 
-                if (SelectedObjects.Count == 1)
-                {
-                    // 3. Inspect selection
-                    (selection as IInspectable).Inspect();
-                }
+                // 3. Inspect selection
+                InspectSelection();
 
                 OnSelectionChanged?.Invoke();
             }
@@ -190,14 +194,14 @@ namespace ForgePlus.LevelManipulation
                     SelectedObjects.RemoveAll(selectedObject => selectedObject != selection);
                 }
 
-                if (SelectedObjects.Count == 1)
-                {
-                    // 3. Inspect selection
-                    (selection as IInspectable).Inspect();
-                }
-                else if (SelectedObjects.Count == 0)
+                // 3. Inspect selection
+                if (SelectedObjects.Count == 0)
                 {
                     InspectNothingSelected();
+                }
+                else
+                {
+                    InspectSelection();
                 }
 
                 OnSelectionChanged?.Invoke();
@@ -226,6 +230,19 @@ namespace ForgePlus.LevelManipulation
             }
 
             OnSelectionChanged?.Invoke();
+        }
+
+        // What's selected alone, or that several things are (which can't be inspected together yet)
+        private void InspectSelection()
+        {
+            if (SelectedObjects.Count == 1)
+            {
+                (SelectedObjects[0] as IInspectable)?.Inspect();
+            }
+            else if (SelectedObjects.Count > 1)
+            {
+                InspectorPanel.Instance.AddInspector(new Inspector_Multiple());
+            }
         }
 
         // With nothing selected, Objects mode inspects the level's item and monster placement
@@ -368,7 +385,7 @@ namespace ForgePlus.LevelManipulation
                    primaryMode == ModeManager.PrimaryModes.Sounds;
         }
 
-        // Hidden media can't be clicked, and hidden points (or lines) can't stay selected
+        // Hidden media can't be clicked (selected points and lines stay shown while their kinds are hidden)
         private void OnGeometryVisibilityChanged()
         {
             var level = LevelEntity_Level.Instance;
@@ -379,11 +396,6 @@ namespace ForgePlus.LevelManipulation
 
             SetSelectability<EditableSurface_Media>(level.EditableSurface_Medias, enabled: MediaSurfacesAreSelectable(ModeManager.Instance.PrimaryMode));
 
-            if ((!SettingsManager.Instance.PointsAreShown && SelectedObjects.Exists(selected => selected is LevelEntity_Point)) ||
-                (!SettingsManager.Instance.LinesAreShown && SelectedObjects.Exists(selected => selected is LevelEntity_Line)))
-            {
-                DeselectAll();
-            }
         }
 
         private void SetSelectability<T>(T selectable, bool enabled) where T : ISelectable
