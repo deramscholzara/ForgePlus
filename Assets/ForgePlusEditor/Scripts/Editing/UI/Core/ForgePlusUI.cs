@@ -213,6 +213,7 @@ namespace ForgePlus.UI
 
             // Once a frame at most, after what may have changed them
             Errors.RefreshIfRequested();
+            DiagnosticVisuals.RefreshIfRequested();
         }
 
         private void Update()

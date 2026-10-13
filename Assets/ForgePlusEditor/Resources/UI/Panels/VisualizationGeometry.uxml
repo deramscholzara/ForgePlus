@@ -3,7 +3,7 @@
     <!-- Geometry mode's visualization options (VisualizationGeometryPanel), which show and hide kinds of geometry. Show
          Everything is on while all the others are, and turns them all on. Polygons and Sides are placeholders, which
          don't filter anything yet. Below them, how the level is drawn (in every mode): Simple Visuals (with the grid
-         texture), Show Lighting, and Diagnostic Visuals (which marks problem geometry in the level). -->
+         texture), Diagnostic Visuals (which marks problem geometry in the level), and Show Lighting. -->
     <ui:VisualElement class="fp-visualization" picking-mode="Ignore">
         <ui:VisualElement class="fp-box fp-box--padded fp-visualization__options">
             <ui:VisualElement class="fp-visualization__grid" picking-mode="Ignore">
@@ -30,11 +30,11 @@
                 <ui:Instance template="Toggle" name="simple-visuals" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--full" tooltip="@Geometry/VisualizationGeometry.SimpleVisuals.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.SimpleVisuals.Control.Text" />
                 </ui:Instance>
-                <ui:Instance template="Toggle" name="show-lighting" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--full" tooltip="@Geometry/VisualizationGeometry.ShowLighting.Tooltip">
-                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.ShowLighting.Control.Text" />
-                </ui:Instance>
                 <ui:Instance template="Toggle" name="diagnostic-visuals" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--full" tooltip="@Geometry/VisualizationGeometry.DiagnosticVisuals.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.DiagnosticVisuals.Control.Text" />
+                </ui:Instance>
+                <ui:Instance template="Toggle" name="show-lighting" class="fp-toggle--wide-short fp-visualization__type fp-visualization__type--full" tooltip="@Geometry/VisualizationGeometry.ShowLighting.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.ShowLighting.Control.Text" />
                 </ui:Instance>
             </ui:VisualElement>
         </ui:VisualElement>

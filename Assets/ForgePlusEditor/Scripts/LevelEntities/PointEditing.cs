@@ -195,6 +195,9 @@ namespace ForgePlus.LevelManipulation
                 }
 
                 ApplyGeometry(level, pointIndexes);
+
+                // Concave polygons and intersecting volumes are marked as they change
+                DiagnosticVisuals.RequestRefresh();
             }
 
             UpdateFeedback(level, group, referenceIndex, isBlocked, target);

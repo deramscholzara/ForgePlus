@@ -382,6 +382,100 @@ namespace ForgePlus.LevelManipulation
             return polygons;
         }
 
+        // Polygons whose volumes intersect another's: their areas overlap across the level (more than touching, as
+        // neighbors do along their shared lines), and so do their spans between floor and ceiling. Allowed (it's how
+        // "5D space" is made), so it isn't an error. Areas are compared as convex shapes (as polygons must be).
+        public static HashSet<short> OverlappingPolygons(MapLevel level)
+        {
+            var shapes = new List<(short Index, int MinX, int MaxX, int MinY, int MaxY, short Floor, short Ceiling, world_point2d[] Corners)>();
+
+            for (short polygonIndex = 0; polygonIndex < level.PolygonList.Count; polygonIndex++)
+            {
+                var polygon = level.PolygonList[polygonIndex];
+                if (map.POLYGON_IS_DETACHED(polygon) || polygon.vertex_count < 3 || polygon.floor_height >= polygon.ceiling_height)
+                {
+                    continue;
+                }
+
+                var corners = new world_point2d[polygon.vertex_count];
+                int minX = int.MaxValue, maxX = int.MinValue, minY = int.MaxValue, maxY = int.MinValue;
+                for (var i = 0; i < polygon.vertex_count; i++)
+                {
+                    var corner = level.EndpointList[polygon.endpoint_indexes[i]].vertex;
+                    corners[i] = corner;
+                    minX = Math.Min(minX, corner.x);
+                    maxX = Math.Max(maxX, corner.x);
+                    minY = Math.Min(minY, corner.y);
+                    maxY = Math.Max(maxY, corner.y);
+                }
+
+                shapes.Add((polygonIndex, minX, maxX, minY, maxY, polygon.floor_height, polygon.ceiling_height, corners));
+            }
+
+            // Across the level from one side, each against those whose extents it reaches
+            shapes.Sort((a, b) => a.MinX.CompareTo(b.MinX));
+
+            var overlapping = new HashSet<short>();
+            for (var i = 0; i < shapes.Count; i++)
+            {
+                var a = shapes[i];
+                for (var j = i + 1; j < shapes.Count && shapes[j].MinX < a.MaxX; j++)
+                {
+                    var b = shapes[j];
+                    if (b.MinY >= a.MaxY || a.MinY >= b.MaxY || b.Floor >= a.Ceiling || a.Floor >= b.Ceiling)
+                    {
+                        continue;
+                    }
+
+                    if (!IsSeparated(a.Corners, b.Corners) && !IsSeparated(b.Corners, a.Corners))
+                    {
+                        overlapping.Add(a.Index);
+                        overlapping.Add(b.Index);
+                    }
+                }
+            }
+
+            return overlapping;
+        }
+
+        // Whether one of the shape's edges has the other shape wholly on its far side (or just touching it)
+        private static bool IsSeparated(world_point2d[] shape, world_point2d[] other)
+        {
+            for (var i = 0; i < shape.Length; i++)
+            {
+                var start = shape[i];
+                var end = shape[(i + 1) % shape.Length];
+                long normalX = end.y - start.y;
+                long normalY = start.x - end.x;
+                if (normalX == 0 && normalY == 0)
+                {
+                    continue;
+                }
+
+                long shapeMin = long.MaxValue, shapeMax = long.MinValue, otherMin = long.MaxValue, otherMax = long.MinValue;
+                foreach (var corner in shape)
+                {
+                    var projection = corner.x * normalX + corner.y * normalY;
+                    shapeMin = Math.Min(shapeMin, projection);
+                    shapeMax = Math.Max(shapeMax, projection);
+                }
+
+                foreach (var corner in other)
+                {
+                    var projection = corner.x * normalX + corner.y * normalY;
+                    otherMin = Math.Min(otherMin, projection);
+                    otherMax = Math.Max(otherMax, projection);
+                }
+
+                if (otherMin >= shapeMax || shapeMin >= otherMax)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         // How many lines meet at each point
         public static int[] LineCountsAtPoints(MapLevel level)
         {
