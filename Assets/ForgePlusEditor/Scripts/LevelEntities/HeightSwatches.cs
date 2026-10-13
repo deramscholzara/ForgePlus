@@ -66,9 +66,11 @@ namespace ForgePlus.LevelManipulation
             OnChanged?.Invoke();
         }
 
+        // With no level open, there are none
         private static SortedSet<short> SessionHeights(LevelEntity_Polygon.DataSources dataSource)
         {
-            var level = LevelEntity_Level.Instance.Level;
+            var levelEntity = LevelEntity_Level.Instance;
+            var level = levelEntity ? levelEntity.Level : null;
             if (level != sessionLevel)
             {
                 sessionLevel = level;
@@ -81,7 +83,13 @@ namespace ForgePlus.LevelManipulation
 
         private static IEnumerable<LevelEntity_Polygon> EditablePolygons()
         {
-            return LevelEntity_Level.Instance.Polygons.Values.Where(HeightsEditing.CanEdit);
+            var level = LevelEntity_Level.Instance;
+            if (!level || level.Polygons == null)
+            {
+                return Enumerable.Empty<LevelEntity_Polygon>();
+            }
+
+            return level.Polygons.Values.Where(HeightsEditing.CanEdit);
         }
     }
 }
