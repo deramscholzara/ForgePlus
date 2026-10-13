@@ -197,6 +197,9 @@ namespace ForgePlus.LevelManipulation
                 }
             }
 
+            // Volumes that now intersect (or no longer do) are marked as they change
+            DiagnosticVisuals.RequestRefresh();
+
             return changedPolygons;
         }
 

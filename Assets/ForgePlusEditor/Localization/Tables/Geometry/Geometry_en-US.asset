@@ -773,7 +773,7 @@ MonoBehaviour:
         m_KeyId: 2738074378977282
         m_Metadata:
           m_Items: []
-        m_Value: 'Marks problem geometry in the level itself, in every mode: a concave polygon''s floor is overlaid in red.'
+        m_Value: 'Marks geometry in the level itself, in every mode, as it''s edited: a concave polygon''s floor is overlaid in red, and the floors of polygons whose volumes intersect (which is allowed) in faint yellow.'
     - rid: 552786288315990118
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
