@@ -9,8 +9,10 @@ namespace ForgePlus.LevelManipulation
 
         private readonly Vector2 startingUVs;
 
-        public UVPlanarDrag(Vector2 startingUVs, Vector3 dragOriginPosition, Vector3 surfaceWorldNormal, Vector3 textureWorldUp)
-            : base(dragOriginPosition, surfaceWorldNormal, textureWorldUp)
+        // A floor's or ceiling's texture runs across the level the other way to the level's own axes, so its axis locks
+        // are swapped to lock the same way they do when moving geometry (a side's aren't)
+        public UVPlanarDrag(Vector2 startingUVs, Vector3 dragOriginPosition, Vector3 surfaceWorldNormal, Vector3 textureWorldUp, bool swapsAxisLocks = false)
+            : base(dragOriginPosition, surfaceWorldNormal, textureWorldUp, swapsAxisLocks)
         {
             this.startingUVs = startingUVs;
         }
