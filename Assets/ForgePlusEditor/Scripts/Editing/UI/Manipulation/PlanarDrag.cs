@@ -9,8 +9,14 @@ namespace ForgePlus.LevelManipulation
 
         private Vector3 lastValidPlanarPosition;
 
-        public PlanarDrag(Vector3 dragOriginPosition, Vector3 planarNormal, Vector3 planarUp)
+        // Whether the X lock holds the drag's Y still (and the Y lock its X), for a plane whose axes run the other way to
+        // the level's (so locking an axis locks the same one it does when moving geometry)
+        private readonly bool swapsAxisLocks;
+
+        public PlanarDrag(Vector3 dragOriginPosition, Vector3 planarNormal, Vector3 planarUp, bool swapsAxisLocks = false)
         {
+            this.swapsAxisLocks = swapsAxisLocks;
+
             originLocalToWorldMatrix = Matrix4x4.TRS(dragOriginPosition,
                                          Quaternion.LookRotation(-planarNormal, planarUp),
                                          Vector3.one);
@@ -38,11 +44,14 @@ namespace ForgePlus.LevelManipulation
             Debug.DrawLine(originLocalToWorldMatrix.MultiplyPoint(Vector3.zero), originLocalToWorldMatrix.MultiplyPoint(dragVector));
 #endif
 
-            if (AxisLocks.Instance.XLocked)
+            var locksX = swapsAxisLocks ? AxisLocks.Instance.YLocked : AxisLocks.Instance.XLocked;
+            var locksY = swapsAxisLocks ? AxisLocks.Instance.XLocked : AxisLocks.Instance.YLocked;
+
+            if (locksX)
             {
                 dragVector.x = 0f;
             }
-            else if (AxisLocks.Instance.YLocked)
+            else if (locksY)
             {
                 dragVector.y = 0f;
             }

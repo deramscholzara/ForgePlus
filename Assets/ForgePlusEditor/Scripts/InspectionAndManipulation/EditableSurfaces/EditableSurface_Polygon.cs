@@ -169,10 +169,12 @@ namespace ForgePlus.LevelManipulation
 
                 var textureWorldUp = Vector3.left;
 
+                // Its axis locks swapped, to lock as they do when moving geometry across the level
                 uvDragPlane = new UVPlanarDrag(startingUVs,
                                                startingPosition,
                                                surfaceWorldNormal,
-                                               textureWorldUp);
+                                               textureWorldUp,
+                                               swapsAxisLocks: true);
 
                 // Recorded as one action when it ends
                 LevelHistory.BeginGesture();
