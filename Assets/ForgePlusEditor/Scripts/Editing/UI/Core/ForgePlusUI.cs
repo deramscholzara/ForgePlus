@@ -47,6 +47,8 @@ namespace ForgePlus.UI
 
         public PointHandles PointHandles { get; private set; }
 
+        public RectangleSelection RectangleSelection { get; private set; }
+
         public SoundVisualization SoundVisualization { get; private set; }
 
         public SettingsViewModel Settings { get; private set; }
@@ -122,6 +124,9 @@ namespace ForgePlus.UI
             // Its handles are clicked before the level is
             PointHandles = new PointHandles(root);
             WorldPointer.Instance.ScreenPicker = PointHandles;
+
+            // Over the handles
+            RectangleSelection = new RectangleSelection(root);
             // Kept alive by its callbacks on the root
             new TooltipLayer(root);
 
@@ -228,8 +233,8 @@ namespace ForgePlus.UI
                 SetVisible(!isVisible);
             }
 
-            // Toggling the menu also shows the UI, if it was hidden
-            if (Hotkeys.WasPressed(ForgePlusInput.Interface.ToggleMenu))
+            // Toggling the menu also shows the UI, if it was hidden (but escape cancels selecting by rectangle instead)
+            if (Hotkeys.WasPressed(ForgePlusInput.Interface.ToggleMenu) && !IsEscapeCancellingRectangleSelection())
             {
                 SetVisible(true);
                 Editor.MenuOpen = !Editor.MenuOpen;
@@ -244,6 +249,16 @@ namespace ForgePlus.UI
             {
                 UndoHistory.Undo();
             }
+        }
+
+        // Whichever of the two notices escape first this frame
+        private static bool IsEscapeCancellingRectangleSelection()
+        {
+            var keyboard = UnityEngine.InputSystem.Keyboard.current;
+            var worldPointer = WorldPointer.Instance;
+
+            return keyboard != null && keyboard.escapeKey.wasPressedThisFrame && worldPointer &&
+                   (worldPointer.IsSelectingByRectangle || worldPointer.RectangleCancelledFrame == Time.frameCount);
         }
 
 #if UNITY_EDITOR

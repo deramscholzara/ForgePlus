@@ -1,4 +1,5 @@
 ﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.Entities.Geometry;
 using ForgePlus.UI;
 using System;
 using UnityEngine;
@@ -37,7 +38,8 @@ namespace ForgePlus.LevelManipulation
 
     // Clicks and drags (with the Select input) on what's drawn over the level (ScreenPicker), or else on the level's
     // colliders, for the handler under the pointer when it was pressed (presses over the UI are the UI's). A drag starts
-    // once the pointer moves far enough from the press.
+    // once the pointer moves far enough from the press. With the Select tool (in the modes it selects in), a drag from
+    // anywhere not already selected selects by rectangle instead (RectangleSelection), so only what's selected is dragged.
     public class WorldPointer : SingletonMonoBehaviour<WorldPointer>
     {
         // Pixels
@@ -59,6 +61,23 @@ namespace ForgePlus.LevelManipulation
 
         private bool isPressed;
         private bool pressStartedOverEmptiness;
+
+        // A drag from this press would select by rectangle, and is (where the pointer last was, and whether shift was held)
+        private bool pressCanSelectByRectangle;
+        private bool isSelectingByRectangle;
+        private Vector2 rectangleEndPosition;
+        private bool rectangleAddsToSelection;
+
+        // Escape cancels selecting by rectangle (rather than toggling the menu, which checks this)
+        public bool IsSelectingByRectangle
+        {
+            get
+            {
+                return isSelectingByRectangle;
+            }
+        }
+
+        public int RectangleCancelledFrame { get; private set; } = -1;
         private IWorldPointerHandler pressedHandler;
         private WorldPointerEventData eventData;
         private Vector2 pressPosition;
@@ -86,7 +105,39 @@ namespace ForgePlus.LevelManipulation
                 return;
             }
 
-            if (pressedHandler != null)
+            if (isSelectingByRectangle)
+            {
+                if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+                {
+                    // Nothing more comes of this press
+                    isSelectingByRectangle = false;
+                    pressCanSelectByRectangle = false;
+                    pressedHandler = null;
+                    pressStartedOverEmptiness = false;
+                    RectangleCancelledFrame = Time.frameCount;
+
+                    ui.RectangleSelection.Cancel();
+                    return;
+                }
+
+                // What it selects is worked out again as it (or shift) changes
+                var addsToSelection = Hotkeys.IsShiftPressed;
+                if (position != rectangleEndPosition || addsToSelection != rectangleAddsToSelection)
+                {
+                    rectangleEndPosition = position;
+                    rectangleAddsToSelection = addsToSelection;
+                    ui.RectangleSelection.Drag(position, addsToSelection);
+                }
+            }
+            else if (pressCanSelectByRectangle && (position - pressPosition).sqrMagnitude >= DragThreshold * DragThreshold)
+            {
+                isSelectingByRectangle = true;
+                rectangleEndPosition = position;
+                rectangleAddsToSelection = Hotkeys.IsShiftPressed;
+                ui.RectangleSelection.Begin(pressPosition);
+                ui.RectangleSelection.Drag(position, rectangleAddsToSelection);
+            }
+            else if (pressedHandler != null)
             {
                 var hasMoved = position != eventData.Position;
                 eventData.Position = position;
@@ -113,6 +164,8 @@ namespace ForgePlus.LevelManipulation
             isPressed = true;
             pressedHandler = null;
             pressStartedOverEmptiness = false;
+            pressCanSelectByRectangle = false;
+            isSelectingByRectangle = false;
             pressPosition = position;
 
             if (IsOverUI(position))
@@ -123,8 +176,11 @@ namespace ForgePlus.LevelManipulation
             if (!TryGetHandler(position, out pressedHandler, out var worldPosition, out var worldNormal))
             {
                 pressStartedOverEmptiness = true;
+                pressCanSelectByRectangle = RectangleSelection.IsAvailable;
                 return;
             }
+
+            pressCanSelectByRectangle = RectangleSelection.IsAvailable && !IsSelected(pressedHandler);
 
             eventData = new WorldPointerEventData
             {
@@ -137,6 +193,16 @@ namespace ForgePlus.LevelManipulation
         private void Release(Vector2 position)
         {
             isPressed = false;
+
+            if (isSelectingByRectangle)
+            {
+                isSelectingByRectangle = false;
+                pressedHandler = null;
+
+                // Shift adds to the selection (as it was before the drag), rather than replacing it
+                ui.RectangleSelection.End(position, addsToSelection: Hotkeys.IsShiftPressed);
+                return;
+            }
 
             if (pressedHandler != null)
             {
@@ -181,6 +247,28 @@ namespace ForgePlus.LevelManipulation
             worldPosition = default;
             worldNormal = default;
             return false;
+        }
+
+        // Whether what it's for is selected (a surface is its polygon's, side's or platform's)
+        private static bool IsSelected(IWorldPointerHandler handler)
+        {
+            var selectionManager = SelectionManager.Instance;
+
+            switch (handler)
+            {
+                case EditableSurface_Polygon polygonSurface:
+                    return selectionManager.GetIsSelected(polygonSurface.ParentPolygon) ||
+                           (polygonSurface.Platform && selectionManager.GetIsSelected(polygonSurface.Platform.SelectablePlatform));
+                case EditableSurface_Side sideSurface:
+                    return selectionManager.GetIsSelected(sideSurface.ParentSide) ||
+                           (sideSurface.Platform && selectionManager.GetIsSelected(sideSurface.Platform.SelectablePlatform));
+                case EditableSurface_Media mediaSurface:
+                    return mediaSurface.Polygon && selectionManager.GetIsSelected(mediaSurface.Polygon);
+                case ISelectable selectable:
+                    return selectionManager.GetIsSelected(selectable);
+                default:
+                    return false;
+            }
         }
 
         private bool IsOverUI(Vector2 position)

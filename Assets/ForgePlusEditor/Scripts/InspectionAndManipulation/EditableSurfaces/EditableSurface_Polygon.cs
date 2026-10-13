@@ -22,6 +22,10 @@ namespace ForgePlus.LevelManipulation
 
         private UVPlanarDrag uvDragPlane;
         private HeightDrag heightDrag;
+
+        // The faces a height drag moves (this one first, then the rest of the selection's polygons' same faces), and their
+        // heights when it began
+        private readonly List<(LevelEntity_Polygon Polygon, short StartingHeight)> heightDragged = new List<(LevelEntity_Polygon, short)>();
         private PointsMove polygonMove;
 
         private readonly List<LevelEntity_Polygon> alignmentGroupedPolygons = new List<LevelEntity_Polygon>();
@@ -364,6 +368,17 @@ namespace ForgePlus.LevelManipulation
             SelectHeightSwatch();
 
             heightDrag = new HeightDrag(eventData.PressWorldPosition, HeightsEditing.GetHeight(ParentPolygon, DataSource), Camera.main);
+
+            heightDragged.Clear();
+            heightDragged.Add((ParentPolygon, HeightsEditing.GetHeight(ParentPolygon, DataSource)));
+            foreach (var selected in SelectionManager.Instance.Selection)
+            {
+                if (selected is LevelEntity_Polygon polygon && polygon != ParentPolygon && HeightsEditing.CanEdit(polygon))
+                {
+                    heightDragged.Add((polygon, HeightsEditing.GetHeight(polygon, DataSource)));
+                }
+            }
+
             HeightsEditing.BeginDrag();
 
             InspectorPanel.Instance.RefreshAllInspectors();
@@ -378,15 +393,20 @@ namespace ForgePlus.LevelManipulation
             }
 
             SelectionManager.Instance.ClickedSurface = this;
-            polygonMove = PointsMove.ForPolygon(ParentPolygon, eventData.PressWorldPosition);
+            polygonMove = PointsMove.ForSelection(ParentPolygon.ParentLevel, ParentPolygon, eventData.PressWorldPosition);
         }
 
         private void DragHeight(WorldPointerEventData eventData)
         {
+            // Each selected face moves as far as this one is dragged, kept to its own polygon (a floor no higher than its
+            // ceiling, and a ceiling no lower than its floor)
             var pointerRay = Camera.main.ScreenPointToRay(new Vector3(eventData.Position.x, eventData.Position.y, 0f));
-            var height = HeightsEditing.ClampHeight(ParentPolygon, DataSource, heightDrag.DraggedHeight(pointerRay));
+            var offset = heightDrag.DraggedHeight(pointerRay) - heightDragged[0].StartingHeight;
 
-            HeightsEditing.DragHeight(ParentPolygon, DataSource, height);
+            foreach (var (polygon, startingHeight) in heightDragged)
+            {
+                HeightsEditing.DragHeight(polygon, DataSource, HeightsEditing.ClampHeight(polygon, DataSource, startingHeight + offset));
+            }
 
             InspectorPanel.Instance.RefreshAllInspectors();
         }
@@ -394,6 +414,7 @@ namespace ForgePlus.LevelManipulation
         private void EndHeightDrag()
         {
             heightDrag = null;
+            heightDragged.Clear();
 
             HeightsEditing.EndDrag();
 

@@ -26,6 +26,9 @@ namespace ForgePlus.History
         private static ModeManager.PrimaryModes recordedMode;
         private static bool isRetakeRequested = true;
 
+        // While a selection is being made over many frames (such as by rectangle), which is recorded once it's done
+        public static bool IsPaused { get; set; }
+
         // The selection, as it is once whatever's changing it now is done, is taken as it is (rather than recorded)
         public static void Retake()
         {
@@ -42,7 +45,7 @@ namespace ForgePlus.History
             }
 
             // Not until the rebuild an edit (or undo) began is done, and its selection is chosen again
-            if (LevelEditing.IsRebuildPending || UndoHistory.IsUndoingOrRedoing)
+            if (IsPaused || LevelEditing.IsRebuildPending || UndoHistory.IsUndoingOrRedoing)
             {
                 return;
             }
