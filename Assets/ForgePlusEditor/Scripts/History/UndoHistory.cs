@@ -196,6 +196,9 @@ namespace ForgePlus.History
                 IsUndoingOrRedoing = false;
             }
 
+            // What it leaves selected (once any rebuild it began is done) isn't a new choice to record
+            SelectionHistory.Retake();
+
             OnChanged?.Invoke();
         }
     }

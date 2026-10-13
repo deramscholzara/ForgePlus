@@ -74,8 +74,7 @@ namespace ForgePlus.LevelManipulation
 
             foreach (var selected in SelectionManager.Instance.Selection)
             {
-                var finder = FinderOf(selected);
-                if (finder != null)
+                if (TryGetIdentity(selected, out _, out var finder))
                 {
                     finders.Add(finder);
                 }
@@ -96,38 +95,63 @@ namespace ForgePlus.LevelManipulation
             };
         }
 
-        // Null for what can't be found again (such as a placeholder side, which has no index)
-        private static Func<ISelectable> FinderOf(ISelectable selected)
+        // What it is (by its kind and index, the same for its entity once the level's entities are made again), and what
+        // finds it again. False for what can't be found again (such as a placeholder side, which has no index).
+        public static bool TryGetIdentity(ISelectable selected, out string key, out Func<ISelectable> finder)
         {
             switch (selected)
             {
                 case LevelEntity_Polygon polygon:
-                    return Find(polygon.NativeIndex, level => level.Polygons);
+                    key = "Polygon:" + polygon.NativeIndex;
+                    finder = Find(polygon.NativeIndex, level => level.Polygons);
+                    return true;
                 case LevelEntity_Line line:
-                    return Find(line.NativeIndex, level => level.Lines);
+                    key = "Line:" + line.NativeIndex;
+                    finder = Find(line.NativeIndex, level => level.Lines);
+                    return true;
                 case LevelEntity_Point point:
-                    return Find(point.NativeIndex, level => level.Points);
-                case LevelEntity_Side side:
-                    return side.NativeIndex >= 0 ? Find(side.NativeIndex, level => level.Sides) : null;
+                    key = "Point:" + point.NativeIndex;
+                    finder = Find(point.NativeIndex, level => level.Points);
+                    return true;
+                case LevelEntity_Side side when side.NativeIndex >= 0:
+                    key = "Side:" + side.NativeIndex;
+                    finder = Find(side.NativeIndex, level => level.Sides);
+                    return true;
                 case LevelEntity_Light light:
-                    return Find(light.NativeIndex, level => level.Lights);
+                    key = "Light:" + light.NativeIndex;
+                    finder = Find(light.NativeIndex, level => level.Lights);
+                    return true;
                 case LevelEntity_Media media:
-                    return Find(media.NativeIndex, level => level.Medias);
+                    key = "Media:" + media.NativeIndex;
+                    finder = Find(media.NativeIndex, level => level.Medias);
+                    return true;
                 case LevelEntity_Platform platform:
                     var platformIndex = platform.NativeIndex;
-                    return () => LevelEntity_Level.Instance ? LevelEntity_Platform.GetSelectablePlatform(LevelEntity_Level.Instance, platformIndex) : null;
+                    key = "Platform:" + platformIndex;
+                    finder = () => LevelEntity_Level.Instance ? LevelEntity_Platform.GetSelectablePlatform(LevelEntity_Level.Instance, platformIndex) : null;
+                    return true;
                 case LevelEntity_MapObject mapObject:
-                    return Find(mapObject.NativeIndex, level => level.MapObjects);
+                    key = "MapObject:" + mapObject.NativeIndex;
+                    finder = Find(mapObject.NativeIndex, level => level.MapObjects);
+                    return true;
                 case LevelEntity_Annotation annotation:
-                    return Find(annotation.NativeIndex, level => level.Annotations);
+                    key = "Annotation:" + annotation.NativeIndex;
+                    finder = Find(annotation.NativeIndex, level => level.Annotations);
+                    return true;
                 case LevelEntity_Level _:
-                    return () => LevelEntity_Level.Instance;
+                    key = "Level";
+                    finder = () => LevelEntity_Level.Instance;
+                    return true;
                 case SoundImageEntry entry:
                     var kind = entry.Kind;
                     var index = entry.Index;
-                    return () => SoundImageEditing.GetEntry(kind, index);
+                    key = "SoundImage:" + kind + ":" + index;
+                    finder = () => SoundImageEditing.GetEntry(kind, index);
+                    return true;
                 default:
-                    return null;
+                    key = null;
+                    finder = null;
+                    return false;
             }
         }
 
