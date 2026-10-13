@@ -138,16 +138,17 @@ namespace ForgePlus.History
             var mouseWasReleased = AnyMouseButton(button => button.wasReleasedThisFrame);
             var keyWasReleased = Keyboard.current != null && Keyboard.current.anyKey.wasReleasedThisFrame;
 
-            if (!isEditMarked && !mouseWasPressed && !mouseWasReleased && !keyWasReleased)
+            if (isEditMarked || mouseWasPressed || mouseWasReleased || keyWasReleased)
             {
-                return;
+                // A press ends what was typed, so it isn't recorded with what the click or drag does
+                if (mouseWasPressed && !IsDraggingOrBlocked || !IsEditInProgress)
+                {
+                    RecordPendingEdit();
+                }
             }
 
-            // A press ends what was typed, so it isn't recorded with what the click or drag does
-            if (mouseWasPressed && !IsDraggingOrBlocked || !IsEditInProgress)
-            {
-                RecordPendingEdit();
-            }
+            // After any edit that came before it
+            SelectionHistory.Sample();
         }
 
         private static bool AnyMouseButton(Func<ButtonControl, bool> isMatch)
@@ -246,6 +247,9 @@ namespace ForgePlus.History
 
             trackedLevel = level;
             trackedMapsFile = mapsFile;
+
+            // What a level opens with selected isn't a choice to undo
+            SelectionHistory.Retake();
 
             Debug.Log($"--- LevelHistory: Captured level state in timespan: {DateTime.Now - captureStartTime}");
         }

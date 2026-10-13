@@ -2637,6 +2637,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4114234551713792
+    m_Key: History.Selection
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4114234560102400
+    m_Key: History.Deselection
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:
