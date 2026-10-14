@@ -31,6 +31,9 @@ namespace ForgePlus.UI
 
         private readonly List<LevelError> errors = new List<LevelError>();
         private bool isRefreshRequested = true;
+
+        // Between a level opening and closing (a rebuild closes and opens it again)
+        private bool isLevelOpen;
         private int filterIndex = 0;
         private bool showWarnings = true;
 
@@ -200,11 +203,12 @@ namespace ForgePlus.UI
             NotifyAll();
         }
 
-        // Errors before warnings (each kept in the order they're found)
-        private static List<LevelError> FindErrors()
+        // Errors before warnings (each kept in the order they're found). None while no level is open (a closed level's
+        // objects last until the frame ends, so they're not looked to)
+        private List<LevelError> FindErrors()
         {
             var level = LevelEntity_Level.Instance;
-            if (!level || LevelEditing.IsRebuildPending)
+            if (!isLevelOpen || !level || LevelEditing.IsRebuildPending)
             {
                 return new List<LevelError>();
             }
@@ -225,12 +229,20 @@ namespace ForgePlus.UI
 
         private void OnLevelOpened(string levelName)
         {
+            // Null when subscribing with no level open
+            isLevelOpen = levelName != null;
+
             RequestRefresh();
         }
 
+        // Cleared at once (rather than as the frame ends, when the closed level's objects would still be found)
         private void OnLevelClosed()
         {
-            RequestRefresh();
+            isLevelOpen = false;
+            isRefreshRequested = false;
+
+            errors.Clear();
+            NotifyAll();
         }
     }
 }

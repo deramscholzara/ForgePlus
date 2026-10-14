@@ -92,10 +92,13 @@ namespace ForgePlus.UI
             }
         }
 
-        // devices.cpp: a terminal's control panel opens the terminal its permutation numbers
+        // devices.cpp: a terminal's control panel opens the terminal its permutation numbers (in a Marathon 1 level, one
+        // past the level's own terminals is a resource, MarathonOneTerminals)
         private static IEnumerable<LevelError> FindInControlPanels(MapLevel level)
         {
             var terminalCount = number_of_terminal_texts(level);
+            var isMarathonOne = MarathonOneTerminals.IsMarathonOneLevel(level);
+            var levelIndex = MapsLoading.Instance.OpenLevelIndex;
 
             for (var sideIndex = 0; sideIndex < level.SideList.Count; sideIndex++)
             {
@@ -107,7 +110,7 @@ namespace ForgePlus.UI
                 }
 
                 var terminalIndex = side.control_panel_permutation;
-                if (terminalIndex < 0 || terminalIndex >= terminalCount)
+                if (terminalIndex < 0 || (terminalIndex >= terminalCount && !(isMarathonOne && MarathonOneTerminals.Exists(levelIndex, terminalIndex))))
                 {
                     yield return new LevelError(Get("Errors.ControlPanel.NoTerminal", sideIndex, terminalIndex, terminalCount));
                 }
