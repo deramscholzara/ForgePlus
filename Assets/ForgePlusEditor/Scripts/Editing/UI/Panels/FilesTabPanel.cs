@@ -1,4 +1,5 @@
 ﻿using ForgePlus.DataFileIO;
+using ForgePlus.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,12 @@ namespace ForgePlus.UI
         private readonly List<DataFileViewModel> dataFiles = new List<DataFileViewModel>();
         private readonly List<string> levelNames = new List<string>();
 
+        private const float PluginListMinimumWidth = 300f;
+        private const float PluginListMaximumHeight = 400f;
+
         private ListView levelList;
         private Button loadButton;
+        private DropdownField pluginList;
 
         protected override string LayoutPath
         {
@@ -34,6 +39,13 @@ namespace ForgePlus.UI
             BindDataFile("shapes", DataFileTypes.Shapes);
             BindDataFile("physics", DataFileTypes.Physics);
             BindDataFile("sounds", DataFileTypes.Sounds);
+            BindDataFile("plugins", DataFileTypes.Plugins);
+            BindDataFile("scripts", DataFileTypes.Scripts);
+
+            pluginList = Root.Find<DropdownField>("plugin-list");
+            pluginList.OpensOnPress(ShowPluginList, replacesOwnHandling: true);
+            MmlLoading.Instance.OnPluginsChanged += RefreshPluginList;
+            RefreshPluginList();
 
             var levelItemTemplate = LoadTemplate("LevelItem");
 
@@ -71,6 +83,7 @@ namespace ForgePlus.UI
             MapsLoading.Instance.OnDataLoadCompleted -= OnMapsLoaded;
             MapsLoading.Instance.OnSaveCompleted -= RefreshList;
             MapsLoading.Instance.OnLevelNamesChanged -= RefreshList;
+            MmlLoading.Instance.OnPluginsChanged -= RefreshPluginList;
 
             foreach (var dataFile in dataFiles)
             {
@@ -91,6 +104,33 @@ namespace ForgePlus.UI
 
             selector.Q("unload").BindShown(dataFile, nameof(DataFileViewModel.HasPath));
             selector.Find<Button>("unload").clicked += dataFile.Unload;
+        }
+
+        // How many of the plugins are on (grayed out while there are none)
+        private void RefreshPluginList()
+        {
+            var plugins = MmlLoading.Instance.Plugins;
+
+            pluginList.SetValueWithoutNotify(plugins.Count > 0 ?
+                Strings.Get(Strings.Menu, "FilesTab.PluginList.Text", plugins.Count(plugin => plugin.enabled), plugins.Count) :
+                Strings.Get(Strings.Menu, "FilesTab.PluginList.None.Text"));
+            pluginList.SetEnabled(plugins.Count > 0);
+        }
+
+        // Unloaded (with its toggles) as the pop-up closes
+        private void ShowPluginList()
+        {
+            if (!pluginList.enabledInHierarchy)
+            {
+                return;
+            }
+
+            var panel = new PluginListPanel();
+            var box = PopupLayer.Open(pluginList, PluginListMinimumWidth, PluginListMaximumHeight, panel.Unload);
+            if (box != null)
+            {
+                panel.Load(box);
+            }
         }
 
         private void OnMapsLoaded(bool isLoaded)

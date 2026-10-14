@@ -2,8 +2,7 @@
 //
 // Not ported: the commented-out sound_definitions table.
 // sound_definition is ported as SoundDefinition (SoundFile.cs), which is what Aleph One reads a sounds file into.
-// The ambient and random sound tables are the originals: MML can change them (parse_mml_sounds in SoundManager.cpp),
-// which isn't ported.
+// MML can change the ambient and random sound tables (parse_mml_sounds in SoundManager.cpp).
 using Unity.Scripting.LifecycleManagement;
 using static AlephOne.cstypes;
 using static AlephOne.SoundManagerEnums;

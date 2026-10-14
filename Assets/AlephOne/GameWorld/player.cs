@@ -1,9 +1,10 @@
-﻿// Port of Aleph One: Source_Files/GameWorld/player.h, player.cpp (only the player shapes, the constants
+﻿// Port of Aleph One: Source_Files/GameWorld/player.h, player.cpp (only the player shapes and their MML, the constants
 // they use, and SIZEOF_physics_constants)
 //
 // Not ported: player_data and everything that runs players in a game, and MML parsing of player
 // settings.
 using Unity.Scripting.LifecycleManagement;
+using static AlephOne.shape_descriptors;
 using static AlephOne.weapons;
 
 namespace AlephOne
@@ -19,6 +20,16 @@ namespace AlephOne
         public short[] torsos = new short[PLAYER_TORSO_SHAPE_COUNT]; /* NONE, ..., double pistols */
         public short[] charging_torsos = new short[PLAYER_TORSO_SHAPE_COUNT]; /* NONE, ..., double pistols */
         public short[] firing_torsos = new short[PLAYER_TORSO_SHAPE_COUNT]; /* NONE, ..., double pistols */
+
+        public player_shape_definitions Clone()
+        {
+            var copy = (player_shape_definitions) MemberwiseClone();
+            copy.legs = (short[]) legs.Clone();
+            copy.torsos = (short[]) torsos.Clone();
+            copy.charging_torsos = (short[]) charging_torsos.Clone();
+            copy.firing_torsos = (short[]) firing_torsos.Clone();
+            return copy;
+        }
     }
 
     [NoAutoStaticsCleanup]
@@ -49,7 +60,7 @@ namespace AlephOne
 
         /* ---------- globals (player.cpp) */
 
-        private static readonly player_shape_definitions player_shapes = new player_shape_definitions
+        private static player_shape_definitions player_shapes = new player_shape_definitions
         {
             collection = 6, /* collection */
 
@@ -65,6 +76,97 @@ namespace AlephOne
         public static player_shape_definitions get_player_shape_definitions()
         {
             return player_shapes;
+        }
+
+        // The shapes as they were before MML changed them (null while MML hasn't)
+        private static player_shape_definitions original_player_shapes;
+
+        // ForgePlus: whether MML has changed the player's shapes since they were last reset
+        public static bool player_shapes_changed_by_mml()
+        {
+            return original_player_shapes != null;
+        }
+
+        // Only the player's shapes are ported (see the file's header)
+        public static void reset_mml_player()
+        {
+            if (original_player_shapes != null)
+            {
+                player_shapes = original_player_shapes;
+                original_player_shapes = null;
+            }
+        }
+
+        public static void parse_mml_player(InfoTree root)
+        {
+            // back up old values first
+            if (original_player_shapes == null)
+            {
+                original_player_shapes = player_shapes;
+                player_shapes = player_shapes.Clone();
+            }
+
+            // Not ported: the player's settings, initial items, damage responses and powerups
+
+            foreach (var shp in root.children_named("shape"))
+            {
+                short type = 0;
+                if (!shp.read_indexed("type", ref type, 5))
+                    continue;
+
+                if (type == 0)
+                {
+                    short subtype = 0;
+                    if (!shp.read_indexed("subtype", ref subtype, 5))
+                        continue;
+                    switch (subtype)
+                    {
+                        case 0:
+                            shp.read_indexed("value", ref player_shapes.collection, MAXIMUM_COLLECTIONS);
+                            break;
+                        case 1:
+                            shp.read_indexed("value", ref player_shapes.dying_hard, MAXIMUM_SHAPES_PER_COLLECTION);
+                            break;
+                        case 2:
+                            shp.read_indexed("value", ref player_shapes.dying_soft, MAXIMUM_SHAPES_PER_COLLECTION);
+                            break;
+                        case 3:
+                            shp.read_indexed("value", ref player_shapes.dead_hard, MAXIMUM_SHAPES_PER_COLLECTION);
+                            break;
+                        case 4:
+                            shp.read_indexed("value", ref player_shapes.dead_soft, MAXIMUM_SHAPES_PER_COLLECTION);
+                            break;
+                    }
+                }
+                else if (type == 1)
+                {
+                    short subtype = 0;
+                    if (!shp.read_indexed("subtype", ref subtype, NUMBER_OF_PLAYER_ACTIONS))
+                        continue;
+                    shp.read_indexed("value", ref player_shapes.legs[subtype], MAXIMUM_SHAPES_PER_COLLECTION);
+                }
+                else if (type == 2)
+                {
+                    short subtype = 0;
+                    if (!shp.read_indexed("subtype", ref subtype, PLAYER_TORSO_SHAPE_COUNT))
+                        continue;
+                    shp.read_indexed("value", ref player_shapes.torsos[subtype], MAXIMUM_SHAPES_PER_COLLECTION);
+                }
+                else if (type == 3)
+                {
+                    short subtype = 0;
+                    if (!shp.read_indexed("subtype", ref subtype, PLAYER_TORSO_SHAPE_COUNT))
+                        continue;
+                    shp.read_indexed("value", ref player_shapes.charging_torsos[subtype], MAXIMUM_SHAPES_PER_COLLECTION);
+                }
+                else if (type == 4)
+                {
+                    short subtype = 0;
+                    if (!shp.read_indexed("subtype", ref subtype, PLAYER_TORSO_SHAPE_COUNT))
+                        continue;
+                    shp.read_indexed("value", ref player_shapes.firing_torsos[subtype], MAXIMUM_SHAPES_PER_COLLECTION);
+                }
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
 //
 // Not ported: the running game (update_medias, update_one_media, get_media_detonation_effect,
 // get_media_damage, get_media_submerged_fade_effect, get_media_collection,
-// IsMediaDangerous, media_in_environment), and MML parsing.
+// IsMediaDangerous, media_in_environment).
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
@@ -110,6 +110,66 @@ namespace AlephOne
         public static media_definition get_media_definition(short type)
         {
             return GetMemberWithBounds(media_definitions, type, NUMBER_OF_MEDIA_TYPES);
+        }
+
+        // The definitions as they were before MML changed them (null while MML hasn't)
+        private static media_definition[] original_media_definitions;
+
+        public static void reset_mml_liquids()
+        {
+            if (original_media_definitions != null)
+            {
+                for (int i = 0; i < NUMBER_OF_MEDIA_TYPES; i++)
+                    media_definitions[i] = original_media_definitions[i];
+                original_media_definitions = null;
+            }
+        }
+
+        public static void parse_mml_liquids(InfoTree root)
+        {
+            // back up old values first
+            if (original_media_definitions == null)
+            {
+                original_media_definitions = new media_definition[NUMBER_OF_MEDIA_TYPES];
+                for (int i = 0; i < NUMBER_OF_MEDIA_TYPES; i++)
+                {
+                    original_media_definitions[i] = media_definitions[i];
+                    media_definitions[i] = media_definitions[i].Clone();
+                }
+            }
+
+            foreach (var liquid in root.children_named("liquid"))
+            {
+                short index = 0;
+                if (!liquid.read_indexed("index", ref index, NUMBER_OF_MEDIA_TYPES))
+                    continue;
+                media_definition def = media_definitions[index];
+
+                liquid.read_indexed("coll", ref def.collection, shape_descriptors.NUMBER_OF_COLLECTIONS);
+                liquid.read_indexed("frame", ref def.shape, shape_descriptors.MAXIMUM_SHAPES_PER_COLLECTION);
+                liquid.read_indexed("transfer", ref def.transfer_mode, map.NUMBER_OF_TRANSFER_MODES);
+                liquid.read_attr("damage_freq", ref def.damage_frequency);
+                liquid.read_indexed("submerged", ref def.submerged_fade_effect, fades.NUMBER_OF_FADE_EFFECT_TYPES);
+
+                foreach (var sound in liquid.children_named("sound"))
+                {
+                    short type = 0;
+                    if (!sound.read_indexed("type", ref type, NUMBER_OF_MEDIA_SOUNDS))
+                        continue;
+                    sound.read_indexed("which", ref def.sounds[type], short.MaxValue + 1, true);
+                }
+                foreach (var effect in liquid.children_named("effect"))
+                {
+                    short type = 0;
+                    if (!effect.read_indexed("type", ref type, NUMBER_OF_MEDIA_DETONATION_TYPES))
+                        continue;
+                    effect.read_indexed("which", ref def.detonation_effects[type], effects.NUMBER_OF_EFFECT_TYPES);
+                }
+                foreach (var dmg in liquid.children_named("damage"))
+                {
+                    dmg.read_damage(def.damage);
+                }
+            }
         }
 
         public static short get_media_sound(MapLevel level, short media_index, short type)

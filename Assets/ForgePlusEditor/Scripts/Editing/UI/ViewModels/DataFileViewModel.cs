@@ -1,4 +1,5 @@
 ﻿using ForgePlus.DataFileIO;
+using ForgePlus.DataFileIO.Extensions;
 using ForgePlus.Localization;
 using System;
 using Unity.Properties;
@@ -22,7 +23,7 @@ namespace ForgePlus.UI
         {
             get
             {
-                return HasPath ? path : Strings.Get(Strings.Menu, "FilesTab.NoPath");
+                return HasPath ? path : Strings.Get(Strings.Menu, type.IsFolder() ? "FilesTab.NoFolderPath" : "FilesTab.NoPath");
             }
         }
 

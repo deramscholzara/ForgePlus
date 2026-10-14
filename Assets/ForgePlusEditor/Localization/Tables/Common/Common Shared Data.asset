@@ -2662,6 +2662,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4257401531940864
+    m_Key: FileBrowser.Type.Plugins
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940865
+    m_Key: FileBrowser.Type.Scripts
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

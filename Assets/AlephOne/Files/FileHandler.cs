@@ -279,6 +279,50 @@ namespace AlephOne
 
         public int GetError() { return err; }
 
+        // The first of the search path's folders (shell.data_search_path) that has the file at this relative path
+        public bool SetNameWithPath(string NameWithPath)
+        {
+            if (string.IsNullOrEmpty(NameWithPath))
+            {
+                err = unknown_filesystem_error;
+                return false;
+            }
+
+            foreach (var directory in shell.data_search_path)
+            {
+                var full_path = new FileSpecifier(Path.Combine(directory, NameWithPath));
+                if (full_path.Exists())
+                {
+                    name = full_path.name;
+                    err = 0;
+                    return true;
+                }
+            }
+
+            err = unknown_filesystem_error;
+            return false;
+        }
+
+        public bool SetNameWithPath(string NameWithPath, string Directory)
+        {
+            if (string.IsNullOrEmpty(NameWithPath))
+            {
+                err = unknown_filesystem_error;
+                return false;
+            }
+
+            var full_path = new FileSpecifier(Path.Combine(Directory, NameWithPath));
+            if (full_path.Exists())
+            {
+                name = full_path.name;
+                err = 0;
+                return true;
+            }
+
+            err = unknown_filesystem_error;
+            return false;
+        }
+
         public bool Exists()
         {
             // Check whether the file is readable

@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace ForgePlus.DataFileIO
 {
-    // Aleph One keeps its loaded shapes, open picture files and last error in global state, which Fast Enter
-    // Play Mode would otherwise carry from one Play session to the next
+    // Aleph One keeps its loaded shapes, open picture files, MML changes, plugins and last error in global state, which
+    // Fast Enter Play Mode would otherwise carry from one Play session to the next
     public static class AlephOneStateReset
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -18,6 +18,14 @@ namespace ForgePlus.DataFileIO
             screen.interface_bit_depth = cstypes.NONE;
 
             game_errors.clear_game_error();
+
+            // MML's changes to the definitions, the plugins found, and where MML's paths are looked for
+            XML_MakeRoot.ResetAllMMLValues();
+            XML_LevelScript.UnloadLevelScripts();
+            Scenario.reset();
+            Plugins.instance().clear();
+            shell.data_search_path.Clear();
+            Logging.take_messages();
         }
     }
 }

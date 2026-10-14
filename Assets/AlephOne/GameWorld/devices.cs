@@ -3,7 +3,7 @@
 // Not ported (the running game): initializing, updating and toggling control panels
 // (initialize_control_panels_for_level, update_control_panels, change_device_state, update_action_key,
 // untoggled_repair_switches_on_level, assume_correct_switch_position, try_and_toggle_control_panel,
-// line_side_has_control_panel, find_action_key_target, ...), control_panel_settings, and MML parsing.
+// line_side_has_control_panel, find_action_key_target, ...), and control_panel_settings (and its MML).
 using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csmacros;
 using static AlephOne.cstypes;
@@ -39,6 +39,13 @@ namespace AlephOne
             this.sounds = sounds;
             this.sound_frequency = sound_frequency;
             this.item = item;
+        }
+
+        public control_panel_definition Clone()
+        {
+            var copy = (control_panel_definition) MemberwiseClone();
+            copy.sounds = (short[]) sounds.Clone();
+            return copy;
         }
     }
 
@@ -140,6 +147,61 @@ namespace AlephOne
         public static control_panel_definition get_control_panel_definition(short control_panel_type)
         {
             return GetMemberWithBounds(control_panel_definitions, control_panel_type, NUMBER_OF_CONTROL_PANEL_DEFINITIONS);
+        }
+
+        // The definitions as they were before MML changed them (null while MML hasn't)
+        private static control_panel_definition[] original_control_panel_definitions;
+
+        public static void reset_mml_control_panels()
+        {
+            // Not ported: control_panel_settings
+
+            if (original_control_panel_definitions != null)
+            {
+                for (int i = 0; i < NUMBER_OF_CONTROL_PANEL_DEFINITIONS; i++)
+                    control_panel_definitions[i] = original_control_panel_definitions[i];
+                original_control_panel_definitions = null;
+            }
+        }
+
+        public static void parse_mml_control_panels(InfoTree root)
+        {
+            // back up old values first
+            if (original_control_panel_definitions == null)
+            {
+                original_control_panel_definitions = new control_panel_definition[NUMBER_OF_CONTROL_PANEL_DEFINITIONS];
+                for (int i = 0; i < NUMBER_OF_CONTROL_PANEL_DEFINITIONS; i++)
+                {
+                    original_control_panel_definitions[i] = control_panel_definitions[i];
+                    control_panel_definitions[i] = control_panel_definitions[i].Clone();
+                }
+            }
+
+            // Not ported: control_panel_settings (reach, horiz, and the recharging energies and rates)
+
+            foreach (var panel in root.children_named("panel"))
+            {
+                short index = 0;
+                if (!panel.read_indexed("index", ref index, NUMBER_OF_CONTROL_PANEL_DEFINITIONS))
+                    continue;
+
+                control_panel_definition def = control_panel_definitions[index];
+                panel.read_indexed("type", ref def._class, NUMBER_OF_CONTROL_PANELS);
+                panel.read_indexed("coll", ref def.collection, NUMBER_OF_COLLECTIONS);
+                panel.read_indexed("active_frame", ref def.active_shape, MAXIMUM_SHAPES_PER_COLLECTION);
+                panel.read_indexed("inactive_frame", ref def.inactive_shape, MAXIMUM_SHAPES_PER_COLLECTION);
+                panel.read_indexed("item", ref def.item, NUMBER_OF_DEFINED_ITEMS, true);
+                panel.read_fixed("pitch", ref def.sound_frequency, 0, short.MaxValue + 1);
+
+                foreach (var sound in panel.children_named("sound"))
+                {
+                    short type = 0, which = 0;
+                    if (!sound.read_indexed("type", ref type, NUMBER_OF_CONTROL_PANEL_SOUNDS) ||
+                        !sound.read_indexed("which", ref which, short.MaxValue + 1, true))
+                        continue;
+                    def.sounds[type] = which;
+                }
+            }
         }
 
         public static short get_panel_class(short panel_type)

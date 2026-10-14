@@ -422,16 +422,27 @@ namespace RuntimeCore.Materials
             }
 
             var information = shapes.extended_get_shape_information(layer.Collection, lowLevelShapeIndex);
-            using (var bitmap = IndexedShapeBitmap.Decode(layer.Collection, layer.CLUT, lowLevelShape.bitmap_index, information.flags))
-            {
-                if (bitmap == null)
-                {
-                    return false;
-                }
 
-                spriteFrame.Width = bitmap.Width;
-                spriteFrame.Height = bitmap.Height;
-                spriteFrame.Pixels = batch.ScheduleColorConversion(bitmap, bitmap.GetPalette32());
+            // MML's substitute image covers the same part of the world as the bitmap does, at its own resolution
+            if (MmlTextures.TryGetSpritePixels(layer.Collection, layer.CLUT, lowLevelShape.bitmap_index, information.flags, out var substitutePixels, out var substituteWidth, out var substituteHeight))
+            {
+                spriteFrame.Width = substituteWidth;
+                spriteFrame.Height = substituteHeight;
+                spriteFrame.Pixels = batch.AddPixels(substitutePixels);
+            }
+            else
+            {
+                using (var bitmap = IndexedShapeBitmap.Decode(layer.Collection, layer.CLUT, lowLevelShape.bitmap_index, information.flags))
+                {
+                    if (bitmap == null)
+                    {
+                        return false;
+                    }
+
+                    spriteFrame.Width = bitmap.Width;
+                    spriteFrame.Height = bitmap.Height;
+                    spriteFrame.Pixels = batch.ScheduleColorConversion(bitmap, bitmap.GetPalette32());
+                }
             }
 
             spriteFrame.WorldLeft = information.world_left;

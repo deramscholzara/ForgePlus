@@ -1,4 +1,6 @@
 ﻿using RuntimeCore.Materials;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace ForgePlus.DataFileIO
@@ -8,6 +10,34 @@ namespace ForgePlus.DataFileIO
         protected override DataFileTypes DataFileType
         {
             get { return DataFileTypes.Shapes; }
+        }
+
+        // The plugins' shapes patches the loaded shapes have
+        private List<string> loadedShapesPatches = new List<string>();
+
+        public override void LoadFile(bool forceReload = true)
+        {
+            if (!forceReload && data != null)
+            {
+                // Already loaded, so exit
+                return;
+            }
+
+            // The plugins (whose shapes patches are applied as the shapes load) are found first
+            MmlLoading.Instance.EnsureInitialized();
+
+            loadedShapesPatches = AlephOne.Plugins.instance().find_shapes_patches(MmlLoading.IsOpenGL);
+
+            base.LoadFile(forceReload);
+        }
+
+        // When the plugins in use have other shapes patches than the loaded shapes have
+        public void ReloadIfShapesPatchesChanged()
+        {
+            if (data != null && !AlephOne.Plugins.instance().find_shapes_patches(MmlLoading.IsOpenGL).SequenceEqual(loadedShapesPatches))
+            {
+                LoadFile();
+            }
         }
 
         public override void UnloadFile()

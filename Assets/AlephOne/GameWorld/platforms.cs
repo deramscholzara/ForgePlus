@@ -3,7 +3,7 @@
 // Not ported (the running platform state machine): update_platforms, platform_was_entered,
 // try_and_change_platform_state, try_and_change_tagged_platform_states, set_platform_state,
 // monster_can_enter/leave_platform, player_touch_platform_state, platform_is_legal_player_target,
-// platform_is_at_initial_state, adjust_platform_for_media, and MML parsing. Which sound a platform plays
+// platform_is_at_initial_state, adjust_platform_for_media, and the MML for key items and damage. Which sound a platform plays
 // (play_platform_sound) is ported, as get_platform_sound, but not playing it.
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
@@ -285,6 +285,57 @@ namespace AlephOne
             public short moving_sound;
 
             public static_platform_data defaults;
+
+            public platform_definition Clone()
+            {
+                var copy = (platform_definition) MemberwiseClone();
+                copy.defaults = defaults?.Clone();
+                return copy;
+            }
+        }
+
+        // The definitions as they were before MML changed them (null while MML hasn't)
+        private static platform_definition[] original_platform_definitions;
+
+        public static void reset_mml_platforms()
+        {
+            if (original_platform_definitions != null)
+            {
+                for (int i = 0; i < NUMBER_OF_PLATFORM_TYPES; i++)
+                    platform_definitions[i] = original_platform_definitions[i];
+                original_platform_definitions = null;
+            }
+        }
+
+        public static void parse_mml_platforms(InfoTree root)
+        {
+            // back up old values first
+            if (original_platform_definitions == null)
+            {
+                original_platform_definitions = new platform_definition[NUMBER_OF_PLATFORM_TYPES];
+                for (int i = 0; i < NUMBER_OF_PLATFORM_TYPES; i++)
+                {
+                    original_platform_definitions[i] = platform_definitions[i];
+                    platform_definitions[i] = platform_definitions[i].Clone();
+                }
+            }
+
+            foreach (var ptree in root.children_named("platform"))
+            {
+                short index = 0;
+                if (!ptree.read_indexed("index", ref index, NUMBER_OF_PLATFORM_TYPES))
+                    continue;
+                platform_definition def = platform_definitions[index];
+
+                ptree.read_indexed("start_extend", ref def.starting_extension, short.MaxValue + 1, true);
+                ptree.read_indexed("start_contract", ref def.starting_contraction, short.MaxValue + 1, true);
+                ptree.read_indexed("stop_extend", ref def.stopping_extension, short.MaxValue + 1, true);
+                ptree.read_indexed("stop_contract", ref def.stopping_contraction, short.MaxValue + 1, true);
+                ptree.read_indexed("obstructed", ref def.obstructed_sound, short.MaxValue + 1, true);
+                ptree.read_indexed("uncontrollable", ref def.uncontrollable_sound, short.MaxValue + 1, true);
+                ptree.read_indexed("moving", ref def.moving_sound, short.MaxValue + 1, true);
+                // Not ported: item (key_item_index) and damage
+            }
         }
 
         private static readonly platform_definition[] platform_definitions = new platform_definition[NUMBER_OF_PLATFORM_TYPES]

@@ -1,0 +1,5 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- The scenario's plugins (Aleph One only), which the Files tab's Plugins dropdown shows in a pop-up: a toggle for
+         each (PluginListPanel adds them), in the order Aleph One loads them -->
+    <ui:VisualElement name="plugins" picking-mode="Ignore" />
+</ui:UXML>

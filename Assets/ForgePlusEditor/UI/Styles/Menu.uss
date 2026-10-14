@@ -56,10 +56,25 @@
 }
 
 .fp-files__selection {
-    min-height: 255px;
-    height: 255px;
+    min-height: 480px;
+    height: 480px;
     flex-shrink: 0;
     margin-bottom: 5px;
+}
+
+/* The Aleph One only Plugins and Scripts folders, and the plugins (marked with fp-aleph-one-only's stripe) */
+.fp-files__mml-separator {
+    margin: 10px 0 5px 0;
+}
+
+.fp-files__mml {
+    padding-left: 5px;
+    flex-shrink: 0;
+}
+
+.fp-files__plugin-list {
+    height: var(--fp-control-height);
+    margin-top: 5px;
 }
 
 .fp-files__levels {

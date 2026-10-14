@@ -23,6 +23,15 @@ namespace AlephOne
         public short[] sounds = new short[NUMBER_OF_MEDIA_SOUNDS];
 
         public short submerged_fade_effect;
+
+        public media_definition Clone()
+        {
+            var copy = (media_definition) MemberwiseClone();
+            copy.damage = damage.Clone();
+            copy.detonation_effects = (short[]) detonation_effects.Clone();
+            copy.sounds = (short[]) sounds.Clone();
+            return copy;
+        }
     }
 
     public static partial class media

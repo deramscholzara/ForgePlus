@@ -54,7 +54,8 @@ namespace ForgePlus.DataFileIO
                 throw new IOException($"\"{fileName}\" contains no shape collections.");
             }
 
-            shapes.load_collections(with_progress_bar: false, is_opengl: false);
+            // As Aleph One's OpenGL renderer loads them (which applies plugins' shapes patches that require it)
+            shapes.load_collections(with_progress_bar: false, is_opengl: MmlLoading.IsOpenGL);
         }
 
         public void Close()
