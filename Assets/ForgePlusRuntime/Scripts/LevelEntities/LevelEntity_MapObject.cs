@@ -176,7 +176,9 @@ namespace RuntimeCore.Entities.MapObjects
                 MapObjectPlaceholderSelectedMaterial.SetFloat(selectedShaderPropertyId, 1f);
             }
 
-            gameObject.AddComponent<MeshRenderer>().sharedMaterial = MapObjectPlaceholderMaterial;
+            var placeholderRenderer = gameObject.AddComponent<MeshRenderer>();
+            placeholderRenderer.sharedMaterial = MapObjectPlaceholderMaterial;
+            SurfaceCacheRenderingLayers.Exclude(placeholderRenderer);
 
             gameObject.AddComponent<MeshCollider>().convex = true;
 
@@ -331,6 +333,7 @@ namespace RuntimeCore.Entities.MapObjects
             spriteObject.AddComponent<MeshFilter>().sharedMesh = GetSpriteQuadMesh(sprite.Bounds);
             spritePreviewRenderer = spriteObject.AddComponent<MeshRenderer>();
             spritePreviewRenderer.sharedMaterial = sprite.Material;
+            SurfaceCacheRenderingLayers.Exclude(spritePreviewRenderer);
         }
 
         private static Mesh GetSpriteQuadMesh(Rect bounds)

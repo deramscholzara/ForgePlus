@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ForgePlus.LevelManipulation.Utilities;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -8,15 +9,11 @@ namespace ForgePlus.ApplicationGeneral
 {
     // Surface Cache Global Illumination renders each new material (its Meta pass) into a texture array that it grows by a
     // slice at a time, copying every slice over each time, so a level's worth of new materials at once can stall the GPU
-    // until the device is lost. Surfaces with materials it doesn't have yet are held out of it (on a rendering layer its
-    // filter excludes: the Effects volume profile's lightTransportRenderingLayerMask), and let in a few new materials a
-    // frame. Light layers aren't used, so the rendering layer changes nothing else about how surfaces are drawn.
+    // until the device is lost. Surfaces with materials it doesn't have yet are held out of it (on the rendering layer it
+    // excludes: SurfaceCacheRenderingLayers), and let in a few new materials a frame.
     [AutoStaticsCleanup]
     public static partial class SurfaceCacheAdmission
     {
-        private const uint AdmittedRenderingLayerMask = 1u << 0;
-        private const uint HeldRenderingLayerMask = 1u << 7;
-
         private const int NewMaterialsPerFrame = 4;
 
         private static bool isEnabled;
@@ -78,12 +75,12 @@ namespace ForgePlus.ApplicationGeneral
         {
             if (hold)
             {
-                renderer.renderingLayerMask = HeldRenderingLayerMask;
+                renderer.renderingLayerMask = SurfaceCacheRenderingLayers.Excluded;
                 heldRenderers.Add(renderer);
             }
             else
             {
-                renderer.renderingLayerMask = AdmittedRenderingLayerMask;
+                renderer.renderingLayerMask = SurfaceCacheRenderingLayers.Included;
                 admittedMaterials.UnionWith(renderer.sharedMaterials.Where(material => material));
             }
         }

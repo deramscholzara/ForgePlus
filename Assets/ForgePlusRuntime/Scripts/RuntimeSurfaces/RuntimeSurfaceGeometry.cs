@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using ForgePlus.LevelManipulation.Utilities;
 
 namespace RuntimeCore.Entities.Geometry
 {
@@ -24,8 +25,7 @@ namespace RuntimeCore.Entities.Geometry
                 throw new Exception("Cannot initialize surface more than once.");
             }
 
-            var mesh = new Mesh();
-            gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var mesh = CreateMesh();
 
             geometryModule = new RuntimeSurfaceGeometryModule_Polygon(
                 entity,
@@ -46,8 +46,7 @@ namespace RuntimeCore.Entities.Geometry
                 throw new Exception("Cannot initialize surface more than once.");
             }
 
-            var mesh = new Mesh();
-            gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var mesh = CreateMesh();
 
             geometryModule = new RuntimeSurfaceGeometryModule_Side(
                 entity,
@@ -185,6 +184,17 @@ namespace RuntimeCore.Entities.Geometry
                 SubscribeToMedia(geometryModule.MaterialKey.SourceMedia);
             }
         }
+
+        // Destroyed with the surface (DestroysMeshOnDestroy)
+        private Mesh CreateMesh()
+        {
+            var mesh = new Mesh();
+            gameObject.AddComponent<MeshFilter>().sharedMesh = mesh;
+            gameObject.AddComponent<DestroysMeshOnDestroy>().Mesh = mesh;
+
+            return mesh;
+        }
+
         private MeshRenderer CreateRenderer()
         {
             var surfaceRenderer = gameObject.AddComponent<MeshRenderer>();

@@ -1,5 +1,6 @@
 #if !NO_EDITING
 using ForgePlus.ApplicationGeneral;
+using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
@@ -139,6 +140,7 @@ namespace ForgePlus.LevelManipulation
             var overlayRenderer = overlay.AddComponent<MeshRenderer>();
             RuntimeSurfaceGeometry.ConfigureRenderer(overlayRenderer);
             overlayRenderer.sharedMaterial = material;
+            SurfaceCacheRenderingLayers.Exclude(overlayRenderer);
 
             return overlay;
         }
