@@ -34,7 +34,7 @@ namespace RuntimeCore.Entities
         public static readonly int lightIntensitiesGlobalPropertyId = Shader.PropertyToID("_LightIntensities");
         private const int minimumIntensitiesCapacity = 256;
 
-        // Released by ReleaseIntensities when Play mode ends
+        // Released by ReleaseIntensities when Play mode ends (LightIntensitiesFallback is bound while there's none)
         [NoAutoStaticsCleanup]
         private static GraphicsBuffer intensitiesBuffer;
         private static float[] intensities = Array.Empty<float>();
@@ -577,6 +577,9 @@ namespace RuntimeCore.Entities
             intensities = Array.Empty<float>();
             dirtyStart = int.MaxValue;
             dirtyEnd = 0;
+
+            // So nothing draws with the released buffer
+            LightIntensitiesFallback.Bind();
         }
     }
 }
