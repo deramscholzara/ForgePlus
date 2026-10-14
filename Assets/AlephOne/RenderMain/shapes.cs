@@ -54,6 +54,13 @@ namespace AlephOne
 
         public static bool shapes_file_is_m1() { return shapes_file_version == M1_SHAPES_VERSION; }
 
+        // ForgePlus: whether the open Marathon 1 shapes file has the resource (where get_indexed_terminal_data also looks
+        // for Marathon 1's 'term' resources)
+        public static bool m1_shapes_file_has_resource(uint type, short id)
+        {
+            return shapes_file_is_m1() && M1ShapesFile.IsOpen() && M1ShapesFile.Check(type, id);
+        }
+
         private static void load_collection_definition(collection_definition cd, SDL_RWops p)
         {
             cd.version = (short) SDL_ReadBE16(p);
