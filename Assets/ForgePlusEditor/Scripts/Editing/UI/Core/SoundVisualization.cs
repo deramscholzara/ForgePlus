@@ -406,7 +406,9 @@ namespace ForgePlus.UI
             indicator.transform.SetParent(root.transform, worldPositionStays: false);
             indicator.layer = SelectionManager.SelectionIndicatorLayer;
             indicator.AddComponent<MeshFilter>();
-            indicator.AddComponent<MeshRenderer>().sharedMaterial = material;
+            var indicatorRenderer = indicator.AddComponent<MeshRenderer>();
+            indicatorRenderer.sharedMaterial = material;
+            SurfaceCacheRenderingLayers.Exclude(indicatorRenderer);
 
             return indicator;
         }

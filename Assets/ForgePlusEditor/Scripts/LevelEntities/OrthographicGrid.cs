@@ -74,6 +74,7 @@ namespace ForgePlus.LevelManipulation
             gridRenderer.sharedMaterial = material;
             gridRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             gridRenderer.receiveShadows = false;
+            SurfaceCacheRenderingLayers.Exclude(gridRenderer);
         }
     }
 }

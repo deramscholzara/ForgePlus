@@ -62,7 +62,9 @@ namespace ForgePlus.LevelManipulation.Utilities
             indicator.layer = SelectionManager.SelectionIndicatorLayer;
 
             indicator.AddComponent<MeshFilter>();
-            indicator.AddComponent<MeshRenderer>().sharedMaterial = SelectionIndicatorMaterial;
+            var indicatorRenderer = indicator.AddComponent<MeshRenderer>();
+            indicatorRenderer.sharedMaterial = SelectionIndicatorMaterial;
+            SurfaceCacheRenderingLayers.Exclude(indicatorRenderer);
 
             UpdateSurfaceSelectionIndicator(indicator, vertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition);
 

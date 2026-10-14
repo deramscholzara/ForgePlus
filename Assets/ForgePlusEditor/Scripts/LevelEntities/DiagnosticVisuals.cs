@@ -1,6 +1,7 @@
 #if !NO_EDITING
 using AlephOne;
 using ForgePlus.ApplicationGeneral;
+using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using System.Collections.Generic;
@@ -143,6 +144,7 @@ namespace ForgePlus.LevelManipulation
             var overlayRenderer = overlay.AddComponent<MeshRenderer>();
             RuntimeSurfaceGeometry.ConfigureRenderer(overlayRenderer);
             overlayRenderer.sharedMaterial = material;
+            SurfaceCacheRenderingLayers.Exclude(overlayRenderer);
 
             return overlay;
         }
