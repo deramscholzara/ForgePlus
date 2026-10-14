@@ -357,6 +357,16 @@ MonoBehaviour:
     m_Flags: 1
     m_Metadata:
       m_Items: []
+  - m_Id: 4283477264056320
+    m_Key: SettingsTab.SurfaceCacheGlobalIllumination.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4283477268250624
+    m_Key: SettingsTab.SurfaceCacheGlobalIllumination.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

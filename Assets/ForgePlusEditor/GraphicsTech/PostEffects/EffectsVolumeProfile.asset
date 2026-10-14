@@ -531,7 +531,7 @@ MonoBehaviour:
   active: 1
   enabled:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   intensity:
     m_OverrideState: 1
     m_Value: 1
@@ -548,7 +548,7 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value:
       serializedVersion: 0
-      m_Bits: 4294967295
+      m_Bits: 4294967167
   lightTransportDefragCount:
     m_OverrideState: 1
     m_Value: 4

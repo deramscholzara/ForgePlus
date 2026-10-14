@@ -165,7 +165,6 @@ namespace ForgePlus.LevelManipulation
             LevelHistory.BeginGesture();
             movedPoints.Clear();
             textureSpread = null;
-            SurfaceBatchingManager.Instance.DeferMerging(true);
 
             isMoving = true;
             WatchTextureModifier(++moveNumber);
@@ -268,7 +267,6 @@ namespace ForgePlus.LevelManipulation
             finally
             {
                 movedPoints.Clear();
-                SurfaceBatchingManager.Instance.DeferMerging(false);
                 LevelHistory.EndGesture();
             }
         }
@@ -787,7 +785,7 @@ namespace ForgePlus.LevelManipulation
 
                     if ((current.x != target.x || current.y != target.y) && level.Polygons.TryGetValue(entry.Key, out var polygonEntity))
                     {
-                        polygonEntity.SetOffset(isFloor ? LevelEntity_Polygon.DataSources.Floor : LevelEntity_Polygon.DataSources.Ceiling, target.x, target.y, rebatch: false);
+                        polygonEntity.SetOffset(isFloor ? LevelEntity_Polygon.DataSources.Floor : LevelEntity_Polygon.DataSources.Ceiling, target.x, target.y);
                     }
                 }
             }
@@ -817,7 +815,7 @@ namespace ForgePlus.LevelManipulation
                 var texture = data.SideList[entry.Side].GetTexture(entry.Layer);
                 if (texture.x0 != target && level.Sides.TryGetValue(entry.Side, out var sideEntity) && sideEntity)
                 {
-                    sideEntity.SetOffset(entry.Layer, target, texture.y0, rebatch: false);
+                    sideEntity.SetOffset(entry.Layer, target, texture.y0);
                 }
 
                 changes[(entry.Side, entry.Layer)] = (offsetChange, 0);

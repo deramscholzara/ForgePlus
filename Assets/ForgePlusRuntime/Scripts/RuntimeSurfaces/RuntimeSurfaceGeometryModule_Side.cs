@@ -31,10 +31,7 @@ namespace RuntimeCore.Entities.Geometry
 
         // Reused for every side's mesh updates, as the mesh copies them (so clipping every frame doesn't allocate)
         private static readonly Vector3[] ScratchPositions = new Vector3[4];
-        private static readonly Vector4[] ScratchUVs = new Vector4[4];
-
-        private int lastLayeredTransparentSideTextureIndex;
-        private int lastLayeredTransparentSideLightIndex;
+        private static readonly Vector2[] ScratchUVs = new Vector2[4];
 
         private readonly LevelEntity_Side sideEntity;
         private readonly LevelEntity_Side.DataSources dataSource;
@@ -168,7 +165,7 @@ namespace RuntimeCore.Entities.Geometry
             ApplyTextureOffset(innerLayer: true);
             ApplyTransferMode(innerLayer: true);
             ApplyLight(innerLayer: true);
-            ApplyBatchKeyMaterial(innerLayer: true);
+            ApplySourceMaterial(innerLayer: true);
 
             // Tangents follow the UVs, which didn't exist yet when ApplyPositionsAndTriangles calculated them
             SurfaceMesh.RecalculateTangents(MeshUpdateFlags.DontNotifyMeshUsers |
@@ -180,7 +177,7 @@ namespace RuntimeCore.Entities.Geometry
                 ApplyTextureOffset(innerLayer: false);
                 ApplyTransferMode(innerLayer: false);
                 ApplyLight(innerLayer: false);
-                ApplyBatchKeyMaterial(innerLayer: false);
+                ApplySourceMaterial(innerLayer: false);
             }
 
             ApplyAmbientDelta();
@@ -253,8 +250,6 @@ namespace RuntimeCore.Entities.Geometry
 
                 SurfaceRenderer.enabled = true;
             }
-
-            IsStaticBatchable = true;
 
             if (sideEntity.NativeObject.HasLayeredTransparentSide(sideEntity.ParentLevel.Level))
             {
@@ -337,8 +332,6 @@ namespace RuntimeCore.Entities.Geometry
 
         private void AddPlatformSideClipping()
         {
-            IsStaticBatchable = false;
-
             platformSideClipping = SurfaceRenderer.gameObject.AddComponent<PlatformSideClipping>();
             platformSideClipping.Module = this;
             platformClippingIsApplied = false;
@@ -419,7 +412,7 @@ namespace RuntimeCore.Entities.Geometry
             positions[1].y = positions[2].y = top / GeometryUtilities.WorldUnitIncrementsPerMeter;
 
             SurfaceMesh.SetVertices(positions);
-            SurfaceMesh.SetUVs(channel: 0, BuildUVs(GetTexture(innerLayer: true).x0, textureAnchor, bottom, top, lastLightIndex, lastTextureIndex));
+            SurfaceMesh.SetUVs(channel: 0, BuildUVs(GetTexture(innerLayer: true).x0, textureAnchor, bottom, top));
             SurfaceMesh.RecalculateBounds();
 
             if (surfaceCollider)
@@ -432,16 +425,13 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyTextureOffset(bool innerLayer)
         {
-            Vector4[] UVs;
-
-            var lastLight = innerLayer ? lastLightIndex : lastLayeredTransparentSideLightIndex;
-            var lastTexture = innerLayer ? lastTextureIndex : lastLayeredTransparentSideTextureIndex;
+            Vector2[] UVs;
 
             var bottom = (float)(LowElevation - HighElevation);
 
             if (sideEntity.NativeObject == null)
             {
-                UVs = BuildUVs(0, 0f, bottom, 0f, lastLight, lastTexture);
+                UVs = BuildUVs(0, 0f, bottom, 0f);
 
                 SurfaceMesh.SetUVs(channel: 0, UVs);
             }
@@ -459,7 +449,7 @@ namespace RuntimeCore.Entities.Geometry
                 // Relative to the top of the surface, where its transform is
                 textureAnchor -= HighElevation;
 
-                UVs = BuildUVs(GetTexture(innerLayer).x0, textureAnchor, bottom, 0f, lastLight, lastTexture);
+                UVs = BuildUVs(GetTexture(innerLayer).x0, textureAnchor, bottom, 0f);
 
                 SurfaceMesh.SetUVs(channel: innerLayer ? 0 : 1, UVs);
             }
@@ -521,40 +511,26 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // Its materials hold the light's intensity (a layered side's outer layer's material, its transparent light's)
         public override void ApplyLight(bool innerLayer)
         {
-            var modifiedBatchKey = BatchKey;
-
             if (sideEntity.NativeObject == null)
             {
-                modifiedBatchKey.SourceLight = null;
-                modifiedBatchKey.LayeredTransparentSideSourceLight = null;
+                return;
             }
-            else if (innerLayer)
-            {
-                var lightIndex = sideEntity.NativeObject.GetLightsourceIndex(dataSource);
 
-                modifiedBatchKey.SourceLight = sideEntity.ParentLevel.Lights[lightIndex];
-                lastLightIndex = lightIndex;
-            }
-            else
-            {
-                modifiedBatchKey.LayeredTransparentSideSourceLight = sideEntity.ParentLevel.Lights[sideEntity.NativeObject.transparent_lightsource_index];
-                lastLayeredTransparentSideLightIndex = sideEntity.NativeObject.transparent_lightsource_index;
-            }
+            var modifiedMaterialKey = MaterialKey;
 
             if (innerLayer)
             {
-                var UVs = SurfaceMesh.uv.Select(uv => new Vector4(uv.x, uv.y, lastLightIndex, lastTextureIndex)).ToArray();
-                SurfaceMesh.SetUVs(0, UVs);
+                modifiedMaterialKey.SourceLight = GetLight(sideEntity.ParentLevel, sideEntity.NativeObject.GetLightsourceIndex(dataSource));
             }
             else
             {
-                var UVs = SurfaceMesh.uv.Select(uv => new Vector4(uv.x, uv.y, lastLayeredTransparentSideLightIndex, lastLayeredTransparentSideTextureIndex)).ToArray();
-                SurfaceMesh.SetUVs(1, UVs);
+                modifiedMaterialKey.LayeredTransparentSideSourceLight = GetLight(sideEntity.ParentLevel, sideEntity.NativeObject.transparent_lightsource_index);
             }
 
-            BatchKey = modifiedBatchKey;
+            MaterialKey = modifiedMaterialKey;
         }
 
         // Applies to both layers of a layered transparent side. Aleph One pins the lit result to between dark and full
@@ -579,15 +555,15 @@ namespace RuntimeCore.Entities.Geometry
             throw new NotImplementedException("Sides do not have media surfaces - this code should be unreachable.");
         }
 
-        public override void ApplyBatchKeyMaterial(bool innerLayer)
+        public override void ApplySourceMaterial(bool innerLayer)
         {
             DecrementTextureUsage();
 
-            var modifiedBatchKey = BatchKey;
+            var modifiedMaterialKey = MaterialKey;
 
             if (sideEntity.NativeObject == null)
             {
-                modifiedBatchKey.SourceMaterial =
+                modifiedMaterialKey.SourceMaterial =
                     MaterialGeneration_Geometry.GetMaterial(cstypes.UNONE,
                                                             transferMode: 0,
                                                             isOpaqueSurface: true,
@@ -599,57 +575,26 @@ namespace RuntimeCore.Entities.Geometry
                 var shapeDescriptor = sideEntity.NativeObject.GetTexture(dataSource).texture;
                 var transferMode = sideEntity.NativeObject.GetTransferMode(dataSource);
 
-#if USE_TEXTURE_ARRAYS
-                modifiedBatchKey.SourceShapeDescriptor = shapeDescriptor;
-#endif
-                modifiedBatchKey.SourceMaterial =
+                modifiedMaterialKey.SourceMaterial =
                     MaterialGeneration_Geometry.GetMaterial(shapeDescriptor,
                                                             transferMode,
                                                             sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
                                                             MaterialGeneration_Geometry.SurfaceTypes.Normal,
                                                             incrementUsageCounter: true);
 
-#if USE_TEXTURE_ARRAYS
-                lastTextureIndex = MaterialGeneration_Geometry.GetTextureArrayIndex(
-                    shapeDescriptor,
-                    transferMode,
-                    sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
-                    MaterialGeneration_Geometry.SurfaceTypes.Normal);
-#endif
             }
             else
             {
-#if USE_TEXTURE_ARRAYS
-                modifiedBatchKey.LayeredTransparentSideShapeDescriptor = sideEntity.NativeObject.transparent_texture.texture;
-#endif
-                modifiedBatchKey.LayeredTransparentSideSourceMaterial =
+                modifiedMaterialKey.LayeredTransparentSideSourceMaterial =
                     MaterialGeneration_Geometry.GetMaterial(sideEntity.NativeObject.transparent_texture.texture,
                                                             sideEntity.NativeObject.transparent_transfer_mode,
                                                             sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
                                                             MaterialGeneration_Geometry.SurfaceTypes.LayeredTransparentOuter,
                                                             incrementUsageCounter: true);
 
-#if USE_TEXTURE_ARRAYS
-                lastLayeredTransparentSideTextureIndex = MaterialGeneration_Geometry.GetTextureArrayIndex(
-                    sideEntity.NativeObject.transparent_texture.texture,
-                    sideEntity.NativeObject.transparent_transfer_mode,
-                    sideEntity.NativeObject.SurfaceShouldBeOpaque(dataSource, sideEntity.ParentLevel.Level),
-                    MaterialGeneration_Geometry.SurfaceTypes.LayeredTransparentOuter);
-#endif
             }
 
-            if (innerLayer)
-            {
-                var UVs = SurfaceMesh.uv.Select(uv => new Vector4(uv.x, uv.y, lastLightIndex, lastTextureIndex)).ToArray();
-                SurfaceMesh.SetUVs(0, UVs);
-            }
-            else
-            {
-                var UVs = SurfaceMesh.uv.Select(uv => new Vector4(uv.x, uv.y, lastLayeredTransparentSideLightIndex, lastLayeredTransparentSideTextureIndex)).ToArray();
-                SurfaceMesh.SetUVs(1, UVs);
-            }
-
-            BatchKey = modifiedBatchKey;
+            MaterialKey = modifiedMaterialKey;
         }
 
         public override void PrepareForDestruction()
@@ -847,16 +792,16 @@ namespace RuntimeCore.Entities.Geometry
 
         // Heights are relative to the surface's transform, with textureAnchor at the top of the texture.
         // Returns the shared scratch array, so the result must be applied before the next call.
-        private Vector4[] BuildUVs(short textureOffsetX, float textureAnchor, float bottom, float top, int lastLight, int lastTexture)
+        private Vector2[] BuildUVs(short textureOffsetX, float textureAnchor, float bottom, float top)
         {
             var meshUVs = ScratchUVs;
 
             if (sideEntity.NativeObject == null)
             {
-                meshUVs[0] = new Vector4(0f, 0f, lastLight, lastTexture);
-                meshUVs[1] = new Vector4(0f, 0f, lastLight, lastTexture);
-                meshUVs[2] = new Vector4(0f, 0f, lastLight, lastTexture);
-                meshUVs[3] = new Vector4(0f, 0f, lastLight, lastTexture);
+                meshUVs[0] = Vector2.zero;
+                meshUVs[1] = Vector2.zero;
+                meshUVs[2] = Vector2.zero;
+                meshUVs[3] = Vector2.zero;
             }
             else
             {
@@ -867,10 +812,10 @@ namespace RuntimeCore.Entities.Geometry
                 var bottomV = (bottom - textureAnchor) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
                 var topV = (top - textureAnchor) / GeometryUtilities.WorldUnitIncrementsPerWorldUnit;
 
-                meshUVs[0] = new Vector4(left, bottomV, lastLight, lastTexture);
-                meshUVs[1] = new Vector4(left, topV, lastLight, lastTexture);
-                meshUVs[2] = new Vector4(right, topV, lastLight, lastTexture);
-                meshUVs[3] = new Vector4(right, bottomV, lastLight, lastTexture);
+                meshUVs[0] = new Vector2(left, bottomV);
+                meshUVs[1] = new Vector2(left, topV);
+                meshUVs[2] = new Vector2(right, topV);
+                meshUVs[3] = new Vector2(right, bottomV);
             }
 
             return meshUVs;

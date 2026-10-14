@@ -309,6 +309,19 @@ namespace ForgePlus.UI
             }
         }
 
+        [CreateProperty]
+        public bool SurfaceCacheGlobalIlluminationEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.SurfaceCacheGlobalIlluminationEnabled;
+            }
+            set
+            {
+                SettingsManager.Instance.SurfaceCacheGlobalIlluminationEnabled = value;
+            }
+        }
+
         // The index of the choice, in the order of MergedSaveChecksums (Ask, Keep, Regenerate)
         [CreateProperty]
         public int MergedSaveChecksum

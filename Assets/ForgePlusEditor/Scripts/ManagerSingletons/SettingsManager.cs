@@ -34,6 +34,7 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_Bloom = "Settings_Bloom";
         private const string PlayerPrefsSettingsKey_ColorAdjustment = "Settings_ColorAdjustment";
         private const string PlayerPrefsSettingsKey_Vignette = "Settings_Vignette";
+        private const string PlayerPrefsSettingsKey_SurfaceCacheGlobalIllumination = "Settings_SurfaceCacheGlobalIllumination";
         private const string PlayerPrefsSettingsKey_ClipPlatformSides = "Settings_ClipPlatformSides";
         private const string PlayerPrefsSettingsKey_ShowInvalidSides = "Settings_ShowInvalidSides";
         private const string PlayerPrefsSettingsKey_MergedSaveChecksum = "Settings_MergedSaveChecksum";
@@ -201,6 +202,23 @@ namespace ForgePlus.ApplicationGeneral
                 }
 
                 OnSettingChanged?.Invoke(nameof(VignetteEnabled));
+            }
+        }
+
+        // Off until it's turned on (it's costly, and its indirect lighting changes how levels look)
+        public bool SurfaceCacheGlobalIlluminationEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_SurfaceCacheGlobalIllumination, 0) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_SurfaceCacheGlobalIllumination, value ? 1 : 0);
+
+                ApplySurfaceCacheGlobalIllumination();
+
+                OnSettingChanged?.Invoke(nameof(SurfaceCacheGlobalIlluminationEnabled));
             }
         }
 
@@ -562,7 +580,19 @@ namespace ForgePlus.ApplicationGeneral
             {
                 simpleVisualsEnabled = value;
 
-                SimpleVisuals.SetEnabled(value, SurfaceBatchingManager.Instance.SurfaceMaterialsInUse);
+                // Surface Cache Global Illumination is off while it's on, so it's turned off before the shaders change,
+                // and back on (if it's set to be) after they're back
+                if (value)
+                {
+                    ApplySurfaceCacheGlobalIllumination();
+                    SurfaceMaterials.SetSimpleVisualsEnabled(true);
+                }
+                else
+                {
+                    SurfaceMaterials.SetSimpleVisualsEnabled(false);
+                    ApplySurfaceCacheGlobalIllumination();
+                }
+
                 ApplyBloomAndColorAdjustment();
 
                 OnSettingChanged?.Invoke(nameof(SimpleVisualsEnabled));
@@ -599,6 +629,27 @@ namespace ForgePlus.ApplicationGeneral
             if (effectsDisabledVolumeProfile.TryGet<SplitToning>(out var colorAdjustment))
             {
                 colorAdjustment.active = !(ColorCorrectionEnabled && !simpleVisualsEnabled);
+            }
+
+            // The camera takes it up itself once the render pipeline has started (which it may not have, as ForgePlus starts)
+            if (VolumeManager.instance.isInitialized)
+            {
+                mainCamera.UpdateVolumeStack();
+            }
+        }
+
+        // The effects-disabled profile's override turns it off (its Enabled is off, which also stops its per-frame work).
+        // It's also off while Simple Visuals is on, keeping its setting for when Simple Visuals is turned off.
+        private void ApplySurfaceCacheGlobalIllumination()
+        {
+            var isActive = SurfaceCacheGlobalIlluminationEnabled && !simpleVisualsEnabled;
+
+            // Before it's on, so it takes surfaces in a few at a time
+            SurfaceCacheAdmission.SetEnabled(isActive);
+
+            if (effectsDisabledVolumeProfile.TryGet<SurfaceCacheGIVolumeOverride>(out var profileComponent))
+            {
+                profileComponent.active = !isActive;
             }
 
             // The camera takes it up itself once the render pipeline has started (which it may not have, as ForgePlus starts)
@@ -685,6 +736,9 @@ namespace ForgePlus.ApplicationGeneral
 
             // The profile keeps what it was last set to (such as off, while Simple Visuals was on when ForgePlus closed)
             ApplyBloomAndColorAdjustment();
+
+            // Its saved setting (off by default) rather than what the profile was last left at
+            ApplySurfaceCacheGlobalIllumination();
         }
     }
 }

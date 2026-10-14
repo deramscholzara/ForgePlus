@@ -166,7 +166,7 @@ namespace ForgePlus.Inspection
 
             protected override void SetOffset(short x, short y)
             {
-                inspector.Edit(side => side.SetOffset(dataSource, x, y, rebatch: true));
+                inspector.Edit(side => side.SetOffset(dataSource, x, y));
             }
 
             protected override void SetTransferMode(short transferMode)

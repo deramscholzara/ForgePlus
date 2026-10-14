@@ -212,6 +212,21 @@ Shader "ForgePlus/DirectionalSpriteRenderer"
             }
             ENDHLSL
         }
+
+        // Black, so Surface Cache Global Illumination can take it without it adding or reflecting light
+        Pass
+        {
+            Name "Meta"
+            Tags { "LightMode" = "Meta" }
+
+            Cull Off
+
+            HLSLPROGRAM
+            #pragma vertex BlackMetaVertex
+            #pragma fragment BlackMetaFragment
+            #include "Assets/ForgePlusEditor/GraphicsTech/Shaders/BlackMetaPass.hlsl"
+            ENDHLSL
+        }
     }
 
     FallBack Off

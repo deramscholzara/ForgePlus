@@ -1,11 +1,12 @@
 // Every surface drawn with the grid texture (SimpleVisuals), lit as the textured surfaces are: its light's intensity
-// (UV0.z indexes _LightIntensities) plus a side's ambient delta (UV4.x), raised toward full by _GlobalMinimumLight (which
-// Show Lighting being off sets to full). Texture coordinates are the surface's own (UV0.xy), without its transfer mode's
-// motion.
+// (_LightIntensity, which its material holds) plus a side's ambient delta (UV4.x), raised toward full by
+// _GlobalMinimumLight (which Show Lighting being off sets to full). Texture coordinates are the surface's own (UV0.xy),
+// without its transfer mode's motion.
 Shader "ForgePlus/SimpleVisuals"
 {
     Properties
     {
+        _LightIntensity("Light Intensity", Float) = 1
     }
 
     SubShader
@@ -25,13 +26,16 @@ Shader "ForgePlus/SimpleVisuals"
         TEXTURE2D(_ForgePlusGridTexture);
         SAMPLER(sampler_ForgePlusGridTexture);
 
-        StructuredBuffer<float> _LightIntensities;
+        CBUFFER_START(UnityPerMaterial)
+        float _LightIntensity;
+        CBUFFER_END
+
         float _GlobalMinimumLight;
 
         struct Attributes
         {
             float4 positionOS : POSITION;
-            float4 uv0 : TEXCOORD0;
+            float2 uv0 : TEXCOORD0;
             float4 uv4 : TEXCOORD4;
             UNITY_VERTEX_INPUT_INSTANCE_ID
         };
@@ -51,10 +55,9 @@ Shader "ForgePlus/SimpleVisuals"
             UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output);
 
             output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
-            output.uv = input.uv0.xy;
+            output.uv = input.uv0;
 
-            // The index arrives through a UV, which can hold slightly off its integer value, so it's rounded
-            float intensity = saturate(_LightIntensities[(uint) round(input.uv0.z)] + input.uv4.x);
+            float intensity = saturate(_LightIntensity + input.uv4.x);
             output.lightIntensity = lerp(_GlobalMinimumLight, 1.0, intensity);
 
             return output;
@@ -140,6 +143,22 @@ Shader "ForgePlus/SimpleVisuals"
             {
                 return half4(NormalizeNormalPerPixel(input.normalWS), 0.0);
             }
+            ENDHLSL
+        }
+
+        // Black, so Surface Cache Global Illumination can take it without it adding or reflecting light (it's turned off while
+        // Simple Visuals is on, but its materials may still be given to it as it turns off)
+        Pass
+        {
+            Name "Meta"
+            Tags { "LightMode" = "Meta" }
+
+            Cull Off
+
+            HLSLPROGRAM
+            #pragma vertex BlackMetaVertex
+            #pragma fragment BlackMetaFragment
+            #include "Assets/ForgePlusEditor/GraphicsTech/Shaders/BlackMetaPass.hlsl"
             ENDHLSL
         }
     }

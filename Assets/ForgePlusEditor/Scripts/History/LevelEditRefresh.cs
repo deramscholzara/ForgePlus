@@ -269,166 +269,157 @@ namespace ForgePlus.History
             var movedPoints = new HashSet<short>();
             var soundsChanged = false;
 
-            SurfaceBatchingManager.Instance.DeferMerging(true);
-
-            try
+            foreach (var change in changes)
             {
-                foreach (var change in changes)
+                if (!(change is TrackedList.ListChange listChange))
                 {
-                    if (!(change is TrackedList.ListChange listChange))
-                    {
-                        continue;
-                    }
+                    continue;
+                }
 
-                    for (var elementIndex = 0; elementIndex < listChange.Elements.Count; elementIndex++)
-                    {
-                        var index = (short) listChange.Elements[elementIndex].Index;
-                        var changedFields = listChange.ChangedFields(elementIndex);
+                for (var elementIndex = 0; elementIndex < listChange.Elements.Count; elementIndex++)
+                {
+                    var index = (short) listChange.Elements[elementIndex].Index;
+                    var changedFields = listChange.ChangedFields(elementIndex);
 
-                        switch (change.Data.Name)
-                        {
-                            case nameof(MapLevel.PolygonList):
-                                if (level.Polygons.TryGetValue(index, out var polygon))
+                    switch (change.Data.Name)
+                    {
+                        case nameof(MapLevel.PolygonList):
+                            if (level.Polygons.TryGetValue(index, out var polygon))
+                            {
+                                polygon.ApplyAllSurfaces();
+                            }
+
+                            // Its sides reach its floor and ceiling
+                            if (changedFields.Overlaps(polygonHeightFields))
+                            {
+                                polygonsWithChangedHeights.Add(index);
+
+                                var nativePolygon = level.Level.PolygonList[index];
+                                for (var i = 0; i < nativePolygon.vertex_count; i++)
                                 {
-                                    polygon.ApplyAllSurfaces();
+                                    linesToRegenerate.Add(nativePolygon.line_indexes[i]);
                                 }
+                            }
 
-                                // Its sides reach its floor and ceiling
-                                if (changedFields.Overlaps(polygonHeightFields))
+                            soundsChanged |= changedFields.Overlaps(polygonSoundFields);
+                            break;
+                        case nameof(MapLevel.SideList):
+                            var element = listChange.Elements[elementIndex];
+
+                            if (element.IsAddedOrRemoved ||
+                                changedFields.Overlaps(sideLineFields) ||
+                                !level.Sides.TryGetValue(index, out var side) || !side)
+                            {
+                                // Added, removed or moved between lines: on the line it was on, and the one it's on
+                                foreach (var state in new[] { element.Before, element.After })
                                 {
-                                    polygonsWithChangedHeights.Add(index);
-
-                                    var nativePolygon = level.Level.PolygonList[index];
-                                    for (var i = 0; i < nativePolygon.vertex_count; i++)
+                                    if (state is side_data sideState)
                                     {
-                                        linesToRegenerate.Add(nativePolygon.line_indexes[i]);
+                                        linesToRegenerate.Add(sideState.line_index);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                side.ApplyAllSurfaces();
+                            }
+
+                            break;
+                        case nameof(MapLevel.LineList):
+                            linesToRegenerate.Add(index);
+                            break;
+                        case nameof(MapLevel.EndpointList):
+                            if (changedFields.Contains(nameof(endpoint_data.vertex)))
+                            {
+                                movedPoints.Add(index);
+                            }
+
+                            break;
+                        case nameof(MapLevel.SavedObjectList):
+                            if (level.MapObjects.TryGetValue(index, out var mapObject))
+                            {
+                                mapObject.ApplyType();
+                                mapObject.ApplyPlacement();
+                            }
+
+                            break;
+                        case nameof(MapLevel.MapAnnotationList):
+                            if (level.Annotations.TryGetValue(index, out var annotation))
+                            {
+                                annotation.RefreshLabel();
+                                annotation.RefreshPosition();
+                            }
+
+                            break;
+                        case nameof(MapLevel.LightList):
+                            if (level.Lights.TryGetValue(index, out var light))
+                            {
+                                light.BeginRuntimeStyleBehavior();
+                            }
+
+                            break;
+                        case nameof(MapLevel.MediaList):
+                            if (level.Medias.TryGetValue(index, out var media))
+                            {
+                                foreach (var mediaPolygon in level.Polygons.Values)
+                                {
+                                    if (mediaPolygon.NativeObject.media_index == index)
+                                    {
+                                        mediaPolygon.ApplyMedia();
                                     }
                                 }
 
-                                soundsChanged |= changedFields.Overlaps(polygonSoundFields);
-                                break;
-                            case nameof(MapLevel.SideList):
-                                var element = listChange.Elements[elementIndex];
+                                media.ApplyMaterialProperties();
+                            }
 
-                                if (element.IsAddedOrRemoved ||
-                                    changedFields.Overlaps(sideLineFields) ||
-                                    !level.Sides.TryGetValue(index, out var side) || !side)
-                                {
-                                    // Added, removed or moved between lines: on the line it was on, and the one it's on
-                                    foreach (var state in new[] { element.Before, element.After })
-                                    {
-                                        if (state is side_data sideState)
-                                        {
-                                            linesToRegenerate.Add(sideState.line_index);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    side.ApplyAllSurfaces();
-                                }
+                            break;
+                        case nameof(MapLevel.AmbientSoundImageList):
+                        case nameof(MapLevel.RandomSoundImageList):
+                            soundsChanged = true;
+                            break;
+                        case nameof(MapLevel.map_terminal_text):
+                            var ui = ForgePlusUI.Instance;
+                            if (ui && ui.Terminals != null)
+                            {
+                                ui.Terminals.ReloadTerminal();
+                            }
 
-                                break;
-                            case nameof(MapLevel.LineList):
-                                linesToRegenerate.Add(index);
-                                break;
-                            case nameof(MapLevel.EndpointList):
-                                if (changedFields.Contains(nameof(endpoint_data.vertex)))
-                                {
-                                    movedPoints.Add(index);
-                                }
-
-                                break;
-                            case nameof(MapLevel.SavedObjectList):
-                                if (level.MapObjects.TryGetValue(index, out var mapObject))
-                                {
-                                    mapObject.ApplyType();
-                                    mapObject.ApplyPlacement();
-                                }
-
-                                break;
-                            case nameof(MapLevel.MapAnnotationList):
-                                if (level.Annotations.TryGetValue(index, out var annotation))
-                                {
-                                    annotation.RefreshLabel();
-                                    annotation.RefreshPosition();
-                                }
-
-                                break;
-                            case nameof(MapLevel.LightList):
-                                if (level.Lights.TryGetValue(index, out var light))
-                                {
-                                    light.BeginRuntimeStyleBehavior();
-                                }
-
-                                break;
-                            case nameof(MapLevel.MediaList):
-                                if (level.Medias.TryGetValue(index, out var media))
-                                {
-                                    foreach (var mediaPolygon in level.Polygons.Values)
-                                    {
-                                        if (mediaPolygon.NativeObject.media_index == index)
-                                        {
-                                            mediaPolygon.ApplyMedia();
-                                        }
-                                    }
-
-                                    media.ApplyMaterialProperties();
-                                }
-
-                                break;
-                            case nameof(MapLevel.AmbientSoundImageList):
-                            case nameof(MapLevel.RandomSoundImageList):
-                                soundsChanged = true;
-                                break;
-                            case nameof(MapLevel.map_terminal_text):
-                                var ui = ForgePlusUI.Instance;
-                                if (ui && ui.Terminals != null)
-                                {
-                                    ui.Terminals.ReloadTerminal();
-                                }
-
-                                break;
-                        }
-                    }
-                }
-
-                if (movedPoints.Count > 0)
-                {
-                    PointEditing.ApplyShapes(level, movedPoints, linesToRegenerate);
-                }
-
-                foreach (var lineIndex in linesToRegenerate)
-                {
-                    if (level.Lines.TryGetValue(lineIndex, out var line))
-                    {
-                        line.RegenerateSurfaces();
-                    }
-                }
-
-                // Objects and annotations are placed by their polygons' heights
-                if (polygonsWithChangedHeights.Count > 0)
-                {
-                    foreach (var mapObject in level.MapObjects.Values)
-                    {
-                        if (polygonsWithChangedHeights.Contains(mapObject.NativeObject.polygon_index))
-                        {
-                            mapObject.ApplyPlacement();
-                        }
-                    }
-
-                    foreach (var annotation in level.Annotations.Values)
-                    {
-                        if (polygonsWithChangedHeights.Contains(annotation.NativeObject.polygon_index))
-                        {
-                            annotation.RefreshPosition();
-                        }
+                            break;
                     }
                 }
             }
-            finally
+
+            if (movedPoints.Count > 0)
             {
-                SurfaceBatchingManager.Instance.DeferMerging(false);
+                PointEditing.ApplyShapes(level, movedPoints, linesToRegenerate);
+            }
+
+            foreach (var lineIndex in linesToRegenerate)
+            {
+                if (level.Lines.TryGetValue(lineIndex, out var line))
+                {
+                    line.RegenerateSurfaces();
+                }
+            }
+
+            // Objects and annotations are placed by their polygons' heights
+            if (polygonsWithChangedHeights.Count > 0)
+            {
+                foreach (var mapObject in level.MapObjects.Values)
+                {
+                    if (polygonsWithChangedHeights.Contains(mapObject.NativeObject.polygon_index))
+                    {
+                        mapObject.ApplyPlacement();
+                    }
+                }
+
+                foreach (var annotation in level.Annotations.Values)
+                {
+                    if (polygonsWithChangedHeights.Contains(annotation.NativeObject.polygon_index))
+                    {
+                        annotation.RefreshPosition();
+                    }
+                }
             }
 
             if (polygonsWithChangedHeights.Count > 0)

@@ -23,6 +23,15 @@ Shader "ForgePlus/DiagnosticOverlay"
         Offset -1, -1
         Blend SrcAlpha OneMinusSrcAlpha
 
+        // Shared by every pass, so they agree on the material's properties (as the SRP Batcher needs)
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+        CBUFFER_START(UnityPerMaterial)
+            half4 _Color;
+        CBUFFER_END
+        ENDHLSL
+
         Pass
         {
             Name "Unlit"
@@ -31,12 +40,6 @@ Shader "ForgePlus/DiagnosticOverlay"
             #pragma vertex Vertex
             #pragma fragment Fragment
             #pragma multi_compile_instancing
-
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-            CBUFFER_START(UnityPerMaterial)
-                half4 _Color;
-            CBUFFER_END
 
             struct Attributes
             {
@@ -65,6 +68,23 @@ Shader "ForgePlus/DiagnosticOverlay"
             {
                 return _Color;
             }
+            ENDHLSL
+        }
+
+        // Black, so Surface Cache Global Illumination can take it without it adding or reflecting light
+        Pass
+        {
+            Name "Meta"
+            Tags { "LightMode" = "Meta" }
+
+            Cull Off
+            Blend Off
+            Offset 0, 0
+
+            HLSLPROGRAM
+            #pragma vertex BlackMetaVertex
+            #pragma fragment BlackMetaFragment
+            #include "Assets/ForgePlusEditor/GraphicsTech/Shaders/BlackMetaPass.hlsl"
             ENDHLSL
         }
     }

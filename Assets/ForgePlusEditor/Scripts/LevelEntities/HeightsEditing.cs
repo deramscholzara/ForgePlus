@@ -63,7 +63,6 @@ namespace ForgePlus.LevelManipulation
         public static void SetHeights(IEnumerable<LevelEntity_Polygon> polygons, LevelEntity_Polygon.DataSources dataSource, short height)
         {
             var changedPolygons = new List<LevelEntity_Polygon>();
-            SurfaceBatchingManager.Instance.DeferMerging(true);
 
             try
             {
@@ -86,7 +85,6 @@ namespace ForgePlus.LevelManipulation
             // Recorded as one action when it ends
             LevelHistory.BeginGesture();
             draggedPolygons.Clear();
-            SurfaceBatchingManager.Instance.DeferMerging(true);
         }
 
         public static void DragHeight(LevelEntity_Polygon polygon, LevelEntity_Polygon.DataSources dataSource, short height)
@@ -170,7 +168,7 @@ namespace ForgePlus.LevelManipulation
             foreach (var polygon in changedPolygons)
             {
                 var surface = dataSource == LevelEntity_Polygon.DataSources.Ceiling ? polygon.CeilingSurface : polygon.FloorSurface;
-                surface.ApplyHeight(rebatchImmediately: false);
+                surface.ApplyHeight();
             }
 
             foreach (var lineIndex in lineClosures.Keys)
@@ -248,7 +246,6 @@ namespace ForgePlus.LevelManipulation
                 // Including faces recorded by an edit that failed partway, which the next edit mustn't start from
                 sideExposure.Clear();
                 objectPlacements = new ObjectPlacement.Snapshot();
-                SurfaceBatchingManager.Instance.DeferMerging(false);
             }
 
             PolygonContainmentMap.MarkChanged();

@@ -1,5 +1,4 @@
-﻿using ForgePlus.ApplicationGeneral;
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -12,6 +11,9 @@ namespace RuntimeCore.Entities.Geometry
         public MeshRenderer SurfaceRenderer => geometryModule.SurfaceRenderer;
 
         protected RuntimeSurfaceGeometryModule_Base geometryModule;
+
+        // The media whose height it follows (a media surface's)
+        private LevelEntity_Media subscribedMedia;
 
         public virtual void InitializeRuntimeSurface(
             LevelEntity_Polygon entity,
@@ -71,31 +73,27 @@ namespace RuntimeCore.Entities.Geometry
 
         public void PrepareForDestruction()
         {
-            SurfaceBatchingManager.Instance.UnmergeBatch(geometryModule.BatchKey);
-            SurfaceBatchingManager.Instance.RemoveFromBatches(geometryModule.BatchKey, this);
+            SubscribeToMedia(null);
 
             geometryModule.PrepareForDestruction();
         }
 
-        public void ApplyPositions(bool rebatchImmediately = true)
+        public void ApplyPositions()
         {
-            ApplyChange(rebatchImmediately, () => geometryModule.ApplyPositionsAndTriangles());
+            geometryModule.ApplyPositionsAndTriangles();
         }
 
-        public void ApplyPlatform(bool rebatchImmediately = true)
+        public void ApplyPlatform()
         {
-            ApplyChange(rebatchImmediately, () => geometryModule.ApplyPositionsAndTriangles());
+            geometryModule.ApplyPositionsAndTriangles();
         }
 
         // For a floor's, ceiling's or media's corners that moved: its positions, the texture coordinates that follow them,
         // and its collider
-        public void ApplyShape(bool rebatchImmediately = true)
+        public void ApplyShape()
         {
-            ApplyChange(rebatchImmediately, () =>
-            {
-                geometryModule.ApplyPositionsAndTriangles();
-                geometryModule.ApplyTextureOffset(innerLayer: true);
-            });
+            geometryModule.ApplyPositionsAndTriangles();
+            geometryModule.ApplyTextureOffset(innerLayer: true);
 
             if (!TryGetComponent<MeshCollider>(out var meshCollider) && HasArea(SurfaceMesh))
             {
@@ -112,7 +110,6 @@ namespace RuntimeCore.Entities.Geometry
                 }
             }
         }
-
         // Whether any of the mesh's triangles has area
         public static bool HasArea(Mesh mesh)
         {
@@ -132,80 +129,62 @@ namespace RuntimeCore.Entities.Geometry
         }
 
         // For a floor's or ceiling's height
-        public void ApplyHeight(bool rebatchImmediately = true)
+        public void ApplyHeight()
         {
-            ApplyChange(rebatchImmediately, () => geometryModule.ApplyTransformPosition());
+            geometryModule.ApplyTransformPosition();
         }
 
-        public void ApplyTextureOffset(bool innerLayer = true, bool rebatchImmediately = true)
+        public void ApplyTextureOffset(bool innerLayer = true)
         {
-            ApplyChange(rebatchImmediately, () => geometryModule.ApplyTextureOffset(innerLayer));
+            geometryModule.ApplyTextureOffset(innerLayer);
         }
 
-        public void ApplyTransferMode(bool innerLayer = true, bool rebatchImmediately = true)
+        public void ApplyTransferMode(bool innerLayer = true)
         {
-            ApplyChange(rebatchImmediately, () => geometryModule.ApplyTransferMode(innerLayer));
+            geometryModule.ApplyTransferMode(innerLayer);
         }
 
-        public void ApplyTexture(bool innerLayer = true, bool rebatchImmediately = true)
+        public void ApplyTexture(bool innerLayer = true)
         {
-            ApplyChange(rebatchImmediately, () =>
-            {
-                geometryModule.ApplyBatchKeyMaterial(innerLayer);
-                geometryModule.ApplyRendererMaterials();
-            });
+            geometryModule.ApplySourceMaterial(innerLayer);
+            geometryModule.ApplyRendererMaterials();
         }
 
-        public void ApplyLight(bool innerLayer = true, bool rebatchImmediately = true)
+        public void ApplyLight(bool innerLayer = true)
         {
-            ApplyChange(rebatchImmediately, () =>
-            {
-                geometryModule.ApplyLight(innerLayer);
-                geometryModule.ApplyRendererMaterials();
-            });
+            geometryModule.ApplyLight(innerLayer);
+            geometryModule.ApplyRendererMaterials();
         }
 
-        public void ApplyAmbientDelta(bool rebatchImmediately = true)
+        public void ApplyAmbientDelta()
         {
             if (geometryModule is RuntimeSurfaceGeometryModule_Side sideModule)
             {
-                ApplyChange(rebatchImmediately, () => sideModule.ApplyAmbientDelta());
+                sideModule.ApplyAmbientDelta();
             }
         }
 
-        public void ApplyMedia(bool rebatchImmediately = true)
+        public void ApplyMedia()
         {
             if (geometryModule is RuntimeSurfaceGeometryModule_Polygon &&
-                geometryModule.BatchKey.SourceMedia != null)
+                geometryModule.MaterialKey.SourceMedia != null)
             {
-                ApplyChange(rebatchImmediately: false, () =>
-                {
-                    geometryModule.ApplyMedia();
+                geometryModule.ApplyMedia();
 
-                    if (geometryModule.BatchKey.SourceMedia == null)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        // Its media (or its media's type) may have changed its texture
-                        geometryModule.ApplyBatchKeyMaterial(innerLayer: true);
-                        geometryModule.ApplyRendererMaterials();
-                    }
-                });
-
-                if (geometryModule.BatchKey.SourceMedia == null)
+                if (geometryModule.MaterialKey.SourceMedia == null)
                 {
                     PrepareForDestruction();
                     Destroy(gameObject);
+                    return;
                 }
-                else if (rebatchImmediately && SurfaceBatchingManager.Instance.GetBatchIsMerged(geometryModule.BatchKey))
-                {
-                    SurfaceBatchingManager.Instance.MergeAllBatches();
-                }
+
+                // Its media (or its media's type) may have changed its texture
+                geometryModule.ApplySourceMaterial(innerLayer: true);
+                geometryModule.ApplyRendererMaterials();
+
+                SubscribeToMedia(geometryModule.MaterialKey.SourceMedia);
             }
         }
-
         private MeshRenderer CreateRenderer()
         {
             var surfaceRenderer = gameObject.AddComponent<MeshRenderer>();
@@ -216,32 +195,26 @@ namespace RuntimeCore.Entities.Geometry
 
         private void AssembleSurface()
         {
-            ApplyChange(rebatchImmediately: false,
-                        changeAction: () => geometryModule.AssembleSurface());
+            geometryModule.AssembleSurface();
+
+            // A media's surfaces follow its height
+            SubscribeToMedia(geometryModule.MaterialKey.SourceMedia);
 
             // If editing isn't possible, then the surface should never need to be updated or rebuilt
 #if NO_EDITING
             Destroy(this);
 #endif
         }
-        
-        private void ApplyChange(bool rebatchImmediately, Action changeAction)
+
+        private void SubscribeToMedia(LevelEntity_Media media)
         {
-            rebatchImmediately &= SurfaceBatchingManager.Instance.GetBatchIsMerged(geometryModule.BatchKey);
-
-            SurfaceBatchingManager.Instance.UnmergeBatch(geometryModule.BatchKey);
-            SurfaceBatchingManager.Instance.RemoveFromBatches(geometryModule.BatchKey, this);
-
-            changeAction.Invoke();
-
-            if (geometryModule.IsStaticBatchable)
+            if (media == subscribedMedia)
             {
-                SurfaceBatchingManager.Instance.AddToBatches(geometryModule.BatchKey, this);
-                if (rebatchImmediately)
-                {
-                    SurfaceBatchingManager.Instance.MergeAllBatches();
-                }
+                return;
             }
-        }
-    }
+
+            subscribedMedia?.UnsubscribeSurface(transform);
+            subscribedMedia = media;
+            subscribedMedia?.SubscribeSurface(transform);
+        }    }
 }
