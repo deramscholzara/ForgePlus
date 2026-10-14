@@ -20,7 +20,8 @@ namespace ForgePlus.Entities.Geometry
 {
     public class EditableSurface_Side : EditableSurface_Base
     {
-        private struct AlignmentGroupee
+        // A side's texture that continues another's (its source's) across an endpoint
+        public struct AlignmentGroupee
         {
             public LevelEntity_Side SourceSide;
             public LevelEntity_Side.DataSources SourceDataSource;
@@ -39,7 +40,12 @@ namespace ForgePlus.Entities.Geometry
 
         private UVPlanarDrag uvDragPlane;
 
+        // The textures on sides that continue this one's (found as a texture drag begins), and their offsets before it: while
+        // Align Contiguous (ctrl) is held during the drag, they're aligned along from this one; otherwise, they're as they
+        // were
         private List<AlignmentGroupee> alignmentGroup = new List<AlignmentGroupee>();
+        private readonly List<(short X, short Y)> alignmentStartingOffsets = new List<(short, short)>();
+        private bool isAligningGroup;
 
         // A placeholder (with no side data) has no texture or light
         public override ushort SurfaceShapeDescriptor
@@ -320,17 +326,24 @@ namespace ForgePlus.Entities.Geometry
                 // Recorded as one action when it ends
                 LevelHistory.BeginGesture();
 
-                if (ForgePlusInput.Editing.AlignContiguous.IsPressed())
+                alignmentGroup.Clear();
+                alignmentStartingOffsets.Clear();
+
+                CollectSimilarContiguousAdjacentSurfaces(ParentSide, destinationDataSource);
+
+                for (var i = 0; i < alignmentGroup.Count; i++)
                 {
-                    alignmentGroup.Clear();
-
-                    CollectSimilarContiguousAdjacentSurfaces(ParentSide, destinationDataSource);
-
-                    for (var i = 0; i < alignmentGroup.Count; i++)
-                    {
-                        CollectSimilarContiguousAdjacentSurfaces(alignmentGroup[i].DestinationSide, alignmentGroup[i].DestinationDataSource);
-                    }
+                    CollectSimilarContiguousAdjacentSurfaces(alignmentGroup[i].DestinationSide, alignmentGroup[i].DestinationDataSource);
                 }
+
+                foreach (var groupee in alignmentGroup)
+                {
+                    var texture = groupee.DestinationSide.NativeObject.GetTexture(groupee.DestinationDataSource);
+                    alignmentStartingOffsets.Add((texture.x0, texture.y0));
+                }
+
+                isAligningGroup = ForgePlusInput.Editing.AlignContiguous.IsPressed();
+                WatchAlignContiguous(uvDragPlane);
             }
             else
             {
@@ -359,16 +372,7 @@ namespace ForgePlus.Entities.Geometry
                                        (short)newUVOffset.y,
                                        rebatch: false);
 
-                foreach (var alignmentGroupee in alignmentGroup)
-                {
-                    AlignDestinationToSource(alignmentGroupee.SourceSide,
-                                             alignmentGroupee.SourceDataSource,
-                                             alignmentGroupee.DestinationSide,
-                                             alignmentGroupee.DestinationDataSource,
-                                             alignmentGroupee.DestinationFlowsOutward,
-                                             alignmentGroupee.DestinationIsLeftOfSource,
-                                             rebatch: false);
-                }
+                ApplyAlignmentGroup();
             }
             else
             {
@@ -397,6 +401,7 @@ namespace ForgePlus.Entities.Geometry
                 }
 
                 alignmentGroup.Clear();
+                alignmentStartingOffsets.Clear();
             }
             else
             {
@@ -584,14 +589,77 @@ namespace ForgePlus.Entities.Geometry
                                       rebatch);
         }
 
-        private void CollectSimilarContiguousAdjacentSurfaces(LevelEntity_Side centralSide, LevelEntity_Side.DataSources centralDataSource)
+        // Aligned along from this side's texture while Align Contiguous (ctrl) is held (each after the one it continues),
+        // and otherwise as they were before the drag
+        private void ApplyAlignmentGroup()
         {
-            CollectSimilarContiguousAdjacentSurfaces(centralSide, centralDataSource, left: true);
+            for (var i = 0; i < alignmentGroup.Count; i++)
+            {
+                var groupee = alignmentGroup[i];
 
-            CollectSimilarContiguousAdjacentSurfaces(centralSide, centralDataSource, left: false);
+                if (isAligningGroup)
+                {
+                    AlignDestinationToSource(groupee.SourceSide,
+                                             groupee.SourceDataSource,
+                                             groupee.DestinationSide,
+                                             groupee.DestinationDataSource,
+                                             groupee.DestinationFlowsOutward,
+                                             groupee.DestinationIsLeftOfSource,
+                                             rebatch: false);
+                }
+                else
+                {
+                    var (x, y) = alignmentStartingOffsets[i];
+                    groupee.DestinationSide.SetOffset(groupee.DestinationDataSource, x, y, rebatch: false);
+                }
+            }
         }
 
-        private void CollectSimilarContiguousAdjacentSurfaces(LevelEntity_Side centralSide, LevelEntity_Side.DataSources centralDataSource, bool left)
+        // Pressing or letting go of Align Contiguous during the drag changes the group, even while the pointer stays put
+        private async void WatchAlignContiguous(UVPlanarDrag drag)
+        {
+            while (Application.isPlaying && this && uvDragPlane == drag)
+            {
+                await Awaitable.NextFrameAsync();
+
+                var isPressed = ForgePlusInput.Editing.AlignContiguous.IsPressed();
+                if (!this || uvDragPlane != drag || isPressed == isAligningGroup)
+                {
+                    continue;
+                }
+
+                isAligningGroup = isPressed;
+                ApplyAlignmentGroup();
+                InspectorPanel.Instance.RefreshAllInspectors();
+            }
+        }
+
+        private void CollectSimilarContiguousAdjacentSurfaces(LevelEntity_Side centralSide, LevelEntity_Side.DataSources centralDataSource)
+        {
+            foreach (var neighbor in SimilarContiguousNeighbors(centralSide, centralDataSource))
+            {
+                // Not the dragged side itself (which the group can reach again around a loop of walls), which moves with
+                // the pointer rather than with the group
+                if (!alignmentGroup.Any(surface => surface.DestinationSurface == neighbor.DestinationSurface) && neighbor.DestinationSide != ParentSide)
+                {
+                    alignmentGroup.Add(neighbor);
+                }
+            }
+        }
+
+        // The textures on sides beside it (across either endpoint) that continue its texture: the same texture, at heights
+        // that overlap its (also used for what moves along with textures moved with points, in PointEditing)
+        public static List<AlignmentGroupee> SimilarContiguousNeighbors(LevelEntity_Side centralSide, LevelEntity_Side.DataSources centralDataSource)
+        {
+            var neighbors = new List<AlignmentGroupee>();
+
+            CollectSimilarContiguousNeighbors(centralSide, centralDataSource, left: true, neighbors);
+            CollectSimilarContiguousNeighbors(centralSide, centralDataSource, left: false, neighbors);
+
+            return neighbors;
+        }
+
+        private static void CollectSimilarContiguousNeighbors(LevelEntity_Side centralSide, LevelEntity_Side.DataSources centralDataSource, bool left, List<AlignmentGroupee> neighbors)
         {
             var centralLine = LevelEntity_Level.Instance.Level.LineList[centralSide.NativeObject.line_index];
 
@@ -617,39 +685,20 @@ namespace ForgePlus.Entities.Geometry
                     continue;
                 }
 
-                if (CheckIfSimilarAndContiguous(centralSide, centralDataSource,
-                                                neighborSide, LevelEntity_Side.DataSources.Primary,
-                                                neighborFlowsOutward, left,
-                                                out var alignmentGroupeePrimary) &&
-                    !alignmentGroup.Any(surface => surface.DestinationSurface == alignmentGroupeePrimary.DestinationSurface) &&
-                    alignmentGroupeePrimary.DestinationSurface != this)
+                foreach (var neighborDataSource in new[] { LevelEntity_Side.DataSources.Primary, LevelEntity_Side.DataSources.Secondary, LevelEntity_Side.DataSources.Transparent })
                 {
-                    alignmentGroup.Add(alignmentGroupeePrimary);
-                }
-
-                if (CheckIfSimilarAndContiguous(centralSide, centralDataSource,
-                                                neighborSide, LevelEntity_Side.DataSources.Secondary,
-                                                neighborFlowsOutward, left,
-                                                out var alignmentGroupeeSecondary) &&
-                    !alignmentGroup.Any(surface => surface.DestinationSurface == alignmentGroupeeSecondary.DestinationSurface) &&
-                    alignmentGroupeeSecondary.DestinationSurface != this)
-                {
-                    alignmentGroup.Add(alignmentGroupeeSecondary);
-                }
-
-                if (CheckIfSimilarAndContiguous(centralSide, centralDataSource,
-                                                neighborSide, LevelEntity_Side.DataSources.Transparent,
-                                                neighborFlowsOutward, left,
-                                                out var alignmentGroupeeTransparent) &&
-                    !alignmentGroup.Any(surface => surface.DestinationSurface == alignmentGroupeeTransparent.DestinationSurface) &&
-                    alignmentGroupeeTransparent.DestinationSurface != this)
-                {
-                    alignmentGroup.Add(alignmentGroupeeTransparent);
+                    if (CheckIfSimilarAndContiguous(centralSide, centralDataSource,
+                                                    neighborSide, neighborDataSource,
+                                                    neighborFlowsOutward, left,
+                                                    out var alignmentGroupee))
+                    {
+                        neighbors.Add(alignmentGroupee);
+                    }
                 }
             }
         }
 
-        private bool CheckIfSimilarAndContiguous(LevelEntity_Side sourceSide, LevelEntity_Side.DataSources sourceDataSource,
+        private static bool CheckIfSimilarAndContiguous(LevelEntity_Side sourceSide, LevelEntity_Side.DataSources sourceDataSource,
                                                  LevelEntity_Side destinationSide, LevelEntity_Side.DataSources destinationDataSource,
                                                  bool destinationFlowsOutward, bool destinationIsLeftOfSource,
                                                  out AlignmentGroupee alignmentGroupee)

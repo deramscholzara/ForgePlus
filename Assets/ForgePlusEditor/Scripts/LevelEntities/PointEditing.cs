@@ -1,6 +1,7 @@
 #if !NO_EDITING
 using AlephOne;
 using ForgePlus.ApplicationGeneral;
+using ForgePlus.Entities.Geometry;
 using ForgePlus.Extensions;
 using ForgePlus.History;
 using ForgePlus.Inspection;
@@ -30,8 +31,10 @@ namespace ForgePlus.LevelManipulation
     // (Feedback).
     //
     // Textures stay where they were at the lines' other ends (for sides) and in the world (for floors and ceilings), or
-    // while Keep Textures With Point (ctrl) is held, move with the point instead. Each step of a move works them out from
-    // how they were before it, as though the modifier had been as it is now for the whole move.
+    // while Keep Textures With Point (ctrl) is held, move with the point instead, along with the textures that continue
+    // them beyond (TextureSpread: as Texture Edit mode's Align Contiguous finds them, until one doesn't match). Each step
+    // of a move works them out from how they were before it, as though the modifier had been as it is now for the whole
+    // move.
     [AutoStaticsCleanup]
     public static partial class PointEditing
     {
@@ -84,6 +87,36 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        // The textures that continue those around the moved points (the same texture, on the same face, until one doesn't
+        // match), and how they were before the move, found as the move begins: floors (and ceilings) of the polygons across
+        // the edges of those around the points, at the same height, and sides across the lines' ends, at heights that
+        // overlap (EditableSurface_Side.SimilarContiguousNeighbors)
+        private sealed class TextureSpread
+        {
+            public readonly Dictionary<short, world_point2d> Floors = new Dictionary<short, world_point2d>();
+            public readonly Dictionary<short, world_point2d> Ceilings = new Dictionary<short, world_point2d>();
+
+            // In the order they were found (each after the texture it continues)
+            public readonly List<SpreadSide> Sides = new List<SpreadSide>();
+        }
+
+        private struct SpreadSide
+        {
+            public short Side;
+            public LevelEntity_Side.DataSources Layer;
+            public short StartingOffset;
+
+            // The texture it continues, and whether it's across that one's first end (rather than its last)
+            public short SourceSide;
+            public LevelEntity_Side.DataSources SourceLayer;
+            public bool IsLeftOfSource;
+        }
+
+        private static readonly LevelEntity_Side.DataSources[] SideLayers = { LevelEntity_Side.DataSources.Primary, LevelEntity_Side.DataSources.Secondary, LevelEntity_Side.DataSources.Transparent };
+
+        // Null until the move's points are known
+        private static TextureSpread textureSpread;
+
         // Null while there's nothing to show
         public static MoveFeedback Feedback { get; private set; }
 
@@ -131,6 +164,7 @@ namespace ForgePlus.LevelManipulation
             // Recorded as one action when it ends
             LevelHistory.BeginGesture();
             movedPoints.Clear();
+            textureSpread = null;
             SurfaceBatchingManager.Instance.DeferMerging(true);
 
             isMoving = true;
@@ -168,6 +202,11 @@ namespace ForgePlus.LevelManipulation
                 group.Add((pointIndex, movedPoint));
             }
 
+            if (textureSpread == null)
+            {
+                textureSpread = FindTextureSpread(level);
+            }
+
             var referenceStart = movedPoints[referenceIndex].StartingLocation;
             var target = new Vector2Int(location.x - referenceStart.x, location.y - referenceStart.y);
             var current = new Vector2Int(reference.x - referenceStart.x, reference.y - referenceStart.y);
@@ -193,6 +232,8 @@ namespace ForgePlus.LevelManipulation
                 {
                     ApplyTextures(level, pointIndex, movedPoint, TexturesFollowPoints);
                 }
+
+                ApplyTextureSpread(level, TexturesFollowPoints);
 
                 ApplyGeometry(level, pointIndexes);
 
@@ -438,6 +479,8 @@ namespace ForgePlus.LevelManipulation
                     ApplyTextures(level, movedPoint.Key, movedPoint.Value, texturesFollowPoints);
                 }
 
+                ApplyTextureSpread(level, texturesFollowPoints);
+
                 ApplyGeometry(level, movedPoints.Keys.ToList());
             }
         }
@@ -605,6 +648,179 @@ namespace ForgePlus.LevelManipulation
                 {
                     polygon.ceiling_origin = new world_point2d(WrapOffset(ceilingOrigin.x - movement.x), WrapOffset(ceilingOrigin.y - movement.y));
                 }
+            }
+        }
+
+        private static TextureSpread FindTextureSpread(LevelEntity_Level level)
+        {
+            var spread = new TextureSpread();
+            var data = level.Level;
+
+            var aroundPolygons = new HashSet<short>(movedPoints.Values.SelectMany(movedPoint => movedPoint.PolygonOrigins.Keys));
+            SpreadAcrossPolygons(data, aroundPolygons, isFloor: true, spread.Floors);
+            SpreadAcrossPolygons(data, aroundPolygons, isFloor: false, spread.Ceilings);
+
+            // Across the lines' ends, from each texture on the sides of the lines that meet the points
+            var found = new HashSet<(short, LevelEntity_Side.DataSources)>();
+            var toSpreadFrom = new Queue<(short Side, LevelEntity_Side.DataSources Layer)>();
+
+            foreach (var sideIndex in movedPoints.Values.SelectMany(movedPoint => movedPoint.SideOffsets.Keys).Distinct())
+            {
+                if (!level.Sides.TryGetValue(sideIndex, out var side) || !side)
+                {
+                    continue;
+                }
+
+                foreach (var layer in SideLayers)
+                {
+                    if (LayerSurface(side, layer) && found.Add((sideIndex, layer)))
+                    {
+                        toSpreadFrom.Enqueue((sideIndex, layer));
+                    }
+                }
+            }
+
+            while (toSpreadFrom.Count > 0)
+            {
+                var (sideIndex, layer) = toSpreadFrom.Dequeue();
+                if (!level.Sides.TryGetValue(sideIndex, out var side) || !side || side.NativeObject == null)
+                {
+                    continue;
+                }
+
+                foreach (var neighbor in EditableSurface_Side.SimilarContiguousNeighbors(side, layer))
+                {
+                    var neighborSide = neighbor.DestinationSide;
+                    if (!neighborSide || neighborSide.NativeIndex < 0 || neighborSide.NativeObject == null ||
+                        !found.Add((neighborSide.NativeIndex, neighbor.DestinationDataSource)))
+                    {
+                        continue;
+                    }
+
+                    spread.Sides.Add(new SpreadSide
+                    {
+                        Side = neighborSide.NativeIndex,
+                        Layer = neighbor.DestinationDataSource,
+                        StartingOffset = neighborSide.NativeObject.GetTexture(neighbor.DestinationDataSource).x0,
+                        SourceSide = sideIndex,
+                        SourceLayer = layer,
+                        IsLeftOfSource = neighbor.DestinationIsLeftOfSource,
+                    });
+
+                    toSpreadFrom.Enqueue((neighborSide.NativeIndex, neighbor.DestinationDataSource));
+                }
+            }
+
+            return spread;
+        }
+
+        // Across their edges, polygons whose face (floor or ceiling) is at the same height, with the same texture, as the
+        // one it's across from
+        private static void SpreadAcrossPolygons(MapLevel data, HashSet<short> aroundPolygons, bool isFloor, Dictionary<short, world_point2d> spread)
+        {
+            var toSpreadFrom = new Queue<short>(aroundPolygons);
+
+            while (toSpreadFrom.Count > 0)
+            {
+                var polygon = data.PolygonList[toSpreadFrom.Dequeue()];
+                var height = isFloor ? polygon.floor_height : polygon.ceiling_height;
+                var texture = isFloor ? polygon.floor_texture : polygon.ceiling_texture;
+
+                for (var i = 0; i < polygon.vertex_count; i++)
+                {
+                    var adjacentIndex = polygon.adjacent_polygon_indexes[i];
+                    if (adjacentIndex == cstypes.NONE || aroundPolygons.Contains(adjacentIndex) || spread.ContainsKey(adjacentIndex))
+                    {
+                        continue;
+                    }
+
+                    var adjacent = data.PolygonList[adjacentIndex];
+                    var adjacentTexture = isFloor ? adjacent.floor_texture : adjacent.ceiling_texture;
+                    var adjacentTransferMode = isFloor ? adjacent.floor_transfer_mode : adjacent.ceiling_transfer_mode;
+
+                    if ((isFloor ? adjacent.floor_height : adjacent.ceiling_height) == height && adjacentTexture == texture && IsOffset(adjacentTexture, adjacentTransferMode))
+                    {
+                        spread[adjacentIndex] = isFloor ? adjacent.floor_origin : adjacent.ceiling_origin;
+                        toSpreadFrom.Enqueue(adjacentIndex);
+                    }
+                }
+            }
+        }
+
+        private static RuntimeSurfaceGeometry LayerSurface(LevelEntity_Side side, LevelEntity_Side.DataSources layer)
+        {
+            switch (layer)
+            {
+                case LevelEntity_Side.DataSources.Primary:
+                    return side.PrimarySurface;
+                case LevelEntity_Side.DataSources.Secondary:
+                    return side.SecondarySurface;
+                default:
+                    return side.TransparentSurface;
+            }
+        }
+
+        // From how they were before the move: following the points, floors and ceilings move as far as the points, and
+        // each side's texture continues the one it continues as it does now (Texture Edit mode's alignment: a texture
+        // across a side's last end starts where that one's ends, and across its first end, ends where that one starts);
+        // otherwise, they're as they were
+        private static void ApplyTextureSpread(LevelEntity_Level level, bool texturesFollowPoints)
+        {
+            var spread = textureSpread;
+            if (spread == null || movedPoints.Count == 0)
+            {
+                return;
+            }
+
+            var data = level.Level;
+            var reference = movedPoints.First();
+            var location = data.EndpointList[reference.Key].vertex;
+            var movement = new Vector2Int(location.x - reference.Value.StartingLocation.x, location.y - reference.Value.StartingLocation.y);
+
+            foreach (var isFloor in new[] { true, false })
+            {
+                foreach (var entry in isFloor ? spread.Floors : spread.Ceilings)
+                {
+                    var target = texturesFollowPoints ? new world_point2d(WrapOffset(entry.Value.x - movement.x), WrapOffset(entry.Value.y - movement.y)) : entry.Value;
+                    var polygon = data.PolygonList[entry.Key];
+                    var current = isFloor ? polygon.floor_origin : polygon.ceiling_origin;
+
+                    if ((current.x != target.x || current.y != target.y) && level.Polygons.TryGetValue(entry.Key, out var polygonEntity))
+                    {
+                        polygonEntity.SetOffset(isFloor ? LevelEntity_Polygon.DataSources.Floor : LevelEntity_Polygon.DataSources.Ceiling, target.x, target.y, rebatch: false);
+                    }
+                }
+            }
+
+            // How far each side's texture has moved along it, and how much longer its line is
+            var changes = new Dictionary<(short, LevelEntity_Side.DataSources), (int Offset, int Length)>();
+            foreach (var movedPoint in movedPoints.Values)
+            {
+                foreach (var sideOffsets in movedPoint.SideOffsets)
+                {
+                    var side = data.SideList[sideOffsets.Key];
+                    var lengthChange = movedPoint.LineLengths.TryGetValue(side.line_index, out var startingLength) ? data.LineList[side.line_index].length - startingLength : 0;
+
+                    for (var i = 0; i < SideLayers.Length; i++)
+                    {
+                        changes[(sideOffsets.Key, SideLayers[i])] = (side.GetTexture(SideLayers[i]).x0 - sideOffsets.Value[i], lengthChange);
+                    }
+                }
+            }
+
+            foreach (var entry in spread.Sides)
+            {
+                changes.TryGetValue((entry.SourceSide, entry.SourceLayer), out var source);
+                var offsetChange = texturesFollowPoints ? source.Offset + (entry.IsLeftOfSource ? 0 : source.Length) : 0;
+                var target = WrapOffset(entry.StartingOffset + offsetChange);
+
+                var texture = data.SideList[entry.Side].GetTexture(entry.Layer);
+                if (texture.x0 != target && level.Sides.TryGetValue(entry.Side, out var sideEntity) && sideEntity)
+                {
+                    sideEntity.SetOffset(entry.Layer, target, texture.y0, rebatch: false);
+                }
+
+                changes[(entry.Side, entry.Layer)] = (offsetChange, 0);
             }
         }
 
