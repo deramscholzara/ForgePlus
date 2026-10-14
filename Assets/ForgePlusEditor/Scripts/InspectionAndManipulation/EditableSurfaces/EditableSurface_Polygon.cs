@@ -28,7 +28,13 @@ namespace ForgePlus.LevelManipulation
         private readonly List<(LevelEntity_Polygon Polygon, short StartingHeight)> heightDragged = new List<(LevelEntity_Polygon, short)>();
         private PointsMove polygonMove;
 
+        // The polygons whose same faces continue this one's texture (found as a texture drag begins), and their offsets
+        // before it: while Align Contiguous (ctrl) is held during the drag, they're aligned to this one; otherwise, they're
+        // as they were
         private readonly List<LevelEntity_Polygon> alignmentGroupedPolygons = new List<LevelEntity_Polygon>();
+        private readonly Dictionary<LevelEntity_Polygon, (short X, short Y)> alignmentStartingOffsets = new Dictionary<LevelEntity_Polygon, (short, short)>();
+        private Vector2 draggedUVOffset;
+        private bool isAligningGroup;
 
         public override ushort SurfaceShapeDescriptor
         {
@@ -179,12 +185,20 @@ namespace ForgePlus.LevelManipulation
                 // Recorded as one action when it ends
                 LevelHistory.BeginGesture();
 
-                if (ForgePlusInput.Editing.AlignContiguous.IsPressed())
-                {
-                    alignmentGroupedPolygons.Clear();
+                alignmentGroupedPolygons.Clear();
+                alignmentStartingOffsets.Clear();
 
-                    CollectSimilarAdjacentPolygons(HeightsEditing.GetHeight(ParentPolygon, DataSource), GetShapeDescriptor(ParentPolygon));
+                CollectSimilarAdjacentPolygons(HeightsEditing.GetHeight(ParentPolygon, DataSource), GetShapeDescriptor(ParentPolygon));
+
+                foreach (var polygon in alignmentGroupedPolygons)
+                {
+                    var origin = DataSource == LevelEntity_Polygon.DataSources.Floor ? polygon.NativeObject.floor_origin : polygon.NativeObject.ceiling_origin;
+                    alignmentStartingOffsets[polygon] = (origin.x, origin.y);
                 }
+
+                draggedUVOffset = startingUVs;
+                isAligningGroup = ForgePlusInput.Editing.AlignContiguous.IsPressed();
+                WatchAlignContiguous(uvDragPlane);
             }
             else
             {
@@ -220,6 +234,7 @@ namespace ForgePlus.LevelManipulation
                 var pointerRay = Camera.main.ScreenPointToRay(screenPosition);
 
                 var newUVOffset = uvDragPlane.UVDraggedPosition(pointerRay);
+                draggedUVOffset = newUVOffset;
 
                 // Note: Polygon surfaces have swapped UVs, so swap them here
                 ParentPolygon.SetOffset(DataSource,
@@ -227,13 +242,7 @@ namespace ForgePlus.LevelManipulation
                                           (short)newUVOffset.x,
                                           rebatch: false);
 
-                for (var i = 0; i < alignmentGroupedPolygons.Count; i++)
-                {
-                    alignmentGroupedPolygons[i].SetOffset(DataSource,
-                                                          (short)newUVOffset.y,
-                                                          (short)newUVOffset.x,
-                                                          rebatch: false);
-                }
+                ApplyAlignmentGroup();
             }
             else
             {
@@ -278,6 +287,7 @@ namespace ForgePlus.LevelManipulation
                 }
 
                 alignmentGroupedPolygons.Clear();
+                alignmentStartingOffsets.Clear();
             }
             else
             {
@@ -429,6 +439,35 @@ namespace ForgePlus.LevelManipulation
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Heights)
             {
                 PaletteManager.Instance.SelectSwatchForHeight(ParentPolygon, DataSource);
+            }
+        }
+
+        // Aligned to this face's texture while Align Contiguous (ctrl) is held, and otherwise as they were before the drag
+        private void ApplyAlignmentGroup()
+        {
+            foreach (var polygon in alignmentGroupedPolygons)
+            {
+                var (x, y) = isAligningGroup ? ((short) draggedUVOffset.y, (short) draggedUVOffset.x) : alignmentStartingOffsets[polygon];
+                polygon.SetOffset(DataSource, x, y, rebatch: false);
+            }
+        }
+
+        // Pressing or letting go of Align Contiguous during the drag changes the group, even while the pointer stays put
+        private async void WatchAlignContiguous(UVPlanarDrag drag)
+        {
+            while (Application.isPlaying && this && uvDragPlane == drag)
+            {
+                await Awaitable.NextFrameAsync();
+
+                var isPressed = ForgePlusInput.Editing.AlignContiguous.IsPressed();
+                if (!this || uvDragPlane != drag || isPressed == isAligningGroup)
+                {
+                    continue;
+                }
+
+                isAligningGroup = isPressed;
+                ApplyAlignmentGroup();
+                InspectorPanel.Instance.RefreshAllInspectors();
             }
         }
 
