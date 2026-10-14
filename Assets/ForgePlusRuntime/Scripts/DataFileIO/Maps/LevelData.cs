@@ -107,6 +107,10 @@ namespace ForgePlus.DataFileIO
                 Debug.Log($"--- LevelLoad: Loaded level data in timespan: {DateTime.Now - loadDataStartTime}\n--- Level Name: {levelName}");
             }
 
+            // As Aleph One does as a level starts, the MML for it (the scripts', the plugins', and the level's own) changes
+            // the definitions its textures, sprites and sounds come from
+            MmlLoading.Instance.ApplyForLevel(level, LevelIndex);
+
             // Pure data work that the build doesn't need right away runs on worker threads alongside it
             var levelPhysics = PhysicsLoading.Instance.BuildLevelModelAsync(level);
             var endpointLines = Task.Run(() => level.BuildEndpointLines());

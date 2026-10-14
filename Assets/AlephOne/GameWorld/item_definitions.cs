@@ -20,6 +20,13 @@ namespace AlephOne
         // extension to support per-difficulty maximums
         public short[] extended_maximum_count = new short[NUMBER_OF_GAME_DIFFICULTY_LEVELS] { NONE, NONE, NONE, NONE, NONE };
 
+        public item_definition Clone()
+        {
+            var copy = (item_definition) MemberwiseClone();
+            copy.extended_maximum_count = (short[]) extended_maximum_count.Clone();
+            return copy;
+        }
+
         // items.cpp
         public short get_maximum_count_per_player(bool is_m1, int difficulty_level)
         {

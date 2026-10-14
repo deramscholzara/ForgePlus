@@ -25,20 +25,14 @@ Note for Mac: decompressing with the standard Archive Utility will corrupt the a
 https://www.keka.io/en/
 
 
---- USING PLUGINS ---
+--- USING PLUGINS AND SCRIPTS ---
 
-Forge+ currently supports the "normal" textures of HD XML/MML texture plugins from Aleph One.
+Forge+ applies a scenario's MML (from its Scripts folder) and its Aleph One plugins the way Aleph One does, so levels show the textures, sprites and sounds they would in the game.
 
- - Install plugins simply by placing them in the "MML_Plugins" folder inside the Forge+ data folder
-    - "Forge+_Data" on Windows/Linux
-    - "Forge+.app/Contents" on Mac OS X
-    - "<project folder>/Assets" in Unity Editor on any platform)
- - Plugin folders should be structured the same way they are for Aleph One
- - Currently supports all .png files and .dds files in these formats:
-    - DXT1
-    - DXT5
-    - BGR8
- - Plugins are all loaded alphanumerically, so if you have multiple plugins replacing the same bitmap, then the plugin labeled alphanumerically later will yield the final loaded result.
+ - In the Files tab, select the scenario's Plugins and Scripts folders (Find In Directory finds them too, as the shallowest folders with those names)
+ - Turn plugins on and off in the Plugins dropdown below them, as in Aleph One's Plugins menu (Forge+ remembers each)
+ - A level's own MML (its level script's, and MML saved in it) applies as it's opened
+ - MML that changes what Forge+ shows is applied: item, scenery and player shapes, liquids, control panels, platform, ambient and random sounds, and substitute images for walls and sprites (normal images and masks, as .png, .jpg or .dds: DXT1, DXT3, DXT5, or uncompressed)
 
 
 --- BUILDING YOUR OWN COPY ---

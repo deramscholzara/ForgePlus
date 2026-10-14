@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.Scripting.LifecycleManagement;
 
 namespace ForgePlus.UI
 {
@@ -11,7 +12,8 @@ namespace ForgePlus.UI
     // opens the 'term' resource numbered 1000 + 10 × the level's index + that number (computer_interface.cpp:
     // get_indexed_terminal_data), from the scenario's external resources (Marathon 1's application, beside its map file),
     // or else from Marathon 1's shapes file
-    public static class MarathonOneTerminals
+    [AutoStaticsCleanup]
+    public static partial class MarathonOneTerminals
     {
         private static readonly uint TerminalResourceType = cstypes.FOUR_CHARS_TO_INT('t', 'e', 'r', 'm');
 

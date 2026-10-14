@@ -1,4 +1,4 @@
-﻿// Port of Aleph One: Source_Files/RenderOther/images.h, images.cpp (the scenario's and the shapes file's pictures)
+﻿// Port of Aleph One: Source_Files/RenderOther/images.h, images.cpp (the scenario's and the shapes file's pictures, and the scenario's texts)
 //
 // Surfaces are the SDL/SDL_surface.cs stand-in, their pixels little-endian as on the platforms Aleph One runs on.
 // C++'s template unpack_bits<T> is unpack_bits with the size of T as a parameter.
@@ -1012,6 +1012,18 @@ namespace AlephOne
         public static void set_shapes_images_file(FileSpecifier file)
         {
             ShapesImagesFile.open_file(file);
+        }
+
+        public static bool get_text_resource_from_scenario(int resource_number, LoadedResource TextRsrc)
+        {
+            if (!ScenarioFile.is_open())
+                return false;
+
+            // Not ported: Plugins::instance()->get_resource(FOUR_CHARS_TO_INT('T','E','X','T'), resource_number, TextRsrc)
+            // (map patches)
+            bool success = ScenarioFile.get_text(resource_number, TextRsrc);
+
+            return success;
         }
 
         /*

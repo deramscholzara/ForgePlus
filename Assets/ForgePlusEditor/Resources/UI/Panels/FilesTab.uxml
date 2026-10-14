@@ -20,6 +20,17 @@
                 <ui:Instance template="PathSelector" name="sounds">
                     <ui:AttributeOverrides element-name="heading" text="@Menu/FilesTab.Sounds.Heading.Text" />
                 </ui:Instance>
+                <!-- Aleph One only: the scenario's Plugins and Scripts folders (whose MML is applied), and which plugins are on -->
+                <ui:VisualElement class="fp-separator fp-separator--horizontal fp-files__mml-separator" />
+                <ui:Instance template="PathSelector" name="plugins" class="fp-aleph-one-only fp-files__mml" tooltip="@Menu/FilesTab.Plugins.Tooltip">
+                    <ui:AttributeOverrides element-name="heading" text="@Menu/FilesTab.Plugins.Heading.Text" />
+                </ui:Instance>
+                <ui:Instance template="PathSelector" name="scripts" class="fp-aleph-one-only fp-files__mml" tooltip="@Menu/FilesTab.Scripts.Tooltip">
+                    <ui:AttributeOverrides element-name="heading" text="@Menu/FilesTab.Scripts.Heading.Text" />
+                </ui:Instance>
+                <ui:VisualElement class="fp-aleph-one-only fp-files__mml">
+                    <ui:DropdownField name="plugin-list" class="fp-display-options fp-files__plugin-list" tooltip="@Menu/FilesTab.PluginList.Tooltip" />
+                </ui:VisualElement>
             </ui:Instance>
         </ui:VisualElement>
         <ui:VisualElement class="fp-separator fp-separator--horizontal" />

@@ -546,6 +546,8 @@ MonoBehaviour:
   - rid: 552786377617702963
   - rid: 552786377617702969
   - rid: 552786377617702970
+  - rid: 552786384866508863
+  - rid: 552786384866508864
   references:
     version: 2
     RefIds:
@@ -4256,3 +4258,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Shows the grid under the level in the Orthographic view (one square per world unit), as see-through as the Orthographic Grid Opacity setting.
+    - rid: 552786384866508863
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940864
+        m_Metadata:
+          m_Items: []
+        m_Value: Plugins
+    - rid: 552786384866508864
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940865
+        m_Metadata:
+          m_Items: []
+        m_Value: Scripts

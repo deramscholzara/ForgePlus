@@ -174,6 +174,15 @@ namespace ForgePlus.Jobs
                 return ScheduleConversion(bitmap, palette, isLandscape: false, TextureFormat.RGBA32).Reinterpret<Color32>(sizeof(byte));
             }
 
+            // For frames whose pixels are already colors (such as MML's substitute images)
+            public NativeArray<Color32> AddPixels(Color32[] pixels)
+            {
+                var nativePixels = new NativeArray<Color32>(pixels, Allocator.Persistent);
+                nativeArrays.Add(nativePixels);
+
+                return nativePixels;
+            }
+
             // Frames are drawn in order, so later frames cover earlier ones
             public NativeArray<Color32> ScheduleComposite(int canvasWidth, int canvasHeight, CanvasFrame[] frames)
             {

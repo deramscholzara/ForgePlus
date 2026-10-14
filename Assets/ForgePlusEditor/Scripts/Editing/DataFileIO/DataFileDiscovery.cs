@@ -19,6 +19,9 @@ namespace ForgePlus.DataFileIO
     {
         public static readonly DataFileTypes[] SearchedTypes = { DataFileTypes.Maps, DataFileTypes.Shapes, DataFileTypes.Physics, DataFileTypes.Sounds };
 
+        // Folders, found by their names (which are their types')
+        private static readonly DataFileTypes[] FolderTypes = { DataFileTypes.Plugins, DataFileTypes.Scripts };
+
         private const int MacBinaryHeaderSize = 128;
 
         // Enough for a MacBinary header, or an AppleSingle header and its entries
@@ -101,6 +104,32 @@ namespace ForgePlus.DataFileIO
                 }
 
                 directories = directories.SelectMany(EnumerateDirectories).ToList();
+            }
+
+            return found;
+        }
+
+        // The shallowest Plugins and Scripts folders (named exactly that, ignoring case) in a folder, searching it one
+        // depth at a time, in name order (folders that aren't found are left out)
+        public static Dictionary<DataFileTypes, string> FindFolders(string rootDirectory)
+        {
+            var found = new Dictionary<DataFileTypes, string>();
+            var directories = new List<string> { rootDirectory };
+
+            while (directories.Count > 0 && found.Count < FolderTypes.Length)
+            {
+                directories = directories.SelectMany(EnumerateDirectories).ToList();
+
+                foreach (var directory in directories)
+                {
+                    foreach (var type in FolderTypes)
+                    {
+                        if (string.Equals(Path.GetFileName(directory), type.ToString(), StringComparison.OrdinalIgnoreCase))
+                        {
+                            Add(found, type, directory);
+                        }
+                    }
+                }
             }
 
             return found;

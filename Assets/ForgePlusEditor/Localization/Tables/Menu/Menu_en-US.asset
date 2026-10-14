@@ -71,6 +71,20 @@ MonoBehaviour:
   - rid: 552786377617702964
   - rid: 552786377617702965
   - rid: 552786377617702966
+  - rid: 552786384866508849
+  - rid: 552786384866508850
+  - rid: 552786384866508851
+  - rid: 552786384866508852
+  - rid: 552786384866508853
+  - rid: 552786384866508854
+  - rid: 552786384866508855
+  - rid: 552786384866508856
+  - rid: 552786384866508857
+  - rid: 552786384866508858
+  - rid: 552786384866508859
+  - rid: 552786384866508860
+  - rid: 552786384866508861
+  - rid: 552786384866508862
   references:
     version: 2
     RefIds:
@@ -423,7 +437,7 @@ MonoBehaviour:
         m_KeyId: 2758288650944512
         m_Metadata:
           m_Items: []
-        m_Value: Choose a folder to search for the first Maps, Shapes, Physics and Sounds files, looking through shallower subfolders before deeper ones. Files are recognized by their extensions, or (for files without one) by their contents. Any type that isn't found is unloaded.
+        m_Value: Choose a folder to search for the first Maps, Shapes, Physics and Sounds files, and the Plugins and Scripts folders (Aleph One only), looking through shallower subfolders before deeper ones. Files are recognized by their extensions, or (for files without one) by their contents; folders by their names. Any type that isn't found is unloaded.
     - rid: 552786288315990122
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -452,3 +466,101 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: '{0}%'
+    - rid: 552786384866508849
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400198152192
+        m_Metadata:
+          m_Items: []
+        m_Value: Plugins (Aleph One only)
+    - rid: 552786384866508850
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400206540800
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: the scenario''s Plugins folder. The MML of each plugin that''s on (in the dropdown below) changes the textures, sprites and sounds levels are shown with, as it does in Aleph One, after the Scripts folder''s MML does.'
+    - rid: 552786384866508851
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400206540801
+        m_Metadata:
+          m_Items: []
+        m_Value: Scripts (Aleph One only)
+    - rid: 552786384866508852
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400206540802
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: the scenario''s Scripts folder. Its MML files (in name order) change the textures, sprites and sounds levels are shown with, as they do in Aleph One.'
+    - rid: 552786384866508853
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400206540803
+        m_Metadata:
+          m_Items: []
+        m_Value: select a folder...
+    - rid: 552786384866508854
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400206540804
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Plugins: {0} of {1} on'
+    - rid: 552786384866508855
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400210735104
+        m_Metadata:
+          m_Items: []
+        m_Value: No plugins
+    - rid: 552786384866508856
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400210735105
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Aleph One only: turn each of the scenario''s plugins on or off, as in Aleph One''s Plugins menu. An open level is shown again with the change (keeping its edits).'
+    - rid: 552786384866508857
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400210735106
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0} (not in use)'
+    - rid: 552786384866508858
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400210735107
+        m_Metadata:
+          m_Items: []
+        m_Value: Version {0}
+    - rid: 552786384866508859
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400210735108
+        m_Metadata:
+          m_Items: []
+        m_Value: Not for this scenario, so it isn't used.
+    - rid: 552786384866508860
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400210735109
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Not in use: another plugin''s HUD, stats, theme or Lua takes its place (as in Aleph One, the last such plugin that''s on is used).'
+    - rid: 552786384866508861
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400210735110
+        m_Metadata:
+          m_Items: []
+        m_Value: It has no MML or shapes patches, so it doesn't change what ForgePlus shows.
+    - rid: 552786384866508862
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257400210735111
+        m_Metadata:
+          m_Items: []
+        m_Value: Choose {0} folder

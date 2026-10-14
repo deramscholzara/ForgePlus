@@ -33,8 +33,8 @@ Aleph One is licensed under the GNU GPL v3, the same license as ForgePlus.
   error with `game_errors.set_game_error`. `assert`/`vassert`/`vhalt` throw an `AlephOneAssertion`,
   since in Aleph One they halt.
 - **Only omit what an editor can never need** (the running game, networking, rendering, sound
-  playback, Lua, MML), and say so in a `Not ported:` comment in the file header or at the point of
-  omission.
+  playback, Lua, and the MML for what an editor doesn't show or use), and say so in a `Not ported:`
+  comment in the file header or at the point of omission.
 
 ## Conventions
 

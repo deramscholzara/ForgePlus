@@ -47,8 +47,8 @@ namespace RuntimeCore.Entities.MapObjects
         }
     }
 
-    // The stationary sprite Aleph One gives each placeable map object type (Marathon 1's player, items and scenery
-    // while its shapes are loaded)
+    // The stationary sprite Aleph One gives each placeable map object type, as MML leaves its definitions (and, while
+    // Marathon 1's shapes are loaded, Marathon 1's player, items and scenery where MML doesn't give them)
     public static class MapObjectSpriteDefinitions
     {
         // Tiny monsters are drawn at half size (RenderPlaceObjs.cpp)
@@ -63,7 +63,7 @@ namespace RuntimeCore.Entities.MapObjects
                     // A player start's index is its team (game_wad.cpp: get_player_starting_location_and_facing), which
                     // picks the CLUTs (player.cpp: set_player_shapes), and players start with the pistol
                     var teamCLUT = mapObject.index >= 0 && mapObject.index < shape_descriptors.MAXIMUM_CLUTS_PER_COLLECTION ? mapObject.index : 0;
-                    if (MarathonOneSpriteDefinitions.IsInUse)
+                    if (MarathonOneSpriteDefinitions.IsInUse && !player.player_shapes_changed_by_mml())
                     {
                         return MarathonOneSpriteDefinitions.GetPlayer(teamCLUT);
                     }
@@ -92,7 +92,7 @@ namespace RuntimeCore.Entities.MapObjects
                             (short) monster.stationary_shape));
 
                 case map._saved_item:
-                    if (MarathonOneSpriteDefinitions.IsInUse && MarathonOneSpriteDefinitions.TryGetItem(mapObject.index, out var itemShape))
+                    if (MarathonOneSpriteDefinitions.IsInUse && !items.item_definitions_changed_by_mml() && MarathonOneSpriteDefinitions.TryGetItem(mapObject.index, out var itemShape))
                     {
                         return GetDefinition(itemShape);
                     }
@@ -106,7 +106,7 @@ namespace RuntimeCore.Entities.MapObjects
                     return GetDefinition(itemDefinition.base_shape);
 
                 case map._saved_object:
-                    if (MarathonOneSpriteDefinitions.IsInUse && MarathonOneSpriteDefinitions.TryGetScenery(mapObject.index, out var sceneryShape))
+                    if (MarathonOneSpriteDefinitions.IsInUse && !scenery.scenery_definitions_changed_by_mml() && MarathonOneSpriteDefinitions.TryGetScenery(mapObject.index, out var sceneryShape))
                     {
                         return GetDefinition(sceneryShape);
                     }

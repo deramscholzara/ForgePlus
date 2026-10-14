@@ -17,6 +17,10 @@ namespace ForgePlus.DataFileIO
         Sounds,
         Physics,
         Images,
+
+        // Folders (Aleph One only): the scenario's plugins, and its scripts (MML)
+        Plugins,
+        Scripts,
     }
 
     public class FileSettings : OnDemandSingletonMonoBehaviour<FileSettings>
@@ -36,6 +40,8 @@ namespace ForgePlus.DataFileIO
                 value.Invoke(DataFileTypes.Shapes, GetLoadableFilePath(DataFileTypes.Shapes));
                 value.Invoke(DataFileTypes.Physics, GetLoadableFilePath(DataFileTypes.Physics));
                 value.Invoke(DataFileTypes.Sounds, GetLoadableFilePath(DataFileTypes.Sounds));
+                value.Invoke(DataFileTypes.Plugins, GetLoadableFilePath(DataFileTypes.Plugins));
+                value.Invoke(DataFileTypes.Scripts, GetLoadableFilePath(DataFileTypes.Scripts));
 
                 // TODO: uncomment this when ready for it.
                 ////value.Invoke(DataFileTypes.Images, GetFilePath(DataFileTypes.Images));
@@ -48,7 +54,8 @@ namespace ForgePlus.DataFileIO
             ShowSelectionBrowserCoroutine(type);
         }
 
-        // Browses for a folder, and loads the first file of each type found in it (unloading the types it doesn't have)
+        // Browses for a folder, and loads the first file of each type found in it, and its shallowest Plugins and Scripts
+        // folders (unloading the types it doesn't have)
         public void ShowDirectorySearchBrowser()
         {
             UIBlocking.Instance.Block();
@@ -65,13 +72,13 @@ namespace ForgePlus.DataFileIO
             return PlayerPrefs.GetString(GetPlayerPrefsKey(type), string.Empty);
         }
 
-        // The path to load the type from, or empty if there's none. A file that's no longer there (moved, deleted, or on a
-        // disconnected drive) has its path cleared, rather than failing to load.
+        // The path to load the type from, or empty if there's none. A file (or folder) that's no longer there (moved,
+        // deleted, or on a disconnected drive) has its path cleared, rather than failing to load.
         public string GetLoadableFilePath(DataFileTypes type)
         {
             var path = GetFilePath(type);
 
-            if (!string.IsNullOrEmpty(path) && !File.Exists(path))
+            if (!string.IsNullOrEmpty(path) && !(type.IsFolder() ? Directory.Exists(path) : File.Exists(path)))
             {
                 UpdateFilePath(type, filePath: string.Empty, loadFile: false);
                 return string.Empty;
@@ -123,6 +130,12 @@ namespace ForgePlus.DataFileIO
             }
 
             UpdateFilePath(type, filePath: string.Empty, loadFile: false);
+
+            // Without the folder, its MML no longer applies
+            if (type.IsFolder())
+            {
+                MmlLoading.Instance.Reload();
+            }
         }
 
         private void ShowSelectionBrowserCoroutine(DataFileTypes type)
@@ -133,6 +146,17 @@ namespace ForgePlus.DataFileIO
             initialDirectory = string.IsNullOrEmpty(initialDirectory)
                 ? Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
                 : Path.GetDirectoryName(initialDirectory);
+
+            if (type.IsFolder())
+            {
+                StandaloneFileBrowser.OpenFolderPanelAsync(
+                    title: Strings.Get(Strings.Menu, "FileBrowser.OpenFolder.Title", type.DisplayName()),
+                    directory: initialDirectory,
+                    multiselect: false,
+                    cb: openPaths => HandleSelectionBrowserResponse(openPaths, type));
+
+                return;
+            }
 
             StandaloneFileBrowser.OpenFilePanelAsync(
                 title: Strings.Get(Strings.Menu, "FileBrowser.Open.Title", type.DisplayName()),
@@ -167,9 +191,14 @@ namespace ForgePlus.DataFileIO
                 }
 
                 var foundPaths = DataFileDiscovery.Find(directory);
+                foreach (var foundFolder in DataFileDiscovery.FindFolders(directory))
+                {
+                    foundPaths[foundFolder.Key] = foundFolder.Value;
+                }
 
-                // Maps last, after the files its levels are shown with
-                foreach (var type in new[] { DataFileTypes.Shapes, DataFileTypes.Physics, DataFileTypes.Sounds, DataFileTypes.Maps })
+                // The scripts and plugins first (as plugins' shapes patches change the shapes), and maps last, after the
+                // files its levels are shown with
+                foreach (var type in new[] { DataFileTypes.Scripts, DataFileTypes.Plugins, DataFileTypes.Shapes, DataFileTypes.Physics, DataFileTypes.Sounds, DataFileTypes.Maps })
                 {
                     if (foundPaths.TryGetValue(type, out var path))
                     {
@@ -225,6 +254,10 @@ namespace ForgePlus.DataFileIO
                     break;
                 case DataFileTypes.Images:
                     Debug.LogWarning("Images loading not yet supported.");
+                    break;
+                case DataFileTypes.Plugins:
+                case DataFileTypes.Scripts:
+                    MmlLoading.Instance.Reload();
                     break;
             }
         }

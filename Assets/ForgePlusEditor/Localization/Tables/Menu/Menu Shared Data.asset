@@ -287,6 +287,76 @@ MonoBehaviour:
     m_Flags: 1
     m_Metadata:
       m_Items: []
+  - m_Id: 4257400198152192
+    m_Key: FilesTab.Plugins.Heading.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400206540800
+    m_Key: FilesTab.Plugins.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400206540801
+    m_Key: FilesTab.Scripts.Heading.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400206540802
+    m_Key: FilesTab.Scripts.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400206540803
+    m_Key: FilesTab.NoFolderPath
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400206540804
+    m_Key: FilesTab.PluginList.Text
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400210735104
+    m_Key: FilesTab.PluginList.None.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400210735105
+    m_Key: FilesTab.PluginList.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400210735106
+    m_Key: FilesTab.Plugin.NotInUse.Text
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400210735107
+    m_Key: FilesTab.Plugin.Version.Text
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400210735108
+    m_Key: FilesTab.Plugin.NotForScenario.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400210735109
+    m_Key: FilesTab.Plugin.Overridden.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400210735110
+    m_Key: FilesTab.Plugin.NothingShown.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257400210735111
+    m_Key: FileBrowser.OpenFolder.Title
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

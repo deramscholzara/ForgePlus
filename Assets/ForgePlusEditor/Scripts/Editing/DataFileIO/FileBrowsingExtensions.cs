@@ -58,6 +58,12 @@ namespace ForgePlus.DataFileIO.Extensions
             };
         }
 
+        // Whether the type is a folder (rather than a file)
+        public static bool IsFolder(this DataFileTypes type)
+        {
+            return type == DataFileTypes.Plugins || type == DataFileTypes.Scripts;
+        }
+
         // The type's name, as file dialogs' titles show it
         public static string DisplayName(this DataFileTypes type)
         {
@@ -73,6 +79,10 @@ namespace ForgePlus.DataFileIO.Extensions
                     return Strings.Get(Strings.Common, "FileBrowser.Type.Physics");
                 case DataFileTypes.Images:
                     return Strings.Get(Strings.Common, "FileBrowser.Type.Images");
+                case DataFileTypes.Plugins:
+                    return Strings.Get(Strings.Common, "FileBrowser.Type.Plugins");
+                case DataFileTypes.Scripts:
+                    return Strings.Get(Strings.Common, "FileBrowser.Type.Scripts");
                 default:
                     return type.ToString();
             }

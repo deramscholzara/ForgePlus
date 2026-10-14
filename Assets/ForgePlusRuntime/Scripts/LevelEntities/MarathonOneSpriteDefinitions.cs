@@ -5,7 +5,8 @@ namespace RuntimeCore.Entities.MapObjects
 {
     // The shapes Marathon 1's player, items and scenery use, as Aleph One's Marathon 1 scenario gives them (its
     // Scripts/Marathon.mml: <player>, <items> and <scenery>), as Marathon 1's shapes file has them in other places than
-    // Marathon 2's does. Monsters' shapes aren't here, as physics (Marathon 1's, or any override) gives them.
+    // Marathon 2's does. Monsters' shapes aren't here, as physics (Marathon 1's, or any override) gives them. These are
+    // the defaults for a Marathon 1 scenario without its Scripts folder's MML (which gives them, as Aleph One reads it).
     public static class MarathonOneSpriteDefinitions
     {
         private const byte PlayerCollection = 6;

@@ -17,6 +17,8 @@ namespace AlephOne
 
         public short destroyed_effect;
         public ushort destroyed_shape;
+
+        public scenery_definition Clone() { return (scenery_definition) MemberwiseClone(); }
     }
 
     public static partial class scenery

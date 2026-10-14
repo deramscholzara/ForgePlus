@@ -250,8 +250,6 @@ namespace RuntimeCore.Materials
         [NoAutoStaticsCleanup] private static readonly int textureArrayIndexPropertyId = Shader.PropertyToID("_TextureArrayIndex");
 #endif
 
-        // TODO: Convert Textures to use TextureSet (renamed from PluginTextureSet)
-        //       and make PluginLoading_Texture use this.Textures instead of its "TextureLookup"
         private static readonly Dictionary<ushort, Texture2D> Textures = new Dictionary<ushort, Texture2D>(255);
         private static readonly Dictionary<ushort, int> TextureUsageCounter = new Dictionary<ushort, int>();
 
@@ -367,16 +365,21 @@ namespace RuntimeCore.Materials
             }
         }
 
-        // Plugin textures take precedence (their main texture can be missing, which counts as loaded but null)
+        // MML's substitute textures (from the scripts and plugins) are used in place of the shapes' (and listed with them)
         private static bool TryGetLoadedTexture(ushort shapeDescriptor, out Texture2D texture)
         {
-            if (PluginLoading_Texture.Instance.TextureLookup.TryGetValue(shapeDescriptor, out var textureSet))
+            if (Textures.TryGetValue(shapeDescriptor, out texture))
             {
-                texture = textureSet.MainTexture ? textureSet.MainTexture : null;
                 return true;
             }
 
-            return Textures.TryGetValue(shapeDescriptor, out texture);
+            if (MmlTextures.TryGetWallTexture(shapeDescriptor, out texture))
+            {
+                Textures[shapeDescriptor] = texture;
+                return true;
+            }
+
+            return false;
         }
 
         private static void AddTexture(ushort shapeDescriptor, Texture2D texture)
@@ -462,14 +465,14 @@ namespace RuntimeCore.Materials
             ClearMaterials(LandscapeMaterials);
 #endif
 
-            foreach (var texturesKey in Textures.Keys)
+            // MML's substitute textures are kept (by MmlTextures) while the MML still gives them
+            foreach (var texture in Textures.Values)
             {
-                Object.Destroy(Textures[texturesKey]);
+                if (!MmlTextures.IsSubstitute(texture))
+                {
+                    Object.Destroy(texture);
+                }
             }
-
-            // TODO: Make plugin texture loading on-demand based on loaded plugin data,
-            //       similar to ShapesLoading.Instance.GetShape (see PluginLoading_Textures notes),
-            //       then TextureLookup, or Textures (using TextureSet) can safely be destroyed and cleared here.
 
             Textures.Clear();
         }

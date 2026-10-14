@@ -1,8 +1,8 @@
 ﻿// Port of Aleph One: Source_Files/Sound/SoundManager.h, SoundManager.cpp (sound definition lookups, ambient sound
 // selection and volumes, and random sounds' permutations and pitches)
 //
-// Not ported: playing sound (players, channels, OpenAL), which ForgePlus does itself; sound patches and replacements;
-// and MML parsing, so the ambient and random tables are always the originals.
+// Not ported: playing sound (players, channels, OpenAL), which ForgePlus does itself; sound patches and replacements
+// (and their MML); and the MML for interface and dialog sounds.
 using System;
 using Unity.Scripting.LifecycleManagement;
 using static AlephOne.csalerts;
@@ -45,6 +45,69 @@ namespace AlephOne
         public static random_sound_definition get_random_sound_definition(short random_sound_index)
         {
             return GetMemberWithBounds(random_sound_definitions, random_sound_index, NUMBER_OF_RANDOM_SOUND_DEFINITIONS);
+        }
+
+        // The definitions as they were before MML changed them (null while MML hasn't)
+        private static ambient_sound_definition[] original_ambient_sound_definitions;
+        private static random_sound_definition[] original_random_sound_definitions;
+
+        public static void reset_mml_sounds()
+        {
+            if (original_ambient_sound_definitions != null)
+            {
+                for (int i = 0; i < NUMBER_OF_AMBIENT_SOUND_DEFINITIONS; i++)
+                    ambient_sound_definitions[i] = original_ambient_sound_definitions[i];
+                original_ambient_sound_definitions = null;
+            }
+            if (original_random_sound_definitions != null)
+            {
+                for (int i = 0; i < NUMBER_OF_RANDOM_SOUND_DEFINITIONS; i++)
+                    random_sound_definitions[i] = original_random_sound_definitions[i];
+                original_random_sound_definitions = null;
+            }
+            // Not ported: the dialog sounds, and SoundReplacements::instance()->Reset()
+        }
+
+        public static void parse_mml_sounds(InfoTree root)
+        {
+            // back up old values first
+            if (original_ambient_sound_definitions == null)
+            {
+                original_ambient_sound_definitions = new ambient_sound_definition[NUMBER_OF_AMBIENT_SOUND_DEFINITIONS];
+                for (int i = 0; i < NUMBER_OF_AMBIENT_SOUND_DEFINITIONS; i++)
+                {
+                    original_ambient_sound_definitions[i] = ambient_sound_definitions[i];
+                    ambient_sound_definitions[i] = new ambient_sound_definition(ambient_sound_definitions[i].sound_index);
+                }
+            }
+            if (original_random_sound_definitions == null)
+            {
+                original_random_sound_definitions = new random_sound_definition[NUMBER_OF_RANDOM_SOUND_DEFINITIONS];
+                for (int i = 0; i < NUMBER_OF_RANDOM_SOUND_DEFINITIONS; i++)
+                {
+                    original_random_sound_definitions[i] = random_sound_definitions[i];
+                    random_sound_definitions[i] = new random_sound_definition(random_sound_definitions[i].sound_index);
+                }
+            }
+
+            // Not ported: the interface sounds (terminal_logon and the like), which ForgePlus doesn't play
+
+            foreach (var ambient in root.children_named("ambient"))
+            {
+                short index = 0;
+                if (!ambient.read_indexed("index", ref index, NUMBER_OF_AMBIENT_SOUND_DEFINITIONS))
+                    continue;
+                ambient.read_indexed("sound", ref ambient_sound_definitions[index].sound_index, short.MaxValue + 1, true);
+            }
+            foreach (var random in root.children_named("random"))
+            {
+                short index = 0;
+                if (!random.read_indexed("index", ref index, NUMBER_OF_RANDOM_SOUND_DEFINITIONS))
+                    continue;
+                random.read_indexed("sound", ref random_sound_definitions[index].sound_index, short.MaxValue + 1, true);
+            }
+
+            // Not ported: dialog sounds, and external sounds (sound and sound_clear), which replace sounds with files
         }
 
         public static sound_behavior_definition get_sound_behavior_definition(short sound_behavior_index)

@@ -3,7 +3,7 @@
 // Not ported (rendering): shading and tinting tables, the screen color table and the remapping of
 // bitmaps into it (find_or_add_color, remap_bitmap, build_shading_tables*, build_*tinting_table*,
 // _change_clut, get_global_shading_table), infravision MML, get_shape_surface(), OpenGL and software
-// renderer extras, and plugins' shapes patches. So bitmaps keep the shapes file's palette indexes and
+// renderer extras. So bitmaps keep the shapes file's palette indexes and
 // the color tables their .value fields.
 using System;
 using System.Collections.Generic;
@@ -1063,7 +1063,7 @@ namespace AlephOne
                 header.flags = 0;
             }
 
-            // Not ported: Plugins::instance()->load_shapes_patches(is_opengl);
+            Plugins.instance().load_shapes_patches(is_opengl);
 
             if (shapes_patch.Length != 0)
             {
