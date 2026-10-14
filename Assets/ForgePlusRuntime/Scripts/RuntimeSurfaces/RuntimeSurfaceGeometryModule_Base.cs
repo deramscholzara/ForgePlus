@@ -16,21 +16,12 @@ namespace RuntimeCore.Entities.Geometry
         // of every layer; yzw are unused. Surfaces without it (such as polygons) are treated as having no delta.
         public const int AmbientDeltaUVChannel = 4;
 
-        protected int lastTextureIndex;
-        protected int lastLightIndex;
-
-        public SurfaceBatchingManager.BatchKey BatchKey { get; protected set; }
-
-        public bool IsStaticBatchable { get; protected set; } = true;
+        // Which materials it's drawn with (SurfaceMaterials)
+        public SurfaceMaterials.Key MaterialKey { get; protected set; }
 
         public Mesh SurfaceMesh { get; protected set; }
 
         public MeshRenderer SurfaceRenderer { get; protected set; }
-
-        public RuntimeSurfaceGeometryModule_Base()
-        {
-            BatchKey = new SurfaceBatchingManager.BatchKey();
-        }
 
         public abstract void AssembleSurface();
 
@@ -48,11 +39,19 @@ namespace RuntimeCore.Entities.Geometry
 
         public abstract void ApplyMedia();
 
-        public abstract void ApplyBatchKeyMaterial(bool innerLayer);
+        public abstract void ApplySourceMaterial(bool innerLayer);
+
+        // The level's light with that index, if there is one
+        protected static LevelEntity_Light GetLight(LevelEntity_Level level, short lightIndex)
+        {
+            return level.Lights.TryGetValue(lightIndex, out var light) ? light : null;
+        }
 
         public void ApplyRendererMaterials()
         {
-            SurfaceRenderer.sharedMaterials = SurfaceBatchingManager.Instance.GetUniqueMaterials(BatchKey);
+            SurfaceRenderer.sharedMaterials = SurfaceMaterials.Get(MaterialKey);
+
+            SurfaceCacheAdmission.Admit(SurfaceRenderer);
         }
 
         public abstract void PrepareForDestruction();

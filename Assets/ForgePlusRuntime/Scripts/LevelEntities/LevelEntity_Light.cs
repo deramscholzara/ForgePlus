@@ -3,11 +3,9 @@ using ForgePlus.LevelManipulation;
 using RuntimeCore.Common;
 using System;
 using System.Collections.Generic;
-using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
-using UnityEngine.Rendering;
 using AlephOne;
 using static AlephOne.lightsource;
 using ForgePlus.Extensions;
@@ -29,20 +27,8 @@ namespace RuntimeCore.Entities
             SecondaryInactive,
         }
 
-        // Every light's display intensity, read by GetLightIntensityFromStructuredBuffer.hlsl using the light index
-        // that each surface stores in its UVs (UV0.z, or UV1.z for a layered side's outer layer)
-        public static readonly int lightIntensitiesGlobalPropertyId = Shader.PropertyToID("_LightIntensities");
-        private const int minimumIntensitiesCapacity = 256;
-
-        // Released by ReleaseIntensities when Play mode ends (LightIntensitiesFallback is bound while there's none)
-        [NoAutoStaticsCleanup]
-        private static GraphicsBuffer intensitiesBuffer;
-        private static float[] intensities = Array.Empty<float>();
-
-        // Range of intensities changed since the last upload (start inclusive, end exclusive), so however many lights
-        // change in a frame, they are sent to the GPU together, once, just before rendering
-        private static int dirtyStart = int.MaxValue;
-        private static int dirtyEnd = 0;
+        // Each surface material is lit by one light (SurfaceMaterials), whose display intensity it holds in this property
+        public static readonly int lightIntensityPropertyId = Shader.PropertyToID("_LightIntensity");
 
         // One "tick" = 1/30 seconds.  This is used to maintain classic flicker frequency.
         private const float minimumTickDuration = 1f / 30f;
@@ -85,11 +71,15 @@ namespace RuntimeCore.Entities
                     CurrentDisplayIntensity = currentLinearIntensity;
                 }
 
-                SetIntensity(NativeIndex, CurrentDisplayIntensity);
+                ApplyIntensityToMaterials();
             }
         }
 
         private float currentLinearIntensity = 0f;
+
+        // The surface materials it lights, and the intensity they last had applied
+        private readonly List<Material> subscribedMaterials = new List<Material>();
+        private float appliedDisplayIntensity = float.NaN;
 
         private States currentState = States.BecomingActive;
         private bool loopsCurrentState;
@@ -107,8 +97,6 @@ namespace RuntimeCore.Entities
 
         public LevelEntity_Light(short index, static_light_data light, LevelEntity_Level level)
         {
-            EnsureIntensitiesCapacity(index + 1);
-
             NativeIndex = index;
             NativeObject = light;
             ParentLevel = level;
@@ -515,71 +503,37 @@ namespace RuntimeCore.Entities
             animatingLights.Clear();
         }
 
-        private static void SetIntensity(int index, float intensity)
+        public void SubscribeMaterial(Material material)
         {
-            if (intensities[index] == intensity)
+            subscribedMaterials.Add(material);
+
+            ApplyIntensity(material);
+        }
+
+        public void UnsubscribeMaterial(Material material)
+        {
+            subscribedMaterials.Remove(material);
+        }
+
+        // Shaders without the property don't keep it, so a material that changes shader has it applied again
+        public void ApplyIntensity(Material material)
+        {
+            material.SetFloat(lightIntensityPropertyId, CurrentDisplayIntensity);
+        }
+
+        private void ApplyIntensityToMaterials()
+        {
+            if (appliedDisplayIntensity == CurrentDisplayIntensity)
             {
                 return;
             }
 
-            intensities[index] = intensity;
-            dirtyStart = Mathf.Min(dirtyStart, index);
-            dirtyEnd = Mathf.Max(dirtyEnd, index + 1);
-        }
+            appliedDisplayIntensity = CurrentDisplayIntensity;
 
-        // The buffer keeps its intensities when it grows, and is never shrunk, so it can be reused by every level
-        private static void EnsureIntensitiesCapacity(int count)
-        {
-            if (intensitiesBuffer != null && intensitiesBuffer.IsValid() && intensitiesBuffer.count >= count)
+            foreach (var material in subscribedMaterials)
             {
-                return;
+                ApplyIntensity(material);
             }
-
-            var capacity = Mathf.Max(minimumIntensitiesCapacity, Mathf.NextPowerOfTwo(count));
-
-            Array.Resize(ref intensities, capacity);
-
-            intensitiesBuffer?.Release();
-            intensitiesBuffer = new GraphicsBuffer(GraphicsBuffer.Target.Structured, capacity, sizeof(float));
-            Shader.SetGlobalBuffer(lightIntensitiesGlobalPropertyId, intensitiesBuffer);
-
-            dirtyStart = 0;
-            dirtyEnd = capacity;
-
-            RenderPipelineManager.beginContextRendering -= UploadIntensities;
-            RenderPipelineManager.beginContextRendering += UploadIntensities;
-
-            // In the Editor this is when Play mode ends
-            Application.quitting -= ReleaseIntensities;
-            Application.quitting += ReleaseIntensities;
-        }
-
-        private static void UploadIntensities(ScriptableRenderContext context, List<Camera> cameras)
-        {
-            if (dirtyEnd <= dirtyStart || intensitiesBuffer == null)
-            {
-                return;
-            }
-
-            intensitiesBuffer.SetData(intensities, dirtyStart, dirtyStart, dirtyEnd - dirtyStart);
-
-            dirtyStart = int.MaxValue;
-            dirtyEnd = 0;
-        }
-
-        private static void ReleaseIntensities()
-        {
-            RenderPipelineManager.beginContextRendering -= UploadIntensities;
-            Application.quitting -= ReleaseIntensities;
-
-            intensitiesBuffer?.Release();
-            intensitiesBuffer = null;
-            intensities = Array.Empty<float>();
-            dirtyStart = int.MaxValue;
-            dirtyEnd = 0;
-
-            // So nothing draws with the released buffer
-            LightIntensitiesFallback.Bind();
         }
     }
 }

@@ -85,6 +85,8 @@ MonoBehaviour:
   - rid: 552786384866508860
   - rid: 552786384866508861
   - rid: 552786384866508862
+  - rid: 552786384866508865
+  - rid: 552786384866508866
   references:
     version: 2
     RefIds:
@@ -564,3 +566,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Choose {0} folder
+    - rid: 552786384866508865
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4283477264056320
+        m_Metadata:
+          m_Items: []
+        m_Value: Surface Cache Global Illumination
+    - rid: 552786384866508866
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4283477268250624
+        m_Metadata:
+          m_Items: []
+        m_Value: Bounced (indirect) light from the level's lit surfaces onto others, calculated as you view the level. It's costly, and isn't how Marathon or Aleph One light levels, so it's off unless turned on here.

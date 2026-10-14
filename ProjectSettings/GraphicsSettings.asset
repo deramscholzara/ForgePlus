@@ -97,4 +97,4 @@ GraphicsSettings:
   m_LightProbeOutsideHullStrategy: 0
   m_CameraRelativeLightCulling: 0
   m_CameraRelativeShadowCulling: 0
-  m_DefaultMeshBufferTarget: 0
+  m_DefaultMeshBufferTarget: 1

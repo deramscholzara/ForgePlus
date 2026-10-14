@@ -28,6 +28,9 @@
                 <ui:Instance template="Toggle" name="ambient-occlusion" class="fp-toggle--wide fp-setting">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.AmbientOcclusion.Control.Text" />
                 </ui:Instance>
+                <ui:Instance template="Toggle" name="surface-cache-global-illumination" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.SurfaceCacheGlobalIllumination.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.SurfaceCacheGlobalIllumination.Control.Text" />
+                </ui:Instance>
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <ui:Instance template="Toggle" name="improper-fractions" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.ImproperFractions.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.ImproperFractions.Control.Text" />

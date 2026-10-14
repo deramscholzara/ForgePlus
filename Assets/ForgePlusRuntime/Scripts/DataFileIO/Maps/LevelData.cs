@@ -250,10 +250,6 @@ namespace ForgePlus.DataFileIO
 
             #endregion Initialization_Medias
 
-#if USE_TEXTURE_ARRAYS
-            MaterialGeneration_Geometry.TextureArraysArePopulating = true;
-#endif
-
             #region Polygons_And_Media
 
             var buildPolygonsStartTime = DateTime.Now;
@@ -303,12 +299,6 @@ namespace ForgePlus.DataFileIO
             Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
 
             #endregion Lines_And_Sides
-
-#if USE_TEXTURE_ARRAYS
-            MaterialGeneration_Geometry.ApplyTextureArrays();
-
-            MaterialGeneration_Geometry.TextureArraysArePopulating = false;
-#endif
 
             #region Objects_And_Placements
 

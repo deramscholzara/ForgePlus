@@ -49,7 +49,7 @@ namespace RuntimeCore.Entities.Geometry
             InspectorPanel.Instance.AddInspector(inspector);
         }
 
-        public void SetOffset(DataSources surfaceType, short x, short y, bool rebatch)
+        public void SetOffset(DataSources surfaceType, short x, short y)
         {
             switch (surfaceType)
             {
@@ -65,7 +65,7 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.ceiling_origin.x = x;
                     NativeObject.ceiling_origin.y = y;
 
-                    CeilingSurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                    CeilingSurface.ApplyTextureOffset();
 
                     break;
                 case DataSources.Floor:
@@ -80,7 +80,7 @@ namespace RuntimeCore.Entities.Geometry
                     NativeObject.floor_origin.x = x;
                     NativeObject.floor_origin.y = y;
                     
-                    FloorSurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                    FloorSurface.ApplyTextureOffset();
 
                     break;
                 default:
@@ -276,7 +276,7 @@ namespace RuntimeCore.Entities.Geometry
             {
                 if (surface)
                 {
-                    surface.ApplyShape(rebatchImmediately: false);
+                    surface.ApplyShape();
                 }
             }
 
@@ -301,11 +301,11 @@ namespace RuntimeCore.Entities.Geometry
                 return;
             }
 
-            surface.ApplyHeight(rebatchImmediately: false);
-            surface.ApplyTexture(rebatchImmediately: false);
-            surface.ApplyTransferMode(rebatchImmediately: false);
-            surface.ApplyTextureOffset(rebatchImmediately: false);
-            surface.ApplyLight(rebatchImmediately: false);
+            surface.ApplyHeight();
+            surface.ApplyTexture();
+            surface.ApplyTransferMode();
+            surface.ApplyTextureOffset();
+            surface.ApplyLight();
         }
 
         private void CreateSelectionIndicators(RuntimeSurfaceGeometry surface, bool isfloor)

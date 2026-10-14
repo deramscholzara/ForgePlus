@@ -88,8 +88,7 @@ namespace ForgePlus.LevelManipulation
                         {
                             ParentPolygon.SetOffset(DataSource,
                                                       DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.floor_origin.x : selectedSourcePolygon.NativeObject.ceiling_origin.x,
-                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.floor_origin.y : selectedSourcePolygon.NativeObject.ceiling_origin.y,
-                                                      rebatch: true);
+                                                      DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.floor_origin.y : selectedSourcePolygon.NativeObject.ceiling_origin.y);
                         }
                     }
                     else
@@ -239,8 +238,7 @@ namespace ForgePlus.LevelManipulation
                 // Note: Polygon surfaces have swapped UVs, so swap them here
                 ParentPolygon.SetOffset(DataSource,
                                           (short)newUVOffset.y,
-                                          (short)newUVOffset.x,
-                                          rebatch: false);
+                                          (short)newUVOffset.x);
 
                 ApplyAlignmentGroup();
             }
@@ -281,11 +279,6 @@ namespace ForgePlus.LevelManipulation
             {
                 uvDragPlane = null;
 
-                if (SurfaceBatchingManager.BatchingEnabled)
-                {
-                    SurfaceBatchingManager.Instance.MergeAllBatches();
-                }
-
                 alignmentGroupedPolygons.Clear();
                 alignmentStartingOffsets.Clear();
             }
@@ -317,8 +310,7 @@ namespace ForgePlus.LevelManipulation
 
                         ParentPolygon.SetOffset(DataSource,
                                                   newX,
-                                                  newY,
-                                                  rebatch: true);
+                                                  newY);
                     }
 
                     break;
@@ -448,7 +440,7 @@ namespace ForgePlus.LevelManipulation
             foreach (var polygon in alignmentGroupedPolygons)
             {
                 var (x, y) = isAligningGroup ? ((short) draggedUVOffset.y, (short) draggedUVOffset.x) : alignmentStartingOffsets[polygon];
-                polygon.SetOffset(DataSource, x, y, rebatch: false);
+                polygon.SetOffset(DataSource, x, y);
             }
         }
 

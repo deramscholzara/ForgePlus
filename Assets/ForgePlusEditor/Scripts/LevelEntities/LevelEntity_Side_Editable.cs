@@ -237,7 +237,7 @@ namespace RuntimeCore.Entities.Geometry
             {
                 if (surface)
                 {
-                    surface.ApplyAmbientDelta(rebatchImmediately: false);
+                    surface.ApplyAmbientDelta();
                 }
             }
         }
@@ -249,14 +249,14 @@ namespace RuntimeCore.Entities.Geometry
                 return;
             }
 
-            surface.ApplyTexture(innerLayer, rebatchImmediately: false);
-            surface.ApplyTransferMode(innerLayer, rebatchImmediately: false);
-            surface.ApplyTextureOffset(innerLayer, rebatchImmediately: false);
-            surface.ApplyLight(innerLayer, rebatchImmediately: false);
+            surface.ApplyTexture(innerLayer);
+            surface.ApplyTransferMode(innerLayer);
+            surface.ApplyTextureOffset(innerLayer);
+            surface.ApplyLight(innerLayer);
         }
 
         // TODO: actually set these up to use the new entity system
-        public void SetOffset(DataSources dataSource, short x, short y, bool rebatch)
+        public void SetOffset(DataSources dataSource, short x, short y)
         {
             switch (dataSource)
             {
@@ -274,7 +274,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     if (PrimarySurface)
                     {
-                        PrimarySurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                        PrimarySurface.ApplyTextureOffset();
                     }
 
                     break;
@@ -292,7 +292,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     if (SecondarySurface)
                     {
-                        SecondarySurface.ApplyTextureOffset(rebatchImmediately: rebatch);
+                        SecondarySurface.ApplyTextureOffset();
                     }
 
                     break;
@@ -310,8 +310,7 @@ namespace RuntimeCore.Entities.Geometry
 
                     if (TransparentSurface)
                     {
-                        TransparentSurface.ApplyTextureOffset(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level),
-                                                             rebatchImmediately: rebatch);
+                        TransparentSurface.ApplyTextureOffset(innerLayer: !NativeObject.HasLayeredTransparentSide(ParentLevel.Level));
                     }
 
                     break;

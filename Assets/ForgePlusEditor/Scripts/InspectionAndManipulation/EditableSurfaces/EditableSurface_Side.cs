@@ -201,7 +201,7 @@ namespace ForgePlus.Entities.Geometry
                             }
                             #endregion Alignment_DataSource_Source
 
-                            AlignDestinationToSource(selectedSourceSide, sourceDataSource, ParentSide, destinationDataSource, neighborFlowsOutward, neighborIsLeft, rebatch: true);
+                            AlignDestinationToSource(selectedSourceSide, sourceDataSource, ParentSide, destinationDataSource, neighborFlowsOutward, neighborIsLeft);
                         }
                     }
                     else
@@ -369,8 +369,7 @@ namespace ForgePlus.Entities.Geometry
 
                 ParentSide.SetOffset(DataSource,
                                        (short)newUVOffset.x,
-                                       (short)newUVOffset.y,
-                                       rebatch: false);
+                                       (short)newUVOffset.y);
 
                 ApplyAlignmentGroup();
             }
@@ -394,11 +393,6 @@ namespace ForgePlus.Entities.Geometry
                 ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
             {
                 uvDragPlane = null;
-
-                if (SurfaceBatchingManager.BatchingEnabled)
-                {
-                    SurfaceBatchingManager.Instance.MergeAllBatches();
-                }
 
                 alignmentGroup.Clear();
                 alignmentStartingOffsets.Clear();
@@ -455,8 +449,7 @@ namespace ForgePlus.Entities.Geometry
 
                         ParentSide.SetOffset(destinationDataSource,
                                                newX,
-                                               newY,
-                                               rebatch: true);
+                                               newY);
                     }
 
                     break;
@@ -527,7 +520,7 @@ namespace ForgePlus.Entities.Geometry
             return (LevelEntity_Side.DataSources)Enum.Parse(typeof(LevelEntity_Side.DataSources), result);
         }
 
-        private void AlignDestinationToSource(LevelEntity_Side sourceSide, LevelEntity_Side.DataSources sourceDataSource, LevelEntity_Side destinationSide, LevelEntity_Side.DataSources destinationDataSource, bool destinationFlowsOutward, bool destinationIsLeftOfSource, bool rebatch)
+        private void AlignDestinationToSource(LevelEntity_Side sourceSide, LevelEntity_Side.DataSources sourceDataSource, LevelEntity_Side destinationSide, LevelEntity_Side.DataSources destinationDataSource, bool destinationFlowsOutward, bool destinationIsLeftOfSource)
         {
             short sourceX;
             short sourceY;
@@ -585,8 +578,7 @@ namespace ForgePlus.Entities.Geometry
 
             destinationSide.SetOffset(destinationDataSource,
                                       newX,
-                                      newY,
-                                      rebatch);
+                                      newY);
         }
 
         // Aligned along from this side's texture while Align Contiguous (ctrl) is held (each after the one it continues),
@@ -604,13 +596,12 @@ namespace ForgePlus.Entities.Geometry
                                              groupee.DestinationSide,
                                              groupee.DestinationDataSource,
                                              groupee.DestinationFlowsOutward,
-                                             groupee.DestinationIsLeftOfSource,
-                                             rebatch: false);
+                                             groupee.DestinationIsLeftOfSource);
                 }
                 else
                 {
                     var (x, y) = alignmentStartingOffsets[i];
-                    groupee.DestinationSide.SetOffset(groupee.DestinationDataSource, x, y, rebatch: false);
+                    groupee.DestinationSide.SetOffset(groupee.DestinationDataSource, x, y);
                 }
             }
         }

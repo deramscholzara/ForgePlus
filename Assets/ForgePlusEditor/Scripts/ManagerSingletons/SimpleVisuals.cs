@@ -6,8 +6,8 @@ using UnityEngine;
 namespace ForgePlus.ApplicationGeneral
 {
     // While Simple Visuals is on, every surface is drawn with the grid texture (lit as it would be) instead of its own
-    // texture. Surfaces (and their batches) share the materials SurfaceBatchingManager makes for them, so swapping those
-    // materials' shader swaps every surface's, including surfaces made later.
+    // texture. Surfaces share the materials SurfaceMaterials makes for them, so swapping those materials' shader swaps
+    // every surface's, including surfaces made later.
     [AutoStaticsCleanup]
     public static partial class SimpleVisuals
     {

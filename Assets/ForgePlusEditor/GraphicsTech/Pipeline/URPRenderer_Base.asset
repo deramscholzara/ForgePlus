@@ -154,7 +154,8 @@ MonoBehaviour:
   - {fileID: 7736890342098132390}
   - {fileID: -8452421458952617489}
   - {fileID: -662273094177211003}
-  m_RendererFeatureMap: 3fe1051f884b82cea6dde83ac6f45e6bef813d4777f7b28a85bd44352122cff6l
+  - {fileID: 3871866521132688532}
+  m_RendererFeatureMap: 3fe1051f884b82cea6dde83ac6f45e6bef813d4777f7b28a85bd44352122cff69464d74116a2bb35l
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   m_AssetVersion: 3
   m_PrepassLayerMask:
@@ -185,6 +186,19 @@ MonoBehaviour:
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
   m_TileOnlyMode: 0
+--- !u!114 &3871866521132688532
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8406b95d18054752ac25ef8eb7ac2d41, type: 3}
+  m_Name: SurfaceCacheGIRendererFeature
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.SurfaceCacheGIRendererFeature
+  m_Active: 1
 --- !u!114 &7736890342098132390
 MonoBehaviour:
   m_ObjectHideFlags: 1

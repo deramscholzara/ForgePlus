@@ -12,13 +12,22 @@ namespace RuntimeCore.Materials
 {
     // Substitute images for walls and sprites, which MML gives (<opengl><texture>), as Aleph One's OpenGL renderer uses
     // them (OGL_Textures.cpp): for a shape's bitmap in a collection and CLUT, its normal image (with its normal mask as
-    // its opacity, if it has one). Glow images, bump maps (offset images) and the opacity and blending options aren't
-    // shown.
+    // its opacity, if it has one). Walls also have their bump map (offset image, with its height as its opacity) and
+    // glow image (with its glow mask as its opacity), which, as in Aleph One (OGL_Setup.cpp:
+    // OGL_TextureOptionsBase::Load), are only used with a normal image, and a glow image only at the normal image's size.
+    // The opacity and blending options aren't shown.
     [NoAutoStaticsCleanup]
     public static class MmlTextures
     {
         // Wall textures, by their normal image and mask (null for images that couldn't be loaded)
         private static readonly Dictionary<(string Image, string Mask, bool IsLandscape), Texture2D> wallTextures = new Dictionary<(string Image, string Mask, bool IsLandscape), Texture2D>();
+
+        // Wall bump maps, by their offset image (null for images that couldn't be loaded)
+        private static readonly Dictionary<string, Texture2D> bumpMaps = new Dictionary<string, Texture2D>();
+
+        // Wall glow maps, by their glow image, mask and whether they're premultiplied (null for images that couldn't be
+        // loaded)
+        private static readonly Dictionary<(string Image, string Mask, bool IsPremultiplied), Texture2D> glowMaps = new Dictionary<(string Image, string Mask, bool IsPremultiplied), Texture2D>();
 
         // A wall, floor, ceiling, media or landscape texture's substitute, if MML gives one
         public static bool TryGetWallTexture(ushort shapeDescriptor, out Texture2D texture)
@@ -39,6 +48,63 @@ namespace RuntimeCore.Materials
             }
 
             return texture;
+        }
+
+        // A wall texture's substitute's bump map (normal in its color, height in its opacity), if MML gives one
+        public static bool TryGetWallBumpMap(ushort shapeDescriptor, out Texture2D bumpMap)
+        {
+            bumpMap = null;
+
+            if (!TryGetOptions(shapeDescriptor, out var options) || !TryGetWallTexture(shapeDescriptor, out _))
+            {
+                return false;
+            }
+
+            var path = options.OffsetMap.GetPath();
+            if (string.IsNullOrEmpty(path) || !options.OffsetMap.Exists())
+            {
+                return false;
+            }
+
+            if (!bumpMaps.TryGetValue(path, out bumpMap))
+            {
+                bumpMap = LoadBumpMap(path);
+                bumpMaps[path] = bumpMap;
+            }
+
+            return bumpMap;
+        }
+
+        // A wall texture's substitute's glow map (its color times its opacity glows), if MML gives one at the substitute's
+        // size
+        public static bool TryGetWallGlowMap(ushort shapeDescriptor, out Texture2D glowMap)
+        {
+            glowMap = null;
+
+            if (!TryGetOptions(shapeDescriptor, out var options) || !TryGetWallTexture(shapeDescriptor, out var texture))
+            {
+                return false;
+            }
+
+            var path = options.GlowColors.GetPath();
+            if (string.IsNullOrEmpty(path) || !options.GlowColors.Exists())
+            {
+                return false;
+            }
+
+            var key = (path, options.GlowMask.GetPath(), options.GlowIsPremultiplied);
+            if (!glowMaps.TryGetValue(key, out glowMap))
+            {
+                glowMap = LoadGlowMap(options);
+                glowMaps[key] = glowMap;
+            }
+
+            if (glowMap && (glowMap.width != texture.width || glowMap.height != texture.height))
+            {
+                return false;
+            }
+
+            return glowMap;
         }
 
         // A sprite frame's substitute, bottom row first, mirrored as the shape is (flags are its low-level shape's)
@@ -99,15 +165,13 @@ namespace RuntimeCore.Materials
         // When the substitutions change (as other MML applies)
         public static void Clear()
         {
-            foreach (var texture in wallTextures.Values)
-            {
-                if (texture)
-                {
-                    Object.Destroy(texture);
-                }
-            }
+            DestroyAll(wallTextures.Values);
+            DestroyAll(bumpMaps.Values);
+            DestroyAll(glowMaps.Values);
 
             wallTextures.Clear();
+            bumpMaps.Clear();
+            glowMaps.Clear();
         }
 
         // For Fast Enter Play Mode, where statics survive between Play sessions
@@ -115,6 +179,19 @@ namespace RuntimeCore.Materials
         private static void ResetStatics()
         {
             wallTextures.Clear();
+            bumpMaps.Clear();
+            glowMaps.Clear();
+        }
+
+        private static void DestroyAll(IEnumerable<Texture2D> textures)
+        {
+            foreach (var texture in textures)
+            {
+                if (texture)
+                {
+                    Object.Destroy(texture);
+                }
+            }
         }
 
         private static bool TryGetOptions(ushort shapeDescriptor, out OGL_TextureOptions options)
@@ -153,31 +230,7 @@ namespace RuntimeCore.Materials
 
             try
             {
-                var texture = new Texture2D(image.width, image.height, TextureFormat.RGBA32, mipChain: true)
-                {
-                    name = Path.GetFileName(options.NormalColors.GetPath()),
-                    filterMode = FilterMode.Trilinear,
-                };
-
-                texture.SetPixels32(image.GetPixels32());
-
-                if (isLandscape)
-                {
-                    texture.wrapModeV = TextureWrapMode.Clamp;
-                }
-
-                if (MathUtilities.IsPowerOfTwo(texture.width) && MathUtilities.IsPowerOfTwo(texture.height))
-                {
-                    texture.Apply(updateMipmaps: true, makeNoLongerReadable: false);
-                    texture.Compress(highQuality: true);
-                    texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
-                }
-                else
-                {
-                    texture.Apply(updateMipmaps: true, makeNoLongerReadable: true);
-                }
-
-                return texture;
+                return CreateWallTexture(image, options.NormalColors.GetPath(), isLinear: false, isLandscape);
             }
             finally
             {
@@ -185,19 +238,105 @@ namespace RuntimeCore.Materials
             }
         }
 
-        // The normal image, readable, with its mask as its opacity (ImageLoader_SDL.cpp: a mask of another size isn't
-        // used, and its opacity is its red, green and blue's average). Null if it can't be loaded.
-        private static Texture2D LoadImage(OGL_TextureOptions options)
+        // Linear, as its color is a direction rather than a color, and its opacity (height) is kept
+        private static Texture2D LoadBumpMap(string path)
         {
-            var image = LoadImageFile(options.NormalColors.GetPath());
+            var image = LoadImageFile(path);
             if (!image)
             {
-                Debug.LogWarning($"MML: the substitute image \"{options.NormalColors.GetPath()}\" couldn't be loaded.");
+                Debug.LogWarning($"MML: the offset image \"{path}\" couldn't be loaded.");
                 return null;
             }
 
-            var maskPath = options.NormalMask.GetPath();
-            if (!string.IsNullOrEmpty(maskPath) && options.NormalMask.Exists())
+            try
+            {
+                return CreateWallTexture(image, path, isLinear: true, isLandscape: false);
+            }
+            finally
+            {
+                Object.Destroy(image);
+            }
+        }
+
+        private static Texture2D LoadGlowMap(OGL_TextureOptions options)
+        {
+            var image = LoadImage(options.GlowColors, options.GlowMask, "glow image");
+            if (!image)
+            {
+                return null;
+            }
+
+            try
+            {
+                // A premultiplied image's color already has its opacity applied, so it glows at full opacity
+                if (options.GlowIsPremultiplied)
+                {
+                    var pixels = image.GetPixels32();
+                    for (var i = 0; i < pixels.Length; i++)
+                    {
+                        pixels[i].a = byte.MaxValue;
+                    }
+
+                    image.SetPixels32(pixels);
+                }
+
+                return CreateWallTexture(image, options.GlowColors.GetPath(), isLinear: false, isLandscape: false);
+            }
+            finally
+            {
+                Object.Destroy(image);
+            }
+        }
+
+        // Mipmapped, and compressed where its size allows
+        private static Texture2D CreateWallTexture(Texture2D image, string path, bool isLinear, bool isLandscape)
+        {
+            var texture = new Texture2D(image.width, image.height, TextureFormat.RGBA32, mipChain: true, linear: isLinear)
+            {
+                name = Path.GetFileName(path),
+                filterMode = FilterMode.Trilinear,
+            };
+
+            texture.SetPixels32(image.GetPixels32());
+
+            if (isLandscape)
+            {
+                texture.wrapModeV = TextureWrapMode.Clamp;
+            }
+
+            if (MathUtilities.IsPowerOfTwo(texture.width) && MathUtilities.IsPowerOfTwo(texture.height))
+            {
+                texture.Apply(updateMipmaps: true, makeNoLongerReadable: false);
+                texture.Compress(highQuality: true);
+                texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
+            }
+            else
+            {
+                texture.Apply(updateMipmaps: true, makeNoLongerReadable: true);
+            }
+
+            return texture;
+        }
+
+        // The normal image, with its mask as its opacity. Null if it can't be loaded.
+        private static Texture2D LoadImage(OGL_TextureOptions options)
+        {
+            return LoadImage(options.NormalColors, options.NormalMask, "substitute image");
+        }
+
+        // The image, readable, with its mask as its opacity (ImageLoader_SDL.cpp: a mask of another size isn't used, and
+        // its opacity is its red, green and blue's average). Null if it can't be loaded.
+        private static Texture2D LoadImage(FileSpecifier colors, FileSpecifier maskFile, string description)
+        {
+            var image = LoadImageFile(colors.GetPath());
+            if (!image)
+            {
+                Debug.LogWarning($"MML: the {description} \"{colors.GetPath()}\" couldn't be loaded.");
+                return null;
+            }
+
+            var maskPath = maskFile.GetPath();
+            if (!string.IsNullOrEmpty(maskPath) && maskFile.Exists())
             {
                 var mask = LoadImageFile(maskPath);
                 if (mask && mask.width == image.width && mask.height == image.height)

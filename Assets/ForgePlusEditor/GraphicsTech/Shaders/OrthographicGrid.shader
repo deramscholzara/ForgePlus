@@ -25,6 +25,20 @@ Shader "ForgePlus/OrthographicGrid"
         ZTest LEqual
         Blend SrcAlpha OneMinusSrcAlpha
 
+        // Shared by every pass, so they agree on the material's properties (as the SRP Batcher needs)
+        HLSLINCLUDE
+        #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+        TEXTURE2D(_MainTex);
+        SAMPLER(sampler_MainTex);
+
+        CBUFFER_START(UnityPerMaterial)
+            float4 _MainTex_ST;
+            half _Opacity;
+            float _MetersPerWorldUnit;
+        CBUFFER_END
+        ENDHLSL
+
         Pass
         {
             Name "Unlit"
@@ -33,17 +47,6 @@ Shader "ForgePlus/OrthographicGrid"
             #pragma vertex Vertex
             #pragma fragment Fragment
             #pragma multi_compile_instancing
-
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-
-            TEXTURE2D(_MainTex);
-            SAMPLER(sampler_MainTex);
-
-            CBUFFER_START(UnityPerMaterial)
-                float4 _MainTex_ST;
-                half _Opacity;
-                float _MetersPerWorldUnit;
-            CBUFFER_END
 
             struct Attributes
             {
@@ -78,6 +81,22 @@ Shader "ForgePlus/OrthographicGrid"
                 half4 grid = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
                 return half4(grid.rgb, grid.a * _Opacity);
             }
+            ENDHLSL
+        }
+
+        // Black, so Surface Cache Global Illumination can take it without it adding or reflecting light
+        Pass
+        {
+            Name "Meta"
+            Tags { "LightMode" = "Meta" }
+
+            Cull Off
+            Blend Off
+
+            HLSLPROGRAM
+            #pragma vertex BlackMetaVertex
+            #pragma fragment BlackMetaFragment
+            #include "Assets/ForgePlusEditor/GraphicsTech/Shaders/BlackMetaPass.hlsl"
             ENDHLSL
         }
     }
