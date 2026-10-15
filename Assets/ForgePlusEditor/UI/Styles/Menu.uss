@@ -49,15 +49,17 @@
 
 /* ---------- Files ---------- */
 
+/* At the top of the file selection box, above its scroll area */
 .fp-files__find {
     height: var(--fp-control-height);
     flex-shrink: 0;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
+/* Find in Directory (40px, and its 10px gap) over the scroll area, which keeps its 460px */
 .fp-files__selection {
-    min-height: 480px;
-    height: 480px;
+    min-height: 530px;
+    height: 530px;
     flex-shrink: 0;
     margin-bottom: 5px;
 }
