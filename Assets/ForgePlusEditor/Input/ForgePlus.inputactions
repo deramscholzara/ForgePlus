@@ -429,6 +429,26 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "ActivatePlatform",
+                    "type": "Button",
+                    "id": "d03f2ba0-ab05-d96c-a927-9ba1369b4bde",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "ObstructPlatform",
+                    "type": "Button",
+                    "id": "d44922ed-2062-4253-a2eb-ca7a7169795d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -594,6 +614,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "AllowInvalidGeometry",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d4971df2-e341-5e30-32bc-936967dcce8c",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivatePlatform",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c017572b-7390-cc09-7000-a85fc44740e2",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ObstructPlatform",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
