@@ -367,6 +367,21 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4283477268250625
+    m_Key: SettingsTab.PointSnapDistance.Control.Label
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4283477268250626
+    m_Key: SettingsTab.PointSnapDistance.Value
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4283477268250627
+    m_Key: SettingsTab.PointSnapDistance.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

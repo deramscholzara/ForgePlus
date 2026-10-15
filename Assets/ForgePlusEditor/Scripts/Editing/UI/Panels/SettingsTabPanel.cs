@@ -33,6 +33,10 @@ namespace ForgePlus.UI
             pointClickArea.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.PointClickAreaSteps));
             pointClickArea.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.PointClickAreaText));
 
+            var pointSnapDistance = Root.Q("point-snap-distance");
+            pointSnapDistance.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.PointSnapDistance));
+            pointSnapDistance.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.PointSnapDistanceText));
+
             var orthographicGridOpacity = Root.Q("orthographic-grid-opacity");
             orthographicGridOpacity.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.OrthographicGridOpacityPercent));
             orthographicGridOpacity.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.OrthographicGridOpacityText));

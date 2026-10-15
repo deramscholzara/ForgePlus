@@ -96,7 +96,7 @@ namespace ForgePlus.LevelManipulation
             var owner = clockwiseOwner != cstypes.NONE ? clockwiseOwner : counterclockwiseOwner;
             if (owner != cstypes.NONE)
             {
-                areaIsPositiveClockwise = SignedArea(level.Level, level.Level.PolygonList[owner]) >= 0;
+                areaIsPositiveClockwise = GeometryConstruction.SignedArea(level.Level, level.Level.PolygonList[owner]) >= 0;
             }
 
             // Dragged as a movement (from nothing), so it's the movement that snaps
@@ -221,42 +221,17 @@ namespace ForgePlus.LevelManipulation
             var aIndex = followsLine ? line.endpoint_indexes[0] : line.endpoint_indexes[1];
             var bIndex = followsLine ? line.endpoint_indexes[1] : line.endpoint_indexes[0];
 
-            var a = ToVector(preview.A);
-            var b = ToVector(preview.B);
-            var copyA = ToVector(preview.CopyA);
-            var copyB = ToVector(preview.CopyB);
+            var a = GeometryConstruction.ToVector(preview.A);
+            var b = GeometryConstruction.ToVector(preview.B);
+            var copyA = GeometryConstruction.ToVector(preview.CopyA);
+            var copyB = GeometryConstruction.ToVector(preview.CopyB);
 
-            // Each new wall, the line's point at one end of it (if it has one), and its other end
-            var walls = new[] { (b, copyB, bIndex, copyB), (copyB, copyA, cstypes.NONE, copyA), (copyA, a, aIndex, copyA) };
-
-            for (short otherIndex = 0; otherIndex < data.LineList.Count; otherIndex++)
+            // Each new wall, from the line's points (where they have one) out to the copy
+            if (GeometryConstruction.SegmentTouchesLines(data, b, copyB, bIndex, cstypes.NONE, lineIndex) ||
+                GeometryConstruction.SegmentTouchesLines(data, copyB, copyA, cstypes.NONE, cstypes.NONE, lineIndex) ||
+                GeometryConstruction.SegmentTouchesLines(data, copyA, a, cstypes.NONE, aIndex, lineIndex))
             {
-                if (otherIndex == lineIndex)
-                {
-                    continue;
-                }
-
-                var other = data.LineList[otherIndex];
-                var p = ToVector(data.EndpointList[other.endpoint_indexes[0]].vertex);
-                var q = ToVector(data.EndpointList[other.endpoint_indexes[1]].vertex);
-
-                foreach (var (start, end, pointIndex, wallFar) in walls)
-                {
-                    if (pointIndex != cstypes.NONE && (other.endpoint_indexes[0] == pointIndex || other.endpoint_indexes[1] == pointIndex))
-                    {
-                        // Meeting at the line's point, they only overlap if they run along each other
-                        var otherFar = other.endpoint_indexes[0] == pointIndex ? q : p;
-
-                        if (IsOnSegment(start, end, otherFar) || IsOnSegment(p, q, wallFar))
-                        {
-                            return true;
-                        }
-                    }
-                    else if (SegmentsTouch(start, end, p, q))
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
 
             // Points in it (but not those on the line it starts from)
@@ -269,7 +244,7 @@ namespace ForgePlus.LevelManipulation
                     continue;
                 }
 
-                var relative = ToVector(data.EndpointList[pointIndex].vertex) - a;
+                var relative = GeometryConstruction.ToVector(data.EndpointList[pointIndex].vertex) - a;
                 var along = (relative.x * (double) offset.y - relative.y * (double) offset.x) / determinant;
                 var across = (side.x * (double) relative.y - side.y * (double) relative.x) / determinant;
 
@@ -300,13 +275,13 @@ namespace ForgePlus.LevelManipulation
 
             var polygonIndex = (short) data.PolygonList.Count;
 
-            var copyAIndex = AddEndpoint(data, preview.CopyA);
-            var copyBIndex = AddEndpoint(data, preview.CopyB);
+            var copyAIndex = GeometryConstruction.AddEndpoint(data, preview.CopyA);
+            var copyBIndex = GeometryConstruction.AddEndpoint(data, preview.CopyB);
 
             // Clockwise around the new polygon: along the line, out to the copy, back along it, and back to the line
-            var nearWallIndex = AddLine(data, bIndex, copyBIndex, polygonIndex);
-            var copyIndex = AddLine(data, copyBIndex, copyAIndex, polygonIndex);
-            var farWallIndex = AddLine(data, copyAIndex, aIndex, polygonIndex);
+            var nearWallIndex = GeometryConstruction.AddLine(data, bIndex, copyBIndex, polygonIndex, cstypes.NONE);
+            var copyIndex = GeometryConstruction.AddLine(data, copyBIndex, copyAIndex, polygonIndex, cstypes.NONE);
+            var farWallIndex = GeometryConstruction.AddLine(data, copyAIndex, aIndex, polygonIndex, cstypes.NONE);
 
             if (followsLine)
             {
@@ -395,37 +370,6 @@ namespace ForgePlus.LevelManipulation
             });
         }
 
-        private static short AddEndpoint(MapLevel data, world_point2d location)
-        {
-            data.EndpointList.Add(new endpoint_data
-            {
-                vertex = location,
-                supporting_polygon_index = cstypes.NONE,
-            });
-
-            return (short) (data.EndpointList.Count - 1);
-        }
-
-        // Owned on its clockwise side by the polygon
-        private static short AddLine(MapLevel data, short firstIndex, short lastIndex, short polygonIndex)
-        {
-            var line = new line_data
-            {
-                clockwise_polygon_owner = polygonIndex,
-                counterclockwise_polygon_owner = cstypes.NONE,
-                clockwise_polygon_side_index = cstypes.NONE,
-                counterclockwise_polygon_side_index = cstypes.NONE,
-            };
-
-            line.endpoint_indexes[0] = firstIndex;
-            line.endpoint_indexes[1] = lastIndex;
-            line.length = world.distance2d(data.EndpointList[firstIndex].vertex, data.EndpointList[lastIndex].vertex);
-
-            data.LineList.Add(line);
-
-            return (short) (data.LineList.Count - 1);
-        }
-
         // A copy of the source side (its textures, lights and transfer modes, but not a control panel), or a blank one if
         // there's none (map_constructors.cpp: new_side), on the polygon's (clockwise) side of the wall
         private static void AddSide(MapLevel data, short polygonIndex, short wallIndex, side_data source)
@@ -451,61 +395,10 @@ namespace ForgePlus.LevelManipulation
             map_constructors.recalculate_side_type(data, sideIndex);
         }
 
-        // Twice the area its corners enclose, positive for corners that go clockwise as the map shows them (its Y down)
-        private static long SignedArea(MapLevel data, polygon_data polygon)
-        {
-            long area = 0;
-            for (var i = 0; i < polygon.vertex_count; i++)
-            {
-                var current = data.EndpointList[polygon.endpoint_indexes[i]].vertex;
-                var next = data.EndpointList[polygon.endpoint_indexes[(i + 1) % polygon.vertex_count]].vertex;
-                area += (long) current.x * next.y - (long) next.x * current.y;
-            }
-
-            return area;
-        }
-
         private static world_point2d Moved(world_point2d start, Vector2Int movement)
         {
             return new world_point2d((short) Mathf.Clamp(start.x + movement.x, short.MinValue, short.MaxValue),
                                      (short) Mathf.Clamp(start.y + movement.y, short.MinValue, short.MaxValue));
-        }
-
-        private static Vector2Int ToVector(world_point2d point)
-        {
-            return new Vector2Int(point.x, point.y);
-        }
-
-        private static long Cross(Vector2Int origin, Vector2Int a, Vector2Int b)
-        {
-            return (long) (a.x - origin.x) * (b.y - origin.y) - (long) (a.y - origin.y) * (b.x - origin.x);
-        }
-
-        // On the segment, including its ends
-        private static bool IsOnSegment(Vector2Int start, Vector2Int end, Vector2Int point)
-        {
-            return Cross(start, end, point) == 0 &&
-                   point.x >= Mathf.Min(start.x, end.x) && point.x <= Mathf.Max(start.x, end.x) &&
-                   point.y >= Mathf.Min(start.y, end.y) && point.y <= Mathf.Max(start.y, end.y);
-        }
-
-        // Crossing or touching
-        private static bool SegmentsTouch(Vector2Int a, Vector2Int b, Vector2Int c, Vector2Int d)
-        {
-            var d1 = System.Math.Sign(Cross(c, d, a));
-            var d2 = System.Math.Sign(Cross(c, d, b));
-            var d3 = System.Math.Sign(Cross(a, b, c));
-            var d4 = System.Math.Sign(Cross(a, b, d));
-
-            if (d1 * d2 < 0 && d3 * d4 < 0)
-            {
-                return true;
-            }
-
-            return d1 == 0 && IsOnSegment(c, d, a) ||
-                   d2 == 0 && IsOnSegment(c, d, b) ||
-                   d3 == 0 && IsOnSegment(a, b, c) ||
-                   d4 == 0 && IsOnSegment(a, b, d);
         }
     }
 }

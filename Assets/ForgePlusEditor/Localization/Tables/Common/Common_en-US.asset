@@ -558,6 +558,12 @@ MonoBehaviour:
   - rid: 552786384866508872
   - rid: 552786384866508873
   - rid: 552786384866508874
+  - rid: 552786384866508900
+  - rid: 552786384866508901
+  - rid: 552786384866508902
+  - rid: 552786384866508903
+  - rid: 552786384866508904
+  - rid: 552786384866508905
   references:
     version: 2
     RefIds:
@@ -4302,7 +4308,7 @@ MonoBehaviour:
         m_KeyId: 4257401531940868
         m_Metadata:
           m_Items: []
-        m_Value: "Add new geometry. Drag a line beside a polygon to add a polygon between it and a copy of it, matching its sides and the polygon's floor and ceiling. Dragging a selected floor or ceiling still adjusts its height, but nothing is moved in this mode."
+        m_Value: "Add new geometry. Drag a line beside a polygon to add a polygon between it and a copy of it, matching its sides and the polygon's floor and ceiling. Drag a point to draw a new line from it, ending at a new point or at another point (from one of a polygon's corners to another, it splits the polygon). Dragging a selected floor or ceiling still adjusts its height, but nothing is moved in this mode."
     - rid: 552786384866508868
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -4352,3 +4358,45 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: "It overlaps other lines or points."
+    - rid: 552786384866508900
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940876
+        m_Metadata:
+          m_Items: []
+        m_Value: "These points are already joined by a line."
+    - rid: 552786384866508901
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940877
+        m_Metadata:
+          m_Items: []
+        m_Value: "Can't draw there (it would cross or touch other lines or points). Hold Shift to allow it."
+    - rid: 552786384866508902
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940878
+        m_Metadata:
+          m_Items: []
+        m_Value: "It crosses or touches other lines or points."
+    - rid: 552786384866508903
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940879
+        m_Metadata:
+          m_Items: []
+        m_Value: "Can't draw through a polygon, except from one of its corners to another (to split it). Hold Shift to allow it."
+    - rid: 552786384866508904
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940880
+        m_Metadata:
+          m_Items: []
+        m_Value: "It's inside a polygon, without splitting it."
+    - rid: 552786384866508905
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940881
+        m_Metadata:
+          m_Items: []
+        m_Value: "A platform's polygon can't be split. Hold Shift to draw the line anyway."

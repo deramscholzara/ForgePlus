@@ -87,6 +87,9 @@ MonoBehaviour:
   - rid: 552786384866508862
   - rid: 552786384866508865
   - rid: 552786384866508866
+  - rid: 552786384866508900
+  - rid: 552786384866508901
+  - rid: 552786384866508902
   references:
     version: 2
     RefIds:
@@ -580,3 +583,24 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Bounced (indirect) light from the level's lit surfaces onto others, calculated as you view the level. It's costly, and isn't how Marathon or Aleph One light levels, so it's off unless turned on here.
+    - rid: 552786384866508900
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4283477268250625
+        m_Metadata:
+          m_Items: []
+        m_Value: "Point Snapping Distance"
+    - rid: 552786384866508901
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4283477268250626
+        m_Metadata:
+          m_Items: []
+        m_Value: "{0} px"
+    - rid: 552786384866508902
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4283477268250627
+        m_Metadata:
+          m_Items: []
+        m_Value: "How near (in pixels on screen) a line drawn from a point (with Geometry mode's Draw tool) has to come to another point to end there."

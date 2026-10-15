@@ -2722,6 +2722,36 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4257401531940876
+    m_Key: LineDrawing.Joined
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940877
+    m_Key: LineDrawing.Overlaps
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940878
+    m_Key: LineDrawing.OverlapsAllowed
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940879
+    m_Key: LineDrawing.InsidePolygon
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940880
+    m_Key: LineDrawing.InsidePolygonAllowed
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940881
+    m_Key: LineDrawing.SplitsPlatform
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

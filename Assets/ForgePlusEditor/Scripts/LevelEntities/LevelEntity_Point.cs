@@ -11,6 +11,7 @@ namespace RuntimeCore.Entities.Geometry
     public class LevelEntity_Point : ISelectionDisplayable, IInspectable, IWorldPointerHandler
     {
         private PointsMove move;
+        private LineDrawing drawing;
 
         public LevelEntity_Point(LevelEntity_Level parentLevel, short nativeIndex)
         {
@@ -54,33 +55,53 @@ namespace RuntimeCore.Entities.Geometry
 
         // In Select mode, dragging it moves it across the level (at its handle's height), with the rest of the selection if
         // it's selected (PointsMove), recorded as one action when it ends. Holding Allow Invalid Move lets it go where it'd
-        // make a polygon invalid.
+        // make a polygon invalid. In Draw mode, dragging it draws a new line from it (LineDrawing), without moving it.
         public void OnWorldPointerBeginDrag(WorldPointerEventData eventData)
         {
-            if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Selection)
+            switch (ModeManager.Instance.SecondaryMode)
             {
-                return;
+                case ModeManager.SecondaryModes.Selection:
+                    SelectionManager.Instance.SelectObject(this, multiSelect: false);
+                    move = PointsMove.ForSelection(ParentLevel, this, eventData.PressWorldPosition);
+                    break;
+                case ModeManager.SecondaryModes.Drawing:
+                    drawing = LineDrawing.Begin(ParentLevel, NativeIndex, eventData.PressWorldPosition);
+                    break;
             }
-
-            SelectionManager.Instance.SelectObject(this, multiSelect: false);
-
-            move = PointsMove.ForSelection(ParentLevel, this, eventData.PressWorldPosition);
         }
 
         public void OnWorldPointerDrag(WorldPointerEventData eventData)
         {
+            var pointerRay = Camera.main.ScreenPointToRay(new Vector3(eventData.Position.x, eventData.Position.y, 0f));
+
+            if (drawing != null)
+            {
+                drawing.Drag(pointerRay, eventData.Position);
+                return;
+            }
+
             if (move == null)
             {
                 return;
             }
 
-            move.Drag(Camera.main.ScreenPointToRay(new Vector3(eventData.Position.x, eventData.Position.y, 0f)));
+            move.Drag(pointerRay);
 
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
         public void OnWorldPointerEndDrag(WorldPointerEventData eventData)
         {
+            if (drawing != null)
+            {
+                var endedDrawing = drawing;
+                drawing = null;
+                endedDrawing.End();
+
+                InspectorPanel.Instance.RefreshAllInspectors();
+                return;
+            }
+
             if (move == null)
             {
                 return;

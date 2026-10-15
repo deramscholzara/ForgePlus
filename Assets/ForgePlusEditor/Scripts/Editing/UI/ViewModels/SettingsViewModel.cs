@@ -161,6 +161,30 @@ namespace ForgePlus.UI
             }
         }
 
+        // In pixels
+        [CreateProperty]
+        public int PointSnapDistance
+        {
+            get
+            {
+                return SettingsManager.Instance.PointSnapDistance;
+            }
+            set
+            {
+                SettingsManager.Instance.PointSnapDistance = value;
+            }
+        }
+
+        // As whole pixels ("5 px")
+        [CreateProperty]
+        public string PointSnapDistanceText
+        {
+            get
+            {
+                return Strings.Get(Strings.Menu, "SettingsTab.PointSnapDistance.Value", SettingsManager.Instance.PointSnapDistance);
+            }
+        }
+
         [CreateProperty]
         public bool PreventInvalidGeometryEnabled
         {
@@ -515,6 +539,11 @@ namespace ForgePlus.UI
             if (setting == nameof(PointClickAreaSteps))
             {
                 Notify(nameof(PointClickAreaText));
+            }
+
+            if (setting == nameof(PointSnapDistance))
+            {
+                Notify(nameof(PointSnapDistanceText));
             }
 
             if (setting == nameof(OrthographicGridOpacityPercent))

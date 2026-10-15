@@ -105,6 +105,14 @@ namespace ForgePlus.CameraNavigation
                         }
                     }
 
+                    // No polygon's corner: at the height its chain of lines takes
+                    if (LooseGeometryHeights.TryGetPointHeight(point.ParentLevel.Level, point.NativeIndex, out var pointHeight))
+                    {
+                        var position = GeometryUtilities.GetMeshVertex(point.ParentLevel.Level, point.NativeIndex);
+                        position.y = pointHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                        Encapsulate(new Bounds(position, Vector3.zero), ref bounds, ref hasBounds);
+                    }
+
                     break;
 
                 case LevelEntity_Line line:
@@ -130,6 +138,17 @@ namespace ForgePlus.CameraNavigation
                                 position.y = surface.transform.position.y;
                                 Encapsulate(new Bounds(position, Vector3.zero), ref bounds, ref hasBounds);
                             }
+                        }
+                    }
+
+                    // No polygon on either side: at the height its chain of lines takes
+                    if (LooseGeometryHeights.TryGetLineHeight(lineLevel.Level, line.NativeIndex, out var lineHeight))
+                    {
+                        foreach (var endpointIndex in line.NativeObject.endpoint_indexes)
+                        {
+                            var position = GeometryUtilities.GetMeshVertex(lineLevel.Level, endpointIndex);
+                            position.y = lineHeight / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                            Encapsulate(new Bounds(position, Vector3.zero), ref bounds, ref hasBounds);
                         }
                     }
 
