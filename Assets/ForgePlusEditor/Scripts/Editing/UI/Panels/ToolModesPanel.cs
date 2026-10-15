@@ -32,7 +32,9 @@ namespace ForgePlus.UI
                     instance.AddToClassList("fp-tool-modes__mode--last");
                 }
 
-                instance.Q<RadioButton>().text = ModeLabel(modes[i]);
+                var button = instance.Q<RadioButton>();
+                button.text = ModeLabel(modes[i]);
+                button.tooltip = ModeTooltip(modes[i]);
                 group.Add(instance);
             }
 
@@ -65,8 +67,25 @@ namespace ForgePlus.UI
                     return Strings.Get(Strings.Common, "ToolModes.Paint");
                 case ModeManager.SecondaryModes.Editing:
                     return Strings.Get(Strings.Common, "ToolModes.Edit");
+                case ModeManager.SecondaryModes.Drawing:
+                    return Strings.Get(Strings.Common, "ToolModes.Draw");
                 default:
                     return Strings.Get(Strings.Common, "ToolModes.Select");
+            }
+        }
+
+        private static string ModeTooltip(ModeManager.SecondaryModes mode)
+        {
+            switch (mode)
+            {
+                case ModeManager.SecondaryModes.Painting:
+                    return Strings.Get(Strings.Common, "ToolModes.Paint.Tooltip");
+                case ModeManager.SecondaryModes.Editing:
+                    return Strings.Get(Strings.Common, "ToolModes.Edit.Tooltip");
+                case ModeManager.SecondaryModes.Drawing:
+                    return Strings.Get(Strings.Common, "ToolModes.Draw.Tooltip");
+                default:
+                    return Strings.Get(Strings.Common, "ToolModes.Select.Tooltip");
             }
         }
     }

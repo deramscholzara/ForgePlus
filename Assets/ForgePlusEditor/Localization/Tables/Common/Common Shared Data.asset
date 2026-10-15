@@ -2672,6 +2672,56 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4257401531940866
+    m_Key: ToolModes.Draw
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940867
+    m_Key: ToolModes.Select.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940868
+    m_Key: ToolModes.Draw.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940869
+    m_Key: ToolModes.Paint.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940870
+    m_Key: ToolModes.Edit.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940871
+    m_Key: LineExtrusion.NoPolygon
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940872
+    m_Key: LineExtrusion.SideTaken
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940873
+    m_Key: LineExtrusion.Parallel
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940874
+    m_Key: LineExtrusion.Overlaps
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940875
+    m_Key: LineExtrusion.OverlapsAllowed
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

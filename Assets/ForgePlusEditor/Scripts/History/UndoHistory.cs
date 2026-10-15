@@ -109,6 +109,60 @@ namespace ForgePlus.History
             OnChanged?.Invoke();
         }
 
+        // Joined to the last action recorded, as one action (named after that one), such as the selection an edit makes;
+        // recorded on its own if there's none
+        public static void RecordWithLast(IUndoableAction action)
+        {
+            if (action == null || IsUndoingOrRedoing)
+            {
+                return;
+            }
+
+            if (undoActions.Count == 0)
+            {
+                Record(action);
+                return;
+            }
+
+            undoActions[undoActions.Count - 1] = new JoinedAction(undoActions[undoActions.Count - 1], action);
+            redoActions.Clear();
+
+            OnChanged?.Invoke();
+        }
+
+        // Two actions as one: undone last to first, and redone first to last
+        private class JoinedAction : IUndoableAction
+        {
+            private readonly IUndoableAction first;
+            private readonly IUndoableAction second;
+
+            public JoinedAction(IUndoableAction first, IUndoableAction second)
+            {
+                this.first = first;
+                this.second = second;
+            }
+
+            public string Description
+            {
+                get
+                {
+                    return first.Description;
+                }
+            }
+
+            public void Undo()
+            {
+                second.Undo();
+                first.Undo();
+            }
+
+            public void Redo()
+            {
+                first.Redo();
+                second.Redo();
+            }
+        }
+
         // Returns whether any were forgotten
         private static bool Trim()
         {

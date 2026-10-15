@@ -347,11 +347,15 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        // In Select mode, dragging the face raises or lowers it (in Geometry mode, only once its polygon is selected, so
-        // dragging across unselected geometry can't change it by accident)
+        // In Select mode (or Geometry mode's Draw mode), dragging the face raises or lowers it (in Geometry mode, only once
+        // its polygon is selected, so dragging across unselected geometry can't change it by accident)
         private void BeginHeightDrag(WorldPointerEventData eventData)
         {
-            if (ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Selection || !HeightsEditing.CanEdit(ParentPolygon))
+            var secondaryMode = ModeManager.Instance.SecondaryMode;
+            var adjustsHeights = secondaryMode == ModeManager.SecondaryModes.Selection ||
+                                 secondaryMode == ModeManager.SecondaryModes.Drawing && ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry;
+
+            if (!adjustsHeights || !HeightsEditing.CanEdit(ParentPolygon))
             {
                 return;
             }
