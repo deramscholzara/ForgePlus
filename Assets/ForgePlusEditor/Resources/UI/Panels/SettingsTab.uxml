@@ -47,6 +47,10 @@
                 <ui:Instance template="SliderValueRow" name="point-click-area" class="fp-setting" tooltip="@Menu/SettingsTab.PointClickArea.Tooltip">
                     <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.PointClickArea.Control.Label" high-value="9" />
                 </ui:Instance>
+                <!-- In pixels on screen, from 1 to 25 (SettingsManager) -->
+                <ui:Instance template="SliderValueRow" name="point-snap-distance" class="fp-setting" tooltip="@Menu/SettingsTab.PointSnapDistance.Tooltip">
+                    <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.PointSnapDistance.Control.Label" low-value="1" high-value="25" />
+                </ui:Instance>
                 <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <!-- From invisible (0%) to opaque (100%) -->
                 <ui:Instance template="SliderValueRow" name="orthographic-grid-opacity" class="fp-setting" tooltip="@Menu/SettingsTab.OrthographicGridOpacity.Tooltip">

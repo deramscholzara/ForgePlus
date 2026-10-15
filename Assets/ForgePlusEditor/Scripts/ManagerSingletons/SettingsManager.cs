@@ -44,6 +44,7 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_ImproperFractions = "Settings_ImproperFractions";
         private const string PlayerPrefsSettingsKey_UndoSteps = "Settings_UndoSteps";
         private const string PlayerPrefsSettingsKey_PointClickAreaSteps = "Settings_PointClickAreaSteps";
+        private const string PlayerPrefsSettingsKey_PointSnapDistance = "Settings_PointSnapDistance";
         private const string PlayerPrefsSettingsKey_PreventInvalidGeometry = "Settings_PreventInvalidGeometry";
         private const string PlayerPrefsSettingsKey_OrthographicGridOpacity = "Settings_OrthographicGridOpacity";
 
@@ -51,6 +52,11 @@ namespace ForgePlus.ApplicationGeneral
 
         // A point's click area grows from its drawn size (100%) to twice that (200%), in steps of a ninth (a pixel each)
         public const int MaximumPointClickAreaSteps = 9;
+
+        // How near (in pixels on screen) a line drawn from a point has to come to another point's handle to end there
+        public const int MinimumPointSnapDistance = 1;
+        public const int MaximumPointSnapDistance = 25;
+        public const int DefaultPointSnapDistance = 5;
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
 
@@ -319,6 +325,21 @@ namespace ForgePlus.ApplicationGeneral
                 PlayerPrefs.SetInt(PlayerPrefsSettingsKey_PointClickAreaSteps, Math.Clamp(value, 0, MaximumPointClickAreaSteps));
 
                 OnSettingChanged?.Invoke(nameof(PointClickAreaSteps));
+            }
+        }
+
+        // In pixels on screen (LineDrawing)
+        public int PointSnapDistance
+        {
+            get
+            {
+                return Math.Clamp(PlayerPrefs.GetInt(PlayerPrefsSettingsKey_PointSnapDistance, DefaultPointSnapDistance), MinimumPointSnapDistance, MaximumPointSnapDistance);
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_PointSnapDistance, Math.Clamp(value, MinimumPointSnapDistance, MaximumPointSnapDistance));
+
+                OnSettingChanged?.Invoke(nameof(PointSnapDistance));
             }
         }
 

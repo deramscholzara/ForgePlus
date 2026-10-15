@@ -29,7 +29,11 @@ namespace ForgePlus.UI
     // While a point is moved, what the move would break (or breaks) is shown (PointEditing.Feedback): the lines involved
     // are outlined (red for errors, yellow for warnings), a ghost of the point shows where it's held back from (or where
     // it last was valid), its handles are ringed, and a note beside it says what's wrong. While a line is dragged with the
-    // Draw tool, the polygon it would add is outlined (LineExtrusion.Current), with a note if it can't be added.
+    // Draw tool, the polygon it would add is outlined (LineExtrusion.Current), with a note if it can't be added, and while
+    // a point is, the line it would draw (LineDrawing.Current).
+    //
+    // Points and lines that aren't part of any polygon are drawn (and clicked) at the heights LooseGeometryHeights gives
+    // them, and the Draw tool snaps to the handles drawn here (TryFindPointNear).
     public class PointHandles : IScreenPointerPicker
     {
         // Pixels: a black border around a white fill (red while selected, with a black center, as in ForgePlus's logo)
@@ -59,6 +63,9 @@ namespace ForgePlus.UI
 
         // A polygon the Draw tool would add
         private static readonly Color ExtrusionColor = new Color32(80, 200, 255, 255);
+
+        // A line the Draw tool would split a polygon with
+        private static readonly Color SplitColor = new Color32(90, 230, 120, 255);
 
         // Pixels: a black outline around a white fill (red while selected), as wide as both together
         private const float PoleWidth = 6f;
@@ -151,6 +158,10 @@ namespace ForgePlus.UI
         private readonly List<(float Height, Color Fill)> lineHeights = new List<(float, Color)>();
         private readonly Dictionary<short, (float Bottom, float Top)> poleHeights = new Dictionary<short, (float, float)>();
 
+        // The heights (in world units) of points and lines that aren't part of any polygon (LooseGeometryHeights)
+        private readonly Dictionary<short, short> loosePointHeights = new Dictionary<short, short>();
+        private readonly Dictionary<short, short> looseLineHeights = new Dictionary<short, short>();
+
         // What they were last collected from (CollectionSignature), whether a point was being moved, and whether any were
         // flashing
         private bool hasCollected;
@@ -176,7 +187,7 @@ namespace ForgePlus.UI
             // Collected again (and drawn again) only once what they're collected from changes, or while a point is moved
             // (whose feedback follows the pointer); otherwise only drawn again while they flash, and once as that ends
             var signature = CollectionSignature();
-            var isMoving = PointEditing.Feedback != null || LineExtrusion.Current != null;
+            var isMoving = PointEditing.Feedback != null || LineExtrusion.Current != null || LineDrawing.Current != null;
             var isFlashing = FocusFlash.IsFlashingHandles;
 
             if (hasCollected && signature == collectedSignature && !isMoving && !wasMoving)
@@ -223,9 +234,12 @@ namespace ForgePlus.UI
                 showsOnlySelectedPoints = !SettingsManager.Instance.PointsAreShown;
                 showsOnlySelectedLines = !SettingsManager.Instance.LinesAreShown;
 
+                LooseGeometryHeights.Find(level.Level, loosePointHeights, looseLineHeights);
+
                 CollectHandles(level, camera, panel);
                 CollectFeedback(level, camera, panel);
                 CollectExtrusionPreview(camera, panel);
+                CollectDrawingPreview(camera, panel);
                 CollectLines(level, camera, panel);
             }
 
@@ -601,6 +615,12 @@ namespace ForgePlus.UI
                 CollectCorners(level, polygon, polygon.CeilingSurface, camera, panel, viewRect);
             }
 
+            // Points that are no polygon's corner, at the heights their chains of lines take (LooseGeometryHeights)
+            foreach (var pair in loosePointHeights)
+            {
+                AddHandle(level, pair.Key, pair.Value / GeometryUtilities.WorldUnitIncrementsPerMeter, camera, panel, viewRect);
+            }
+
             if (isOrthographic)
             {
                 KeepUppermostHandles();
@@ -686,9 +706,13 @@ namespace ForgePlus.UI
                     AddLineHeight(SurfaceHeight(polygon, isFloor: true), OneSidedLineColor);
                     AddLineHeight(SurfaceHeight(polygon, isFloor: false), OneSidedLineColor);
                 }
+                else if (looseLineHeights.TryGetValue(lineIndex, out var looseHeight))
+                {
+                    // With no polygon on either side, at the height its chain of lines takes (LooseGeometryHeights)
+                    AddLineHeight(looseHeight / GeometryUtilities.WorldUnitIncrementsPerMeter, OneSidedLineColor);
+                }
                 else
                 {
-                    // With no polygon on either side, it's at no height
                     continue;
                 }
 
@@ -879,50 +903,91 @@ namespace ForgePlus.UI
                 return;
             }
 
-            var data = level.Level;
             var height = surface.transform.position.y;
-            var heightKey = (uint) Mathf.RoundToInt(height * GeometryUtilities.WorldUnitIncrementsPerMeter);
             var nativePolygon = polygon.NativeObject;
 
             for (var i = 0; i < nativePolygon.vertex_count; i++)
             {
-                var pointIndex = nativePolygon.endpoint_indexes[i];
-
-                if (!placedCorners.Add(((long) pointIndex << 32) | heightKey) ||
-                    !level.Points.TryGetValue(pointIndex, out var point) ||
-                    (showsOnlySelectedPoints && !point.IsSelected))
-                {
-                    continue;
-                }
-
-                poleHeights[pointIndex] = poleHeights.TryGetValue(pointIndex, out var heights) ? (Mathf.Min(heights.Bottom, height), Mathf.Max(heights.Top, height)) : (height, height);
-
-                var worldPosition = GeometryUtilities.GetMeshVertex(data, pointIndex);
-                worldPosition.y = height;
-
-                var screenPosition = camera.WorldToScreenPoint(worldPosition);
-                if (screenPosition.z <= 0f || !viewRect.Contains(screenPosition))
-                {
-                    continue;
-                }
-
-                var distance = Vector3.Distance(camera.transform.position, worldPosition);
-                if (distance > FadeEndDistance && !point.IsSelected && !isOrthographic)
-                {
-                    continue;
-                }
-
-                var panelPosition = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(screenPosition.x, Screen.height - screenPosition.y));
-
-                handles.Add(new Handle
-                {
-                    Point = point,
-                    WorldPosition = worldPosition,
-                    Corner = new Vector2(Mathf.Floor(panelPosition.x) - Mathf.Floor(Size * 0.5f), Mathf.Floor(panelPosition.y) - Mathf.Floor(Size * 0.5f)),
-                    Depth = screenPosition.z,
-                    Opacity = isOrthographic ? 1f : OpacityAt(point, distance),
-                });
+                AddHandle(level, nativePolygon.endpoint_indexes[i], height, camera, panel, viewRect);
             }
+        }
+
+        // A point's handle at a height (in meters), once
+        private void AddHandle(LevelEntity_Level level, short pointIndex, float height, Camera camera, IPanel panel, UnityEngine.Rect viewRect)
+        {
+            var heightKey = (uint) Mathf.RoundToInt(height * GeometryUtilities.WorldUnitIncrementsPerMeter);
+
+            if (!placedCorners.Add(((long) pointIndex << 32) | heightKey) ||
+                !level.Points.TryGetValue(pointIndex, out var point) ||
+                (showsOnlySelectedPoints && !point.IsSelected))
+            {
+                return;
+            }
+
+            poleHeights[pointIndex] = poleHeights.TryGetValue(pointIndex, out var heights) ? (Mathf.Min(heights.Bottom, height), Mathf.Max(heights.Top, height)) : (height, height);
+
+            var worldPosition = GeometryUtilities.GetMeshVertex(level.Level, pointIndex);
+            worldPosition.y = height;
+
+            var screenPosition = camera.WorldToScreenPoint(worldPosition);
+            if (screenPosition.z <= 0f || !viewRect.Contains(screenPosition))
+            {
+                return;
+            }
+
+            var distance = Vector3.Distance(camera.transform.position, worldPosition);
+            if (distance > FadeEndDistance && !point.IsSelected && !isOrthographic)
+            {
+                return;
+            }
+
+            var panelPosition = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(screenPosition.x, Screen.height - screenPosition.y));
+
+            handles.Add(new Handle
+            {
+                Point = point,
+                WorldPosition = worldPosition,
+                Corner = new Vector2(Mathf.Floor(panelPosition.x) - Mathf.Floor(Size * 0.5f), Mathf.Floor(panelPosition.y) - Mathf.Floor(Size * 0.5f)),
+                Depth = screenPosition.z,
+                Opacity = isOrthographic ? 1f : OpacityAt(point, distance),
+            });
+        }
+
+        // The point drawn nearest the screen position (pixels, from the bottom left), within the distance (in pixels), other
+        // than the excluded one, and where its handle is
+        public bool TryFindPointNear(Vector2 screenPosition, float maximumDistance, short excludedPointIndex, out short pointIndex, out Vector3 worldPosition)
+        {
+            pointIndex = cstypes.NONE;
+            worldPosition = default;
+
+            var camera = Camera.main;
+            if (!camera)
+            {
+                return false;
+            }
+
+            var nearest = maximumDistance * maximumDistance;
+            var isFound = false;
+
+            foreach (var handle in handles)
+            {
+                if (handle.Point.NativeIndex == excludedPointIndex)
+                {
+                    continue;
+                }
+
+                var handleScreen = camera.WorldToScreenPoint(handle.WorldPosition);
+                var squaredDistance = ((Vector2) handleScreen - screenPosition).sqrMagnitude;
+                if (handleScreen.z > 0f && squaredDistance <= nearest)
+                {
+                    nearest = squaredDistance;
+                    pointIndex = handle.Point.NativeIndex;
+                    worldPosition = handle.WorldPosition;
+                    isFound = true;
+                }
+            }
+
+            return isFound;
         }
 
         // What the current move would break (or breaks), as PointEditing reports it
@@ -1013,6 +1078,40 @@ namespace ForgePlus.UI
             // Beside the middle of the copy, at the height the line was grabbed at
             var middle = new world_point2d((short) ((preview.CopyA.x + preview.CopyB.x) / 2), (short) ((preview.CopyA.y + preview.CopyB.y) / 2));
             ShowStatus(preview.Message, preview.IsBlocked, WorldPosition(middle, preview.Height), camera, panel);
+        }
+
+        // What a point dragged in Draw mode would add (LineDrawing.Current): the new line (red where it can't be added,
+        // yellow where it crosses something, green where it splits a polygon), the point it ends at ringed (or a ghost of
+        // the new point there), and a note beside its end saying why
+        private void CollectDrawingPreview(Camera camera, IPanel panel)
+        {
+            var preview = LineDrawing.Current;
+            if (preview == null || !preview.HasLine)
+            {
+                return;
+            }
+
+            Vector3 WorldPosition(world_point2d location, float height)
+            {
+                return new Vector3(location.x, 0f, -location.y) / GeometryUtilities.WorldUnitIncrementsPerMeter + Vector3.up * height;
+            }
+
+            var color = preview.IsBlocked ? ErrorColor : preview.Overlaps ? WarningColor : preview.Splits ? SplitColor : ExtrusionColor;
+            var end = WorldPosition(preview.End, preview.EndHeight);
+
+            AddOutline(WorldPosition(preview.Start, preview.StartHeight), end, color, camera, panel);
+
+            if (preview.SnappedPoint != cstypes.NONE)
+            {
+                ringedPoint = preview.SnappedPoint;
+                ringColor = color;
+            }
+            else
+            {
+                AddGhost(end, new Color(color.r, color.g, color.b, 0.5f), camera, panel);
+            }
+
+            ShowStatus(preview.Message, preview.IsBlocked, end, camera, panel);
         }
 
         // The part of it in front of the camera
