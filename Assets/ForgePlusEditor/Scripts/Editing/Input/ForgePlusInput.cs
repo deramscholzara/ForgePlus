@@ -120,6 +120,24 @@ namespace ForgePlus.ApplicationGeneral
                 }
             }
 
+            // Starts or stops the simulation of the selected platforms (PlatformSimulationHotkeys)
+            public static InputAction ActivatePlatform
+            {
+                get
+                {
+                    return Find("Editing/ActivatePlatform");
+                }
+            }
+
+            // Obstructs the extension of the selected platforms (PlatformSimulationHotkeys)
+            public static InputAction ObstructPlatform
+            {
+                get
+                {
+                    return Find("Editing/ObstructPlatform");
+                }
+            }
+
             public static InputAction NudgeUp
             {
                 get

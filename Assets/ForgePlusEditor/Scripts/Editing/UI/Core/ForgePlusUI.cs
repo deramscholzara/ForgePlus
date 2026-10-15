@@ -247,6 +247,8 @@ namespace ForgePlus.UI
             {
                 UndoHistory.Undo();
             }
+
+            PlatformSimulationHotkeys.Update();
         }
 
         // Whichever of the two notices escape first this frame
