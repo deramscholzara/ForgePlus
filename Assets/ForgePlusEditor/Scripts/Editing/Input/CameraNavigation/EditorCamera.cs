@@ -753,17 +753,37 @@ namespace ForgePlus.CameraNavigation
             // Shown under the level while looking straight down
             OrthographicGrid.Update(isOrthographic, hasBounds ? bounds : (Bounds?) null);
 
+            // Within the whole area a Marathon map can use, or the level where it reaches further (such as above its highest
+            // ceiling, where the orthographic view looks down from). A camera flown away from the level can be brought back
+            // by the orthographic view or Frame Selected.
+            var movementBounds = StandardMapBounds;
             if (hasBounds)
             {
-                var position = transform.position;
-                var clamped = new Vector3(Mathf.Clamp(position.x, bounds.min.x, bounds.max.x),
-                                          Mathf.Clamp(position.y, bounds.min.y, bounds.max.y),
-                                          Mathf.Clamp(position.z, bounds.min.z, bounds.max.z));
+                movementBounds.Encapsulate(bounds);
+            }
 
-                if (clamped != position)
-                {
-                    transform.position = clamped;
-                }
+            var position = transform.position;
+            var clamped = new Vector3(Mathf.Clamp(position.x, movementBounds.min.x, movementBounds.max.x),
+                                      Mathf.Clamp(position.y, movementBounds.min.y, movementBounds.max.y),
+                                      Mathf.Clamp(position.z, movementBounds.min.z, movementBounds.max.z));
+
+            if (clamped != position)
+            {
+                transform.position = clamped;
+            }
+        }
+
+        // Every position and height a Marathon map can hold (world_distance is 16 bits), in meters
+        private static Bounds StandardMapBounds
+        {
+            get
+            {
+                var scale = GeometryUtilities.WorldUnitIncrementsPerMeter;
+                var bounds = new Bounds();
+                bounds.SetMinMax(new Vector3(short.MinValue, short.MinValue, -short.MaxValue) / scale,
+                                 new Vector3(short.MaxValue, short.MaxValue, -short.MinValue) / scale);
+
+                return bounds;
             }
         }
 
