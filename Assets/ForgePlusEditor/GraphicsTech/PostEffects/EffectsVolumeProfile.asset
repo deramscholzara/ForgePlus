@@ -540,7 +540,7 @@ MonoBehaviour:
     m_Value: 1
   lightTransportBouncePatchAllocation:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   lightTransportSampleCount:
     m_OverrideState: 1
     m_Value: 2
@@ -551,7 +551,7 @@ MonoBehaviour:
       m_Bits: 4294967167
   lightTransportDefragCount:
     m_OverrideState: 1
-    m_Value: 4
+    m_Value: 8
   lightTransportWarmupSampleMultiplier:
     m_OverrideState: 1
     m_Value: 2

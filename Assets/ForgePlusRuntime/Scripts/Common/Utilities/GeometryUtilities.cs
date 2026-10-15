@@ -33,6 +33,24 @@ namespace ForgePlus.LevelManipulation.Utilities
         // Recreated when destroyed, such as at the end of a Play session
         private static Material selectionIndicatorMaterial;
 
+        // Given to renderers that ExcludeFromGpuResidentDrawer leaves out of it
+        private static MaterialPropertyBlock notGpuDrivenPropertyBlock;
+
+        // For renderers lying on (or just in front of) surfaces, such as selection indicators and diagnostic overlays:
+        // drawn without the GPU Resident Drawer, whose GPU occlusion culling hides some of them from some angles (judging
+        // them to be behind the surface). It doesn't draw renderers that have a property block, so they're given one that
+        // changes nothing.
+        public static void ExcludeFromGpuResidentDrawer(Renderer renderer)
+        {
+            if (notGpuDrivenPropertyBlock == null)
+            {
+                notGpuDrivenPropertyBlock = new MaterialPropertyBlock();
+                notGpuDrivenPropertyBlock.SetFloat("_ForgePlusNotGpuDriven", 1f);
+            }
+
+            renderer.SetPropertyBlock(notGpuDrivenPropertyBlock);
+        }
+
         private static Material SelectionIndicatorMaterial
         {
             get
@@ -64,6 +82,7 @@ namespace ForgePlus.LevelManipulation.Utilities
             indicator.AddComponent<MeshFilter>();
             var indicatorRenderer = indicator.AddComponent<MeshRenderer>();
             indicatorRenderer.sharedMaterial = SelectionIndicatorMaterial;
+            ExcludeFromGpuResidentDrawer(indicatorRenderer);
             SurfaceCacheRenderingLayers.Exclude(indicatorRenderer);
 
             UpdateSurfaceSelectionIndicator(indicator, vertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition);

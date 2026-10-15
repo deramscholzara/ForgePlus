@@ -38,6 +38,15 @@ namespace ForgePlus.LevelManipulation
         // Each flash's, so a flash left from an earlier one stops
         private static int flashNumber;
 
+        // While any point's handles or line's lines are flashing (so they're drawn again each frame)
+        public static bool IsFlashingHandles
+        {
+            get
+            {
+                return points.Count > 0 || lines.Count > 0;
+            }
+        }
+
         // How far toward the flash color a point's handle is now (0 while it isn't flashing)
         public static float PointIntensity(LevelEntity_Point point)
         {

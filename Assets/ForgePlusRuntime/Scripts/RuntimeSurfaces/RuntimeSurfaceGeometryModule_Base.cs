@@ -1,5 +1,6 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using RuntimeCore.Common;
+using RuntimeCore.Materials;
 using System.Collections.Generic;
 using UnityEngine;
 using AlephOne;
@@ -51,7 +52,19 @@ namespace RuntimeCore.Entities.Geometry
         {
             SurfaceRenderer.sharedMaterials = SurfaceMaterials.Get(MaterialKey);
 
-            SurfaceCacheAdmission.Admit(SurfaceRenderer);
+            ApplySurfaceCacheAdmission();
+        }
+
+        // Whether Surface Cache Global Illumination takes it in, after its materials or size change
+        public void ApplySurfaceCacheAdmission()
+        {
+            SurfaceCacheAdmission.Admit(SurfaceRenderer, IsExcludedFromSurfaceCache());
+        }
+
+        // Placeholders (an unassigned texture, or a texture that's missing) give it nothing worth bouncing
+        protected virtual bool IsExcludedFromSurfaceCache()
+        {
+            return MaterialGeneration_Geometry.IsPlaceholder(MaterialKey.SourceMaterial);
         }
 
         public abstract void PrepareForDestruction();

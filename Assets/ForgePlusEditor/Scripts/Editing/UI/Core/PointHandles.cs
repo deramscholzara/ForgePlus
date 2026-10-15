@@ -147,6 +147,13 @@ namespace ForgePlus.UI
         private readonly List<(float Height, Color Fill)> lineHeights = new List<(float, Color)>();
         private readonly Dictionary<short, (float Bottom, float Top)> poleHeights = new Dictionary<short, (float, float)>();
 
+        // What they were last collected from (CollectionSignature), whether a point was being moved, and whether any were
+        // flashing
+        private bool hasCollected;
+        private int collectedSignature;
+        private bool wasMoving;
+        private bool wasFlashing;
+
         public PointHandles(VisualElement root)
         {
             layer = WorldLayer.Create(root, "point-handles");
@@ -161,6 +168,33 @@ namespace ForgePlus.UI
 
         // After the camera has moved for the frame (and platforms, whose floors and ceilings carry their handles)
         public void Update()
+        {
+            // Collected again (and drawn again) only once what they're collected from changes, or while a point is moved
+            // (whose feedback follows the pointer); otherwise only drawn again while they flash, and once as that ends
+            var signature = CollectionSignature();
+            var isMoving = PointEditing.Feedback != null;
+            var isFlashing = FocusFlash.IsFlashingHandles;
+
+            if (hasCollected && signature == collectedSignature && !isMoving && !wasMoving)
+            {
+                if (isFlashing || wasFlashing)
+                {
+                    layer.MarkDirtyRepaint();
+                }
+
+                wasFlashing = isFlashing;
+                return;
+            }
+
+            hasCollected = true;
+            collectedSignature = signature;
+            wasMoving = isMoving;
+            wasFlashing = isFlashing;
+
+            Collect();
+        }
+
+        private void Collect()
         {
             var hadHandles = handles.Count > 0 || poles.Count > 0 || lines.Count > 0;
             handles.Clear();
@@ -487,6 +521,59 @@ namespace ForgePlus.UI
             var lineDistance = denominator > 0.0001f ? (b * Vector3.Dot(ray.direction, toLine) - toLine.y) / denominator : 0f;
 
             return Mathf.Clamp(bottom.y + lineDistance, bottom.y, top.y);
+        }
+
+        // Everything the handles, poles and lines are collected from, far cheaper to read than to collect them from: whether
+        // they're shown, the camera and the panel, the visualization options, what's selected, where the points are, and
+        // the heights of the floors and ceilings (which platforms move)
+        private int CollectionSignature()
+        {
+            var level = LevelEntity_Level.Instance;
+            var camera = Camera.main;
+            var panel = layer.panel;
+            var isShown = IsLayerShown(level) && camera && panel != null && ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Geometry;
+
+            var signature = new System.HashCode();
+            signature.Add(isShown);
+
+            if (!isShown)
+            {
+                return signature.ToHashCode();
+            }
+
+            var editorCamera = ForgePlusUI.Instance.EditorCamera;
+            signature.Add(editorCamera && editorCamera.IsOrthographic);
+            signature.Add(level);
+            signature.Add(camera.transform.localToWorldMatrix);
+            signature.Add(camera.projectionMatrix);
+            signature.Add(camera.pixelRect);
+            signature.Add(panel.visualTree.layout);
+            signature.Add(SettingsManager.Instance.PointsAreShown);
+            signature.Add(SettingsManager.Instance.LinesAreShown);
+
+            foreach (var selected in SelectionManager.Instance.Selection)
+            {
+                signature.Add(selected);
+            }
+
+            var data = level.Level;
+            signature.Add(data.LineList.Count);
+            signature.Add(data.PolygonList.Count);
+            signature.Add(level.Points.Count);
+
+            foreach (var endpoint in data.EndpointList)
+            {
+                signature.Add(endpoint.vertex.x);
+                signature.Add(endpoint.vertex.y);
+            }
+
+            foreach (var polygon in level.Polygons.Values)
+            {
+                signature.Add(polygon.FloorSurface ? polygon.FloorSurface.transform.position.y : float.NaN);
+                signature.Add(polygon.CeilingSurface ? polygon.CeilingSurface.transform.position.y : float.NaN);
+            }
+
+            return signature.ToHashCode();
         }
 
         // Not while the UI is hidden, or while the level's data is ahead of its (soon rebuilt) entities

@@ -29,6 +29,9 @@ namespace ForgePlus.ApplicationGeneral
         // The materials of the surfaces let in
         private static readonly HashSet<Material> admittedMaterials = new HashSet<Material>();
 
+        // Surfaces it never takes in (placeholders, and sides too small to matter)
+        private static readonly HashSet<MeshRenderer> excludedRenderers = new HashSet<MeshRenderer>();
+
         // Before Surface Cache Global Illumination is turned on, so its first frame doesn't take every surface at once
         public static void SetEnabled(bool enabled)
         {
@@ -38,9 +41,14 @@ namespace ForgePlus.ApplicationGeneral
             heldRenderers.Clear();
             admittedMaterials.Clear();
 
+            excludedRenderers.RemoveWhere(renderer => !renderer);
+
             foreach (var renderer in surfaceRenderers)
             {
-                Admit(renderer, hold: enabled);
+                if (!excludedRenderers.Contains(renderer))
+                {
+                    Place(renderer, hold: enabled);
+                }
             }
 
             if (enabled)
@@ -49,13 +57,22 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
-        // After a surface's materials change
-        public static void Admit(MeshRenderer renderer)
+        // After a surface's materials or size change
+        public static void Admit(MeshRenderer renderer, bool isExcluded)
         {
             surfaceRenderers.Add(renderer);
             heldRenderers.Remove(renderer);
 
-            Admit(renderer, hold: isEnabled && renderer.sharedMaterials.Any(material => material && !admittedMaterials.Contains(material)));
+            if (isExcluded)
+            {
+                excludedRenderers.Add(renderer);
+                SetRenderingLayer(renderer, SurfaceCacheRenderingLayers.Excluded);
+                return;
+            }
+
+            excludedRenderers.Remove(renderer);
+
+            Place(renderer, hold: isEnabled && renderer.sharedMaterials.Any(material => material && !admittedMaterials.Contains(material)));
 
             if (isEnabled)
             {
@@ -69,19 +86,29 @@ namespace ForgePlus.ApplicationGeneral
             surfaceRenderers.Clear();
             heldRenderers.Clear();
             admittedMaterials.Clear();
+            excludedRenderers.Clear();
         }
 
-        private static void Admit(MeshRenderer renderer, bool hold)
+        private static void Place(MeshRenderer renderer, bool hold)
         {
             if (hold)
             {
-                renderer.renderingLayerMask = SurfaceCacheRenderingLayers.Excluded;
+                SetRenderingLayer(renderer, SurfaceCacheRenderingLayers.Excluded);
                 heldRenderers.Add(renderer);
             }
             else
             {
-                renderer.renderingLayerMask = SurfaceCacheRenderingLayers.Included;
+                SetRenderingLayer(renderer, SurfaceCacheRenderingLayers.Included);
                 admittedMaterials.UnionWith(renderer.sharedMaterials.Where(material => material));
+            }
+        }
+
+        // Only when it changes, as Surface Cache Global Illumination updates every renderer that's changed
+        private static void SetRenderingLayer(MeshRenderer renderer, uint renderingLayerMask)
+        {
+            if (renderer.renderingLayerMask != renderingLayerMask)
+            {
+                renderer.renderingLayerMask = renderingLayerMask;
             }
         }
 
@@ -141,7 +168,7 @@ namespace ForgePlus.ApplicationGeneral
 
                 remainingNewMaterials -= newMaterials.Count;
                 heldRenderers.RemoveAt(i--);
-                Admit(renderer, hold: false);
+                Place(renderer, hold: false);
             }
         }
     }

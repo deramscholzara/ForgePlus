@@ -4,6 +4,7 @@ using System.Linq;
 using ForgePlus.DataFileIO;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
+using RuntimeCore.Materials;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
@@ -74,6 +75,18 @@ namespace ForgePlus.ApplicationGeneral
         // The surface's materials: its own, then a layered transparent side's outer layer's
         public static Material[] Get(Key key)
         {
+            // Landscapes aren't lit by lights, so every one with a texture shares a material that no light changes (which
+            // would have Surface Cache Global Illumination render it again for nothing)
+            if (MaterialGeneration_Geometry.IsLandscape(key.SourceMaterial))
+            {
+                key.SourceLight = null;
+            }
+
+            if (MaterialGeneration_Geometry.IsLandscape(key.LayeredTransparentSideSourceMaterial))
+            {
+                key.LayeredTransparentSideSourceLight = null;
+            }
+
             if (materials.TryGetValue(key, out var keyMaterials))
             {
                 return keyMaterials;
@@ -114,7 +127,7 @@ namespace ForgePlus.ApplicationGeneral
         {
             SimpleVisuals.SetEnabled(enabled, InUse);
 
-            // The grid shader lights every material, including those whose own shader didn't keep their light's intensity
+            // The grid shader lights every material, including those whose own shader didn't keep their light's index
             if (enabled)
             {
                 foreach (var keyMaterials in materials)
@@ -149,6 +162,7 @@ namespace ForgePlus.ApplicationGeneral
             }
             else
             {
+                material.SetFloat(LevelEntity_Light.lightIndexPropertyId, LevelEntity_Light.FullIntensityLightIndex);
                 material.SetFloat(LevelEntity_Light.lightIntensityPropertyId, 1f);
             }
         }

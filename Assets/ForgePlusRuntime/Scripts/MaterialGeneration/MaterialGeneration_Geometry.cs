@@ -49,6 +49,22 @@ namespace RuntimeCore.Materials
 
         [NoAutoStaticsCleanup] private static readonly Texture2D GridTexture = Resources.Load<Texture2D>("Walls/Grid");
 
+        // Landscapes aren't lit by the level's lights (so they're drawn the same whichever light their surface has)
+        public static bool IsLandscape(Material sourceMaterial)
+        {
+            return sourceMaterial && sourceMaterial.shader == OpaqueLandscapeShader;
+        }
+
+        // The unassigned material, or one drawn with the grid in place of a texture that's missing
+        public static bool IsPlaceholder(Material sourceMaterial)
+        {
+            return sourceMaterial &&
+                   (sourceMaterial == unassignedMaterial ||
+                    (sourceMaterial.HasTexture(mainTexturePropertyId) && sourceMaterial.GetTexture(mainTexturePropertyId) == GridTexture));
+        }
+
+        [NoAutoStaticsCleanup] private static readonly int mainTexturePropertyId = Shader.PropertyToID("_MainTex");
+
         [NoAutoStaticsCleanup] private static readonly int mediaSubColorPropertyId = Shader.PropertyToID("_SubMediaColor");
 
         // MML's bump maps and glow maps for substitute textures (MmlTextures), on the shaders that draw them
@@ -333,9 +349,9 @@ namespace RuntimeCore.Materials
             return material;
         }
 
-        // Wall, media and transparent surfaces' emission (their Meta pass's) is light Surface Cache Global Illumination
-        // spreads to other surfaces (it only reads emission from materials marked for realtime indirect emission). The
-        // batched copies take this setting from it.
+        // Every surface's emission (its Meta pass's) is light Surface Cache Global Illumination spreads to other surfaces (it
+        // only reads emission from materials marked for realtime indirect emission): lit surfaces' bounced light, and
+        // landscapes' ambient sky light. The surface materials copied from it (SurfaceMaterials) take this setting from it.
         private static void SetSurfaceCacheEmission(Material material)
         {
             material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeIndirectEmission;
@@ -353,10 +369,7 @@ namespace RuntimeCore.Materials
                 material = new Material(shaderToUse);
                 trackedMaterials[shapeDescriptor] = material;
 
-                if (shaderToUse != OpaqueLandscapeShader)
-                {
-                    SetSurfaceCacheEmission(material);
-                }
+                SetSurfaceCacheEmission(material);
 
                 if (shaderToUse == MediaShader)
                 {

@@ -144,6 +144,7 @@ namespace ForgePlus.LevelManipulation
             var overlayRenderer = overlay.AddComponent<MeshRenderer>();
             RuntimeSurfaceGeometry.ConfigureRenderer(overlayRenderer);
             overlayRenderer.sharedMaterial = material;
+            GeometryUtilities.ExcludeFromGpuResidentDrawer(overlayRenderer);
             SurfaceCacheRenderingLayers.Exclude(overlayRenderer);
 
             return overlay;

@@ -80,11 +80,13 @@ namespace RuntimeCore.Entities.Geometry
         public void ApplyPositions()
         {
             geometryModule.ApplyPositionsAndTriangles();
+            geometryModule.ApplySurfaceCacheAdmission();
         }
 
         public void ApplyPlatform()
         {
             geometryModule.ApplyPositionsAndTriangles();
+            geometryModule.ApplySurfaceCacheAdmission();
         }
 
         // For a floor's, ceiling's or media's corners that moved: its positions, the texture coordinates that follow them,
@@ -93,6 +95,7 @@ namespace RuntimeCore.Entities.Geometry
         {
             geometryModule.ApplyPositionsAndTriangles();
             geometryModule.ApplyTextureOffset(innerLayer: true);
+            geometryModule.ApplySurfaceCacheAdmission();
 
             if (!TryGetComponent<MeshCollider>(out var meshCollider) && HasArea(SurfaceMesh))
             {
