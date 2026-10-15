@@ -29,10 +29,20 @@ namespace ForgePlus.History
         // While a selection is being made over many frames (such as by rectangle), which is recorded once it's done
         public static bool IsPaused { get; set; }
 
+        // Whether the next change is joined to the last action (the edit that made it), rather than recorded on its own
+        private static bool joinsNextToLast;
+
         // The selection, as it is once whatever's changing it now is done, is taken as it is (rather than recorded)
         public static void Retake()
         {
             isRetakeRequested = true;
+        }
+
+        // The selection, as it is once whatever's changing it now is done, is undone and redone with the last action (such
+        // as the edit that's selecting what it added), rather than on its own
+        public static void JoinNextToLast()
+        {
+            joinsNextToLast = true;
         }
 
         // Once a frame (LevelHistory)
@@ -53,6 +63,10 @@ namespace ForgePlus.History
             var current = Capture(selectionManager);
             var mode = ModeManager.Instance.PrimaryMode;
 
+            // Only the change that's next (if there is one)
+            var joinsToLast = joinsNextToLast;
+            joinsNextToLast = false;
+
             if (isRetakeRequested || mode != recordedMode)
             {
                 isRetakeRequested = false;
@@ -66,7 +80,16 @@ namespace ForgePlus.History
                 return;
             }
 
-            UndoHistory.Record(new SelectionChange(recorded, current, mode));
+            var change = new SelectionChange(recorded, current, mode);
+            if (joinsToLast)
+            {
+                UndoHistory.RecordWithLast(change);
+            }
+            else
+            {
+                UndoHistory.Record(change);
+            }
+
             recorded = current;
         }
 
@@ -89,8 +112,14 @@ namespace ForgePlus.History
             return a.Count == b.Count && new HashSet<string>(a.Select(entry => entry.Key)).SetEquals(b.Select(entry => entry.Key));
         }
 
-        // Selects what was selected (what's still in the level), in the mode it was selected in
+        // Selects what was selected (what's still in the level), in the mode it was selected in. With an edit undone or
+        // redone along with it (that's rebuilding the level), it's once the level's entities are made again.
         private static void Apply(List<(string Key, Func<ISelectable> Finder)> selection, ModeManager.PrimaryModes mode)
+        {
+            LevelEditing.AfterPendingRebuild(() => ApplyNow(selection, mode));
+        }
+
+        private static void ApplyNow(List<(string Key, Func<ISelectable> Finder)> selection, ModeManager.PrimaryModes mode)
         {
             if (ModeManager.Instance.PrimaryMode != mode)
             {

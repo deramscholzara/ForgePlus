@@ -548,6 +548,16 @@ MonoBehaviour:
   - rid: 552786377617702970
   - rid: 552786384866508863
   - rid: 552786384866508864
+  - rid: 552786384866508865
+  - rid: 552786384866508866
+  - rid: 552786384866508867
+  - rid: 552786384866508868
+  - rid: 552786384866508869
+  - rid: 552786384866508870
+  - rid: 552786384866508871
+  - rid: 552786384866508872
+  - rid: 552786384866508873
+  - rid: 552786384866508874
   references:
     version: 2
     RefIds:
@@ -4272,3 +4282,73 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Scripts
+    - rid: 552786384866508865
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940866
+        m_Metadata:
+          m_Items: []
+        m_Value: "Draw"
+    - rid: 552786384866508866
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940867
+        m_Metadata:
+          m_Items: []
+        m_Value: "Select what's clicked, and drag to move or adjust it (or, from empty space, to select by rectangle)."
+    - rid: 552786384866508867
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940868
+        m_Metadata:
+          m_Items: []
+        m_Value: "Add new geometry. Drag a line beside a polygon to add a polygon between it and a copy of it, matching its sides and the polygon's floor and ceiling. Dragging a selected floor or ceiling still adjusts its height, but nothing is moved in this mode."
+    - rid: 552786384866508868
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940869
+        m_Metadata:
+          m_Items: []
+        m_Value: "Apply the palette's chosen swatch to what's clicked."
+    - rid: 552786384866508869
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940870
+        m_Metadata:
+          m_Items: []
+        m_Value: "Drag textures across their surfaces to align them."
+    - rid: 552786384866508870
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940871
+        m_Metadata:
+          m_Items: []
+        m_Value: "Only a line beside a polygon can be dragged into a new one."
+    - rid: 552786384866508871
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940872
+        m_Metadata:
+          m_Items: []
+        m_Value: "There's already a polygon on that side of the line."
+    - rid: 552786384866508872
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940873
+        m_Metadata:
+          m_Items: []
+        m_Value: "Drag away from the line to add a polygon."
+    - rid: 552786384866508873
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940874
+        m_Metadata:
+          m_Items: []
+        m_Value: "Can't add it there (it would overlap other lines or points). Hold Shift to allow it."
+    - rid: 552786384866508874
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940875
+        m_Metadata:
+          m_Items: []
+        m_Value: "It overlaps other lines or points."

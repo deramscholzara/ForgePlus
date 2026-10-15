@@ -28,7 +28,8 @@ namespace ForgePlus.UI
     //
     // While a point is moved, what the move would break (or breaks) is shown (PointEditing.Feedback): the lines involved
     // are outlined (red for errors, yellow for warnings), a ghost of the point shows where it's held back from (or where
-    // it last was valid), its handles are ringed, and a note beside it says what's wrong.
+    // it last was valid), its handles are ringed, and a note beside it says what's wrong. While a line is dragged with the
+    // Draw tool, the polygon it would add is outlined (LineExtrusion.Current), with a note if it can't be added.
     public class PointHandles : IScreenPointerPicker
     {
         // Pixels: a black border around a white fill (red while selected, with a black center, as in ForgePlus's logo)
@@ -55,6 +56,9 @@ namespace ForgePlus.UI
         private static readonly Color WarningColor = new Color32(240, 200, 30, 255);
         private static readonly Color BlockedGhostColor = new Color(210f / 255f, 40f / 255f, 40f / 255f, 0.5f);
         private static readonly Color LastValidGhostColor = new Color(1f, 1f, 1f, 0.5f);
+
+        // A polygon the Draw tool would add
+        private static readonly Color ExtrusionColor = new Color32(80, 200, 255, 255);
 
         // Pixels: a black outline around a white fill (red while selected), as wide as both together
         private const float PoleWidth = 6f;
@@ -172,7 +176,7 @@ namespace ForgePlus.UI
             // Collected again (and drawn again) only once what they're collected from changes, or while a point is moved
             // (whose feedback follows the pointer); otherwise only drawn again while they flash, and once as that ends
             var signature = CollectionSignature();
-            var isMoving = PointEditing.Feedback != null;
+            var isMoving = PointEditing.Feedback != null || LineExtrusion.Current != null;
             var isFlashing = FocusFlash.IsFlashingHandles;
 
             if (hasCollected && signature == collectedSignature && !isMoving && !wasMoving)
@@ -221,6 +225,7 @@ namespace ForgePlus.UI
 
                 CollectHandles(level, camera, panel);
                 CollectFeedback(level, camera, panel);
+                CollectExtrusionPreview(camera, panel);
                 CollectLines(level, camera, panel);
             }
 
@@ -969,23 +974,80 @@ namespace ForgePlus.UI
                 }
             }
 
-            if (!string.IsNullOrEmpty(feedback.Message) && TryProject(statusAt, camera, panel, out var statusPosition))
+            ShowStatus(feedback.Message, feedback.HasErrors, statusAt, camera, panel);
+        }
+
+        // What a line dragged in Draw mode would add (LineExtrusion.Current): the new polygon outlined at its floor and
+        // ceiling and up its new corners (red where it can't be added, yellow where it overlaps other geometry), and a note
+        // beside it saying why
+        private void CollectExtrusionPreview(Camera camera, IPanel panel)
+        {
+            var preview = LineExtrusion.Current;
+            if (preview == null)
             {
-                status.text = feedback.Message;
-                status.EnableInClassList("fp-point-status--error", feedback.HasErrors);
-                status.EnableInClassList("fp-point-status--warning", !feedback.HasErrors);
-                // Beside the point, or to its left if there isn't room on its right (its width is as it was last laid out)
-                var width = float.IsNaN(status.layout.width) ? 0f : status.layout.width;
-                var left = statusPosition.x + StatusOffset.x;
-                if (left + width > layer.layout.width)
+                return;
+            }
+
+            Vector3 WorldPosition(world_point2d location, float height)
+            {
+                return new Vector3(location.x, 0f, -location.y) / GeometryUtilities.WorldUnitIncrementsPerMeter + Vector3.up * height;
+            }
+
+            if (preview.HasShape)
+            {
+                var color = preview.IsBlocked ? ErrorColor : preview.Overlaps ? WarningColor : ExtrusionColor;
+                var corners = new[] { preview.A, preview.B, preview.CopyB, preview.CopyA };
+
+                foreach (var height in new[] { preview.FloorHeight, preview.CeilingHeight })
                 {
-                    left = Mathf.Max(0f, statusPosition.x - StatusOffset.x - width);
+                    for (var i = 0; i < corners.Length; i++)
+                    {
+                        AddOutline(WorldPosition(corners[i], height), WorldPosition(corners[(i + 1) % corners.Length], height), color, camera, panel);
+                    }
                 }
 
-                status.style.left = left;
-                status.style.top = statusPosition.y + StatusOffset.y;
-                status.style.display = DisplayStyle.Flex;
+                AddOutline(WorldPosition(preview.CopyA, preview.FloorHeight), WorldPosition(preview.CopyA, preview.CeilingHeight), color, camera, panel);
+                AddOutline(WorldPosition(preview.CopyB, preview.FloorHeight), WorldPosition(preview.CopyB, preview.CeilingHeight), color, camera, panel);
             }
+
+            // Beside the middle of the copy, at the height the line was grabbed at
+            var middle = new world_point2d((short) ((preview.CopyA.x + preview.CopyB.x) / 2), (short) ((preview.CopyA.y + preview.CopyB.y) / 2));
+            ShowStatus(preview.Message, preview.IsBlocked, WorldPosition(middle, preview.Height), camera, panel);
+        }
+
+        // The part of it in front of the camera
+        private void AddOutline(Vector3 start, Vector3 end, Color color, Camera camera, IPanel panel)
+        {
+            if (ClipToFront(camera, ref start, ref end))
+            {
+                TryProject(start, camera, panel, out var panelStart);
+                TryProject(end, camera, panel, out var panelEnd);
+                outlines.Add((panelStart, panelEnd, color));
+            }
+        }
+
+        // The note (if there is one), as an error's or a warning's
+        private void ShowStatus(string message, bool isError, Vector3 worldPosition, Camera camera, IPanel panel)
+        {
+            if (string.IsNullOrEmpty(message) || !TryProject(worldPosition, camera, panel, out var statusPosition))
+            {
+                return;
+            }
+
+            status.text = message;
+            status.EnableInClassList("fp-point-status--error", isError);
+            status.EnableInClassList("fp-point-status--warning", !isError);
+            // Beside the point, or to its left if there isn't room on its right (its width is as it was last laid out)
+            var width = float.IsNaN(status.layout.width) ? 0f : status.layout.width;
+            var left = statusPosition.x + StatusOffset.x;
+            if (left + width > layer.layout.width)
+            {
+                left = Mathf.Max(0f, statusPosition.x - StatusOffset.x - width);
+            }
+
+            status.style.left = left;
+            status.style.top = statusPosition.y + StatusOffset.y;
+            status.style.display = DisplayStyle.Flex;
         }
 
         private void AddGhost(Vector3 worldPosition, Color color, Camera camera, IPanel panel)

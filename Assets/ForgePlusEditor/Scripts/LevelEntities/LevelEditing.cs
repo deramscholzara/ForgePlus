@@ -59,6 +59,19 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        // Once the pending rebuild is done (after what it was asked to do then), or now if none is pending
+        public static void AfterPendingRebuild(Action action)
+        {
+            if (IsRebuildPending)
+            {
+                afterPendingRebuild.Add(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
         // Rebuilds the level, then selects again what was selected (as far as it's still there)
         public static void RebuildLevelKeepingSelection()
         {
