@@ -39,6 +39,10 @@ namespace RuntimeCore.Entities.Geometry
         // TODO: Add this to IInspectable so it must be implemented in all inspectables
         public event Action<LevelEntity_Platform> OnInspectionStateChange;
 
+        // In each frame it moves in, before LateUpdate, so the surfaces that follow or are trimmed by it update then
+        // (PlatformConstraint, PlatformSideClipping)
+        public event Action Moved;
+
         // play_platform_sound (platforms.cpp): the platform, sound code, whether it's extending, and whether it's fully
         // contracted. A split platform's come from its floor only.
         public static event Action<LevelEntity_Platform, short, bool, bool> OnRuntimeSound;
@@ -443,9 +447,12 @@ namespace RuntimeCore.Entities.Geometry
 
         private void Update()
         {
-            if (NativeObject != null)
+            // Only as it moves, as Surface Cache Global Illumination updates every moved surface
+            if (NativeObject != null && transform.position.y != currentPosition)
             {
                 transform.position = new Vector3(0f, currentPosition, 0f);
+
+                Moved?.Invoke();
             }
         }
     }

@@ -33,6 +33,13 @@ namespace RuntimeCore.Entities.Geometry
             }
             private set
             {
+                // Its height is worked out each frame, but surfaces are only moved as it changes (Surface Cache Global
+                // Illumination updates every moved surface)
+                if (currentHeight == value)
+                {
+                    return;
+                }
+
                 currentHeight = value;
 
                 foreach (var transform in subscribedSurfaces)

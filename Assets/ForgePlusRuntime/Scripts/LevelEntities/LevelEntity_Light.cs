@@ -27,8 +27,30 @@ namespace RuntimeCore.Entities
             SecondaryInactive,
         }
 
-        // Each surface material is lit by one light (SurfaceMaterials), whose display intensity it holds in this property
+        // Every light's display intensity, which surfaces read by their material's _LightIndex as they're drawn. A global
+        // array, so it changes no materials (Surface Cache Global Illumination re-renders any material that changes).
+        public static readonly int lightIntensitiesPropertyId = Shader.PropertyToID("_LightIntensities");
+        public const int LightIntensitiesLength = 1024;
+
+        // The array's last entry is always full intensity, for surfaces with no light (such as a null side's)
+        public const int FullIntensityLightIndex = LightIntensitiesLength - 1;
+
+        // Each surface material is lit by one light (SurfaceMaterials): its index into the array, and the intensity Surface
+        // Cache Global Illumination takes from its Meta pass, which changes far less often than the light does
+        public static readonly int lightIndexPropertyId = Shader.PropertyToID("_LightIndex");
         public static readonly int lightIntensityPropertyId = Shader.PropertyToID("_LightIntensity");
+
+        // Surface Cache Global Illumination's intensity skips changes smaller than this (of the light's own 0-1
+        // intensity), and is applied to this many materials a frame at most, as it re-renders each material it changes
+        private const float surfaceCacheIntensityThreshold = 0.45f;
+        private const int surfaceCacheMaterialsPerFrame = 2;
+
+        private static readonly float[] displayIntensities = CreateFullIntensities();
+        private static bool displayIntensitiesChanged = true;
+
+        // Lights whose Surface Cache Global Illumination intensity is still being applied to their materials, oldest first
+        private static readonly List<LevelEntity_Light> surfaceCachePending = new List<LevelEntity_Light>();
+        private static int lastSurfaceCacheFrame = -1;
 
         // One "tick" = 1/30 seconds.  This is used to maintain classic flicker frequency.
         private const float minimumTickDuration = 1f / 30f;
@@ -59,27 +81,24 @@ namespace RuntimeCore.Entities
             }
             private set
             {
-                currentLinearIntensity = value;
-
-                if (QualitySettings.activeColorSpace == ColorSpace.Linear)
-                {
-                    // Square to convert to gamma-space values (only needed if the project is in Linear space)
-                    CurrentDisplayIntensity = currentLinearIntensity * currentLinearIntensity;
-                }
-                else
-                {
-                    CurrentDisplayIntensity = currentLinearIntensity;
-                }
-
-                ApplyIntensityToMaterials();
+                SetIntensity(value, value);
             }
         }
 
         private float currentLinearIntensity = 0f;
 
-        // The surface materials it lights, and the intensity they last had applied
+        // The surface materials it lights
         private readonly List<Material> subscribedMaterials = new List<Material>();
-        private float appliedDisplayIntensity = float.NaN;
+
+        // The intensity (the light's own, 0-1) Surface Cache Global Illumination was last given, and how many of the
+        // materials have it so far
+        private float surfaceCacheIntensity = float.NaN;
+        private int surfaceCacheMaterialsApplied;
+
+        // Set as the light changes between active and inactive, so the next phase gives every material its intensity at once
+        // (and holds it through that phase)
+        private bool statusChanged;
+        private bool holdsSurfaceCacheIntensity;
 
         private States currentState = States.BecomingActive;
         private bool loopsCurrentState;
@@ -118,6 +137,7 @@ namespace RuntimeCore.Entities
         public void PrepareForDestruction()
         {
             StopAnimating();
+            surfaceCachePending.Remove(this);
         }
 
         public void BeginRuntimeStyleBehavior()
@@ -143,7 +163,7 @@ namespace RuntimeCore.Entities
                 return;
             }
 
-            currentState = state;
+            EnterState(state);
             loopsCurrentState = loop;
 
             // If we're looping (such as for an editor state-preview mode)
@@ -257,6 +277,17 @@ namespace RuntimeCore.Entities
             nextTickTime = float.MinValue;
             phaseIsStarted = true;
 
+            // Once as the light becomes active or inactive, whatever the change, so bounced light follows it: the phase's
+            // final intensity, held through the phase (which may start from the old one) so it isn't taken back
+            holdsSurfaceCacheIntensity = false;
+
+            if (statusChanged)
+            {
+                statusChanged = false;
+                SetSurfaceCacheIntensity(phaseFinalIntensity, immediately: true);
+                holdsSurfaceCacheIntensity = true;
+            }
+
             switch (phaseFunction.function)
             {
                 case _constant_lighting_function:
@@ -297,20 +328,21 @@ namespace RuntimeCore.Entities
         }
 
         // A new intensity each tick (lightsource.cpp): flicker's between the smooth and final ones, random's between the
-        // initial and final ones, and fluorescent's either one
+        // initial and final ones, and fluorescent's either one. Surface Cache Global Illumination is given the average of
+        // that range instead, as it re-renders the materials of every change it takes.
         private void ShowTick(float progress)
         {
             switch (phaseFunction.function)
             {
                 case _flicker_lighting_function:
                     var smoothIntensity = Mathf.Lerp(phaseInitialIntensity, phaseFinalIntensity, SmoothProgress(progress));
-                    CurrentLinearIntensity = Mathf.Lerp(smoothIntensity, phaseFinalIntensity, Random.value);
+                    SetIntensity(Mathf.Lerp(smoothIntensity, phaseFinalIntensity, Random.value), (smoothIntensity + phaseFinalIntensity) / 2f);
                     break;
                 case _random_lighting_function:
-                    CurrentLinearIntensity = Mathf.Lerp(phaseInitialIntensity, phaseFinalIntensity, Random.value);
+                    SetIntensity(Mathf.Lerp(phaseInitialIntensity, phaseFinalIntensity, Random.value), (phaseInitialIntensity + phaseFinalIntensity) / 2f);
                     break;
                 default:
-                    CurrentLinearIntensity = Random.Range(0, 2) == 0 ? phaseInitialIntensity : phaseFinalIntensity;
+                    SetIntensity(Random.Range(0, 2) == 0 ? phaseInitialIntensity : phaseFinalIntensity, (phaseInitialIntensity + phaseFinalIntensity) / 2f);
                     break;
             }
         }
@@ -333,36 +365,53 @@ namespace RuntimeCore.Entities
             switch (currentState)
             {
                 case States.BecomingActive:
-                    currentState = States.PrimaryActive;
+                    EnterState(States.PrimaryActive);
                     return true;
                 case States.PrimaryActive:
                     if (GoesToSecondaryPhase(NativeObject.primary_active, NativeObject.secondary_active))
                     {
-                        currentState = States.SecondaryActive;
+                        EnterState(States.SecondaryActive);
                         return true;
                     }
 
                     return !IsUnchanging(NativeObject.primary_active);
                 case States.SecondaryActive:
-                    currentState = LIGHT_IS_STATELESS(NativeObject) ? States.BecomingInactive : States.PrimaryActive;
+                    EnterState(LIGHT_IS_STATELESS(NativeObject) ? States.BecomingInactive : States.PrimaryActive);
                     return true;
                 case States.BecomingInactive:
-                    currentState = States.PrimaryInactive;
+                    EnterState(States.PrimaryInactive);
                     return true;
                 case States.PrimaryInactive:
                     if (GoesToSecondaryPhase(NativeObject.primary_inactive, NativeObject.secondary_inactive))
                     {
-                        currentState = States.SecondaryInactive;
+                        EnterState(States.SecondaryInactive);
                         return true;
                     }
 
                     return !IsUnchanging(NativeObject.primary_inactive);
                 case States.SecondaryInactive:
-                    currentState = LIGHT_IS_STATELESS(NativeObject) ? States.BecomingActive : States.PrimaryInactive;
+                    EnterState(LIGHT_IS_STATELESS(NativeObject) ? States.BecomingActive : States.PrimaryInactive);
                     return true;
                 default:
                     throw new Exception($"Light State: {currentState}");
             }
+        }
+
+        // Notes a change between active and inactive (a stateless light's own cycle, or a switch or trigger), which the next
+        // phase gives Surface Cache Global Illumination at once
+        private void EnterState(States state)
+        {
+            if (IsActiveState(state) != IsActiveState(currentState))
+            {
+                statusChanged = true;
+            }
+
+            currentState = state;
+        }
+
+        private static bool IsActiveState(States state)
+        {
+            return state == States.BecomingActive || state == States.PrimaryActive || state == States.SecondaryActive;
         }
 
         // Only go to the second phase if it has a lasting duration
@@ -471,6 +520,7 @@ namespace RuntimeCore.Entities
                         if (!keepsAnimating)
                         {
                             light.isAnimating = false;
+                            light.SettleSurfaceCacheIntensity();
 
                             var lastIndex = animatingLights.Count - 1;
                             animatingLights[i] = animatingLights[lastIndex];
@@ -515,24 +565,171 @@ namespace RuntimeCore.Entities
             subscribedMaterials.Remove(material);
         }
 
-        // Shaders without the property don't keep it, so a material that changes shader has it applied again
+        // Its index into the display intensities, and Surface Cache Global Illumination's intensity. Shaders without the
+        // properties don't keep them, so a material that changes shader has them applied again.
         public void ApplyIntensity(Material material)
         {
-            material.SetFloat(lightIntensityPropertyId, CurrentDisplayIntensity);
+            material.SetFloat(lightIndexPropertyId, NativeIndex >= 0 && NativeIndex < FullIntensityLightIndex ? NativeIndex : FullIntensityLightIndex);
+            ApplySurfaceCacheIntensity(material);
         }
 
-        private void ApplyIntensityToMaterials()
+        private void SetIntensity(float linearIntensity, float surfaceCacheLinearIntensity)
         {
-            if (appliedDisplayIntensity == CurrentDisplayIntensity)
+            currentLinearIntensity = linearIntensity;
+            CurrentDisplayIntensity = ToDisplayIntensity(linearIntensity);
+
+            if (NativeIndex >= 0 && NativeIndex < FullIntensityLightIndex && displayIntensities[NativeIndex] != CurrentDisplayIntensity)
+            {
+                displayIntensities[NativeIndex] = CurrentDisplayIntensity;
+                displayIntensitiesChanged = true;
+            }
+
+            if (!holdsSurfaceCacheIntensity &&
+                (float.IsNaN(surfaceCacheIntensity) ||
+                 Mathf.Abs(surfaceCacheLinearIntensity - surfaceCacheIntensity) >= surfaceCacheIntensityThreshold))
+            {
+                SetSurfaceCacheIntensity(surfaceCacheLinearIntensity, immediately: false);
+            }
+        }
+
+        // Square to convert to gamma-space values (only needed if the project is in Linear space)
+        private static float ToDisplayIntensity(float linearIntensity)
+        {
+            return QualitySettings.activeColorSpace == ColorSpace.Linear ? linearIntensity * linearIntensity : linearIntensity;
+        }
+
+        // Right away to every material, or a few materials a frame (ApplyPendingSurfaceCacheIntensities)
+        private void SetSurfaceCacheIntensity(float linearIntensity, bool immediately)
+        {
+            surfaceCacheIntensity = linearIntensity;
+
+            if (immediately)
+            {
+                foreach (var material in subscribedMaterials)
+                {
+                    ApplySurfaceCacheIntensity(material);
+                }
+
+                surfaceCacheMaterialsApplied = subscribedMaterials.Count;
+                surfaceCachePending.Remove(this);
+            }
+            else
+            {
+                surfaceCacheMaterialsApplied = 0;
+
+                if (!surfaceCachePending.Contains(this))
+                {
+                    surfaceCachePending.Add(this);
+                }
+            }
+        }
+
+        // A light that stops changing leaves Surface Cache Global Illumination where it stopped, however small the
+        // difference, rather than where the threshold last let it be
+        private void SettleSurfaceCacheIntensity()
+        {
+            if (surfaceCacheIntensity != currentLinearIntensity)
+            {
+                SetSurfaceCacheIntensity(currentLinearIntensity, immediately: false);
+            }
+        }
+
+        // False when the material already had it (setting a value it has would still re-render it)
+        private bool ApplySurfaceCacheIntensity(Material material)
+        {
+            var intensity = ToDisplayIntensity(float.IsNaN(surfaceCacheIntensity) ? currentLinearIntensity : surfaceCacheIntensity);
+
+            if (material.HasFloat(lightIntensityPropertyId) && material.GetFloat(lightIntensityPropertyId) == intensity)
+            {
+                return false;
+            }
+
+            material.SetFloat(lightIntensityPropertyId, intensity);
+            return true;
+        }
+
+        private static float[] CreateFullIntensities()
+        {
+            var intensities = new float[LightIntensitiesLength];
+            for (var i = 0; i < intensities.Length; i++)
+            {
+                intensities[i] = 1f;
+            }
+
+            return intensities;
+        }
+
+        // Full intensity until a level's lights are set (in Edit mode, in material and Shader Graph previews, and after
+        // Play mode ends)
+        private static void ResetDisplayIntensities()
+        {
+            for (var i = 0; i < displayIntensities.Length; i++)
+            {
+                displayIntensities[i] = 1f;
+            }
+
+            Shader.SetGlobalFloatArray(lightIntensitiesPropertyId, displayIntensities);
+            displayIntensitiesChanged = false;
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void WatchRendering()
+        {
+            UnityEngine.Rendering.RenderPipelineManager.beginContextRendering -= OnBeginRendering;
+            UnityEngine.Rendering.RenderPipelineManager.beginContextRendering += OnBeginRendering;
+
+            // In the Editor this is when Play mode ends
+            Application.quitting -= ResetDisplayIntensities;
+            Application.quitting += ResetDisplayIntensities;
+        }
+
+#if UNITY_EDITOR
+        [UnityEditor.InitializeOnLoadMethod]
+        private static void ResetDisplayIntensitiesInEditor()
+        {
+            ResetDisplayIntensities();
+        }
+#endif
+
+        // Before each view renders: the display intensities once they've changed, and Surface Cache Global Illumination's
+        // pending intensities once a frame (it re-renders each material it changes)
+        private static void OnBeginRendering(UnityEngine.Rendering.ScriptableRenderContext context, List<Camera> cameras)
+        {
+            if (displayIntensitiesChanged)
+            {
+                Shader.SetGlobalFloatArray(lightIntensitiesPropertyId, displayIntensities);
+                displayIntensitiesChanged = false;
+            }
+
+            if (Time.frameCount == lastSurfaceCacheFrame)
             {
                 return;
             }
 
-            appliedDisplayIntensity = CurrentDisplayIntensity;
+            lastSurfaceCacheFrame = Time.frameCount;
 
-            foreach (var material in subscribedMaterials)
+            ApplyPendingSurfaceCacheIntensities();
+        }
+
+        private static void ApplyPendingSurfaceCacheIntensities()
+        {
+            var remainingMaterials = surfaceCacheMaterialsPerFrame;
+
+            while (remainingMaterials > 0 && surfaceCachePending.Count > 0)
             {
-                ApplyIntensity(material);
+                var light = surfaceCachePending[0];
+
+                if (light.surfaceCacheMaterialsApplied >= light.subscribedMaterials.Count)
+                {
+                    surfaceCachePending.RemoveAt(0);
+                    continue;
+                }
+
+                var material = light.subscribedMaterials[light.surfaceCacheMaterialsApplied++];
+                if (material && light.ApplySurfaceCacheIntensity(material))
+                {
+                    remainingMaterials--;
+                }
             }
         }
     }

@@ -1,12 +1,13 @@
 // Every surface drawn with the grid texture (SimpleVisuals), lit as the textured surfaces are: its light's intensity
-// (_LightIntensity, which its material holds) plus a side's ambient delta (UV4.x), raised toward full by
+// (_LightIntensities, by the _LightIndex its material holds) plus a side's ambient delta (UV4.x), raised toward full by
 // _GlobalMinimumLight (which Show Lighting being off sets to full). Texture coordinates are the surface's own (UV0.xy),
 // without its transfer mode's motion.
 Shader "ForgePlus/SimpleVisuals"
 {
     Properties
     {
-        _LightIntensity("Light Intensity", Float) = 1
+        _LightIndex("Light Index", Float) = 1023
+        _LightIntensity("Light Intensity (Surface Cache)", Float) = 1
     }
 
     SubShader
@@ -26,10 +27,15 @@ Shader "ForgePlus/SimpleVisuals"
         TEXTURE2D(_ForgePlusGridTexture);
         SAMPLER(sampler_ForgePlusGridTexture);
 
+        // _LightIntensity (Surface Cache Global Illumination's, through the Meta pass) is kept so it survives the material
+        // changing to this shader and back
         CBUFFER_START(UnityPerMaterial)
+        float _LightIndex;
         float _LightIntensity;
         CBUFFER_END
 
+        // Every light's display intensity (LevelEntity_Light), the last always full
+        float _LightIntensities[1024];
         float _GlobalMinimumLight;
 
         struct Attributes
@@ -57,7 +63,7 @@ Shader "ForgePlus/SimpleVisuals"
             output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
             output.uv = input.uv0;
 
-            float intensity = saturate(_LightIntensity + input.uv4.x);
+            float intensity = saturate(_LightIntensities[(uint) _LightIndex] + input.uv4.x);
             output.lightIntensity = lerp(_GlobalMinimumLight, 1.0, intensity);
 
             return output;

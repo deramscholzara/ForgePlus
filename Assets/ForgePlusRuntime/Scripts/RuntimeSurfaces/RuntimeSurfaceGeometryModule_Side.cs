@@ -3,6 +3,7 @@ using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Constraints;
 using RuntimeCore.Materials;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
@@ -32,6 +33,9 @@ namespace RuntimeCore.Entities.Geometry
         // Reused for every side's mesh updates, as the mesh copies them (so clipping every frame doesn't allocate)
         private static readonly Vector3[] ScratchPositions = new Vector3[4];
         private static readonly Vector2[] ScratchUVs = new Vector2[4];
+
+        // Sides smaller than this (in square world units) are left out of Surface Cache Global Illumination
+        private const float MinimumSurfaceCacheArea = 0.1f;
 
         private readonly LevelEntity_Side sideEntity;
         private readonly LevelEntity_Side.DataSources dataSource;
@@ -227,7 +231,7 @@ namespace RuntimeCore.Entities.Geometry
             fullSizePositions = positions;
 
             // Clipping must be reapplied to the new geometry
-            platformClippingIsApplied = false;
+            InvalidatePlatformClipping();
         }
 
         public override void ApplyTransformPosition()
@@ -334,7 +338,45 @@ namespace RuntimeCore.Entities.Geometry
         {
             platformSideClipping = SurfaceRenderer.gameObject.AddComponent<PlatformSideClipping>();
             platformSideClipping.Module = this;
+            platformSideClipping.Watch(GetPlatforms(FacingPolygonIndex).Concat(GetPlatforms(OpposingPolygonIndex)));
             platformClippingIsApplied = false;
+        }
+
+        // The platforms of a polygon (one, the other, or both of its floor and ceiling), if it's a platform
+        private IEnumerable<LevelEntity_Platform> GetPlatforms(short polygonIndex)
+        {
+            if (polygonIndex < 0)
+            {
+                yield break;
+            }
+
+            var level = sideEntity.ParentLevel;
+            var polygon = map.get_polygon_data(level.Level, polygonIndex);
+            if (polygon.GetPlatform(level.Level) == null)
+            {
+                yield break;
+            }
+
+            if (level.FloorPlatforms.TryGetValue(polygon.permutation, out var floorPlatform))
+            {
+                yield return floorPlatform;
+            }
+
+            if (level.CeilingPlatforms.TryGetValue(polygon.permutation, out var ceilingPlatform))
+            {
+                yield return ceilingPlatform;
+            }
+        }
+
+        // Its geometry changed, so it's trimmed again this frame
+        private void InvalidatePlatformClipping()
+        {
+            platformClippingIsApplied = false;
+
+            if (platformSideClipping)
+            {
+                platformSideClipping.RequestUpdate();
+            }
         }
 
         // Fits the surface to what Aleph One would draw for the platforms' current heights
@@ -456,7 +498,7 @@ namespace RuntimeCore.Entities.Geometry
 
             if (innerLayer)
             {
-                platformClippingIsApplied = false;
+                InvalidatePlatformClipping();
             }
         }
 
@@ -555,6 +597,29 @@ namespace RuntimeCore.Entities.Geometry
             throw new NotImplementedException("Sides do not have media surfaces - this code should be unreachable.");
         }
 
+        // Sides too small to matter (by their full size, before platforms clip them) are left out of Surface Cache Global
+        // Illumination too
+        protected override bool IsExcludedFromSurfaceCache()
+        {
+            return base.IsExcludedFromSurfaceCache() || GetFullSizeArea() < MinimumSurfaceCacheArea;
+        }
+
+        // In square world units
+        private float GetFullSizeArea()
+        {
+            if (fullSizePositions == null)
+            {
+                return 0f;
+            }
+
+            // Vertex order: bottom-left, top-left, top-right, bottom-right
+            var metersPerWorldUnit = GeometryUtilities.WorldUnitIncrementsPerWorldUnit / GeometryUtilities.WorldUnitIncrementsPerMeter;
+            var width = Vector3.Distance(fullSizePositions[0], fullSizePositions[3]) / metersPerWorldUnit;
+            var height = Vector3.Distance(fullSizePositions[0], fullSizePositions[1]) / metersPerWorldUnit;
+
+            return width * height;
+        }
+
         public override void ApplySourceMaterial(bool innerLayer)
         {
             DecrementTextureUsage();
@@ -638,7 +703,7 @@ namespace RuntimeCore.Entities.Geometry
             }
 #else
             var constraint = SurfaceRenderer.gameObject.AddComponent<PlatformConstraint>();
-            constraint.Parent = platform.transform;
+            constraint.Watch(platform);
 
             if (constrainAbovePlatform)
             {
