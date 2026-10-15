@@ -60,49 +60,49 @@ MonoBehaviour:
       type: {class: JsonResourceProvider, ns: Unity.Localization.Providers.FileTables, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_Collections:
-        - Guid: cdc9627813db16c4d82ec20004791906
-          Name: Common
-        - Guid: 920d96b35e949f446a2f1219b9456ea0
-          Name: Menu
-        - Guid: 9ba8f798e63950b4597125a87dc732e4
-          Name: Geometry
-        - Guid: 53d90a99b5908804993e31e636e43a74
-          Name: Textures
-        - Guid: a6a000b04aff3a54eab6a85e4e8224a1
-          Name: Lights
-        - Guid: f1fe01ea89eaaa94c9886dd3a13bf4a5
-          Name: Media
-        - Guid: 30600656d5180ed4d9ea21376925ecbb
-          Name: Sounds
-        - Guid: a29638c87540b554a8fe06664bb42fdb
-          Name: Platforms
-        - Guid: 3e941181d13d50948989d12e273ce204
-          Name: Objects
         - Guid: 3095a629b2a3866459e09fd7731eb86f
           Name: Annotations
-        - Guid: 015493dcfae4c6247a47b9504677fb5b
-          Name: Level
-        - Guid: 745da985c4962cc4192dbf56ca45a0f3
-          Name: Map
-        - Guid: 40872e691392b094dab2e5da7f36729d
-          Name: Terminals
+        - Guid: cdc9627813db16c4d82ec20004791906
+          Name: Common
+        - Guid: 9ba8f798e63950b4597125a87dc732e4
+          Name: Geometry
         - Guid: cba6bc9c918660e429937ae203d38a21
           Name: Heights
+        - Guid: 015493dcfae4c6247a47b9504677fb5b
+          Name: Level
+        - Guid: a6a000b04aff3a54eab6a85e4e8224a1
+          Name: Lights
+        - Guid: 745da985c4962cc4192dbf56ca45a0f3
+          Name: Map
+        - Guid: f1fe01ea89eaaa94c9886dd3a13bf4a5
+          Name: Media
+        - Guid: 920d96b35e949f446a2f1219b9456ea0
+          Name: Menu
+        - Guid: 3e941181d13d50948989d12e273ce204
+          Name: Objects
+        - Guid: a29638c87540b554a8fe06664bb42fdb
+          Name: Platforms
+        - Guid: 30600656d5180ed4d9ea21376925ecbb
+          Name: Sounds
+        - Guid: 40872e691392b094dab2e5da7f36729d
+          Name: Terminals
+        - Guid: 53d90a99b5908804993e31e636e43a74
+          Name: Textures
         m_OwnedCollections:
-        - cdc9627813db16c4d82ec20004791906
-        - 920d96b35e949f446a2f1219b9456ea0
-        - 9ba8f798e63950b4597125a87dc732e4
-        - 53d90a99b5908804993e31e636e43a74
-        - a6a000b04aff3a54eab6a85e4e8224a1
-        - f1fe01ea89eaaa94c9886dd3a13bf4a5
-        - 30600656d5180ed4d9ea21376925ecbb
-        - a29638c87540b554a8fe06664bb42fdb
-        - 3e941181d13d50948989d12e273ce204
         - 3095a629b2a3866459e09fd7731eb86f
-        - 015493dcfae4c6247a47b9504677fb5b
-        - 745da985c4962cc4192dbf56ca45a0f3
-        - 40872e691392b094dab2e5da7f36729d
+        - cdc9627813db16c4d82ec20004791906
+        - 9ba8f798e63950b4597125a87dc732e4
         - cba6bc9c918660e429937ae203d38a21
+        - 015493dcfae4c6247a47b9504677fb5b
+        - a6a000b04aff3a54eab6a85e4e8224a1
+        - 745da985c4962cc4192dbf56ca45a0f3
+        - f1fe01ea89eaaa94c9886dd3a13bf4a5
+        - 920d96b35e949f446a2f1219b9456ea0
+        - 3e941181d13d50948989d12e273ce204
+        - a29638c87540b554a8fe06664bb42fdb
+        - 30600656d5180ed4d9ea21376925ecbb
+        - 40872e691392b094dab2e5da7f36729d
+        - 53d90a99b5908804993e31e636e43a74
         m_BakedTables: []
         m_SubPath: LocalizationTables
         m_PlayModeSource: 0
