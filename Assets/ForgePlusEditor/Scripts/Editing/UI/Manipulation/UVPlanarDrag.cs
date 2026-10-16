@@ -32,10 +32,10 @@ namespace ForgePlus.LevelManipulation
 
             if (AxisLocks.Instance.SnapToGrid)
             {
-                uvDraggedPosition /= 32f;
+                uvDraggedPosition /= GeometryUtilities.UnitsPerTextureOffsetSnap;
 
-                uvDraggedPosition.x = Mathf.Round(uvDraggedPosition.x) * 32;
-                uvDraggedPosition.y = Mathf.Round(uvDraggedPosition.y) * 32;
+                uvDraggedPosition.x = Mathf.Round(uvDraggedPosition.x) * GeometryUtilities.UnitsPerTextureOffsetSnap;
+                uvDraggedPosition.y = Mathf.Round(uvDraggedPosition.y) * GeometryUtilities.UnitsPerTextureOffsetSnap;
             }
 
             uvDraggedPosition.x %= GeometryUtilities.WorldUnitIncrementsPerWorldUnit;

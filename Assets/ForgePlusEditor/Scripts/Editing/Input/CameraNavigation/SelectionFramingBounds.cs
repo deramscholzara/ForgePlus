@@ -162,6 +162,21 @@ namespace ForgePlus.CameraNavigation
 
                     break;
 
+                case LevelEntity_Side side when !side.HasSurfaces && side.FacingPolygon:
+                    // Hidden by its polygons' heights: where it would be, its line's ends from its polygon's floor to ceiling
+                    var facing = side.FacingPolygon.NativeObject;
+                    foreach (var endpointIndex in side.ParentLevel.Level.LineList[side.ParentLineIndex].endpoint_indexes)
+                    {
+                        var position = GeometryUtilities.GetMeshVertex(side.ParentLevel.Level, endpointIndex);
+                        foreach (var height in new[] { facing.floor_height, facing.ceiling_height })
+                        {
+                            position.y = height / GeometryUtilities.WorldUnitIncrementsPerMeter;
+                            Encapsulate(new Bounds(position, Vector3.zero), ref bounds, ref hasBounds);
+                        }
+                    }
+
+                    break;
+
                 case Component component:
                     // Polygons, lines, sides, map objects, annotations, etc. - their surfaces are their children
                     EncapsulateMeshes(component.gameObject, includeChildren: true, ref bounds, ref hasBounds);

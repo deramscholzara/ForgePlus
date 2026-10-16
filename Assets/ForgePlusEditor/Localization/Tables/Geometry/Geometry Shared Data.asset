@@ -507,6 +507,56 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 4206718128635905
+    m_Key: Inspector.Side.FillOpening.Flag.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635906
+    m_Key: Inspector.Side.FillOpening.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635907
+    m_Key: Inspector.Line.SelectFrontSide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635908
+    m_Key: Inspector.Line.AddFrontSide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635909
+    m_Key: Inspector.Line.SelectBackSide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635910
+    m_Key: Inspector.Line.AddBackSide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635911
+    m_Key: Inspector.Line.SelectSide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635912
+    m_Key: Inspector.Line.AddSide
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635913
+    m_Key: Inspector.Line.FrontSide.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4206718128635914
+    m_Key: Inspector.Line.BackSide.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

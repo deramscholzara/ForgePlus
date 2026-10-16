@@ -3,6 +3,7 @@
     <ui:Template name="Subheader" src="../Templates/InspectorSubheader.uxml" />
     <ui:Template name="Row" src="../Templates/InspectorRow.uxml" />
     <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
     <!-- Bound to Inspector_Line -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -25,5 +26,11 @@
         <ui:Instance template="Flag" name="Decorative" class="fp-aleph-one-only" tooltip="@Geometry/Inspector.Line.Decorative.Tooltip">
             <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Line.Decorative.Flag.Text" />
         </ui:Instance>
+        <ui:VisualElement class="fp-space" />
+        <!-- Select (or add) the side on each face with a polygon: the front one faces the camera (Inspector_Line) -->
+        <ui:VisualElement class="fp-inspector-actions">
+            <ui:Instance template="Button" name="front-side" class="fp-inspector-action" tooltip="@Geometry/Inspector.Line.FrontSide.Tooltip" />
+            <ui:Instance template="Button" name="back-side" class="fp-inspector-action fp-inspector-actions__next" tooltip="@Geometry/Inspector.Line.BackSide.Tooltip" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

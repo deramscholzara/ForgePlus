@@ -5,6 +5,7 @@
     <ui:Template name="IntegerFieldRow" src="../Templates/IntegerFieldRow.uxml" />
     <ui:Template name="ScrollArea" src="../Templates/ScrollArea.uxml" />
     <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
     <ui:VisualElement class="fp-grow" picking-mode="Ignore">
         <ui:VisualElement class="fp-box fp-settings__options">
             <ui:Instance template="ScrollArea" class="fp-grow fp-scroll--spaced">
@@ -72,7 +73,14 @@
                     </ui:Instance>
                 </ui:RadioButtonGroup>
             </ui:Instance>
+            <!-- At the bottom of the settings, centered -->
+            <ui:VisualElement class="fp-settings__actions" picking-mode="Ignore">
+                <ui:Instance template="Button" name="reset-to-defaults" class="fp-settings__reset" tooltip="@Menu/SettingsTab.ResetToDefaults.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.ResetToDefaults.Control.Text" />
+                </ui:Instance>
+            </ui:VisualElement>
         </ui:VisualElement>
-        <ui:Label text="@Menu/SettingsTab.Version20200914.Text" class="fp-faint-text fp-settings__version" />
+        <!-- The version in Player Settings (SettingsTabPanel) -->
+        <ui:Label name="version" class="fp-faint-text fp-settings__version" />
     </ui:VisualElement>
 </ui:UXML>

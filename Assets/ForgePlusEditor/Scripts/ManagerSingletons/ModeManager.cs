@@ -29,7 +29,6 @@ namespace ForgePlus.LevelManipulation
             None,
             Selection,
             Painting,
-            Editing,
 
             // Adding geometry (Geometry mode's Draw tool)
             Drawing,
@@ -66,7 +65,6 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        private readonly SecondaryModes[] allSecondaryModes = { SecondaryModes.Selection, SecondaryModes.Painting, SecondaryModes.Editing };
         private readonly SecondaryModes[] selectionAndPainting = { SecondaryModes.Selection, SecondaryModes.Painting };
         private readonly SecondaryModes[] selectionAndDrawing = { SecondaryModes.Selection, SecondaryModes.Drawing };
         private readonly SecondaryModes[] selectionOnly = { SecondaryModes.Selection };
@@ -131,7 +129,6 @@ namespace ForgePlus.LevelManipulation
                     case PrimaryModes.Geometry:
                         return selectionAndDrawing;
                     case PrimaryModes.Textures:
-                        return allSecondaryModes;
                     case PrimaryModes.Lights:
                     case PrimaryModes.Media:
                     case PrimaryModes.Sounds:

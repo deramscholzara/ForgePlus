@@ -44,6 +44,15 @@ namespace RuntimeCore.Entities.Geometry
         public RuntimeSurfaceGeometry MiddleSurface { get; private set; }
         public RuntimeSurfaceGeometry BottomSurface { get; private set; }
 
+        // Whether any of it is drawn (a side hidden by its polygons' heights has no surfaces)
+        public bool HasSurfaces
+        {
+            get
+            {
+                return TopSurface || MiddleSurface || BottomSurface;
+            }
+        }
+
         public RuntimeSurfaceGeometry PrimarySurface { get; private set; }
         public RuntimeSurfaceGeometry SecondarySurface { get; private set; }
         public RuntimeSurfaceGeometry TransparentSurface { get; private set; }
@@ -103,8 +112,11 @@ namespace RuntimeCore.Entities.Geometry
 
             if (exposesMiddle)
             {
-                // Primary if there's no opposing polygon or it's explicitly "full", Transparent otherwise
-                var sideDataSource = (!elevations.HasOpposingPolygon) ? DataSources.Primary : DataSources.Transparent;
+                // Primary if there's no opposing polygon, or it's explicitly "full" with a primary texture (which Aleph One
+                // draws floor to ceiling across the opening, skipping it without a texture: RenderRasterize.cpp,
+                // render_node), Transparent otherwise (layered over a full side's primary, if it has both)
+                var drawsFullPrimary = dataExpectsFullSide && !side.primary_texture.texture.IsEmptyShapeDescriptor();
+                var sideDataSource = (!elevations.HasOpposingPolygon || drawsFullPrimary) ? DataSources.Primary : DataSources.Transparent;
 
                 var hasLayeredTransparentSide = side.HasLayeredTransparentSide(level.Level);
 
@@ -189,6 +201,13 @@ namespace RuntimeCore.Entities.Geometry
             if (side == null && runtimeSide)
             {
                 runtimeSide.ApplyPlaceholderVisibility();
+            }
+
+            // A side whose polygons' heights hide all of it (such as between polygons of the same heights) has no
+            // surfaces, but is still there to be selected (from its line) and inspected
+            if (side != null && !runtimeSide)
+            {
+                CreateSideRoot(ref runtimeSide, isClockwise, sideIndex, side, level, lineIndex);
             }
 
             return runtimeSide;
@@ -276,9 +295,16 @@ namespace RuntimeCore.Entities.Geometry
                          elevations.HasOpposingPolygon &&
                          elevations.HighestFacingCeiling > elevations.LowestOpposingCeiling;
 
+            // Across an opening, a side only draws its own transparent texture (or, as a full side, its primary), and only
+            // with a texture, as Aleph One skips one without (RenderRasterize.cpp: render_node, render_node_side): the other
+            // side's transparent texture is drawn by that side, from its own polygon. A side that draws nothing is still
+            // selected from its line.
+            var drawsOpening = side != null &&
+                               ((dataExpectsFullSide && !side.primary_texture.texture.IsEmptyShapeDescriptor()) ||
+                                !side.transparent_texture.texture.IsEmptyShapeDescriptor());
+
             exposesMiddle = (!elevations.HasOpposingPolygon ||
-                            LINE_HAS_TRANSPARENT_SIDE(line) ||
-                            dataExpectsFullSide) &&
+                            drawsOpening) &&
                             elevations.HighestFacingCeiling > elevations.LowestFacingFloor &&
                             (elevations.HighestOpposingCeiling > elevations.LowestOpposingFloor || dataExpectsFullSide);
 

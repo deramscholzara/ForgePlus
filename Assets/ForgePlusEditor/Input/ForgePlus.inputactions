@@ -87,6 +87,16 @@
                     "priority": 0
                 },
                 {
+                    "name": "ToggleOrthographic",
+                    "type": "Button",
+                    "id": "5e0b9c3a-2f7d-4c81-9a46-0d3e8b7f1c52",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
                     "name": "PanModifier",
                     "type": "Button",
                     "id": "fa3a6744-cf07-4129-872c-b3ca21407469",
@@ -270,6 +280,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "FrameSelected",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a3c7e1f4-6b28-4d9e-8f05-7c1b2e9d4a63",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleOrthographic",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

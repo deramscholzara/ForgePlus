@@ -39,9 +39,8 @@ namespace ForgePlus.UI
             objects.BindValue(settings, nameof(SettingsViewModel.ObjectIconsEnabled));
             objects.BindEnabled(settings, nameof(SettingsViewModel.ObjectIconsEditable));
 
-            // Not implemented yet (shown on, as everything of theirs is shown)
-            Root.Find<Toggle>("polygons").SetEnabled(false);
-            Root.Find<Toggle>("sides").SetEnabled(false);
+            Root.Find<Toggle>("polygons").BindValue(settings, nameof(SettingsViewModel.PolygonsEnabled));
+            Root.Find<Toggle>("sides").BindValue(settings, nameof(SettingsViewModel.SidesEnabled));
 
             viewOptions = new ViewOptionsPanel();
             viewOptions.Load(Root.Q("view-options-slot"));

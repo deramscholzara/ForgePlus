@@ -113,8 +113,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2584663965706
-    m_Key: SettingsTab.Version20200914.Text
-    m_Flags: 0
+    m_Key: SettingsTab.Version.Text
+    m_Flags: 1
     m_Metadata:
       m_Items: []
   - m_Id: 2584785600512
@@ -379,6 +379,16 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4283477268250627
     m_Key: SettingsTab.PointSnapDistance.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4283477268250628
+    m_Key: SettingsTab.ResetToDefaults.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4283477268250629
+    m_Key: SettingsTab.ResetToDefaults.Tooltip
     m_Flags: 0
     m_Metadata:
       m_Items: []

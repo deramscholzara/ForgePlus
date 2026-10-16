@@ -3,11 +3,13 @@ using AlephOne;
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.Extensions;
 using ForgePlus.History;
+using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.Localization;
 using ForgePlus.PolygonContainment;
 using ForgePlus.UI;
 using RuntimeCore.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using static AlephOne.map;
@@ -17,7 +19,8 @@ namespace ForgePlus.LevelManipulation
     // Geometry mode's Draw tool, dragging a point: a new line follows the pointer from it (across the level plane at the
     // height it was grabbed at, snapping to the grid as moving a point does), or ends at another point once the pointer is
     // within the Point Snapping Distance (the setting, in pixels) of its handle. Letting go adds the line, and a new point
-    // at its end unless it ended at one.
+    // at its end unless it ended at one. Ending at a point, it may close a loop of lines into a polygon on either side of
+    // it (PolygonClosing).
     //
     // A line from one of a polygon's corners across it to another (that isn't next to it) splits the polygon in two: the
     // new one (on one side of the line) has everything the polygon had (its floor and ceiling, media, sounds and so on),
@@ -47,6 +50,10 @@ namespace ForgePlus.LevelManipulation
             // Whether there's a line to show (it's been dragged away from the point), and whether it would split a polygon
             public bool HasLine;
             public bool Splits;
+
+            // The polygons it would close (PolygonClosing): their corners (clockwise), and their floor and ceiling heights
+            // (in meters)
+            public readonly List<(world_point2d[] Corners, float FloorHeight, float CeilingHeight)> ClosedPolygons = new List<(world_point2d[], float, float)>();
 
             // Whether it can't be added (as it is), or it can but crosses something, and what the note says (or null)
             public bool IsBlocked;
@@ -152,6 +159,7 @@ namespace ForgePlus.LevelManipulation
 
             preview.HasLine = false;
             preview.Splits = false;
+            preview.ClosedPolygons.Clear();
             preview.IsBlocked = false;
             preview.Overlaps = false;
             preview.Message = null;
@@ -215,6 +223,18 @@ namespace ForgePlus.LevelManipulation
 
             if (!touches && insidePolygons.Count == 0)
             {
+                // Ending at a point, it may close loops of lines into polygons
+                if (endIndex != cstypes.NONE && level.EndpointLines != null)
+                {
+                    foreach (var loop in PolygonClosing.FindLoops(data, level.EndpointLines, startIndex, endIndex, cstypes.NONE))
+                    {
+                        var source = data.PolygonList[loop.Source];
+                        preview.ClosedPolygons.Add((loop.Corners.Select(corner => data.EndpointList[corner].vertex).ToArray(),
+                                                    source.floor_height / GeometryUtilities.WorldUnitIncrementsPerMeter,
+                                                    source.ceiling_height / GeometryUtilities.WorldUnitIncrementsPerMeter));
+                    }
+                }
+
                 return;
             }
 
@@ -271,7 +291,8 @@ namespace ForgePlus.LevelManipulation
             return apart > 1 && apart < count - 1;
         }
 
-        // A line with no polygon on either side (and a new point at its end, unless it ends at one)
+        // A line with no polygon on either side (and a new point at its end, unless it ends at one), and the polygons it
+        // closes (PolygonClosing), if it ends at a point
         private void AddLine()
         {
             var data = level.Level;
@@ -285,11 +306,27 @@ namespace ForgePlus.LevelManipulation
             map_constructors.recalculate_redundant_endpoint_data(data, startIndex);
             map_constructors.recalculate_redundant_endpoint_data(data, endIndex);
 
+            var closedPolygons = new List<polygon_data>();
+            if (preview.SnappedPoint != cstypes.NONE)
+            {
+                // Each found before any is added (as each is on its own side of the line)
+                foreach (var loop in PolygonClosing.FindLoops(data, data.BuildEndpointLines(), startIndex, endIndex, lineIndex))
+                {
+                    closedPolygons.Add(PolygonClosing.AddPolygon(data, loop, endIndex));
+                }
+            }
+
             var line = data.LineList[lineIndex];
             var point = preview.SnappedPoint == cstypes.NONE ? data.EndpointList[endIndex] : null;
 
             Rebuild(rebuiltLevel =>
             {
+                if (closedPolygons.Count > 0)
+                {
+                    var polygonIndex = (short) rebuiltLevel.Level.PolygonList.IndexOf(closedPolygons[0]);
+                    return rebuiltLevel.Polygons.TryGetValue(polygonIndex, out var closed) ? closed : null;
+                }
+
                 if (point != null)
                 {
                     var pointIndex = (short) rebuiltLevel.Level.EndpointList.IndexOf(point);
@@ -406,7 +443,7 @@ namespace ForgePlus.LevelManipulation
             SET_LINE_TRANSPARENCY(data.LineList[lineIndex], !isClosed);
             map_constructors.recalculate_redundant_line_data(data, lineIndex);
 
-            LineCollapse.RecalculateAround(data, neighbors);
+            GeometryConstruction.RecalculateAfterAdding(data, neighbors, new[] { lineIndex });
 
             var splittingLine = data.LineList[lineIndex];
             Rebuild(rebuiltLevel =>

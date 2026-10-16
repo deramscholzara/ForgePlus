@@ -16,6 +16,11 @@ namespace ForgePlus.UI
         {
             var settings = ForgePlusUI.Instance.Settings;
 
+            Root.Find<Button>("reset-to-defaults").clicked += () => ApplicationGeneral.SettingsManager.Instance.ResetToDefaults();
+
+            // As Player Settings has it (the build's version)
+            Root.Q<Label>("version").text = Localization.Strings.Get(Localization.Strings.Menu, "SettingsTab.Version.Text", UnityEngine.Application.version);
+
             Root.Find<Toggle>("full-screen").BindValue(settings, nameof(SettingsViewModel.IsFullScreen));
             Root.Find<Slider>("minimum-light").BindValue(settings, nameof(SettingsViewModel.MinimumLight));
             Root.Find<Toggle>("bloom").BindValue(settings, nameof(SettingsViewModel.BloomEnabled));

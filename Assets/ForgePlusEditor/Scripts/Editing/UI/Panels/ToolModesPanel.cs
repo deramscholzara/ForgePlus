@@ -65,8 +65,6 @@ namespace ForgePlus.UI
             {
                 case ModeManager.SecondaryModes.Painting:
                     return Strings.Get(Strings.Common, "ToolModes.Paint");
-                case ModeManager.SecondaryModes.Editing:
-                    return Strings.Get(Strings.Common, "ToolModes.Edit");
                 case ModeManager.SecondaryModes.Drawing:
                     return Strings.Get(Strings.Common, "ToolModes.Draw");
                 default:
@@ -80,8 +78,6 @@ namespace ForgePlus.UI
             {
                 case ModeManager.SecondaryModes.Painting:
                     return Strings.Get(Strings.Common, "ToolModes.Paint.Tooltip");
-                case ModeManager.SecondaryModes.Editing:
-                    return Strings.Get(Strings.Common, "ToolModes.Edit.Tooltip");
                 case ModeManager.SecondaryModes.Drawing:
                     return Strings.Get(Strings.Common, "ToolModes.Draw.Tooltip");
                 default:

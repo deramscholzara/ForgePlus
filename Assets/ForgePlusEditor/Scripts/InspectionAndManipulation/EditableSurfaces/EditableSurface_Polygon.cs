@@ -78,13 +78,13 @@ namespace ForgePlus.LevelManipulation
                             ParentPolygon.SetShapeDescriptor(DataSource, selectedTexture);
                         }
                     }
-                    else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
-                             ForgePlusInput.Editing.AlignToSelection.IsPressed())
+                    // Alt-clicking aligns its texture to the selected polygon's (or, with none to align to, selects as a
+                    // click does)
+                    else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection &&
+                             ForgePlusInput.Editing.AlignToSelection.IsPressed() &&
+                             SelectionManager.Instance.SelectedObject is LevelEntity_Polygon selectedSourcePolygon &&
+                             selectedSourcePolygon && selectedSourcePolygon != ParentPolygon)
                     {
-                        var selectedSourceObject = SelectionManager.Instance.SelectedObject;
-                        var selectedSourcePolygon = (selectedSourceObject is LevelEntity_Polygon) ? selectedSourceObject as LevelEntity_Polygon : null;
-
-                        if (selectedSourcePolygon && selectedSourcePolygon != ParentPolygon)
                         {
                             ParentPolygon.SetOffset(DataSource,
                                                       DataSource == LevelEntity_Polygon.DataSources.Floor ? selectedSourcePolygon.NativeObject.floor_origin.x : selectedSourcePolygon.NativeObject.ceiling_origin.x,
@@ -160,7 +160,7 @@ namespace ForgePlus.LevelManipulation
             }
 
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
-                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
             {
                 // Note: Polygon surfaces have swapped UVs, so swap them here
                 var startingUVs = DataSource == LevelEntity_Polygon.DataSources.Floor ?
@@ -224,7 +224,7 @@ namespace ForgePlus.LevelManipulation
 
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
-                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
             {
                 var screenPosition = new Vector3(eventData.Position.x,
                                                  eventData.Position.y,
@@ -275,7 +275,7 @@ namespace ForgePlus.LevelManipulation
 
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
-                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
             {
                 uvDragPlane = null;
 
@@ -297,20 +297,34 @@ namespace ForgePlus.LevelManipulation
             switch (ModeManager.Instance.PrimaryMode)
             {
                 case ModeManager.PrimaryModes.Textures:
-                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
                     {
-                        var newX = (short)(direction.y * GeometryUtilities.UnitsPerTextureOffetNudge);
-                        var newY = (short)(direction.x * GeometryUtilities.UnitsPerTextureOffetNudge);
-
                         var originalX = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentPolygon.NativeObject.floor_origin.x : ParentPolygon.NativeObject.ceiling_origin.x;
                         var originalY = DataSource == LevelEntity_Polygon.DataSources.Floor ? ParentPolygon.NativeObject.floor_origin.y : ParentPolygon.NativeObject.ceiling_origin.y;
 
-                        newX += (short)(Mathf.Round(originalX / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                        newY += (short)(Mathf.Round(originalY / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                        var newX = NudgedOffset(originalX, direction.y);
+                        var newY = NudgedOffset(originalY, direction.x);
+
+                        // Holding Align Contiguous (ctrl) moves the textures that continue it too, as dragging does
+                        alignmentGroupedPolygons.Clear();
+                        alignmentStartingOffsets.Clear();
+
+                        if (ForgePlusInput.Editing.AlignContiguous.IsPressed())
+                        {
+                            CollectSimilarAdjacentPolygons(HeightsEditing.GetHeight(ParentPolygon, DataSource), GetShapeDescriptor(ParentPolygon));
+                        }
 
                         ParentPolygon.SetOffset(DataSource,
                                                   newX,
                                                   newY);
+
+                        // Note: Polygon surfaces have swapped UVs
+                        draggedUVOffset = new Vector2(newY, newX);
+                        isAligningGroup = true;
+                        ApplyAlignmentGroup();
+
+                        alignmentGroupedPolygons.Clear();
+                        alignmentStartingOffsets.Clear();
                     }
 
                     break;

@@ -18,6 +18,9 @@
         <ui:Instance template="Row" name="Type" tooltip="@Geometry/Inspector.Side.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.Type.Label.Text" />
         </ui:Instance>
+        <ui:Instance template="Flag" name="FillOpening" tooltip="@Geometry/Inspector.Side.FillOpening.Tooltip">
+            <ui:AttributeOverrides element-name="flag" text="@Geometry/Inspector.Side.FillOpening.Flag.Text" />
+        </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:Instance template="Subheader">
             <ui:AttributeOverrides element-name="label" text="@Geometry/Inspector.Side.ControlPanel.Label.Text" />

@@ -15,8 +15,9 @@ using static AlephOne.map;
 
 namespace ForgePlus.LevelManipulation
 {
-    // Floor and ceiling heights, with the level's derived data (side types, line and endpoint heights and flags, and
-    // automatic platform travel) kept as Bungie's editor kept it, and only the affected faces, sides and objects rebuilt
+    // Floor and ceiling heights, with the level's derived data (line and endpoint heights and flags, and automatic
+    // platform travel) kept as Bungie's editor kept it, side types and textures following the heights while keeping what
+    // was seen (SideExposure), and only the affected faces, sides and objects rebuilt
     [AutoStaticsCleanup]
     public static partial class HeightsEditing
     {
@@ -156,8 +157,12 @@ namespace ForgePlus.LevelManipulation
             foreach (var lineClosure in lineClosures)
             {
                 LineFlagsEditing.UpdateForHeightChange(data, lineClosure.Key, lineClosure.Value);
-                RecalculateSideTypes(data, data.LineList[lineClosure.Key]);
             }
+
+            // Their types follow the heights, with their textures rearranged to keep what was seen before (SideExposure),
+            // as they will be once the edit is committed
+            var linesToRegenerate = new HashSet<short>(lineClosures.Keys);
+            linesToRegenerate.UnionWith(sideExposure.ArrangeSides(data));
 
             // After the lines, whose solidity they take
             foreach (var endpointIndex in endpointIndexes)
@@ -171,9 +176,12 @@ namespace ForgePlus.LevelManipulation
                 surface.ApplyHeight();
             }
 
-            foreach (var lineIndex in lineClosures.Keys)
+            foreach (var lineIndex in linesToRegenerate)
             {
-                level.Lines[lineIndex].RegenerateSurfaces();
+                if (level.Lines.TryGetValue(lineIndex, out var line))
+                {
+                    line.RegenerateSurfaces();
+                }
             }
 
             // Objects (on the floor, or hanging from the ceiling) and annotations (halfway up) follow their polygons
@@ -259,20 +267,6 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        // As recalculate_side_type (map_constructors.cpp) works them out
-        private static void RecalculateSideTypes(MapLevel data, line_data line)
-        {
-            if (line.clockwise_polygon_side_index != cstypes.NONE)
-            {
-                map_constructors.recalculate_side_type(data, line.clockwise_polygon_side_index);
-            }
-
-            if (line.counterclockwise_polygon_side_index != cstypes.NONE)
-            {
-                map_constructors.recalculate_side_type(data, line.counterclockwise_polygon_side_index);
-            }
-        }
-
         private static IEnumerable<polygon_data> AdjacentPlatformPolygons(MapLevel data, polygon_data polygon)
         {
             for (var i = 0; i < polygon.vertex_count; i++)
@@ -351,10 +345,18 @@ namespace ForgePlus.LevelManipulation
 
                 anyChanged = true;
 
+                // Their types follow its travel (and their textures, where an edit's SideExposure recorded them, follow)
                 var platformPolygon = data.PolygonList[original.polygon_index];
                 for (var i = 0; i < platformPolygon.vertex_count; i++)
                 {
-                    RecalculateSideTypes(data, data.LineList[platformPolygon.line_indexes[i]]);
+                    var line = data.LineList[platformPolygon.line_indexes[i]];
+                    foreach (var sideIndex in new[] { line.clockwise_polygon_side_index, line.counterclockwise_polygon_side_index })
+                    {
+                        if (sideIndex != cstypes.NONE)
+                        {
+                            data.SideList[sideIndex].type = GeometryConstruction.SideTypeForHeights(data, sideIndex);
+                        }
+                    }
                 }
             }
 

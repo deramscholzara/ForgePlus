@@ -75,6 +75,15 @@ namespace ForgePlus.ApplicationGeneral
                 }
             }
 
+            // O: switches between the perspective view and the top-down (orthographic) view
+            public static InputAction ToggleOrthographic
+            {
+                get
+                {
+                    return Find("Camera/ToggleOrthographic");
+                }
+            }
+
             // Held while pressing Select (the left mouse button), it grabs the level to pan across it
             public static InputAction PanModifier
             {

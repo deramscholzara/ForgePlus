@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.LevelManipulation;
 using ForgePlus.Localization;
 using ForgePlus.UI;
 using RuntimeCore.Entities.Geometry;
@@ -48,6 +49,31 @@ namespace ForgePlus.Inspection
             get
             {
                 return AlephOneNames.SideType(Side.type);
+            }
+        }
+
+        // Whether it closes off its line's opening (as a full side, drawn floor to ceiling), or leaves it open (as the type
+        // its polygons' heights call for), which sets its type (SideEditing)
+        [CreateProperty]
+        public bool FillOpening
+        {
+            get
+            {
+                return SideEditing.FillsOpening(Entity.ParentLevel.Level, Side);
+            }
+            set
+            {
+                Edit(side => SideEditing.SetFillsOpening(side, value));
+            }
+        }
+
+        // Only where its polygons' heights leave an opening
+        [CreateProperty]
+        public bool IsFillOpeningEditable
+        {
+            get
+            {
+                return SideEditing.CanFillOpening(Entity.ParentLevel.Level, Side);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.LevelManipulation;
 using ForgePlus.Localization;
 using RuntimeCore.Entities.Geometry;
 using Unity.Properties;
@@ -47,6 +48,29 @@ namespace ForgePlus.Inspection
             get
             {
                 return AlephOneNames.SideType(Side.type);
+            }
+        }
+
+        // As in Geometry mode's side inspector (SideEditing)
+        [CreateProperty]
+        public bool FillOpening
+        {
+            get
+            {
+                return SideEditing.FillsOpening(Entity.ParentLevel.Level, Side);
+            }
+            set
+            {
+                Edit(side => SideEditing.SetFillsOpening(side, value));
+            }
+        }
+
+        [CreateProperty]
+        public bool IsFillOpeningEditable
+        {
+            get
+            {
+                return SideEditing.CanFillOpening(Entity.ParentLevel.Level, Side);
             }
         }
 

@@ -104,8 +104,11 @@ namespace ForgePlus.Entities.Geometry
                             ParentSide.SetShapeDescriptor(destinationDataSource, selectedTexture);
                         }
                     }
-                    else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing &&
-                             ForgePlusInput.Editing.AlignToSelection.IsPressed())
+                    // Alt-clicking aligns its texture to the selected side's (or, with no side selected to align to, selects
+                    // as a click does)
+                    else if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection &&
+                             ForgePlusInput.Editing.AlignToSelection.IsPressed() &&
+                             SelectionManager.Instance.SelectedObject is LevelEntity_Side)
                     {
                         var selectedSourceObject = SelectionManager.Instance.SelectedObject;
                         var selectedSourceSide = (selectedSourceObject is LevelEntity_Side) ? selectedSourceObject as LevelEntity_Side : null;
@@ -281,7 +284,7 @@ namespace ForgePlus.Entities.Geometry
         public override void OnValidatedBeginDrag(WorldPointerEventData eventData)
         {
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
-                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
             {
                 Vector2 startingUVs;
 
@@ -357,7 +360,7 @@ namespace ForgePlus.Entities.Geometry
         {
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
-                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
             {
                 var screenPosition = new Vector3(eventData.Position.x,
                                                  eventData.Position.y,
@@ -390,7 +393,7 @@ namespace ForgePlus.Entities.Geometry
 
             if (uvDragPlane != null &&
                 ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Textures &&
-                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
             {
                 uvDragPlane = null;
 
@@ -412,13 +415,10 @@ namespace ForgePlus.Entities.Geometry
             switch (ModeManager.Instance.PrimaryMode)
             {
                 case ModeManager.PrimaryModes.Textures:
-                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Editing)
+                    if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
                     {
                         var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
                         var destinationDataSource = DataSource;
-
-                        var newX = (short)(-direction.x * GeometryUtilities.UnitsPerTextureOffetNudge);
-                        var newY = (short)(direction.y * GeometryUtilities.UnitsPerTextureOffetNudge);
 
                         if (destinationIsLayered &&
                             ForgePlusInput.Editing.TargetOuterLayer.IsPressed())
@@ -426,30 +426,38 @@ namespace ForgePlus.Entities.Geometry
                             destinationDataSource = LevelEntity_Side.DataSources.Transparent;
                         }
 
-                        switch (destinationDataSource)
+                        if (ParentSide.NativeObject == null)
                         {
-                            case LevelEntity_Side.DataSources.Primary:
-                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.primary_texture.x0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.primary_texture.y0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                            return;
+                        }
 
-                                break;
-                            case LevelEntity_Side.DataSources.Secondary:
-                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.secondary_texture.x0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.secondary_texture.y0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                        var texture = ParentSide.NativeObject.GetTexture(destinationDataSource);
+                        var newX = NudgedOffset(texture.x0, -direction.x);
+                        var newY = NudgedOffset(texture.y0, direction.y);
 
-                                break;
-                            case LevelEntity_Side.DataSources.Transparent:
-                                newX += (short)(Mathf.RoundToInt(ParentSide.NativeObject.transparent_texture.x0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
-                                newY += (short)(Mathf.RoundToInt(ParentSide.NativeObject.transparent_texture.y0 / GeometryUtilities.UnitsPerTextureOffetNudge) * GeometryUtilities.UnitsPerTextureOffetNudge);
+                        // Holding Align Contiguous (ctrl) moves the textures that continue it too, as dragging does
+                        alignmentGroup.Clear();
+                        alignmentStartingOffsets.Clear();
 
-                                break;
-                            default:
-                                return;
+                        if (ForgePlusInput.Editing.AlignContiguous.IsPressed())
+                        {
+                            CollectSimilarContiguousAdjacentSurfaces(ParentSide, destinationDataSource);
+
+                            for (var i = 0; i < alignmentGroup.Count; i++)
+                            {
+                                CollectSimilarContiguousAdjacentSurfaces(alignmentGroup[i].DestinationSide, alignmentGroup[i].DestinationDataSource);
+                            }
                         }
 
                         ParentSide.SetOffset(destinationDataSource,
                                                newX,
                                                newY);
+
+                        isAligningGroup = true;
+                        ApplyAlignmentGroup();
+
+                        alignmentGroup.Clear();
+                        alignmentStartingOffsets.Clear();
                     }
 
                     break;

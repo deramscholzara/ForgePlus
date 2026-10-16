@@ -292,43 +292,14 @@ namespace ForgePlus.LevelManipulation
                 line.counterclockwise_polygon_owner = polygonIndex;
             }
 
-            var polygon = new polygon_data
-            {
-                type = _polygon_is_normal,
-                vertex_count = 4,
-                floor_texture = source.floor_texture,
-                ceiling_texture = source.ceiling_texture,
-                floor_height = source.floor_height,
-                ceiling_height = source.ceiling_height,
-                floor_lightsource_index = source.floor_lightsource_index,
-                ceiling_lightsource_index = source.ceiling_lightsource_index,
-                floor_transfer_mode = source.floor_transfer_mode,
-                ceiling_transfer_mode = source.ceiling_transfer_mode,
-                floor_origin = source.floor_origin,
-                ceiling_origin = source.ceiling_origin,
-                first_object = cstypes.NONE,
-                media_index = cstypes.NONE,
-                media_lightsource_index = source.media_lightsource_index,
-                sound_source_indexes = cstypes.NONE,
-                ambient_sound_image_index = cstypes.NONE,
-                random_sound_image_index = cstypes.NONE,
-            };
-
-            var corners = new[] { aIndex, bIndex, copyBIndex, copyAIndex };
-            var edges = new[] { lineIndex, nearWallIndex, copyIndex, farWallIndex };
-            for (var i = 0; i < MAXIMUM_VERTICES_PER_POLYGON; i++)
-            {
-                polygon.endpoint_indexes[i] = i < 4 ? corners[i] : cstypes.NONE;
-                polygon.line_indexes[i] = i < 4 ? edges[i] : cstypes.NONE;
-                polygon.adjacent_polygon_indexes[i] = cstypes.NONE;
-                polygon.side_indexes[i] = cstypes.NONE;
-            }
-
+            var polygon = GeometryConstruction.NewPolygonLike(source,
+                                                              new[] { aIndex, bIndex, copyBIndex, copyAIndex },
+                                                              new[] { lineIndex, nearWallIndex, copyIndex, farWallIndex });
             data.PolygonList.Add(polygon);
 
             foreach (var wallIndex in new[] { nearWallIndex, copyIndex, farWallIndex })
             {
-                AddSide(data, polygonIndex, wallIndex, sourceSide);
+                GeometryConstruction.AddSide(data, polygonIndex, wallIndex, sourceSide);
             }
 
             // The line's hidden side goes (or one it reveals is added)
@@ -346,7 +317,7 @@ namespace ForgePlus.LevelManipulation
             }
 
             map_constructors.recalculate_redundant_line_data(data, lineIndex);
-            LineCollapse.RecalculateAround(data, new[] { source, polygon });
+            GeometryConstruction.RecalculateAfterAdding(data, new[] { source, polygon }, new[] { lineIndex, nearWallIndex, copyIndex, farWallIndex });
 
             // Until the level is rebuilt, which works these out for its entities
             level.EndpointLines = data.BuildEndpointLines();
@@ -368,31 +339,6 @@ namespace ForgePlus.LevelManipulation
                     SelectionManager.Instance.SelectObject(added, multiSelect: false);
                 }
             });
-        }
-
-        // A copy of the source side (its textures, lights and transfer modes, but not a control panel), or a blank one if
-        // there's none (map_constructors.cpp: new_side), on the polygon's (clockwise) side of the wall
-        private static void AddSide(MapLevel data, short polygonIndex, short wallIndex, side_data source)
-        {
-            if (source == null)
-            {
-                map_constructors.new_side(data, polygonIndex, wallIndex);
-                return;
-            }
-
-            var side = source.Clone();
-            side.flags = 0;
-            side.control_panel_type = 0;
-            side.control_panel_permutation = 0;
-            side.polygon_index = polygonIndex;
-            side.line_index = wallIndex;
-
-            var sideIndex = (short) data.SideList.Count;
-            data.SideList.Add(side);
-            data.LineList[wallIndex].clockwise_polygon_side_index = sideIndex;
-
-            map_constructors.recalculate_redundant_side_data(data, sideIndex, wallIndex);
-            map_constructors.recalculate_side_type(data, sideIndex);
         }
 
         private static world_point2d Moved(world_point2d start, Vector2Int movement)

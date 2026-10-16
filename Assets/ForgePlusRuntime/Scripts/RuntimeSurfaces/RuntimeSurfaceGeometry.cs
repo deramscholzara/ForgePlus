@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
 using ForgePlus.LevelManipulation.Utilities;
 
 namespace RuntimeCore.Entities.Geometry
 {
-    public class RuntimeSurfaceGeometry : MonoBehaviour
+    [AutoStaticsCleanup]
+    public partial class RuntimeSurfaceGeometry : MonoBehaviour
     {
         public Mesh SurfaceMesh => geometryModule.SurfaceMesh;
         
@@ -33,6 +36,8 @@ namespace RuntimeCore.Entities.Geometry
                 mesh,
                 CreateRenderer());
 
+            kind = dataSource == LevelEntity_Polygon.DataSources.Media ? Kind.Other : Kind.Polygon;
+
             AssembleSurface();
         }
 
@@ -54,6 +59,8 @@ namespace RuntimeCore.Entities.Geometry
                 section,
                 mesh,
                 CreateRenderer());
+
+            kind = Kind.Side;
 
             AssembleSurface();
         }
@@ -206,9 +213,73 @@ namespace RuntimeCore.Entities.Geometry
             return surfaceRenderer;
         }
 
+        // Which of the visualization options (Polygons, Sides) shows and hides it (a media surface is Media's)
+        private enum Kind
+        {
+            Other,
+            Polygon,
+            Side,
+        }
+
+        private Kind kind;
+
+        // Clicks pass through what's hidden (the pointer doesn't raycast this layer)
+        private const int HiddenLayer = 2;
+        private const int ShownLayer = 0;
+
+        private static bool polygonsAreVisible = true;
+        private static bool sidesAreVisible = true;
+
+        // Every floor's, ceiling's and side's surface, for showing and hiding them
+        // Not readonly, so AutoStaticsCleanup resets it each Play session
+        private static HashSet<RuntimeSurfaceGeometry> kindSurfaces = new HashSet<RuntimeSurfaceGeometry>();
+
+        // Floors and ceilings (Polygons) and sides (Sides) that are hidden aren't drawn, and clicks pass through them,
+        // though they're still there
+        public static void SetKindVisibility(bool polygonsVisible, bool sidesVisible)
+        {
+            if (polygonsVisible == polygonsAreVisible && sidesVisible == sidesAreVisible)
+            {
+                return;
+            }
+
+            polygonsAreVisible = polygonsVisible;
+            sidesAreVisible = sidesVisible;
+
+            kindSurfaces.RemoveWhere(surface => !surface);
+            foreach (var surface in kindSurfaces)
+            {
+                surface.ApplyKindVisibility();
+            }
+        }
+
+        private void ApplyKindVisibility()
+        {
+            var isShown = kind == Kind.Polygon ? polygonsAreVisible : kind != Kind.Side || sidesAreVisible;
+            var surfaceRenderer = SurfaceRenderer;
+
+            if (surfaceRenderer)
+            {
+                surfaceRenderer.forceRenderingOff = !isShown;
+            }
+
+            gameObject.layer = isShown ? ShownLayer : HiddenLayer;
+        }
+
+        private void OnDestroy()
+        {
+            kindSurfaces.Remove(this);
+        }
+
         private void AssembleSurface()
         {
             geometryModule.AssembleSurface();
+
+            if (kind != Kind.Other)
+            {
+                kindSurfaces.Add(this);
+                ApplyKindVisibility();
+            }
 
             // A media's surfaces follow its height
             SubscribeToMedia(geometryModule.MaterialKey.SourceMedia);

@@ -611,6 +611,12 @@ namespace ForgePlus.CameraNavigation
                 FrameSelected();
             }
 
+            // Not as a shortcut's key (with Ctrl or Command)
+            if (!Hotkeys.IsShortcutModifierPressed && Hotkeys.WasPressed(ForgePlusInput.Camera.ToggleOrthographic))
+            {
+                IsOrthographic = !IsOrthographic;
+            }
+
             if (isFraming)
             {
                 if (HasNavigationInput(wheelNotches))

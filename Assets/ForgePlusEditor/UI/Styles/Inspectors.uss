@@ -309,6 +309,20 @@
     height: var(--fp-short-control-height);
 }
 
+/* Actions side by side, sharing the row */
+.fp-inspector-actions {
+    flex-direction: row;
+}
+
+.fp-inspector-actions > .fp-inspector-action {
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.fp-inspector-actions__next {
+    margin-left: 4px;
+}
+
 /* The foldout's header looks like a subheader, with a small indicator that fills while it's open */
 .fp-inspector-foldout {
     margin: 0;

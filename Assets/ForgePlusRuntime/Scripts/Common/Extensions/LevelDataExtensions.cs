@@ -91,10 +91,11 @@ namespace ForgePlus.Extensions
 
             var destinationLine = get_line_data(level, side.line_index);
 
+            // Across an opening, only over a primary texture (without one, the transparent texture is drawn alone)
             return LINE_HAS_TRANSPARENT_SIDE(destinationLine) &&
                    side.type == _full_side &&
                    !side.transparent_texture.texture.IsEmptyShapeDescriptor() &&
-                   !side.HasOpposingPolygon(level);
+                   (!side.HasOpposingPolygon(level) || !side.primary_texture.texture.IsEmptyShapeDescriptor());
         }
 
         public static short GetPolygonOwner(this line_data line, bool clockwise)
