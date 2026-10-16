@@ -49,7 +49,7 @@ namespace ForgePlus.UI
                     tabSlot.Show<FilesTabPanel>();
                     break;
                 case 1:
-                    tabSlot.Show(new LayoutPanel("UI/Panels/InputsTab"));
+                    tabSlot.Show<InputsTabPanel>();
                     break;
                 case 2:
                     tabSlot.Show<SettingsTabPanel>();

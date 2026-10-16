@@ -53,4 +53,6 @@
        and the level view mark them */
     --fp-error: rgb(210, 40, 40);
     --fp-warning: rgb(240, 200, 30);
+    --fp-warning-hover: rgb(255, 225, 90);
+    --fp-warning-highlight: rgba(240, 200, 30, 0.2);
 }

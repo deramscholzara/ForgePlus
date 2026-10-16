@@ -8,15 +8,12 @@ using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
 {
-    // Dragging a row's label right or up raises its field's value, and left or down lowers it, by a step for each pixel
-    // (ten times as fast while shift is held). It's set through the field, as typing in it would be, and does nothing
-    // while the field is grayed out. Dragging is recorded as one action when it ends. Snapping (which alt/option inverts)
+    // Dragging a row's label right or up raises its field's value, and left or down lowers it, by a step for each pixel.
+    // It's set through the field, as typing in it would be, and does nothing while the field is grayed out. Dragging is recorded as one action when it ends. Snapping (which alt/option inverts)
     // snaps a distance to the world's sixteenth-of-a-world-unit marks, and anything else to its own increment. It drags
     // a range's middle bar on its slider the same way (only the bar, not its thumbs).
     public class LabelDragger : PointerManipulator
     {
-        private const float FastMultiplier = 10f;
-
         // A 128th of a world unit (the classic pixel distance)
         private const float DistanceStepPerPixel = world.WORLD_ONE / 128f;
 
@@ -271,7 +268,7 @@ namespace ForgePlus.UI
             }
 
             var delta = pointerMoveEvent.deltaPosition;
-            draggedPixels += (delta.x - delta.y) * (Hotkeys.IsShiftPressed ? FastMultiplier : 1f);
+            draggedPixels += delta.x - delta.y;
 
             var value = Snap(startValue + draggedPixels * stepPerPixel);
             if (WrapPeriod > 0f)

@@ -4301,7 +4301,7 @@ MonoBehaviour:
         m_KeyId: 4257401531940867
         m_Metadata:
           m_Items: []
-        m_Value: "Select what's clicked, and drag to move or adjust it (or, from empty space, to select by rectangle). In Textures mode, drag a surface to align its texture (holding control aligns the textures that continue it too), alt-click a surface to align it to the selected one, and use the arrow keys to nudge the selected surface's texture."
+        m_Value: "Select what's clicked, and drag to move or adjust it (or, from empty space, to select what's wholly in a rectangle: hold ctrl to select what it touches any of, and shift to add to the selection). In Textures mode, drag a surface to align its texture (holding control aligns the textures that continue it too), alt-click a surface to align it to the selected one, and use the arrow keys to nudge the selected surface's texture."
     - rid: 552786384866508867
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:

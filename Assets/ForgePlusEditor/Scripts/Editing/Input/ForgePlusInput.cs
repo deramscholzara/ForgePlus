@@ -129,6 +129,15 @@ namespace ForgePlus.ApplicationGeneral
                 }
             }
 
+            // Uses the platform in front of the camera as a player's action key would (PlatformSimulationHotkeys)
+            public static InputAction UsePlatform
+            {
+                get
+                {
+                    return Find("Editing/UsePlatform");
+                }
+            }
+
             // Starts or stops the simulation of the selected platforms (PlatformSimulationHotkeys)
             public static InputAction ActivatePlatform
             {
@@ -234,6 +243,33 @@ namespace ForgePlus.ApplicationGeneral
                     return Find("Editing/AllowInvalidGeometry");
                 }
             }
+
+            // Held while clicking (or selecting by rectangle), it adds to the selection rather than replacing it
+            public static InputAction AddToSelection
+            {
+                get
+                {
+                    return Find("Editing/AddToSelection");
+                }
+            }
+
+            // Held while selecting by rectangle, it selects what the rectangle touches, rather than only what's wholly in it
+            public static InputAction SelectTouching
+            {
+                get
+                {
+                    return Find("Editing/SelectTouching");
+                }
+            }
+
+            // Stops selecting by rectangle, leaving the selection as it was
+            public static InputAction CancelSelectionBox
+            {
+                get
+                {
+                    return Find("Editing/CancelSelectionBox");
+                }
+            }
         }
 
         public static class Interface
@@ -254,7 +290,7 @@ namespace ForgePlus.ApplicationGeneral
                 }
             }
 
-            // Ctrl+Z (Command+Z), which redoes with Shift
+            // Ctrl+Z (Command+Z)
             public static InputAction Undo
             {
                 get
@@ -263,7 +299,7 @@ namespace ForgePlus.ApplicationGeneral
                 }
             }
 
-            // Ctrl+Y
+            // Ctrl+Y, or Ctrl+Shift+Z (Command+Shift+Z), whose Ctrl+Z is also Undo's
             public static InputAction Redo
             {
                 get
@@ -291,6 +327,9 @@ namespace ForgePlus.ApplicationGeneral
             {
                 actionsByPath = new Dictionary<string, InputAction>();
                 firstActionMap = currentFirstActionMap;
+
+                // The Inputs tab's changes, which new maps don't have
+                InputBindings.Load(asset);
             }
 
             if (!actionsByPath.TryGetValue(actionPath, out var action))

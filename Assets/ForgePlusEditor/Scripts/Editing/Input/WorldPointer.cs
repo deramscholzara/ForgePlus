@@ -122,7 +122,7 @@ namespace ForgePlus.LevelManipulation
 
             if (isSelectingByRectangle)
             {
-                if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
+                if (Hotkeys.WasPressed(ForgePlusInput.Editing.CancelSelectionBox))
                 {
                     // Nothing more comes of this press
                     isSelectingByRectangle = false;
@@ -135,8 +135,8 @@ namespace ForgePlus.LevelManipulation
                     return;
                 }
 
-                // What it selects is worked out again as it (or shift) changes
-                var addsToSelection = Hotkeys.IsShiftPressed;
+                // What it selects is worked out again as it (or Add to Selection) changes
+                var addsToSelection = Hotkeys.IsPressed(ForgePlusInput.Editing.AddToSelection);
                 if (position != rectangleEndPosition || addsToSelection != rectangleAddsToSelection)
                 {
                     rectangleEndPosition = position;
@@ -148,7 +148,7 @@ namespace ForgePlus.LevelManipulation
             {
                 isSelectingByRectangle = true;
                 rectangleEndPosition = position;
-                rectangleAddsToSelection = Hotkeys.IsShiftPressed;
+                rectangleAddsToSelection = Hotkeys.IsPressed(ForgePlusInput.Editing.AddToSelection);
                 ui.RectangleSelection.Begin(pressPosition);
                 ui.RectangleSelection.Drag(position, rectangleAddsToSelection);
             }
@@ -214,8 +214,8 @@ namespace ForgePlus.LevelManipulation
                 isSelectingByRectangle = false;
                 pressedHandler = null;
 
-                // Shift adds to the selection (as it was before the drag), rather than replacing it
-                ui.RectangleSelection.End(position, addsToSelection: Hotkeys.IsShiftPressed);
+                // Add to Selection (Shift) adds to the selection (as it was before the drag), rather than replacing it
+                ui.RectangleSelection.End(position, addsToSelection: Hotkeys.IsPressed(ForgePlusInput.Editing.AddToSelection));
                 return;
             }
 

@@ -478,6 +478,26 @@ namespace AlephOne
             return definition.moving_sound;
         }
 
+        // ForgePlus: with PLATFORM_HAS_BEEN_ACTIVATED passed in, as the running game's dynamic flags aren't kept
+        public static bool platform_is_legal_player_target(MapLevel level, short platform_index, bool has_been_activated)
+        {
+            platform_data platform = get_platform_data(level, platform_index);
+            platform_definition definition = get_platform_definition(platform.type);
+            if (definition == null) return false;
+            bool legal_player_target = false;
+
+            if (PLATFORM_IS_DOOR(platform.static_flags))
+            {
+                if ((PLATFORM_IS_PLAYER_CONTROLLABLE(platform.static_flags) || definition.uncontrollable_sound != NONE) &&
+                    (!PLATFORM_ACTIVATES_ONLY_ONCE(platform.static_flags) || !has_been_activated))
+                {
+                    legal_player_target = true;
+                }
+            }
+
+            return legal_player_target;
+        }
+
         // play_platform_sound's choice of sound. ForgePlus: with PLATFORM_IS_EXTENDING and PLATFORM_IS_FULLY_CONTRACTED
         // passed in, as the running game's dynamic flags aren't kept
         public static short get_platform_sound(MapLevel level, short platform_index, short type, bool is_extending, bool is_fully_contracted)

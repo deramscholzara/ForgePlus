@@ -114,7 +114,7 @@ namespace ForgePlus.LevelManipulation
         // mode selects can be clicked)
         public void ToggleObjectSelection(ISelectable selection, bool multiSelect = false)
         {
-            if (!multiSelect && Hotkeys.IsShiftPressed)
+            if (!multiSelect && Hotkeys.IsPressed(ForgePlusInput.Editing.AddToSelection))
             {
                 multiSelect = true;
             }

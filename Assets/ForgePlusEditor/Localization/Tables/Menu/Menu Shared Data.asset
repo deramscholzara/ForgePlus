@@ -42,11 +42,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 2584642994176
-    m_Key: InputsTab.NoteThisWillBe.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 2584655577088
     m_Key: Menu.Files.Control.Text
     m_Flags: 0
@@ -389,6 +384,441 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4283477268250629
     m_Key: SettingsTab.ResetToDefaults.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888703377408
+    m_Key: InputsTab.ResetAll.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766016
+    m_Key: InputsTab.ResetAll.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766017
+    m_Key: InputsTab.ResetEntry.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766018
+    m_Key: InputsTab.ResetEntry.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766019
+    m_Key: InputsTab.Binding.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766020
+    m_Key: InputsTab.Rebinding.Message.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766021
+    m_Key: InputsTab.CameraHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766022
+    m_Key: InputsTab.SelectionHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766023
+    m_Key: InputsTab.MovingHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766024
+    m_Key: InputsTab.TexturesHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766025
+    m_Key: InputsTab.PlatformsHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766026
+    m_Key: InputsTab.InterfaceHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766027
+    m_Key: InputsTab.MoveForward.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766028
+    m_Key: InputsTab.MoveForward.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766029
+    m_Key: InputsTab.MoveBack.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766030
+    m_Key: InputsTab.MoveBack.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766031
+    m_Key: InputsTab.MoveLeft.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766032
+    m_Key: InputsTab.MoveLeft.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766033
+    m_Key: InputsTab.MoveRight.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766034
+    m_Key: InputsTab.MoveRight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766035
+    m_Key: InputsTab.MoveUp.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766036
+    m_Key: InputsTab.MoveUp.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766037
+    m_Key: InputsTab.MoveDown.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766038
+    m_Key: InputsTab.MoveDown.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766039
+    m_Key: InputsTab.MoveFaster.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766040
+    m_Key: InputsTab.MoveFaster.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766041
+    m_Key: InputsTab.Look.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766042
+    m_Key: InputsTab.Look.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766043
+    m_Key: InputsTab.Pan.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766044
+    m_Key: InputsTab.Pan.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766045
+    m_Key: InputsTab.PanWithSelect.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766046
+    m_Key: InputsTab.PanWithSelect.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766047
+    m_Key: InputsTab.FrameSelection.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766048
+    m_Key: InputsTab.FrameSelection.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766049
+    m_Key: InputsTab.TopDownView.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766050
+    m_Key: InputsTab.TopDownView.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766051
+    m_Key: InputsTab.Select.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766052
+    m_Key: InputsTab.Select.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766053
+    m_Key: InputsTab.AddToSelection.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766054
+    m_Key: InputsTab.AddToSelection.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766055
+    m_Key: InputsTab.SelectTouching.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766056
+    m_Key: InputsTab.SelectTouching.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766057
+    m_Key: InputsTab.CancelSelectionBox.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766058
+    m_Key: InputsTab.CancelSelectionBox.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766059
+    m_Key: InputsTab.LockX.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766060
+    m_Key: InputsTab.LockX.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766061
+    m_Key: InputsTab.LockY.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766062
+    m_Key: InputsTab.LockY.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766063
+    m_Key: InputsTab.InvertGridSnap.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766064
+    m_Key: InputsTab.InvertGridSnap.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766065
+    m_Key: InputsTab.KeepRelativeHeight.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766066
+    m_Key: InputsTab.KeepRelativeHeight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766067
+    m_Key: InputsTab.KeepTexturesWithPoint.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766068
+    m_Key: InputsTab.KeepTexturesWithPoint.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766069
+    m_Key: InputsTab.AllowInvalidGeometry.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766070
+    m_Key: InputsTab.AllowInvalidGeometry.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766071
+    m_Key: InputsTab.NudgeUp.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766072
+    m_Key: InputsTab.NudgeUp.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766073
+    m_Key: InputsTab.NudgeDown.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766074
+    m_Key: InputsTab.NudgeDown.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766075
+    m_Key: InputsTab.NudgeLeft.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766076
+    m_Key: InputsTab.NudgeLeft.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766077
+    m_Key: InputsTab.NudgeRight.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766078
+    m_Key: InputsTab.NudgeRight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766079
+    m_Key: InputsTab.AlignToSelection.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766080
+    m_Key: InputsTab.AlignToSelection.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766081
+    m_Key: InputsTab.AlignContiguous.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766082
+    m_Key: InputsTab.AlignContiguous.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766083
+    m_Key: InputsTab.TargetOuterLayer.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766084
+    m_Key: InputsTab.TargetOuterLayer.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766085
+    m_Key: InputsTab.ActivatePlatform.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766086
+    m_Key: InputsTab.ActivatePlatform.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766087
+    m_Key: InputsTab.ObstructPlatform.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766088
+    m_Key: InputsTab.ObstructPlatform.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766089
+    m_Key: InputsTab.ToggleUI.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766090
+    m_Key: InputsTab.ToggleUI.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766091
+    m_Key: InputsTab.ToggleMenu.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766092
+    m_Key: InputsTab.ToggleMenu.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766093
+    m_Key: InputsTab.Undo.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766094
+    m_Key: InputsTab.Undo.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766095
+    m_Key: InputsTab.Redo.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5038888711766096
+    m_Key: InputsTab.Redo.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5041631518146560
+    m_Key: InputsTab.CommandKey.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5045579306123264
+    m_Key: InputsTab.Conflicts.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5045579310317568
+    m_Key: InputsTab.Conflict.Text
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685126860800
+    m_Key: InputsTab.UsePlatform.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055104
+    m_Key: InputsTab.UsePlatform.Tooltip
     m_Flags: 0
     m_Metadata:
       m_Items: []

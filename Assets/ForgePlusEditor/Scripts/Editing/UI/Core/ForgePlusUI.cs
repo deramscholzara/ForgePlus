@@ -231,15 +231,16 @@ namespace ForgePlus.UI
                 SetVisible(!isVisible);
             }
 
-            // Toggling the menu also shows the UI, if it was hidden (but escape cancels selecting by rectangle instead)
-            if (Hotkeys.WasPressed(ForgePlusInput.Interface.ToggleMenu) && !IsEscapeCancellingRectangleSelection())
+            // Toggling the menu also shows the UI, if it was hidden (but a key that also cancels selecting by rectangle,
+            // as escape does, cancels it instead)
+            if (Hotkeys.WasPressed(ForgePlusInput.Interface.ToggleMenu) && !IsCancellingRectangleSelection())
             {
                 SetVisible(true);
                 Editor.MenuOpen = !Editor.MenuOpen;
             }
 
-            // Ctrl+Shift+Z redoes too
-            if (Hotkeys.WasPressed(ForgePlusInput.Interface.Redo) || Hotkeys.WasPressed(ForgePlusInput.Interface.Undo) && Hotkeys.IsShiftPressed)
+            // Before Undo, whose Ctrl+Z is part of Redo's Ctrl+Shift+Z
+            if (Hotkeys.WasPressed(ForgePlusInput.Interface.Redo))
             {
                 UndoHistory.Redo();
             }
@@ -251,13 +252,12 @@ namespace ForgePlus.UI
             PlatformSimulationHotkeys.Update();
         }
 
-        // Whichever of the two notices escape first this frame
-        private static bool IsEscapeCancellingRectangleSelection()
+        // Whichever of the two notices Cancel Selection Box first this frame
+        private static bool IsCancellingRectangleSelection()
         {
-            var keyboard = UnityEngine.InputSystem.Keyboard.current;
             var worldPointer = WorldPointer.Instance;
 
-            return keyboard != null && keyboard.escapeKey.wasPressedThisFrame && worldPointer &&
+            return Hotkeys.WasPressed(ForgePlusInput.Editing.CancelSelectionBox) && worldPointer &&
                    (worldPointer.IsSelectingByRectangle || worldPointer.RectangleCancelledFrame == Time.frameCount);
         }
 
