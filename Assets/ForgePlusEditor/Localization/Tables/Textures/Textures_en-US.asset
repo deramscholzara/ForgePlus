@@ -103,6 +103,8 @@ MonoBehaviour:
   - rid: 552786240694648889
   - rid: 552786240694648890
   - rid: 552786240694648891
+  - rid: 552786240694648900
+  - rid: 552786240694648901
   references:
     version: 2
     RefIds:
@@ -708,3 +710,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Which of its surfaces it draws, as its polygons' heights expose them
+    - rid: 552786240694648900
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058184
+        m_Metadata:
+          m_Items: []
+        m_Value: "Fill Opening"
+    - rid: 552786240694648901
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 2151328155058185
+        m_Metadata:
+          m_Items: []
+        m_Value: "Closes off the opening between its line's polygons, as seen from its polygon. Where their heights expose a step up to the floor beyond or a drop down to the ceiling beyond, those keep their own textures and lights (it's a low, high or split side), and its transparent texture fills the opening between them. Off, its transparent texture is cleared. Where their heights expose neither (a window out of a constriction, or between polygons of the same heights), the side is only there to fill the opening (as a full side), so turning this off removes it."

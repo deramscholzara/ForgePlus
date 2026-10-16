@@ -25,12 +25,14 @@ namespace ForgePlus.UI
         {
             get
             {
-                return PointsEnabled && LinesEnabled && MediaEnabled && ObjectIconsEnabled;
+                return PolygonsEnabled && SidesEnabled && PointsEnabled && LinesEnabled && MediaEnabled && ObjectIconsEnabled;
             }
             set
             {
                 if (value)
                 {
+                    PolygonsEnabled = true;
+                    SidesEnabled = true;
                     PointsEnabled = true;
                     LinesEnabled = true;
                     MediaEnabled = true;
@@ -38,6 +40,38 @@ namespace ForgePlus.UI
                 }
 
                 Notify(nameof(ShowEverythingEnabled));
+            }
+        }
+
+        [CreateProperty]
+        public bool PolygonsEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.PolygonsEnabled;
+            }
+            set
+            {
+                if (value != SettingsManager.Instance.PolygonsEnabled)
+                {
+                    SettingsManager.Instance.PolygonsEnabled = value;
+                }
+            }
+        }
+
+        [CreateProperty]
+        public bool SidesEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.SidesEnabled;
+            }
+            set
+            {
+                if (value != SettingsManager.Instance.SidesEnabled)
+                {
+                    SettingsManager.Instance.SidesEnabled = value;
+                }
             }
         }
 
@@ -557,6 +591,8 @@ namespace ForgePlus.UI
         {
             Notify(nameof(IsGeometryMode));
             Notify(nameof(ShowEverythingEnabled));
+            Notify(nameof(PolygonsEnabled));
+            Notify(nameof(SidesEnabled));
             Notify(nameof(PointsEnabled));
             Notify(nameof(LinesEnabled));
             Notify(nameof(MediaEnabled));

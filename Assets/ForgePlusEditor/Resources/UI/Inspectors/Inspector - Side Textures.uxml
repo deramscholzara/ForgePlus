@@ -7,6 +7,7 @@
     <ui:Template name="IntegerFieldRow" src="../Templates/InspectorIntegerFieldRow.uxml" />
     <ui:Template name="WrappedDistanceFieldRow" src="../Templates/InspectorWrappedDistanceFieldRow.uxml" />
     <ui:Template name="LightRow" src="../Templates/InspectorLightRow.uxml" />
+    <ui:Template name="Flag" src="../Templates/InspectorFlag.uxml" />
     <!-- Bound to Inspector_SideTextures -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -17,6 +18,9 @@
         </ui:Instance>
         <ui:Instance template="Row" name="Type" tooltip="@Textures/Inspector.SideTextures.Type.Tooltip">
             <ui:AttributeOverrides element-name="label" text="@Textures/Inspector.SideTextures.Type.Label.Text" />
+        </ui:Instance>
+        <ui:Instance template="Flag" name="FillOpening" tooltip="@Textures/Inspector.SideTextures.FillOpening.Tooltip">
+            <ui:AttributeOverrides element-name="flag" text="@Textures/Inspector.SideTextures.FillOpening.Flag.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-space" />
         <ui:VisualElement name="Primary" class="fp-inspector-scope">

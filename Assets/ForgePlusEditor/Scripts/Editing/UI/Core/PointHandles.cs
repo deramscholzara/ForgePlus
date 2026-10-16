@@ -64,7 +64,7 @@ namespace ForgePlus.UI
         // A polygon the Draw tool would add
         private static readonly Color ExtrusionColor = new Color32(80, 200, 255, 255);
 
-        // A line the Draw tool would split a polygon with
+        // A line the Draw tool would split a polygon with, or a polygon it would close
         private static readonly Color SplitColor = new Color32(90, 230, 120, 255);
 
         // Pixels: a black outline around a white fill (red while selected), as wide as both together
@@ -249,15 +249,15 @@ namespace ForgePlus.UI
             }
         }
 
-        // The nearest handle whose click area is under the pointer, or else the nearest pole
+        // The nearest handle whose click area is under the pointer, or else the nearest pole, or else the nearest line
         public bool TryPick(Vector2 screenPosition, out IWorldPointerHandler handler, out Vector3 worldPosition)
         {
             handler = null;
             worldPosition = default;
 
             var panel = layer.panel;
-            // Only what's drawn (hidden points' selected ones among them)
-            if (handles.Count == 0 || panel == null || !IsLayerShown(LevelEntity_Level.Instance))
+            // Only what's drawn (hidden points' and lines' selected ones among them): hiding points leaves lines to pick
+            if ((handles.Count == 0 && poles.Count == 0 && lines.Count == 0) || panel == null || !IsLayerShown(LevelEntity_Level.Instance))
             {
                 return false;
             }
@@ -684,7 +684,7 @@ namespace ForgePlus.UI
                 var line = data.LineList[lineIndex];
 
                 level.Lines.TryGetValue(lineIndex, out var lineEntity);
-                var isSelected = lineEntity && lineEntity.IsSelected;
+                var isSelected = lineEntity && (lineEntity.IsSelected || HasSelectedHiddenSide(lineEntity));
                 if (showsOnlySelectedLines && !isSelected)
                 {
                     continue;
@@ -745,6 +745,13 @@ namespace ForgePlus.UI
 
                 return aSelected != bSelected ? aSelected.CompareTo(bSelected) : b.Depth.CompareTo(a.Depth);
             });
+        }
+
+        // A side its polygons' heights hide (so it has no surfaces to show it) is shown selected by its line
+        private static bool HasSelectedHiddenSide(LevelEntity_Line line)
+        {
+            return (line.ClockwiseSide && line.ClockwiseSide.IsSelected && !line.ClockwiseSide.HasSurfaces) ||
+                   (line.CounterclockwiseSide && line.CounterclockwiseSide.IsSelected && !line.CounterclockwiseSide.HasSurfaces);
         }
 
         // The floors (or ceilings) on either side of a line: at one height, or a step between two
@@ -1081,8 +1088,8 @@ namespace ForgePlus.UI
         }
 
         // What a point dragged in Draw mode would add (LineDrawing.Current): the new line (red where it can't be added,
-        // yellow where it crosses something, green where it splits a polygon), the point it ends at ringed (or a ghost of
-        // the new point there), and a note beside its end saying why
+        // yellow where it crosses something, green where it splits a polygon), the polygons it would close (green), the
+        // point it ends at ringed (or a ghost of the new point there), and a note beside its end saying why
         private void CollectDrawingPreview(Camera camera, IPanel panel)
         {
             var preview = LineDrawing.Current;
@@ -1098,6 +1105,18 @@ namespace ForgePlus.UI
 
             var color = preview.IsBlocked ? ErrorColor : preview.Overlaps ? WarningColor : preview.Splits ? SplitColor : ExtrusionColor;
             var end = WorldPosition(preview.End, preview.EndHeight);
+
+            // The polygons it would close, at their floors and ceilings and up their corners
+            foreach (var (corners, floorHeight, ceilingHeight) in preview.ClosedPolygons)
+            {
+                for (var i = 0; i < corners.Length; i++)
+                {
+                    var next = corners[(i + 1) % corners.Length];
+                    AddOutline(WorldPosition(corners[i], floorHeight), WorldPosition(next, floorHeight), SplitColor, camera, panel);
+                    AddOutline(WorldPosition(corners[i], ceilingHeight), WorldPosition(next, ceilingHeight), SplitColor, camera, panel);
+                    AddOutline(WorldPosition(corners[i], floorHeight), WorldPosition(corners[i], ceilingHeight), SplitColor, camera, panel);
+                }
+            }
 
             AddOutline(WorldPosition(preview.Start, preview.StartHeight), end, color, camera, panel);
 

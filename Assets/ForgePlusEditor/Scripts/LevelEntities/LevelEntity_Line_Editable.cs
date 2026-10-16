@@ -16,6 +16,21 @@ namespace RuntimeCore.Entities.Geometry
             InspectorPanel.Instance.RefreshAllInspectors();
         }
 
+        // Adds a point on it where it's clicked (LineSplitting), with Geometry mode's Draw tool
+        public void OnWorldPointerDoubleClick(WorldPointerEventData eventData)
+        {
+            if (!isSelectable ||
+                ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Geometry ||
+                ModeManager.Instance.SecondaryMode != ModeManager.SecondaryModes.Drawing)
+            {
+                // Otherwise it's an ordinary second click
+                OnWorldPointerClick(eventData);
+                return;
+            }
+
+            LineSplitting.TrySplit(LevelEntity_Level.Instance, NativeIndex, eventData.PressWorldPosition);
+        }
+
         // In Select mode, dragging it moves both its ends together across the level (at the height of the line it was
         // grabbed by), with the rest of the selection if it's selected (PointsMove), recorded as one action when it ends.
         // In Draw mode, dragging it adds a polygon between it and a copy of it that follows the pointer (LineExtrusion),

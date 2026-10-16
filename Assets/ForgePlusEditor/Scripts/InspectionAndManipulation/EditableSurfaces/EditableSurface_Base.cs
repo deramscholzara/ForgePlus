@@ -180,6 +180,29 @@ namespace ForgePlus.LevelManipulation
             SelectionManager.Instance.ToggleObjectSelection(polygon, multiSelect: false);
         }
 
+        // A texture offset nudged along the direction: while Snapping is on (alt/option inverts it), to the next increment
+        // that dragging snaps to (a 32nd of a world unit) that way, or else by a classic pixel (a 128th) from where it is
+        protected static short NudgedOffset(short offset, float direction)
+        {
+            if (direction == 0f)
+            {
+                return offset;
+            }
+
+            float nudged;
+            if (AxisLocks.Instance.SnapToGrid)
+            {
+                var step = GeometryUtilities.UnitsPerTextureOffsetSnap;
+                nudged = direction > 0f ? (Mathf.Floor(offset / step) + 1f) * step : (Mathf.Ceil(offset / step) - 1f) * step;
+            }
+            else
+            {
+                nudged = offset + Mathf.Sign(direction) * GeometryUtilities.UnitsPerTextureOffetNudge;
+            }
+
+            return (short) Mathf.Clamp(nudged, short.MinValue, short.MaxValue);
+        }
+
         // Nudges the surface with the directional inputs while the object is selected
         public async void InputListener(ISelectable mustBeSelectedObject)
         {

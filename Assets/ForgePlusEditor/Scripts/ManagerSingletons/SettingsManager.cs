@@ -1,4 +1,5 @@
 ﻿using ForgePlus.History;
+using ForgePlus.DataFileIO;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.Sound;
@@ -96,6 +97,8 @@ namespace ForgePlus.ApplicationGeneral
         // These last for the session only (they aren't saved)
         private bool objectIconsEnabled = true;
         private bool spritePreviewsEnabled = true;
+        private bool polygonsEnabled = true;
+        private bool sidesEnabled = true;
         private bool pointsEnabled = true;
         private bool linesEnabled = true;
         private bool mediaEnabled = true;
@@ -522,6 +525,40 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Floors and ceilings (in every mode): hidden ones aren't drawn, and clicks pass through them
+        public bool PolygonsEnabled
+        {
+            get
+            {
+                return polygonsEnabled;
+            }
+            set
+            {
+                polygonsEnabled = value;
+
+                ApplyGeometryVisibility();
+
+                OnSettingChanged?.Invoke(nameof(PolygonsEnabled));
+            }
+        }
+
+        // Sides (walls, and what fills openings, in every mode): hidden ones aren't drawn, and clicks pass through them
+        public bool SidesEnabled
+        {
+            get
+            {
+                return sidesEnabled;
+            }
+            set
+            {
+                sidesEnabled = value;
+
+                ApplyGeometryVisibility();
+
+                OnSettingChanged?.Invoke(nameof(SidesEnabled));
+            }
+        }
+
         // Points (polygons' corners) are only shown in Geometry mode
         public bool PointsEnabled
         {
@@ -730,9 +767,67 @@ namespace ForgePlus.ApplicationGeneral
             OnObjectVisibilityChanged_Sender?.Invoke();
         }
 
+        // The settings kept between sessions (the Settings tab's, the display options', and the Save Merged dialog's
+        // remembered choice) back to how they start, and every plugin back to how its Plugin.xml says to start. The files'
+        // paths are kept, and the options kept only for the session are left as they are.
+        public void ResetToDefaults()
+        {
+            foreach (var key in new[]
+            {
+                PlayerPrefsSettingsKey_FullScreen,
+                PlayerPrefsSettingsKey_MinimumLight,
+                PlayerPrefsSettingsKey_AmbientOcclusion,
+                PlayerPrefsSettingsKey_Bloom,
+                PlayerPrefsSettingsKey_ColorAdjustment,
+                PlayerPrefsSettingsKey_Vignette,
+                PlayerPrefsSettingsKey_SurfaceCacheGlobalIllumination,
+                PlayerPrefsSettingsKey_ClipPlatformSides,
+                PlayerPrefsSettingsKey_ShowInvalidSides,
+                PlayerPrefsSettingsKey_MergedSaveChecksum,
+                PlayerPrefsSettingsKey_SoundDirection,
+                PlayerPrefsSettingsKey_SoundVolume,
+                PlayerPrefsSettingsKey_PlayLevelAudio,
+                PlayerPrefsSettingsKey_ImproperFractions,
+                PlayerPrefsSettingsKey_UndoSteps,
+                PlayerPrefsSettingsKey_PointClickAreaSteps,
+                PlayerPrefsSettingsKey_PointSnapDistance,
+                PlayerPrefsSettingsKey_PreventInvalidGeometry,
+                PlayerPrefsSettingsKey_OrthographicGridOpacity,
+            })
+            {
+                PlayerPrefs.DeleteKey(key);
+            }
+
+            // Each set to its default (what it reads without its key), which applies it as changing it would
+            IsFullScreen = IsFullScreen;
+            MinimumLight = MinimumLight;
+            AmbientOcclusionEnabled = AmbientOcclusionEnabled;
+            BloomEnabled = BloomEnabled;
+            ColorCorrectionEnabled = ColorCorrectionEnabled;
+            VignetteEnabled = VignetteEnabled;
+            SurfaceCacheGlobalIlluminationEnabled = SurfaceCacheGlobalIlluminationEnabled;
+            ClipPlatformSidesEnabled = ClipPlatformSidesEnabled;
+            ShowInvalidSidesEnabled = ShowInvalidSidesEnabled;
+            MergedSaveChecksum = MergedSaveChecksum;
+            SoundDirectionEnabled = SoundDirectionEnabled;
+            SoundVolumeEnabled = SoundVolumeEnabled;
+            PlayLevelAudioEnabled = PlayLevelAudioEnabled;
+            ImproperFractionsEnabled = ImproperFractionsEnabled;
+            UndoSteps = UndoSteps;
+            PointClickAreaSteps = PointClickAreaSteps;
+            PointSnapDistance = PointSnapDistance;
+            PreventInvalidGeometryEnabled = PreventInvalidGeometryEnabled;
+            OrthographicGridOpacityPercent = OrthographicGridOpacityPercent;
+
+            MmlLoading.Instance.ResetPluginStates();
+
+            PlayerPrefs.Save();
+        }
+
         private void ApplyGeometryVisibility()
         {
             LevelEntity_Media.SurfacesAreVisible = MediaIsShown;
+            RuntimeSurfaceGeometry.SetKindVisibility(polygonsEnabled, sidesEnabled);
             DiagnosticVisuals.Refresh();
 
             OnGeometryVisibilityChanged_Sender?.Invoke();

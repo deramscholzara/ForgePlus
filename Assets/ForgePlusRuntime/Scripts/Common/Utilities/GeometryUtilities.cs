@@ -30,6 +30,9 @@ namespace ForgePlus.LevelManipulation.Utilities
 
         public const float UnitsPerTextureOffetNudge = WorldUnitIncrementsPerWorldUnit / 128f;
 
+        // What texture offsets snap to (a 32nd of a world unit), dragged or nudged while snapping is on
+        public const float UnitsPerTextureOffsetSnap = WorldUnitIncrementsPerWorldUnit / 32f;
+
         // Recreated when destroyed, such as at the end of a Play session
         private static Material selectionIndicatorMaterial;
 

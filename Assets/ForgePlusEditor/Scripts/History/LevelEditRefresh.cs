@@ -91,6 +91,11 @@ namespace ForgePlus.History
 
             // Worked out from its line (map_constructors.cpp: recalculate_redundant_side_data)
             nameof(side_data.exclusion_zone),
+
+            // Whether it has a transparent texture (or, as a full side across an opening, a primary) decides whether it
+            // draws its opening
+            nameof(side_data.primary_texture),
+            nameof(side_data.transparent_texture),
         };
 
         private static readonly HashSet<string> refreshableSideFields = new HashSet<string>(sideLineFields)

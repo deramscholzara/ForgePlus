@@ -96,6 +96,48 @@ namespace ForgePlus.DataFileIO
             OnPluginsChanged?.Invoke();
         }
 
+        // Every plugin back on (or off) as its Plugin.xml says to start, forgetting what each was set to (for every
+        // scenario), applied to the open level if any changed
+        public void ResetPluginStates()
+        {
+            PlayerPrefs.DeleteKey(PluginStatesPlayerPrefsKey);
+            PlayerPrefs.Save();
+
+            if (!isInitialized)
+            {
+                return;
+            }
+
+            var anyChanged = false;
+            foreach (var plugin in AlephOne.Plugins.instance().plugins)
+            {
+                if (plugin.enabled == plugin.auto_enable)
+                {
+                    continue;
+                }
+
+                if (plugin.auto_enable)
+                {
+                    AlephOne.Plugins.instance().enable(plugin.directory);
+                }
+                else
+                {
+                    AlephOne.Plugins.instance().disable(plugin.directory);
+                }
+
+                anyChanged = true;
+            }
+
+            if (!anyChanged)
+            {
+                return;
+            }
+
+            ApplyToOpenLevel();
+
+            OnPluginsChanged?.Invoke();
+        }
+
         // Before a level is built (LevelData), with its level script's MML and its own
         public void ApplyForLevel(MapLevel level, int levelIndex)
         {

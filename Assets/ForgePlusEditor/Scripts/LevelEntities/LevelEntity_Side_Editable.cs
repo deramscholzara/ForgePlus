@@ -20,9 +20,14 @@ namespace RuntimeCore.Entities.Geometry
             // Intentionally empty - Selectability is handled in EditableSurface_Side
         }
 
+        // While selected, a side with no surfaces is shown by its line (PointHandles)
+        public bool IsSelected { get; private set; }
+
         public void DisplaySelectionState(bool state)
         {
-            if (state)
+            IsSelected = state;
+
+            if (state && HasSurfaces)
             {
                 bool collectedTopSurface = false;
                 Vector3 topLeftWorldPosition = Vector3.zero;
@@ -322,6 +327,7 @@ namespace RuntimeCore.Entities.Geometry
         public void SetShapeDescriptor(DataSources dataSource, ushort shapeDescriptor)
         {
             short transferMode;
+            var wasEmpty = NativeObject.GetTexture(dataSource).texture.IsEmptyShapeDescriptor();
 
             switch (dataSource)
             {
@@ -398,6 +404,16 @@ namespace RuntimeCore.Entities.Geometry
 
             // Whether the line has a transparent side, or a landscape, may have changed
             LineFlagsEditing.UpdateForSide(ParentLevel.Level, NativeObject);
+
+            // Which surfaces it has depends on whether it has a transparent texture (drawn across its opening), and on
+            // whether a full side across an opening has a primary texture (drawn floor to ceiling, under it)
+            var decidesSurfaces = dataSource == DataSources.Transparent ||
+                                  (dataSource == DataSources.Primary && NativeObject.type == map._full_side && NativeObject.HasOpposingPolygon(ParentLevel.Level));
+
+            if (decidesSurfaces && wasEmpty != shapeDescriptor.IsEmptyShapeDescriptor())
+            {
+                SideEditing.RebuildLineSoon(ParentLevel, ParentLineIndex);
+            }
         }
 
         // The material depends on the transfer mode too (a landscape's is its own)

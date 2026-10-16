@@ -29,6 +29,13 @@ namespace ForgePlus.LevelManipulation
         void OnWorldPointerEndDrag(WorldPointerEventData eventData);
     }
 
+    // Something that also takes double-clicks: a second click on it, soon after and near the first, comes here instead of
+    // to OnWorldPointerClick (so the first click's selection stays)
+    public interface IWorldPointerDoubleClickHandler
+    {
+        void OnWorldPointerDoubleClick(WorldPointerEventData eventData);
+    }
+
     // Something drawn over the level on screen (such as points' handles), which takes presses before the level's colliders
     public interface IScreenPointerPicker
     {
@@ -44,6 +51,14 @@ namespace ForgePlus.LevelManipulation
     {
         // Pixels
         private const float DragThreshold = 10f;
+
+        // A second click within this long (seconds) and this near (pixels) of the first, on the same thing, is a double-click
+        private const float DoubleClickSeconds = 0.4f;
+        private const float DoubleClickDistance = 6f;
+
+        private IWorldPointerHandler lastClickedHandler;
+        private float lastClickTime;
+        private Vector2 lastClickPosition;
 
         // Pressing and releasing over nothing (no UI, and nothing in the level)
         public event Action OnClickEmptySpace;
@@ -214,7 +229,23 @@ namespace ForgePlus.LevelManipulation
                          TryGetHandler(position, out var releasedHandler, out _, out _) &&
                          releasedHandler == pressedHandler)
                 {
-                    pressedHandler.OnWorldPointerClick(eventData);
+                    var isDoubleClick = pressedHandler == lastClickedHandler &&
+                                        Time.unscaledTime - lastClickTime <= DoubleClickSeconds &&
+                                        (position - lastClickPosition).sqrMagnitude <= DoubleClickDistance * DoubleClickDistance;
+
+                    if (isDoubleClick && pressedHandler is IWorldPointerDoubleClickHandler doubleClickHandler)
+                    {
+                        // A third click starts again
+                        lastClickedHandler = null;
+                        doubleClickHandler.OnWorldPointerDoubleClick(eventData);
+                    }
+                    else
+                    {
+                        lastClickedHandler = pressedHandler;
+                        lastClickTime = Time.unscaledTime;
+                        lastClickPosition = position;
+                        pressedHandler.OnWorldPointerClick(eventData);
+                    }
                 }
 
                 pressedHandler = null;

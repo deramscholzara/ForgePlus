@@ -259,6 +259,19 @@
     margin-right: 0;
 }
 
+/* Reset To Defaults, centered at the bottom of the settings (below their scroll area) */
+.fp-settings__actions {
+    flex-direction: row;
+    justify-content: center;
+    height: var(--fp-control-height);
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+
+.fp-settings__reset {
+    width: 160px;
+}
+
 .fp-settings__version {
     height: 30px;
     flex-shrink: 0;

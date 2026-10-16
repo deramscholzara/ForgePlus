@@ -4238,7 +4238,7 @@ MonoBehaviour:
         m_KeyId: 2833534313709568
         m_Metadata:
           m_Items: []
-        m_Value: Looks straight down on the level from above it, without perspective, with the map's up at the top. W and S move up and down the view, Q and E raise and lower the camera (what's above it isn't drawn), and the mouse wheel zooms. In Geometry mode, drag a selected polygon to move it. Turning it off goes back to perspective, looking at what was last selected.
+        m_Value: Looks straight down on the level from above it, without perspective, with the map's up at the top. W and S move up and down the view, Q and E raise and lower the camera (what's above it isn't drawn), and the mouse wheel zooms. In Geometry mode, drag a selected polygon to move it. Turning it off goes back to perspective, looking at what was last selected. O switches between the two.
     - rid: 552786377617702961
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -4301,14 +4301,14 @@ MonoBehaviour:
         m_KeyId: 4257401531940867
         m_Metadata:
           m_Items: []
-        m_Value: "Select what's clicked, and drag to move or adjust it (or, from empty space, to select by rectangle)."
+        m_Value: "Select what's clicked, and drag to move or adjust it (or, from empty space, to select by rectangle). In Textures mode, drag a surface to align its texture (holding control aligns the textures that continue it too), alt-click a surface to align it to the selected one, and use the arrow keys to nudge the selected surface's texture."
     - rid: 552786384866508867
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940868
         m_Metadata:
           m_Items: []
-        m_Value: "Add new geometry. Drag a line beside a polygon to add a polygon between it and a copy of it, matching its sides and the polygon's floor and ceiling. Drag a point to draw a new line from it, ending at a new point or at another point (from one of a polygon's corners to another, it splits the polygon). Dragging a selected floor or ceiling still adjusts its height, but nothing is moved in this mode."
+        m_Value: "Add new geometry. Drag a line beside a polygon to add a polygon between it and a copy of it, matching its sides and the polygon's floor and ceiling. Drag a point to draw a new line from it, ending at a new point or at another point (from one of a polygon's corners to another, it splits the polygon, and closing a loop of lines makes a new polygon). Double-click a line to add a point on it. Dragging a selected floor or ceiling still adjusts its height, but nothing is moved in this mode."
     - rid: 552786384866508868
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:

@@ -115,6 +115,16 @@ MonoBehaviour:
   - rid: 552786288315990119
   - rid: 552786377617702967
   - rid: 552786377617702968
+  - rid: 552786377617703000
+  - rid: 552786377617703001
+  - rid: 552786377617703002
+  - rid: 552786377617703003
+  - rid: 552786377617703004
+  - rid: 552786377617703005
+  - rid: 552786377617703006
+  - rid: 552786377617703007
+  - rid: 552786377617703008
+  - rid: 552786377617703009
   references:
     version: 2
     RefIds:
@@ -663,7 +673,7 @@ MonoBehaviour:
         m_KeyId: 2693705663922176
         m_Metadata:
           m_Items: []
-        m_Value: Shows polygons' floors and ceilings (not implemented yet)
+        m_Value: Shows polygons' floors and ceilings. Hidden ones can't be clicked, and let clicks through to what's beyond them. Applies in every mode.
     - rid: 552786288315990070
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -677,7 +687,7 @@ MonoBehaviour:
         m_KeyId: 2693705663922178
         m_Metadata:
           m_Items: []
-        m_Value: Shows sides (not implemented yet)
+        m_Value: Shows sides (walls, and what fills openings). Hidden ones can't be clicked, and let clicks through to what's beyond them. Applies in every mode.
     - rid: 552786288315990072
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -804,3 +814,73 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Shows objects' icons (Objects and Sounds modes always show them). Their sprite previews are a separate option, under More Display Options.
+    - rid: 552786377617703000
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635905
+        m_Metadata:
+          m_Items: []
+        m_Value: "Fill Opening"
+    - rid: 552786377617703001
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635906
+        m_Metadata:
+          m_Items: []
+        m_Value: "Closes off the opening between its line's polygons, as seen from its polygon. Where their heights expose a step up to the floor beyond or a drop down to the ceiling beyond, those keep their own textures and lights (it's a low, high or split side), and its transparent texture fills the opening between them. Off, its transparent texture is cleared. Where their heights expose neither (a window out of a constriction, or between polygons of the same heights), the side is only there to fill the opening (as a full side), so turning this off removes it."
+    - rid: 552786377617703002
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635907
+        m_Metadata:
+          m_Items: []
+        m_Value: "Select Front Side"
+    - rid: 552786377617703003
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635908
+        m_Metadata:
+          m_Items: []
+        m_Value: "Add Front Side"
+    - rid: 552786377617703004
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635909
+        m_Metadata:
+          m_Items: []
+        m_Value: "Select Back Side"
+    - rid: 552786377617703005
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635910
+        m_Metadata:
+          m_Items: []
+        m_Value: "Add Back Side"
+    - rid: 552786377617703006
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635911
+        m_Metadata:
+          m_Items: []
+        m_Value: "Select Side"
+    - rid: 552786377617703007
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635912
+        m_Metadata:
+          m_Items: []
+        m_Value: "Add Side"
+    - rid: 552786377617703008
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635913
+        m_Metadata:
+          m_Items: []
+        m_Value: "Selects the line's side facing the camera (or its only side), even where its polygons' heights hide it, or adds one there (copying a side of its polygon beside it) if it has none. Added where its polygons' heights expose no step or drop (a window), it fills the opening, as that's all a side there is for."
+    - rid: 552786377617703009
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4206718128635914
+        m_Metadata:
+          m_Items: []
+        m_Value: "Selects the line's side facing away from the camera, even where its polygons' heights hide it, or adds one there (copying a side of its polygon beside it) if it has none. Added where its polygons' heights expose no step or drop (a window), it fills the opening, as that's all a side there is for."
