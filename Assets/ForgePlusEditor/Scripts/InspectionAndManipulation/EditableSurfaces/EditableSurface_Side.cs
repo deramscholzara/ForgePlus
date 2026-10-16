@@ -417,14 +417,9 @@ namespace ForgePlus.Entities.Geometry
                 case ModeManager.PrimaryModes.Textures:
                     if (ModeManager.Instance.SecondaryMode == ModeManager.SecondaryModes.Selection)
                     {
-                        var destinationIsLayered = ParentSide.NativeObject.HasLayeredTransparentSide(LevelEntity_Level.Instance.Level);
+                        // Always the surface's own texture: a transparent layer over it is only adjusted by dragging (with
+                        // Target Transparent Layer) or in the inspector
                         var destinationDataSource = DataSource;
-
-                        if (destinationIsLayered &&
-                            ForgePlusInput.Editing.TargetOuterLayer.IsPressed())
-                        {
-                            destinationDataSource = LevelEntity_Side.DataSources.Transparent;
-                        }
 
                         if (ParentSide.NativeObject == null)
                         {

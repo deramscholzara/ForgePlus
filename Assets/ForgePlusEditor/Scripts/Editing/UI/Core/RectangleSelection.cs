@@ -1,4 +1,5 @@
 using AlephOne;
+using ForgePlus.ApplicationGeneral;
 using ForgePlus.History;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
@@ -15,11 +16,13 @@ namespace ForgePlus.UI
 {
     // Selecting by dragging a rectangle over the level (WorldPointer starts it, from anywhere not already selected, with the
     // Select tool), drawn as a faint outline. As it's dragged (shown live, and recorded as one change once it's let go,
-    // or put back as it was if it's cancelled), what the mode selects that it covers any of is selected:
-    // in Geometry mode, points and lines (as drawn, while shown) and polygons; in Heights mode, polygons; in Objects mode,
-    // objects; in Sounds mode, sound sources; and in Annotations mode, annotations. In perspective, only what's within
-    // the distance points and lines fade out at counts (looking straight down, anything in view does). Holding shift adds
-    // what it covers to the selection; otherwise, it's selected instead.
+    // or put back as it was if it's cancelled), what the mode selects that's wholly in it is selected (a polygon's whole
+    // floor or ceiling, a line's both ends, a point anywhere up its vertical axis, and an object's or annotation's
+    // center), or while ctrl is held, what it touches any of: in Geometry mode, points and lines (as drawn, while shown)
+    // and polygons; in Heights mode, polygons; in Objects mode, objects; in Sounds mode, sound sources; and in
+    // Annotations mode, annotations. In perspective, only what's within the distance points and lines fade out at counts
+    // (looking straight down, anything in view does). Holding shift adds what it covers to the selection; otherwise, it's
+    // selected instead.
     public class RectangleSelection
     {
         // Pixels
@@ -92,7 +95,7 @@ namespace ForgePlus.UI
             box.style.display = DisplayStyle.Flex;
         }
 
-        // Shift (held now) adds to the selection as it was before the drag, rather than replacing it
+        // Add to Selection (Shift, held now) adds to the selection as it was before the drag, rather than replacing it
         public void Drag(Vector2 screenPosition, bool addsToSelection)
         {
             var panelRectangle = PanelRectangle(screenPosition);
@@ -104,8 +107,11 @@ namespace ForgePlus.UI
                 box.style.height = panelRectangle.Value.height;
             }
 
+            // Select Touching (Ctrl, held now) selects what it touches any of, rather than only what's wholly in it
+            var touches = Hotkeys.IsPressed(ForgePlusInput.Editing.SelectTouching);
+
             var hits = new List<ISelectable>();
-            Collect(ScreenRectangle(screenPosition), panelRectangle, hits);
+            Collect(ScreenRectangle(screenPosition), panelRectangle, touches, hits);
 
             var selection = addsToSelection ? previousSelection.Concat(hits).Distinct().ToList() : hits;
             ApplySelection(selection);
@@ -171,7 +177,7 @@ namespace ForgePlus.UI
             return Rect.MinMaxRect(Mathf.Min(start.x, end.x), Mathf.Min(start.y, end.y), Mathf.Max(start.x, end.x), Mathf.Max(start.y, end.y));
         }
 
-        private static void Collect(Rect screenRectangle, Rect? panelRectangle, List<ISelectable> hits)
+        private static void Collect(Rect screenRectangle, Rect? panelRectangle, bool touches, List<ISelectable> hits)
         {
             var level = LevelEntity_Level.Instance;
             var camera = Camera.main;
@@ -189,13 +195,13 @@ namespace ForgePlus.UI
                 case ModeManager.PrimaryModes.Geometry:
                     if (panelRectangle != null)
                     {
-                        ForgePlusUI.Instance.PointHandles.CollectInRectangle(panelRectangle.Value, found);
+                        ForgePlusUI.Instance.PointHandles.CollectInRectangle(panelRectangle.Value, requiresWhole: !touches, found);
                     }
 
-                    CollectPolygons(level, camera, screenRectangle, limitsDistance, found);
+                    CollectPolygons(level, camera, screenRectangle, limitsDistance, touches, found);
                     break;
                 case ModeManager.PrimaryModes.Heights:
-                    CollectPolygons(level, camera, screenRectangle, limitsDistance, found);
+                    CollectPolygons(level, camera, screenRectangle, limitsDistance, touches, found);
                     break;
                 case ModeManager.PrimaryModes.Objects:
                 case ModeManager.PrimaryModes.Sounds:
@@ -203,7 +209,9 @@ namespace ForgePlus.UI
                     foreach (var mapObject in level.MapObjects.Values)
                     {
                         if (mapObject && (!soundSourcesOnly || mapObject.NativeObject.type == map._saved_sound_source) &&
-                            BoundsCover(camera, mapObject, screenRectangle, limitsDistance))
+                            (touches ?
+                                BoundsCover(camera, mapObject, screenRectangle, limitsDistance) :
+                                PointCovers(camera, ObjectCenter(mapObject), 0f, screenRectangle, limitsDistance)))
                         {
                             found.Add(mapObject);
                         }
@@ -213,7 +221,7 @@ namespace ForgePlus.UI
                 case ModeManager.PrimaryModes.Annotations:
                     foreach (var annotation in level.Annotations.Values)
                     {
-                        if (annotation && PointCovers(camera, annotation.transform.position, AnnotationMargin, screenRectangle, limitsDistance))
+                        if (annotation && PointCovers(camera, annotation.transform.position, touches ? AnnotationMargin : 0f, screenRectangle, limitsDistance))
                         {
                             found.Add(annotation);
                         }
@@ -226,8 +234,9 @@ namespace ForgePlus.UI
         }
 
         // A polygon's floor or ceiling any of which (within the distance) is in the rectangle: an edge crosses it, or the
-        // rectangle's corners or middle look onto it
-        private static void CollectPolygons(LevelEntity_Level level, Camera camera, Rect screenRectangle, bool limitsDistance, HashSet<ISelectable> found)
+        // rectangle's corners or middle look onto it. Or, unless it touches, all of which is: every corner, in front of the
+        // camera (and within the distance)
+        private static void CollectPolygons(LevelEntity_Level level, Camera camera, Rect screenRectangle, bool limitsDistance, bool touches, HashSet<ISelectable> found)
         {
             var data = level.Level;
             var cameraPosition = camera.transform.position;
@@ -258,7 +267,11 @@ namespace ForgePlus.UI
 
                 foreach (var height in new[] { SurfaceHeight(polygon, isFloor: true), SurfaceHeight(polygon, isFloor: false) })
                 {
-                    if (FaceCovers(level, polygon, corners, height, camera, cameraPosition, rays, screenRectangle, limitsDistance, distance))
+                    var isInside = touches ?
+                                   FaceCovers(level, polygon, corners, height, camera, cameraPosition, rays, screenRectangle, limitsDistance, distance) :
+                                   FaceIsInside(corners, height, camera, cameraPosition, screenRectangle, limitsDistance, distance);
+
+                    if (isInside)
                     {
                         found.Add(polygon);
                         break;
@@ -321,6 +334,44 @@ namespace ForgePlus.UI
             }
 
             return false;
+        }
+
+        private static bool FaceIsInside(Vector3[] corners, float height, Camera camera, Vector3 cameraPosition, Rect screenRectangle, bool limitsDistance, float distance)
+        {
+            foreach (var corner in corners)
+            {
+                var position = new Vector3(corner.x, height, corner.z);
+                if (limitsDistance && Vector3.Distance(cameraPosition, position) > distance)
+                {
+                    return false;
+                }
+
+                var screen = camera.WorldToScreenPoint(position);
+                if (screen.z <= 0f || !screenRectangle.Contains(screen))
+                {
+                    return false;
+                }
+            }
+
+            return corners.Length > 0;
+        }
+
+        // The middle of what's drawn of it (or its place, if nothing is)
+        private static Vector3 ObjectCenter(LevelEntity_MapObject mapObject)
+        {
+            var renderers = mapObject.GetComponentsInChildren<Renderer>();
+            if (renderers.Length == 0)
+            {
+                return mapObject.transform.position;
+            }
+
+            var bounds = renderers[0].bounds;
+            foreach (var objectRenderer in renderers)
+            {
+                bounds.Encapsulate(objectRenderer.bounds);
+            }
+
+            return bounds.center;
         }
 
         private static float SurfaceHeight(LevelEntity_Polygon polygon, bool isFloor)

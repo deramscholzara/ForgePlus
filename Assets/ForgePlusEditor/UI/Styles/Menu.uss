@@ -222,11 +222,95 @@
 
 /* ---------- Inputs ---------- */
 
-.fp-inputs__text {
-    font-size: 20px;
-    color: var(--fp-text-bright);
-    white-space: normal;
+/* A category's header bar, above its inputs' rows */
+.fp-inputs__header {
+    height: 28px;
+    margin: 5px 0 0 0;
+    padding: 0 5px;
+    background-color: var(--fp-header);
+    color: var(--fp-text-light);
+    font-size: 18px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+/* An input's name, its bindings, then its reset */
+.fp-inputs__row {
+    flex-direction: row;
+    align-items: center;
+    min-height: var(--fp-short-control-height);
+}
+
+.fp-inputs__label {
+    width: 220px;
+    flex-shrink: 0;
     margin: 0;
+    padding: 0 5px;
+    color: var(--fp-text-bright);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+.fp-inputs__bindings {
+    flex-grow: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+/* A binding (a key or button, or a combination such as Ctrl + Z) */
+.fp-inputs__binding {
+    flex-direction: row;
+    align-items: center;
+    margin: 2px 10px 2px 0;
+}
+
+.fp-inputs__key {
+    min-width: 90px;
+    height: var(--fp-short-control-height);
+}
+
+.fp-inputs__plus {
+    margin: 0 4px;
+    color: var(--fp-text-light);
+    -unity-font-style: bold;
+}
+
+/* An input with a binding that conflicts with another input's (its tooltip says which), and that binding's keys */
+.fp-inputs__row--conflict {
+    background-color: var(--fp-warning-highlight);
+    border-left-width: 6px;
+    border-left-color: var(--fp-warning);
+}
+
+.fp-inputs__binding--conflict > .fp-inputs__key {
+    background-color: var(--fp-warning);
+}
+
+.fp-inputs__binding--conflict > .fp-inputs__key:hover {
+    background-color: var(--fp-warning-hover);
+}
+
+.fp-inputs__reset {
+    width: 70px;
+    height: var(--fp-short-control-height);
+    flex-shrink: 0;
+}
+
+/* Over the whole UI while a binding waits for its key or button */
+.fp-inputs__rebinding-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--fp-blocker-fill);
+}
+
+.fp-inputs__rebinding-message {
+    margin-top: 10px;
+    -unity-text-align: middle-center;
 }
 
 /* ---------- Settings ---------- */

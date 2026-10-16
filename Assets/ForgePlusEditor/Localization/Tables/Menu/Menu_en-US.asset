@@ -22,7 +22,6 @@ MonoBehaviour:
   - rid: 552786097007231047
   - rid: 552786097007231048
   - rid: 552786097007231049
-  - rid: 552786097007231050
   - rid: 552786097007231051
   - rid: 552786097007231052
   - rid: 552786097007231053
@@ -92,6 +91,93 @@ MonoBehaviour:
   - rid: 552786384866508902
   - rid: 552786384866508910
   - rid: 552786384866508911
+  - rid: 552786424166088762
+  - rid: 552786424166088763
+  - rid: 552786424166088764
+  - rid: 552786424166088765
+  - rid: 552786424166088766
+  - rid: 552786424166088767
+  - rid: 552786424166088768
+  - rid: 552786424166088769
+  - rid: 552786424166088770
+  - rid: 552786424166088771
+  - rid: 552786424166088772
+  - rid: 552786424166088773
+  - rid: 552786424166088774
+  - rid: 552786424166088775
+  - rid: 552786424166088776
+  - rid: 552786424166088777
+  - rid: 552786424166088778
+  - rid: 552786424166088779
+  - rid: 552786424166088780
+  - rid: 552786424166088781
+  - rid: 552786424166088782
+  - rid: 552786424166088783
+  - rid: 552786424166088784
+  - rid: 552786424166088785
+  - rid: 552786424166088786
+  - rid: 552786424166088787
+  - rid: 552786424166088788
+  - rid: 552786424166088789
+  - rid: 552786424166088790
+  - rid: 552786424166088791
+  - rid: 552786424166088792
+  - rid: 552786424166088793
+  - rid: 552786424166088794
+  - rid: 552786424166088795
+  - rid: 552786424166088796
+  - rid: 552786424166088797
+  - rid: 552786424166088798
+  - rid: 552786424166088799
+  - rid: 552786424166088800
+  - rid: 552786424166088801
+  - rid: 552786424166088802
+  - rid: 552786424166088803
+  - rid: 552786424166088804
+  - rid: 552786424166088805
+  - rid: 552786424166088806
+  - rid: 552786424166088807
+  - rid: 552786424166088808
+  - rid: 552786424166088809
+  - rid: 552786424166088810
+  - rid: 552786424166088811
+  - rid: 552786424166088812
+  - rid: 552786424166088813
+  - rid: 552786424166088814
+  - rid: 552786424166088815
+  - rid: 552786424166088816
+  - rid: 552786424166088817
+  - rid: 552786424166088818
+  - rid: 552786424166088819
+  - rid: 552786424166088820
+  - rid: 552786424166088821
+  - rid: 552786424166088822
+  - rid: 552786424166088823
+  - rid: 552786424166088824
+  - rid: 552786424166088825
+  - rid: 552786424166088826
+  - rid: 552786424166088827
+  - rid: 552786424166088828
+  - rid: 552786424166088829
+  - rid: 552786424166088830
+  - rid: 552786424166088831
+  - rid: 552786424166088832
+  - rid: 552786424166088833
+  - rid: 552786424166088834
+  - rid: 552786424166088835
+  - rid: 552786424166088836
+  - rid: 552786424166088837
+  - rid: 552786424166088838
+  - rid: 552786424166088839
+  - rid: 552786424166088840
+  - rid: 552786424166088841
+  - rid: 552786424166088842
+  - rid: 552786424166088843
+  - rid: 552786424166088846
+  - rid: 552786424166088847
+  - rid: 552786424166088848
+  - rid: 552786424166088849
+  - rid: 552786424166088850
   references:
     version: 2
     RefIds:
@@ -130,14 +216,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Load Level
-    - rid: 552786097007231050
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2584642994176
-        m_Metadata:
-          m_Items: []
-        m_Value: "Note: this will be configurable eventually.\n\nWith menu closed\n    Movement:\n        - Forward/Back/Left/Right: WASD\n        - Down/Up: Q/E\n        - Go faster: Hold Shift\n        - Forward/Back in steps: Mouse wheel (when the pointer isn't over the UI)\n\n    Looking:\n        - Move mouse while holding RMB\n\n    Panning:\n        - Drag with the middle mouse button, or hold Space and drag with the left mouse button, to grab the level and slide across it (horizontally). What you grabbed stays under the pointer: in perspective, at the height of what's under it (or, over nothing, the floor or ceiling corner nearest to where you pointed).\n\n    The camera can't leave the level's bounds.\n\n    Orthographic view (the Orthographic toggle, bottom, or o):\n        - Up/Down/Left/Right across the view: WASD\n        - Camera down/up (what's above it isn't drawn): Q/E\n        - Zoom in/out: Mouse wheel\n        - Pan: drag with the middle mouse button, or hold Space and drag (follows the pointer exactly)\n        - Looking around is locked, with the map's up at the top of the view\n\nUI Controls:\n    - Open/Close Menu: Tab or Escape\n    - Show/Hide All UI: ` (~ key without Shift)\n\nSurface Dragging:\n    - In Textures mode, with the Select tool, drag a surface (selected or not) to adjust its texture.\n        - While you hold the control key during the drag, contiguous surfaces with the same bitmap align to the dragged surface. Pressing or letting go of control mid-drag switches between the two: let go, they're back as they were before the drag.\n        - With a surface selected in this mode, the arrow keys nudge its texture by a 128th of a world unit (a classic pixel), or, with Snapping on (alt/option inverts it), to the next 32nd of a world unit that way (as dragging snaps to); holding control nudges the textures that continue it too (as control does when dragging).\n\nObject Dragging:\n    - In Objects mode (and for sound sources in Sounds mode), with the Select tool, drag an object to move it. It moves across the level at the height it was grabbed, into whichever polygon it's over.\n        - With Snapping on (alt/option inverts it), it snaps to the nearest sixteenth of a world unit along X and Y.\n        - Moving into another polygon, it keeps its height in the world, kept within that polygon's floor and ceiling. With Snapping on (the setting itself) or while holding control, it instead keeps its distance from the polygon's floor (or ceiling, when From Ceiling is enabled).\n\nPoint Dragging:\n    - In Geometry mode, with the Select tool and Points shown (the visualization options on the left), drag a point's handle to move it. It moves across the level at the height of the corner it was grabbed by.\n        - With Snapping on (alt/option inverts it), it snaps to the nearest sixteenth of a world unit along X and Y.\n        - Its sides' textures stay where they were at the lines' other ends, and floors' and ceilings' textures stay where they were in the world. While holding control, they move with the point instead (pressing or letting go of control during the drag switches between the two, as though it had been that way for the whole drag).\n        - With Prevent Invalid Moves on (Settings), it stops short of where it would make a polygon around it invalid (concave, inside out, crossing itself, or without area), showing what's wrong where it's held back from. Hold shift while dragging to let it go there anyway (shown in red, with a marker where it last was valid).\n        - Dropping it on a neighboring point collapses the line between them: the two points become one, and a polygon left with fewer than three corners is removed.\n\nAdding Points:\n    - In Geometry mode, with the Draw tool, double-click a line to add a point on it where you clicked, splitting it in two (its sides and textures carry on across the new point). With Snapping on, the point snaps to sixteenths of a world unit along the line. It can't be added while a polygon along the line already has 8 corners, Marathon's limit.\n\nPolygon Dragging:\n    - In Geometry mode, in the Orthographic view, with the Select tool, drag a selected polygon to move it whole. Its corners move together (stretching the polygons around it that share them), and its objects and annotations move with it.\n        - With Snapping on (alt/option inverts it), how far it moves snaps to sixteenths of a world unit, so it stays as aligned to the grid as it was.\n        - Textures, Prevent Invalid Moves, and collapsing lines work as they do for points.\n\nHotkeys:\n    - Frame Selected: f (with nothing selected, it frames what was last selected, or the nearest object)\n    - Toggle Orthographic View: o
-    - Toggle X-Axis Lock: x\n    - Toggle Y-Axis Lock: y\n\nModifier Keys (must be held):\n    - Invert Snapping Setting: alt/option\n    - In Textures mode, you can select a surface (normal click) then alt-click a surface of the same geometry type (Polygon or Side) to align that surface's texture to the selected one.  SIdes must be neighbors, but polygons (ceilings and floors) can be anywhere.  The assigned textures are not required to be the same, and will not be updated when aligning.\n    - In Textures mode, while you hold control during a drag on a surface, all contiguous surfaces with the same bitmap are aligned to the dragged surface (otherwise, they're as they were before the drag).\n    - When dragging an object into another polygon, hold control to keep its distance from the polygon's floor (or ceiling) instead of its height in the world.\n    - When dragging a point (or a line, polygon, or a multi-selection), hold control to move the textures around it with it, along with the textures that continue them beyond (as with control in Textures mode: matching textures on neighboring floors, ceilings and walls, until one doesn't match).\n    - When dragging a point, hold shift to let it go where it would make a polygon invalid.\n    - When dragging a polygon, hold control to move the textures around it with it, and shift to let it go where it would make a polygon invalid.\n\nPainting:\n    - In Texture > Paint Mode, you can click on surfaces to assign the selected texture swatch to those surfaces."
     - rid: 552786097007231051
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -592,32 +670,643 @@ MonoBehaviour:
         m_KeyId: 4283477268250625
         m_Metadata:
           m_Items: []
-        m_Value: "Point Snapping Distance"
+        m_Value: Point Snapping Distance
     - rid: 552786384866508901
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4283477268250626
         m_Metadata:
           m_Items: []
-        m_Value: "{0} px"
+        m_Value: '{0} px'
     - rid: 552786384866508902
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4283477268250627
         m_Metadata:
           m_Items: []
-        m_Value: "How near (in pixels on screen) a line drawn from a point (with Geometry mode's Draw tool) has to come to another point to end there."
+        m_Value: How near (in pixels on screen) a line drawn from a point (with Geometry mode's Draw tool) has to come to another point to end there.
     - rid: 552786384866508910
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4283477268250628
         m_Metadata:
           m_Items: []
-        m_Value: "Reset To Defaults"
+        m_Value: Reset To Defaults
     - rid: 552786384866508911
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4283477268250629
         m_Metadata:
           m_Items: []
-        m_Value: "Sets every setting kept between sessions back to how it starts: those in this tab, the display options (such as Clip Platform Sides and the sound displays), and Save Merged's remembered choice, and turns each plugin back on or off as it starts. The files' paths are kept, as are the options that only last for the session (such as the visualization options)."
+        m_Value: 'Sets every setting kept between sessions back to how it starts: those in this tab, the display options (such as Clip Platform Sides and the sound displays), and Save Merged''s remembered choice, and turns each plugin back on or off as it starts. The files'' paths are kept, as are the options that only last for the session (such as the visualization options).'
+    - rid: 552786424166088762
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888703377408
+        m_Metadata:
+          m_Items: []
+        m_Value: Reset All Inputs
+    - rid: 552786424166088763
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766016
+        m_Metadata:
+          m_Items: []
+        m_Value: Puts every input back to its default keys and buttons.
+    - rid: 552786424166088764
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766017
+        m_Metadata:
+          m_Items: []
+        m_Value: Reset
+    - rid: 552786424166088765
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766018
+        m_Metadata:
+          m_Items: []
+        m_Value: Puts this input back to its default keys and buttons.
+    - rid: 552786424166088766
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766019
+        m_Metadata:
+          m_Items: []
+        m_Value: Click, then press a key or mouse button to bind it here. Escape cancels.
+    - rid: 552786424166088767
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766020
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Press a key or mouse button to bind.
+
+          Escape cancels.'
+    - rid: 552786424166088768
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766021
+        m_Metadata:
+          m_Items: []
+        m_Value: Camera
+    - rid: 552786424166088769
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766022
+        m_Metadata:
+          m_Items: []
+        m_Value: Selection
+    - rid: 552786424166088770
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766023
+        m_Metadata:
+          m_Items: []
+        m_Value: Moving & Snapping
+    - rid: 552786424166088771
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766024
+        m_Metadata:
+          m_Items: []
+        m_Value: Textures
+    - rid: 552786424166088772
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766025
+        m_Metadata:
+          m_Items: []
+        m_Value: Platforms
+    - rid: 552786424166088773
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766026
+        m_Metadata:
+          m_Items: []
+        m_Value: Interface
+    - rid: 552786424166088774
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766027
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Forward
+    - rid: 552786424166088775
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766028
+        m_Metadata:
+          m_Items: []
+        m_Value: Moves the camera forward while held. In the top-down view, it moves up across the view.
+    - rid: 552786424166088776
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766029
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Back
+    - rid: 552786424166088777
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766030
+        m_Metadata:
+          m_Items: []
+        m_Value: Moves the camera back while held. In the top-down view, it moves down across the view.
+    - rid: 552786424166088778
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766031
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Left
+    - rid: 552786424166088779
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766032
+        m_Metadata:
+          m_Items: []
+        m_Value: Moves the camera left while held.
+    - rid: 552786424166088780
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766033
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Right
+    - rid: 552786424166088781
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766034
+        m_Metadata:
+          m_Items: []
+        m_Value: Moves the camera right while held.
+    - rid: 552786424166088782
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766035
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Up
+    - rid: 552786424166088783
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766036
+        m_Metadata:
+          m_Items: []
+        m_Value: Raises the camera while held. In the top-down view, what's above the camera isn't drawn.
+    - rid: 552786424166088784
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766037
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Down
+    - rid: 552786424166088785
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766038
+        m_Metadata:
+          m_Items: []
+        m_Value: Lowers the camera while held. In the top-down view, what's above the camera isn't drawn.
+    - rid: 552786424166088786
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766039
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Faster
+    - rid: 552786424166088787
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766040
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold to move the camera faster.
+    - rid: 552786424166088788
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766041
+        m_Metadata:
+          m_Items: []
+        m_Value: Look Around
+    - rid: 552786424166088789
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766042
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold and move the mouse to turn the camera. Looking around is locked in the top-down view.
+    - rid: 552786424166088790
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766043
+        m_Metadata:
+          m_Items: []
+        m_Value: Pan
+    - rid: 552786424166088791
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766044
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold and drag to grab the level and slide across it. What you grabbed stays under the pointer.
+    - rid: 552786424166088792
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766045
+        m_Metadata:
+          m_Items: []
+        m_Value: Pan with Select
+    - rid: 552786424166088793
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766046
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold, then drag with Select, to pan as Pan does (rather than selecting or dragging what's under the pointer).
+    - rid: 552786424166088794
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766047
+        m_Metadata:
+          m_Items: []
+        m_Value: Frame Selection
+    - rid: 552786424166088795
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766048
+        m_Metadata:
+          m_Items: []
+        m_Value: Moves the camera to show the selection. With nothing selected, it frames what was last selected, or the nearest object.
+    - rid: 552786424166088796
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766049
+        m_Metadata:
+          m_Items: []
+        m_Value: Toggle Top-Down View
+    - rid: 552786424166088797
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766050
+        m_Metadata:
+          m_Items: []
+        m_Value: Switches between the perspective view and the top-down (orthographic) view. Not while Ctrl or Command is held.
+    - rid: 552786424166088798
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766051
+        m_Metadata:
+          m_Items: []
+        m_Value: Select
+    - rid: 552786424166088799
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766052
+        m_Metadata:
+          m_Items: []
+        m_Value: Click to select what's under the pointer, and drag to move or adjust it (or, from empty space, to select by rectangle). In Geometry mode's Draw tool, drag from a line or point to draw, and double-click a line to add a point on it.
+    - rid: 552786424166088800
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766053
+        m_Metadata:
+          m_Items: []
+        m_Value: Add to Selection
+    - rid: 552786424166088801
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766054
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold while clicking, or while selecting by rectangle, to add to the selection (or click to take something out of it) rather than replacing it.
+    - rid: 552786424166088802
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766055
+        m_Metadata:
+          m_Items: []
+        m_Value: Select Touching
+    - rid: 552786424166088803
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766056
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold while selecting by rectangle to select what the rectangle touches any part of, rather than only what's wholly in it.
+    - rid: 552786424166088804
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766057
+        m_Metadata:
+          m_Items: []
+        m_Value: Cancel Selection Box
+    - rid: 552786424166088805
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766058
+        m_Metadata:
+          m_Items: []
+        m_Value: While selecting by rectangle, stops it and puts the selection back as it was. (A key it shares with Toggle Menu only cancels, then.)
+    - rid: 552786424166088806
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766059
+        m_Metadata:
+          m_Items: []
+        m_Value: Lock X Axis
+    - rid: 552786424166088807
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766060
+        m_Metadata:
+          m_Items: []
+        m_Value: Toggles a lock that keeps dragged points, polygons and objects from moving along X (locking one axis unlocks the other). Not while Ctrl or Command is held.
+    - rid: 552786424166088808
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766061
+        m_Metadata:
+          m_Items: []
+        m_Value: Lock Y Axis
+    - rid: 552786424166088809
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766062
+        m_Metadata:
+          m_Items: []
+        m_Value: Toggles a lock that keeps dragged points, polygons and objects from moving along Y (locking one axis unlocks the other). Not while Ctrl or Command is held.
+    - rid: 552786424166088810
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766063
+        m_Metadata:
+          m_Items: []
+        m_Value: Invert Snapping
+    - rid: 552786424166088811
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766064
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold while dragging or nudging to snap when Snapping is off, or not snap when it's on.
+    - rid: 552786424166088812
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766065
+        m_Metadata:
+          m_Items: []
+        m_Value: Keep Height Above Floor
+    - rid: 552786424166088813
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766066
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold while dragging an object into another polygon to keep its distance from that polygon's floor (or ceiling, for From Ceiling), rather than its height in the world.
+    - rid: 552786424166088814
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766067
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Textures Along
+    - rid: 552786424166088815
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766068
+        m_Metadata:
+          m_Items: []
+        m_Value: Hold while dragging points, lines or polygons to move the textures around them with them (and the matching textures that continue them), rather than leaving them where they were. It can be pressed or let go mid-drag.
+    - rid: 552786424166088816
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766069
+        m_Metadata:
+          m_Items: []
+        m_Value: Allow Invalid Geometry
+    - rid: 552786424166088817
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766070
+        m_Metadata:
+          m_Items: []
+        m_Value: With Prevent Invalid Moves on (Settings), hold while dragging or drawing to let geometry go where it would make a polygon invalid (shown in red).
+    - rid: 552786424166088818
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766071
+        m_Metadata:
+          m_Items: []
+        m_Value: Nudge Texture Up
+    - rid: 552786424166088819
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766072
+        m_Metadata:
+          m_Items: []
+        m_Value: In Textures mode, moves the selected surface's texture up by a classic pixel (a 128th of a world unit), or, with Snapping, to the next 32nd of a world unit. A transparent texture layered over a wall isn't nudged (adjust it in the inspector).
+    - rid: 552786424166088820
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766073
+        m_Metadata:
+          m_Items: []
+        m_Value: Nudge Texture Down
+    - rid: 552786424166088821
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766074
+        m_Metadata:
+          m_Items: []
+        m_Value: In Textures mode, moves the selected surface's texture down by a classic pixel (a 128th of a world unit), or, with Snapping, to the next 32nd of a world unit. A transparent texture layered over a wall isn't nudged (adjust it in the inspector).
+    - rid: 552786424166088822
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766075
+        m_Metadata:
+          m_Items: []
+        m_Value: Nudge Texture Left
+    - rid: 552786424166088823
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766076
+        m_Metadata:
+          m_Items: []
+        m_Value: In Textures mode, moves the selected surface's texture left by a classic pixel (a 128th of a world unit), or, with Snapping, to the next 32nd of a world unit. A transparent texture layered over a wall isn't nudged (adjust it in the inspector).
+    - rid: 552786424166088824
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766077
+        m_Metadata:
+          m_Items: []
+        m_Value: Nudge Texture Right
+    - rid: 552786424166088825
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766078
+        m_Metadata:
+          m_Items: []
+        m_Value: In Textures mode, moves the selected surface's texture right by a classic pixel (a 128th of a world unit), or, with Snapping, to the next 32nd of a world unit. A transparent texture layered over a wall isn't nudged (adjust it in the inspector).
+    - rid: 552786424166088826
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766079
+        m_Metadata:
+          m_Items: []
+        m_Value: Align to Selection
+    - rid: 552786424166088827
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766080
+        m_Metadata:
+          m_Items: []
+        m_Value: In Textures mode, hold while clicking a surface to align its texture to the selected surface of the same kind (a neighboring side, or any floor or ceiling). Its texture isn't changed.
+    - rid: 552786424166088828
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766081
+        m_Metadata:
+          m_Items: []
+        m_Value: Align Contiguous
+    - rid: 552786424166088829
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766082
+        m_Metadata:
+          m_Items: []
+        m_Value: In Textures mode, hold while dragging or nudging a surface's texture to align the contiguous surfaces with the same bitmap to it. It can be pressed or let go mid-drag.
+    - rid: 552786424166088830
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766083
+        m_Metadata:
+          m_Items: []
+        m_Value: Target Transparent Layer
+    - rid: 552786424166088831
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766084
+        m_Metadata:
+          m_Items: []
+        m_Value: In Textures mode, hold as you start dragging a wall that has a transparent texture over it to adjust that transparent texture, rather than the one behind it (letting go mid-drag doesn't switch back).
+    - rid: 552786424166088832
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766085
+        m_Metadata:
+          m_Items: []
+        m_Value: Toggle Selected Platform
+    - rid: 552786424166088833
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766086
+        m_Metadata:
+          m_Items: []
+        m_Value: Starts or stops the simulation of each platform that's selected (or that a selected polygon, line, side or object is part of), in any mode, whether or not a player could. Both halves of a split platform. Not while Ctrl or Command is held.
+    - rid: 552786424166088834
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766087
+        m_Metadata:
+          m_Items: []
+        m_Value: Obstruct Selected Platform
+    - rid: 552786424166088835
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766088
+        m_Metadata:
+          m_Items: []
+        m_Value: Simulates something in the way of each selected platform as it extends (both halves of a split platform), as its inspector's Obstruct Extension does.
+    - rid: 552786424166088836
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766089
+        m_Metadata:
+          m_Items: []
+        m_Value: Show/Hide UI
+    - rid: 552786424166088837
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766090
+        m_Metadata:
+          m_Items: []
+        m_Value: Shows or hides all of ForgePlus's panels, leaving only the level view.
+    - rid: 552786424166088838
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766091
+        m_Metadata:
+          m_Items: []
+        m_Value: Open/Close Menu
+    - rid: 552786424166088839
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766092
+        m_Metadata:
+          m_Items: []
+        m_Value: Opens or closes this menu (and shows the UI, if it was hidden).
+    - rid: 552786424166088840
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766093
+        m_Metadata:
+          m_Items: []
+        m_Value: Undo
+    - rid: 552786424166088841
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766094
+        m_Metadata:
+          m_Items: []
+        m_Value: Undoes the last edit or selection change.
+    - rid: 552786424166088842
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766095
+        m_Metadata:
+          m_Items: []
+        m_Value: Redo
+    - rid: 552786424166088843
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5038888711766096
+        m_Metadata:
+          m_Items: []
+        m_Value: Redoes what was last undone.
+    - rid: 552786424166088846
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5041631518146560
+        m_Metadata:
+          m_Items: []
+        m_Value: Command
+    - rid: 552786424166088847
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5045579306123264
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Conflicts (both act at once):'
+    - rid: 552786424166088848
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5045579310317568
+        m_Metadata:
+          m_Items: []
+        m_Value: "\u2022 {0} overlaps {1} ({2}), bound to {3}"
+    - rid: 552786424166088849
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685126860800
+        m_Metadata:
+          m_Items: []
+        m_Value: Use Platform
+    - rid: 552786424166088850
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055104
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Uses the platform in front of the camera as a player''s action key would, in any mode: it must be a door a player can use (or one that plays its uncontrollable sound), and within reach. It starts the platform if it''s off; if it''s on, it reverses or restarts it as the platform allows. Not in the top-down view, or while Ctrl or Command is held.'

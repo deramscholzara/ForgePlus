@@ -470,6 +470,46 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "UsePlatform",
+                    "type": "Button",
+                    "id": "d44922ed-2062-4253-a2eb-ca7a71697901",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "AddToSelection",
+                    "type": "Button",
+                    "id": "7e2b9d41-3c6a-4f85-b0d2-91a4e6c8f301",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "SelectTouching",
+                    "type": "Button",
+                    "id": "7e2b9d41-3c6a-4f85-b0d2-91a4e6c8f302",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "CancelSelectionBox",
+                    "type": "Button",
+                    "id": "7e2b9d41-3c6a-4f85-b0d2-91a4e6c8f303",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -639,24 +679,123 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
+                    "name": "Shift+Tab",
                     "id": "d4971df2-e341-5e30-32bc-936967dcce8c",
-                    "path": "<Keyboard>/r",
+                    "path": "OneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivatePlatform",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "d4971df2-e341-5e30-32bc-936967dcce01",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "ActivatePlatform",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
                 },
                 {
-                    "name": "",
+                    "name": "binding",
+                    "id": "d4971df2-e341-5e30-32bc-936967dcce02",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ActivatePlatform",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Ctrl+Tab",
                     "id": "c017572b-7390-cc09-7000-a85fc44740e2",
-                    "path": "<Keyboard>/t",
+                    "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "ObstructPlatform",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "c017572b-7390-cc09-7000-a85fc4474001",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ObstructPlatform",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "c017572b-7390-cc09-7000-a85fc4474002",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ObstructPlatform",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "c017572b-7390-cc09-7000-a85fc4474011",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UsePlatform",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e2b9d41-3c6a-4f85-b0d2-91a4e6c8f311",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AddToSelection",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e2b9d41-3c6a-4f85-b0d2-91a4e6c8f312",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTouching",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e2b9d41-3c6a-4f85-b0d2-91a4e6c8f313",
+                    "path": "<Keyboard>/meta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectTouching",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7e2b9d41-3c6a-4f85-b0d2-91a4e6c8f314",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CancelSelectionBox",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -716,17 +855,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "ToggleUI",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "177e38ba-67c0-4f3e-aca8-25d0756909f1",
-                    "path": "<Keyboard>/tab",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ToggleMenu",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -833,6 +961,94 @@
                     "name": "binding",
                     "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e33",
                     "path": "<Keyboard>/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Redo",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Ctrl+Shift+Z",
+                    "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e41",
+                    "path": "TwoModifiers",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Redo",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier1",
+                    "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e42",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Redo",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "modifier2",
+                    "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e43",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Redo",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e44",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Redo",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Command+Shift+Z",
+                    "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e51",
+                    "path": "TwoModifiers",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Redo",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier1",
+                    "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e52",
+                    "path": "<Keyboard>/meta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Redo",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "modifier2",
+                    "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e53",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Redo",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "9b1f0c52-6d1e-4c3a-8f57-1a2b3c4d5e54",
+                    "path": "<Keyboard>/z",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

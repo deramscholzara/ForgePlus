@@ -284,7 +284,9 @@ namespace ForgePlus.UI
 
         // The points and lines drawn (handles, poles and lines) any part of which the rectangle (in panel space) covers,
         // within the fade distance (looking straight down, anywhere)
-        public void CollectInRectangle(UnityEngine.Rect panelRectangle, ICollection<ISelectable> results)
+        // Touching any of them, or (requiring them whole) with a point's handle's center (or any of its pole: a point is
+        // anywhere up its vertical axis) and both of a line's ends (where it's drawn) in the rectangle
+        public void CollectInRectangle(UnityEngine.Rect panelRectangle, bool requiresWhole, ICollection<ISelectable> results)
         {
             var camera = Camera.main;
             var panel = layer.panel;
@@ -298,7 +300,9 @@ namespace ForgePlus.UI
             foreach (var handle in handles)
             {
                 var box = new UnityEngine.Rect(handle.Corner, new Vector2(Size, Size));
-                if (box.Overlaps(panelRectangle) && (isOrthographic || Vector3.Distance(cameraPosition, handle.WorldPosition) <= FadeEndDistance))
+                var isInside = requiresWhole ? panelRectangle.Contains(box.center) : box.Overlaps(panelRectangle);
+
+                if (isInside && (isOrthographic || Vector3.Distance(cameraPosition, handle.WorldPosition) <= FadeEndDistance))
                 {
                     results.Add(handle.Point);
                 }
@@ -312,13 +316,52 @@ namespace ForgePlus.UI
                 }
             }
 
+            var level = LevelEntity_Level.Instance;
+
             foreach (var line in lines)
             {
-                if (line.Line && SegmentCoversRectangle(camera, panel, line.StartWorld, line.EndWorld, panelRectangle))
+                if (!line.Line)
+                {
+                    continue;
+                }
+
+                var isInside = requiresWhole ?
+                               LineIsInside(level, line, camera, panel, panelRectangle) :
+                               SegmentCoversRectangle(camera, panel, line.StartWorld, line.EndWorld, panelRectangle);
+
+                if (isInside)
                 {
                     results.Add(line.Line);
                 }
             }
+        }
+
+        // Both of the line's ends, at the height it's drawn at (not cut to what's in front of the camera), are in the
+        // rectangle, and near enough
+        private bool LineIsInside(LevelEntity_Level level, Segment line, Camera camera, IPanel panel, UnityEngine.Rect panelRectangle)
+        {
+            if (!level)
+            {
+                return false;
+            }
+
+            foreach (var endpointIndex in line.Line.NativeObject.endpoint_indexes)
+            {
+                var position = GeometryUtilities.GetMeshVertex(level.Level, endpointIndex);
+                position.y = line.StartWorld.y;
+
+                if (!isOrthographic && Vector3.Distance(camera.transform.position, position) > FadeEndDistance)
+                {
+                    return false;
+                }
+
+                if (!TryProject(position, camera, panel, out var panelPosition) || !panelRectangle.Contains(panelPosition))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         // Whether the part of the segment within the fade distance (and in front of the camera) crosses the rectangle

@@ -70,6 +70,9 @@ namespace RuntimeCore.Entities.Geometry
         // A move that went nowhere stops without its stopping sound
         private bool lastMoveTraveled;
 
+        // As PLATFORM_HAS_BEEN_ACTIVATED, for one that activates only once (since its simulation began)
+        private bool hasBeenActivated;
+
         public float CurrentHeightInWorldUnitIncrements
         {
             get
@@ -142,6 +145,7 @@ namespace RuntimeCore.Entities.Geometry
         public void BeginRuntimeStyleBehavior()
         {
             startsMovingSilently = true;
+            hasBeenActivated = false;
 
             currentState = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? States.Extended : States.Contracted;
 
@@ -159,6 +163,11 @@ namespace RuntimeCore.Entities.Geometry
 
         public void SetRuntimeActive(bool value, bool isRootActivation = true)
         {
+            if (value)
+            {
+                hasBeenActivated = true;
+            }
+
             // Deactivating one that's moving stops it as if obstructed (set_platform_state, in platforms.cpp)
             if (!value && IsRuntimeMoving)
             {
@@ -194,19 +203,122 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // A split platform's halves are one platform, so both reverse (the obstructed one playing the sound)
         public void ObstructRuntimeBehavior()
+        {
+            ObstructRuntimeBehavior(playsSound: true);
+
+            OtherHalf?.ObstructRuntimeBehavior(playsSound: false);
+        }
+
+        private void ObstructRuntimeBehavior(bool playsSound)
         {
             if (IsRuntimeActive)
             {
                 if (currentState == States.Extending &&
                     PLATFORM_REVERSES_DIRECTION_WHEN_OBSTRUCTED(NativeObject.static_flags))
                 {
-                    // Whichever part is obstructed plays it, and it reverses without its starting sound
-                    OnRuntimeSound?.Invoke(this, _obstructed_sound, true, false);
+                    // It reverses without its starting sound
+                    if (playsSound)
+                    {
+                        OnRuntimeSound?.Invoke(this, _obstructed_sound, true, false);
+                    }
 
                     startsMovingSilently = true;
                     BeginState(States.Contracting, loop: false);
                 }
+            }
+        }
+
+        // Whether a player could use it (find_action_key_target in devices.cpp, with platform_is_legal_player_target)
+        public bool IsLegalPlayerTarget
+        {
+            get
+            {
+                return platform_is_legal_player_target(ParentLevel.Level, NativeIndex, hasBeenActivated);
+            }
+        }
+
+        // As a player's action key does (player_touch_platform_state in platforms.cpp), for both halves of a split
+        // platform. ForgePlus: the player is taken to have any key item it needs.
+        public void PlayerTouchRuntimeBehavior()
+        {
+            var flags = NativeObject.static_flags;
+
+            if (!PLATFORM_IS_PLAYER_CONTROLLABLE(flags))
+            {
+                SoundHalf.PlayRuntimeSound(_uncontrollable_sound);
+                return;
+            }
+
+            if (!IsRuntimeActive)
+            {
+                SetRuntimeActive(true);
+                return;
+            }
+
+            if (PLATFORM_CANNOT_BE_EXTERNALLY_DEACTIVATED(flags))
+            {
+                SoundHalf.PlayRuntimeSound(_uncontrollable_sound);
+                return;
+            }
+
+            if (!IsRuntimeMoving)
+            {
+                // Waiting at either end, it starts moving again now (its delay set to nothing)
+                RestartRuntimeBehavior();
+                OtherHalf?.RestartRuntimeBehavior();
+            }
+            else if (PLATFORM_REVERSES_DIRECTION_WHEN_OBSTRUCTED(flags))
+            {
+                // It reverses, starting again with its starting sound
+                ReverseRuntimeBehavior();
+                OtherHalf?.ReverseRuntimeBehavior();
+            }
+            else
+            {
+                SoundHalf.PlayRuntimeSound(_uncontrollable_sound);
+            }
+        }
+
+        private void RestartRuntimeBehavior()
+        {
+            if (IsRuntimeActive && !IsRuntimeMoving)
+            {
+                BeginState(currentState == States.Extended ? States.Contracting : States.Extending, loop: false);
+            }
+        }
+
+        private void ReverseRuntimeBehavior()
+        {
+            if (IsRuntimeMoving)
+            {
+                BeginState(currentState == States.Extending ? States.Contracting : States.Extending, loop: false);
+            }
+        }
+
+        // The other half of a split platform (its ceiling's, for its floor's), or null
+        private LevelEntity_Platform OtherHalf
+        {
+            get
+            {
+                if (!PLATFORM_GOES_BOTH_WAYS(NativeObject.static_flags))
+                {
+                    return null;
+                }
+
+                var halves = linkedSurface == LinkedSurfaces.Floor ? ParentLevel.CeilingPlatforms : ParentLevel.FloorPlatforms;
+
+                return halves.TryGetValue(NativeIndex, out var otherHalf) ? otherHalf : null;
+            }
+        }
+
+        // A split platform's sounds come from its floor (PlayRuntimeSound)
+        private LevelEntity_Platform SoundHalf
+        {
+            get
+            {
+                return linkedSurface == LinkedSurfaces.Ceiling && OtherHalf ? OtherHalf : this;
             }
         }
 
