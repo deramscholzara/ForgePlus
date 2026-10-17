@@ -270,6 +270,15 @@ namespace ForgePlus.LevelManipulation
             ToggleObjectSelection(selection, multiSelect: false);
         }
 
+        // In Lights and Media modes, the face the selection was clicked on (GetSelectedFace), or null
+        public EditableSurface_Base SelectedFace
+        {
+            get
+            {
+                return GetSelectedFace();
+            }
+        }
+
         // The face the selected light was clicked on, or the media surface of the polygon the selected media was clicked in
         private EditableSurface_Base GetSelectedFace()
         {

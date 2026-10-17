@@ -178,7 +178,6 @@ MonoBehaviour:
   - rid: 552786424166088848
   - rid: 552786424166088849
   - rid: 552786424166088850
-  - rid: 552786424166088851
   - rid: 552786424166088852
   - rid: 552786424166088853
   references:
@@ -1313,24 +1312,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Uses the platform in front of the camera as a player''s action key would, in any mode: it must be a door a player can use (or one that plays its uncontrollable sound), and within reach. It starts the platform if it''s off; if it''s on, it reverses or restarts it as the platform allows. Not in the top-down view, or while Ctrl or Command is held.'
-    - rid: 552786424166088851
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 5056685131055105
-        m_Metadata:
-          m_Items: []
-        m_Value: "Geometry"
     - rid: 552786424166088852
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055106
         m_Metadata:
           m_Items: []
-        m_Value: "Delete Selected Geometry"
+        m_Value: "Delete Selected"
     - rid: 552786424166088853
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055107
         m_Metadata:
           m_Items: []
-        m_Value: "In Geometry mode, deletes the selected polygons, points and lines (a line by deleting the points at both its ends). A deleted polygon leaves its lines and points behind, empty (what was in it goes with it). A deleted point is taken out of its chain of lines rather than leaving a gap: its neighbors are joined across where it was, and a polygon left with fewer than three corners is deleted too. Points left with no lines are removed."
+        m_Value: "Deletes or clears what's selected, as the mode has it. Geometry: deletes the selected polygons (leaving their lines and points, empty, and deleting what was in them), points (taking each out of its chain of lines, and deleting polygons left with fewer than three corners) and lines (by deleting the points at both their ends); points left with no lines are removed. Objects and Annotations: deletes the selected ones. Sounds: clears the selected polygons' ambient and random sounds, and deletes selected sound sources. Media: clears the media of the polygon it was selected in. Lights: sets the face it was selected on to light 0. Platforms: makes the selected platforms normal polygons. Textures: clears the textures of the selected surfaces (the face clicked, and the same face of the rest of the selection)."

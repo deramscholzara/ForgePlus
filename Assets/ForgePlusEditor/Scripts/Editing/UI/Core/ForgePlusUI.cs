@@ -252,7 +252,7 @@ namespace ForgePlus.UI
             }
 
             PlatformSimulationHotkeys.Update();
-            GeometryDeletion.Update();
+            SelectionDeletion.Update();
         }
 
         // Whichever of the two notices Cancel Selection Box first this frame

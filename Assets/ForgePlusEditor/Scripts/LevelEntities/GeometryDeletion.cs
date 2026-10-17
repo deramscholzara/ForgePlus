@@ -10,8 +10,8 @@ using static AlephOne.map;
 
 namespace ForgePlus.LevelManipulation
 {
-    // In Geometry mode, Delete Geometry (Delete or Backspace) deletes the selected polygons and points, and the points at
-    // both ends of the selected lines (which takes the lines with them), as one action:
+    // In Geometry mode, Delete Selected (Delete or Backspace: SelectionDeletion) deletes the selected polygons and points,
+    // and the points at both ends of the selected lines (which takes the lines with them), as one action:
     //
     // A deleted polygon leaves its lines and points behind, empty (what was in it, its objects and annotations, goes with
     // it). Its neighbors' faces toward it become walls, with sides where they're seen.
@@ -26,18 +26,9 @@ namespace ForgePlus.LevelManipulation
     // rebuilt afterward, with nothing selected.
     public static class GeometryDeletion
     {
-        // Once a frame, from ForgePlusUI
-        public static void Update()
+        public static void DeleteSelection(LevelEntity_Level level)
         {
-            if (!Hotkeys.WasPressed(ForgePlusInput.Editing.DeleteGeometry) || Hotkeys.IsShortcutModifierPressed ||
-                ModeManager.Instance.PrimaryMode != ModeManager.PrimaryModes.Geometry)
-            {
-                return;
-            }
-
-            var level = LevelEntity_Level.Instance;
-            if (!level || level.Points == null || LevelEditing.IsRebuildPending ||
-                LineDrawing.Current != null || LineExtrusion.Current != null || PointEditing.Feedback != null)
+            if (level.Points == null || LineDrawing.Current != null || LineExtrusion.Current != null || PointEditing.Feedback != null)
             {
                 return;
             }
