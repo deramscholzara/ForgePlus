@@ -18,7 +18,7 @@ namespace ForgePlus.LevelManipulation
     // - Geometry: deletes the selected polygons, points and lines (GeometryDeletion)
     // - Objects: deletes the selected objects
     // - Annotations: deletes the selected annotations
-    // - Sounds: clears the selected polygons' ambient and random sounds, and deletes the selected sound sources
+    // - Sounds: clears the selected polygons' ambient and random sounds
     // - Media: clears the media of the polygon it was selected in (its media becomes none)
     // - Lights: sets the face it was selected on to light 0
     // - Platforms: makes the selected platforms' polygons normal ones
@@ -55,7 +55,7 @@ namespace ForgePlus.LevelManipulation
                                   selection.OfType<LevelEntity_Annotation>().Select(annotation => annotation.NativeObject).ToList());
                     break;
                 case ModeManager.PrimaryModes.Sounds:
-                    ClearSounds(level, selection);
+                    ClearSounds(selection);
                     break;
                 case ModeManager.PrimaryModes.Media:
                     ClearMedia();
@@ -143,8 +143,8 @@ namespace ForgePlus.LevelManipulation
             LevelEditing.RebuildLevel();
         }
 
-        // Sound sources are objects (deleted as Objects mode deletes them), and polygons play no sounds
-        private static void ClearSounds(LevelEntity_Level level, List<ISelectable> selection)
+        // The polygons play no sounds
+        private static void ClearSounds(List<ISelectable> selection)
         {
             foreach (var polygon in selection.OfType<LevelEntity_Polygon>())
             {
@@ -155,8 +155,6 @@ namespace ForgePlus.LevelManipulation
             }
 
             LevelHistory.MarkEdited();
-
-            DeleteObjects(level, selection.OfType<LevelEntity_MapObject>().Select(mapObject => mapObject.NativeObject).ToList(), new List<map_annotation>());
         }
 
         // The selected media's face is the media surface of the polygon it was clicked in

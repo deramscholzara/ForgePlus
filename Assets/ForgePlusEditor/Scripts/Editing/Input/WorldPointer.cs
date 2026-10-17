@@ -332,7 +332,7 @@ namespace ForgePlus.LevelManipulation
         }
 
         // What's drawn over the level comes first, then the level's colliders. Something (a collider) can be hit without
-        // having a handler.
+        // having a handler (except in Objects mode, where only what can be clicked counts).
         private bool TryGetHandler(Vector2 position, out IWorldPointerHandler handler, out Vector3 worldPosition, out Vector3 worldNormal)
         {
             if (ScreenPicker != null && ScreenPicker.TryPick(position, out handler, out worldPosition))
@@ -341,7 +341,34 @@ namespace ForgePlus.LevelManipulation
                 return true;
             }
 
-            if (Physics.Raycast(mainCamera.ScreenPointToRay(position), out var hit, mainCamera.farClipPlane, raycastLayers))
+            var ray = mainCamera.ScreenPointToRay(position);
+
+            // In Objects mode, clicks pass through the level's geometry (which it doesn't select) to the objects beyond
+            if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Objects)
+            {
+                var hits = Physics.RaycastAll(ray, mainCamera.farClipPlane, raycastLayers);
+                System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
+                foreach (var objectHit in hits)
+                {
+                    handler = objectHit.collider.GetComponentInParent<IWorldPointerHandler>();
+                    if (handler == null || (handler is EditableSurface_Base surface && !surface.IsSelectable))
+                    {
+                        continue;
+                    }
+
+                    worldPosition = objectHit.point;
+                    worldNormal = objectHit.normal;
+                    return true;
+                }
+
+                handler = null;
+                worldPosition = default;
+                worldNormal = default;
+                return false;
+            }
+
+            if (Physics.Raycast(ray, out var hit, mainCamera.farClipPlane, raycastLayers))
             {
                 handler = hit.collider.GetComponentInParent<IWorldPointerHandler>();
                 worldPosition = hit.point;

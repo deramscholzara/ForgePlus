@@ -15,6 +15,15 @@ namespace ForgePlus.LevelManipulation
     {
         protected bool isSelectable = false;
 
+        // Whether the mode lets it be clicked (WorldPointer lets some modes' clicks pass through those it doesn't)
+        public bool IsSelectable
+        {
+            get
+            {
+                return isSelectable;
+            }
+        }
+
         private GameObject[] faceSelectionIndicators;
 
         // Read from the level each time, so they follow what's painted onto the face

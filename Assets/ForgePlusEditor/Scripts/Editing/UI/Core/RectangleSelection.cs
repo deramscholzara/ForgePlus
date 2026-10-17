@@ -19,7 +19,7 @@ namespace ForgePlus.UI
     // or put back as it was if it's cancelled), what the mode selects that's wholly in it is selected (a polygon's whole
     // floor or ceiling, a line's both ends, a point anywhere up its vertical axis, and an object's or annotation's
     // center), or while ctrl is held, what it touches any of: in Geometry mode, points and lines (as drawn, while shown)
-    // and polygons; in Heights mode, polygons; in Objects mode, objects; in Sounds mode, sound sources; and in
+    // and polygons; in Heights and Sounds modes, polygons; in Objects mode, objects; and in
     // Annotations mode, annotations. In perspective, only what's within the distance points and lines fade out at counts
     // (looking straight down, anything in view does). Holding shift adds what it covers to the selection; otherwise, it's
     // selected instead.
@@ -201,14 +201,13 @@ namespace ForgePlus.UI
                     CollectPolygons(level, camera, screenRectangle, limitsDistance, touches, found);
                     break;
                 case ModeManager.PrimaryModes.Heights:
+                case ModeManager.PrimaryModes.Sounds:
                     CollectPolygons(level, camera, screenRectangle, limitsDistance, touches, found);
                     break;
                 case ModeManager.PrimaryModes.Objects:
-                case ModeManager.PrimaryModes.Sounds:
-                    var soundSourcesOnly = ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Sounds;
                     foreach (var mapObject in level.MapObjects.Values)
                     {
-                        if (mapObject && (!soundSourcesOnly || mapObject.NativeObject.type == map._saved_sound_source) &&
+                        if (mapObject &&
                             (touches ?
                                 BoundsCover(camera, mapObject, screenRectangle, limitsDistance) :
                                 PointCovers(camera, ObjectCenter(mapObject), 0f, screenRectangle, limitsDistance)))

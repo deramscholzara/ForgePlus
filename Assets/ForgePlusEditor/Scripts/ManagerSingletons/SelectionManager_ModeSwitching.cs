@@ -154,12 +154,6 @@ namespace ForgePlus.LevelManipulation
                 case ModeManager.PrimaryModes.Media:
                     return context.Media;
                 case ModeManager.PrimaryModes.Sounds:
-                    // Sound sources are the only objects selected here
-                    if (context.MapObject && context.MapObject.NativeObject.type == map._saved_sound_source)
-                    {
-                        return context.MapObject;
-                    }
-
                     return context.Polygon;
                 case ModeManager.PrimaryModes.Heights:
                     return HeightsEditing.CanEdit(context.Polygon) ? context.Polygon : null;
