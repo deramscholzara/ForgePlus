@@ -541,7 +541,7 @@ Forge+ can view everything in a map, and edit much of it. These are the main thi
 
 1. Install Unity (from [unity.com](https://unity.com)), at or above the version in [`ProjectSettings/ProjectVersion.txt`](ProjectSettings/ProjectVersion.txt). The free license is fine, but adds a watermark at startup.
 2. Include the build support module for each platform you want to build for. Forge+ is presently tested with:
-   - Windows (IL2CPP)
+   - Windows (CoreCLR)
    - Linux (IL2CPP)
    - Mac (Mono)
 3. In Unity, open the root of this repository. It's the root of the Unity project.

@@ -4,6 +4,7 @@ using ForgePlus.LevelManipulation.Utilities;
 using RuntimeCore.Common;
 using System.Collections.Generic;
 using System.Threading;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using AlephOne;
 using ForgePlus.Extensions;
@@ -12,7 +13,8 @@ using ForgePlus.Extensions;
 namespace RuntimeCore.Entities.Geometry
 {
     // TODO: Should inherit from LevelEntity_Base, and should have a representative GameObject in the scene
-    public class LevelEntity_Media : IDestructionPreparable, ISelectable, IInspectable
+    [AutoStaticsCleanup]
+    public partial class LevelEntity_Media : IDestructionPreparable, ISelectable, IInspectable
     {
         private const float MagnitudeToWorldUnit = 1f / 40f; // Note: Not sure why this isn't 1/30 to match the tick rate.
 

@@ -74,7 +74,6 @@ namespace RuntimeCore.Entities.Geometry
             renderer.lightProbeUsage = LightProbeUsage.Off;
             renderer.reflectionProbeUsage = ReflectionProbeUsage.Off;
             renderer.motionVectorGenerationMode = MotionVectorGenerationMode.ForceNoMotion;
-            renderer.allowOcclusionWhenDynamic = false;
         }
 
         public void PrepareForDestruction()
