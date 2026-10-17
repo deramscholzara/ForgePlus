@@ -133,10 +133,10 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        // With its sides, its platform (if it is one), and its lines that no other polygon has. What's in it moves into a
-        // polygon beside it, and what refers to it (a teleporter's or trigger's destination, a terminal's teleport) no
-        // longer does.
-        public static void RemovePolygon(MapLevel level, polygon_data polygon)
+        // With its sides, its platform (if it is one), and its lines that no other polygon has (unless they're kept, left
+        // with no polygon on that side). What's in it moves into a polygon beside it, and what refers to it (a teleporter's
+        // or trigger's destination, a terminal's teleport) no longer does.
+        public static void RemovePolygon(MapLevel level, polygon_data polygon, bool keepsLines = false)
         {
             var polygonIndex = (short) level.PolygonList.IndexOf(polygon);
             if (polygonIndex < 0)
@@ -189,6 +189,11 @@ namespace ForgePlus.LevelManipulation
             }
 
             level.PolygonList.RemoveAt(lastIndex);
+
+            if (keepsLines)
+            {
+                return;
+            }
 
             foreach (var line in orphanedLines)
             {

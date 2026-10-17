@@ -106,6 +106,8 @@ namespace ForgePlus.UI
                 new Entry("KeepTexturesWithPoint", () => ForgePlusInput.Editing.KeepTexturesWithPoint, InputContexts.GeometryDrag),
                 new Entry("AllowInvalidGeometry", () => ForgePlusInput.Editing.AllowInvalidGeometry,
                     InputContexts.GeometryDrag | InputContexts.Draw)),
+            new Category("Geometry",
+                new Entry("DeleteGeometry", () => ForgePlusInput.Editing.DeleteGeometry, InputContexts.Always)),
             // Nudging acts on its press while a surface is selected in Textures mode, even mid-click or mid-drag
             new Category("Textures",
                 new Entry("NudgeUp", () => ForgePlusInput.Editing.NudgeUp, TextureModeContexts),

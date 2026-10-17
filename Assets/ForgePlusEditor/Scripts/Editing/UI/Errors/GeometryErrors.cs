@@ -77,6 +77,10 @@ namespace ForgePlus.UI
                     }
 
                     break;
+                case GeometryIssueKind.OrphanedPoint:
+                    show = () => LevelFocus.ShowPoint(issue.Point);
+                    fix = () => OrphanedPoints.Remove(LevelEntity_Level.Instance, issue.Point);
+                    break;
                 case GeometryIssueKind.ZeroLengthLine:
                     show = () => LevelFocus.ShowPoint(issue.Point);
 
@@ -118,6 +122,8 @@ namespace ForgePlus.UI
                     return Get(key, issue.Line, segment.A, segment.B);
                 case GeometryIssueKind.LineTooLong:
                     return Get(key, issue.Line);
+                case GeometryIssueKind.OrphanedPoint:
+                    return Get(key, issue.Point);
                 case GeometryIssueKind.PointNearLine:
                     return Get(key, issue.Point, issue.Line, issue.Polygon);
                 case GeometryIssueKind.TooManyMapIndexes:

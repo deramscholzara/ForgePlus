@@ -143,8 +143,16 @@ Shape the level: polygons, lines, sides (walls) and points.
 - **Draw a new line from a point:** drag from a point. The line ends at a new point, or snaps to an existing point within the **Point Snapping Distance** setting.
   - **Split a polygon:** draw a line from one corner of a polygon to another, non-adjacent, corner. (Platform polygons can't be split.)
   - **Close a polygon:** when a line completes a loop, Forge+ fills it with a new polygon automatically. The loop must be convex, have at most 8 corners and have nothing inside it.
+- **Draw a new line from empty space:** click empty space, then press again and drag. The line starts at a new point where you pressed. It's drawn at the floor height of the polygon whose corner is nearest (or at 0, in an empty level). Lines that don't touch any polygon are shown at the lowest floor of the polygons their chain of lines reaches (or at 0).
+- **Fill a loop of lines:** any loop of lines that could become a polygon shows its future floor in see-through cyan. Double-click it to fill it. The new polygon copies a polygon at its corners. If there isn't one, it gets a plain floor at 0 and a ceiling one world unit above, with the environment's first wall texture and the first light.
 - **Add a point to a line:** double-click the line. Every polygon along that line gains the new corner (each polygon can have at most 8).
 - Dragging a selected floor or ceiling still changes its height in this tool.
+
+**Deleting geometry:** in Geometry mode, press <kbd>Delete</kbd> or <kbd>Backspace</kbd> to delete the selected polygons, points and lines, as one undoable step.
+- **A deleted polygon** leaves its lines and points behind, empty. Its objects and annotations are deleted with it, and its neighbors' faces toward it become walls.
+- **A deleted point** is taken out of its chain of lines instead of leaving a gap. Its neighbors are joined across where it was, and a polygon left with fewer than three corners is deleted too. Objects and annotations in the polygons that shrink are kept inside them.
+- **A deleted line** goes by deleting the points at both of its ends.
+- Points left with no lines are removed, and the selection is cleared afterward.
 
 **Keeping geometry valid:** with **Prevent Invalid Moves** on (the default, in Settings), Forge+ won't let a move or a new line make a polygon concave, inside-out or self-crossing, or make a line longer than 32 world units. A note in the view explains why it stopped. Hold <kbd>Shift</kbd> to allow it anyway.
 
@@ -320,7 +328,7 @@ Every edit can be undone, including selection changes and the knock-on fixes an 
 
 The **!** button in the bottom-right corner flashes red when the level has problems. Click it to open the Errors panel, which lists them:
 
-- **Geometry:** inside-out, flat or concave polygons, crossing edges, zero-length or over-long lines, redundant corners, points nearly touching lines, objects or annotations outside their polygons, and too many map entries.
+- **Geometry:** inside-out, flat or concave polygons, crossing edges, zero-length or over-long lines, redundant corners, points with no lines (older maps may have these on purpose), points nearly touching lines, objects or annotations outside their polygons, and too many map entries.
 - **Terminals:** missing or unreachable groups, sections running into each other, teleports to missing levels or polygons, and control panels pointing at missing terminals.
 
 Use **Show** to select and frame a problem, and **Fix** (or **Fix All**) for problems Forge+ can fix automatically. Filter the list with **All**, **Auto-Fixable** and **Standard**, and turn **Show Warnings** on or off.
@@ -453,6 +461,15 @@ Every binding can be changed in the **Inputs** tab of the Menu. Click a binding,
 </details>
 
 <details open>
+<summary><strong>Geometry</strong></summary>
+
+| Action | Default |
+|---|---|
+| Delete selected geometry (Geometry mode) | <kbd>Delete</kbd>, <kbd>Backspace</kbd> |
+
+</details>
+
+<details open>
 <summary><strong>Textures</strong></summary>
 
 | Action | Default |
@@ -496,7 +513,7 @@ Keyboard shortcuts don't fire while you're typing in a field.
 - **Hover for help.** Every field, button and tab has a tooltip, and grayed-out fields usually say why they're unavailable.
 - **Use the top-down view for layout work.** Press <kbd>O</kbd> to drop into a classic overhead view, with a grid (**More Display Options → Grid**). Press it again to return to 3D, tilted toward your last selection.
 - **Switch modes without losing your place.** Select a polygon in Geometry mode, then switch to Textures, Lights, Media, Platforms or Sounds, and the matching item is already selected.
-- **Build rooms fast with the Draw tool:** extrude a wall into a new polygon, keep extruding to make a corridor, and draw lines between corners to split rooms. Close a loop of lines and Forge+ fills it in for you.
+- **Build rooms fast with the Draw tool:** extrude a wall into a new polygon, keep extruding to make a corridor, and draw lines between corners to split rooms. Close a loop of lines and Forge+ fills it in for you. You can also sketch a room's outline from empty space and double-click its cyan floor to fill it.
 - **Keep textures aligned while reshaping.** Hold <kbd>Ctrl</kbd> while dragging points or lines. When aligning textures, <kbd>Ctrl</kbd>-drag moves a whole run of matching walls at once.
 - **Copy alignment.** In Textures mode, select a well-aligned surface and <kbd>Alt</kbd>+click its neighbors to line them up with it.
 - **Test doors in place.** Fly up to a door and press <kbd>Tab</kbd>, or select a platform and press <kbd>Shift</kbd>+<kbd>Tab</kbd>.
@@ -514,7 +531,7 @@ Keyboard shortcuts don't fire while you're typing in a field.
 Forge+ can view everything in a map, and edit much of it. These are the main things it can't do yet:
 
 **Creating and deleting**
-- [ ] Delete polygons, lines, points, objects, lights, media, annotations or terminals. Today, only sound entries and terminal groups can be deleted, and geometry is only removed by Errors-panel fixes and collapsing lines.
+- [ ] Delete objects, lights, media, annotations or terminals. Today, besides geometry (polygons, lines and points), only sound entries and terminal groups can be deleted.
 - [ ] Place new objects (monsters, items, scenery, player starts, goals, sound sources).
 - [ ] Add new lights, media, annotations, terminals or levels.
 - [ ] Copy, paste and duplicate geometry or objects.

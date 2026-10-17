@@ -32,6 +32,11 @@ namespace ForgePlus.LevelManipulation
     // is held when letting go (which never splits). Splitting a polygon ignores the lines of others that overlap it (at
     // other heights), as the new line can't meet them. What it would add is shown as it goes (Current, which PointHandles
     // draws). The level's structure changes, so it's rebuilt afterward, with the new point (or line) selected.
+    //
+    // A line can also be drawn from empty space (BeginFromEmptySpace, which a press, release and press there begins), from
+    // a new point where it was pressed. It's drawn at the floor of the polygon whose corner is nearest that point (or at
+    // 0, with no polygons), and once added, it's shown at the height its chain of lines takes (LooseGeometryHeights): the
+    // lowest floor of the polygons it reaches, or 0 if it reaches none.
     [AutoStaticsCleanup]
     public sealed partial class LineDrawing
     {
@@ -41,6 +46,9 @@ namespace ForgePlus.LevelManipulation
             // Where the line starts and ends, and the heights it's shown at there (in meters)
             public world_point2d Start;
             public world_point2d End;
+
+            // Whether it starts at a new point (drawn from empty space)
+            public bool StartsNew;
             public float StartHeight;
             public float EndHeight;
 
@@ -80,19 +88,49 @@ namespace ForgePlus.LevelManipulation
                 return null;
             }
 
-            return new LineDrawing(level, pointIndex, pressWorldPosition);
+            return new LineDrawing(level, pointIndex, level.Level.EndpointList[pointIndex].vertex, pressWorldPosition);
         }
 
-        private LineDrawing(LevelEntity_Level level, short pointIndex, Vector3 pressWorldPosition)
+        // From a new point where the pointer's ray meets the level plane at the floor of the polygon whose corner is
+        // nearest there (snapped to the grid as drawing is), or at 0 with no polygons
+        public static LineDrawing BeginFromEmptySpace(LevelEntity_Level level, Ray pointerRay)
+        {
+            if (!level || LevelEditing.IsRebuildPending)
+            {
+                return null;
+            }
+
+            var data = level.Level;
+            var height = 0f;
+            if (!TryMeetPlane(pointerRay, height, out var pressWorldPosition))
+            {
+                return null;
+            }
+
+            // The nearest corner depends on where the ray meets the plane, which depends on its height (twice is enough to
+            // settle on one)
+            for (var i = 0; i < 2 && data.PolygonList.Count > 0; i++)
+            {
+                height = NearestCornerFloor(data, ToLocation(pressWorldPosition, snaps: false));
+                if (!TryMeetPlane(pointerRay, height, out pressWorldPosition))
+                {
+                    return null;
+                }
+            }
+
+            return new LineDrawing(level, cstypes.NONE, ToLocation(pressWorldPosition, AxisLocks.Instance.SnapToGrid), pressWorldPosition);
+        }
+
+        private LineDrawing(LevelEntity_Level level, short pointIndex, world_point2d start, Vector3 pressWorldPosition)
         {
             this.level = level;
             startIndex = pointIndex;
             pressHeight = pressWorldPosition.y;
 
-            var start = level.Level.EndpointList[pointIndex].vertex;
             drag = new LevelPlaneDrag(pressWorldPosition, start);
 
             preview.Start = start;
+            preview.StartsNew = pointIndex == cstypes.NONE;
             preview.End = start;
             preview.StartHeight = pressHeight;
             preview.EndHeight = pressHeight;
@@ -176,7 +214,7 @@ namespace ForgePlus.LevelManipulation
             var end = GeometryConstruction.ToVector(preview.End);
 
             // Never a second line between the same two points
-            if (endIndex != cstypes.NONE && IsJoined(data, startIndex, endIndex))
+            if (endIndex != cstypes.NONE && startIndex != cstypes.NONE && IsJoined(data, startIndex, endIndex))
             {
                 preview.IsBlocked = true;
                 preview.Message = Strings.Get(Strings.Common, "LineDrawing.Joined");
@@ -223,8 +261,8 @@ namespace ForgePlus.LevelManipulation
 
             if (!touches && insidePolygons.Count == 0)
             {
-                // Ending at a point, it may close loops of lines into polygons
-                if (endIndex != cstypes.NONE && level.EndpointLines != null)
+                // Ending at a point, it may close loops of lines into polygons (not from a new point, with no other line)
+                if (endIndex != cstypes.NONE && startIndex != cstypes.NONE && level.EndpointLines != null)
                 {
                     foreach (var loop in PolygonClosing.FindLoops(data, level.EndpointLines, startIndex, endIndex, cstypes.NONE))
                     {
@@ -291,12 +329,13 @@ namespace ForgePlus.LevelManipulation
             return apart > 1 && apart < count - 1;
         }
 
-        // A line with no polygon on either side (and a new point at its end, unless it ends at one), and the polygons it
-        // closes (PolygonClosing), if it ends at a point
+        // A line with no polygon on either side (and a new point at its end, unless it ends at one, and at its start, if
+        // it's drawn from empty space), and the polygons it closes (PolygonClosing), if it ends at a point
         private void AddLine()
         {
             var data = level.Level;
 
+            var startIndex = this.startIndex != cstypes.NONE ? this.startIndex : GeometryConstruction.AddEndpoint(data, preview.Start);
             var endIndex = preview.SnappedPoint != cstypes.NONE ? preview.SnappedPoint : GeometryConstruction.AddEndpoint(data, preview.End);
             var lineIndex = GeometryConstruction.AddLine(data, startIndex, endIndex, cstypes.NONE, cstypes.NONE);
 
@@ -307,7 +346,7 @@ namespace ForgePlus.LevelManipulation
             map_constructors.recalculate_redundant_endpoint_data(data, endIndex);
 
             var closedPolygons = new List<polygon_data>();
-            if (preview.SnappedPoint != cstypes.NONE)
+            if (preview.SnappedPoint != cstypes.NONE && !preview.StartsNew)
             {
                 // Each found before any is added (as each is on its own side of the line)
                 foreach (var loop in PolygonClosing.FindLoops(data, data.BuildEndpointLines(), startIndex, endIndex, lineIndex))
@@ -451,6 +490,60 @@ namespace ForgePlus.LevelManipulation
                 var index = (short) rebuiltLevel.Level.LineList.IndexOf(splittingLine);
                 return rebuiltLevel.Lines.TryGetValue(index, out var addedLine) ? addedLine : null;
             });
+        }
+
+        private static bool TryMeetPlane(Ray ray, float height, out Vector3 worldPosition)
+        {
+            var plane = new Plane(Vector3.up, new Vector3(0f, height, 0f));
+            if (plane.Raycast(ray, out var distance))
+            {
+                worldPosition = ray.GetPoint(distance);
+                return true;
+            }
+
+            worldPosition = default;
+            return false;
+        }
+
+        // A level location (its X along the world's X, and its Y along the world's Z, reversed)
+        private static world_point2d ToLocation(Vector3 worldPosition, bool snaps)
+        {
+            var x = Mathf.Round(worldPosition.x * GeometryUtilities.WorldUnitIncrementsPerMeter);
+            var y = Mathf.Round(-worldPosition.z * GeometryUtilities.WorldUnitIncrementsPerMeter);
+
+            if (snaps)
+            {
+                x = Mathf.Round(x / HeightsEditing.SnapIncrement) * HeightsEditing.SnapIncrement;
+                y = Mathf.Round(y / HeightsEditing.SnapIncrement) * HeightsEditing.SnapIncrement;
+            }
+
+            return new world_point2d((short) Mathf.Clamp(x, short.MinValue, short.MaxValue), (short) Mathf.Clamp(y, short.MinValue, short.MaxValue));
+        }
+
+        // The floor (in meters) of the polygon whose corner is nearest the location (the lowest, of those at that corner)
+        private static float NearestCornerFloor(MapLevel data, world_point2d location)
+        {
+            var nearestDistance = long.MaxValue;
+            var floor = 0;
+
+            foreach (var polygon in data.PolygonList)
+            {
+                for (var i = 0; i < polygon.vertex_count; i++)
+                {
+                    var vertex = data.EndpointList[polygon.endpoint_indexes[i]].vertex;
+                    long dx = vertex.x - location.x;
+                    long dy = vertex.y - location.y;
+                    var distance = dx * dx + dy * dy;
+
+                    if (distance < nearestDistance || (distance == nearestDistance && polygon.floor_height < floor))
+                    {
+                        nearestDistance = distance;
+                        floor = polygon.floor_height;
+                    }
+                }
+            }
+
+            return floor / GeometryUtilities.WorldUnitIncrementsPerMeter;
         }
 
         private static void SetCorners(polygon_data polygon, List<short> corners, List<short> lines)

@@ -510,6 +510,16 @@
                     "interactions": "",
                     "initialStateCheck": false,
                     "priority": 0
+                },
+                {
+                    "name": "DeleteGeometry",
+                    "type": "Button",
+                    "id": "3f6c1a2e-8b4d-4e71-9a05-2d7c6e1b4a01",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -796,6 +806,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "CancelSelectionBox",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f6c1a2e-8b4d-4e71-9a05-2d7c6e1b4a02",
+                    "path": "<Keyboard>/delete",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DeleteGeometry",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3f6c1a2e-8b4d-4e71-9a05-2d7c6e1b4a03",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DeleteGeometry",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
