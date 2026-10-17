@@ -62,8 +62,6 @@ MonoBehaviour:
   - rid: 552786288315990086
   - rid: 552786288315990087
   - rid: 552786288315990088
-  - rid: 552786288315990089
-  - rid: 552786288315990090
   - rid: 552786288315990120
   - rid: 552786288315990121
   - rid: 552786288315990122
@@ -180,6 +178,15 @@ MonoBehaviour:
   - rid: 552786424166088850
   - rid: 552786424166088852
   - rid: 552786424166088853
+  - rid: 552786424166088854
+  - rid: 552786424166088855
+  - rid: 552786424166088856
+  - rid: 552786424166088857
+  - rid: 552786424166088858
+  - rid: 552786424166088859
+  - rid: 552786424166088860
+  - rid: 552786424166088861
+  - rid: 552786424166088862
   references:
     version: 2
     RefIds:
@@ -498,20 +505,6 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Those you fix yourself, as each says how
-    - rid: 552786288315990089
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2724798001725441
-        m_Metadata:
-          m_Items: []
-        m_Value: Prevent Invalid Moves
-    - rid: 552786288315990090
-      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
-      data:
-        m_KeyId: 2724798001725442
-        m_Metadata:
-          m_Items: []
-        m_Value: Moving a point stops short of where it would make a polygon invalid (concave, inside out, crossing itself, or without area) or a line too long. Hold Shift while dragging a point to allow it anyway.
     - rid: 552786288315990120
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -1094,7 +1087,7 @@ MonoBehaviour:
         m_KeyId: 5038888711766070
         m_Metadata:
           m_Items: []
-        m_Value: With Prevent Invalid Moves on (Settings), hold while dragging or drawing to let geometry go where it would make a polygon invalid (shown in red).
+        m_Value: Hold while dragging or drawing to let geometry go where it would make a polygon invalid (shown in red), which is otherwise prevented.
     - rid: 552786424166088818
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -1326,3 +1319,66 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: "Deletes or clears what's selected, as the mode has it. Geometry: deletes the selected polygons (leaving their lines and points, empty, and deleting what was in them), points (taking each out of its chain of lines, and deleting polygons left with fewer than three corners) and lines (by deleting the points at both their ends); points left with no lines are removed. Objects and Annotations: deletes the selected ones. Sounds: clears the selected polygons' ambient and random sounds. Media: clears the media of the polygon it was selected in. Lights: sets the face it was selected on to light 0. Platforms: makes the selected platforms normal polygons. Textures: clears the textures of the selected surfaces (the face clicked, and the same face of the rest of the selection)."
+    - rid: 552786424166088854
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055108
+        m_Metadata:
+          m_Items: []
+        m_Value: "Display"
+    - rid: 552786424166088855
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055109
+        m_Metadata:
+          m_Items: []
+        m_Value: "Rendering"
+    - rid: 552786424166088856
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055110
+        m_Metadata:
+          m_Items: []
+        m_Value: "Units"
+    - rid: 552786424166088857
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055111
+        m_Metadata:
+          m_Items: []
+        m_Value: "Editing"
+    - rid: 552786424166088858
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055112
+        m_Metadata:
+          m_Items: []
+        m_Value: "Top-Down View"
+    - rid: 552786424166088859
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055113
+        m_Metadata:
+          m_Items: []
+        m_Value: "Saving"
+    - rid: 552786424166088860
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055114
+        m_Metadata:
+          m_Items: []
+        m_Value: "UI Scale"
+    - rid: 552786424166088861
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055115
+        m_Metadata:
+          m_Items: []
+        m_Value: "How large the UI is drawn, from 100% to 350% (as Windows scales the display), for high-resolution screens. Applied once you let go of the slider."
+    - rid: 552786424166088862
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055116
+        m_Metadata:
+          m_Items: []
+        m_Value: "{0}%"

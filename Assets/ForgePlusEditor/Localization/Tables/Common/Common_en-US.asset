@@ -565,6 +565,8 @@ MonoBehaviour:
   - rid: 552786384866508904
   - rid: 552786384866508905
   - rid: 552786384866508906
+  - rid: 552786384866508907
+  - rid: 552786384866508908
   references:
     version: 2
     RefIds:
@@ -4408,3 +4410,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: "Point {0} has no lines, so it isn't part of any geometry. Older maps may have these on purpose; fixing removes it."
+    - rid: 552786384866508907
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940883
+        m_Metadata:
+          m_Items: []
+        m_Value: "Other"
+    - rid: 552786384866508908
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 4257401531940884
+        m_Metadata:
+          m_Items: []
+        m_Value: "The modes used less often: Level, Map, Annotations and Terminals. Checked while one of them is open."

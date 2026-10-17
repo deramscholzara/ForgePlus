@@ -18,7 +18,8 @@ Forge+ was originally written by Richard L Harrington. It builds on ideas from [
 - [Moving around the level](#moving-around-the-level)
 - [Selecting things](#selecting-things)
 - [Modes](#modes)
-  - [Geometry](#geometry) · [Textures](#textures) · [Lights](#lights) · [Media](#media) · [Sounds](#sounds) · [Heights](#heights) · [Platforms](#platforms) · [Objects](#objects) · [Annotations](#annotations) · [Level](#level) · [Map](#map) · [Terminals](#terminals)
+  - [Geometry](#geometry) · [Heights](#heights) · [Textures](#textures) · [Lights](#lights) · [Sounds](#sounds) · [Platforms](#platforms) · [Media](#media) · [Objects](#objects)
+  - Other: [Level](#level) · [Map](#map) · [Annotations](#annotations) · [Terminals](#terminals)
 - [Snapping, axis locks and number fields](#snapping-axis-locks-and-number-fields)
 - [Undo and redo](#undo-and-redo)
 - [Errors panel](#errors-panel)
@@ -58,7 +59,7 @@ Forge+ remembers your file paths, so they load again the next time you start it.
 
 | Area | What's there |
 |---|---|
-| **Header bar** (top) | **Menu** toggle · the twelve **mode** buttons · **Save Merged**, **Save Level** and **Quit** |
+| **Header bar** (top) | **Menu** toggle · the **mode** tabs and the **Other** menu · **Save Merged**, **Save Level** and **Quit** |
 | **Left column** | **Visibility** toggles and **More Display Options** · the **inspector** for what's selected (in Map, Annotations and Terminals modes, that mode's own panel) |
 | **Right column** | The **tool** choice for modes with more than one tool (Select / Draw, or Select / Paint) · the mode's **palette** (textures, lights, media, sounds, heights, platforms, polygons or text styles) |
 | **Center** | The 3D view. The **Menu**, the **Errors** panel and the **terminal preview** open here |
@@ -129,7 +130,9 @@ Forge+ has two views: a free-flying **perspective** camera, and a **top-down** (
 
 ## Modes
 
-Pick a mode from the header bar. Each mode focuses on one kind of map data and shows the matching inspector and palette. Some modes have more than one **tool**:
+Pick a mode from the header bar. The everyday modes have their own tabs: **Geometry**, **Heights**, **Textures**, **Lights**, **Sounds**, **Platforms**, **Media** and **Objects**. The modes you'll use less often are in the **Other** menu at the end: **Level**, **Map**, **Annotations** and **Terminals**. The Other button stays checked while one of those is open. If the window is too narrow for every tab, scroll the tabs sideways with the mouse wheel.
+
+Each mode focuses on one kind of map data and shows the matching inspector and palette. Some modes have more than one **tool**:
 
 | Mode | Tools |
 |---|---|
@@ -165,7 +168,7 @@ Shape the level: polygons, lines, sides (walls) and points.
 - **A deleted line** goes by deleting the points at both of its ends.
 - Points left with no lines are removed, and the selection is cleared afterward.
 
-**Keeping geometry valid:** with **Prevent Invalid Moves** on (the default, in Settings), Forge+ won't let a move or a new line make a polygon concave, inside-out or self-crossing, or make a line longer than 32 world units. A note in the view explains why it stopped. Hold <kbd>Shift</kbd> to allow it anyway.
+**Keeping geometry valid:** Forge+ won't let a move or a new line make a polygon concave, inside-out or self-crossing, or make a line longer than 32 world units. A note in the view explains why it stopped. Hold <kbd>Shift</kbd> to allow it anyway.
 
 **Knock-on fixes happen automatically.** For example:
 - A line dragged to zero length collapses into a single point.
@@ -403,21 +406,21 @@ Forge+ aims for every file it saves to load in the original **Marathon 2** and *
 
 ## Settings
 
-The **Settings** tab of the Menu:
+The **Settings** tab of the Menu is grouped into sections:
 
-| Setting | Default | What it does |
-|---|---|---|
-| Full-Screen | On | Runs Forge+ full-screen |
-| Minimum Light | Low | The lowest light level surfaces are drawn with, so dark areas stay visible |
-| Bloom, Vignette, Color Adjustment, Ambient Occlusion | On | Visual effects in the view |
-| Surface Cache Global Illumination | Off | Higher-quality light bouncing |
-| Display World-Units as Improper Fractions | Off | Shows `-512/1024` instead of `-1 and 512/1024` |
-| Undo Steps | 50 | How many changes you can undo (1–10,000) |
-| Prevent Invalid Moves | On | Stops moves and new lines that would break geometry (hold <kbd>Shift</kbd> to override) |
-| Point Click Area | 100% | How large points' clickable area is (100–200%) |
-| Point Snapping Distance | 5 px | How close the pointer must be to snap a new line onto an existing point |
-| Orthographic Grid Opacity | 40% | How visible the top-down grid is |
-| Update Merge Checksum On Save | Ask | Whether Save Merged keeps or regenerates the checksum, or asks each time |
+| Section | Setting | Default | What it does |
+|---|---|---|---|
+| **Display** | Full-Screen | On | Runs Forge+ full-screen |
+| | UI Scale | 100% | How large the interface is drawn (100–350%, in steps of 50%), for high-resolution screens. It's applied once you let go of the slider |
+| **Rendering** | Minimum Light | Low | The lowest light level surfaces are drawn with, so dark areas stay visible |
+| | Bloom, Vignette, Color Adjustment, Ambient Occlusion | On | Visual effects in the view |
+| | Surface Cache Global Illumination | Off | Higher-quality light bouncing |
+| **Units** | Display World-Units as Improper Fractions | Off | Shows `-512/1024` instead of `-1 and 512/1024` |
+| **Editing** | Undo Steps | 50 | How many changes you can undo (1–10,000) |
+| | Point Click Area | 100% | How large points' clickable area is (100–200%) |
+| | Point Snapping Distance | 5 px | How close the pointer must be to snap a new line onto an existing point |
+| **Top-Down View** | Orthographic Grid Opacity | 40% | How visible the top-down grid is |
+| **Saving** | Update Merge Checksum On Save | Ask | Whether Save Merged keeps or regenerates the checksum, or asks each time |
 
 **Reset To Defaults** resets these settings and the display options, but keeps your file paths. The bottom of the tab shows the version of Forge+ you're running, which is handy when reporting bugs.
 
@@ -559,7 +562,7 @@ Forge+ can view everything in a map, and edit much of it. These are the main thi
 
 ## Building Forge+ yourself
 
-1. Install Unity (from [unity.com](https://unity.com)), at or above the version in [`ProjectSettings/ProjectVersion.txt`](ProjectSettings/ProjectVersion.txt). The free license is fine, but adds a watermark at startup.
+1. Install Unity (from [unity.com](https://unity.com)), at or above the version in [`ProjectSettings/ProjectVersion.txt`](ProjectSettings/ProjectVersion.txt). The free Unity Personal license is fine.
 2. Include the build support module for each platform you want to build for. Forge+ is presently tested with:
    - Windows (CoreCLR)
    - Linux (IL2CPP)

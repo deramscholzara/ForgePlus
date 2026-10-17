@@ -2754,6 +2754,16 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 4257401531940882
     m_Key: Errors.Geometry.OrphanedPoint
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940883
+    m_Key: Header.Other.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4257401531940884
+    m_Key: Header.Other.Tooltip
     m_Flags: 0
     m_Metadata:
       m_Items: []

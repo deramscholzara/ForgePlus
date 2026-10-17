@@ -242,16 +242,6 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
-  - m_Id: 2724798001725441
-    m_Key: SettingsTab.PreventInvalidGeometry.Control.Text
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
-  - m_Id: 2724798001725442
-    m_Key: SettingsTab.PreventInvalidGeometry.Tooltip
-    m_Flags: 0
-    m_Metadata:
-      m_Items: []
   - m_Id: 2758288646750208
     m_Key: FilesTab.FindInDirectory.Control.Text
     m_Flags: 0
@@ -830,6 +820,51 @@ MonoBehaviour:
   - m_Id: 5056685131055107
     m_Key: InputsTab.DeleteSelected.Tooltip
     m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055108
+    m_Key: SettingsTab.DisplayHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055109
+    m_Key: SettingsTab.RenderingHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055110
+    m_Key: SettingsTab.UnitsHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055111
+    m_Key: SettingsTab.EditingHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055112
+    m_Key: SettingsTab.TopDownViewHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055113
+    m_Key: SettingsTab.SavingHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055114
+    m_Key: SettingsTab.UIScale.Control.Label
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055115
+    m_Key: SettingsTab.UIScale.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055116
+    m_Key: SettingsTab.UIScale.Value
+    m_Flags: 1
     m_Metadata:
       m_Items: []
   m_Metadata:

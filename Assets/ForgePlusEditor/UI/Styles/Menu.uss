@@ -11,7 +11,7 @@
 }
 
 .fp-menu__tabs {
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
     flex-shrink: 0;
     margin-bottom: 5px;
 }
@@ -28,7 +28,7 @@
 /* The menu's actions (closing it) on the left, and the tab's (if it has any) on the right */
 .fp-menu__actions {
     flex-direction: row;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
     flex-shrink: 0;
     margin-top: 5px;
 }
@@ -49,17 +49,23 @@
 
 /* ---------- Files ---------- */
 
-/* At the top of the file selection box, above its scroll area */
+/* Centered at the top of the file selection box, above its scroll area, as wide as its text */
 .fp-files__find {
-    height: var(--fp-control-height);
+    align-self: center;
+    height: var(--fp-short-control-height);
     flex-shrink: 0;
     margin-bottom: 10px;
 }
 
-/* Find in Directory (40px, and its 10px gap) over the scroll area, which keeps its 460px */
+.fp-files__find > .fp-button {
+    padding: 0 20px;
+}
+
+/* Find in Directory (30px, and its 10px gap) over the scroll area, which shows the first four files (Maps, Shapes,
+   Physics and Sounds, 57px each) without scrolling */
 .fp-files__selection {
-    min-height: 530px;
-    height: 530px;
+    min-height: 288px;
+    height: 288px;
     flex-shrink: 0;
     margin-bottom: 5px;
 }
@@ -75,7 +81,7 @@
 }
 
 .fp-files__plugin-list {
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
     margin-top: 5px;
 }
 
@@ -86,7 +92,7 @@
 
 .fp-files__actions {
     flex-direction: row;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
     flex-shrink: 0;
 }
 
@@ -104,7 +110,7 @@
 
 .fp-path-selector__row {
     flex-direction: row;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
 }
 
 .fp-path-selector__button {
@@ -132,7 +138,7 @@
 
 .fp-level-item {
     flex-direction: row;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
     margin-bottom: 5px;
     background-color: var(--fp-control);
 }
@@ -142,7 +148,7 @@
 }
 
 .fp-level-item__indicator {
-    width: 35px;
+    width: 30px;
     flex-shrink: 0;
     background-color: var(--fp-indicator-frame);
     border-color: var(--fp-indicator-frame);
@@ -222,8 +228,9 @@
 
 /* ---------- Inputs ---------- */
 
-/* A category's header bar, above its inputs' rows */
-.fp-inputs__header {
+/* A category's header bar, above its inputs' (or settings') rows */
+.fp-inputs__header,
+.fp-settings__header {
     height: 28px;
     margin: 5px 0 0 0;
     padding: 0 5px;
@@ -241,12 +248,15 @@
     min-height: var(--fp-short-control-height);
 }
 
+/* On a light background with dark text, as the settings' names are, as tall as the row */
 .fp-inputs__label {
     width: 220px;
     flex-shrink: 0;
-    margin: 0;
+    align-self: stretch;
+    margin: 0 5px 0 0;
     padding: 0 5px;
-    color: var(--fp-text-bright);
+    background-color: var(--fp-slider-background);
+    color: var(--fp-control-text);
     -unity-font-style: bold;
     -unity-text-align: middle-left;
 }
@@ -324,13 +334,34 @@
     height: var(--fp-control-height);
 }
 
-/* A setting's name, above its choices */
-.fp-setting__label {
-    margin: 5px 0 0 0;
-    padding: 0 5px;
-    color: var(--fp-text-bright);
+/* Settings' names (sliders', number fields' and choices') are wide enough for the longest, so their controls start (and
+   their sliders end) in line */
+.fp-settings__options .fp-slider > .unity-base-field__label,
+.fp-settings__options .fp-number-row > .unity-base-field__label,
+.fp-setting-row__label {
+    width: 250px;
+    min-width: 250px;
+}
+
+/* A setting's name with its choices beside it, as a slider's row is */
+.fp-setting-row {
+    flex-direction: row;
+    padding: 5px;
+    background-color: var(--fp-slider-background);
+}
+
+.fp-setting-row__label {
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    color: var(--fp-control-text);
+    font-size: 14px;
     -unity-font-style: bold;
     -unity-text-align: middle-left;
+}
+
+.fp-setting-row__choices {
+    flex-grow: 1;
 }
 
 .fp-setting__choice {
@@ -347,7 +378,7 @@
 .fp-settings__actions {
     flex-direction: row;
     justify-content: center;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
     flex-shrink: 0;
     margin-top: 5px;
 }

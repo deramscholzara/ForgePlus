@@ -32,7 +32,6 @@ namespace ForgePlus.UI
             Root.Find<RadioButtonGroup>("merged-save-checksum").BindValue(settings, nameof(SettingsViewModel.MergedSaveChecksum));
             Root.Find<IntegerField>("undo-steps").BindValue(settings, nameof(SettingsViewModel.UndoSteps));
 
-            Root.Find<Toggle>("prevent-invalid-geometry").BindValue(settings, nameof(SettingsViewModel.PreventInvalidGeometryEnabled));
 
             var pointClickArea = Root.Q("point-click-area");
             pointClickArea.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.PointClickAreaSteps));
@@ -41,6 +40,10 @@ namespace ForgePlus.UI
             var pointSnapDistance = Root.Q("point-snap-distance");
             pointSnapDistance.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.PointSnapDistance));
             pointSnapDistance.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.PointSnapDistanceText));
+
+            var uiScale = Root.Q("ui-scale");
+            uiScale.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.UIScaleStep));
+            uiScale.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.UIScaleText));
 
             var orthographicGridOpacity = Root.Q("orthographic-grid-opacity");
             orthographicGridOpacity.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.OrthographicGridOpacityPercent));

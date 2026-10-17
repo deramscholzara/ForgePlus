@@ -6,55 +6,49 @@
         <ui:Instance template="Toggle" name="menu" class="fp-header__menu">
             <ui:AttributeOverrides element-name="control" text="@Common/Header.Menu.Control.Text" />
         </ui:Instance>
-        <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
-        <!-- In the order of ModeManager.PrimaryModes -->
-        <ui:RadioButtonGroup name="primary-modes" class="fp-radio-group fp-radio-row fp-header__modes">
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Geometry.Control.Text" />
+        <!-- The modes, centered between the menu and the actions, scrolled sideways (with no scrollbar, by either mouse
+             wheel: HeaderPanel) where there's no room for them all, so the menu and actions always show -->
+        <ui:ScrollView name="modes-scroll" mode="Horizontal" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" class="fp-header__modes-scroll">
+            <!-- In the order of EditorViewModel.HeaderModes -->
+            <ui:RadioButtonGroup name="primary-modes" class="fp-radio-group fp-radio-row fp-header__modes">
+                <ui:Instance template="RadioToggle" class="fp-header__mode">
+                    <ui:AttributeOverrides element-name="control" text="@Common/Header.Geometry.Control.Text" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-header__mode">
+                    <ui:AttributeOverrides element-name="control" text="@Common/Header.Heights.Control.Text" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-header__mode">
+                    <ui:AttributeOverrides element-name="control" text="@Common/Header.Textures.Control.Text" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-header__mode">
+                    <ui:AttributeOverrides element-name="control" text="@Common/Header.Lights.Control.Text" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-header__mode">
+                    <ui:AttributeOverrides element-name="control" text="@Common/Header.Sounds.Control.Text" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-header__mode">
+                    <ui:AttributeOverrides element-name="control" text="@Common/Header.Platforms.Control.Text" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-header__mode">
+                    <ui:AttributeOverrides element-name="control" text="@Common/Header.Media.Control.Text" />
+                </ui:Instance>
+                <ui:Instance template="RadioToggle" class="fp-header__mode">
+                    <ui:AttributeOverrides element-name="control" text="@Common/Header.Objects.Control.Text" />
+                </ui:Instance>
+            </ui:RadioButtonGroup>
+            <!-- The modes in EditorViewModel.OtherModes, in a menu (checked while one of them is the mode) -->
+            <ui:Instance template="Toggle" name="other-modes" class="fp-header__mode fp-header__mode--last fp-header__other" tooltip="@Common/Header.Other.Tooltip">
+                <ui:AttributeOverrides element-name="control" text="@Common/Header.Other.Control.Text" />
             </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Textures.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Lights.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Media.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Sounds.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Heights.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Platforms.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Objects.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Annotations.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Level.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Map.Control.Text" />
-            </ui:Instance>
-            <ui:Instance template="RadioToggle" class="fp-header__mode fp-header__mode--last">
-                <ui:AttributeOverrides element-name="control" text="@Common/Header.Terminals.Control.Text" />
-            </ui:Instance>
-        </ui:RadioButtonGroup>
-        <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
+        </ui:ScrollView>
         <ui:VisualElement class="fp-header__actions" picking-mode="Ignore">
-            <ui:Instance template="Button" name="save-merged" class="fp-header__action">
+            <ui:Instance template="Button" name="save-merged" class="fp-header__action fp-header__action--wide">
                 <ui:AttributeOverrides element-name="control" text="@Common/Header.SaveMerged.Control.Text" />
             </ui:Instance>
             <ui:Instance template="Button" name="save" class="fp-header__action">
                 <ui:AttributeOverrides element-name="control" text="@Common/Header.Save.Control.Text" />
             </ui:Instance>
-            <ui:Instance template="Button" name="quit" class="fp-header__action">
+            <ui:Instance template="Button" name="quit" class="fp-header__action fp-header__action--fit">
                 <ui:AttributeOverrides element-name="control" text="@Common/Header.Quit.Control.Text" />
             </ui:Instance>
         </ui:VisualElement>

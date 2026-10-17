@@ -35,20 +35,52 @@ namespace ForgePlus.UI
             ForgePlusUI.Instance.EditorCamera.OnOrthographicChanged += OnOrthographicChanged;
         }
 
-        // Primary modes in their order in the header (Geometry is 0)
+        // The modes with their own tabs in the header, in their order there
+        public static readonly ModeManager.PrimaryModes[] HeaderModes =
+        {
+            ModeManager.PrimaryModes.Geometry,
+            ModeManager.PrimaryModes.Heights,
+            ModeManager.PrimaryModes.Textures,
+            ModeManager.PrimaryModes.Lights,
+            ModeManager.PrimaryModes.Sounds,
+            ModeManager.PrimaryModes.Platforms,
+            ModeManager.PrimaryModes.Media,
+            ModeManager.PrimaryModes.Objects,
+        };
+
+        // The rest, in the header's Other menu, in its order
+        public static readonly ModeManager.PrimaryModes[] OtherModes =
+        {
+            ModeManager.PrimaryModes.Level,
+            ModeManager.PrimaryModes.Map,
+            ModeManager.PrimaryModes.Annotations,
+            ModeManager.PrimaryModes.Terminals,
+        };
+
+        // The primary mode's tab in the header (HeaderModes), or -1 for one in the Other menu (or none)
         [CreateProperty]
         public int PrimaryModeIndex
         {
             get
             {
-                return (int)ModeManager.Instance.PrimaryMode - 1;
+                return Array.IndexOf(HeaderModes, ModeManager.Instance.PrimaryMode);
             }
             set
             {
-                if (value >= 0)
+                if (value >= 0 && value < HeaderModes.Length)
                 {
-                    ModeManager.Instance.PrimaryMode = (ModeManager.PrimaryModes)(value + 1);
+                    ModeManager.Instance.PrimaryMode = HeaderModes[value];
                 }
+            }
+        }
+
+        // Whether the primary mode is one in the header's Other menu
+        [CreateProperty]
+        public bool IsOtherModeSelected
+        {
+            get
+            {
+                return Array.IndexOf(OtherModes, ModeManager.Instance.PrimaryMode) >= 0;
             }
         }
 
@@ -296,6 +328,7 @@ namespace ForgePlus.UI
         private void OnPrimaryModeChanged(ModeManager.PrimaryModes primaryMode)
         {
             Notify(nameof(PrimaryModeIndex));
+            Notify(nameof(IsOtherModeSelected));
         }
 
         private void OnSecondaryModeChanged(ModeManager.SecondaryModes secondaryMode)
