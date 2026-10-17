@@ -572,6 +572,10 @@ MonoBehaviour:
   - rid: 552786457188368451
   - rid: 552786457188368452
   - rid: 552786457188368453
+  - rid: 552786469862768640
+  - rid: 552786469862768641
+  - rid: 552786469862768642
+  - rid: 552786469862768643
   references:
     version: 2
     RefIds:
@@ -4464,3 +4468,31 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: OK
+    - rid: 552786469862768640
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5582341229133824
+        m_Metadata:
+          m_Items: []
+        m_Value: Unsaved Changes
+    - rid: 552786469862768641
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5582341237522432
+        m_Metadata:
+          m_Items: []
+        m_Value: The open level has unsaved changes, which will be lost. Save them first (saving the whole map file, as Save Merged does), or discard them?
+    - rid: 552786469862768642
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5582341237522433
+        m_Metadata:
+          m_Items: []
+        m_Value: Save Now
+    - rid: 552786469862768643
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5582341237522434
+        m_Metadata:
+          m_Items: []
+        m_Value: Discard

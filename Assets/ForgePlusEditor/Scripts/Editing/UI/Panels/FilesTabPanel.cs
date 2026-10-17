@@ -1,4 +1,5 @@
-﻿using ForgePlus.DataFileIO;
+﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.DataFileIO;
 using ForgePlus.Localization;
 using System;
 using System.Collections.Generic;
@@ -187,12 +188,16 @@ namespace ForgePlus.UI
             levelList.ScrollToItem(levelIndex);
         }
 
-        private void OnLoad()
+        // Taken before asking about unsaved changes, since saving them refreshes the list
+        private async void OnLoad()
         {
-            if (levelList.selectedIndex >= 0)
+            var levelIndex = levelList.selectedIndex;
+            if (levelIndex < 0 || !await UnsavedChanges.Confirm())
             {
-                MapsLoading.Instance.OpenLevel(levelList.selectedIndex);
+                return;
             }
+
+            MapsLoading.Instance.OpenLevel(levelIndex);
         }
     }
 }

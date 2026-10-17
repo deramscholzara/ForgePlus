@@ -159,7 +159,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 2026.10.16.0
+  bundleVersion: 2026.10.17.0
   preloadedAssets:
   - {fileID: 2800000, guid: 4fd2c5e43a78e164fb3f83ef2e46c657, type: 3}
   metroInputSource: 0
@@ -366,14 +366,14 @@ PlayerSettings:
   - m_BuildTarget: LinuxStandaloneSupport
     m_APIs: 1500000011000000i
     m_UGKFlags: 0000000000000000i
-    m_Automatic: 1
+    m_Automatic: 0
   - m_BuildTarget: MacStandaloneSupport
     m_APIs: 1000000011000000i
     m_UGKFlags: 0000000000000000i
-    m_Automatic: 1
+    m_Automatic: 0
   - m_BuildTarget: WindowsStandaloneSupport
-    m_APIs: 120000000200000015000000i
-    m_UGKFlags: 000000000000000000000000i
+    m_APIs: 1200000015000000i
+    m_UGKFlags: 0000000000000000i
     m_Automatic: 0
   - m_BuildTarget: WebGLSupport
     m_APIs: 0b000000i

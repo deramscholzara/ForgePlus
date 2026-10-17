@@ -1401,7 +1401,7 @@ MonoBehaviour:
         m_KeyId: 5435900372336640
         m_Metadata:
           m_Items: []
-        m_Value: 'Creates a new map file: choose where to save it, then name its first level (a map file must have at least one level), which is set up for single player as New Level''s are. It''s saved right away, then loaded with its level open, in place of the loaded map file (so the open level''s unsaved edits are discarded). It''s saved as Marathon 2 data, which the original games can read.'
+        m_Value: 'Creates a new map file: choose where to save it, then name its first level (a map file must have at least one level), which is set up for single player as New Level''s are. It''s saved right away, then loaded with its level open, in place of the loaded map file (if the open level has unsaved edits, you''re asked first whether to save or discard them). It''s saved as Marathon 2 data, which the original games can read.'
     - rid: 552786457188368445
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:

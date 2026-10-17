@@ -7,6 +7,7 @@ using RuntimeCore.Entities;
 using SFB;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -25,8 +26,8 @@ namespace ForgePlus.DataFileIO
         public event Action OnSaveCompleted;
 
         // Just the open level, in a map file of its own, with what it uses besides its map (its embedded physics, and its
-        // resources from the map file), as chosen in a dialog (unless it's cancelled)
-        public async void Save()
+        // resources from the map file), as chosen in a dialog. Completes with whether it was saved (rather than cancelled).
+        public async Task<bool> Save()
         {
             var option = await DialogManager.Instance.DisplayQueuedDialog(
                 title: Strings.Get(Strings.Common, "Dialog.SaveWith.Title"),
@@ -43,18 +44,19 @@ namespace ForgePlus.DataFileIO
 
             if (option.Option == null)
             {
-                return;
+                return false;
             }
 
             var withPhysics = option.Option == PhysicsOption || option.Option == ResourcesAndPhysicsOption;
             var withResources = option.Option == ResourcesOption || option.Option == ResourcesAndPhysicsOption;
 
-            ShowSelectionBrowserCoroutine(merged: false, path => SaveLevelToUnmergedMapFile(path, withPhysics, withResources));
+            return await ShowSelectionBrowser(merged: false, path => SaveLevelToUnmergedMapFile(path, withPhysics, withResources));
         }
 
         // Every level of the map file, with the open level as edited, in one map file. Its checksum is kept or
-        // regenerated as the settings say, or as chosen in a dialog that asks (unless it's cancelled).
-        public async void SaveMerged()
+        // regenerated as the settings say, or as chosen in a dialog that asks. Completes with whether it was saved (rather than
+        // cancelled).
+        public async Task<bool> SaveMerged()
         {
             var choice = SettingsManager.Instance.MergedSaveChecksum;
 
@@ -73,7 +75,7 @@ namespace ForgePlus.DataFileIO
 
                 if (result.Option == null)
                 {
-                    return;
+                    return false;
                 }
 
                 choice = result.Option == KeepChecksumOption ? MergedSaveChecksums.Keep : MergedSaveChecksums.Regenerate;
@@ -85,11 +87,14 @@ namespace ForgePlus.DataFileIO
             }
 
             var keepChecksum = choice == MergedSaveChecksums.Keep;
-            ShowSelectionBrowserCoroutine(merged: true, path => SaveMergedMapFile(path, keepChecksum));
+            return await ShowSelectionBrowser(merged: true, path => SaveMergedMapFile(path, keepChecksum));
         }
 
-        private void ShowSelectionBrowserCoroutine(bool merged, Action<string> save)
+        // Completes with whether it was saved (rather than cancelled, or failed)
+        private Task<bool> ShowSelectionBrowser(bool merged, Action<string> save)
         {
+            var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
             UIBlocking.Instance.Block();
 
             var type = DataFileTypes.Maps;
@@ -102,11 +107,15 @@ namespace ForgePlus.DataFileIO
                 directory: initialDirectory,
                 defaultName: defaultName,
                 type.FileExtension(),
-                cb: savePath => HandleSelectionBrowserResponse(savePath, type, save));
+                cb: savePath => completion.TrySetResult(HandleSelectionBrowserResponse(savePath, type, save)));
+
+            return completion.Task;
         }
 
-        private void HandleSelectionBrowserResponse(string savePath, DataFileTypes type, Action<string> save)
+        private bool HandleSelectionBrowserResponse(string savePath, DataFileTypes type, Action<string> save)
         {
+            var isSaved = false;
+
             if (!string.IsNullOrEmpty(savePath) && !string.IsNullOrWhiteSpace(savePath))
             {
                 var path = savePath;
@@ -119,6 +128,8 @@ namespace ForgePlus.DataFileIO
                     FileSettings.Instance.UpdateFilePath(type, filePath: path, loadFile: false);
 
                     OnSaveCompleted?.Invoke();
+
+                    isSaved = true;
                 }
                 catch (Exception exception)
                 {
@@ -127,6 +138,8 @@ namespace ForgePlus.DataFileIO
             }
 
             UIBlocking.Instance.Unblock();
+
+            return isSaved;
         }
 
         private void SaveLevelToUnmergedMapFile(string savePath, bool withPhysics, bool withResources)

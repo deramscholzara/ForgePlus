@@ -1,4 +1,5 @@
-﻿using ForgePlus.DataFileIO;
+﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.DataFileIO;
 using ForgePlus.LevelManipulation;
 using ForgePlus.Localization;
 using UnityEngine;
@@ -79,22 +80,17 @@ namespace ForgePlus.UI
 
         private static void OnSave()
         {
-            MapsLoading.Instance.Save();
+            _ = MapsLoading.Instance.Save();
         }
 
         private static void OnSaveMerged()
         {
-            MapsLoading.Instance.SaveMerged();
+            _ = MapsLoading.Instance.SaveMerged();
         }
 
         private static void OnQuit()
         {
-            // TODO: Check if save is necessary
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            UnsavedChanges.Quit();
         }
     }
 }

@@ -166,26 +166,35 @@ namespace ForgePlus.DataFileIO
                 cb: openPaths => HandleSelectionBrowserResponse(openPaths, type));
         }
 
-        private void HandleSelectionBrowserResponse(string[] openPaths, DataFileTypes type)
+        // Another maps file closes the open level, so its unsaved changes are asked about first
+        private async void HandleSelectionBrowserResponse(string[] openPaths, DataFileTypes type)
         {
-            if (openPaths.Length > 0)
+            try
             {
-                var openPath = openPaths[0];
-                if (!string.IsNullOrEmpty(openPath) && !string.IsNullOrWhiteSpace(openPath))
+                if (openPaths.Length > 0)
                 {
-                    UpdateFilePath(type, filePath: openPath, loadFile: true);
+                    var openPath = openPaths[0];
+                    if (!string.IsNullOrEmpty(openPath) && !string.IsNullOrWhiteSpace(openPath) &&
+                        (type != DataFileTypes.Maps || await UnsavedChanges.Confirm()))
+                    {
+                        UpdateFilePath(type, filePath: openPath, loadFile: true);
+                    }
                 }
             }
-
-            UIBlocking.Instance.Unblock();
+            finally
+            {
+                UIBlocking.Instance.Unblock();
+            }
         }
 
-        private void HandleDirectorySearchBrowserResponse(string[] openPaths)
+        // The maps file is always loaded again (or unloaded), closing the open level, so its unsaved changes are asked
+        // about first
+        private async void HandleDirectorySearchBrowserResponse(string[] openPaths)
         {
             try
             {
                 var directory = openPaths.Length > 0 ? openPaths[0] : null;
-                if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory))
+                if (string.IsNullOrWhiteSpace(directory) || !Directory.Exists(directory) || !await UnsavedChanges.Confirm())
                 {
                     return;
                 }
