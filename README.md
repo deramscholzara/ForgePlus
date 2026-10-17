@@ -112,7 +112,18 @@ Forge+ has two views: a free-flying **perspective** camera, and a **top-down** (
   - Press <kbd>Esc</kbd> to cancel and restore the previous selection.
   - In perspective, the rectangle only picks things within the distance where points fade out. In the top-down view, it picks everything in view.
 - **Switching modes keeps the selection meaningful.** For example, select a polygon in Geometry mode, switch to Lights mode, and that polygon's light is selected.
-- Selecting more than one thing shows no inspector yet. Multi-selection is used for moving things together.
+- Selecting more than one thing shows no inspector yet. Multi-selection is used for moving and deleting things together.
+- **Press <kbd>Delete</kbd> or <kbd>Backspace</kbd>** to delete or clear what's selected, as one undoable step. What that means depends on the mode:
+
+  | Mode | Delete Selected |
+  |---|---|
+  | Geometry | Deletes the selected polygons, points and lines (see [Deleting geometry](#geometry)) |
+  | Objects, Annotations | Deletes the selected objects or annotations |
+  | Sounds | Clears the selected polygons' ambient and random sounds, and deletes the selected sound sources |
+  | Media | Removes the media from the polygon it was selected in |
+  | Lights | Sets the surface the light was selected on to light 0 |
+  | Platforms | Turns the selected platforms back into normal polygons |
+  | Textures | Clears the textures of the selected surfaces (the face you clicked, and the same face of the rest of the selection). A control panel's main texture is set by its panel type, so it isn't cleared |
 
 ---
 
@@ -444,6 +455,7 @@ Every binding can be changed in the **Inputs** tab of the Menu. Click a binding,
 | Add to selection | <kbd>Shift</kbd> |
 | Select touching (rectangle) | <kbd>Ctrl</kbd> / <kbd>Cmd</kbd> |
 | Cancel selection box | <kbd>Esc</kbd> |
+| Delete selected (what it does depends on the mode) | <kbd>Delete</kbd>, <kbd>Backspace</kbd> |
 
 </details>
 
@@ -457,15 +469,6 @@ Every binding can be changed in the **Inputs** tab of the Menu. Click a binding,
 | Keep height above floor (dragging objects) | <kbd>Ctrl</kbd> |
 | Move textures along (dragging geometry) | <kbd>Ctrl</kbd> |
 | Allow invalid geometry | <kbd>Shift</kbd> |
-
-</details>
-
-<details open>
-<summary><strong>Geometry</strong></summary>
-
-| Action | Default |
-|---|---|
-| Delete selected geometry (Geometry mode) | <kbd>Delete</kbd>, <kbd>Backspace</kbd> |
 
 </details>
 
@@ -531,7 +534,7 @@ Keyboard shortcuts don't fire while you're typing in a field.
 Forge+ can view everything in a map, and edit much of it. These are the main things it can't do yet:
 
 **Creating and deleting**
-- [ ] Delete objects, lights, media, annotations or terminals. Today, besides geometry (polygons, lines and points), only sound entries and terminal groups can be deleted.
+- [ ] Delete lights, media types or terminals from the level. Today, <kbd>Delete</kbd> only unassigns a light or media from a surface or polygon. Polygons, lines, points, objects, annotations, sound entries and terminal groups can be deleted.
 - [ ] Place new objects (monsters, items, scenery, player starts, goals, sound sources).
 - [ ] Add new lights, media, annotations, terminals or levels.
 - [ ] Copy, paste and duplicate geometry or objects.

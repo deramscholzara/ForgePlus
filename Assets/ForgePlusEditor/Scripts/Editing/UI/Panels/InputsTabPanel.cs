@@ -94,7 +94,8 @@ namespace ForgePlus.UI
                 new Entry("AddToSelection", () => ForgePlusInput.Editing.AddToSelection,
                     InputContexts.WorldClick | InputContexts.RectangleSelect),
                 new Entry("SelectTouching", () => ForgePlusInput.Editing.SelectTouching, InputContexts.RectangleSelect),
-                new Entry("CancelSelectionBox", () => ForgePlusInput.Editing.CancelSelectionBox, InputContexts.RectangleSelect)),
+                new Entry("CancelSelectionBox", () => ForgePlusInput.Editing.CancelSelectionBox, InputContexts.RectangleSelect),
+                new Entry("DeleteSelected", () => ForgePlusInput.Editing.DeleteSelected, InputContexts.Always)),
             new Category("Moving",
                 new Entry("LockX", () => ForgePlusInput.Editing.LockX, InputContexts.Always, ignoredWithShortcutModifier: true),
                 new Entry("LockY", () => ForgePlusInput.Editing.LockY, InputContexts.Always, ignoredWithShortcutModifier: true),
@@ -106,8 +107,6 @@ namespace ForgePlus.UI
                 new Entry("KeepTexturesWithPoint", () => ForgePlusInput.Editing.KeepTexturesWithPoint, InputContexts.GeometryDrag),
                 new Entry("AllowInvalidGeometry", () => ForgePlusInput.Editing.AllowInvalidGeometry,
                     InputContexts.GeometryDrag | InputContexts.Draw)),
-            new Category("Geometry",
-                new Entry("DeleteGeometry", () => ForgePlusInput.Editing.DeleteGeometry, InputContexts.Always)),
             // Nudging acts on its press while a surface is selected in Textures mode, even mid-click or mid-drag
             new Category("Textures",
                 new Entry("NudgeUp", () => ForgePlusInput.Editing.NudgeUp, TextureModeContexts),

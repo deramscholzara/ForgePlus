@@ -156,12 +156,12 @@ namespace ForgePlus.ApplicationGeneral
                 }
             }
 
-            // Deletes the selected points and polygons in Geometry mode (GeometryDeletion)
-            public static InputAction DeleteGeometry
+            // Deletes or clears what's selected, as the mode has it (SelectionDeletion)
+            public static InputAction DeleteSelected
             {
                 get
                 {
-                    return Find("Editing/DeleteGeometry");
+                    return Find("Editing/DeleteSelected");
                 }
             }
 

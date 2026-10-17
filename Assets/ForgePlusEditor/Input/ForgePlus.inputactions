@@ -512,7 +512,7 @@
                     "priority": 0
                 },
                 {
-                    "name": "DeleteGeometry",
+                    "name": "DeleteSelected",
                     "type": "Button",
                     "id": "3f6c1a2e-8b4d-4e71-9a05-2d7c6e1b4a01",
                     "expectedControlType": "Button",
@@ -816,7 +816,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DeleteGeometry",
+                    "action": "DeleteSelected",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -827,7 +827,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DeleteGeometry",
+                    "action": "DeleteSelected",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
