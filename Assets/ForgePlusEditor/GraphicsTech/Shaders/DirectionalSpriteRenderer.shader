@@ -1,4 +1,5 @@
-﻿// A Marathon directional sprite, billboarded around the world Y axis. The object's forward axis is its facing,
+﻿// A Marathon directional sprite, billboarded around the world Y axis to face the camera's position (its view direction,
+// in an orthographic view). The object's forward axis is its facing,
 // which picks the view as Aleph One's get_object_shape_and_transfer_mode() does (FACING4/FACING5/FACING8).
 Shader "ForgePlus/DirectionalSpriteRenderer"
 {
@@ -103,10 +104,21 @@ Shader "ForgePlus/DirectionalSpriteRenderer"
 
             float3 originWS = TransformObjectToWorld(float3(0.0, 0.0, 0.0));
 
-            // The camera's right vector, flattened so sprites stay upright
-            float3 rightWS = UNITY_MATRIX_I_V._m00_m10_m20;
-            rightWS.y = 0.0;
-            rightWS = dot(rightWS, rightWS) > 1e-6 ? normalize(rightWS) : float3(1.0, 0.0, 0.0);
+            // Square to the direction from the camera to the sprite (as Aleph One draws them), flattened so sprites stay
+            // upright. An orthographic camera looks the same way from everywhere, so (as for a sprite right below or
+            // above the camera) that's its right vector.
+            float3 cameraRightWS = UNITY_MATRIX_I_V._m00_m10_m20;
+            cameraRightWS.y = 0.0;
+            cameraRightWS = dot(cameraRightWS, cameraRightWS) > 1e-6 ? normalize(cameraRightWS) : float3(1.0, 0.0, 0.0);
+
+            float3 toSpriteWS = originWS - GetCameraPositionWS();
+            toSpriteWS.y = 0.0;
+
+            float3 rightWS = cameraRightWS;
+            if (unity_OrthoParams.w < 0.5 && dot(toSpriteWS, toSpriteWS) > 1e-6)
+            {
+                rightWS = normalize(cross(float3(0.0, 1.0, 0.0), toSpriteWS));
+            }
 
             float3 positionWS = originWS + rightWS * input.positionOS.x + float3(0.0, input.positionOS.y, 0.0);
 
