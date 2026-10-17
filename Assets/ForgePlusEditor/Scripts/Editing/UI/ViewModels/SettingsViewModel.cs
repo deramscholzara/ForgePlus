@@ -220,19 +220,6 @@ namespace ForgePlus.UI
         }
 
         [CreateProperty]
-        public bool PreventInvalidGeometryEnabled
-        {
-            get
-            {
-                return SettingsManager.Instance.PreventInvalidGeometryEnabled;
-            }
-            set
-            {
-                SettingsManager.Instance.PreventInvalidGeometryEnabled = value;
-            }
-        }
-
-        [CreateProperty]
         public bool GridEnabled
         {
             get
@@ -265,6 +252,30 @@ namespace ForgePlus.UI
             set
             {
                 SettingsManager.Instance.OrthographicGridOpacityPercent = value;
+            }
+        }
+
+        // The UI scale's step on its slider (0 for 100%, up to 5 for 350%)
+        [CreateProperty]
+        public int UIScaleStep
+        {
+            get
+            {
+                return (SettingsManager.Instance.UIScalePercent - SettingsManager.MinimumUIScalePercent) / SettingsManager.UIScaleStepPercent;
+            }
+            set
+            {
+                SettingsManager.Instance.UIScalePercent = SettingsManager.MinimumUIScalePercent + value * SettingsManager.UIScaleStepPercent;
+            }
+        }
+
+        // "150%"
+        [CreateProperty]
+        public string UIScaleText
+        {
+            get
+            {
+                return Strings.Get(Strings.Menu, "SettingsTab.UIScale.Value", SettingsManager.Instance.UIScalePercent);
             }
         }
 
@@ -583,6 +594,12 @@ namespace ForgePlus.UI
             if (setting == nameof(OrthographicGridOpacityPercent))
             {
                 Notify(nameof(OrthographicGridOpacityText));
+            }
+
+            if (setting == nameof(SettingsManager.UIScalePercent))
+            {
+                Notify(nameof(UIScaleStep));
+                Notify(nameof(UIScaleText));
             }
         }
 

@@ -25,7 +25,7 @@
     left: 0;
     right: 0;
     top: 0;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
 }
 
 .fp-header {
@@ -36,9 +36,28 @@
 
 .fp-header__menu {
     width: 100px;
+    flex-shrink: 0;
 }
 
-.fp-header__modes {
+/* Between the menu and the actions (which keep their sizes), the modes centered in what room there is, and scrolled
+   sideways where they don't fit */
+.fp-header__modes-scroll {
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    margin: 0 5px;
+}
+
+.fp-header__modes-scroll .unity-scroll-view__content-container {
+    flex-direction: row;
+    flex-grow: 1;
+    min-width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+
+.fp-header__modes,
+.fp-header__other {
     flex-shrink: 0;
 }
 
@@ -61,15 +80,46 @@
     margin-left: 5px;
 }
 
+/* Wide enough for its text on one line (Save Merged) */
+.fp-header__action--wide {
+    width: 130px;
+}
+
+/* Only as wide as its text, with room either side (Quit) */
+.fp-header__action--fit {
+    width: auto;
+}
+
+.fp-header__action--fit > .fp-button {
+    padding: 0 15px;
+}
+
+/* Other's text is centered, as the modes' are, and a toggle's would otherwise be beside its indicator */
+.fp-header__other .unity-toggle__text {
+    -unity-text-align: middle-center;
+}
+
+/* On Other's right, as a dropdown's */
+.fp-header__other-arrow {
+    position: absolute;
+    right: 8px;
+    top: 9px;
+    width: 12px;
+    height: 12px;
+    margin: 0;
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-image-tint-color: var(--fp-control-text);
+}
+
 /* ---------- Columns ---------- */
 
-/* 10px below the header and above the manipulation bar (each --fp-control-height tall) */
+/* 10px below the header and above the manipulation bar (each --fp-short-control-height tall) */
 .fp-frame {
     position: absolute;
     left: 0;
     right: 0;
-    top: 50px;
-    bottom: 50px;
+    top: 40px;
+    bottom: 40px;
     flex-direction: row;
     align-items: stretch;
 }
@@ -161,7 +211,7 @@
 
 /* Tool modes and view options, in the right column's first box */
 .fp-tool-modes {
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
 }
 
 .fp-tool-modes__mode {
@@ -230,13 +280,13 @@
     bottom: 0;
     left: 0;
     right: 0;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
     align-items: center;
 }
 
 .fp-manipulation {
     flex-direction: row;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
 }
 
 .fp-manipulation > * {
@@ -279,7 +329,7 @@
     right: 0;
     bottom: 0;
     width: 50px;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
 }
 
 .fp-errors-toggle-slot > .fp-panel,
@@ -307,7 +357,7 @@
     position: absolute;
     left: 0;
     bottom: 0;
-    height: var(--fp-control-height);
+    height: var(--fp-short-control-height);
 }
 
 .fp-history-slot > .fp-panel,
@@ -334,7 +384,7 @@
 .fp-level-name {
     position: absolute;
     right: 60px;
-    bottom: 7px;
+    bottom: 2px;
     margin: 0;
     padding: 0;
     -unity-text-align: lower-right;

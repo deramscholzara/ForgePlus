@@ -25,7 +25,7 @@ namespace ForgePlus.LevelManipulation
     // the move left outside their polygons (or heights) are put back in (ObjectPlacement), and the map indexes (what's
     // near each polygon, and which sound sources it hears) are worked out again.
     //
-    // While Prevent Invalid Moves is on (the setting), a point (or points moved together) stops short of where it would
+    // A point (or points moved together) stops short of where it would
     // make a polygon around it invalid (GeometryValidation's errors that weren't there before the move); holding Allow
     // Invalid Move (shift) while dragging lets it go there anyway. What a move would break, or breaks, is shown as it goes
     // (Feedback).
@@ -141,7 +141,7 @@ namespace ForgePlus.LevelManipulation
 
         private static bool PreventsInvalidMoves(bool canBeAllowed)
         {
-            return SettingsManager.Instance.PreventInvalidGeometryEnabled && !(canBeAllowed && ForgePlusInput.Editing.AllowInvalidGeometry.IsPressed());
+            return !(canBeAllowed && ForgePlusInput.Editing.AllowInvalidGeometry.IsPressed());
         }
 
         // Typed in, as one action

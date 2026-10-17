@@ -21,8 +21,8 @@ namespace ForgePlus.LevelManipulation
     // goes, as a height edit hides it (SideExposure).
     //
     // What it would add is shown as it goes (Current, which PointHandles draws). It can't be added where the line has no
-    // polygon beside it, or already has one on the side it's dragged to. While Prevent Invalid Moves is on (the setting),
-    // it also can't overlap other lines or points, unless Allow Invalid Move (shift) is held when letting go.
+    // polygon beside it, or already has one on the side it's dragged to. It also
+    // can't overlap other lines or points, unless Allow Invalid Move (shift) is held when letting go.
     [AutoStaticsCleanup]
     public sealed partial class LineExtrusion
     {
@@ -208,7 +208,7 @@ namespace ForgePlus.LevelManipulation
             preview.Overlaps = OverlapsGeometry(data, line);
             if (preview.Overlaps)
             {
-                var allowsOverlap = !SettingsManager.Instance.PreventInvalidGeometryEnabled || ForgePlusInput.Editing.AllowInvalidGeometry.IsPressed();
+                var allowsOverlap = ForgePlusInput.Editing.AllowInvalidGeometry.IsPressed();
 
                 preview.IsBlocked = !allowsOverlap;
                 preview.Message = Strings.Get(Strings.Common, allowsOverlap ? "LineExtrusion.OverlapsAllowed" : "LineExtrusion.Overlaps");

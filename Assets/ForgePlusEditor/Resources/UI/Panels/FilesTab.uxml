@@ -35,7 +35,7 @@
         </ui:VisualElement>
         <ui:VisualElement class="fp-separator fp-separator--horizontal" />
         <ui:VisualElement class="fp-box fp-box--padded fp-files__levels">
-            <ui:ListView name="levels" fixed-item-height="45" selection-type="Single" class="fp-scroll fp-level-list" />
+            <ui:ListView name="levels" fixed-item-height="35" selection-type="Single" class="fp-scroll fp-level-list" />
         </ui:VisualElement>
         <!-- Shown in the menu's row of actions -->
         <ui:VisualElement name="actions" class="fp-files__actions" picking-mode="Ignore">

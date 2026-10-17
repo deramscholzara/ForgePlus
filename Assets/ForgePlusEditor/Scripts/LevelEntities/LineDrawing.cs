@@ -28,7 +28,7 @@ namespace ForgePlus.LevelManipulation
     // stay where they are.
     //
     // The line can't cross or touch other lines or points (other than those it starts and ends at), or go through a
-    // polygon other than to split it, while Prevent Invalid Moves is on (the setting), unless Allow Invalid Move (shift)
+    // polygon other than to split it, unless Allow Invalid Move (shift)
     // is held when letting go (which never splits). Splitting a polygon ignores the lines of others that overlap it (at
     // other heights), as the new line can't meet them. What it would add is shown as it goes (Current, which PointHandles
     // draws). The level's structure changes, so it's rebuilt afterward, with the new point (or line) selected.
@@ -276,7 +276,7 @@ namespace ForgePlus.LevelManipulation
                 return;
             }
 
-            var allowsInvalid = !SettingsManager.Instance.PreventInvalidGeometryEnabled || ForgePlusInput.Editing.AllowInvalidGeometry.IsPressed();
+            var allowsInvalid = ForgePlusInput.Editing.AllowInvalidGeometry.IsPressed();
 
             preview.Overlaps = true;
             preview.IsBlocked = !allowsInvalid;

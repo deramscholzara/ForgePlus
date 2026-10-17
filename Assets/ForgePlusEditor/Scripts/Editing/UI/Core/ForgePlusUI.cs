@@ -8,6 +8,7 @@ using ForgePlus.Sound;
 using System.Collections.Generic;
 using Unity.Localization;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace ForgePlus.UI
@@ -36,6 +37,9 @@ namespace ForgePlus.UI
         private PanelSlot paletteSlot;
 
         private bool isBuilt;
+
+        // The panel settings asset's own scale, put back as the UI closes (in the Editor, the asset outlives Play sessions)
+        private float? originalPanelScale;
 
         // The open mode's string table, and the mode whose panels were last asked for (while its table loads)
         private string modeTable;
@@ -193,6 +197,12 @@ namespace ForgePlus.UI
 
             slots.Clear();
 
+            var panelSettings = GetComponent<UIDocument>().panelSettings;
+            if (originalPanelScale.HasValue && panelSettings)
+            {
+                panelSettings.scale = originalPanelScale.Value;
+            }
+
             Editor?.Dispose();
             Settings?.Dispose();
             Terminals?.Dispose();
@@ -211,6 +221,8 @@ namespace ForgePlus.UI
             KeepRootInDocument();
 #endif
 
+            ApplyUIScale();
+
             WorldLabels.UpdatePositions();
             SoundVisualization.Update();
             PointHandles.Update();
@@ -219,6 +231,27 @@ namespace ForgePlus.UI
             // Once a frame at most, after what may have changed them
             Errors.RefreshIfRequested();
             DiagnosticVisuals.RefreshIfRequested();
+        }
+
+        // The UI Scale setting, as the panel's scale. A change waits until no mouse button is held, so the slider dragged to
+        // change it doesn't grow or shrink under the pointer mid-drag.
+        private void ApplyUIScale()
+        {
+            var panelSettings = GetComponent<UIDocument>().panelSettings;
+            var scale = SettingsManager.Instance.UIScalePercent / 100f;
+            if (!panelSettings || Mathf.Approximately(panelSettings.scale, scale))
+            {
+                return;
+            }
+
+            var mouse = Mouse.current;
+            if (mouse != null && (mouse.leftButton.isPressed || mouse.rightButton.isPressed || mouse.middleButton.isPressed))
+            {
+                return;
+            }
+
+            originalPanelScale ??= panelSettings.scale;
+            panelSettings.scale = scale;
         }
 
         private void Update()

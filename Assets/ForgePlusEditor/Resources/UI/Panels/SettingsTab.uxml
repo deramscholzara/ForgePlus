@@ -9,14 +9,18 @@
     <ui:VisualElement class="fp-grow" picking-mode="Ignore">
         <ui:VisualElement class="fp-box fp-settings__options">
             <ui:Instance template="ScrollArea" class="fp-grow fp-scroll--spaced">
+                <ui:Label text="@Menu/SettingsTab.DisplayHeader.Text" class="fp-settings__header" />
                 <ui:Instance template="Toggle" name="full-screen" class="fp-toggle--wide fp-setting">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.FullScreen.Control.Text" />
                 </ui:Instance>
-                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <!-- From 100% to 350% in steps of 50% (SettingsManager), applied once the pointer lets go (ForgePlusUI) -->
+                <ui:Instance template="SliderValueRow" name="ui-scale" class="fp-setting" tooltip="@Menu/SettingsTab.UIScale.Tooltip">
+                    <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.UIScale.Control.Label" high-value="5" />
+                </ui:Instance>
+                <ui:Label text="@Menu/SettingsTab.RenderingHeader.Text" class="fp-settings__header" />
                 <ui:Instance template="SliderRow" name="minimum-light" class="fp-setting">
                     <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.MinimumLight.Control.Label" />
                 </ui:Instance>
-                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
                 <ui:Instance template="Toggle" name="bloom" class="fp-toggle--wide fp-setting">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Bloom.Control.Text" />
                 </ui:Instance>
@@ -32,17 +36,13 @@
                 <ui:Instance template="Toggle" name="surface-cache-global-illumination" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.SurfaceCacheGlobalIllumination.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.SurfaceCacheGlobalIllumination.Control.Text" />
                 </ui:Instance>
-                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <ui:Label text="@Menu/SettingsTab.UnitsHeader.Text" class="fp-settings__header" />
                 <ui:Instance template="Toggle" name="improper-fractions" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.ImproperFractions.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.ImproperFractions.Control.Text" />
                 </ui:Instance>
-                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <ui:Label text="@Menu/SettingsTab.EditingHeader.Text" class="fp-settings__header" />
                 <ui:Instance template="IntegerFieldRow" name="undo-steps" class="fp-setting" tooltip="@Menu/SettingsTab.UndoSteps.Tooltip">
                     <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.UndoSteps.Control.Label" />
-                </ui:Instance>
-                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
-                <ui:Instance template="Toggle" name="prevent-invalid-geometry" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.PreventInvalidGeometry.Tooltip">
-                    <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.PreventInvalidGeometry.Control.Text" />
                 </ui:Instance>
                 <!-- From a point's drawn size (100%) to twice that (200%), in steps of a ninth (SettingsManager) -->
                 <ui:Instance template="SliderValueRow" name="point-click-area" class="fp-setting" tooltip="@Menu/SettingsTab.PointClickArea.Tooltip">
@@ -52,26 +52,28 @@
                 <ui:Instance template="SliderValueRow" name="point-snap-distance" class="fp-setting" tooltip="@Menu/SettingsTab.PointSnapDistance.Tooltip">
                     <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.PointSnapDistance.Control.Label" low-value="1" high-value="25" />
                 </ui:Instance>
-                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <ui:Label text="@Menu/SettingsTab.TopDownViewHeader.Text" class="fp-settings__header" />
                 <!-- From invisible (0%) to opaque (100%) -->
                 <ui:Instance template="SliderValueRow" name="orthographic-grid-opacity" class="fp-setting" tooltip="@Menu/SettingsTab.OrthographicGridOpacity.Tooltip">
                     <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.OrthographicGridOpacity.Control.Label" high-value="100" />
                 </ui:Instance>
-                <ui:VisualElement class="fp-separator fp-separator--horizontal" />
+                <ui:Label text="@Menu/SettingsTab.SavingHeader.Text" class="fp-settings__header" />
                 <!-- What Save Merged does with the map file's checksum (Ask until its dialog's choice is remembered), in the
-                     order of MergedSaveChecksums -->
-                <ui:Label text="@Menu/SettingsTab.UpdateMergeChecksumOn.Text" class="fp-setting__label" />
-                <ui:RadioButtonGroup name="merged-save-checksum" class="fp-radio-group fp-radio-row fp-setting">
-                    <ui:Instance template="RadioToggle" class="fp-setting__choice">
-                        <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Ask.Control.Text" />
-                    </ui:Instance>
-                    <ui:Instance template="RadioToggle" class="fp-setting__choice">
-                        <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Keep.Control.Text" />
-                    </ui:Instance>
-                    <ui:Instance template="RadioToggle" class="fp-setting__choice fp-setting__choice--last">
-                        <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Regenerate.Control.Text" />
-                    </ui:Instance>
-                </ui:RadioButtonGroup>
+                     order of MergedSaveChecksums, beside its name (as a slider's row is) -->
+                <ui:VisualElement class="fp-setting fp-setting-row">
+                    <ui:Label text="@Menu/SettingsTab.UpdateMergeChecksumOn.Text" class="fp-setting-row__label" />
+                    <ui:RadioButtonGroup name="merged-save-checksum" class="fp-radio-group fp-radio-row fp-setting-row__choices">
+                        <ui:Instance template="RadioToggle" class="fp-setting__choice">
+                            <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Ask.Control.Text" />
+                        </ui:Instance>
+                        <ui:Instance template="RadioToggle" class="fp-setting__choice">
+                            <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Keep.Control.Text" />
+                        </ui:Instance>
+                        <ui:Instance template="RadioToggle" class="fp-setting__choice fp-setting__choice--last">
+                            <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.Regenerate.Control.Text" />
+                        </ui:Instance>
+                    </ui:RadioButtonGroup>
+                </ui:VisualElement>
             </ui:Instance>
             <!-- At the bottom of the settings, centered -->
             <ui:VisualElement class="fp-settings__actions" picking-mode="Ignore">

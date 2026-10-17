@@ -46,10 +46,19 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_UndoSteps = "Settings_UndoSteps";
         private const string PlayerPrefsSettingsKey_PointClickAreaSteps = "Settings_PointClickAreaSteps";
         private const string PlayerPrefsSettingsKey_PointSnapDistance = "Settings_PointSnapDistance";
-        private const string PlayerPrefsSettingsKey_PreventInvalidGeometry = "Settings_PreventInvalidGeometry";
+
+        // No longer a setting (invalid moves are always prevented, unless Allow Invalid Move is held), so its saved value
+        // is removed
+        private const string RemovedPlayerPrefsSettingsKey_PreventInvalidGeometry = "Settings_PreventInvalidGeometry";
         private const string PlayerPrefsSettingsKey_OrthographicGridOpacity = "Settings_OrthographicGridOpacity";
 
         public const int DefaultOrthographicGridOpacityPercent = 40;
+
+        // The UI's scale, from 100% to 350% (the range of Windows' display scaling) in steps of 50%
+        private const string PlayerPrefsSettingsKey_UIScale = "Settings_UIScale";
+        public const int MinimumUIScalePercent = 100;
+        public const int MaximumUIScalePercent = 350;
+        public const int UIScaleStepPercent = 50;
 
         // A point's click area grows from its drawn size (100%) to twice that (200%), in steps of a ninth (a pixel each)
         public const int MaximumPointClickAreaSteps = 9;
@@ -346,22 +355,6 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
-        // Moving a point stops short of where it would make a polygon invalid (PointEditing), unless Allow Invalid Move
-        // (shift) is held while dragging its handle
-        public bool PreventInvalidGeometryEnabled
-        {
-            get
-            {
-                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_PreventInvalidGeometry, 1) != 0;
-            }
-            set
-            {
-                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_PreventInvalidGeometry, value ? 1 : 0);
-
-                OnSettingChanged?.Invoke(nameof(PreventInvalidGeometryEnabled));
-            }
-        }
-
         // The click area's size, as a multiple of a point's drawn size
         // The grid under the level in the orthographic view (OrthographicGrid)
         public bool GridEnabled
@@ -391,6 +384,28 @@ namespace ForgePlus.ApplicationGeneral
 
                 OnSettingChanged?.Invoke(nameof(OrthographicGridOpacityPercent));
             }
+        }
+
+        // As a whole percentage, on one of its steps (ForgePlusUI applies it)
+        public int UIScalePercent
+        {
+            get
+            {
+                return SnappedUIScalePercent(PlayerPrefs.GetInt(PlayerPrefsSettingsKey_UIScale, MinimumUIScalePercent));
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_UIScale, SnappedUIScalePercent(value));
+
+                OnSettingChanged?.Invoke(nameof(UIScalePercent));
+            }
+        }
+
+        private static int SnappedUIScalePercent(int percent)
+        {
+            var steps = (int) Math.Round((float) (percent - MinimumUIScalePercent) / UIScaleStepPercent);
+
+            return Math.Clamp(MinimumUIScalePercent + steps * UIScaleStepPercent, MinimumUIScalePercent, MaximumUIScalePercent);
         }
 
         public float OrthographicGridOpacity
@@ -791,8 +806,8 @@ namespace ForgePlus.ApplicationGeneral
                 PlayerPrefsSettingsKey_UndoSteps,
                 PlayerPrefsSettingsKey_PointClickAreaSteps,
                 PlayerPrefsSettingsKey_PointSnapDistance,
-                PlayerPrefsSettingsKey_PreventInvalidGeometry,
                 PlayerPrefsSettingsKey_OrthographicGridOpacity,
+                PlayerPrefsSettingsKey_UIScale,
             })
             {
                 PlayerPrefs.DeleteKey(key);
@@ -816,8 +831,8 @@ namespace ForgePlus.ApplicationGeneral
             UndoSteps = UndoSteps;
             PointClickAreaSteps = PointClickAreaSteps;
             PointSnapDistance = PointSnapDistance;
-            PreventInvalidGeometryEnabled = PreventInvalidGeometryEnabled;
             OrthographicGridOpacityPercent = OrthographicGridOpacityPercent;
+            UIScalePercent = UIScalePercent;
 
             MmlLoading.Instance.ResetPluginStates();
 
@@ -841,6 +856,8 @@ namespace ForgePlus.ApplicationGeneral
 
         private void Start()
         {
+            PlayerPrefs.DeleteKey(RemovedPlayerPrefsSettingsKey_PreventInvalidGeometry);
+
             IsFullScreen = IsFullScreen;
             MinimumLight = MinimumLight;
             ClipPlatformSidesEnabled = ClipPlatformSidesEnabled;
