@@ -63,12 +63,13 @@
 
 /* ---------- Columns ---------- */
 
+/* 10px below the header and above the manipulation bar (each --fp-control-height tall) */
 .fp-frame {
     position: absolute;
     left: 0;
     right: 0;
-    top: 65px;
-    bottom: 40px;
+    top: 50px;
+    bottom: 50px;
     flex-direction: row;
     align-items: stretch;
 }
