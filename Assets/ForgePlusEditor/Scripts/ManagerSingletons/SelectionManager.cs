@@ -78,13 +78,9 @@ namespace ForgePlus.LevelManipulation
                 SetSelectability<LevelEntity_Annotation>(level.Annotations.Values, enabled: primaryMode == ModeManager.PrimaryModes.Annotations);
                 SetSelectability<LevelEntity_Level>(level, enabled: primaryMode == ModeManager.PrimaryModes.Level);
 
-                // Sound sources are the only objects selected in Sounds mode
                 foreach (var mapObject in level.MapObjects.Values)
                 {
-                    var isSelectable = primaryMode == ModeManager.PrimaryModes.Objects ||
-                                       (primaryMode == ModeManager.PrimaryModes.Sounds && mapObject.NativeObject.type == map._saved_sound_source);
-
-                    SetSelectability<LevelEntity_MapObject>(mapObject, enabled: isSelectable);
+                    SetSelectability<LevelEntity_MapObject>(mapObject, enabled: primaryMode == ModeManager.PrimaryModes.Objects);
                 }
 
                 foreach (var polygonSurface in level.EditableSurface_Polygons)
@@ -373,9 +369,15 @@ namespace ForgePlus.LevelManipulation
             return SelectsFaces(primaryMode);
         }
 
-        // Terminals mode clicks sides (computer terminal panels) to preview their terminals
+        // Terminals mode clicks sides (computer terminal panels) to preview their terminals. Media and Sounds modes only
+        // select polygons, through their floors and ceilings (and media).
         private static bool SideSurfacesAreSelectable(ModeManager.PrimaryModes primaryMode)
         {
+            if (primaryMode == ModeManager.PrimaryModes.Media || primaryMode == ModeManager.PrimaryModes.Sounds)
+            {
+                return false;
+            }
+
             return SelectsFaces(primaryMode) || primaryMode == ModeManager.PrimaryModes.Terminals;
         }
 

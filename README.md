@@ -119,7 +119,7 @@ Forge+ has two views: a free-flying **perspective** camera, and a **top-down** (
   |---|---|
   | Geometry | Deletes the selected polygons, points and lines (see [Deleting geometry](#geometry)) |
   | Objects, Annotations | Deletes the selected objects or annotations |
-  | Sounds | Clears the selected polygons' ambient and random sounds, and deletes the selected sound sources |
+  | Sounds | Clears the selected polygons' ambient and random sounds |
   | Media | Removes the media from the polygon it was selected in |
   | Lights | Sets the surface the light was selected on to light 0 |
   | Platforms | Turns the selected platforms back into normal polygons |
@@ -218,7 +218,7 @@ A control panel's main texture comes from its panel type, so you change it in th
 
 Liquids such as water, lava and sewage.
 
-- **Click** a polygon to select its media.
+- **Click** a polygon's floor, ceiling or media surface to select its media. Walls can't be clicked in this mode.
 - **Paint tool:** apply the palette's media to polygons, or paint **None** to remove it.
 - **Inspector:** type, low and high heights, flow direction and strength, light, minimum light intensity, Floor Obstructs Sound.
 
@@ -226,10 +226,10 @@ Liquids such as water, lava and sewage.
 
 ![Sounds mode, showing sound sources and the ambient and random sound lists](Documentation/Images/sounds.jpg)
 
-- **Click** a polygon to see its ambient and random sounds, and which sound-source objects it hears.
+- **Click** a polygon's floor or ceiling to see its ambient and random sounds, and which sound-source objects it hears. Walls and objects can't be clicked in this mode, and the selection rectangle picks polygons.
 - **Paint tool:** give clicked polygons the sounds chosen in the palette.
 - The palette lists the level's **Ambient Sounds** and **Random Sounds**. Each one has a ▶ play button, and you can **Add** or **Duplicate** entries. Select an entry to edit its sound, volume, period, pitch and direction, and see where it plays, or **Delete** it.
-- Sound-source objects can be selected and dragged here, as in Objects mode.
+- To select, move or delete sound-source objects, use Objects mode.
 - **Listen to the level:** turn on **More Display Options → Play Level Audio** (needs a Sounds file), then move the camera into a polygon to hear what the game plays there: that polygon's ambient and random sounds, and the sound sources it hears.
 
 > [!NOTE]
@@ -273,7 +273,7 @@ The Platform inspector's **Simulation Actions** do the same.
 
 Monsters, items, scenery, player starts, goals and sound sources.
 
-- **Click** an object to select it. **Drag** to move it (with any other selected objects) into whichever polygon it ends up over.
+- **Click** an object to select it. Clicks pass through walls, floors and ceilings, so you can pick objects behind them. **Drag** to move it (with any other selected objects) into whichever polygon it ends up over.
   - With Snapping on, or while holding <kbd>Ctrl</kbd>, an object keeps its height above the floor (or below the ceiling, for ceiling objects). Otherwise it keeps its height in the world.
 - **Inspector:** type, subtype, angle, position, height, flags, and (for sound sources) the sound, its volume and its light.
 - **With nothing selected,** the inspector shows the level's **Object Placement** settings for items and monsters: initial, minimum and maximum counts, random counts and chances, and whether they reappear in random locations.
