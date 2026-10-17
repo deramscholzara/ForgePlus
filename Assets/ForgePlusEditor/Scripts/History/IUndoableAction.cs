@@ -8,6 +8,9 @@ namespace ForgePlus.History
         // What changed (such as "Polygon 12"), for the Undo and Redo buttons' tooltips
         string Description { get; }
 
+        // Whether it changes what's saved (the level and map file), rather than only the selection
+        bool ChangesData { get; }
+
         void Undo();
 
         void Redo();

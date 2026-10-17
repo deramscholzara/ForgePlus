@@ -1,4 +1,5 @@
-﻿using ForgePlus.DataFileIO;
+﻿using ForgePlus.ApplicationGeneral;
+using ForgePlus.DataFileIO;
 using ForgePlus.DataFileIO.Extensions;
 using ForgePlus.Localization;
 using System;
@@ -41,8 +42,14 @@ namespace ForgePlus.UI
             FileSettings.Instance.ShowSelectionBrowser(type);
         }
 
-        public void Unload()
+        // Unloading the maps file closes the open level, so its unsaved changes are asked about first
+        public async void Unload()
         {
+            if (type == DataFileTypes.Maps && !await UnsavedChanges.Confirm())
+            {
+                return;
+            }
+
             FileSettings.Instance.UnloadFile(type);
         }
 

@@ -204,6 +204,8 @@ namespace ForgePlus.History
             {
                 data.Capture();
             }
+
+            UndoHistory.MarkSaved();
         }
 
         private void StartTracking()
@@ -276,6 +278,14 @@ namespace ForgePlus.History
             }
 
             public string Description { get; }
+
+            public bool ChangesData
+            {
+                get
+                {
+                    return true;
+                }
+            }
 
             public void Undo()
             {

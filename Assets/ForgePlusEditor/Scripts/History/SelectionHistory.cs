@@ -160,6 +160,14 @@ namespace ForgePlus.History
 
             public string Description { get; }
 
+            public bool ChangesData
+            {
+                get
+                {
+                    return false;
+                }
+            }
+
             public void Undo()
             {
                 Apply(before, mode);

@@ -2792,6 +2792,26 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 5582341229133824
+    m_Key: Dialog.UnsavedChanges.Title
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5582341237522432
+    m_Key: Dialog.UnsavedChanges.Message
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5582341237522433
+    m_Key: Dialog.UnsavedChanges.Save
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5582341237522434
+    m_Key: Dialog.UnsavedChanges.Discard
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

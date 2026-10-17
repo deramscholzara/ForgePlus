@@ -16,7 +16,8 @@ namespace ForgePlus.DataFileIO
     public partial class MapsLoading
     {
         // A new map file, where it's chosen to be saved, with a first level named in a dialog (a map file must have at least
-        // one level). It's then loaded, with its level open. Cancelling either the location or the name makes nothing.
+        // one level). It's then loaded, with its level open. Cancelling the location, the name, or what to do with the open
+        // level's unsaved changes makes nothing.
         public async void CreateNewMap()
         {
             var path = await ChooseNewMapPath();
@@ -29,7 +30,7 @@ namespace ForgePlus.DataFileIO
                 Strings.Get(Strings.Common, "Dialog.NewMap.Title"),
                 Strings.Get(Strings.Common, "Dialog.NewMap.Message"));
 
-            if (levelName == null)
+            if (levelName == null || !await UnsavedChanges.Confirm())
             {
                 return;
             }

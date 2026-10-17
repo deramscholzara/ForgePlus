@@ -1,6 +1,7 @@
 ﻿#if !NO_EDITING
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
@@ -20,6 +21,11 @@ namespace ForgePlus.History
 
         private static List<IUndoableAction> undoActions = new List<IUndoableAction>();
         private static List<IUndoableAction> redoActions = new List<IUndoableAction>();
+
+        // The last data-changing action that had been done when the data was saved (null if there was none), and whether
+        // that state can no longer be undone or redone back to (such as when the action before it was forgotten)
+        private static IUndoableAction savedAction;
+        private static bool isSavedStateUnreachable;
 
         // When what can be undone or redone changes
         public static event Action OnChanged;
@@ -95,6 +101,36 @@ namespace ForgePlus.History
         // While an action is being undone or redone (when the changes it makes aren't new actions)
         public static bool IsUndoingOrRedoing { get; private set; }
 
+        // Whether the data has been edited since it was saved (or opened), going by the actions done since then. Selecting
+        // isn't an edit, and undoing back to how it was saved leaves nothing unsaved.
+        public static bool HasUnsavedChanges
+        {
+            get
+            {
+                return isSavedStateUnreachable || LastDataAction() != savedAction;
+            }
+        }
+
+        // The data is now as it was saved
+        public static void MarkSaved()
+        {
+            savedAction = LastDataAction();
+            isSavedStateUnreachable = false;
+        }
+
+        private static IUndoableAction LastDataAction()
+        {
+            for (var i = undoActions.Count - 1; i >= 0; i--)
+            {
+                if (undoActions[i].ChangesData)
+                {
+                    return undoActions[i];
+                }
+            }
+
+            return null;
+        }
+
         public static void Record(IUndoableAction action)
         {
             if (action == null || IsUndoingOrRedoing)
@@ -124,8 +160,16 @@ namespace ForgePlus.History
                 return;
             }
 
-            undoActions[undoActions.Count - 1] = new JoinedAction(undoActions[undoActions.Count - 1], action);
+            var last = undoActions[undoActions.Count - 1];
+            var joined = new JoinedAction(last, action);
+            undoActions[undoActions.Count - 1] = joined;
             redoActions.Clear();
+
+            // A selection joined to the action the data was saved after doesn't change the data
+            if (last == savedAction && !action.ChangesData)
+            {
+                savedAction = joined;
+            }
 
             OnChanged?.Invoke();
         }
@@ -150,6 +194,14 @@ namespace ForgePlus.History
                 }
             }
 
+            public bool ChangesData
+            {
+                get
+                {
+                    return first.ChangesData || second.ChangesData;
+                }
+            }
+
             public void Undo()
             {
                 second.Undo();
@@ -169,16 +221,47 @@ namespace ForgePlus.History
             var excessUndo = undoActions.Count - capacity;
             if (excessUndo > 0)
             {
+                ForgetSavedActionBefore(excessUndo);
+
                 undoActions.RemoveRange(0, excessUndo);
             }
 
             var excessRedo = undoActions.Count + redoActions.Count - capacity;
             if (excessRedo > 0)
             {
+                if (savedAction != null && redoActions.Take(excessRedo).Contains(savedAction))
+                {
+                    isSavedStateUnreachable = true;
+                }
+
                 redoActions.RemoveRange(0, excessRedo);
             }
 
             return excessUndo > 0 || excessRedo > 0;
+        }
+
+        // As the oldest actions that can be undone (up to count) are forgotten: saved after the last of them that changes
+        // data, it's saved as the data is once every action left is undone. Saved before an edit among them, it can no
+        // longer be undone back to.
+        private static void ForgetSavedActionBefore(int count)
+        {
+            var savedIndex = savedAction == null ? -1 : undoActions.IndexOf(savedAction);
+            if (savedAction != null && (savedIndex < 0 || savedIndex >= count))
+            {
+                // Saved after an action that's kept (or that can be redone)
+                return;
+            }
+
+            for (var i = savedIndex + 1; i < count; i++)
+            {
+                if (undoActions[i].ChangesData)
+                {
+                    isSavedStateUnreachable = true;
+                    return;
+                }
+            }
+
+            savedAction = null;
         }
 
         public static void Undo()
@@ -211,9 +294,12 @@ namespace ForgePlus.History
             }
         }
 
-        // Forgets every action (for when what they changed is gone, such as when a level closes)
+        // Forgets every action (for when what they changed is gone, such as when a level closes), with nothing unsaved
         public static void Clear()
         {
+            savedAction = null;
+            isSavedStateUnreachable = false;
+
             if (undoActions.Count == 0 && redoActions.Count == 0)
             {
                 return;
@@ -244,6 +330,9 @@ namespace ForgePlus.History
 
                 undoActions.Clear();
                 redoActions.Clear();
+
+                // The data may be partly changed, so how it was saved is out of reach
+                isSavedStateUnreachable = true;
             }
             finally
             {
