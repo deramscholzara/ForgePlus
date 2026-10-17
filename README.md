@@ -110,6 +110,7 @@ Forge+ has two views: a free-flying **perspective** camera, and a **top-down** (
   - Hold <kbd>Ctrl</kbd> (<kbd>Cmd</kbd> on Mac) to select everything the rectangle **touches**.
   - Hold <kbd>Shift</kbd> to **add** to the existing selection.
   - Press <kbd>Esc</kbd> to cancel and restore the previous selection.
+  - In perspective, the rectangle only picks things within the distance where points fade out. In the top-down view, it picks everything in view.
 - **Switching modes keeps the selection meaningful.** For example, select a polygon in Geometry mode, switch to Lights mode, and that polygon's light is selected.
 - Selecting more than one thing shows no inspector yet. Multi-selection is used for moving things together.
 
@@ -156,10 +157,12 @@ Shape the level: polygons, lines, sides (walls) and points.
 
 | Inspector | What you can edit |
 |---|---|
-| **Polygon** | Type (choosing *Platform* turns it into a platform), permutation, floor and ceiling heights and lights, media, ambient and random sounds |
+| **Polygon** | Type (choosing *Platform* turns it into a platform with S'pht door settings; choosing another type removes the platform), permutation, floor and ceiling heights and lights, media, ambient and random sounds |
 | **Line** | Solid, Decorative *(Aleph One only)*. Buttons to select or add its front and back sides |
 | **Side** | Fill Opening, ambient delta, control panel settings (type, target, flags), lights for each texture layer |
 | **Point** | X and Y position |
+
+If a line has no side data on a face, clicking that wall shows a **placeholder side** inspector. To create the side, use the Line inspector's **Add Side** buttons.
 
 > [!TIP]
 > Hold <kbd>Ctrl</kbd> while moving points, lines or polygons to drag their textures along with them, so the textures stay aligned.
@@ -222,6 +225,7 @@ Manage floor and ceiling heights as a palette.
 - **Click** a floor or ceiling to select its polygon and highlight its height in the palette.
 - **Drag** a floor or ceiling up or down. All selected polygons follow.
 - **Paint tool:** apply the palette's height to the floors or ceilings you click.
+- Platform floors and ceilings can't be clicked in this mode. Their heights are set in the Platform inspector.
 - Add new heights with **Add Floor Height** / **Add Ceiling Height**, or type over a swatch's value. If that height is in use, Forge+ asks whether to **Change All** polygons using it, or **Add New Height**.
 
 ### Platforms
@@ -290,6 +294,8 @@ Information about the map file itself: its name (editable), file and data versio
 - Pick a terminal and a group from the left panel, or click a terminal's wall in the view. Forge+ previews it as the game shows it, with **Back** / **Next** page buttons.
 - **Edit a group's** type, permutation, text and object placement. **Add Group** / **Remove Group**, and drag a group's number to reorder it.
 - **Text styles:** select some text and click a face (bold, italic, underline) or one of the eight colors in the palette on the right to apply it. This inserts the `$B`, `$I`, `$U` and `$C0`–`$C7` codes.
+- **Text Is Encoded** saves the terminal's text lightly scrambled, as Bungie's tools did. This is optional: Marathon 2, Infinity and Aleph One read the text either way.
+- The panel is grayed out when the level has no terminals.
 - Forge+ ignores edits that would break a terminal, such as leaving the player stranded or leaving a group unreachable.
 
 ---
@@ -355,7 +361,7 @@ The **Files** tab of the Menu loads your scenario's data:
 
 **Plugins and MML:** Forge+ applies a scenario's MML (from its Scripts folder) and its Aleph One plugins the way Aleph One does, so levels show the textures, sprites and sounds they would in the game.
 
-- Turn plugins on and off in the **Plugins** dropdown, as in Aleph One's Plugins menu. Forge+ remembers each one. Plugins that aren't for this scenario are grayed out, and overridden ones are marked *(not in use)*.
+- Turn plugins on and off in the **Plugins** dropdown, as in Aleph One's Plugins menu. Forge+ remembers each one. Plugins that aren't for this scenario are grayed out, and overridden ones are marked *(not in use)*. Turning a plugin on or off reloads the open level, and your unsaved edits are kept.
 - A level's own MML (from its level script, and MML saved in it) applies as it's opened.
 - MML that changes what Forge+ shows is applied: item, scenery and player shapes, liquids, control panels, platform, ambient and random sounds, and substitute images for walls and sprites (normal images and masks, as `.png`, `.jpg` or `.dds`: DXT1, DXT3, DXT5, or uncompressed).
 
@@ -394,7 +400,7 @@ The **Settings** tab of the Menu:
 | Orthographic Grid Opacity | 40% | How visible the top-down grid is |
 | Update Merge Checksum On Save | Ask | Whether Save Merged keeps or regenerates the checksum, or asks each time |
 
-**Reset To Defaults** resets these settings and the display options, but keeps your file paths.
+**Reset To Defaults** resets these settings and the display options, but keeps your file paths. The bottom of the tab shows the version of Forge+ you're running, which is handy when reporting bugs.
 
 ---
 
