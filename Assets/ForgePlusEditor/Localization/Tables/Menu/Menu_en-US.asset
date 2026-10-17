@@ -187,6 +187,12 @@ MonoBehaviour:
   - rid: 552786424166088860
   - rid: 552786424166088861
   - rid: 552786424166088862
+  - rid: 552786457188368443
+  - rid: 552786457188368444
+  - rid: 552786457188368445
+  - rid: 552786457188368446
+  - rid: 552786457188368447
+  - rid: 552786457188368448
   references:
     version: 2
     RefIds:
@@ -1311,74 +1317,116 @@ MonoBehaviour:
         m_KeyId: 5056685131055106
         m_Metadata:
           m_Items: []
-        m_Value: "Delete Selected"
+        m_Value: Delete Selected
     - rid: 552786424166088853
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055107
         m_Metadata:
           m_Items: []
-        m_Value: "Deletes or clears what's selected, as the mode has it. Geometry: deletes the selected polygons (leaving their lines and points, empty, and deleting what was in them), points (taking each out of its chain of lines, and deleting polygons left with fewer than three corners) and lines (by deleting the points at both their ends); points left with no lines are removed. Objects and Annotations: deletes the selected ones. Sounds: clears the selected polygons' ambient and random sounds. Media: clears the media of the polygon it was selected in. Lights: sets the face it was selected on to light 0. Platforms: makes the selected platforms normal polygons. Textures: clears the textures of the selected surfaces (the face clicked, and the same face of the rest of the selection)."
+        m_Value: 'Deletes or clears what''s selected, as the mode has it. Geometry: deletes the selected polygons (leaving their lines and points, empty, and deleting what was in them), points (taking each out of its chain of lines, and deleting polygons left with fewer than three corners) and lines (by deleting the points at both their ends); points left with no lines are removed. Objects and Annotations: deletes the selected ones. Sounds: clears the selected polygons'' ambient and random sounds. Media: clears the media of the polygon it was selected in. Lights: sets the face it was selected on to light 0. Platforms: makes the selected platforms normal polygons. Textures: clears the textures of the selected surfaces (the face clicked, and the same face of the rest of the selection).'
     - rid: 552786424166088854
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055108
         m_Metadata:
           m_Items: []
-        m_Value: "Display"
+        m_Value: Display
     - rid: 552786424166088855
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055109
         m_Metadata:
           m_Items: []
-        m_Value: "Rendering"
+        m_Value: Rendering
     - rid: 552786424166088856
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055110
         m_Metadata:
           m_Items: []
-        m_Value: "Units"
+        m_Value: Units
     - rid: 552786424166088857
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055111
         m_Metadata:
           m_Items: []
-        m_Value: "Editing"
+        m_Value: Editing
     - rid: 552786424166088858
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055112
         m_Metadata:
           m_Items: []
-        m_Value: "Top-Down View"
+        m_Value: Top-Down View
     - rid: 552786424166088859
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055113
         m_Metadata:
           m_Items: []
-        m_Value: "Saving"
+        m_Value: Saving
     - rid: 552786424166088860
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055114
         m_Metadata:
           m_Items: []
-        m_Value: "UI Scale"
+        m_Value: UI Scale
     - rid: 552786424166088861
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055115
         m_Metadata:
           m_Items: []
-        m_Value: "How large the UI is drawn, from 100% to 350% (as Windows scales the display), for high-resolution screens. Applied once you let go of the slider."
+        m_Value: How large the UI is drawn, from 100% to 350% (as Windows scales the display), for high-resolution screens. Applied once you let go of the slider.
     - rid: 552786424166088862
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5056685131055116
         m_Metadata:
           m_Items: []
-        m_Value: "{0}%"
+        m_Value: '{0}%'
+    - rid: 552786457188368443
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900359753728
+        m_Metadata:
+          m_Items: []
+        m_Value: New Map
+    - rid: 552786457188368444
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900372336640
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Creates a new map file: choose where to save it, then name its first level (a map file must have at least one level), which is set up for single player as New Level''s are. It''s saved right away, then loaded with its level open, in place of the loaded map file (so the open level''s unsaved edits are discarded). It''s saved as Marathon 2 data, which the original games can read.'
+    - rid: 552786457188368445
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900372336641
+        m_Metadata:
+          m_Items: []
+        m_Value: New Level
+    - rid: 552786457188368446
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900372336642
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Adds a new level to the end of the loaded map file, named in a dialog, and selects it (ready to load). It''s set up for single player, as Forge and Weland start one: a starting room with a player start, the single player entry point, and lights from full intensity down to none in steps of 5%. The map file is saved right away, with its other levels as they were last saved (so the open level''s unsaved edits stay unsaved), and its checksum changes. Grayed out while no map file is loaded.'
+    - rid: 552786457188368447
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900372336643
+        m_Metadata:
+          m_Items: []
+        m_Value: Create a New Map File
+    - rid: 552786457188368448
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900372336644
+        m_Metadata:
+          m_Items: []
+        m_Value: New Map

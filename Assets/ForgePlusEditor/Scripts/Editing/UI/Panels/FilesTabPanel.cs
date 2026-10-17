@@ -18,6 +18,7 @@ namespace ForgePlus.UI
 
         private ListView levelList;
         private Button loadButton;
+        private Button newLevelButton;
         private DropdownField pluginList;
 
         protected override string LayoutPath
@@ -34,6 +35,7 @@ namespace ForgePlus.UI
         protected override void OnLoaded()
         {
             Root.Find<Button>("find-in-directory").clicked += () => FileSettings.Instance.ShowDirectorySearchBrowser();
+            Root.Find<Button>("new-map").clicked += () => MapsLoading.Instance.CreateNewMap();
 
             BindDataFile("maps", DataFileTypes.Maps);
             BindDataFile("shapes", DataFileTypes.Shapes);
@@ -54,6 +56,9 @@ namespace ForgePlus.UI
             levelList.makeItem = () => levelItemTemplate.Instantiate();
             levelList.bindItem = (item, index) => item.Q<Label>("label").text = levelNames[index];
             levelList.selectionChanged += selection => UpdateLoadButton();
+
+            newLevelButton = Root.Find<Button>("new-level");
+            newLevelButton.clicked += OnNewLevel;
 
             loadButton = Root.Find<Button>("load");
             loadButton.clicked += OnLoad;
@@ -161,11 +166,25 @@ namespace ForgePlus.UI
             }
 
             UpdateLoadButton();
+            newLevelButton.SetEnabled(MapsLoading.Instance.MapsFile != null);
         }
 
         private void UpdateLoadButton()
         {
             loadButton.SetEnabled(levelList.selectedIndex >= 0);
+        }
+
+        // The new level is selected, ready to load
+        private async void OnNewLevel()
+        {
+            var levelIndex = await MapsLoading.Instance.AddNewLevel();
+            if (Root == null || levelIndex < 0 || levelIndex >= levelNames.Count)
+            {
+                return;
+            }
+
+            levelList.SetSelection(levelIndex);
+            levelList.ScrollToItem(levelIndex);
         }
 
         private void OnLoad()

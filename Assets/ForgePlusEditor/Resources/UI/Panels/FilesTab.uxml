@@ -4,9 +4,15 @@
     <ui:Template name="PathSelector" src="../Templates/PathSelector.uxml" />
     <ui:VisualElement class="fp-grow" picking-mode="Ignore">
         <ui:VisualElement class="fp-box fp-box--padded fp-files__selection">
-            <ui:Instance template="Button" name="find-in-directory" class="fp-files__find" tooltip="@Menu/FilesTab.FindInDirectory.Tooltip">
-                <ui:AttributeOverrides element-name="control" text="@Menu/FilesTab.FindInDirectory.Control.Text" />
-            </ui:Instance>
+            <ui:VisualElement class="fp-files__top-row">
+                <ui:Instance template="Button" name="find-in-directory" class="fp-files__top-button" tooltip="@Menu/FilesTab.FindInDirectory.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Menu/FilesTab.FindInDirectory.Control.Text" />
+                </ui:Instance>
+                <ui:VisualElement class="fp-grow" picking-mode="Ignore" />
+                <ui:Instance template="Button" name="new-map" class="fp-files__top-button" tooltip="@Menu/FilesTab.NewMap.Tooltip">
+                    <ui:AttributeOverrides element-name="control" text="@Menu/FilesTab.NewMap.Control.Text" />
+                </ui:Instance>
+            </ui:VisualElement>
             <ui:Instance template="ScrollArea" class="fp-grow fp-scroll--wide-spaced">
                 <ui:Instance template="PathSelector" name="maps">
                     <ui:AttributeOverrides element-name="heading" text="@Menu/FilesTab.Maps.Heading.Text" />
@@ -36,6 +42,10 @@
         <ui:VisualElement class="fp-separator fp-separator--horizontal" />
         <ui:VisualElement class="fp-box fp-box--padded fp-files__levels">
             <ui:ListView name="levels" fixed-item-height="35" selection-type="Single" class="fp-scroll fp-level-list" />
+            <!-- After the levels: adds one to the end of the loaded map file (grayed out while none is loaded) -->
+            <ui:Instance template="Button" name="new-level" class="fp-files__new-level" tooltip="@Menu/FilesTab.NewLevel.Tooltip">
+                <ui:AttributeOverrides element-name="control" text="@Menu/FilesTab.NewLevel.Control.Text" />
+            </ui:Instance>
         </ui:VisualElement>
         <!-- Shown in the menu's row of actions -->
         <ui:VisualElement name="actions" class="fp-files__actions" picking-mode="Ignore">

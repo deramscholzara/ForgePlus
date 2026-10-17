@@ -46,9 +46,9 @@ Download a build for your platform from the [Releases page](https://github.com/d
 
 1. Forge+ opens with the **Menu** showing its **Files** tab.
 2. Click **Find In Directory** and pick your scenario's folder (for example, your Marathon Infinity folder). Forge+ finds its Maps, Shapes, Physics and Sounds files, and its Plugins and Scripts folders. You can also pick each file yourself with its **Select** button.
-3. Choose a level in the list and click **Load Level**.
+3. Choose a level in the list and click **Load Level**. To start from scratch instead, click **New Map** (or **New Level**, to add one to the loaded map).
 4. Close the menu (**Close**, or <kbd>Esc</kbd>), and fly around with the mouse and <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd>.
-5. Pick a mode from the header bar (Geometry, Textures, Lights...), click things to inspect them, and edit them in the left-hand inspector or directly in the view.
+5. Pick a mode from the header bar (Geometry, Heights, Textures...), click things to inspect them, and edit them in the left-hand inspector or directly in the view.
 6. Save with **Save Merged** (the whole map file) or **Save Level** (just this level, as its own map file).
 
 Forge+ remembers your file paths, so they load again the next time you start it.
@@ -158,7 +158,7 @@ Shape the level: polygons, lines, sides (walls) and points.
   - **Split a polygon:** draw a line from one corner of a polygon to another, non-adjacent, corner. (Platform polygons can't be split.)
   - **Close a polygon:** when a line completes a loop, Forge+ fills it with a new polygon automatically. The loop must be convex, have at most 8 corners and have nothing inside it.
 - **Draw a new line from empty space:** click empty space, then press again and drag. The line starts at a new point where you pressed. It's drawn at the floor height of the polygon whose corner is nearest (or at 0, in an empty level). Lines that don't touch any polygon are shown at the lowest floor of the polygons their chain of lines reaches (or at 0).
-- **Fill a loop of lines:** any loop of lines that could become a polygon shows its future floor in see-through cyan. Double-click it to fill it. The new polygon copies a polygon at its corners. If there isn't one, it gets a plain floor at 0 and a ceiling one world unit above, with the environment's first wall texture and the first light.
+- **Fill a loop of lines:** any loop of lines that could become a polygon shows its future floor in see-through cyan. Double-click it to fill it. The new polygon copies a polygon at its corners. If there isn't one, it gets a plain floor at 0 and a ceiling one world unit above, with the first plain wall texture of the environment (skipping control panel and liquid textures) and the first light.
 - **Add a point to a line:** double-click the line. Every polygon along that line gains the new corner (each polygon can have at most 8).
 - Dragging a selected floor or ceiling still changes its height in this tool.
 
@@ -377,6 +377,10 @@ The **Files** tab of the Menu loads your scenario's data:
 - **Plugins** and **Scripts** folders *(Aleph One only)*.
 - **Find In Directory:** pick a folder, and Forge+ finds the first file of each type in it (shallowest folders first), plus the Plugins and Scripts folders.
 - **Level list** and **Load Level:** the only way to open a level.
+- **New Map:** creates a new map file. Choose where to save it, then name its first level (a map file needs at least one). The new map is saved right away and opened in place of the loaded one, so the open level's unsaved edits are discarded. It's saved as Marathon 2 data, which the original games can read.
+- **New Level** (below the level list): adds a new level to the end of the loaded map file, named in a dialog, and selects it ready to load. The map file is saved right away, with its other levels as they were last saved, so the open level's unsaved edits stay unsaved. The map's checksum changes. Grayed out while no map file is loaded.
+
+New levels start the way Forge and Weland start them: set up for single player, with a small starting room, a player start, and a set of lights from full intensity down to none in steps of 5%.
 
 > [!CAUTION]
 > Opening another level, or quitting, **discards unsaved edits without asking**. Save first.
@@ -539,7 +543,7 @@ Forge+ can view everything in a map, and edit much of it. These are the main thi
 **Creating and deleting**
 - [ ] Delete lights, media types or terminals from the level. Today, <kbd>Delete</kbd> only unassigns a light or media from a surface or polygon. Polygons, lines, points, objects, annotations, sound entries and terminal groups can be deleted.
 - [ ] Place new objects (monsters, items, scenery, player starts, goals, sound sources).
-- [ ] Add new lights, media, annotations, terminals or levels.
+- [ ] Add new lights, media, annotations or terminals. (New maps and levels can be created from the Files tab.)
 - [ ] Copy, paste and duplicate geometry or objects.
 
 **Editing**

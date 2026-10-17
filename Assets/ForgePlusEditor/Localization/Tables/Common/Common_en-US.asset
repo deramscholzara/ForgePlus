@@ -567,6 +567,11 @@ MonoBehaviour:
   - rid: 552786384866508906
   - rid: 552786384866508907
   - rid: 552786384866508908
+  - rid: 552786457188368449
+  - rid: 552786457188368450
+  - rid: 552786457188368451
+  - rid: 552786457188368452
+  - rid: 552786457188368453
   references:
     version: 2
     RefIds:
@@ -4297,130 +4302,165 @@ MonoBehaviour:
         m_KeyId: 4257401531940866
         m_Metadata:
           m_Items: []
-        m_Value: "Draw"
+        m_Value: Draw
     - rid: 552786384866508866
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940867
         m_Metadata:
           m_Items: []
-        m_Value: "Select what's clicked, and drag to move or adjust it (or, from empty space, to select what's wholly in a rectangle: hold ctrl to select what it touches any of, and shift to add to the selection). In Textures mode, drag a surface to align its texture (holding control aligns the textures that continue it too), alt-click a surface to align it to the selected one, and use the arrow keys to nudge the selected surface's texture."
+        m_Value: 'Select what''s clicked, and drag to move or adjust it (or, from empty space, to select what''s wholly in a rectangle: hold ctrl to select what it touches any of, and shift to add to the selection). In Textures mode, drag a surface to align its texture (holding control aligns the textures that continue it too), alt-click a surface to align it to the selected one, and use the arrow keys to nudge the selected surface''s texture.'
     - rid: 552786384866508867
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940868
         m_Metadata:
           m_Items: []
-        m_Value: "Add new geometry. Drag a line beside a polygon to add a polygon between it and a copy of it, matching its sides and the polygon's floor and ceiling. Drag a point to draw a new line from it, ending at a new point or at another point (from one of a polygon's corners to another, it splits the polygon, and closing a loop of lines makes a new polygon). Click empty space, then press again and drag, to draw a line from a new point there. Double-click a line to add a point on it. A loop of lines that could be a polygon shows its floor in cyan: double-click it to fill it. Dragging a selected floor or ceiling still adjusts its height, but nothing is moved in this mode."
+        m_Value: 'Add new geometry. Drag a line beside a polygon to add a polygon between it and a copy of it, matching its sides and the polygon''s floor and ceiling. Drag a point to draw a new line from it, ending at a new point or at another point (from one of a polygon''s corners to another, it splits the polygon, and closing a loop of lines makes a new polygon). Click empty space, then press again and drag, to draw a line from a new point there. Double-click a line to add a point on it. A loop of lines that could be a polygon shows its floor in cyan: double-click it to fill it. Dragging a selected floor or ceiling still adjusts its height, but nothing is moved in this mode.'
     - rid: 552786384866508868
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940869
         m_Metadata:
           m_Items: []
-        m_Value: "Apply the palette's chosen swatch to what's clicked."
+        m_Value: Apply the palette's chosen swatch to what's clicked.
     - rid: 552786384866508869
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940870
         m_Metadata:
           m_Items: []
-        m_Value: "Drag textures across their surfaces to align them."
+        m_Value: Drag textures across their surfaces to align them.
     - rid: 552786384866508870
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940871
         m_Metadata:
           m_Items: []
-        m_Value: "Only a line beside a polygon can be dragged into a new one."
+        m_Value: Only a line beside a polygon can be dragged into a new one.
     - rid: 552786384866508871
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940872
         m_Metadata:
           m_Items: []
-        m_Value: "There's already a polygon on that side of the line."
+        m_Value: There's already a polygon on that side of the line.
     - rid: 552786384866508872
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940873
         m_Metadata:
           m_Items: []
-        m_Value: "Drag away from the line to add a polygon."
+        m_Value: Drag away from the line to add a polygon.
     - rid: 552786384866508873
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940874
         m_Metadata:
           m_Items: []
-        m_Value: "Can't add it there (it would overlap other lines or points). Hold Shift to allow it."
+        m_Value: Can't add it there (it would overlap other lines or points). Hold Shift to allow it.
     - rid: 552786384866508874
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940875
         m_Metadata:
           m_Items: []
-        m_Value: "It overlaps other lines or points."
+        m_Value: It overlaps other lines or points.
     - rid: 552786384866508900
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940876
         m_Metadata:
           m_Items: []
-        m_Value: "These points are already joined by a line."
+        m_Value: These points are already joined by a line.
     - rid: 552786384866508901
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940877
         m_Metadata:
           m_Items: []
-        m_Value: "Can't draw there (it would cross or touch other lines or points). Hold Shift to allow it."
+        m_Value: Can't draw there (it would cross or touch other lines or points). Hold Shift to allow it.
     - rid: 552786384866508902
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940878
         m_Metadata:
           m_Items: []
-        m_Value: "It crosses or touches other lines or points."
+        m_Value: It crosses or touches other lines or points.
     - rid: 552786384866508903
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940879
         m_Metadata:
           m_Items: []
-        m_Value: "Can't draw through a polygon, except from one of its corners to another (to split it). Hold Shift to allow it."
+        m_Value: Can't draw through a polygon, except from one of its corners to another (to split it). Hold Shift to allow it.
     - rid: 552786384866508904
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940880
         m_Metadata:
           m_Items: []
-        m_Value: "It's inside a polygon, without splitting it."
+        m_Value: It's inside a polygon, without splitting it.
     - rid: 552786384866508905
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940881
         m_Metadata:
           m_Items: []
-        m_Value: "A platform's polygon can't be split. Hold Shift to draw the line anyway."
+        m_Value: A platform's polygon can't be split. Hold Shift to draw the line anyway.
     - rid: 552786384866508906
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940882
         m_Metadata:
           m_Items: []
-        m_Value: "Point {0} has no lines, so it isn't part of any geometry. Older maps may have these on purpose; fixing removes it."
+        m_Value: Point {0} has no lines, so it isn't part of any geometry. Older maps may have these on purpose; fixing removes it.
     - rid: 552786384866508907
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940883
         m_Metadata:
           m_Items: []
-        m_Value: "Other"
+        m_Value: Other
     - rid: 552786384866508908
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 4257401531940884
         m_Metadata:
           m_Items: []
-        m_Value: "The modes used less often: Level, Map, Annotations and Terminals. Checked while one of them is open."
+        m_Value: 'The modes used less often: Level, Map, Annotations and Terminals. Checked while one of them is open.'
+    - rid: 552786457188368449
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435901693542400
+        m_Metadata:
+          m_Items: []
+        m_Value: New Map
+    - rid: 552786457188368450
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435901693542401
+        m_Metadata:
+          m_Items: []
+        m_Value: Name the new map's first level. The map file is created once you choose OK.
+    - rid: 552786457188368451
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435901693542402
+        m_Metadata:
+          m_Items: []
+        m_Value: New Level
+    - rid: 552786457188368452
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435901693542403
+        m_Metadata:
+          m_Items: []
+        m_Value: Name the new level. It's added to the end of the map file, which is saved right away.
+    - rid: 552786457188368453
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435901693542404
+        m_Metadata:
+          m_Items: []
+        m_Value: OK

@@ -867,6 +867,36 @@ MonoBehaviour:
     m_Flags: 1
     m_Metadata:
       m_Items: []
+  - m_Id: 5435900359753728
+    m_Key: FilesTab.NewMap.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435900372336640
+    m_Key: FilesTab.NewMap.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435900372336641
+    m_Key: FilesTab.NewLevel.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435900372336642
+    m_Key: FilesTab.NewLevel.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435900372336643
+    m_Key: FileBrowser.NewMap.Title
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435900372336644
+    m_Key: FileBrowser.NewMap.DefaultName
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

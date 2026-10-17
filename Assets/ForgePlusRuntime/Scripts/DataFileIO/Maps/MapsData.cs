@@ -85,6 +85,19 @@ namespace ForgePlus.DataFileIO
             currentlyOpenLevel.SaveAsSingleLevelFile(savePath, withPhysics, withResources);
         }
 
+        // At the end of the map file (MapsFile.AddLevel)
+        public void AddLevel(AlephOne.MapLevel level)
+        {
+            LoadData();
+
+            if (file == null)
+            {
+                throw new IOException($"Tried adding a level with no Maps file loaded.");
+            }
+
+            file.AddLevel(level);
+        }
+
         public void SaveMerged(string savePath, bool keepChecksum)
         {
             if (currentlyOpenLevel == null)
