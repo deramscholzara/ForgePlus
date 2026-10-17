@@ -1,4 +1,5 @@
 ﻿using ForgePlus.UI;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -37,6 +38,24 @@ namespace ForgePlus.ApplicationGeneral
         public async Task<(string Option, bool IsChecked)> DisplayQueuedDialog(string title, string message, IList<string> options,
             IList<string> optionLabels, string checkboxLabel)
         {
+            return await DisplayQueued(
+                () => new ObjectSelectorDialog(title, options, optionLabels, message, checkboxLabel),
+                async dialog => (await dialog.Selection, dialog.IsChecked));
+        }
+
+        // The entered text (trimmed), or null if the dialog was cancelled. OK is only enabled while isValid accepts the text.
+        public async Task<string> DisplayQueuedTextDialog(string title, string message, string initialText, int maxLength,
+            Func<string, bool> isValid)
+        {
+            return await DisplayQueued(
+                () => new TextInputDialog(title, message, initialText, maxLength, isValid),
+                dialog => dialog.Result);
+        }
+
+        // Waits for the dialogs before it, then shows it until it completes
+        private async Task<TResult> DisplayQueued<TDialog, TResult>(Func<TDialog> createDialog, Func<TDialog, Task<TResult>> getResult)
+            where TDialog : UIPanel
+        {
             if (dialogQueue.Count == 0)
             {
                 UIBlocking.Instance.Block();
@@ -50,10 +69,10 @@ namespace ForgePlus.ApplicationGeneral
                 await Awaitable.NextFrameAsync();
             }
 
-            var dialog = new ObjectSelectorDialog(title, options, optionLabels, message, checkboxLabel);
+            var dialog = createDialog();
             DialogSlot.Show(dialog);
 
-            var result = (await dialog.Selection, dialog.IsChecked);
+            var result = await getResult(dialog);
 
             DialogSlot.Hide();
             dialogQueue.Remove(queuedDialog);

@@ -358,8 +358,8 @@ namespace ForgePlus.LevelManipulation
         }
 
         // What a polygon with nothing to copy is like: its floor at 0 and ceiling a world unit above, textured with the
-        // first texture of the level's environment's wall collection, and lit by the first light (one is added if the
-        // level has none, as every surface needs one)
+        // first plain texture of the level's environment's wall collection (PlainWallTexture), and lit by the first light
+        // (one is added if the level has none, as every surface needs one)
         private static polygon_data PlainPolygon(MapLevel data)
         {
             if (data.LightList.Count == 0)
@@ -367,7 +367,7 @@ namespace ForgePlus.LevelManipulation
                 lightsource.new_light(data, lightsource.get_defaults_for_light_type(lightsource._normal_light));
             }
 
-            var texture = shape_descriptors.BUILD_DESCRIPTOR(shape_descriptors.BUILD_COLLECTION(ForgePlus.Inspection.CollectionChoices.WallCollectionOf(data.static_world.environment_code), 0), 0);
+            var texture = PlainWallTexture(ForgePlus.Inspection.CollectionChoices.WallCollectionOf(data.static_world.environment_code));
 
             return new polygon_data
             {
@@ -381,6 +381,43 @@ namespace ForgePlus.LevelManipulation
                 ceiling_lightsource_index = 0,
                 media_lightsource_index = 0,
             };
+        }
+
+        // The collection's first texture that isn't a control panel's (active or inactive) or a liquid's (any of its
+        // frames), as those are meant for their own surfaces. The definitions are as MML has them, if it changes them.
+        private static ushort PlainWallTexture(int collection)
+        {
+            var reservedShapes = new HashSet<int>();
+
+            for (short controlPanelType = 0; controlPanelType < devices.NUMBER_OF_CONTROL_PANEL_DEFINITIONS; controlPanelType++)
+            {
+                var definition = devices.get_control_panel_definition(controlPanelType);
+                if (definition != null && shape_descriptors.GET_COLLECTION(definition.collection) == collection)
+                {
+                    reservedShapes.Add(definition.active_shape);
+                    reservedShapes.Add(definition.inactive_shape);
+                }
+            }
+
+            for (short mediaType = 0; mediaType < media.NUMBER_OF_MEDIA_TYPES; mediaType++)
+            {
+                var definition = media.get_media_definition(mediaType);
+                if (definition != null && shape_descriptors.GET_COLLECTION(definition.collection) == collection)
+                {
+                    for (var frame = 0; frame < Mathf.Max(1, (int) definition.shape_count); frame++)
+                    {
+                        reservedShapes.Add(definition.shape + frame);
+                    }
+                }
+            }
+
+            var shape = 0;
+            while (reservedShapes.Contains(shape))
+            {
+                shape++;
+            }
+
+            return shape_descriptors.BUILD_DESCRIPTOR(shape_descriptors.BUILD_COLLECTION(collection, 0), shape);
         }
 
         // Its walls, with the polygon's floor texture and light

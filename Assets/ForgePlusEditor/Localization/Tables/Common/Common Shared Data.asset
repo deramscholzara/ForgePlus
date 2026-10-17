@@ -2767,6 +2767,31 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 5435901693542400
+    m_Key: Dialog.NewMap.Title
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435901693542401
+    m_Key: Dialog.NewMap.Message
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435901693542402
+    m_Key: Dialog.NewLevel.Title
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435901693542403
+    m_Key: Dialog.NewLevel.Message
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435901693542404
+    m_Key: Dialog.TextInput.Ok
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

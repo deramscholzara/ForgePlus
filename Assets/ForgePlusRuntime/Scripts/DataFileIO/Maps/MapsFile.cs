@@ -172,6 +172,31 @@ namespace ForgePlus.DataFileIO
             Save(savePath, saveFile => game_wad.save_levels(saveFile, levels, file_name: name, checksum: checksum));
         }
 
+        // A new map file with just the level (a map file must have at least one: wad.cs: read_wad_header)
+        public static void CreateNew(string savePath, MapLevel firstLevel)
+        {
+            if (!game_wad.save_level(new FileSpecifier(savePath), firstLevel))
+            {
+                throw new IOException($"A new map file could not be created at \"{savePath}\" ({DescribeGameError()}).");
+            }
+        }
+
+        // The level, after the others, which are saved as they are in the file (so the open level's unsaved edits stay
+        // unsaved). Its contents change, so its checksum is regenerated. Afterward, this refers to the saved file.
+        public void AddLevel(MapLevel level)
+        {
+            var levels = new List<MapLevel>(Levels.Count + 1);
+            for (var levelIndex = 0; levelIndex < Levels.Count; levelIndex++)
+            {
+                levels.Add(LoadLevel(levelIndex));
+            }
+
+            levels.Add(level);
+
+            var savePath = File.GetPath();
+            Save(savePath, saveFile => game_wad.save_levels(saveFile, levels));
+        }
+
         private int CountEmbeddedPhysicsLevels()
         {
             var count = 0;

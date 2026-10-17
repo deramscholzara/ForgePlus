@@ -49,20 +49,22 @@
 
 /* ---------- Files ---------- */
 
-/* Centered at the top of the file selection box, above its scroll area, as wide as its text */
-.fp-files__find {
-    align-self: center;
+/* At the top of the file selection box, above its scroll area: Find in Directory on the left and New Map on the right,
+   each as wide as its text */
+.fp-files__top-row {
+    flex-direction: row;
     height: var(--fp-short-control-height);
     flex-shrink: 0;
     margin-bottom: 10px;
 }
 
-.fp-files__find > .fp-button {
+.fp-files__top-button > .fp-button {
+    height: 100%;
     padding: 0 20px;
 }
 
-/* Find in Directory (30px, and its 10px gap) over the scroll area, which shows the first four files (Maps, Shapes,
-   Physics and Sounds, 57px each) without scrolling */
+/* The top row (30px, and its 10px gap) over the scroll area, which shows the first four files (Maps, Shapes, Physics
+   and Sounds, 57px each) without scrolling */
 .fp-files__selection {
     min-height: 288px;
     height: 288px;
@@ -88,6 +90,17 @@
 .fp-files__levels {
     flex-grow: 1;
     margin: 5px 0 0 0;
+}
+
+/* Under the level list, as wide as it */
+.fp-files__new-level {
+    height: var(--fp-short-control-height);
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+
+.fp-files__new-level > .fp-button {
+    height: 100%;
 }
 
 .fp-files__actions {

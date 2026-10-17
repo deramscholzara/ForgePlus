@@ -1,0 +1,17 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- A titled text field (with a message when it has one), and Cancel and OK (TextInputDialog) -->
+    <ui:VisualElement class="fp-box fp-dialog">
+        <ui:Label name="title" text="" class="fp-dialog__header" />
+        <ui:Label name="message" text="" class="fp-dialog__message" />
+        <ui:TextField name="text" class="fp-dialog__text-field" />
+        <ui:VisualElement class="fp-dialog__buttons">
+            <ui:Instance template="Button" name="cancel" class="fp-dialog__option fp-dialog__button">
+                <ui:AttributeOverrides element-name="control" text="@Common/Dialog.ObjectSelector.Cancel" />
+            </ui:Instance>
+            <ui:Instance template="Button" name="ok" class="fp-dialog__option fp-dialog__button">
+                <ui:AttributeOverrides element-name="control" text="@Common/Dialog.TextInput.Ok" />
+            </ui:Instance>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

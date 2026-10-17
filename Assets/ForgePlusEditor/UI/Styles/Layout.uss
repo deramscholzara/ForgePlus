@@ -458,6 +458,25 @@
     margin: 0 5px 10px 5px;
 }
 
+/* TextInputDialog's field, and its Cancel and OK side by side */
+.fp-dialog__text-field {
+    height: var(--fp-short-control-height);
+    margin: 0 5px 10px 5px;
+}
+
+.fp-dialog__buttons {
+    flex-direction: row;
+}
+
+.fp-dialog__button {
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.fp-dialog__button > .fp-button {
+    height: 100%;
+}
+
 /* ---------- Name tags in the level (WorldLabels) ---------- */
 
 /* Behind every panel, covering the view (WorldLayer, which SoundVisualization's volume bars are in too) */
