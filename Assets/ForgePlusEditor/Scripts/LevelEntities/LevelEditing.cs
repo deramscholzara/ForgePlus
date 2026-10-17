@@ -9,12 +9,14 @@ using RuntimeCore.Entities.MapObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
 namespace ForgePlus.LevelManipulation
 {
     // Steps shared by several kinds of level edits
-    public static class LevelEditing
+    [AutoStaticsCleanup]
+    public static partial class LevelEditing
     {
         private static readonly List<Action> afterPendingRebuild = new List<Action>();
 
