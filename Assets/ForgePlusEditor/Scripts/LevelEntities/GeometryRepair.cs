@@ -89,6 +89,20 @@ namespace ForgePlus.LevelManipulation
 
             SelectionManager.Instance.DeselectAll();
 
+            var affectedPolygons = new HashSet<polygon_data>();
+            var placements = new ObjectPlacement.Snapshot();
+
+            MergeLinesAtPoint(data, pointIndex, affectedPolygons, placements);
+
+            FinishCollapse(level, affectedPolygons, placements, keptPoint: null);
+        }
+
+        // A point with exactly two lines (to two different points, not already joined), taken out of its chain: its two
+        // lines become one, which keeps the first line's sides (with each texture staying where it is in the world), and
+        // the second line's sides go. Each polygon at it loses the corner (each has at least four, as the two points it's
+        // between aren't joined), and what's in them is recorded to be kept inside them. The level is left to be rebuilt.
+        public static void MergeLinesAtPoint(MapLevel data, short pointIndex, HashSet<polygon_data> affectedPolygons, ObjectPlacement.Snapshot placements)
+        {
             var point = data.EndpointList[pointIndex];
             var lines = data.LineList.Where(line => line.endpoint_indexes[0] == pointIndex || line.endpoint_indexes[1] == pointIndex).ToList();
             var keptLine = lines[0];
@@ -98,8 +112,6 @@ namespace ForgePlus.LevelManipulation
 
             var removedLength = removedLine.length;
 
-            var affectedPolygons = new HashSet<polygon_data>();
-            var placements = new ObjectPlacement.Snapshot();
             var polygonIndexes = new List<short>();
 
             // Each polygon loses the corner, and the edge across it is the kept line
@@ -157,8 +169,6 @@ namespace ForgePlus.LevelManipulation
             // Its sides go with it (no polygon lists it now)
             LevelTopology.RemoveLine(data, removedLine);
             LevelTopology.RemoveEndpoint(data, point);
-
-            FinishCollapse(level, affectedPolygons, placements, keptPoint: null);
         }
 
         private static short FindCollapsibleLine(MapLevel data, short pointIndex)
@@ -200,7 +210,9 @@ namespace ForgePlus.LevelManipulation
             placements.Record(data, polygonIndexes);
         }
 
-        private static void FinishCollapse(LevelEntity_Level level, HashSet<polygon_data> affectedPolygons, ObjectPlacement.Snapshot placements, endpoint_data keptPoint)
+        // Shared by other edits that remove geometry (GeometryDeletion): what's worked out around the affected polygons, the
+        // objects and annotations put back in them, and the rebuild (selecting the kept point, if any)
+        public static void FinishCollapse(LevelEntity_Level level, HashSet<polygon_data> affectedPolygons, ObjectPlacement.Snapshot placements, endpoint_data keptPoint)
         {
             var data = level.Level;
 

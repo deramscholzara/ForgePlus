@@ -10,8 +10,9 @@ namespace ForgePlus.LevelManipulation
     // What the pointer did to something in the level (for IWorldPointerHandler)
     public class WorldPointerEventData
     {
-        // Screen position (pixels, from the bottom left)
+        // Screen position (pixels, from the bottom left), and where it was pressed
         public Vector2 Position;
+        public Vector2 PressPosition;
 
         // Where on its collider the pointer was pressed, and the collider's normal there
         public Vector3 PressWorldPosition;
@@ -36,6 +37,12 @@ namespace ForgePlus.LevelManipulation
         void OnWorldPointerDoubleClick(WorldPointerEventData eventData);
     }
 
+    // Something in the level that counts as empty space for a drag from empty space (EmptySpaceDragger), such as a preview
+    // of a polygon that isn't there yet, while still taking its own clicks
+    public interface IWorldPointerEmptySpace
+    {
+    }
+
     // Something drawn over the level on screen (such as points' handles), which takes presses before the level's colliders
     public interface IScreenPointerPicker
     {
@@ -47,6 +54,8 @@ namespace ForgePlus.LevelManipulation
     // colliders, for the handler under the pointer when it was pressed (presses over the UI are the UI's). A drag starts
     // once the pointer moves far enough from the press. With the Select tool (in the modes it selects in), a drag from
     // anywhere not already selected selects by rectangle instead (RectangleSelection), so only what's selected is dragged.
+    // A drag from empty space just after a click there (a press, release and press, as a double-click's) goes to the
+    // handler the EmptySpaceDragger gives, if it gives one; let go without dragging, it's an ordinary click.
     public class WorldPointer : SingletonMonoBehaviour<WorldPointer>
     {
         // Pixels
@@ -60,8 +69,17 @@ namespace ForgePlus.LevelManipulation
         private float lastClickTime;
         private Vector2 lastClickPosition;
 
+        // The last click on empty space, and the handler (if any) a drag from the press after it would go to
+        private float lastEmptyClickTime = float.NegativeInfinity;
+        private Vector2 lastEmptyClickPosition;
+        private bool isSecondEmptyPress;
+        private IWorldPointerHandler emptySpaceDragHandler;
+
         // Pressing and releasing over nothing (no UI, and nothing in the level)
         public event Action OnClickEmptySpace;
+
+        // What handles a drag from empty space just after a click there (given where it's pressed), or null for nothing
+        public Func<Vector2, IWorldPointerHandler> EmptySpaceDragger { get; set; }
 
         // The camera the level is seen through, and the UI whose presses aren't the level's
         [SerializeField]
@@ -152,6 +170,21 @@ namespace ForgePlus.LevelManipulation
                 ui.RectangleSelection.Begin(pressPosition);
                 ui.RectangleSelection.Drag(position, rectangleAddsToSelection);
             }
+            else if (emptySpaceDragHandler != null && (position - pressPosition).sqrMagnitude >= DragThreshold * DragThreshold)
+            {
+                // Whatever was pressed (if anything) counts as empty space, and the drag is the empty space's
+                pressedHandler = emptySpaceDragHandler;
+                emptySpaceDragHandler = null;
+
+                eventData = new WorldPointerEventData
+                {
+                    Position = position,
+                    PressPosition = pressPosition,
+                    IsDragging = true,
+                };
+
+                pressedHandler.OnWorldPointerBeginDrag(eventData);
+            }
             else if (pressedHandler != null)
             {
                 var hasMoved = position != eventData.Position;
@@ -182,6 +215,15 @@ namespace ForgePlus.LevelManipulation
             pressCanSelectByRectangle = false;
             isSelectingByRectangle = false;
             pressPosition = position;
+            emptySpaceDragHandler = null;
+
+            // Just after a click on empty space, and near it (once only)
+            isSecondEmptyPress = Time.unscaledTime - lastEmptyClickTime <= DoubleClickSeconds &&
+                                 (position - lastEmptyClickPosition).sqrMagnitude <= DoubleClickDistance * DoubleClickDistance;
+            if (isSecondEmptyPress)
+            {
+                lastEmptyClickTime = float.NegativeInfinity;
+            }
 
             if (IsOverUI(position))
             {
@@ -192,14 +234,28 @@ namespace ForgePlus.LevelManipulation
             {
                 pressStartedOverEmptiness = true;
                 pressCanSelectByRectangle = RectangleSelection.IsAvailable;
+
+                if (isSecondEmptyPress && EmptySpaceDragger != null)
+                {
+                    emptySpaceDragHandler = EmptySpaceDragger(position);
+                    pressCanSelectByRectangle &= emptySpaceDragHandler == null;
+                }
+
                 return;
             }
 
             pressCanSelectByRectangle = RectangleSelection.IsAvailable && !IsSelected(pressedHandler);
 
+            if (isSecondEmptyPress && pressedHandler is IWorldPointerEmptySpace && EmptySpaceDragger != null)
+            {
+                emptySpaceDragHandler = EmptySpaceDragger(position);
+                pressCanSelectByRectangle &= emptySpaceDragHandler == null;
+            }
+
             eventData = new WorldPointerEventData
             {
                 Position = position,
+                PressPosition = position,
                 PressWorldPosition = worldPosition,
                 PressWorldNormal = worldNormal,
             };
@@ -244,6 +300,12 @@ namespace ForgePlus.LevelManipulation
                         lastClickedHandler = pressedHandler;
                         lastClickTime = Time.unscaledTime;
                         lastClickPosition = position;
+
+                        if (pressedHandler is IWorldPointerEmptySpace)
+                        {
+                            RecordEmptyClick(position);
+                        }
+
                         pressedHandler.OnWorldPointerClick(eventData);
                     }
                 }
@@ -252,7 +314,20 @@ namespace ForgePlus.LevelManipulation
             }
             else if (pressStartedOverEmptiness && !IsOverUI(position) && !TryGetHandler(position, out _, out _, out _))
             {
+                RecordEmptyClick(position);
                 OnClickEmptySpace?.Invoke();
+            }
+
+            emptySpaceDragHandler = null;
+        }
+
+        // Not the second click of a press, release and press (which starts again)
+        private void RecordEmptyClick(Vector2 position)
+        {
+            if (!isSecondEmptyPress)
+            {
+                lastEmptyClickTime = Time.unscaledTime;
+                lastEmptyClickPosition = position;
             }
         }
 

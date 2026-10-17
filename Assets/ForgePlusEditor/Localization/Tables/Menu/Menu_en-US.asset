@@ -178,6 +178,9 @@ MonoBehaviour:
   - rid: 552786424166088848
   - rid: 552786424166088849
   - rid: 552786424166088850
+  - rid: 552786424166088851
+  - rid: 552786424166088852
+  - rid: 552786424166088853
   references:
     version: 2
     RefIds:
@@ -966,7 +969,7 @@ MonoBehaviour:
         m_KeyId: 5038888711766052
         m_Metadata:
           m_Items: []
-        m_Value: Click to select what's under the pointer, and drag to move or adjust it (or, from empty space, to select by rectangle). In Geometry mode's Draw tool, drag from a line or point to draw, and double-click a line to add a point on it.
+        m_Value: Click to select what's under the pointer, and drag to move or adjust it (or, from empty space, to select by rectangle). In Geometry mode's Draw tool, drag from a line or point to draw (or click empty space, then press again and drag), double-click a line to add a point on it, and double-click a cyan floor to fill its loop of lines with a polygon.
     - rid: 552786424166088800
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -1310,3 +1313,24 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Uses the platform in front of the camera as a player''s action key would, in any mode: it must be a door a player can use (or one that plays its uncontrollable sound), and within reach. It starts the platform if it''s off; if it''s on, it reverses or restarts it as the platform allows. Not in the top-down view, or while Ctrl or Command is held.'
+    - rid: 552786424166088851
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055105
+        m_Metadata:
+          m_Items: []
+        m_Value: "Geometry"
+    - rid: 552786424166088852
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055106
+        m_Metadata:
+          m_Items: []
+        m_Value: "Delete Selected Geometry"
+    - rid: 552786424166088853
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5056685131055107
+        m_Metadata:
+          m_Items: []
+        m_Value: "In Geometry mode, deletes the selected polygons, points and lines (a line by deleting the points at both its ends). A deleted polygon leaves its lines and points behind, empty (what was in it goes with it). A deleted point is taken out of its chain of lines rather than leaving a gap: its neighbors are joined across where it was, and a polygon left with fewer than three corners is deleted too. Points left with no lines are removed."

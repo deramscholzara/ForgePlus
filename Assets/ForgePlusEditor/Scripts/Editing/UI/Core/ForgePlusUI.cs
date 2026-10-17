@@ -124,6 +124,7 @@ namespace ForgePlus.UI
             // Its handles are clicked before the level is
             PointHandles = new PointHandles(root);
             WorldPointer.Instance.ScreenPicker = PointHandles;
+            WorldPointer.Instance.EmptySpaceDragger = EmptySpaceDrawing.TryCreate;
 
             // Over the handles
             RectangleSelection = new RectangleSelection(root);
@@ -213,6 +214,7 @@ namespace ForgePlus.UI
             WorldLabels.UpdatePositions();
             SoundVisualization.Update();
             PointHandles.Update();
+            FillablePolygons.Update();
 
             // Once a frame at most, after what may have changed them
             Errors.RefreshIfRequested();
@@ -250,6 +252,7 @@ namespace ForgePlus.UI
             }
 
             PlatformSimulationHotkeys.Update();
+            GeometryDeletion.Update();
         }
 
         // Whichever of the two notices Cancel Selection Box first this frame

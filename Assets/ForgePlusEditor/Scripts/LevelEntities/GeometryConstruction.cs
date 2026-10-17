@@ -288,11 +288,11 @@ namespace ForgePlus.LevelManipulation
         // Whether a new line from start to end would cross or touch the level's lines (other than the ignored one). Its
         // ends may be existing points (their indexes, or NONE): lines that meet it there only count if they run along it,
         // and a line already joining both counts.
-        public static bool SegmentTouchesLines(MapLevel data, Vector2Int start, Vector2Int end, short startIndex, short endIndex, short ignoredLineIndex = cstypes.NONE)
+        public static bool SegmentTouchesLines(MapLevel data, Vector2Int start, Vector2Int end, short startIndex, short endIndex, short ignoredLineIndex = cstypes.NONE, ICollection<short> ignoredLineIndexes = null)
         {
             for (short lineIndex = 0; lineIndex < data.LineList.Count; lineIndex++)
             {
-                if (lineIndex == ignoredLineIndex)
+                if (lineIndex == ignoredLineIndex || (ignoredLineIndexes != null && ignoredLineIndexes.Contains(lineIndex)))
                 {
                     continue;
                 }
@@ -331,11 +331,11 @@ namespace ForgePlus.LevelManipulation
         }
 
         // Whether any point (other than its ends) is on the segment, such as one no line reaches
-        public static bool SegmentTouchesPoints(MapLevel data, Vector2Int start, Vector2Int end, short startIndex, short endIndex)
+        public static bool SegmentTouchesPoints(MapLevel data, Vector2Int start, Vector2Int end, short startIndex, short endIndex, short ignoredPointIndex = cstypes.NONE)
         {
             for (short pointIndex = 0; pointIndex < data.EndpointList.Count; pointIndex++)
             {
-                if (pointIndex != startIndex && pointIndex != endIndex && IsOnSegment(start, end, ToVector(data.EndpointList[pointIndex].vertex)))
+                if (pointIndex != startIndex && pointIndex != endIndex && pointIndex != ignoredPointIndex && IsOnSegment(start, end, ToVector(data.EndpointList[pointIndex].vertex)))
                 {
                     return true;
                 }

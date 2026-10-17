@@ -156,6 +156,15 @@ namespace ForgePlus.ApplicationGeneral
                 }
             }
 
+            // Deletes the selected points and polygons in Geometry mode (GeometryDeletion)
+            public static InputAction DeleteGeometry
+            {
+                get
+                {
+                    return Find("Editing/DeleteGeometry");
+                }
+            }
+
             public static InputAction NudgeUp
             {
                 get

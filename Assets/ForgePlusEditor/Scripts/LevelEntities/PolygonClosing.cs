@@ -35,7 +35,7 @@ namespace ForgePlus.LevelManipulation
 
             foreach (var turnsLeft in new[] { true, false })
             {
-                var loop = TryFollow(data, endpointLines, startIndex, endIndex, newLineIndex, turnsLeft);
+                var loop = TryFollow(data, endpointLines, startIndex, endIndex, newLineIndex, turnsLeft, requiresSource: true);
                 if (loop != null && !loops.Any(other => new HashSet<short>(other.Corners).SetEquals(loop.Corners)))
                 {
                     loops.Add(loop);
@@ -45,7 +45,36 @@ namespace ForgePlus.LevelManipulation
             return loops;
         }
 
-        private static Loop TryFollow(MapLevel data, List<short>[] endpointLines, short startIndex, short endIndex, short newLineIndex, bool turnsLeft)
+        // Every loop of existing lines that could be filled with a polygon (FillablePolygons): followed from each line
+        // with no polygon on a side. A loop with no polygon at any of its corners has no source (NONE) to copy, and is
+        // filled with a plain one (AddPolygon).
+        public static List<Loop> FindEmptyLoops(MapLevel data, List<short>[] endpointLines)
+        {
+            var loops = new List<Loop>();
+            var found = new HashSet<string>();
+
+            for (short lineIndex = 0; lineIndex < data.LineList.Count; lineIndex++)
+            {
+                var line = data.LineList[lineIndex];
+                if (line.clockwise_polygon_owner != cstypes.NONE && line.counterclockwise_polygon_owner != cstypes.NONE)
+                {
+                    continue;
+                }
+
+                foreach (var turnsLeft in new[] { true, false })
+                {
+                    var loop = TryFollow(data, endpointLines, line.endpoint_indexes[0], line.endpoint_indexes[1], lineIndex, turnsLeft, requiresSource: false);
+                    if (loop != null && found.Add(string.Join(",", loop.Corners.OrderBy(corner => corner))))
+                    {
+                        loops.Add(loop);
+                    }
+                }
+            }
+
+            return loops;
+        }
+
+        private static Loop TryFollow(MapLevel data, List<short>[] endpointLines, short startIndex, short endIndex, short newLineIndex, bool turnsLeft, bool requiresSource)
         {
             var corners = new List<short> { startIndex, endIndex };
             var lines = new List<short> { newLineIndex };
@@ -106,11 +135,11 @@ namespace ForgePlus.LevelManipulation
                 incomingLine = bestLine;
             }
 
-            return AsPolygon(data, corners, lines, endIndex);
+            return AsPolygon(data, corners, lines, endIndex, requiresSource);
         }
 
         // As a polygon's corners (clockwise, as the level's polygons go), if it can be one
-        private static Loop AsPolygon(MapLevel data, List<short> corners, List<short> lines, short endIndex)
+        private static Loop AsPolygon(MapLevel data, List<short> corners, List<short> lines, short endIndex, bool requiresSource)
         {
             var count = corners.Count;
             if (count < 3 || count > MAXIMUM_VERTICES_PER_POLYGON)
@@ -207,7 +236,7 @@ namespace ForgePlus.LevelManipulation
 
             loop.Source = FindSource(data, endIndex, loop.Corners, neighbors);
 
-            return loop.Source == cstypes.NONE ? null : loop;
+            return loop.Source == cstypes.NONE && requiresSource ? null : loop;
         }
 
         // A polygon at the point the line was drawn to (beside the loop, if any is, or else the one with the lowest
@@ -246,11 +275,13 @@ namespace ForgePlus.LevelManipulation
             return best;
         }
 
-        // Adds the loop's polygon (its new line is added by now, and in its lines). Returns it.
+        // Adds the loop's polygon (its new line is added by now, and in its lines). Returns it. With no source, it's a plain
+        // one (PlainPolygon), and so are its walls' textures.
         public static polygon_data AddPolygon(MapLevel data, Loop loop, short drawnToIndex)
         {
-            var source = data.PolygonList[loop.Source];
-            var sourceSide = GeometryConstruction.FindSideToCopy(data, loop.Source, loop.Lines, new[] { drawnToIndex });
+            var hasSource = loop.Source != cstypes.NONE;
+            var source = hasSource ? data.PolygonList[loop.Source] : PlainPolygon(data);
+            var sourceSide = hasSource ? GeometryConstruction.FindSideToCopy(data, loop.Source, loop.Lines, new[] { drawnToIndex }) : PlainSide(source);
 
             // The polygons beside it, whose sides it may hide or reveal
             var neighbors = new List<polygon_data>();
@@ -318,6 +349,53 @@ namespace ForgePlus.LevelManipulation
             GeometryConstruction.RecalculateAfterAdding(data, neighbors, loop.Lines);
 
             return polygon;
+        }
+
+        // The floor height (in world units) a loop's polygon would have
+        public static short FloorHeight(MapLevel data, Loop loop)
+        {
+            return loop.Source != cstypes.NONE ? data.PolygonList[loop.Source].floor_height : (short) 0;
+        }
+
+        // What a polygon with nothing to copy is like: its floor at 0 and ceiling a world unit above, textured with the
+        // first texture of the level's environment's wall collection, and lit by the first light (one is added if the
+        // level has none, as every surface needs one)
+        private static polygon_data PlainPolygon(MapLevel data)
+        {
+            if (data.LightList.Count == 0)
+            {
+                lightsource.new_light(data, lightsource.get_defaults_for_light_type(lightsource._normal_light));
+            }
+
+            var texture = shape_descriptors.BUILD_DESCRIPTOR(shape_descriptors.BUILD_COLLECTION(ForgePlus.Inspection.CollectionChoices.WallCollectionOf(data.static_world.environment_code), 0), 0);
+
+            return new polygon_data
+            {
+                floor_height = 0,
+                ceiling_height = world.WORLD_ONE,
+                floor_texture = texture,
+                ceiling_texture = texture,
+                floor_transfer_mode = _xfer_normal,
+                ceiling_transfer_mode = _xfer_normal,
+                floor_lightsource_index = 0,
+                ceiling_lightsource_index = 0,
+                media_lightsource_index = 0,
+            };
+        }
+
+        // Its walls, with the polygon's floor texture and light
+        private static side_data PlainSide(polygon_data polygon)
+        {
+            var side = new side_data();
+            side.primary_texture.texture = polygon.floor_texture;
+            side.primary_lightsource_index = polygon.floor_lightsource_index;
+            side.primary_transfer_mode = _xfer_normal;
+            side.secondary_texture.texture = cstypes.UNONE;
+            side.secondary_lightsource_index = polygon.floor_lightsource_index;
+            side.transparent_texture.texture = cstypes.UNONE;
+            side.transparent_lightsource_index = polygon.floor_lightsource_index;
+
+            return side;
         }
 
         private static Vector2 Location(MapLevel data, short pointIndex)

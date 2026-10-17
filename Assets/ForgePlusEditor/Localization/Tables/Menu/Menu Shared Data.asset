@@ -822,6 +822,21 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 5056685131055105
+    m_Key: InputsTab.GeometryHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055106
+    m_Key: InputsTab.DeleteGeometry.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5056685131055107
+    m_Key: InputsTab.DeleteGeometry.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

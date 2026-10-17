@@ -1163,6 +1163,12 @@ namespace ForgePlus.UI
 
             AddOutline(WorldPosition(preview.Start, preview.StartHeight), end, color, camera, panel);
 
+            // A line drawn from empty space starts at a new point too
+            if (preview.StartsNew)
+            {
+                AddGhost(WorldPosition(preview.Start, preview.StartHeight), new Color(color.r, color.g, color.b, 0.5f), camera, panel);
+            }
+
             if (preview.SnappedPoint != cstypes.NONE)
             {
                 ringedPoint = preview.SnappedPoint;

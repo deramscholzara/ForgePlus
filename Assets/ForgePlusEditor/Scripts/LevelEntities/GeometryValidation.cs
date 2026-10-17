@@ -20,6 +20,7 @@ namespace ForgePlus.LevelManipulation
         // Warnings: legal, but probably not meant
         RedundantStraightCorner,
         PointNearLine,
+        OrphanedPoint,
         MapIndexesAlephOneOnly,
     }
 
@@ -87,6 +88,12 @@ namespace ForgePlus.LevelManipulation
             for (short pointIndex = 0; pointIndex < level.EndpointList.Count; pointIndex++)
             {
                 CheckPointNearLines(level, pointIndex, issues, pointPolygons[pointIndex]);
+
+                // A point no line reaches (OrphanedPoints)
+                if (lineCounts[pointIndex] == 0 && pointPolygons[pointIndex].Count == 0)
+                {
+                    issues.Add(new GeometryIssue { Kind = GeometryIssueKind.OrphanedPoint, Point = pointIndex });
+                }
             }
 
             CheckMapIndexes(level, issues);
