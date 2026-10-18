@@ -60,7 +60,7 @@ Forge+ remembers your file paths, so they load again the next time you start it.
 | Area | What's there |
 |---|---|
 | **Header bar** (top) | **Menu** toggle · the **mode** tabs and the **Other** menu · **Save Merged**, **Save Level** and **Quit** |
-| **Left column** | **Visibility** toggles and **More Display Options** · the **inspector** for what's selected (in Map, Annotations and Terminals modes, that mode's own panel) |
+| **Left column** | **Visibility** toggles, **More Display Options** and **Culling Simulation** · the **inspector** for what's selected (in Map, Annotations and Terminals modes, that mode's own panel) |
 | **Right column** | The **tool** choice for modes with more than one tool (Select / Draw, or Select / Paint) · the mode's **palette** (textures, lights, media, sounds, heights, platforms, polygons or text styles) |
 | **Center** | The 3D view. The **Menu**, the **Errors** panel and the **terminal preview** open here |
 | **Bottom bar** | **Undo** / **Redo** · **Frame Selected** · **X** / **Y** axis locks · **Snapping** · **Orthographic** · the open level's name · the **Errors** toggle (**!**) |
@@ -365,6 +365,16 @@ The **More Display Options** dropdown (under the visibility toggles) has:
 
 Options the current mode controls are grayed out. Press <kbd>`</kbd> (backquote) at any time to hide or show the whole interface.
 
+**Culling Simulation** (the dropdown below More Display Options) shows only what Aleph One would draw from a point: the polygon that point is in, and the polygons visible from it in any direction. It works in every mode, and is off each time Forge+ starts.
+
+| Choice | Draws from |
+|---|---|
+| **Off** | Nothing is hidden |
+| **Camera** | The camera's position, so you see what a player standing there could see |
+| **Reference Point** | A white cube placed in front of the camera. Drag it around the level to check visibility from anywhere while you fly elsewhere |
+
+While the point isn't inside a polygon, nothing is hidden. Overlapping polygons ("5-D space") aren't trimmed yet.
+
 ---
 
 ## Files, plugins and scripts
@@ -532,6 +542,7 @@ Keyboard shortcuts don't fire while you're typing in a field.
 - **Scrub numbers.** Drag a field's label instead of typing, and hold <kbd>Alt</kbd> to toggle snapping while you do.
 - **Check the !** before saving, and use **Fix All** for problems Forge+ can repair itself.
 - **Diagnose odd geometry** with **Diagnostic Visuals** (concave polygons in red) and **Simple Visuals** (plain surfaces).
+- **Check sight lines** with **Culling Simulation**. Set it to **Reference Point** and drag the cube into a room to see everything the engine would draw from there, such as whether a window or doorway exposes more of the level than you meant.
 - **Hear the level.** Turn on **Play Level Audio**, then fly into a polygon to hear its ambient and random sounds, and the sound sources it hears, as the game would play them.
 
 ---
@@ -557,7 +568,7 @@ Forge+ can view everything in a map, and edit much of it. These are the main thi
 **Workflow**
 - [ ] Warn about unsaved changes when quitting or opening another level.
 - [ ] Keyboard shortcuts for switching modes and toggling visibility.
-- [ ] The **Visualization Effect** display option (currently disabled).
+- [ ] Culling Simulation trimming overlapping polygons ("5-D space").
 - [ ] Loading an **Images** file.
 - [ ] Optionally opening the first level automatically when a Maps file is chosen.
 - [ ] Saving a Marathon 1 map as Marathon 1 data (Marathon 1 input is always saved in the modern format).

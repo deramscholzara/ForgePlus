@@ -259,6 +259,26 @@
     -unity-background-image-tint-color: var(--fp-control-text);
 }
 
+/* The Culling Simulation choice, under the Display Options dropdown: its name, then the dropdown filling the rest */
+.fp-culling-simulation {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.fp-culling-simulation__label {
+    margin: 0 5px 0 0;
+    padding: 0;
+    color: var(--fp-text-light);
+    -unity-text-align: middle-left;
+}
+
+.fp-culling-simulation__choice {
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
 .fp-view-option {
     height: var(--fp-short-control-height);
     margin-bottom: 5px;

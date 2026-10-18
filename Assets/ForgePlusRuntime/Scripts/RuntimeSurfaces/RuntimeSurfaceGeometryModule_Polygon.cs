@@ -29,6 +29,14 @@ namespace RuntimeCore.Entities.Geometry
             SurfaceRenderer = surfaceRenderer;
         }
 
+        public override short OwnerPolygonIndex
+        {
+            get
+            {
+                return polygonEntity.NativeIndex;
+            }
+        }
+
         public override void AssembleSurface()
         {
             // Note: ApplyTextureOffset() & ApplyTransferMode() will be run due to vertex

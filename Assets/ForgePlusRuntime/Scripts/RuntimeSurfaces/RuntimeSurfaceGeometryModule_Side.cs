@@ -104,6 +104,15 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // The polygon the side faces into, which it's drawn with
+        public override short OwnerPolygonIndex
+        {
+            get
+            {
+                return Line.GetPolygonOwner(sideEntity.IsClockwise);
+            }
+        }
+
         private short FacingPolygonIndex
         {
             get

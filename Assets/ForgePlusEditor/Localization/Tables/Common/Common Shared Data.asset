@@ -393,7 +393,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 2586052280320
-    m_Key: ViewOptions.VisualizationEffect.Control.Text
+    m_Key: ViewOptions.CullingSimulation.Control.Text
     m_Flags: 0
     m_Metadata:
       m_Items: []
@@ -2809,6 +2809,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 5582341237522434
     m_Key: Dialog.UnsavedChanges.Discard
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5582341237522435
+    m_Key: ViewOptions.CullingSimulation.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5582341237522436
+    m_Key: ViewOptions.CullingSimulation.Off.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5582341237522437
+    m_Key: ViewOptions.CullingSimulation.Camera.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5582341237522438
+    m_Key: ViewOptions.CullingSimulation.ReferencePoint.Text
     m_Flags: 0
     m_Metadata:
       m_Items: []

@@ -116,6 +116,8 @@ namespace ForgePlus.PolygonContainment
 
                 firstVertex += polygon.vertex_count;
             }
+
+            BuildVisibilityData(level);
         }
 
         // After the level's polygons change shape or height
@@ -194,6 +196,8 @@ namespace ForgePlus.PolygonContainment
                 heights.Dispose();
                 results.Dispose();
             }
+
+            DisposeVisibilityData();
         }
 
         private static void DisposeCurrent()

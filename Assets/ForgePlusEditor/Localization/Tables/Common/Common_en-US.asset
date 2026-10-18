@@ -576,6 +576,10 @@ MonoBehaviour:
   - rid: 552786469862768641
   - rid: 552786469862768642
   - rid: 552786469862768643
+  - rid: 552786469862768644
+  - rid: 552786469862768645
+  - rid: 552786469862768646
+  - rid: 552786469862768647
   references:
     version: 2
     RefIds:
@@ -1110,7 +1114,7 @@ MonoBehaviour:
         m_KeyId: 2586052280320
         m_Metadata:
           m_Items: []
-        m_Value: Visualization Effect
+        m_Value: Culling Simulation
     - rid: 552786097007231467
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -4496,3 +4500,31 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Discard
+    - rid: 552786469862768644
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5582341237522435
+        m_Metadata:
+          m_Items: []
+        m_Value: "Hides what Aleph One wouldn't draw from a point: only the polygon it's in, and the polygons visible from it in any direction, are shown. Camera uses the camera's position; Reference Point uses a cube, which can be dragged around the level. While the point isn't in a polygon, nothing is hidden. Overlapping polygons (5-D space) aren't trimmed yet."
+    - rid: 552786469862768645
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5582341237522436
+        m_Metadata:
+          m_Items: []
+        m_Value: Off
+    - rid: 552786469862768646
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5582341237522437
+        m_Metadata:
+          m_Items: []
+        m_Value: Camera
+    - rid: 552786469862768647
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5582341237522438
+        m_Metadata:
+          m_Items: []
+        m_Value: Reference Point

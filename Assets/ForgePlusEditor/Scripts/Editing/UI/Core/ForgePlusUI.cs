@@ -227,6 +227,7 @@ namespace ForgePlus.UI
             SoundVisualization.Update();
             PointHandles.Update();
             FillablePolygons.Update();
+            CullingSimulation.Update();
 
             // Once a frame at most, after what may have changed them
             Errors.RefreshIfRequested();

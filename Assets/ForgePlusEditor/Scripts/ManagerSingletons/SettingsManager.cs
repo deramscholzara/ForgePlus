@@ -739,6 +739,22 @@ namespace ForgePlus.ApplicationGeneral
             Shader.SetGlobalFloat(minimumLightPropertyId, showLightingEnabled ? MinimumLight : 1f);
         }
 
+        // Shows only what Aleph One would draw from the camera, or from a reference point (CullingSimulation), in every
+        // mode. Off as ForgePlus starts (it isn't saved).
+        public CullingSimulation.Modes CullingSimulationMode
+        {
+            get
+            {
+                return CullingSimulation.Mode;
+            }
+            set
+            {
+                CullingSimulation.Mode = value;
+
+                OnSettingChanged?.Invoke(nameof(CullingSimulationMode));
+            }
+        }
+
         // Problem geometry is marked in the level view (DiagnosticVisuals), in every mode
         public bool DiagnosticVisualsEnabled
         {

@@ -1,6 +1,7 @@
 ﻿using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.LevelManipulation.Utilities;
+using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Materials;
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
@@ -39,6 +40,9 @@ namespace RuntimeCore.Entities.MapObjects
         private static bool spritePreviewsAreVisible = true;
 
         private MeshRenderer spritePreviewRenderer;
+
+        // Whether its polygon was culled (PolygonVisibilityCulling) when its visibility was last applied
+        private bool isCulled;
 
         private enum SideDataSources
         {
@@ -133,11 +137,12 @@ namespace RuntimeCore.Entities.MapObjects
             EndMoveDrag();
         }
 
+        // Clicks pass through it while its polygon is culled
         public override void SetSelectability(bool enabled)
         {
             base.SetSelectability(enabled);
 
-            GetComponent<MeshCollider>().enabled = enabled;
+            GetComponent<MeshCollider>().enabled = enabled && !isCulled;
         }
 
         public void DisplaySelectionState(bool state)
@@ -288,9 +293,16 @@ namespace RuntimeCore.Entities.MapObjects
             // A sound source's facing is its volume instead, so it isn't turned
             var facing = NativeObject.type == map._saved_sound_source ? (short) 0 : NativeObject.facing;
             transform.eulerAngles = new Vector3(0f, AlephOneExtensions.AngleToDegrees(facing) + 90f, 0f);
+
+            // Moved into (or out of) a culled polygon
+            if (PolygonVisibilityCulling.IsCulled(NativeObject.polygon_index) != isCulled)
+            {
+                ApplyVisibility();
+            }
         }
 
-        private static void ApplyVisibilityToAllObjects()
+        // Also after what's culled changes (PolygonVisibilityCulling)
+        public static void ApplyVisibilityToAllObjects()
         {
             var level = LevelEntity_Level.Instance;
             if (!level)
@@ -305,13 +317,22 @@ namespace RuntimeCore.Entities.MapObjects
             }
         }
 
+        // Neither its icon nor its sprite is drawn while its polygon is culled, and clicks pass through it
         private void ApplyVisibility()
         {
-            GetComponent<MeshRenderer>().enabled = iconsAreVisible || (soundSourceIconsAreVisible && NativeObject.type == map._saved_sound_source);
+            var wasCulled = isCulled;
+            isCulled = PolygonVisibilityCulling.IsCulled(NativeObject.polygon_index);
+
+            if (isCulled != wasCulled)
+            {
+                GetComponent<MeshCollider>().enabled = IsSelectable && !isCulled;
+            }
+
+            GetComponent<MeshRenderer>().enabled = !isCulled && (iconsAreVisible || (soundSourceIconsAreVisible && NativeObject.type == map._saved_sound_source));
 
             if (spritePreviewRenderer)
             {
-                spritePreviewRenderer.enabled = spritePreviewsAreVisible;
+                spritePreviewRenderer.enabled = !isCulled && spritePreviewsAreVisible;
             }
         }
 

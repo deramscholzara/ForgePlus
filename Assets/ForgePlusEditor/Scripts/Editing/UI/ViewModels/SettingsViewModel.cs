@@ -1,5 +1,6 @@
 ﻿using ForgePlus.ApplicationGeneral;
 using ForgePlus.DataFileIO;
+using ForgePlus.LevelManipulation;
 using ForgePlus.Localization;
 using System;
 using Unity.Properties;
@@ -168,6 +169,45 @@ namespace ForgePlus.UI
                 if (value != SettingsManager.Instance.DiagnosticVisualsEnabled)
                 {
                     SettingsManager.Instance.DiagnosticVisualsEnabled = value;
+                }
+            }
+        }
+
+        // The Culling Simulation dropdown's choices, in the order of CullingSimulation.Modes (Off, Camera, Reference Point)
+        [CreateProperty]
+        public System.Collections.Generic.List<string> CullingSimulationModeChoices
+        {
+            get
+            {
+                if (cullingSimulationModeChoices == null)
+                {
+                    cullingSimulationModeChoices = new System.Collections.Generic.List<string>();
+                    foreach (CullingSimulation.Modes mode in Enum.GetValues(typeof(CullingSimulation.Modes)))
+                    {
+                        cullingSimulationModeChoices.Add(Strings.Get(Strings.Common, $"ViewOptions.CullingSimulation.{mode}.Text"));
+                    }
+                }
+
+                return cullingSimulationModeChoices;
+            }
+        }
+
+        private System.Collections.Generic.List<string> cullingSimulationModeChoices;
+
+        // As the chosen choice's text
+        [CreateProperty]
+        public string CullingSimulationMode
+        {
+            get
+            {
+                return CullingSimulationModeChoices[(int) SettingsManager.Instance.CullingSimulationMode];
+            }
+            set
+            {
+                var index = CullingSimulationModeChoices.IndexOf(value);
+                if (index >= 0 && (CullingSimulation.Modes) index != SettingsManager.Instance.CullingSimulationMode)
+                {
+                    SettingsManager.Instance.CullingSimulationMode = (CullingSimulation.Modes) index;
                 }
             }
         }

@@ -117,6 +117,12 @@ namespace ForgePlus.LevelManipulation
 
         public IScreenPointerPicker ScreenPicker { get; set; }
 
+        // Something in the level that isn't part of it (such as Culling Simulation's reference point), which takes presses
+        // before anything else, and whose drags are always its own (never selecting by rectangle)
+        public IScreenPointerPicker OverlayPicker { get; set; }
+
+        private bool pressedOverlay;
+
         private void Update()
         {
             var pointer = Pointer.current;
@@ -211,6 +217,7 @@ namespace ForgePlus.LevelManipulation
         {
             isPressed = true;
             pressedHandler = null;
+            pressedOverlay = false;
             pressStartedOverEmptiness = false;
             pressCanSelectByRectangle = false;
             isSelectingByRectangle = false;
@@ -244,9 +251,10 @@ namespace ForgePlus.LevelManipulation
                 return;
             }
 
-            pressCanSelectByRectangle = RectangleSelection.IsAvailable && !IsSelected(pressedHandler);
+            pressedOverlay = OverlayPicker != null && OverlayPicker.TryPick(position, out var overlayHandler, out _) && overlayHandler == pressedHandler;
+            pressCanSelectByRectangle = RectangleSelection.IsAvailable && !IsSelected(pressedHandler) && !pressedOverlay;
 
-            if (isSecondEmptyPress && pressedHandler is IWorldPointerEmptySpace && EmptySpaceDragger != null)
+            if (isSecondEmptyPress && !pressedOverlay && pressedHandler is IWorldPointerEmptySpace && EmptySpaceDragger != null)
             {
                 emptySpaceDragHandler = EmptySpaceDragger(position);
                 pressCanSelectByRectangle &= emptySpaceDragHandler == null;
@@ -335,6 +343,12 @@ namespace ForgePlus.LevelManipulation
         // having a handler (except in Objects mode, where only what can be clicked counts).
         private bool TryGetHandler(Vector2 position, out IWorldPointerHandler handler, out Vector3 worldPosition, out Vector3 worldNormal)
         {
+            if (OverlayPicker != null && OverlayPicker.TryPick(position, out handler, out worldPosition))
+            {
+                worldNormal = Vector3.up;
+                return true;
+            }
+
             if (ScreenPicker != null && ScreenPicker.TryPick(position, out handler, out worldPosition))
             {
                 worldNormal = Vector3.up;

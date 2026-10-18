@@ -184,7 +184,12 @@ namespace RuntimeCore.Entities.Geometry
         // A surface, or the merged batch it's drawn in
         private static void ApplyVisibility(Transform surface)
         {
-            if (surface && surface.TryGetComponent<MeshRenderer>(out var surfaceRenderer))
+            // Which also hides it while its polygon is culled
+            if (surface && surface.TryGetComponent<RuntimeSurfaceGeometry>(out var surfaceGeometry))
+            {
+                surfaceGeometry.ApplyVisibility();
+            }
+            else if (surface && surface.TryGetComponent<MeshRenderer>(out var surfaceRenderer))
             {
                 surfaceRenderer.forceRenderingOff = !surfacesAreVisible;
             }

@@ -1,6 +1,11 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <!-- Opens the view options (DisplayOptions) in a pop-up -->
+    <!-- Opens the view options (DisplayOptions) in a pop-up, and below it, the Culling Simulation choice (Off, Camera,
+         Reference Point) -->
     <ui:VisualElement picking-mode="Ignore">
         <ui:DropdownField name="display-options" class="fp-display-options" tooltip="@Common/ViewOptions.DisplayOptions.Tooltip" />
+        <ui:VisualElement class="fp-culling-simulation" tooltip="@Common/ViewOptions.CullingSimulation.Tooltip">
+            <ui:Label text="@Common/ViewOptions.CullingSimulation.Control.Text" class="fp-culling-simulation__label" picking-mode="Ignore" />
+            <ui:DropdownField name="culling-simulation" class="fp-display-options fp-culling-simulation__choice" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

@@ -18,10 +18,6 @@
             <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.ShowLighting.Control.Text" />
         </ui:Instance>
         <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
-        <!-- A placeholder, which doesn't change anything yet -->
-        <ui:Instance template="Toggle" name="visualization-effect" class="fp-toggle--wide-short fp-view-option">
-            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.VisualizationEffect.Control.Text" value="false" />
-        </ui:Instance>
         <ui:Instance template="Toggle" name="sprite-previews" class="fp-toggle--wide-short fp-view-option">
             <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SpritePreviews.Control.Text" />
         </ui:Instance>

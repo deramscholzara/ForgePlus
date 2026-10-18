@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 using UnityEngine.Rendering;
+using AlephOne;
 using ForgePlus.LevelManipulation.Utilities;
 
 namespace RuntimeCore.Entities.Geometry
@@ -229,9 +230,18 @@ namespace RuntimeCore.Entities.Geometry
         private static bool polygonsAreVisible = true;
         private static bool sidesAreVisible = true;
 
-        // Every floor's, ceiling's and side's surface, for showing and hiding them
+        // Every surface (floors', ceilings', sides' and media's), for showing and hiding them
         // Not readonly, so AutoStaticsCleanup resets it each Play session
-        private static HashSet<RuntimeSurfaceGeometry> kindSurfaces = new HashSet<RuntimeSurfaceGeometry>();
+        private static HashSet<RuntimeSurfaceGeometry> surfaces = new HashSet<RuntimeSurfaceGeometry>();
+
+        // The polygon it's drawn as part of: a floor's, ceiling's or media's own, or the one a side faces into
+        public short OwnerPolygonIndex
+        {
+            get
+            {
+                return geometryModule != null ? geometryModule.OwnerPolygonIndex : cstypes.NONE;
+            }
+        }
 
         // Floors and ceilings (Polygons) and sides (Sides) that are hidden aren't drawn, and clicks pass through them,
         // though they're still there
@@ -245,40 +255,59 @@ namespace RuntimeCore.Entities.Geometry
             polygonsAreVisible = polygonsVisible;
             sidesAreVisible = sidesVisible;
 
-            kindSurfaces.RemoveWhere(surface => !surface);
-            foreach (var surface in kindSurfaces)
+            ApplyVisibilityToAll();
+        }
+
+        // After what's shown changes for every surface (such as what PolygonVisibilityCulling hides)
+        public static void ApplyVisibilityToAll()
+        {
+            surfaces.RemoveWhere(surface => !surface);
+            foreach (var surface in surfaces)
             {
-                surface.ApplyKindVisibility();
+                surface.ApplyVisibility();
             }
         }
 
-        private void ApplyKindVisibility()
+        // Shown while its kind is (a media surface's is Media's), and its polygon isn't culled (PolygonVisibilityCulling).
+        // Clicks pass through what's hidden, except media hidden by its kind (whose clicks SelectionManager decides).
+        public void ApplyVisibility()
         {
-            var isShown = kind == Kind.Polygon ? polygonsAreVisible : kind != Kind.Side || sidesAreVisible;
-            var surfaceRenderer = SurfaceRenderer;
-
-            if (surfaceRenderer)
+            var isCulled = PolygonVisibilityCulling.IsCulled(OwnerPolygonIndex);
+            bool isKindShown;
+            switch (kind)
             {
-                surfaceRenderer.forceRenderingOff = !isShown;
+                case Kind.Polygon:
+                    isKindShown = polygonsAreVisible;
+                    break;
+                case Kind.Side:
+                    isKindShown = sidesAreVisible;
+                    break;
+                default:
+                    isKindShown = LevelEntity_Media.SurfacesAreVisible;
+                    break;
             }
 
-            gameObject.layer = isShown ? ShownLayer : HiddenLayer;
+            var surfaceRenderer = SurfaceRenderer;
+            if (surfaceRenderer)
+            {
+                surfaceRenderer.forceRenderingOff = !isKindShown || isCulled;
+            }
+
+            var isClickable = kind == Kind.Other ? !isCulled : isKindShown && !isCulled;
+            gameObject.layer = isClickable ? ShownLayer : HiddenLayer;
         }
 
         private void OnDestroy()
         {
-            kindSurfaces.Remove(this);
+            surfaces.Remove(this);
         }
 
         private void AssembleSurface()
         {
             geometryModule.AssembleSurface();
 
-            if (kind != Kind.Other)
-            {
-                kindSurfaces.Add(this);
-                ApplyKindVisibility();
-            }
+            surfaces.Add(this);
+            ApplyVisibility();
 
             // A media's surfaces follow its height
             SubscribeToMedia(geometryModule.MaterialKey.SourceMedia);

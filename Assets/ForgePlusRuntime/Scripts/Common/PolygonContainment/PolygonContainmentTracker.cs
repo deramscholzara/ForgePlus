@@ -83,8 +83,12 @@ namespace ForgePlus.PolygonContainment
                 return;
             }
 
+            // The same level's polygons, rebuilt after they changed (as they're moved), are first looked in around the
+            // one it was in, as when it moves
+            var isSameLevel = hasEvaluated && evaluatedMap != null && map.Level == evaluatedMap.Level;
+
             short polygonIndex;
-            if (!isSameMap || PolygonIndex == cstypes.NONE)
+            if (!isSameLevel || PolygonIndex == cstypes.NONE)
             {
                 polygonIndex = map.FindPolygon(point, withHeight);
             }

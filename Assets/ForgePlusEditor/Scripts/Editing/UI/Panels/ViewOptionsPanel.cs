@@ -23,6 +23,11 @@ namespace ForgePlus.UI
             var displayOptions = Root.Find<DropdownField>("display-options");
             displayOptions.SetValueWithoutNotify(Strings.Get(Strings.Common, "ViewOptions.DisplayOptions.Text"));
             displayOptions.OpensOnPress(() => ShowDisplayOptions(displayOptions), replacesOwnHandling: true);
+
+            var settings = ForgePlusUI.Instance.Settings;
+            var cullingSimulation = Root.Find<DropdownField>("culling-simulation");
+            cullingSimulation.Bind("choices", settings, nameof(SettingsViewModel.CullingSimulationModeChoices));
+            cullingSimulation.BindValue(settings, nameof(SettingsViewModel.CullingSimulationMode));
         }
 
         // Unloaded (with its bindings) as the pop-up closes

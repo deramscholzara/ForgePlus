@@ -24,6 +24,9 @@ namespace RuntimeCore.Entities.Geometry
 
         public MeshRenderer SurfaceRenderer { get; protected set; }
 
+        // The polygon it's drawn as part of (for culling it with that polygon)
+        public abstract short OwnerPolygonIndex { get; }
+
         public abstract void AssembleSurface();
 
         public abstract void ApplyPositionsAndTriangles();
