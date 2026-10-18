@@ -1,4 +1,6 @@
 using AlephOne;
+using RuntimeCore.Entities;
+using RuntimeCore.Entities.Geometry;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
@@ -30,6 +32,61 @@ namespace ForgePlus.PolygonContainment
 
         private NativeArray<byte> visiblePolygons;
         private int endpointCount;
+
+        // The lines beside platforms (variable elevation), and the polygon on each side of each, whose transparency
+        // follows the heights the platforms are at as they're simulated (ApplyPlatformHeights)
+        private short[] variableElevationLines;
+        private short[] variableElevationLinePolygons;
+
+        // Lines beside platforms are seen through only while their polygons' floors and ceilings (with each platform where
+        // its simulation has it) leave a gap between them, as Aleph One sets them as platforms move
+        // (adjust_platform_endpoint_and_line_heights, in platforms.cpp). Whether any changed since last applied.
+        public bool ApplyPlatformHeights(LevelEntity_Level levelEntity)
+        {
+            if (variableElevationLines.Length == 0 || !levelEntity || levelEntity.Level != Level)
+            {
+                return false;
+            }
+
+            var isChanged = false;
+            for (var i = 0; i < variableElevationLines.Length; i++)
+            {
+                var first = LiveHeights(levelEntity, variableElevationLinePolygons[i * 2]);
+                var second = LiveHeights(levelEntity, variableElevationLinePolygons[i * 2 + 1]);
+                var transparent = math.max(first.x, second.x) < math.min(first.y, second.y) ? (byte) 1 : (byte) 0;
+
+                var lineIndex = variableElevationLines[i];
+                if (transparentLines[lineIndex] != transparent)
+                {
+                    transparentLines[lineIndex] = transparent;
+                    isChanged = true;
+                }
+            }
+
+            return isChanged;
+        }
+
+        // A polygon's floor and ceiling heights (world units), where a platform's simulation has a platform's
+        private int2 LiveHeights(LevelEntity_Level levelEntity, short polygonIndex)
+        {
+            var polygon = Level.PolygonList[polygonIndex];
+            var heights = new int2(polygon.floor_height, polygon.ceiling_height);
+
+            if (polygon.type == map._polygon_is_platform)
+            {
+                if (levelEntity.FloorPlatforms != null && levelEntity.FloorPlatforms.TryGetValue(polygon.permutation, out var floorPlatform) && floorPlatform)
+                {
+                    heights.x = (int) math.round(floorPlatform.CurrentHeightInWorldUnitIncrements);
+                }
+
+                if (levelEntity.CeilingPlatforms != null && levelEntity.CeilingPlatforms.TryGetValue(polygon.permutation, out var ceilingPlatform) && ceilingPlatform)
+                {
+                    heights.y = (int) math.round(ceilingPlatform.CurrentHeightInWorldUnitIncrements);
+                }
+            }
+
+            return heights;
+        }
 
         // Whether each polygon can be seen from the point (given in world units), which is in the origin polygon. Run on a
         // worker thread (with Burst), and waited for.
@@ -93,10 +150,26 @@ namespace ForgePlus.PolygonContainment
                 }
             }
 
+            var variableLines = new System.Collections.Generic.List<short>();
+            var variableLinePolygons = new System.Collections.Generic.List<short>();
+
             for (var lineIndex = 0; lineIndex < level.LineList.Count; lineIndex++)
             {
-                transparentLines[lineIndex] = map.LINE_IS_TRANSPARENT(level.LineList[lineIndex]) ? (byte) 1 : (byte) 0;
+                var line = level.LineList[lineIndex];
+                transparentLines[lineIndex] = map.LINE_IS_TRANSPARENT(line) ? (byte) 1 : (byte) 0;
+
+                var clockwisePolygon = ValidPolygonOrNone(line.clockwise_polygon_owner);
+                var counterclockwisePolygon = ValidPolygonOrNone(line.counterclockwise_polygon_owner);
+                if (map.LINE_IS_VARIABLE_ELEVATION(line) && clockwisePolygon != cstypes.NONE && counterclockwisePolygon != cstypes.NONE)
+                {
+                    variableLines.Add((short) lineIndex);
+                    variableLinePolygons.Add(clockwisePolygon);
+                    variableLinePolygons.Add(counterclockwisePolygon);
+                }
             }
+
+            variableElevationLines = variableLines.ToArray();
+            variableElevationLinePolygons = variableLinePolygons.ToArray();
         }
 
         private short ValidPolygonOrNone(short polygonIndex)

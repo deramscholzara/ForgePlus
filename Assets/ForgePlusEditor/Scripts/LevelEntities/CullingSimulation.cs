@@ -3,6 +3,7 @@ using ForgePlus.History;
 using ForgePlus.LevelManipulation.Utilities;
 using ForgePlus.PolygonContainment;
 using ForgePlus.UI;
+using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using Unity.Mathematics;
 using Unity.Scripting.LifecycleManagement;
@@ -114,7 +115,10 @@ namespace ForgePlus.LevelManipulation
             var location = tracker.Location;
             var location2D = new int2(location.x, location.y);
 
-            if (!isEdited && map.Version == computedVersion && polygonIndex == computedPolygonIndex && location2D.Equals(computedLocation))
+            // Doors and other platforms opening (or closing) as they're simulated show (or hide) what's past them
+            var platformsChanged = map.ApplyPlatformHeights(LevelEntity_Level.Instance);
+
+            if (!isEdited && !platformsChanged && map.Version == computedVersion && polygonIndex == computedPolygonIndex && location2D.Equals(computedLocation))
             {
                 return;
             }
