@@ -218,7 +218,8 @@ namespace ForgePlus.DataFileIO
             if (MathUtilities.IsPowerOfTwo(result.width) &&
                 MathUtilities.IsPowerOfTwo(result.height))
             {
-                result.Apply(updateMipmaps: true, makeNoLongerReadable: false);
+                // Mipmapped on the CPU, so it's only uploaded once, compressed
+                PixelJobs.GenerateMipmaps(result);
                 result.Compress(highQuality: true);
                 result.Apply(updateMipmaps: false, makeNoLongerReadable: true);
             }

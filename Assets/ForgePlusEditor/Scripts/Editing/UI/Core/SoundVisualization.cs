@@ -48,14 +48,18 @@ namespace ForgePlus.UI
         private static readonly float[] FullVolumeDistances = { 0f, 1f, 2f };
         private static readonly float[] SilentDistances = { 5f, 10f, 15f };
 
+        // An indicator's position before it's first written (unequal to any real one, so the first is always written)
+        private static readonly Vector3 UnsetPosition = new Vector3(float.NaN, float.NaN, float.NaN);
+
         private readonly VisualElement layer;
 
-        private readonly Dictionary<short, VisualElement> polygonBars = new Dictionary<short, VisualElement>();
-        private readonly Dictionary<short, VisualElement> sourceBars = new Dictionary<short, VisualElement>();
+        private readonly Dictionary<short, Bars> polygonBars = new Dictionary<short, Bars>();
+        private readonly Dictionary<short, Bars> sourceBars = new Dictionary<short, Bars>();
 
-        private readonly Dictionary<short, (GameObject Arrow, short Direction, short Delta)> arrows = new Dictionary<short, (GameObject, short, short)>();
-        private readonly Dictionary<short, (GameObject Line, short Direction)> playingLines = new Dictionary<short, (GameObject, short)>();
-        private readonly Dictionary<short, (GameObject Radii, short Behavior)> radii = new Dictionary<short, (GameObject, short)>();
+        // With the position last written to each, so it's only written when it changes
+        private readonly Dictionary<short, (GameObject Arrow, short Direction, short Delta, Vector3 Position)> arrows = new Dictionary<short, (GameObject, short, short, Vector3)>();
+        private readonly Dictionary<short, (GameObject Line, short Direction, Vector3 Position)> playingLines = new Dictionary<short, (GameObject, short, Vector3)>();
+        private readonly Dictionary<short, (GameObject Radii, short Behavior, Vector3 Position)> radii = new Dictionary<short, (GameObject, short, Vector3)>();
 
         private readonly HashSet<short> selectedPolygons = new HashSet<short>();
         private readonly HashSet<short> selectedSources = new HashSet<short>();
@@ -63,6 +67,9 @@ namespace ForgePlus.UI
         private GameObject root;
         private Material material;
         private LevelEntity_Level shownLevel;
+
+        // Whether anything could be shown last frame, so everything is hidden once after nothing can be
+        private bool wasShowing;
 
         public SoundVisualization(VisualElement uiRoot)
         {
@@ -90,8 +97,12 @@ namespace ForgePlus.UI
 
             selectedPolygons.Clear();
             selectedSources.Clear();
-            foreach (var selected in SelectionManager.Instance.Selection)
+
+            // By index, as a foreach over the list's interface would allocate an enumerator every frame
+            var selection = SelectionManager.Instance.Selection;
+            for (var i = 0; i < selection.Count; i++)
             {
+                var selected = selection[i];
                 if (selected is LevelEntity_Polygon polygon)
                 {
                     selectedPolygons.Add(polygon.NativeIndex);
@@ -101,6 +112,17 @@ namespace ForgePlus.UI
                     selectedSources.Add(mapObject.NativeIndex);
                 }
             }
+
+            // Bars and arrows only show for their display setting or a selected polygon, and bars and radii for a
+            // selected sound source, so without any of those nothing shows. It's all gone through once more after that,
+            // to hide what was shown, then left alone until something can show again.
+            var isShowing = showsAllVolumes || showsAllDirections || selectedPolygons.Count > 0 || selectedSources.Count > 0;
+            if (!isShowing && !wasShowing)
+            {
+                return;
+            }
+
+            wasShowing = isShowing;
 
             var camera = Camera.main;
             var panel = layer.panel;
@@ -164,6 +186,7 @@ namespace ForgePlus.UI
 
             root = null;
             material = null;
+            wasShowing = false;
         }
 
         // Ambient, then random (each empty for none, and a random sound's showing how much higher it can be)
@@ -177,17 +200,17 @@ namespace ForgePlus.UI
 
             var ambientIndex = polygon.ambient_sound_image_index;
             var ambientVolume = ambientIndex >= 0 && ambientIndex < level.AmbientSoundImageList.Count ? level.AmbientSoundImageList[ambientIndex].volume : 0;
-            SetBar(bars[0], ambientVolume, ambientVolume);
+            SetBar(bars, 0, ambientVolume, ambientVolume);
 
             var randomIndex = polygon.random_sound_image_index;
             if (randomIndex >= 0 && randomIndex < level.RandomSoundImageList.Count)
             {
                 var random = level.RandomSoundImageList[randomIndex];
-                SetBar(bars[1], random.volume, random.delta_volume > 1 ? random.volume + random.delta_volume - 1 : random.volume);
+                SetBar(bars, 1, random.volume, random.delta_volume > 1 ? random.volume + random.delta_volume - 1 : random.volume);
             }
             else
             {
-                SetBar(bars[1], 0, 0);
+                SetBar(bars, 1, 0, 0);
             }
         }
 
@@ -207,19 +230,21 @@ namespace ForgePlus.UI
                 volume = level.Lights.TryGetValue((short) -facing, out var light) ? light.CurrentLinearIntensity * SoundManagerEnums.MAXIMUM_SOUND_VOLUME : 0f;
             }
 
-            SetBar(bars[0], volume, volume);
+            SetBar(bars, 0, volume, volume);
         }
 
-        // The bars at their point, made as they're first shown, or null (with them hidden) while they aren't shown
-        private VisualElement ShowBars(Dictionary<short, VisualElement> barsByIndex, short index, int barCount, bool isShown, Vector3 worldPosition, Camera camera, IPanel panel)
+        // The bars at their point, made as they're first shown, or null (with them hidden) while they aren't shown. Styles
+        // are only written when they change, as each write restyles the bars even when it's the same.
+        private Bars ShowBars(Dictionary<short, Bars> barsByIndex, short index, int barCount, bool isShown, Vector3 worldPosition, Camera camera, IPanel panel)
         {
             barsByIndex.TryGetValue(index, out var bars);
 
             if (!isShown || !WorldLayer.TryGetPanelPosition(worldPosition, camera, panel, out var position))
             {
-                if (bars != null)
+                if (bars != null && bars.IsShown)
                 {
-                    bars.style.display = DisplayStyle.None;
+                    bars.Root.style.display = DisplayStyle.None;
+                    bars.IsShown = false;
                 }
 
                 return null;
@@ -231,17 +256,31 @@ namespace ForgePlus.UI
                 barsByIndex[index] = bars;
             }
 
-            bars.style.left = position.x;
-            bars.style.top = position.y;
-            bars.style.display = DisplayStyle.Flex;
+            if (position.x != bars.Left)
+            {
+                bars.Root.style.left = position.x;
+                bars.Left = position.x;
+            }
+
+            if (position.y != bars.Top)
+            {
+                bars.Root.style.top = position.y;
+                bars.Top = position.y;
+            }
+
+            if (!bars.IsShown)
+            {
+                bars.Root.style.display = DisplayStyle.Flex;
+                bars.IsShown = true;
+            }
 
             return bars;
         }
 
-        private VisualElement CreateBars(int barCount)
+        private Bars CreateBars(int barCount)
         {
-            var bars = new VisualElement { pickingMode = PickingMode.Ignore };
-            bars.AddToClassList("fp-volume-bars");
+            var bars = new Bars(barCount);
+            bars.Root.AddToClassList("fp-volume-bars");
 
             for (var i = 0; i < barCount; i++)
             {
@@ -258,19 +297,32 @@ namespace ForgePlus.UI
                 fill.AddToClassList("fp-volume-bar__fill");
                 bar.Add(fill);
 
-                bars.Add(bar);
+                bars.Root.Add(bar);
+                bars.Fills[i] = fill;
+                bars.Ranges[i] = range;
             }
 
-            layer.Add(bars);
+            layer.Add(bars.Root);
 
             return bars;
         }
 
         // Filled to the volume, with how much higher it can be (up to the maximum) above it
-        private static void SetBar(VisualElement bar, float volume, float maximum)
+        private static void SetBar(Bars bars, int bar, float volume, float maximum)
         {
-            bar.Q("fill").style.height = Length.Percent(VolumeBars.Percent(volume));
-            bar.Q("range").style.height = Length.Percent(VolumeBars.Percent(maximum));
+            var fillPercent = VolumeBars.Percent(volume);
+            if (fillPercent != bars.FillPercents[bar])
+            {
+                bars.Fills[bar].style.height = Length.Percent(fillPercent);
+                bars.FillPercents[bar] = fillPercent;
+            }
+
+            var rangePercent = VolumeBars.Percent(maximum);
+            if (rangePercent != bars.RangePercents[bar])
+            {
+                bars.Ranges[bar].style.height = Length.Percent(rangePercent);
+                bars.RangePercents[bar] = rangePercent;
+            }
         }
 
         private void ShowArrow(MapLevel level, short index, polygon_data polygon, bool isShown)
@@ -285,7 +337,7 @@ namespace ForgePlus.UI
             {
                 if (arrow.Arrow)
                 {
-                    arrow.Arrow.SetActive(false);
+                    SetActive(arrow.Arrow, false);
                 }
 
                 ShowPlayingDirection(index, randomIndex, isShown: false);
@@ -297,15 +349,23 @@ namespace ForgePlus.UI
                 if (!arrow.Arrow)
                 {
                     arrow.Arrow = CreateIndicator($"Sound Direction - Polygon {index}");
+                    arrow.Position = UnsetPosition;
                 }
 
                 SetMesh(arrow.Arrow, BuildArrowMesh(random.direction, random.delta_direction));
-                arrow = (arrow.Arrow, random.direction, random.delta_direction);
+                arrow = (arrow.Arrow, random.direction, random.delta_direction, arrow.Position);
                 arrows[index] = arrow;
             }
 
-            arrow.Arrow.transform.position = PolygonAnchor(polygon, FloorOffset);
-            arrow.Arrow.SetActive(true);
+            var anchor = PolygonAnchor(polygon, FloorOffset);
+            if (!anchor.Equals(arrow.Position))
+            {
+                arrow.Arrow.transform.position = anchor;
+                arrow.Position = anchor;
+                arrows[index] = arrow;
+            }
+
+            SetActive(arrow.Arrow, true);
 
             ShowPlayingDirection(index, randomIndex, isShown: true, arrow.Arrow.transform.position);
         }
@@ -325,7 +385,7 @@ namespace ForgePlus.UI
             {
                 if (playing.Line)
                 {
-                    playing.Line.SetActive(false);
+                    SetActive(playing.Line, false);
                 }
 
                 return;
@@ -336,18 +396,25 @@ namespace ForgePlus.UI
                 if (!playing.Line)
                 {
                     playing.Line = CreateIndicator($"Sound Playing Direction - Polygon {index}");
+                    playing.Position = UnsetPosition;
                 }
 
                 var builder = new LineMeshBuilder();
                 builder.AddLine(Vector3.zero, AngleDirection(playedDirection + HalfTurn) * ArrowLength * ArcRadius);
                 SetMesh(playing.Line, builder.Build("Sound Playing Direction"));
 
-                playing = (playing.Line, playedDirection);
+                playing = (playing.Line, playedDirection, playing.Position);
                 playingLines[index] = playing;
             }
 
-            playing.Line.transform.position = position;
-            playing.Line.SetActive(true);
+            if (!position.Equals(playing.Position))
+            {
+                playing.Line.transform.position = position;
+                playing.Position = position;
+                playingLines[index] = playing;
+            }
+
+            SetActive(playing.Line, true);
         }
 
         private void ShowRadii(LevelEntity_MapObject mapObject, bool isShown)
@@ -359,7 +426,7 @@ namespace ForgePlus.UI
             {
                 if (shown.Radii)
                 {
-                    shown.Radii.SetActive(false);
+                    SetActive(shown.Radii, false);
                 }
 
                 return;
@@ -371,15 +438,32 @@ namespace ForgePlus.UI
                 if (!shown.Radii)
                 {
                     shown.Radii = CreateIndicator($"Sound Radii - Object {index}");
+                    shown.Position = UnsetPosition;
                 }
 
                 SetMesh(shown.Radii, BuildRadiiMesh(behavior));
-                shown = (shown.Radii, behavior);
+                shown = (shown.Radii, behavior, shown.Position);
                 radii[index] = shown;
             }
 
-            shown.Radii.transform.position = mapObject.transform.position;
-            shown.Radii.SetActive(true);
+            var position = mapObject.transform.position;
+            if (!position.Equals(shown.Position))
+            {
+                shown.Radii.transform.position = position;
+                shown.Position = position;
+                radii[index] = shown;
+            }
+
+            SetActive(shown.Radii, true);
+        }
+
+        // Only when it changes, as setting it (even to the same value) costs every frame
+        private static void SetActive(GameObject indicator, bool isActive)
+        {
+            if (indicator.activeSelf != isActive)
+            {
+                indicator.SetActive(isActive);
+            }
         }
 
         // At the polygon's center, above its floor
@@ -399,7 +483,7 @@ namespace ForgePlus.UI
 
             if (!material)
             {
-                material = new Material(Shader.Find("ForgePlus/GeometrySelectionIndicator"));
+                material = GeometryUtilities.CreateSelectionIndicatorMaterial();
             }
 
             var indicator = new GameObject(name);
@@ -491,6 +575,34 @@ namespace ForgePlus.UI
             builder.AddCircle(silentDistance, CircleSegments);
 
             return builder.Build("Sound Radii");
+        }
+
+        // A point's volume bars, with the style values last written to them (they start hidden, with nothing written yet)
+        private class Bars
+        {
+            public readonly VisualElement Root = new VisualElement { pickingMode = PickingMode.Ignore };
+            public readonly VisualElement[] Fills;
+            public readonly VisualElement[] Ranges;
+            public readonly float[] FillPercents;
+            public readonly float[] RangePercents;
+
+            public bool IsShown;
+            public float Left = float.NaN;
+            public float Top = float.NaN;
+
+            public Bars(int barCount)
+            {
+                Fills = new VisualElement[barCount];
+                Ranges = new VisualElement[barCount];
+                FillPercents = new float[barCount];
+                RangePercents = new float[barCount];
+
+                for (var i = 0; i < barCount; i++)
+                {
+                    FillPercents[i] = float.NaN;
+                    RangePercents[i] = float.NaN;
+                }
+            }
         }
 
         // Thin flat strips (on the XZ plane) for lines, as one mesh

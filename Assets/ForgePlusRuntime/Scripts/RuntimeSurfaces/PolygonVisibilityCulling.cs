@@ -14,6 +14,9 @@ namespace RuntimeCore.Entities.Geometry
         // Not readonly, so AutoStaticsCleanup resets it each Play session
         private static bool[] visiblePolygons = null;
 
+        // Which polygons' culling changed in the last update (reused)
+        private static bool[] changedPolygons = null;
+
         public static bool IsActive
         {
             get
@@ -45,10 +48,27 @@ namespace RuntimeCore.Entities.Geometry
                 return;
             }
 
-            if (visiblePolygons == null || visiblePolygons.Length != visible.Length)
+            // With the same polygons as before, only those that turned visible or culled are applied again
+            if (visiblePolygons != null && visiblePolygons.Length == visible.Length)
             {
-                visiblePolygons = new bool[visible.Length];
+                if (changedPolygons == null || changedPolygons.Length != visible.Length)
+                {
+                    changedPolygons = new bool[visible.Length];
+                }
+
+                for (var i = 0; i < visible.Length; i++)
+                {
+                    changedPolygons[i] = visiblePolygons[i] != visible[i];
+                }
+
+                Array.Copy(visible, visiblePolygons, visible.Length);
+
+                RuntimeSurfaceGeometry.ApplyVisibilityToSurfacesIn(changedPolygons);
+                LevelEntity_MapObject.ApplyVisibilityToObjectsIn(changedPolygons);
+                return;
             }
+
+            visiblePolygons = new bool[visible.Length];
 
             Array.Copy(visible, visiblePolygons, visible.Length);
 

@@ -36,6 +36,11 @@
                 <ui:Instance template="Toggle" name="surface-cache-global-illumination" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.SurfaceCacheGlobalIllumination.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.SurfaceCacheGlobalIllumination.Control.Text" />
                 </ui:Instance>
+                <!-- From none (0x) to ten times (10x) in steps of 0.1, as tenths (SettingsManager); only while Surface Cache
+                     Global Illumination is on -->
+                <ui:Instance template="SliderValueRow" name="surface-light-multiplier" class="fp-setting" tooltip="@Menu/SettingsTab.SurfaceLightMultiplier.Tooltip">
+                    <ui:AttributeOverrides element-name="control" label="@Menu/SettingsTab.SurfaceLightMultiplier.Control.Label" high-value="100" />
+                </ui:Instance>
                 <ui:Label text="@Menu/SettingsTab.UnitsHeader.Text" class="fp-settings__header" />
                 <ui:Instance template="Toggle" name="improper-fractions" class="fp-toggle--wide fp-setting" tooltip="@Menu/SettingsTab.ImproperFractions.Tooltip">
                     <ui:AttributeOverrides element-name="control" text="@Menu/SettingsTab.ImproperFractions.Control.Text" />

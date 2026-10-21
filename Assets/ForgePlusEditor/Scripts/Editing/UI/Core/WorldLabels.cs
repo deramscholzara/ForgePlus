@@ -10,7 +10,7 @@ namespace ForgePlus.UI
     public class WorldLabels
     {
         private readonly VisualElement layer;
-        private readonly Dictionary<Label, Transform> anchors = new Dictionary<Label, Transform>();
+        private readonly Dictionary<Label, LabelAnchor> anchors = new Dictionary<Label, LabelAnchor>();
 
         public WorldLabels(VisualElement root)
         {
@@ -26,7 +26,7 @@ namespace ForgePlus.UI
             label.RegisterCallback<ClickEvent>(clickEvent => onClick());
 
             layer.Add(label);
-            anchors[label] = anchor;
+            anchors[label] = new LabelAnchor { Anchor = anchor };
 
             return label;
         }
@@ -46,19 +46,45 @@ namespace ForgePlus.UI
             foreach (var labelAnchor in anchors)
             {
                 var label = labelAnchor.Key;
-                var anchor = labelAnchor.Value;
+                var shown = labelAnchor.Value;
+                var anchor = shown.Anchor;
 
+                // Styles are only written when they change, as each write restyles the label even when it's the same
                 if (anchor && anchor.gameObject.activeInHierarchy && WorldLayer.TryGetPanelPosition(anchor.position, camera, panel, out var position))
                 {
-                    label.style.left = position.x;
-                    label.style.top = position.y;
-                    label.style.display = DisplayStyle.Flex;
+                    if (position.x != shown.Left)
+                    {
+                        label.style.left = position.x;
+                        shown.Left = position.x;
+                    }
+
+                    if (position.y != shown.Top)
+                    {
+                        label.style.top = position.y;
+                        shown.Top = position.y;
+                    }
+
+                    if (!shown.IsShown)
+                    {
+                        label.style.display = DisplayStyle.Flex;
+                        shown.IsShown = true;
+                    }
                 }
-                else
+                else if (shown.IsShown)
                 {
                     label.style.display = DisplayStyle.None;
+                    shown.IsShown = false;
                 }
             }
+        }
+
+        // A label's point, and the style values last written to the label (it starts hidden, with no position yet)
+        private class LabelAnchor
+        {
+            public Transform Anchor;
+            public bool IsShown;
+            public float Left = float.NaN;
+            public float Top = float.NaN;
         }
     }
 }

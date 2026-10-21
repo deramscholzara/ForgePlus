@@ -193,6 +193,9 @@ MonoBehaviour:
   - rid: 552786457188368446
   - rid: 552786457188368447
   - rid: 552786457188368448
+  - rid: 552786457188368449
+  - rid: 552786457188368450
+  - rid: 552786457188368451
   references:
     version: 2
     RefIds:
@@ -1430,3 +1433,24 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: New Map
+    - rid: 552786457188368449
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900372336645
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Light Multiplier'
+    - rid: 552786457188368450
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900372336646
+        m_Metadata:
+          m_Items: []
+        m_Value: 'How much light surfaces give Surface Cache Global Illumination to bounce onto other surfaces, from none (0x) to ten times their own (10x). Only while Surface Cache Global Illumination is on.'
+    - rid: 552786457188368451
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 5435900372336647
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0:0.0}x'

@@ -29,6 +29,9 @@ namespace ForgePlus.LevelManipulation
         // The face shown as selected for what's selected through it
         private EditableSurface_Base shownFace;
 
+        // Counts every change to what's selected, so what follows it can tell it changed without comparing
+        public int SelectionVersion { get; private set; }
+
         public ISelectable SelectedObject
         {
             get
@@ -145,6 +148,7 @@ namespace ForgePlus.LevelManipulation
 
                 // 2. Update actual selection list
                 SelectedObjects.Add(selection);
+                SelectionVersion++;
 
                 // 3. Inspect selection
                 InspectSelection();
@@ -169,6 +173,7 @@ namespace ForgePlus.LevelManipulation
 
                     // 2. Update actual selection list
                     SelectedObjects.Remove(selection);
+                    SelectionVersion++;
                 }
                 else
                 {
@@ -188,6 +193,7 @@ namespace ForgePlus.LevelManipulation
 
                     // 2. Update actual selection list
                     SelectedObjects.RemoveAll(selectedObject => selectedObject != selection);
+                    SelectionVersion++;
                 }
 
                 // 3. Inspect selection
@@ -219,6 +225,7 @@ namespace ForgePlus.LevelManipulation
 
             // 2. Update actual selection list
             SelectedObjects.Clear();
+            SelectionVersion++;
 
             if (inspectNothingSelected)
             {

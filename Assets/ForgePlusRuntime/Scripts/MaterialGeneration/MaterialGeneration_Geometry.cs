@@ -40,7 +40,7 @@ namespace RuntimeCore.Materials
             {
                 if (!unassignedMaterial)
                 {
-                    unassignedMaterial = new Material(Shader.Find("ForgePlus/Unassigned"));
+                    unassignedMaterial = CreateMaterial(Shader.Find("ForgePlus/Unassigned"));
                 }
 
                 return unassignedMaterial;
@@ -65,7 +65,17 @@ namespace RuntimeCore.Materials
 
         [NoAutoStaticsCleanup] private static readonly int mainTexturePropertyId = Shader.PropertyToID("_MainTex");
 
-        [NoAutoStaticsCleanup] private static readonly int mediaSubColorPropertyId = Shader.PropertyToID("_SubMediaColor");
+        // The face shaders' lighting that nothing uses: there are no realtime lights to highlight, and the level isn't meant
+        // to reflect its surroundings, so every material turns them off. These match the shader inclusion materials (as
+        // URP's material validation sets them), as builds only have variants for the keyword combinations those use.
+        [NoAutoStaticsCleanup] private static readonly string[] unusedLightingKeywords = { "_SPECULARHIGHLIGHTS_OFF", "_ENVIRONMENTREFLECTIONS_OFF", "_SCREENSPACEREFLECTIONS_OFF" };
+
+        // Parallax and bump mapping, only on materials with a bump map
+        private const string BumpMapKeyword = "_ALEPHONE_BUMP_MAP";
+
+        // Static draws neither its texture nor its light (as Aleph One's does), so every static surface drawn with a
+        // shader shares one material
+        private static readonly Dictionary<Shader, Material> StaticMaterials = new Dictionary<Shader, Material>();
 
         // MML's bump maps and glow maps for substitute textures (MmlTextures), on the shaders that draw them
         [NoAutoStaticsCleanup] private static readonly int bumpMapPropertyId = Shader.PropertyToID("_BumpMap");
@@ -278,6 +288,84 @@ namespace RuntimeCore.Materials
             Textures.Clear();
         }
 
+        // For Fast Enter Play Mode, where statics survive between Play sessions but the textures and materials they hold
+        // were destroyed as the last session ended (AutoStaticsCleanup doesn't clear these collections)
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics()
+        {
+            Textures.Clear();
+            TextureUsageCounter.Clear();
+
+            Materials.Clear();
+            TransparentMaterials.Clear();
+            TransparentLayeredOuterMaterials.Clear();
+            LandscapeMaterials.Clear();
+            MediaMaterials.Clear();
+
+            StaticMaterials.Clear();
+
+            unassignedMaterial = null;
+        }
+
+        // The material every static surface drawn with the source material's shader shares, for shaders that draw static
+        public static Material GetStaticMaterial(Material sourceMaterial)
+        {
+            if (!sourceMaterial)
+            {
+                return sourceMaterial;
+            }
+
+            var shader = sourceMaterial.shader;
+            if (shader != OpaqueWithAlphaAlphaNormalShader &&
+                shader != TransparentNormalShader &&
+                shader != TransparentNormalLayeredOuterShader)
+            {
+                return sourceMaterial;
+            }
+
+            if (!StaticMaterials.TryGetValue(shader, out var material) || !material)
+            {
+                material = CreateMaterial(shader);
+                material.name = $"Static ({shader.name})";
+                SetSurfaceCacheEmission(material);
+
+                StaticMaterials[shader] = material;
+            }
+
+            return material;
+        }
+
+        private static Material CreateMaterial(Shader shader)
+        {
+            var material = new Material(shader);
+
+            foreach (var keyword in unusedLightingKeywords)
+            {
+                SetToggleKeyword(material, keyword, true);
+            }
+
+            return material;
+        }
+
+        // A shader graph Boolean keyword is a Toggle property too, and copying a material (as SurfaceMaterials does) sets
+        // its keywords from those properties, so both are set (a property the shader doesn't have is ignored)
+        private static void SetToggleKeyword(Material material, string keyword, bool isOn)
+        {
+            if (material.HasFloat(keyword))
+            {
+                material.SetFloat(keyword, isOn ? 1f : 0f);
+            }
+
+            if (isOn)
+            {
+                material.EnableKeyword(keyword);
+            }
+            else
+            {
+                material.DisableKeyword(keyword);
+            }
+        }
+
         private static void ClearMaterials(IDictionary<ushort, Material> materials)
         {
             // Don't actually clear the Materials list,
@@ -295,6 +383,7 @@ namespace RuntimeCore.Materials
             if (material.HasTexture(bumpMapPropertyId))
             {
                 material.SetTexture(bumpMapPropertyId, bumpMap);
+                SetToggleKeyword(material, BumpMapKeyword, bumpMap);
             }
 
             if (material.HasTexture(emissionMapPropertyId))
@@ -366,29 +455,10 @@ namespace RuntimeCore.Materials
             }
             else
             {
-                material = new Material(shaderToUse);
+                material = CreateMaterial(shaderToUse);
                 trackedMaterials[shapeDescriptor] = material;
 
                 SetSurfaceCacheEmission(material);
-
-                if (shaderToUse == MediaShader)
-                {
-                    var readableTexture = GetReadableTexture(textureToUse);
-                    var fastAverageTextureColor = readableTexture.GetPixelBilinear(0f, 0f);
-                    fastAverageTextureColor += readableTexture.GetPixelBilinear(0.25f, 0.75f);
-                    fastAverageTextureColor += readableTexture.GetPixelBilinear(0.66f, 0.33f);
-                    fastAverageTextureColor *= 1f / 3f;
-
-                    if (readableTexture != textureToUse)
-                    {
-                        Object.Destroy(readableTexture);
-                    }
-
-                    Color.RGBToHSV(fastAverageTextureColor, out float hue, out float saturation, out _);
-                    fastAverageTextureColor = Color.HSVToRGB(hue, saturation, 1f);
-
-                    material.SetColor(mediaSubColorPropertyId, fastAverageTextureColor);
-                }
             }
 
             if (material.mainTexture != textureToUse)
@@ -402,36 +472,6 @@ namespace RuntimeCore.Materials
             }
 
             return material;
-        }
-
-        // The texture, or (as textures are made unreadable once uploaded) a small readable copy of it, read back from the GPU
-        private static Texture2D GetReadableTexture(Texture2D texture)
-        {
-            if (texture.isReadable)
-            {
-                return texture;
-            }
-
-            const int CopySize = 64;
-            var copyTarget = RenderTexture.GetTemporary(CopySize, CopySize, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.sRGB);
-            var previous = RenderTexture.active;
-
-            try
-            {
-                Graphics.Blit(texture, copyTarget);
-                RenderTexture.active = copyTarget;
-
-                var copy = new Texture2D(CopySize, CopySize, TextureFormat.RGBA32, mipChain: false, linear: false);
-                copy.ReadPixels(new UnityEngine.Rect(0, 0, CopySize, CopySize), 0, 0);
-                copy.Apply(updateMipmaps: false);
-
-                return copy;
-            }
-            finally
-            {
-                RenderTexture.active = previous;
-                RenderTexture.ReleaseTemporary(copyTarget);
-            }
         }
     }
 }

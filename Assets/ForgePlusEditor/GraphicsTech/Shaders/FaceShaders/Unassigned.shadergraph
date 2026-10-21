@@ -7,7 +7,14 @@
             "m_Id": "b886b5ba03a749778edb5bfd0d9ad606"
         }
     ],
-    "m_Keywords": [],
+    "m_Keywords": [
+        {
+            "m_Id": "0d82d925c78e65a034654184049438ac"
+        },
+        {
+            "m_Id": "da90b1e43328124182ad25b0f1f4fef7"
+        }
+    ],
     "m_Dropdowns": [],
     "m_CategoryData": [
         {
@@ -86,8 +93,8 @@
     },
     "m_FragmentContext": {
         "m_Position": {
-            "x": 0.0,
-            "y": 200.0
+            "x": 0,
+            "y": 200
         },
         "m_Blocks": [
             {
@@ -147,6 +154,12 @@
     "m_ChildObjectList": [
         {
             "m_Id": "b886b5ba03a749778edb5bfd0d9ad606"
+        },
+        {
+            "m_Id": "0d82d925c78e65a034654184049438ac"
+        },
+        {
+            "m_Id": "da90b1e43328124182ad25b0f1f4fef7"
         }
     ]
 }
@@ -399,8 +412,8 @@
     "m_AlphaMode": 0,
     "m_RenderFace": 2,
     "m_AlphaClip": false,
-    "m_CastShadows": true,
-    "m_ReceiveShadows": true,
+    "m_CastShadows": false,
+    "m_ReceiveShadows": false,
     "m_DisableTint": false,
     "m_Sort3DAs2DCompatible": false,
     "m_AdditionalMotionVectorMode": 0,
@@ -653,9 +666,9 @@
     "m_NormalDropOffSpace": 0,
     "m_ClearCoat": false,
     "m_BlendModePreserveSpecular": true,
-    "m_ScreenSpaceReflections": true,
-    "m_ScreenSpaceReflectionsContributeTransparent": true,
-    "m_ReceiveFog": true
+    "m_ScreenSpaceReflections": false,
+    "m_ScreenSpaceReflectionsContributeTransparent": false,
+    "m_ReceiveFog": false
 }
 
 {
@@ -940,5 +953,55 @@
         "m_SerializableColors": []
     },
     "m_SerializedDescriptor": "VertexDescription.Normal"
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "0d82d925c78e65a034654184049438ac",
+    "m_Guid": {
+        "m_GuidSerialized": "c37c0782-d41d-8365-a988-e88ce1101905"
+    },
+    "m_Name": "Specular Highlights Off",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Specular Highlights Off",
+    "m_DefaultReferenceName": "_SPECULARHIGHLIGHTS_OFF",
+    "m_OverrideReferenceName": "_SPECULARHIGHLIGHTS_OFF",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_KeywordType": 0,
+    "m_KeywordDefinition": 0,
+    "m_KeywordScope": 0,
+    "m_KeywordStages": 2,
+    "m_Entries": [],
+    "m_Value": 1,
+    "m_IsEditable": true
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.ShaderKeyword",
+    "m_ObjectId": "da90b1e43328124182ad25b0f1f4fef7",
+    "m_Guid": {
+        "m_GuidSerialized": "7579c2fc-829f-8dc3-843c-b00eb5bc794a"
+    },
+    "m_Name": "Environment Reflections Off",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Environment Reflections Off",
+    "m_DefaultReferenceName": "_ENVIRONMENTREFLECTIONS_OFF",
+    "m_OverrideReferenceName": "_ENVIRONMENTREFLECTIONS_OFF",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_KeywordType": 0,
+    "m_KeywordDefinition": 0,
+    "m_KeywordScope": 0,
+    "m_KeywordStages": 2,
+    "m_Entries": [],
+    "m_Value": 1,
+    "m_IsEditable": true
 }
 

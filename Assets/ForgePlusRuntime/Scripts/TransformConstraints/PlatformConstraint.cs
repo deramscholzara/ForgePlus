@@ -33,6 +33,7 @@ namespace RuntimeCore.Constraints
             if (transform.position != position)
             {
                 transform.position = position;
+                RuntimeSurfaceGeometry.MarkGeometryChanged();
             }
         }
 

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using ForgePlus.LevelManipulation.Utilities;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
@@ -22,9 +21,15 @@ namespace ForgePlus.ApplicationGeneral
         // Rendering begins for each view (such as the Game and Scene views), but they share a frame's admissions
         private static int lastAdmissionFrame = -1;
 
-        // Every surface renderer, and those still held out
+        // Every surface renderer
         private static readonly HashSet<MeshRenderer> surfaceRenderers = new HashSet<MeshRenderer>();
-        private static readonly List<MeshRenderer> heldRenderers = new List<MeshRenderer>();
+
+        // Those still held out, by the materials each waits on (those not let in yet). Each held renderer is listed under
+        // every material it waits on, and queued in the order it was held. Lists and the queue can keep renderers that have
+        // since been let in or held again (they're skipped), so neither needs searching when that happens.
+        private static readonly Dictionary<MeshRenderer, HashSet<Material>> heldRenderers = new Dictionary<MeshRenderer, HashSet<Material>>();
+        private static readonly Dictionary<Material, List<MeshRenderer>> heldRenderersByMaterial = new Dictionary<Material, List<MeshRenderer>>();
+        private static readonly Queue<MeshRenderer> heldRendererQueue = new Queue<MeshRenderer>();
 
         // The materials of the surfaces let in
         private static readonly HashSet<Material> admittedMaterials = new HashSet<Material>();
@@ -32,13 +37,19 @@ namespace ForgePlus.ApplicationGeneral
         // Surfaces it never takes in (placeholders, and sides too small to matter)
         private static readonly HashSet<MeshRenderer> excludedRenderers = new HashSet<MeshRenderer>();
 
+        // Reused, so admitting doesn't allocate
+        private static readonly List<Material> rendererMaterials = new List<Material>();
+        private static readonly Stack<List<Material>> materialListPool = new Stack<List<Material>>();
+        private static readonly Stack<HashSet<Material>> materialSetPool = new Stack<HashSet<Material>>();
+        private static readonly Stack<List<MeshRenderer>> rendererListPool = new Stack<List<MeshRenderer>>();
+
         // Before Surface Cache Global Illumination is turned on, so its first frame doesn't take every surface at once
         public static void SetEnabled(bool enabled)
         {
             isEnabled = enabled;
 
             surfaceRenderers.RemoveWhere(renderer => !renderer);
-            heldRenderers.Clear();
+            ClearHeld();
             admittedMaterials.Clear();
 
             excludedRenderers.RemoveWhere(renderer => !renderer);
@@ -47,7 +58,7 @@ namespace ForgePlus.ApplicationGeneral
             {
                 if (!excludedRenderers.Contains(renderer))
                 {
-                    Place(renderer, hold: enabled);
+                    Place(renderer);
                 }
             }
 
@@ -61,7 +72,7 @@ namespace ForgePlus.ApplicationGeneral
         public static void Admit(MeshRenderer renderer, bool isExcluded)
         {
             surfaceRenderers.Add(renderer);
-            heldRenderers.Remove(renderer);
+            Release(renderer);
 
             if (isExcluded)
             {
@@ -72,7 +83,7 @@ namespace ForgePlus.ApplicationGeneral
 
             excludedRenderers.Remove(renderer);
 
-            Place(renderer, hold: isEnabled && renderer.sharedMaterials.Any(material => material && !admittedMaterials.Contains(material)));
+            Place(renderer);
 
             if (isEnabled)
             {
@@ -84,23 +95,129 @@ namespace ForgePlus.ApplicationGeneral
         public static void Forget()
         {
             surfaceRenderers.Clear();
-            heldRenderers.Clear();
+            ClearHeld();
             admittedMaterials.Clear();
             excludedRenderers.Clear();
         }
 
-        private static void Place(MeshRenderer renderer, bool hold)
+        // Held out while it has materials not let in yet (and Surface Cache Global Illumination is on), otherwise let in
+        private static void Place(MeshRenderer renderer)
         {
-            if (hold)
+            if (!isEnabled)
             {
-                SetRenderingLayer(renderer, SurfaceCacheRenderingLayers.Excluded);
-                heldRenderers.Add(renderer);
+                LetIn(renderer);
+                return;
             }
-            else
+
+            HashSet<Material> waitingOn = null;
+
+            renderer.GetSharedMaterials(rendererMaterials);
+            foreach (var material in rendererMaterials)
             {
-                SetRenderingLayer(renderer, SurfaceCacheRenderingLayers.Included);
-                admittedMaterials.UnionWith(renderer.sharedMaterials.Where(material => material));
+                if (material && !admittedMaterials.Contains(material))
+                {
+                    waitingOn ??= materialSetPool.Count > 0 ? materialSetPool.Pop() : new HashSet<Material>();
+                    waitingOn.Add(material);
+                }
             }
+
+            if (waitingOn == null)
+            {
+                LetIn(renderer);
+                return;
+            }
+
+            SetRenderingLayer(renderer, SurfaceCacheRenderingLayers.Excluded);
+
+            heldRenderers.Add(renderer, waitingOn);
+            heldRendererQueue.Enqueue(renderer);
+
+            foreach (var material in waitingOn)
+            {
+                if (!heldRenderersByMaterial.TryGetValue(material, out var waiting))
+                {
+                    waiting = rendererListPool.Count > 0 ? rendererListPool.Pop() : new List<MeshRenderer>();
+                    heldRenderersByMaterial.Add(material, waiting);
+                }
+
+                waiting.Add(renderer);
+            }
+        }
+
+        private static void LetIn(MeshRenderer renderer)
+        {
+            SetRenderingLayer(renderer, SurfaceCacheRenderingLayers.Included);
+
+            // Its own list, as letting in the renderers that were only waiting on these materials lets them in here too
+            var materials = materialListPool.Count > 0 ? materialListPool.Pop() : new List<Material>();
+            renderer.GetSharedMaterials(materials);
+
+            foreach (var material in materials)
+            {
+                if (material && admittedMaterials.Add(material))
+                {
+                    LetInRenderersWaitingOnlyOn(material);
+                }
+            }
+
+            materials.Clear();
+            materialListPool.Push(materials);
+        }
+
+        // A material that's in now brings in no new material with the renderers that were only waiting on it
+        private static void LetInRenderersWaitingOnlyOn(Material material)
+        {
+            if (!heldRenderersByMaterial.Remove(material, out var waiting))
+            {
+                return;
+            }
+
+            foreach (var renderer in waiting)
+            {
+                if (heldRenderers.TryGetValue(renderer, out var waitingOn) &&
+                    waitingOn.Remove(material) &&
+                    waitingOn.Count == 0)
+                {
+                    Release(renderer);
+
+                    if (renderer)
+                    {
+                        LetIn(renderer);
+                    }
+                }
+            }
+
+            waiting.Clear();
+            rendererListPool.Push(waiting);
+        }
+
+        // No longer held (its lists and queue entry are skipped from now on)
+        private static void Release(MeshRenderer renderer)
+        {
+            if (heldRenderers.Remove(renderer, out var waitingOn))
+            {
+                waitingOn.Clear();
+                materialSetPool.Push(waitingOn);
+            }
+        }
+
+        private static void ClearHeld()
+        {
+            foreach (var waitingOn in heldRenderers.Values)
+            {
+                waitingOn.Clear();
+                materialSetPool.Push(waitingOn);
+            }
+
+            foreach (var waiting in heldRenderersByMaterial.Values)
+            {
+                waiting.Clear();
+                rendererListPool.Push(waiting);
+            }
+
+            heldRenderers.Clear();
+            heldRenderersByMaterial.Clear();
+            heldRendererQueue.Clear();
         }
 
         // Only when it changes, as Surface Cache Global Illumination updates every renderer that's changed
@@ -129,10 +246,13 @@ namespace ForgePlus.ApplicationGeneral
             RenderPipelineManager.beginContextRendering -= AdmitHeldRenderers;
         }
 
+        // In the order they were held, until this frame's new materials are used up (letting each one in also lets in
+        // every renderer that was only waiting on its materials)
         private static void AdmitHeldRenderers(ScriptableRenderContext context, List<Camera> cameras)
         {
             if (!isEnabled || heldRenderers.Count == 0)
             {
+                heldRendererQueue.Clear();
                 StopAdmittingEachFrame();
                 return;
             }
@@ -145,30 +265,35 @@ namespace ForgePlus.ApplicationGeneral
             lastAdmissionFrame = Time.frameCount;
 
             var remainingNewMaterials = NewMaterialsPerFrame;
-            var newMaterials = new HashSet<Material>();
 
-            for (var i = 0; i < heldRenderers.Count; i++)
+            while (remainingNewMaterials > 0 && heldRendererQueue.Count > 0)
             {
-                var renderer = heldRenderers[i];
+                var renderer = heldRendererQueue.Peek();
+                if (!heldRenderers.TryGetValue(renderer, out var waitingOn))
+                {
+                    heldRendererQueue.Dequeue();
+                    continue;
+                }
+
                 if (!renderer)
                 {
-                    heldRenderers.RemoveAt(i--);
+                    heldRendererQueue.Dequeue();
+                    Release(renderer);
                     continue;
                 }
-
-                newMaterials.Clear();
-                newMaterials.UnionWith(renderer.sharedMaterials.Where(material => material && !admittedMaterials.Contains(material)));
 
                 // A surface with more new materials than a frame allows still gets in, on a frame of its own
-                if (newMaterials.Count > remainingNewMaterials &&
+                if (waitingOn.Count > remainingNewMaterials &&
                     remainingNewMaterials < NewMaterialsPerFrame)
                 {
-                    continue;
+                    break;
                 }
 
-                remainingNewMaterials -= newMaterials.Count;
-                heldRenderers.RemoveAt(i--);
-                Place(renderer, hold: false);
+                remainingNewMaterials -= waitingOn.Count;
+
+                heldRendererQueue.Dequeue();
+                Release(renderer);
+                LetIn(renderer);
             }
         }
     }

@@ -36,6 +36,7 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_ColorAdjustment = "Settings_ColorAdjustment";
         private const string PlayerPrefsSettingsKey_Vignette = "Settings_Vignette";
         private const string PlayerPrefsSettingsKey_SurfaceCacheGlobalIllumination = "Settings_SurfaceCacheGlobalIllumination";
+        private const string PlayerPrefsSettingsKey_SurfaceLightMultiplier = "Settings_SurfaceLightMultiplier";
         private const string PlayerPrefsSettingsKey_ClipPlatformSides = "Settings_ClipPlatformSides";
         private const string PlayerPrefsSettingsKey_ShowInvalidSides = "Settings_ShowInvalidSides";
         private const string PlayerPrefsSettingsKey_MergedSaveChecksum = "Settings_MergedSaveChecksum";
@@ -54,6 +55,10 @@ namespace ForgePlus.ApplicationGeneral
 
         public const int DefaultOrthographicGridOpacityPercent = 40;
 
+        // The light surfaces give Surface Cache Global Illumination to bounce, from none to ten times their own, in tenths
+        public const int MaximumSurfaceLightMultiplierTenths = 100;
+        public const int DefaultSurfaceLightMultiplierTenths = 10;
+
         // The UI's scale, from 100% to 350% (the range of Windows' display scaling) in steps of 50%
         private const string PlayerPrefsSettingsKey_UIScale = "Settings_UIScale";
         public const int MinimumUIScalePercent = 100;
@@ -69,6 +74,7 @@ namespace ForgePlus.ApplicationGeneral
         public const int DefaultPointSnapDistance = 5;
 
         private static readonly int minimumLightPropertyId = Shader.PropertyToID("_GlobalMinimumLight");
+        private static readonly int surfaceLightMultiplierPropertyId = Shader.PropertyToID("_SurfaceLightMultiplier");
 
         // The name of the setting (its property) that changed, which SettingsViewModel's properties share
         public event Action<string> OnSettingChanged;
@@ -237,6 +243,32 @@ namespace ForgePlus.ApplicationGeneral
                 ApplySurfaceCacheGlobalIllumination();
 
                 OnSettingChanged?.Invoke(nameof(SurfaceCacheGlobalIlluminationEnabled));
+            }
+        }
+
+        // Scales the light surfaces give Surface Cache Global Illumination to bounce (the face shaders' Meta pass emission),
+        // in tenths, so the slider's steps are exact
+        public int SurfaceLightMultiplierTenths
+        {
+            get
+            {
+                return Math.Clamp(PlayerPrefs.GetInt(PlayerPrefsSettingsKey_SurfaceLightMultiplier, DefaultSurfaceLightMultiplierTenths), 0, MaximumSurfaceLightMultiplierTenths);
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_SurfaceLightMultiplier, Math.Clamp(value, 0, MaximumSurfaceLightMultiplierTenths));
+
+                ApplySurfaceLightMultiplier();
+
+                OnSettingChanged?.Invoke(nameof(SurfaceLightMultiplierTenths));
+            }
+        }
+
+        public float SurfaceLightMultiplier
+        {
+            get
+            {
+                return SurfaceLightMultiplierTenths / 10f;
             }
         }
 
@@ -732,6 +764,13 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Surface Cache Global Illumination only takes it up as each material's Meta pass is rendered again
+        private void ApplySurfaceLightMultiplier()
+        {
+            Shader.SetGlobalFloat(surfaceLightMultiplierPropertyId, SurfaceLightMultiplier);
+            SurfaceMaterials.RefreshSurfaceCache();
+        }
+
         // Surfaces are lit from this up to full brightness (the shaders' lerp from it), so full brightness everywhere
         // while lighting isn't shown
         private void ApplyMinimumLight()
@@ -812,6 +851,7 @@ namespace ForgePlus.ApplicationGeneral
                 PlayerPrefsSettingsKey_ColorAdjustment,
                 PlayerPrefsSettingsKey_Vignette,
                 PlayerPrefsSettingsKey_SurfaceCacheGlobalIllumination,
+                PlayerPrefsSettingsKey_SurfaceLightMultiplier,
                 PlayerPrefsSettingsKey_ClipPlatformSides,
                 PlayerPrefsSettingsKey_ShowInvalidSides,
                 PlayerPrefsSettingsKey_MergedSaveChecksum,
@@ -837,6 +877,7 @@ namespace ForgePlus.ApplicationGeneral
             ColorCorrectionEnabled = ColorCorrectionEnabled;
             VignetteEnabled = VignetteEnabled;
             SurfaceCacheGlobalIlluminationEnabled = SurfaceCacheGlobalIlluminationEnabled;
+            SurfaceLightMultiplierTenths = SurfaceLightMultiplierTenths;
             ClipPlatformSidesEnabled = ClipPlatformSidesEnabled;
             ShowInvalidSidesEnabled = ShowInvalidSidesEnabled;
             MergedSaveChecksum = MergedSaveChecksum;
@@ -888,6 +929,7 @@ namespace ForgePlus.ApplicationGeneral
 
             // Its saved setting (off by default) rather than what the profile was last left at
             ApplySurfaceCacheGlobalIllumination();
+            ApplySurfaceLightMultiplier();
         }
     }
 }

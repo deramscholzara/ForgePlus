@@ -1,5 +1,6 @@
 ﻿using AlephOne;
 using ForgePlus.Extensions;
+using ForgePlus.Jobs;
 using ForgePlus.LevelManipulation.Utilities;
 using System;
 using System.Collections.Generic;
@@ -306,7 +307,8 @@ namespace RuntimeCore.Materials
 
             if (MathUtilities.IsPowerOfTwo(texture.width) && MathUtilities.IsPowerOfTwo(texture.height))
             {
-                texture.Apply(updateMipmaps: true, makeNoLongerReadable: false);
+                // Mipmapped on the CPU, so it's only uploaded once, compressed
+                PixelJobs.GenerateMipmaps(texture);
                 texture.Compress(highQuality: true);
                 texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
             }

@@ -117,6 +117,73 @@ namespace ForgePlus.Jobs
             }
         }
 
+        // Halves one mip level into the next, one destination row per index. Each pair of pixels across is averaged, then
+        // the two pairs, rounding down each time, as Unity's own mipmapping (Texture2D.Apply) does. A side that's already
+        // one pixel uses that pixel twice.
+        [BurstCompile]
+        private struct DownsampleJob : IJobParallelFor
+        {
+            public int SourceWidth;
+            public int SourceHeight;
+            public int Width;
+            public int BytesPerPixel;
+
+            [ReadOnly]
+            public NativeArray<byte> Source;
+
+            [WriteOnly, NativeDisableParallelForRestriction]
+            public NativeArray<byte> Destination;
+
+            public void Execute(int y)
+            {
+                var row0 = Math.Min(y * 2, SourceHeight - 1) * SourceWidth;
+                var row1 = Math.Min(y * 2 + 1, SourceHeight - 1) * SourceWidth;
+
+                for (var x = 0; x < Width; x++)
+                {
+                    var column0 = Math.Min(x * 2, SourceWidth - 1);
+                    var column1 = Math.Min(x * 2 + 1, SourceWidth - 1);
+
+                    for (var channel = 0; channel < BytesPerPixel; channel++)
+                    {
+                        var top = (Source[(row0 + column0) * BytesPerPixel + channel] + Source[(row0 + column1) * BytesPerPixel + channel]) >> 1;
+                        var bottom = (Source[(row1 + column0) * BytesPerPixel + channel] + Source[(row1 + column1) * BytesPerPixel + channel]) >> 1;
+
+                        Destination[(y * Width + x) * BytesPerPixel + channel] = (byte) ((top + bottom) >> 1);
+                    }
+                }
+            }
+        }
+
+        // Fills a readable texture's mip levels from its first one on the CPU, as Texture2D.Apply(updateMipmaps: true)
+        // would, but without uploading it, so it can be compressed first and uploaded once. Power-of-two sizes only (Unity
+        // rounds odd sizes differently).
+        public static void GenerateMipmaps(Texture2D texture)
+        {
+            var bytesPerPixel = PixelLayout.For(texture.format).BytesPerPixel;
+            var sourceWidth = texture.width;
+            var sourceHeight = texture.height;
+
+            for (var mipLevel = 1; mipLevel < texture.mipmapCount; mipLevel++)
+            {
+                var width = Math.Max(1, sourceWidth >> 1);
+                var height = Math.Max(1, sourceHeight >> 1);
+
+                new DownsampleJob
+                {
+                    SourceWidth = sourceWidth,
+                    SourceHeight = sourceHeight,
+                    Width = width,
+                    BytesPerPixel = bytesPerPixel,
+                    Source = texture.GetPixelData<byte>(mipLevel - 1),
+                    Destination = texture.GetPixelData<byte>(mipLevel),
+                }.Schedule(height, RowsPerBatch).Complete();
+
+                sourceWidth = width;
+                sourceHeight = height;
+            }
+        }
+
         public struct CanvasFrame
         {
             public NativeArray<Color32> Pixels;

@@ -897,6 +897,21 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 5435900372336645
+    m_Key: SettingsTab.SurfaceLightMultiplier.Control.Label
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435900372336646
+    m_Key: SettingsTab.SurfaceLightMultiplier.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5435900372336647
+    m_Key: SettingsTab.SurfaceLightMultiplier.Value
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

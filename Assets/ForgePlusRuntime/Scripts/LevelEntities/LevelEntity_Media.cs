@@ -20,7 +20,6 @@ namespace RuntimeCore.Entities.Geometry
 
         private static readonly int mediaDirectionPropertyId = Shader.PropertyToID("_MediaDirectionAngle");
         private static readonly int mediaSpeedPropertyId = Shader.PropertyToID("_MediaFlowSpeed");
-        private static readonly int mediaDepthPropertyId = Shader.PropertyToID("_MediaDepth");
 
         public short NativeIndex { get; set; }
         public media_data NativeObject { get; set; }
@@ -122,7 +121,7 @@ namespace RuntimeCore.Entities.Geometry
         {
             subscribedMaterials.Add(material);
 
-            ApplyDirectionFlowAndDepthPropertiesToMaterial(material);
+            ApplyDirectionAndFlowPropertiesToMaterial(material);
         }
 
         public void UnsubscribeMaterial(Material material)
@@ -149,12 +148,12 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
-        // After its flow or type changes (its height follows its data each frame)
+        // After its flow changes (its height follows its data each frame)
         public void ApplyMaterialProperties()
         {
             foreach (var material in subscribedMaterials)
             {
-                ApplyDirectionFlowAndDepthPropertiesToMaterial(material);
+                ApplyDirectionAndFlowPropertiesToMaterial(material);
             }
         }
 
@@ -195,7 +194,7 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
-        private void ApplyDirectionFlowAndDepthPropertiesToMaterial(Material material)
+        private void ApplyDirectionAndFlowPropertiesToMaterial(Material material)
         {
             if (material)
             {
@@ -208,25 +207,6 @@ namespace RuntimeCore.Entities.Geometry
                 {
                     material.SetFloat(mediaDirectionPropertyId, 25f);
                     material.SetFloat(mediaSpeedPropertyId, 0f);
-                }
-
-                switch (NativeObject.type)
-                {
-                    case media._media_water:
-                        material.SetFloat(mediaDepthPropertyId, 6f);
-                        break;
-                    case media._media_lava:
-                        material.SetFloat(mediaDepthPropertyId, 0.01f);
-                        break;
-                    case media._media_goo:
-                        material.SetFloat(mediaDepthPropertyId, 1f);
-                        break;
-                    case media._media_sewage:
-                        material.SetFloat(mediaDepthPropertyId, 1f);
-                        break;
-                    case media._media_jjaro:
-                        material.SetFloat(mediaDepthPropertyId, 1.25f);
-                        break;
                 }
             }
         }

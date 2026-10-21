@@ -15,8 +15,8 @@ namespace ForgePlus.ApplicationGeneral
 
         private static bool isEnabled;
 
-        // Each swapped material's own shader and render queue, to put back
-        private static Dictionary<Material, (Shader Shader, int RenderQueue)> originals = new Dictionary<Material, (Shader, int)>();
+        // Each swapped material's own shader, render queue and keywords (such as its transfer mode's), to put back
+        private static Dictionary<Material, (Shader Shader, int RenderQueue, string[] Keywords)> originals = new Dictionary<Material, (Shader, int, string[])>();
 
         private static Shader gridShader;
 
@@ -52,6 +52,7 @@ namespace ForgePlus.ApplicationGeneral
             {
                 original.Key.shader = original.Value.Shader;
                 original.Key.renderQueue = original.Value.RenderQueue;
+                original.Key.shaderKeywords = original.Value.Keywords;
             }
 
             originals.Clear();
@@ -65,7 +66,7 @@ namespace ForgePlus.ApplicationGeneral
                 return;
             }
 
-            originals[material] = (material.shader, material.renderQueue);
+            originals[material] = (material.shader, material.renderQueue, material.shaderKeywords);
             material.shader = GridShader;
             material.renderQueue = -1;
         }

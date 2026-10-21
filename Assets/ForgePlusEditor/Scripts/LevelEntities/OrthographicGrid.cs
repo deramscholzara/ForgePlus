@@ -9,12 +9,12 @@ namespace ForgePlus.LevelManipulation
 {
     // While looking straight down (the camera's orthographic view), a grid aligned to world units (the grid texture,
     // repeated once per world unit) is drawn under the whole level, as see-through as the Orthographic Grid Opacity
-    // setting, while the Grid view option is on. It's just under the level's lowest floor, and reaches well past its
-    // edges.
+    // setting, while the Grid view option is on. It never moves: it's centered on the world, under the lowest floor any
+    // level can have, and reaches well past the edges of the whole area any level can use.
     [AutoStaticsCleanup]
     public static partial class OrthographicGrid
     {
-        // Meters past the level's edges it reaches, and below its lowest floor it's drawn
+        // Meters past the edges of the area a level can use that it reaches, and below the lowest possible floor it's drawn
         private const float Margin = 500f;
         private const float Depth = 0.01f;
 
@@ -24,13 +24,14 @@ namespace ForgePlus.LevelManipulation
         // Recreated when destroyed, such as at the end of a Play session
         private static GameObject grid;
         private static Material material;
+        private static float appliedOpacity = float.NaN;
 
         // Each frame (EditorCamera), with the level's bounds if a level is open
         public static void Update(bool isShown, Bounds? levelBounds)
         {
             if (!isShown || levelBounds == null || !SettingsManager.Instance.GridEnabled)
             {
-                if (grid)
+                if (grid && grid.activeSelf)
                 {
                     grid.SetActive(false);
                 }
@@ -43,11 +44,12 @@ namespace ForgePlus.LevelManipulation
                 Create();
             }
 
-            var bounds = levelBounds.Value;
-            grid.transform.position = new Vector3(bounds.center.x, bounds.min.y - Depth, bounds.center.z);
-            grid.transform.localScale = new Vector3(bounds.size.x + Margin * 2f, 1f, bounds.size.z + Margin * 2f);
-
-            material.SetFloat(opacityPropertyId, SettingsManager.Instance.OrthographicGridOpacity);
+            var opacity = SettingsManager.Instance.OrthographicGridOpacity;
+            if (opacity != appliedOpacity)
+            {
+                appliedOpacity = opacity;
+                material.SetFloat(opacityPropertyId, opacity);
+            }
 
             if (!grid.activeSelf)
             {
@@ -75,6 +77,14 @@ namespace ForgePlus.LevelManipulation
             gridRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             gridRenderer.receiveShadows = false;
             SurfaceCacheRenderingLayers.Exclude(gridRenderer);
+
+            // Map coordinates and heights are shorts, so no level reaches past these
+            var scale = GeometryUtilities.WorldUnitIncrementsPerMeter;
+            var extent = (-(float)short.MinValue / scale) * 2f + Margin * 2f;
+            grid.transform.position = new Vector3(0f, short.MinValue / scale - Depth, 0f);
+            grid.transform.localScale = new Vector3(extent, 1f, extent);
+
+            appliedOpacity = float.NaN;
         }
     }
 }

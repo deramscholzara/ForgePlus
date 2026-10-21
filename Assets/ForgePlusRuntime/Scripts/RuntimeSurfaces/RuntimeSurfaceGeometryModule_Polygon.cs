@@ -328,16 +328,9 @@ namespace RuntimeCore.Entities.Geometry
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
 
-            var vertexColor = GetTransferModeVertexColor(transferMode);
-            var vertexColors = new Color[polygonEntity.NativeObject.vertex_count];
-            for (var i = 0; i < polygonEntity.NativeObject.vertex_count; i++)
-            {
-                vertexColors[i] = vertexColor;
-            }
-
-            SurfaceMesh.SetColors(vertexColors);
-
-            ApplyTransferModeEffects(transferMode, innerLayer: true);
+            var modifiedMaterialKey = MaterialKey;
+            modifiedMaterialKey.TransferMode = TransferModeLook.For(transferMode);
+            MaterialKey = modifiedMaterialKey;
         }
 
         public override void ApplyLight(bool innerLayer = true)
@@ -542,34 +535,6 @@ namespace RuntimeCore.Entities.Geometry
             }
 
             return meshUVs;
-        }
-
-        private Color GetTransferModeVertexColor(short transferMode)
-        {
-            var mode = (TransferModes)transferMode;
-
-            switch (mode)
-            {
-                case TransferModes.Pulsate: // Pulsate
-                case TransferModes.Wobble: // Wobble
-                    return new Color(0f, 0f, 2f, 0f);
-                case TransferModes.WobbleFast: // Wobble Fast
-                    return new Color(0f, 0f, 20f, 0f);
-                case TransferModes.HorizontalSlide: // Horizontal Slide
-                    return new Color(0f, -1f / 8f, 0f, 0f);
-                case TransferModes.HorizontalSlideFast: // Horizontal Slide Fast
-                    return new Color(0f, -2f / 8f, 0f, 0f);
-                case TransferModes.VerticalSlide: // Vertical Slide
-                    return new Color(1f / 8f, 0f, 0f, 0f);
-                case TransferModes.VerticalSlideFast: // Vertical Slide Fast
-                    return new Color(2f / 8f, 0f, 0f, 0f);
-                case TransferModes.Wander: // Wander
-                    return new Color(0f, 0f, 0f, 1f);
-                case TransferModes.WanderFast: // Wander Fast
-                    return new Color(0f, 0f, 0f, 2f);
-                default: // Normal
-                    return Color.clear;
-            }
         }
 
         private void DecrementTextureUsage()

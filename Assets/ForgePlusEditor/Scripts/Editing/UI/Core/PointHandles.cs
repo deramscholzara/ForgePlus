@@ -586,8 +586,8 @@ namespace ForgePlus.UI
         }
 
         // Everything the handles, poles and lines are collected from, far cheaper to read than to collect them from: whether
-        // they're shown, the camera and the panel, the visualization options, what's selected, where the points are, and
-        // the heights of the floors and ceilings (which platforms move)
+        // they're shown, the camera and the panel, the visualization options, what's selected (by its change count), where
+        // the points are, and the heights of the floors and ceilings (which platforms move: by the surfaces' change count)
         private int CollectionSignature()
         {
             var level = LevelEntity_Level.Instance;
@@ -613,10 +613,7 @@ namespace ForgePlus.UI
             signature.Add(SettingsManager.Instance.PointsAreShown);
             signature.Add(SettingsManager.Instance.LinesAreShown);
 
-            foreach (var selected in SelectionManager.Instance.Selection)
-            {
-                signature.Add(selected);
-            }
+            signature.Add(SelectionManager.Instance.SelectionVersion);
 
             var data = level.Level;
             signature.Add(data.LineList.Count);
@@ -629,11 +626,8 @@ namespace ForgePlus.UI
                 signature.Add(endpoint.vertex.y);
             }
 
-            foreach (var polygon in level.Polygons.Values)
-            {
-                signature.Add(polygon.FloorSurface ? polygon.FloorSurface.transform.position.y : float.NaN);
-                signature.Add(polygon.CeilingSurface ? polygon.CeilingSurface.transform.position.y : float.NaN);
-            }
+            // Floor and ceiling heights (rather than reading every surface's)
+            signature.Add(RuntimeSurfaceGeometry.GeometryVersion);
 
             return signature.ToHashCode();
         }

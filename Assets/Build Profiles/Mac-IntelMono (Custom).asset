@@ -162,7 +162,7 @@ BuildProfilePlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 2026.10.18.6
+  bundleVersion: 2026.10.21.0
   preloadedAssets:
   - {fileID: 2800000, guid: 4fd2c5e43a78e164fb3f83ef2e46c657, type: 3}
   metroInputSource: 0
@@ -854,6 +854,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 552786457188368384
       type: {class: OSXStandaloneBuildProfile, ns: UnityEditor.OSXStandalone, asm: UnityEditor.OSXStandalone.Extensions}
       data:

@@ -24,6 +24,7 @@ namespace ForgePlus.History
     {
         private static List<(string Key, Func<ISelectable> Finder)> recorded = new List<(string, Func<ISelectable>)>();
         private static ModeManager.PrimaryModes recordedMode;
+        private static int recordedVersion = -1;
         private static bool isRetakeRequested = true;
 
         // While a selection is being made over many frames (such as by rectangle), which is recorded once it's done
@@ -60,12 +61,22 @@ namespace ForgePlus.History
                 return;
             }
 
-            var current = Capture(selectionManager);
             var mode = ModeManager.Instance.PrimaryMode;
 
             // Only the change that's next (if there is one)
             var joinsToLast = joinsNextToLast;
             joinsNextToLast = false;
+
+            // Nothing's been selected or deselected since it was last recorded
+            if (!isRetakeRequested &&
+                mode == recordedMode &&
+                selectionManager.SelectionVersion == recordedVersion)
+            {
+                return;
+            }
+
+            var current = Capture(selectionManager);
+            recordedVersion = selectionManager.SelectionVersion;
 
             if (isRetakeRequested || mode != recordedMode)
             {
@@ -141,6 +152,7 @@ namespace ForgePlus.History
 
             recorded = selection;
             recordedMode = mode;
+            recordedVersion = SelectionManager.Instance.SelectionVersion;
         }
 
         private class SelectionChange : IUndoableAction

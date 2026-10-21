@@ -11,6 +11,15 @@ namespace RuntimeCore.Entities.Geometry
     [AutoStaticsCleanup]
     public partial class RuntimeSurfaceGeometry : MonoBehaviour
     {
+        // Counts every change to any surface's shape or placement (including platforms moving them), so what's drawn from
+        // where surfaces are can tell when to look again without reading them all
+        public static int GeometryVersion { get; private set; }
+
+        public static void MarkGeometryChanged()
+        {
+            GeometryVersion++;
+        }
+
         public Mesh SurfaceMesh => geometryModule.SurfaceMesh;
         
         public MeshRenderer SurfaceRenderer => geometryModule.SurfaceRenderer;
@@ -88,12 +97,14 @@ namespace RuntimeCore.Entities.Geometry
         {
             geometryModule.ApplyPositionsAndTriangles();
             geometryModule.ApplySurfaceCacheAdmission();
+            MarkGeometryChanged();
         }
 
         public void ApplyPlatform()
         {
             geometryModule.ApplyPositionsAndTriangles();
             geometryModule.ApplySurfaceCacheAdmission();
+            MarkGeometryChanged();
         }
 
         // For a floor's, ceiling's or media's corners that moved: its positions, the texture coordinates that follow them,
@@ -103,6 +114,7 @@ namespace RuntimeCore.Entities.Geometry
             geometryModule.ApplyPositionsAndTriangles();
             geometryModule.ApplyTextureOffset(innerLayer: true);
             geometryModule.ApplySurfaceCacheAdmission();
+            MarkGeometryChanged();
 
             if (!TryGetComponent<MeshCollider>(out var meshCollider) && HasArea(SurfaceMesh))
             {
@@ -119,13 +131,19 @@ namespace RuntimeCore.Entities.Geometry
                 }
             }
         }
+        private static readonly List<Vector3> hasAreaVertices = new List<Vector3>();
+        private static readonly List<int> hasAreaTriangles = new List<int>();
+
         // Whether any of the mesh's triangles has area
         public static bool HasArea(Mesh mesh)
         {
-            var vertices = mesh.vertices;
-            var triangles = mesh.triangles;
+            // Read into reused lists, as this runs as surfaces are reshaped (each frame they're dragged)
+            var vertices = hasAreaVertices;
+            var triangles = hasAreaTriangles;
+            mesh.GetVertices(vertices);
+            mesh.GetTriangles(triangles, 0);
 
-            for (var i = 0; i + 2 < triangles.Length; i += 3)
+            for (var i = 0; i + 2 < triangles.Count; i += 3)
             {
                 var a = vertices[triangles[i]];
                 if (Vector3.Cross(vertices[triangles[i + 1]] - a, vertices[triangles[i + 2]] - a).sqrMagnitude > 1e-10f)
@@ -141,6 +159,7 @@ namespace RuntimeCore.Entities.Geometry
         public void ApplyHeight()
         {
             geometryModule.ApplyTransformPosition();
+            MarkGeometryChanged();
         }
 
         public void ApplyTextureOffset(bool innerLayer = true)
@@ -151,6 +170,7 @@ namespace RuntimeCore.Entities.Geometry
         public void ApplyTransferMode(bool innerLayer = true)
         {
             geometryModule.ApplyTransferMode(innerLayer);
+            geometryModule.ApplyRendererMaterials();
         }
 
         public void ApplyTexture(bool innerLayer = true)
@@ -261,15 +281,47 @@ namespace RuntimeCore.Entities.Geometry
         // After what's shown changes for every surface (such as what PolygonVisibilityCulling hides)
         public static void ApplyVisibilityToAll()
         {
-            surfaces.RemoveWhere(surface => !surface);
+            surfaces.RemoveWhere(isDestroyed);
             foreach (var surface in surfaces)
             {
                 surface.ApplyVisibility();
             }
         }
 
-        // Shown while its kind is (a media surface's is Media's), and its polygon isn't culled (PolygonVisibilityCulling).
-        // Clicks pass through what's hidden, except media hidden by its kind (whose clicks SelectionManager decides).
+        // Only those of the polygons whose culling just changed (PolygonVisibilityCulling)
+        public static void ApplyVisibilityToSurfacesIn(bool[] polygonChanged)
+        {
+            surfaces.RemoveWhere(isDestroyed);
+            foreach (var surface in surfaces)
+            {
+                var polygonIndex = surface.OwnerPolygonIndex;
+                if (polygonIndex >= 0 && polygonIndex < polygonChanged.Length && polygonChanged[polygonIndex])
+                {
+                    surface.ApplyVisibility();
+                }
+            }
+        }
+
+        private static readonly Predicate<RuntimeSurfaceGeometry> isDestroyed = surface => !surface;
+
+        // While platforms leave none of a side to draw (RuntimeSurfaceGeometryModule_Side)
+        private bool isClippedAway;
+
+        public void SetClippedAway(bool clippedAway)
+        {
+            if (clippedAway == isClippedAway)
+            {
+                return;
+            }
+
+            isClippedAway = clippedAway;
+            ApplyVisibility();
+        }
+
+        // Shown while its kind is (a media surface's is Media's), its polygon isn't culled (PolygonVisibilityCulling), and
+        // platforms leave some of it to draw. Clicks pass through what's hidden by kind or culling, except media hidden by
+        // its kind (whose clicks SelectionManager decides). Each is only written where it differs, as Surface Cache Global
+        // Illumination and the GPU Resident Drawer update every renderer that's changed.
         public void ApplyVisibility()
         {
             var isCulled = PolygonVisibilityCulling.IsCulled(OwnerPolygonIndex);
@@ -290,11 +342,19 @@ namespace RuntimeCore.Entities.Geometry
             var surfaceRenderer = SurfaceRenderer;
             if (surfaceRenderer)
             {
-                surfaceRenderer.forceRenderingOff = !isKindShown || isCulled;
+                var isHidden = !isKindShown || isCulled || isClippedAway;
+                if (surfaceRenderer.forceRenderingOff != isHidden)
+                {
+                    surfaceRenderer.forceRenderingOff = isHidden;
+                }
             }
 
             var isClickable = kind == Kind.Other ? !isCulled : isKindShown && !isCulled;
-            gameObject.layer = isClickable ? ShownLayer : HiddenLayer;
+            var layer = isClickable ? ShownLayer : HiddenLayer;
+            if (gameObject.layer != layer)
+            {
+                gameObject.layer = layer;
+            }
         }
 
         private void OnDestroy()

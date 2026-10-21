@@ -431,6 +431,30 @@ namespace ForgePlus.UI
             }
         }
 
+        // The slider's position, in tenths (0 to 100 for 0x to 10x)
+        [CreateProperty]
+        public int SurfaceLightMultiplierTenths
+        {
+            get
+            {
+                return SettingsManager.Instance.SurfaceLightMultiplierTenths;
+            }
+            set
+            {
+                SettingsManager.Instance.SurfaceLightMultiplierTenths = value;
+            }
+        }
+
+        // "1.0x"
+        [CreateProperty]
+        public string SurfaceLightMultiplierText
+        {
+            get
+            {
+                return Strings.Get(Strings.Menu, "SettingsTab.SurfaceLightMultiplier.Value", SettingsManager.Instance.SurfaceLightMultiplier);
+            }
+        }
+
         // The index of the choice, in the order of MergedSaveChecksums (Ask, Keep, Regenerate)
         [CreateProperty]
         public int MergedSaveChecksum
@@ -634,6 +658,11 @@ namespace ForgePlus.UI
             if (setting == nameof(OrthographicGridOpacityPercent))
             {
                 Notify(nameof(OrthographicGridOpacityText));
+            }
+
+            if (setting == nameof(SurfaceLightMultiplierTenths))
+            {
+                Notify(nameof(SurfaceLightMultiplierText));
             }
 
             if (setting == nameof(SettingsManager.UIScalePercent))

@@ -149,7 +149,7 @@ namespace RuntimeCore.Entities.Geometry
 
             currentState = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? States.Extended : States.Contracted;
 
-            currentPosition = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? extendedPosition : contractedPosition;
+            SetCurrentPosition(PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? extendedPosition : contractedPosition);
 
             if (PLATFORM_IS_INITIALLY_ACTIVE(NativeObject.static_flags))
             {
@@ -399,7 +399,7 @@ namespace RuntimeCore.Entities.Geometry
 
                         if (loop)
                         {
-                            currentPosition = contractedPosition;
+                            SetCurrentPosition(contractedPosition);
                         }
                         else
                         {
@@ -442,7 +442,7 @@ namespace RuntimeCore.Entities.Geometry
 
                         if (loop)
                         {
-                            currentPosition = extendedPosition;
+                            SetCurrentPosition(extendedPosition);
                         }
                         else
                         {
@@ -462,7 +462,7 @@ namespace RuntimeCore.Entities.Geometry
 
         private async Awaitable Hold(CancellationToken cancellationToken, float duration, float holdPosition)
         {
-            currentPosition = holdPosition;
+            SetCurrentPosition(holdPosition);
 
             var endTime = Time.realtimeSinceStartup + duration;
             while (GetStateOffsetRealTimeSinceStartup() < endTime)
@@ -518,7 +518,7 @@ namespace RuntimeCore.Entities.Geometry
                 // Do Movement
                 var remainingProgress = (endTime - GetStateOffsetRealTimeSinceStartup()) / duration;
 
-                currentPosition = Mathf.Lerp(targetPosition, startingPosition, remainingProgress);
+                SetCurrentPosition(Mathf.Lerp(targetPosition, startingPosition, remainingProgress));
 
                 await Awaitable.NextFrameAsync();
 
@@ -528,7 +528,7 @@ namespace RuntimeCore.Entities.Geometry
                 }
             }
 
-            currentPosition = targetPosition;
+            SetCurrentPosition(targetPosition);
 
             remainingStateTime = GetStateOffsetRealTimeSinceStartup() - endTime;
         }
@@ -557,15 +557,33 @@ namespace RuntimeCore.Entities.Geometry
             return Time.realtimeSinceStartup + remainingStateTime;
         }
 
+        // Enabled only until Update has carried a new position to the transform, so a still platform costs no Update
+        private void SetCurrentPosition(float position)
+        {
+            currentPosition = position;
+
+            if (!enabled && this)
+            {
+                enabled = true;
+            }
+        }
+
         private void Update()
         {
+            if (NativeObject == null)
+            {
+                return;
+            }
+
             // Only as it moves, as Surface Cache Global Illumination updates every moved surface
-            if (NativeObject != null && transform.position.y != currentPosition)
+            if (transform.position.y != currentPosition)
             {
                 transform.position = new Vector3(0f, currentPosition, 0f);
 
                 Moved?.Invoke();
             }
+
+            enabled = false;
         }
     }
 }

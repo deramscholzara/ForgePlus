@@ -45,6 +45,11 @@ namespace ForgePlus.UI
             uiScale.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.UIScaleStep));
             uiScale.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.UIScaleText));
 
+            var surfaceLightMultiplier = Root.Q("surface-light-multiplier");
+            surfaceLightMultiplier.BindEnabled(settings, nameof(SettingsViewModel.SurfaceCacheGlobalIlluminationEnabled));
+            surfaceLightMultiplier.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.SurfaceLightMultiplierTenths));
+            surfaceLightMultiplier.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.SurfaceLightMultiplierText));
+
             var orthographicGridOpacity = Root.Q("orthographic-grid-opacity");
             orthographicGridOpacity.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.OrthographicGridOpacityPercent));
             orthographicGridOpacity.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.OrthographicGridOpacityText));

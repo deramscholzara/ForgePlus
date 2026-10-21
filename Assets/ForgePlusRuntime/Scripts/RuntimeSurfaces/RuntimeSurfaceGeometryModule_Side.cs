@@ -45,6 +45,7 @@ namespace RuntimeCore.Entities.Geometry
 
         private PlatformSideClipping platformSideClipping;
         private MeshCollider surfaceCollider;
+        private RuntimeSurfaceGeometry surface;
         private Vector3[] fullSizePositions;
         private bool platformClippingIsApplied;
         private bool lastClippedVisibility;
@@ -261,7 +262,7 @@ namespace RuntimeCore.Entities.Geometry
                 UnityEngine.Object.Destroy(platformSideClipping);
                 platformSideClipping = null;
 
-                SurfaceRenderer.enabled = true;
+                SetClippedAway(false);
             }
 
             if (sideEntity.NativeObject.HasLayeredTransparentSide(sideEntity.ParentLevel.Level))
@@ -377,6 +378,25 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // Hidden while platforms leave none of it to draw (by the surface's visibility, alongside its kind and culling)
+        private void SetClippedAway(bool isClippedAway)
+        {
+            if (!surface)
+            {
+                surface = SurfaceRenderer.GetComponent<RuntimeSurfaceGeometry>();
+            }
+
+            if (surface)
+            {
+                surface.SetClippedAway(isClippedAway);
+            }
+            else
+            {
+                // Without editing, the surface's component is gone once it's assembled, and nothing else hides it
+                SurfaceRenderer.forceRenderingOff = isClippedAway;
+            }
+        }
+
         // Its geometry changed, so it's trimmed again this frame
         private void InvalidatePlatformClipping()
         {
@@ -440,7 +460,7 @@ namespace RuntimeCore.Entities.Geometry
                 surfaceCollider = SurfaceRenderer.GetComponent<MeshCollider>();
             }
 
-            SurfaceRenderer.enabled = isVisible;
+            SetClippedAway(!isVisible);
 
             if (surfaceCollider)
             {
@@ -468,9 +488,7 @@ namespace RuntimeCore.Entities.Geometry
 
             if (surfaceCollider)
             {
-                // Reassigning the mesh rebuilds the collider
-                surfaceCollider.sharedMesh = null;
-                surfaceCollider.sharedMesh = SurfaceMesh;
+                PlatformSideColliders.Reshape(surfaceCollider, SurfaceMesh);
             }
         }
 
@@ -513,53 +531,22 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyTransferMode(bool innerLayer)
         {
+            var modifiedMaterialKey = MaterialKey;
+
             if (sideEntity.NativeObject == null)
             {
-                var vertexColors = new Color[4];
-                for (var i = 0; i < 4; i++)
-                {
-                    vertexColors[i] = Color.black;
-                }
-
-                SurfaceMesh.SetColors(vertexColors);
-                ApplyTransferModeEffects(map._xfer_normal, innerLayer: true);
-
-                return;
+                modifiedMaterialKey.TransferMode = default;
             }
-
-            if (innerLayer)
+            else if (innerLayer)
             {
-                var transferMode = sideEntity.NativeObject.GetTransferMode(dataSource);
-                ApplyTransferModeEffects(transferMode, innerLayer: true);
-
-                var vertexColor = GetTransferModeVertexColor(transferMode);
-
-                var vertexColors = new Color[4];
-                for (var i = 0; i < 4; i++)
-                {
-                    vertexColors[i] = vertexColor;
-                }
-
-                SurfaceMesh.SetColors(vertexColors);
+                modifiedMaterialKey.TransferMode = TransferModeLook.For(sideEntity.NativeObject.GetTransferMode(dataSource));
             }
             else
             {
-                ApplyTransferModeEffects(sideEntity.NativeObject.transparent_transfer_mode, innerLayer: false);
-
-                var vertexColor = GetTransferModeVertexColor(sideEntity.NativeObject.transparent_transfer_mode);
-
-                var uv2 = new Vector4[4];
-
-                for (var i = 0; i < 4; i++)
-                {
-                    uv2[i].x = vertexColor.r;
-                    uv2[i].y = vertexColor.g;
-                    uv2[i].z = vertexColor.b;
-                    uv2[i].w = vertexColor.a;
-                }
-
-                SurfaceMesh.SetUVs(channel: 2, uvs: uv2);
+                modifiedMaterialKey.LayeredTransparentSideTransferMode = TransferModeLook.For(sideEntity.NativeObject.transparent_transfer_mode);
             }
+
+            MaterialKey = modifiedMaterialKey;
         }
 
         // Its materials hold the light's intensity (a layered side's outer layer's material, its transparent light's)
@@ -893,34 +880,6 @@ namespace RuntimeCore.Entities.Geometry
             }
 
             return meshUVs;
-        }
-
-        private Color GetTransferModeVertexColor(short transferMode)
-        {
-            var mode = (TransferModes)transferMode;
-
-            switch (mode)
-            {
-                case TransferModes.Pulsate: // Pulsate
-                case TransferModes.Wobble: // Wobble
-                    return new Color(0f, 0f, 2f, 0f);
-                case TransferModes.WobbleFast: // Wobble Fast
-                    return new Color(0f, 0f, 20f, 0f);
-                case TransferModes.HorizontalSlide: // Horizontal Slide
-                    return new Color(-1f / 8f, 0f, 0f, 0f);
-                case TransferModes.HorizontalSlideFast: // Horizontal Slide Fast
-                    return new Color(-2f / 8f, 0f, 0f, 0f);
-                case TransferModes.VerticalSlide: // Vertical Slide
-                    return new Color(0f, 1f / 8f, 0f, 0f);
-                case TransferModes.VerticalSlideFast: // Vertical Slide Fast
-                    return new Color(0f, 2f / 8f, 0f, 0f);
-                case TransferModes.Wander: // Wander
-                    return new Color(0f, 0f, 0f, 1f);
-                case TransferModes.WanderFast: // Wander Fast
-                    return new Color(0f, 0f, 0f, 2f);
-                default: // Normal
-                    return Color.clear;
-            }
         }
 
         private void DecrementTextureUsage()

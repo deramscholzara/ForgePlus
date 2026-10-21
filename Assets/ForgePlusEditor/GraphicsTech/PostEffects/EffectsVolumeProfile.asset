@@ -745,10 +745,10 @@ MonoBehaviour:
   active: 1
   m_Mode:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   m_Quality:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 1
   m_Intensity:
     m_OverrideState: 1
     m_Value: 0.6
@@ -760,19 +760,19 @@ MonoBehaviour:
     m_Value: 1
   m_FalloffDistance:
     m_OverrideState: 1
-    m_Value: 100
+    m_Value: 90
   m_SampleCount:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   m_Downsample:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   m_AfterOpaque:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0
   m_BlurQuality:
     m_OverrideState: 1
-    m_Value: 2
+    m_Value: 1
   m_Method:
     m_OverrideState: 1
     m_Value: 1
@@ -781,7 +781,7 @@ MonoBehaviour:
     m_Value: 1
   m_NormalQuality:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   m_MinimumRadiusInPixels:
     m_OverrideState: 1
     m_Value: 40

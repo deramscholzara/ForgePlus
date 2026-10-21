@@ -357,6 +357,9 @@ namespace ForgePlus.LevelManipulation
 
             var ray = mainCamera.ScreenPointToRay(position);
 
+            // Sides beside platforms that moved take their new shapes only now
+            RuntimeCore.Entities.Geometry.PlatformSideColliders.Flush();
+
             // In Objects mode, clicks pass through the level's geometry (which it doesn't select) to the objects beyond
             if (ModeManager.Instance.PrimaryMode == ModeManager.PrimaryModes.Objects)
             {

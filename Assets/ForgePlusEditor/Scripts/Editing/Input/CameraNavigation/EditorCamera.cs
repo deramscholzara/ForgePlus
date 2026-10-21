@@ -571,6 +571,17 @@ namespace ForgePlus.CameraNavigation
         private void Awake()
         {
             viewCamera = GetComponent<Camera>();
+
+#if !NO_EDITING
+            ForgePlus.History.UndoHistory.OnChanged += OnUndoHistoryChanged;
+#endif
+        }
+
+        private void OnDestroy()
+        {
+#if !NO_EDITING
+            ForgePlus.History.UndoHistory.OnChanged -= OnUndoHistoryChanged;
+#endif
         }
 
         private void Start()
@@ -795,7 +806,41 @@ namespace ForgePlus.CameraNavigation
 
         // Across all its points, and from its lowest floor to above its highest ceiling (as high as the orthographic view
         // looks down from), including where its platforms reach
+        //
+        // Kept until the level's data may have changed: another level, an edit or undo (UndoHistory), a surface reshaped or
+        // moved (including edits still being made), or points, polygons or platforms added or removed
         private static bool TryGetLevelBounds(out Bounds bounds)
+        {
+            var level = LevelEntity_Level.Instance;
+            var key = level ?
+                (level, RuntimeSurfaceGeometry.GeometryVersion, levelDataChanges, level.Level.EndpointList.Count, level.Level.PolygonList.Count, level.Level.PlatformList.Count) :
+                default;
+
+            if (!hasCachedLevelBounds || key != cachedLevelBoundsKey)
+            {
+                hasCachedLevelBounds = true;
+                cachedLevelBoundsKey = key;
+                cachedLevelHasBounds = FindLevelBounds(out cachedLevelBounds);
+            }
+
+            bounds = cachedLevelBounds;
+            return cachedLevelHasBounds;
+        }
+
+        private static bool hasCachedLevelBounds;
+        private static (LevelEntity_Level, int, int, int, int, int) cachedLevelBoundsKey;
+        private static bool cachedLevelHasBounds;
+        private static Bounds cachedLevelBounds;
+
+        // Counts what's been done, undone and redone
+        private static int levelDataChanges;
+
+        private static void OnUndoHistoryChanged()
+        {
+            levelDataChanges++;
+        }
+
+        private static bool FindLevelBounds(out Bounds bounds)
         {
             bounds = default;
 
@@ -886,6 +931,14 @@ namespace ForgePlus.CameraNavigation
             }
         }
 
+        // Sides beside platforms that moved take their new shapes only as something raycasts
+        private bool RaycastLevel(Ray ray, out RaycastHit hit)
+        {
+            PlatformSideColliders.Flush();
+
+            return Physics.Raycast(ray, out hit, viewCamera.farClipPlane);
+        }
+
         private void BeginPan(Vector2 screenPosition)
         {
             var ray = viewCamera.ScreenPointToRay(screenPosition);
@@ -895,7 +948,7 @@ namespace ForgePlus.CameraNavigation
                 // Looking straight down, any height is the same
                 panHeight = transform.position.y - 1f;
             }
-            else if (Physics.Raycast(ray, out var hit, viewCamera.farClipPlane))
+            else if (RaycastLevel(ray, out var hit))
             {
                 panHeight = hit.point.y;
             }

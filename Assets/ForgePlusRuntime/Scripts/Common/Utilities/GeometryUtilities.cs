@@ -1,4 +1,5 @@
 ﻿using AlephOne;
+using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
 using UnityEngine;
 
@@ -60,11 +61,21 @@ namespace ForgePlus.LevelManipulation.Utilities
             {
                 if (!selectionIndicatorMaterial)
                 {
-                    selectionIndicatorMaterial = new Material(Shader.Find("ForgePlus/GeometrySelectionIndicator"));
+                    selectionIndicatorMaterial = CreateSelectionIndicatorMaterial();
                 }
 
                 return selectionIndicatorMaterial;
             }
+        }
+
+        // Selection indicators are drawn over everything: their shader ignores depth, and they're drawn after every other
+        // transparent (so nothing drawn later covers them)
+        public static Material CreateSelectionIndicatorMaterial()
+        {
+            return new Material(Shader.Find("ForgePlus/GeometrySelectionIndicator"))
+            {
+                renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent + 100,
+            };
         }
 
         public static Vector3 GetMeshVertex(MapLevel level, int endpointIndex, short height = 0)
@@ -76,51 +87,39 @@ namespace ForgePlus.LevelManipulation.Utilities
             return new Vector3(endpoint.x, height, -endpoint.y) / WorldUnitIncrementsPerMeter;
         }
 
+        // One corner's indicator (on a parent that carries it as it moves)
         public static GameObject CreateSurfaceSelectionIndicator(string name, Transform parent, Vector3 vertexWorldPosition, Vector3 nextVertexWorldPosition, Vector3 previousVertexWorldPosition)
         {
-            var indicator = new GameObject($"Selection Indicators - {name}");
-            indicator.transform.SetParent(parent, worldPositionStays: true);
-            indicator.layer = SelectionManager.SelectionIndicatorLayer;
+            var indicator = CreateIndicatorObject(name, parent);
 
-            indicator.AddComponent<MeshFilter>();
-            var indicatorRenderer = indicator.AddComponent<MeshRenderer>();
-            indicatorRenderer.sharedMaterial = SelectionIndicatorMaterial;
-            ExcludeFromGpuResidentDrawer(indicatorRenderer);
-            SurfaceCacheRenderingLayers.Exclude(indicatorRenderer);
-
-            UpdateSurfaceSelectionIndicator(indicator, vertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition);
+            BeginIndicatorMesh();
+            AddCorner(parent.worldToLocalMatrix, vertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition);
+            EndIndicatorMesh(indicator);
 
             return indicator;
         }
 
-        public static void UpdateSurfaceSelectionIndicator(GameObject indicator, Vector3 vertexWorldPosition, Vector3 nextVertexWorldPosition, Vector3 previousVertexWorldPosition)
-        {
-            var thickness = 0.04f;
-            var length = 0.2f;
-            var clockwiseDirection = (nextVertexWorldPosition - vertexWorldPosition).normalized;
-            var counterclockwiseDirection = (previousVertexWorldPosition - vertexWorldPosition).normalized;
-            var scale = Mathf.Min(1f, Vector3.Distance(vertexWorldPosition, nextVertexWorldPosition) / (length * 2f), Vector3.Distance(vertexWorldPosition, previousVertexWorldPosition) / (length * 2f));
-
-            indicator.transform.position = vertexWorldPosition;
-
-            var meshFilter = indicator.GetComponent<MeshFilter>();
-            if (meshFilter.sharedMesh)
-            {
-                UnityEngine.Object.Destroy(meshFilter.sharedMesh);
-            }
-
-            meshFilter.sharedMesh = CreateSurfaceSelectionIndicatorCornerMesh(clockwiseDirection, counterclockwiseDirection, length, thickness, scale);
-        }
-
-        // Fits an indicator to each corner of a surface, creating any that are missing (a ceiling's vertices wind the other way)
+        // Fits the indicators of every corner of a surface, as one mesh (one renderer and one draw for the surface): made the
+        // first time, then reshaped in place (a ceiling's vertices wind the other way)
         public static GameObject[] FitSurfaceSelectionIndicators(string name, Transform surface, Vector3[] vertices, bool isCeiling, GameObject[] indicators = null)
         {
-            if (indicators == null)
+            if (indicators == null || indicators.Length != 1 || !indicators[0])
             {
-                indicators = new GameObject[vertices.Length];
+                if (indicators != null)
+                {
+                    foreach (var indicator in indicators)
+                    {
+                        DestroySurfaceSelectionIndicator(indicator);
+                    }
+                }
+
+                indicators = new[] { CreateIndicatorObject(name, surface) };
             }
 
             var localToWorldMatrix = surface.localToWorldMatrix;
+            var worldToLocalMatrix = surface.worldToLocalMatrix;
+
+            BeginIndicatorMesh();
 
             for (var i = 0; i < vertices.Length; i++)
             {
@@ -132,21 +131,31 @@ namespace ForgePlus.LevelManipulation.Utilities
                     (nextIndex, previousIndex) = (previousIndex, nextIndex);
                 }
 
-                var vertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[i]);
-                var nextVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[nextIndex]);
-                var previousVertexWorldPosition = localToWorldMatrix.MultiplyPoint(vertices[previousIndex]);
-
-                if (indicators[i])
-                {
-                    UpdateSurfaceSelectionIndicator(indicators[i], vertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition);
-                }
-                else
-                {
-                    indicators[i] = CreateSurfaceSelectionIndicator($"{name} ({i})", surface, vertexWorldPosition, nextVertexWorldPosition, previousVertexWorldPosition);
-                }
+                AddCorner(worldToLocalMatrix,
+                          localToWorldMatrix.MultiplyPoint(vertices[i]),
+                          localToWorldMatrix.MultiplyPoint(vertices[nextIndex]),
+                          localToWorldMatrix.MultiplyPoint(vertices[previousIndex]));
             }
 
+            EndIndicatorMesh(indicators[0]);
+
             return indicators;
+        }
+
+        // At its parent's origin, so its mesh is in the parent's space and it moves with it
+        private static GameObject CreateIndicatorObject(string name, Transform parent)
+        {
+            var indicator = new GameObject($"Selection Indicators - {name}");
+            indicator.transform.SetParent(parent, worldPositionStays: false);
+            indicator.layer = SelectionManager.SelectionIndicatorLayer;
+
+            indicator.AddComponent<MeshFilter>();
+            var indicatorRenderer = indicator.AddComponent<MeshRenderer>();
+            indicatorRenderer.sharedMaterial = SelectionIndicatorMaterial;
+            ExcludeFromGpuResidentDrawer(indicatorRenderer);
+            SurfaceCacheRenderingLayers.Exclude(indicatorRenderer);
+
+            return indicator;
         }
 
         public static void DestroySurfaceSelectionIndicator(GameObject indicator)
@@ -165,44 +174,73 @@ namespace ForgePlus.LevelManipulation.Utilities
             UnityEngine.Object.Destroy(indicator);
         }
 
-        private static Mesh CreateSurfaceSelectionIndicatorCornerMesh(Vector3 clockwiseDirection, Vector3 counterclockwiseDirection, float length, float thickness, float scale)
+        // Reused while building an indicator's mesh
+        private static readonly List<Vector3> indicatorVertices = new List<Vector3>();
+        private static readonly List<int> indicatorTriangles = new List<int>();
+        private static readonly List<Color> indicatorColors = new List<Color>();
+
+        private static readonly Color IndicatorEdgeColor = new Color(1f, 1f, 1f, 0.75f);
+        private static readonly Color IndicatorInnerColor = new Color(1f, 1f, 1f, 0f);
+
+        private static void BeginIndicatorMesh()
         {
-            var mesh = new Mesh();
+            indicatorVertices.Clear();
+            indicatorTriangles.Clear();
+            indicatorColors.Clear();
+        }
+
+        // Into the indicator's own mesh, made once and refilled in place after
+        private static void EndIndicatorMesh(GameObject indicator)
+        {
+            var meshFilter = indicator.GetComponent<MeshFilter>();
+            var mesh = meshFilter.sharedMesh;
+            if (!mesh)
+            {
+                mesh = new Mesh { name = indicator.name };
+                mesh.MarkDynamic();
+                meshFilter.sharedMesh = mesh;
+            }
+
+            mesh.Clear();
+            mesh.SetVertices(indicatorVertices);
+            mesh.SetColors(indicatorColors);
+            mesh.SetTriangles(indicatorTriangles, 0);
+        }
+
+        // A corner's L-shaped wedge, along the edges to the next and previous corners, in the indicator's space
+        private static void AddCorner(Matrix4x4 worldToLocalMatrix, Vector3 vertexWorldPosition, Vector3 nextVertexWorldPosition, Vector3 previousVertexWorldPosition)
+        {
+            const float thickness = 0.04f;
+            const float length = 0.2f;
+
+            var clockwiseDirection = (nextVertexWorldPosition - vertexWorldPosition).normalized;
+            var counterclockwiseDirection = (previousVertexWorldPosition - vertexWorldPosition).normalized;
+            var scale = Mathf.Min(1f, Vector3.Distance(vertexWorldPosition, nextVertexWorldPosition) / (length * 2f), Vector3.Distance(vertexWorldPosition, previousVertexWorldPosition) / (length * 2f));
 
             var facingVector = Vector3.Cross(clockwiseDirection, counterclockwiseDirection);
             var clockwiseThicknessDirection = Vector3.Cross(facingVector, clockwiseDirection).normalized;
             var counterclockwiseThicknessDirection = Vector3.Cross(counterclockwiseDirection, facingVector).normalized;
             var insetCornerPosition = thickness / Mathf.Abs(Mathf.Sin(Vector3.Angle(clockwiseDirection, counterclockwiseDirection) * 0.5f * Mathf.Deg2Rad)) * (clockwiseThicknessDirection + counterclockwiseThicknessDirection).normalized;
 
-            mesh.vertices = new Vector3[]
-            {
-                Vector3.zero,
-                (clockwiseDirection * length) * scale,
-                (clockwiseDirection * length + clockwiseThicknessDirection * thickness) * scale,
-                insetCornerPosition * scale,
-                (counterclockwiseThicknessDirection * thickness + counterclockwiseDirection * length) * scale,
-                (counterclockwiseDirection * length) * scale
-            };
+            var first = indicatorVertices.Count;
 
-            mesh.triangles = new int[]
-            {
-                0, 1, 2,
-                2, 3, 0,
-                3, 4, 0,
-                4, 5, 0
-            };
+            AddIndicatorVertex(worldToLocalMatrix, vertexWorldPosition, IndicatorEdgeColor);
+            AddIndicatorVertex(worldToLocalMatrix, vertexWorldPosition + (clockwiseDirection * length) * scale, IndicatorEdgeColor);
+            AddIndicatorVertex(worldToLocalMatrix, vertexWorldPosition + (clockwiseDirection * length + clockwiseThicknessDirection * thickness) * scale, IndicatorInnerColor);
+            AddIndicatorVertex(worldToLocalMatrix, vertexWorldPosition + insetCornerPosition * scale, IndicatorInnerColor);
+            AddIndicatorVertex(worldToLocalMatrix, vertexWorldPosition + (counterclockwiseThicknessDirection * thickness + counterclockwiseDirection * length) * scale, IndicatorInnerColor);
+            AddIndicatorVertex(worldToLocalMatrix, vertexWorldPosition + (counterclockwiseDirection * length) * scale, IndicatorEdgeColor);
 
-            mesh.colors = new Color[]
-            {
-                new Color(1f, 1f, 1f, 0.75f),
-                new Color(1f, 1f, 1f, 0.75f),
-                new Color(1f, 1f, 1f, 0f),
-                new Color(1f, 1f, 1f, 0f),
-                new Color(1f, 1f, 1f, 0f),
-                new Color(1f, 1f, 1f, 0.75f),
-            };
+            indicatorTriangles.Add(first + 0); indicatorTriangles.Add(first + 1); indicatorTriangles.Add(first + 2);
+            indicatorTriangles.Add(first + 2); indicatorTriangles.Add(first + 3); indicatorTriangles.Add(first + 0);
+            indicatorTriangles.Add(first + 3); indicatorTriangles.Add(first + 4); indicatorTriangles.Add(first + 0);
+            indicatorTriangles.Add(first + 4); indicatorTriangles.Add(first + 5); indicatorTriangles.Add(first + 0);
+        }
 
-            return mesh;
+        private static void AddIndicatorVertex(Matrix4x4 worldToLocalMatrix, Vector3 worldPosition, Color color)
+        {
+            indicatorVertices.Add(worldToLocalMatrix.MultiplyPoint3x4(worldPosition));
+            indicatorColors.Add(color);
         }
     }
 }

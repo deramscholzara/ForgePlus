@@ -17,6 +17,7 @@ namespace RuntimeCore.Entities.MapObjects
     public partial class LevelEntity_MapObject : EditableSurface_Base, ISelectionDisplayable, IInspectable
     {
         private readonly int selectedShaderPropertyId = Shader.PropertyToID("_Selected");
+        private static readonly int zTestPropertyId = Shader.PropertyToID("_ZTest");
 
         private static Material MapObjectPlaceholderMaterial;
         private static Material MapObjectPlaceholderSelectedMaterial;
@@ -40,6 +41,10 @@ namespace RuntimeCore.Entities.MapObjects
         private static bool spritePreviewsAreVisible = true;
 
         private MeshRenderer spritePreviewRenderer;
+
+        // The icon's (on the root), kept rather than looked up each time visibility is applied
+        private MeshRenderer placeholderRenderer;
+        private MeshCollider placeholderCollider;
 
         // Whether its polygon was culled (PolygonVisibilityCulling) when its visibility was last applied
         private bool isCulled;
@@ -142,7 +147,20 @@ namespace RuntimeCore.Entities.MapObjects
         {
             base.SetSelectability(enabled);
 
-            GetComponent<MeshCollider>().enabled = enabled && !isCulled;
+            PlaceholderCollider.enabled = enabled && !isCulled;
+        }
+
+        private MeshCollider PlaceholderCollider
+        {
+            get
+            {
+                if (!placeholderCollider)
+                {
+                    placeholderCollider = GetComponent<MeshCollider>();
+                }
+
+                return placeholderCollider;
+            }
         }
 
         public void DisplaySelectionState(bool state)
@@ -179,13 +197,19 @@ namespace RuntimeCore.Entities.MapObjects
                 MapObjectPlaceholderMaterial.enableInstancing = true;
                 MapObjectPlaceholderSelectedMaterial = new Material(MapObjectPlaceholderMaterial);
                 MapObjectPlaceholderSelectedMaterial.SetFloat(selectedShaderPropertyId, 1f);
+
+                // Selected icons are drawn over everything: ignoring depth (still writing it, so what's drawn later in
+                // front of them still covers them), after every other opaque
+                MapObjectPlaceholderSelectedMaterial.SetFloat(zTestPropertyId, (float)UnityEngine.Rendering.CompareFunction.Always);
+                MapObjectPlaceholderSelectedMaterial.renderQueue = (int)UnityEngine.Rendering.RenderQueue.GeometryLast;
             }
 
-            var placeholderRenderer = gameObject.AddComponent<MeshRenderer>();
+            placeholderRenderer = gameObject.AddComponent<MeshRenderer>();
             placeholderRenderer.sharedMaterial = MapObjectPlaceholderMaterial;
             SurfaceCacheRenderingLayers.Exclude(placeholderRenderer);
 
-            gameObject.AddComponent<MeshCollider>().convex = true;
+            placeholderCollider = gameObject.AddComponent<MeshCollider>();
+            placeholderCollider.convex = true;
 
             ApplyPlacement();
 
@@ -199,7 +223,7 @@ namespace RuntimeCore.Entities.MapObjects
             var iconMesh = IconMesh();
             GetComponent<MeshFilter>().sharedMesh = iconMesh;
 
-            var meshCollider = GetComponent<MeshCollider>();
+            var meshCollider = PlaceholderCollider;
             meshCollider.sharedMesh = null;
             meshCollider.sharedMesh = iconMesh;
 
@@ -325,14 +349,48 @@ namespace RuntimeCore.Entities.MapObjects
 
             if (isCulled != wasCulled)
             {
-                GetComponent<MeshCollider>().enabled = IsSelectable && !isCulled;
+                PlaceholderCollider.enabled = IsSelectable && !isCulled;
             }
 
-            GetComponent<MeshRenderer>().enabled = !isCulled && (iconsAreVisible || (soundSourceIconsAreVisible && NativeObject.type == map._saved_sound_source));
+            // Hidden by forceRenderingOff rather than disabling, which would take it out of (and put it back into) the GPU
+            // Resident Drawer; only written where it differs
+            if (!placeholderRenderer)
+            {
+                placeholderRenderer = GetComponent<MeshRenderer>();
+            }
+
+            SetShown(placeholderRenderer, !isCulled && (iconsAreVisible || (soundSourceIconsAreVisible && NativeObject.type == map._saved_sound_source)));
 
             if (spritePreviewRenderer)
             {
-                spritePreviewRenderer.enabled = !isCulled && spritePreviewsAreVisible;
+                SetShown(spritePreviewRenderer, !isCulled && spritePreviewsAreVisible);
+            }
+        }
+
+        private static void SetShown(Renderer renderer, bool isShown)
+        {
+            if (renderer.forceRenderingOff == isShown)
+            {
+                renderer.forceRenderingOff = !isShown;
+            }
+        }
+
+        // Only those whose polygon is among those whose culling just changed (PolygonVisibilityCulling)
+        public static void ApplyVisibilityToObjectsIn(bool[] polygonChanged)
+        {
+            var level = LevelEntity_Level.Instance;
+            if (!level)
+            {
+                return;
+            }
+
+            foreach (var mapObject in level.MapObjects.Values)
+            {
+                var polygonIndex = mapObject.NativeObject.polygon_index;
+                if (polygonIndex >= 0 && polygonIndex < polygonChanged.Length && polygonChanged[polygonIndex])
+                {
+                    mapObject.ApplyVisibility();
+                }
             }
         }
 
