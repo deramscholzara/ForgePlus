@@ -304,6 +304,10 @@ namespace RuntimeCore.Entities.Geometry
             }
             
             SurfaceMesh.SetUVs(channel: 0, UVs);
+
+            // Polygons have no ambient delta, but a mesh missing the channel leaves shaders that read it (SimpleVisuals)
+            // with undefined values rather than zero, so it's filled explicitly, matching the vertex count
+            SurfaceMesh.SetUVs(AmbientDeltaUVChannel, new Vector2[UVs.Length]);
         }
 
         public override void ApplyTransferMode(bool innerLayer = true)

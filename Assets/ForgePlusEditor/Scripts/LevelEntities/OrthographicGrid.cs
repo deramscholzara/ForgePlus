@@ -9,13 +9,12 @@ namespace ForgePlus.LevelManipulation
 {
     // While looking straight down (the camera's orthographic view), a grid aligned to world units (the grid texture,
     // repeated once per world unit) is drawn under the whole level, as see-through as the Orthographic Grid Opacity
-    // setting, while the Grid view option is on. It never moves: it's centered on the world, under the lowest floor any
-    // level can have, and reaches well past the edges of the whole area any level can use.
+    // setting, while the Grid view option is on. It never moves: it covers exactly the area any level can use (no further),
+    // under the lowest floor any level can have.
     [AutoStaticsCleanup]
     public static partial class OrthographicGrid
     {
-        // Meters past the edges of the area a level can use that it reaches, and below the lowest possible floor it's drawn
-        private const float Margin = 500f;
+        // Meters below the lowest possible floor it's drawn
         private const float Depth = 0.01f;
 
         private static readonly int opacityPropertyId = Shader.PropertyToID("_Opacity");
@@ -78,11 +77,13 @@ namespace ForgePlus.LevelManipulation
             gridRenderer.receiveShadows = false;
             SurfaceCacheRenderingLayers.Exclude(gridRenderer);
 
-            // Map coordinates and heights are shorts, so no level reaches past these
+            // Map coordinates and heights are shorts, so no level reaches past these: map X runs along the world's X, and
+            // map Y along its Z, reversed
             var scale = GeometryUtilities.WorldUnitIncrementsPerMeter;
-            var extent = (-(float)short.MinValue / scale) * 2f + Margin * 2f;
-            grid.transform.position = new Vector3(0f, short.MinValue / scale - Depth, 0f);
-            grid.transform.localScale = new Vector3(extent, 1f, extent);
+            var minimum = short.MinValue / scale;
+            var maximum = short.MaxValue / scale;
+            grid.transform.position = new Vector3((minimum + maximum) * 0.5f, minimum - Depth, -(minimum + maximum) * 0.5f);
+            grid.transform.localScale = new Vector3(maximum - minimum, 1f, maximum - minimum);
 
             appliedOpacity = float.NaN;
         }

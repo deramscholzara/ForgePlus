@@ -8,7 +8,7 @@ namespace RuntimeCore.Entities.Geometry
     public abstract class RuntimeSurfaceGeometryModule_Base : IDestructionPreparable
     {
         // UV4.x holds the side's ambient delta, from -1 (full dark) to +1 (full light), which offsets the light intensity
-        // of every layer; yzw are unused. Surfaces without it (such as polygons) are treated as having no delta.
+        // of every layer; yzw are unused. Polygons fill it with zeros (no delta), since a missing channel reads as undefined values.
         public const int AmbientDeltaUVChannel = 4;
 
         // Which materials it's drawn with (SurfaceMaterials)
