@@ -1,8 +1,9 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/world.h, world.cpp (the distance functions)
 //
-// Not ported: trig tables (arctangent is computed instead), random numbers, and the point transforms of the running
-// game.
+// Not ported: the tangent table (arctangent is computed instead), random numbers, and the point transforms of the
+// running game.
 using System;
+using Unity.Scripting.LifecycleManagement;
 using static AlephOne.cstypes;
 using static AlephOne.FilmProfileGlobals;
 
@@ -52,6 +53,20 @@ namespace AlephOne
         public short k;
     }
 
+    // struct fixed_point3d : public fixed_point2d (_fixed)
+    public struct fixed_point3d
+    {
+        public int x, y;
+        public int z;
+    }
+
+    // struct fixed_vector3d : public fixed_vector2d (_fixed)
+    public struct fixed_vector3d
+    {
+        public int i, j;
+        public int k;
+    }
+
     public struct world_location3d
     {
         public world_point3d point;
@@ -62,6 +77,7 @@ namespace AlephOne
         public world_vector3d velocity;
     }
 
+    [NoAutoStaticsCleanup]
     public static class world
     {
         public const int TRIG_SHIFT = 10;
@@ -99,7 +115,39 @@ namespace AlephOne
 
         public static short NORMALIZE_ANGLE(int t) { return (short) (t & (short) (NUMBER_OF_ANGLES - 1)); }
 
+        /* ---------- globals */
+
+        // ForgePlus: built once, as they're first used (Aleph One builds them as it starts)
+        public static readonly short[] cosine_table = new short[NUMBER_OF_ANGLES];
+        public static readonly short[] sine_table = new short[NUMBER_OF_ANGLES];
+
+        static world()
+        {
+            build_trig_tables();
+        }
+
         /* ---------- code (world.cpp) */
+
+        // ForgePlus: without the tangent table
+        private static void build_trig_tables()
+        {
+            short i;
+            double two_pi = 8.0 * Math.Atan(1.0);
+            double theta;
+
+            for (i = 0; i < NUMBER_OF_ANGLES; ++i)
+            {
+                theta = two_pi * (double) i / (double) NUMBER_OF_ANGLES;
+
+                cosine_table[i] = (short) ((double) TRIG_MAGNITUDE * Math.Cos(theta) + 0.5);
+                sine_table[i] = (short) ((double) TRIG_MAGNITUDE * Math.Sin(theta) + 0.5);
+
+                if (i == 0) { sine_table[i] = 0; cosine_table[i] = TRIG_MAGNITUDE; }
+                if (i == QUARTER_CIRCLE) { sine_table[i] = TRIG_MAGNITUDE; cosine_table[i] = 0; }
+                if (i == HALF_CIRCLE) { sine_table[i] = 0; cosine_table[i] = -TRIG_MAGNITUDE; }
+                if (i == THREE_QUARTER_CIRCLE) { sine_table[i] = -TRIG_MAGNITUDE; cosine_table[i] = 0; }
+            }
+        }
 
         public static short guess_distance2d(world_point2d p0, world_point2d p1)
         {

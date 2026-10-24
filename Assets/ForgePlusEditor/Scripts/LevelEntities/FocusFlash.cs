@@ -1,6 +1,7 @@
 #if !NO_EDITING
 using ForgePlus.ApplicationGeneral;
 using ForgePlus.LevelManipulation.Utilities;
+using ForgePlus.Play;
 using RuntimeCore.Entities;
 using RuntimeCore.Entities.Geometry;
 using RuntimeCore.Entities.MapObjects;
@@ -154,8 +155,9 @@ namespace ForgePlus.LevelManipulation
             return overlay;
         }
 
-        // The meshes that show it (not selection indicators, or other overlays)
-        private static IEnumerable<MeshFilter> MeshesOf(ISelectable target)
+        // The meshes that show it (not selection indicators, or other overlays), which Play mode's target highlight
+        // overlays too
+        public static IEnumerable<MeshFilter> MeshesOf(ISelectable target)
         {
             var level = LevelEntity_Level.Instance;
 
@@ -180,7 +182,8 @@ namespace ForgePlus.LevelManipulation
                     return component.GetComponentsInChildren<MeshFilter>()
                                     .Where(meshFilter => meshFilter.sharedMesh &&
                                                          meshFilter.gameObject.layer != SelectionManager.SelectionIndicatorLayer &&
-                                                         meshFilter.name != "Focus Flash" && meshFilter.name != "Diagnostic Overlay")
+                                                         meshFilter.name != "Focus Flash" && meshFilter.name != "Diagnostic Overlay" &&
+                                                         meshFilter.name != PlayTargetHighlight.OverlayName)
                                     .ToList();
                 default:
                     return new MeshFilter[0];

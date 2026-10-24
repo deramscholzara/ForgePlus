@@ -18,16 +18,23 @@ namespace ForgePlus.ApplicationGeneral
         private readonly IList<string> optionLabels;
         private readonly string message;
         private readonly string checkboxLabel;
+        private readonly IList<bool> optionsEnabled;
+        private readonly IList<string> optionTooltips;
 
         private Toggle checkbox;
 
-        public ObjectSelectorDialog(string title, IList<string> options, IList<string> optionLabels, string message = null, string checkboxLabel = null)
+        // An option can be grayed out (optionsEnabled), and explained (optionTooltips); either list can be null, or
+        // shorter than the options, for options that are enabled and need no tooltip
+        public ObjectSelectorDialog(string title, IList<string> options, IList<string> optionLabels, string message = null, string checkboxLabel = null,
+            IList<bool> optionsEnabled = null, IList<string> optionTooltips = null)
         {
             this.title = title;
             this.options = options;
             this.optionLabels = optionLabels;
             this.message = message;
             this.checkboxLabel = checkboxLabel;
+            this.optionsEnabled = optionsEnabled;
+            this.optionTooltips = optionTooltips;
         }
 
         public Task<string> Selection
@@ -75,7 +82,13 @@ namespace ForgePlus.ApplicationGeneral
                             optionLabels[i] :
                             options[i];
 
-                AddOption(optionsContainer, buttonTemplate, label, options[i]);
+                var button = AddOption(optionsContainer, buttonTemplate, label, options[i]);
+                button.SetEnabled(optionsEnabled == null || optionsEnabled.Count <= i || optionsEnabled[i]);
+
+                if (optionTooltips != null && optionTooltips.Count > i && !string.IsNullOrEmpty(optionTooltips[i]))
+                {
+                    Strings.SetTooltip(button.parent, optionTooltips[i]);
+                }
             }
 
             AddOption(optionsContainer, buttonTemplate, Strings.Get(Strings.Common, "Dialog.ObjectSelector.Cancel"), null);
@@ -87,7 +100,7 @@ namespace ForgePlus.ApplicationGeneral
             selection.TrySetResult(null);
         }
 
-        private void AddOption(VisualElement container, VisualTreeAsset buttonTemplate, string label, string option)
+        private Button AddOption(VisualElement container, VisualTreeAsset buttonTemplate, string label, string option)
         {
             var instance = buttonTemplate.Instantiate();
             instance.AddToClassList("fp-dialog__option");
@@ -97,6 +110,8 @@ namespace ForgePlus.ApplicationGeneral
             button.clicked += () => selection.TrySetResult(option);
 
             container.Add(instance);
+
+            return button;
         }
     }
 }

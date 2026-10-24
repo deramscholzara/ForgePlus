@@ -318,6 +318,89 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
+        // Play mode's (PlayThisLevel), which act only while it's on, as the others don't
+        public static class Play
+        {
+            public const string MapName = "Play";
+
+            public static InputAction Advance
+            {
+                get
+                {
+                    return Find("Play/Advance");
+                }
+            }
+
+            public static InputAction Strafe
+            {
+                get
+                {
+                    return Find("Play/Strafe");
+                }
+            }
+
+            public static InputAction Look
+            {
+                get
+                {
+                    return Find("Play/Look");
+                }
+            }
+
+            // Held, the player walks rather than runs
+            public static InputAction Walk
+            {
+                get
+                {
+                    return Find("Play/Walk");
+                }
+            }
+
+            // The player's action key, which uses doors, platforms, switches and terminals
+            public static InputAction Action
+            {
+                get
+                {
+                    return Find("Play/Action");
+                }
+            }
+
+            // Held with the head under a liquid, the player swims up
+            public static InputAction Swim
+            {
+                get
+                {
+                    return Find("Play/Swim");
+                }
+            }
+
+            // Reading a terminal, on to its next page (or out of it, after its last)
+            public static InputAction NextPage
+            {
+                get
+                {
+                    return Find("Play/NextPage");
+                }
+            }
+
+            public static InputAction PreviousPage
+            {
+                get
+                {
+                    return Find("Play/PreviousPage");
+                }
+            }
+
+            // Leaves the terminal being read, or else Play mode
+            public static InputAction Exit
+            {
+                get
+                {
+                    return Find("Play/Exit");
+                }
+            }
+        }
+
         // Looked up once each, since they're read every frame
         private static Dictionary<string, InputAction> actionsByPath;
 

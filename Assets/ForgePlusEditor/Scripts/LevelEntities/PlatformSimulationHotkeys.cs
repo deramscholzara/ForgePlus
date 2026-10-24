@@ -67,9 +67,8 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
-        // As a player's action key would (find_action_key_target in devices.cpp), from the camera: along its facing
-        // (ignoring its pitch) across the map from the polygon it's in, the first platform polygon entered through a line
-        // whose midpoint is in range, if a player could use that platform. Through no solid wall, and none in the
+        // As a player's action key would (ActionKeyTargeting), from the camera (in place of the player's middle): along
+        // its facing (ignoring its pitch) across the map from the polygon it's in, for platforms only. None in the
         // top-down view (which faces no direction across the map).
         private static LevelEntity_Platform FindPlayerTarget(LevelEntity_Level level)
         {
@@ -92,52 +91,10 @@ namespace ForgePlus.LevelManipulation
                 return null;
             }
 
-            facing = facing.normalized * MaximumPlatformActivationRange;
-            var destination = new world_point2d((short) (origin.x + facing.x), (short) (origin.y + facing.y));
-
             var polygonIndex = map.world_point_to_polygon_index(data, origin);
-            while (polygonIndex != cstypes.NONE)
-            {
-                var lineIndex = map.find_line_crossed_leaving_polygon(data, polygonIndex, origin, destination);
-                if (lineIndex == cstypes.NONE)
-                {
-                    return null;
-                }
+            var angle = world.arctangent(Mathf.RoundToInt(facing.x * world.TRIG_MAGNITUDE), Mathf.RoundToInt(facing.y * world.TRIG_MAGNITUDE));
 
-                polygonIndex = map.find_adjacent_polygon(data, polygonIndex, lineIndex);
-                if (polygonIndex == cstypes.NONE)
-                {
-                    return null;
-                }
-
-                var polygon = data.PolygonList[polygonIndex];
-                if (polygon.type == map._polygon_is_platform && IsLineWithinRange(data, lineIndex, eye))
-                {
-                    var platform = LevelEntity_Platform.GetSelectablePlatform(level, polygon.permutation);
-                    if (platform && platform.IsLegalPlayerTarget)
-                    {
-                        return platform;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        // MAXIMUM_PLATFORM_ACTIVATION_RANGE (devices.cpp)
-        private const float MaximumPlatformActivationRange = 3 * world.WORLD_ONE;
-
-        // line_is_within_range (devices.cpp), from the camera (in place of the player's middle), with height counting
-        // double (control_panel_settings.ReachHorizontal)
-        private static bool IsLineWithinRange(MapLevel data, short lineIndex, world_point3d eye)
-        {
-            map.calculate_line_midpoint(data, lineIndex, out var midpoint);
-
-            float dx = eye.x - midpoint.x;
-            float dy = eye.y - midpoint.y;
-            float dz = 2f * (eye.z - midpoint.z);
-
-            return Mathf.Sqrt(dx * dx + dy * dy + dz * dz) < MaximumPlatformActivationRange;
+            return ActionKeyTargeting.Find(level, data, polygonIndex, origin, angle, eye, canTogglePanel: null).Platform;
         }
 
         // Each once, as its inspector inspects it (the floor's part of a platform that comes from both)

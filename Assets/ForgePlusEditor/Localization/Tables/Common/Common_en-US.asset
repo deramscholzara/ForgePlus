@@ -580,6 +580,14 @@ MonoBehaviour:
   - rid: 552786469862768645
   - rid: 552786469862768646
   - rid: 552786469862768647
+  - rid: 552786629739413575
+  - rid: 552786629739413576
+  - rid: 552786629739413577
+  - rid: 552786629739413578
+  - rid: 552786629739413579
+  - rid: 552786630167494705
+  - rid: 552786630167494706
+  - rid: 552786630167494707
   references:
     version: 2
     RefIds:
@@ -4506,7 +4514,7 @@ MonoBehaviour:
         m_KeyId: 5582341237522435
         m_Metadata:
           m_Items: []
-        m_Value: "Hides what Aleph One wouldn't draw from a point: only the polygon it's in, and the polygons visible from it in any direction, are shown. Camera uses the camera's position; Reference Point uses a cube, which can be dragged around the level. While the point isn't in a polygon, nothing is hidden. Overlapping polygons (5-D space) aren't trimmed yet."
+        m_Value: 'Hides what Aleph One wouldn''t draw from a point: only the polygon it''s in, and the polygons visible from it in any direction, are shown. Camera uses the camera''s position; Reference Point uses a cube, which can be dragged around the level. While the point isn''t in a polygon, nothing is hidden. Overlapping polygons (5-D space) aren''t trimmed yet.'
     - rid: 552786469862768645
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -4528,3 +4536,59 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Reference Point
+    - rid: 552786629739413575
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140899514728448
+        m_Metadata:
+          m_Items: []
+        m_Value: Play
+    - rid: 552786629739413576
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140899531505664
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Play This Level: walk around the level as a player would, from one of its player starts (picked at random) or from here, with the UI hidden and the view culled as Aleph One culls it. The action key uses doors, platforms, switches and terminals; monsters, items, weapons and the HUD aren''t simulated. Nothing done while playing changes the level, and its lights, media and platforms start over afterward.'
+    - rid: 552786629739413577
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140899531505665
+        m_Metadata:
+          m_Items: []
+        m_Value: Play This Level
+    - rid: 552786629739413578
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140899531505666
+        m_Metadata:
+          m_Items: []
+        m_Value: When finished, press the {0} key to exit.
+    - rid: 552786629739413579
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140899531505667
+        m_Metadata:
+          m_Items: []
+        m_Value: Begin
+    - rid: 552786630167494705
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8172466702270464
+        m_Metadata:
+          m_Items: []
+        m_Value: Starts at one of the level's player starts, picked at random. Only while the level has a player start.
+    - rid: 552786630167494706
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8172466710659072
+        m_Metadata:
+          m_Items: []
+        m_Value: Begin From Here
+    - rid: 552786630167494707
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8172466710659073
+        m_Metadata:
+          m_Items: []
+        m_Value: Starts on the floor right below the Culling Simulation's reference point, or else the camera, facing the way the camera does (and kept clear of walls). Only while one of them is inside a polygon, between its floor and ceiling, and not in the top-down view.

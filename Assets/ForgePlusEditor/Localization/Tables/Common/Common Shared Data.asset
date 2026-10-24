@@ -2832,6 +2832,46 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 8140899514728448
+    m_Key: PlayButton.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140899531505664
+    m_Key: PlayButton.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140899531505665
+    m_Key: Dialog.Play.Title
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140899531505666
+    m_Key: Dialog.Play.Message
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140899531505667
+    m_Key: Dialog.Play.Begin
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8172466702270464
+    m_Key: Dialog.Play.Begin.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8172466710659072
+    m_Key: Dialog.Play.BeginFromHere
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8172466710659073
+    m_Key: Dialog.Play.BeginFromHere.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

@@ -81,6 +81,7 @@ MonoBehaviour:
   - rid: 552786204080472183
   - rid: 552786204080472184
   - rid: 552786204080472185
+  - rid: 552786629739413574
   references:
     version: 2
     RefIds:
@@ -532,3 +533,10 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Styles are written in the text as Bungie''s terminal source wrote them: $B and $b turn bold on and off, $I and $i italic, $U and $u underline, and $C0 to $C7 set the color. Each group starts plain, in color 0. Click a style under Text Styles to apply it to the selected text.'
+    - rid: 552786629739413574
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140885358952448
+        m_Metadata:
+          m_Items: []
+        m_Value: The map of checkpoint {0}, which Terminals mode shows.

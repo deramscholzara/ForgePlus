@@ -20,6 +20,7 @@ Forge+ was originally written by Richard L Harrington. It builds on ideas from [
 - [Modes](#modes)
   - [Geometry](#geometry) · [Heights](#heights) · [Textures](#textures) · [Lights](#lights) · [Sounds](#sounds) · [Platforms](#platforms) · [Media](#media) · [Objects](#objects)
   - Other: [Level](#level) · [Map](#map) · [Annotations](#annotations) · [Terminals](#terminals)
+- [Play This Level](#play-this-level)
 - [Snapping, axis locks and number fields](#snapping-axis-locks-and-number-fields)
 - [Undo and redo](#undo-and-redo)
 - [Errors panel](#errors-panel)
@@ -63,7 +64,7 @@ Forge+ remembers your file paths, so they load again the next time you start it.
 | **Left column** | **Visibility** toggles, **More Display Options** and **Culling Simulation** · the **inspector** for what's selected (in Map, Annotations and Terminals modes, that mode's own panel) |
 | **Right column** | The **tool** choice for modes with more than one tool (Select / Draw, or Select / Paint) · the mode's **palette** (textures, lights, media, sounds, heights, platforms, polygons or text styles) |
 | **Center** | The 3D view. The **Menu**, the **Errors** panel and the **terminal preview** open here |
-| **Bottom bar** | **Undo** / **Redo** · **Frame Selected** · **X** / **Y** axis locks · **Snapping** · **Orthographic** · the open level's name · the **Errors** toggle (**!**) |
+| **Bottom bar** | **Undo** / **Redo** · **Frame Selected** · **X** / **Y** axis locks · **Snapping** · **Orthographic** · the open level's name · **Play** · the **Errors** toggle (**!**) |
 
 Every field, button and tab has a tooltip, so hover over anything to learn what it does. Grayed-out fields show data that Forge+ can't edit yet, or can't edit in the current situation. In that case, a caption or tooltip usually says why.
 
@@ -322,6 +323,39 @@ Information about the map file itself: its name (editable), file and data versio
 
 ---
 
+## Play This Level
+
+Walk around the level as a player would, without leaving Forge+. Click **Play** in the bottom-right corner (it's available while the open level has a player start), then choose how to start:
+
+- **Begin:** starts at one of the level's player starts, picked at random.
+- **Begin From Here:** starts on the floor below the Culling Simulation reference point if there is one, or else below the camera, facing the way the camera faces. This is available while that point is inside a polygon, between its floor and ceiling, and you're not in the top-down view.
+
+While playing:
+
+- The interface is hidden, and the view is culled as Aleph One culls it.
+- You move with Aleph One's own player physics: walking, running, swimming, and riding moving platforms.
+- The **action key** uses doors, platforms, switches and terminals, as in the game. Terminals are shown page by page.
+- Teleporters move you within the level, and a teleport to another level ends Play mode.
+- Lights, media and platforms run as they do in the game, starting from their initial states.
+- Player starts, goals and sound sources are hidden.
+- Monsters, items, weapons and the HUD aren't simulated, and you can't die.
+
+Press <kbd>Esc</kbd> to leave a terminal, or to leave Play mode. Nothing you do while playing changes the level or the undo history, and the level's lights, media and platforms start over afterward.
+
+| Input | Action |
+|---|---|
+| <kbd>W</kbd> / <kbd>S</kbd> | Move forward / back |
+| <kbd>A</kbd> / <kbd>D</kbd> | Sidestep left / right |
+| Mouse | Look around |
+| Hold <kbd>Shift</kbd> | Walk instead of run |
+| <kbd>Tab</kbd> | Action key (doors, platforms, switches, terminals) |
+| Hold <kbd>Space</kbd> | Swim up, while your head is under a liquid |
+| <kbd>Space</kbd>, <kbd>Enter</kbd> or left mouse | Next terminal page (or out of the terminal after its last page) |
+| <kbd>↑</kbd> | Previous terminal page |
+| <kbd>Esc</kbd> | Leave the terminal, or else Play mode |
+
+---
+
 ## Snapping, axis locks and number fields
 
 - **Snapping** (bottom bar): moves positions and heights in steps of 1/16 world unit, and angles, volumes and similar values in steps of 5. Hold <kbd>Alt</kbd> to invert it temporarily.
@@ -392,8 +426,7 @@ The **Files** tab of the Menu loads your scenario's data:
 
 New levels start the way Forge and Weland start them: set up for single player, with a small starting room, a player start, and a set of lights from full intensity down to none in steps of 5%.
 
-> [!CAUTION]
-> Opening another level, or quitting, **discards unsaved edits without asking**. Save first.
+**Unsaved edits:** before anything that would lose the open level's unsaved edits, Forge+ asks whether to **save** them (as a Save Merged of the map file), **discard** them, or **cancel**. That includes opening another level or map file, unloading the map file, pressing Quit, or closing the window. New Map and New Level are the exceptions noted above.
 
 **Plugins and MML:** Forge+ applies a scenario's MML (from its Scripts folder) and its Aleph One plugins the way Aleph One does, so levels show the textures, sprites and sounds they would in the game.
 
@@ -429,6 +462,7 @@ The **Settings** tab of the Menu is grouped into sections:
 | **Rendering** | Minimum Light | Low | The lowest light level surfaces are drawn with, so dark areas stay visible |
 | | Bloom, Vignette, Color Adjustment, Ambient Occlusion | On | Visual effects in the view |
 | | Surface Cache Global Illumination | Off | Higher-quality light bouncing |
+| | Light Multiplier | 1x | How much light surfaces give Surface Cache Global Illumination to bounce onto other surfaces (0x–10x). Only while Surface Cache Global Illumination is on |
 | **Units** | Display World-Units as Improper Fractions | Off | Shows `-512/1024` instead of `-1 and 512/1024` |
 | **Editing** | Undo Steps | 50 | How many changes you can undo (1–10,000) |
 | | Point Click Area | 100% | How large points' clickable area is (100–200%) |
@@ -524,6 +558,22 @@ Every binding can be changed in the **Inputs** tab of the Menu. Click a binding,
 
 </details>
 
+<details open>
+<summary><strong>Play Mode</strong></summary>
+
+| Action | Default |
+|---|---|
+| Move forward / back | <kbd>W</kbd> / <kbd>S</kbd> |
+| Sidestep left / right | <kbd>A</kbd> / <kbd>D</kbd> |
+| Walk | <kbd>Shift</kbd> |
+| Action | <kbd>Tab</kbd> |
+| Swim | <kbd>Space</kbd> |
+| Next page | <kbd>Space</kbd>, <kbd>Enter</kbd>, left mouse |
+| Previous page | <kbd>↑</kbd> |
+| Exit | <kbd>Esc</kbd> |
+
+</details>
+
 Keyboard shortcuts don't fire while you're typing in a field.
 
 ---
@@ -537,6 +587,7 @@ Keyboard shortcuts don't fire while you're typing in a field.
 - **Keep textures aligned while reshaping.** Hold <kbd>Ctrl</kbd> while dragging points or lines. When aligning textures, <kbd>Ctrl</kbd>-drag moves a whole run of matching walls at once.
 - **Copy alignment.** In Textures mode, select a well-aligned surface and <kbd>Alt</kbd>+click its neighbors to line them up with it.
 - **Test doors in place.** Fly up to a door and press <kbd>Tab</kbd>, or select a platform and press <kbd>Shift</kbd>+<kbd>Tab</kbd>.
+- **Walk it like a player.** Click **Play**, then **Begin From Here** to drop in wherever the camera is. You can check jumps between heights, door timing, switches and terminals, then press <kbd>Esc</kbd> to be back where you were, with nothing changed.
 - **Use the selection rectangle precisely.** It normally selects only what's wholly inside it. Hold <kbd>Ctrl</kbd> to select anything it touches.
 - **Hide clutter.** Turn off Objects, Media or Sides to click through to what's behind them, or press <kbd>`</kbd> to hide the interface for a clean view (or a screenshot).
 - **Scrub numbers.** Drag a field's label instead of typing, and hold <kbd>Alt</kbd> to toggle snapping while you do.
@@ -566,7 +617,7 @@ Forge+ can view everything in a map, and edit much of it. These are the main thi
 - [ ] Edit physics, shapes and sounds files. These are loaded for display and preview only, and embedded physics is carried through on save.
 
 **Workflow**
-- [ ] Warn about unsaved changes when quitting or opening another level.
+- [ ] Simulate monsters, items, weapons and the HUD in Play mode, and pushing the player out of objects.
 - [ ] Keyboard shortcuts for switching modes and toggling visibility.
 - [ ] Culling Simulation trimming overlapping polygons ("5-D space").
 - [ ] Loading an **Images** file.
@@ -578,12 +629,19 @@ Forge+ can view everything in a map, and edit much of it. These are the main thi
 ## Building Forge+ yourself
 
 1. Install Unity (from [unity.com](https://unity.com)), at or above the version in [`ProjectSettings/ProjectVersion.txt`](ProjectSettings/ProjectVersion.txt). The free Unity Personal license is fine.
-2. Include the build support module for each platform you want to build for. Forge+ is presently tested with:
+2. Include the build support module for each platform you want to build for. The project has a Build Profile for each platform it's tested with:
    - Windows (CoreCLR)
-   - Linux (IL2CPP)
-   - Mac (Mono)
+   - Linux (CoreCLR)
+   - Mac, for Apple Silicon (CoreCLR)
+   - Mac-IntelMono, for Intel Macs (Mono)
 3. In Unity, open the root of this repository. It's the root of the Unity project.
-4. Build as usual: **File → Build Settings...**, choose the target platform, then **Build** or **Build And Run**.
+4. Build from the **Build** menu:
+   - **Build → Build All Profiles** builds every profile.
+   - **Build → Individual → Windows / Mac / Linux** builds one platform's profiles (Mac includes both Mac profiles).
+
+   Each build goes to `Desktop/ForgePlusBuilds/ForgePlus_<Profile Name>`, with Unity's "do not ship" debug folders removed. Each one is also zipped, with Unix file permissions recorded, so Mac apps and the Linux player stay launchable. A Mac zip holds just the `.app`.
+
+   You can also build a single profile the usual way, from **File → Build Profiles**.
 
 ## License
 

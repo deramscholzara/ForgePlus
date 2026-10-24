@@ -22,6 +22,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="manipulation-slot" class="fp-slot fp-manipulation-slot" picking-mode="Ignore" />
+        <ui:VisualElement name="play-button-slot" class="fp-slot fp-play-button-slot" picking-mode="Ignore" />
         <ui:VisualElement name="errors-toggle-slot" class="fp-slot fp-errors-toggle-slot" picking-mode="Ignore" />
         <ui:VisualElement name="history-slot" class="fp-slot fp-history-slot" picking-mode="Ignore" />
         <ui:Label name="level-name" class="fp-faint-text fp-level-name" picking-mode="Ignore" />
@@ -29,5 +30,6 @@
             <ui:VisualElement class="fp-input-blocker__fill" picking-mode="Ignore" />
         </ui:VisualElement>
         <ui:VisualElement name="dialog-layer" class="fp-dialog-layer" />
+        <ui:VisualElement name="play-layer" class="fp-play-layer" picking-mode="Ignore" />
     </ui:VisualElement>
 </ui:UXML>

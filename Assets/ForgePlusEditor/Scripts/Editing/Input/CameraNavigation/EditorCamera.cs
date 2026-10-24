@@ -117,6 +117,9 @@ namespace ForgePlus.CameraNavigation
         private float panHeight;
         private Vector3 panGrabPoint;
 
+        // Where the camera was (and its field of view) as something else took control of it
+        private (Vector3 Position, Quaternion Rotation, float FieldOfView)? externalControl;
+
         public event Action OnOrthographicChanged;
 
         // Whether the orthographic view is on (including while the view moves into it)
@@ -173,6 +176,57 @@ namespace ForgePlus.CameraNavigation
                 Frame(bounds, viewportArea);
                 FocusFlash.Flash(targets, FramingTimeLeft);
             }
+        }
+
+        // While something else moves the camera (Play mode), it neither navigates nor keeps to the level's bounds, and
+        // looks in perspective. Afterward it's back where it was, as it was.
+        public bool IsExternallyControlled
+        {
+            get
+            {
+                return externalControl.HasValue;
+            }
+        }
+
+        public void BeginExternalControl()
+        {
+            if (externalControl.HasValue)
+            {
+                return;
+            }
+
+            if (isTransitioning)
+            {
+                FinishTransition();
+            }
+
+            isFraming = false;
+            isPanning = false;
+            currentVelocityVector = Vector3.zero;
+
+            externalControl = (transform.position, transform.rotation, viewCamera.fieldOfView);
+
+            viewCamera.ResetProjectionMatrix();
+            viewCamera.orthographic = false;
+
+            OrthographicGrid.Update(false, null);
+        }
+
+        public void EndExternalControl()
+        {
+            if (!externalControl.HasValue)
+            {
+                return;
+            }
+
+            var (position, rotation, fieldOfView) = externalControl.Value;
+            externalControl = null;
+
+            transform.SetPositionAndRotation(position, rotation);
+            viewCamera.fieldOfView = fieldOfView;
+            viewCamera.ResetProjectionMatrix();
+            viewCamera.orthographic = isOrthographic;
+            viewCamera.orthographicSize = orthographicSize;
         }
 
         public void OnInputBlockerChanged(bool isBlocking)
@@ -593,6 +647,11 @@ namespace ForgePlus.CameraNavigation
 
         private void Update()
         {
+            if (IsExternallyControlled)
+            {
+                return;
+            }
+
             // Not navigation, so it carries on while navigation is blocked
             if (isTransitioning)
             {
@@ -765,6 +824,11 @@ namespace ForgePlus.CameraNavigation
         // After everything that moves it (including framing and the orthographic transition)
         private void LateUpdate()
         {
+            if (IsExternallyControlled)
+            {
+                return;
+            }
+
             var hasBounds = TryGetLevelBounds(out var bounds);
 
             // Shown under the level while looking straight down

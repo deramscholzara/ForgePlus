@@ -154,7 +154,38 @@ namespace RuntimeCore.Entities
             }
         }
 
+        // Whether it's on (get_light_status in lightsource.cpp: becoming active, or in either active state)
+        public bool IsRuntimeActive
+        {
+            get
+            {
+                return currentState == States.BecomingActive || currentState == States.PrimaryActive || currentState == States.SecondaryActive;
+            }
+        }
+
+        // As set_light_status (lightsource.cpp): a light that isn't already on (or off) starts becoming so, from the
+        // beginning of that phase. Returns whether it changed.
+        public bool SetRuntimeStatus(bool isActive)
+        {
+            if (isActive == IsRuntimeActive)
+            {
+                return false;
+            }
+
+            BeginPhase(isActive ? States.BecomingActive : States.BecomingInactive, loop: false, phaseOffset: 0);
+
+            return true;
+        }
+
         public void BeginPhase(States state, bool loop = false)
+        {
+            // If we're looping (such as for an editor state-preview mode)
+            // then we should not incur any "phase" offset to adjust the
+            // current State or position therein.
+            BeginPhase(state, loop, loop ? 0 : NativeObject.phase);
+        }
+
+        private void BeginPhase(States state, bool loop, int phaseOffset)
         {
             StopAnimating();
 
@@ -166,10 +197,7 @@ namespace RuntimeCore.Entities
             EnterState(state);
             loopsCurrentState = loop;
 
-            // If we're looping (such as for an editor state-preview mode)
-            // then we should not incur any "phase" offset to adjust the
-            // current State or position therein.
-            remainingPhaseOffset = loop ? 0 : NativeObject.phase;
+            remainingPhaseOffset = phaseOffset;
 
             var now = Time.realtimeSinceStartup;
 

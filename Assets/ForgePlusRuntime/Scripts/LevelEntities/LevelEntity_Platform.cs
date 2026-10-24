@@ -47,6 +47,10 @@ namespace RuntimeCore.Entities.Geometry
         // contracted. A split platform's come from its floor only.
         public static event Action<LevelEntity_Platform, short, bool, bool> OnRuntimeSound;
 
+        // Whether a platform may move its half to a height (meters), as legal_polygon_height_change (map.cpp) checks that
+        // nothing in its polygon is crushed, or null while nothing can be (such as outside Play mode)
+        public static Func<LevelEntity_Platform, float, bool> IsHeightChangeLegal;
+
         // TODO: Use this for checking "is active" state for toggling?
         private CancellationTokenSource platformBehaviorCTS;
 
@@ -73,11 +77,35 @@ namespace RuntimeCore.Entities.Geometry
         // As PLATFORM_HAS_BEEN_ACTIVATED, for one that activates only once (since its simulation began)
         private bool hasBeenActivated;
 
+        // The platform that turned it on (platform_data.parent_platform_index), or NONE
+        private short parentPlatformIndex = cstypes.NONE;
+
+        // The frame its state was last changed in (as PLATFORM_WAS_JUST_ACTIVATED_OR_DEACTIVATED marks the tick)
+        private int lastStateChangeFrame = -1;
+
         public float CurrentHeightInWorldUnitIncrements
         {
             get
             {
                 return currentPosition * GeometryUtilities.WorldUnitIncrementsPerMeter;
+            }
+        }
+
+        // As PLATFORM_HAS_BEEN_ACTIVATED (since its simulation began)
+        public bool HasBeenRuntimeActivated
+        {
+            get
+            {
+                return hasBeenActivated;
+            }
+        }
+
+        // Which of its polygon's surfaces it moves
+        public LinkedSurfaces LinkedSurface
+        {
+            get
+            {
+                return linkedSurface;
             }
         }
 
@@ -146,6 +174,8 @@ namespace RuntimeCore.Entities.Geometry
         {
             startsMovingSilently = true;
             hasBeenActivated = false;
+            parentPlatformIndex = cstypes.NONE;
+            lastStateChangeFrame = -1;
 
             currentState = PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) ? States.Extended : States.Contracted;
 
@@ -203,6 +233,132 @@ namespace RuntimeCore.Entities.Geometry
             }
         }
 
+        // set_platform_state (platforms.cpp): as the game turns a platform on or off (rather than as the inspector's Active
+        // and Activate Platform simulate it alone), with what that does to other things. Turning on, it turns its
+        // polygon's lights on (if it activates its light), remembers the platform that turned it on (its parent), and turns
+        // adjacent platforms on or off (as it activates or deactivates them as it activates); turning off, likewise for
+        // the lights it deactivates and the adjacent platforms it changes as it deactivates. One that activates only once
+        // can't be turned on again, and none changes twice in a frame (a tick, in the game), so adjacent platforms can't
+        // keep turning each other on and off. Returns whether it's on now.
+        public bool SetRuntimeState(bool state, short parentPlatformIndex)
+        {
+            var flags = NativeObject.static_flags;
+
+            if (lastStateChangeFrame == Time.frameCount ||
+                (state && PLATFORM_ACTIVATES_ONLY_ONCE(flags) && hasBeenActivated) ||
+                state == IsRuntimeActive)
+            {
+                return IsRuntimeActive;
+            }
+
+            // The state of this platform cannot be changed again this tick
+            lastStateChangeFrame = Time.frameCount;
+
+            if (state)
+            {
+                if (PLATFORM_ACTIVATES_LIGHT(flags))
+                {
+                    SetPolygonLightsRuntimeStatus(true);
+                }
+
+                this.parentPlatformIndex = parentPlatformIndex;
+
+                if (PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_WHEN_ACTIVATING(flags)) SetAdjacentRuntimeStates(true);
+                if (PLATFORM_DEACTIVATES_ADJACENT_PLATFORMS_WHEN_ACTIVATING(flags)) SetAdjacentRuntimeStates(false);
+            }
+            else
+            {
+                if (PLATFORM_DEACTIVATES_LIGHT(flags))
+                {
+                    SetPolygonLightsRuntimeStatus(false);
+                }
+
+                if (PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_WHEN_DEACTIVATING(flags)) SetAdjacentRuntimeStates(true);
+                if (PLATFORM_DEACTIVATES_ADJACENT_PLATFORMS_WHEN_DEACTIVATING(flags)) SetAdjacentRuntimeStates(false);
+            }
+
+            SetRuntimeActive(state);
+
+            return state;
+        }
+
+        // update_platforms (platforms.cpp), as a platform reaches either level: it turns adjacent platforms on if it does
+        // that at each level, and then itself off if it deactivates at each level, or at its initial one (which it's at,
+        // if isInitialLevel). Only once for a split platform (from its primary half). Returns whether it's off now.
+        private bool ReachLevel(bool isInitialLevel)
+        {
+            var flags = NativeObject.static_flags;
+            var deactivates = PLATFORM_DEACTIVATES_AT_EACH_LEVEL(flags) || (isInitialLevel && PLATFORM_DEACTIVATES_AT_INITIAL_LEVEL(flags));
+
+            if (this != PrimaryHalf)
+            {
+                if (deactivates)
+                {
+                    DeactivateRuntimeBehavior();
+                }
+
+                return deactivates;
+            }
+
+            if (PLATFORM_ACTIVATES_ADJACENT_PLATFORMS_AT_EACH_LEVEL(flags))
+            {
+                SetAdjacentRuntimeStates(true);
+            }
+
+            if (deactivates)
+            {
+                // Not a change it's already made this frame, which would leave it running
+                lastStateChangeFrame = -1;
+                SetRuntimeState(false, cstypes.NONE);
+            }
+
+            return deactivates;
+        }
+
+        // set_adjacent_platform_states (platforms.cpp): every platform beside its polygon, as their parent, apart from its own
+        // parent if it doesn't activate its parent
+        private void SetAdjacentRuntimeStates(bool state)
+        {
+            var level = ParentLevel.Level;
+            var polygon = level.PolygonList[NativeObject.polygon_index];
+
+            for (var i = 0; i < polygon.vertex_count; i++)
+            {
+                var adjacentPolygonIndex = polygon.adjacent_polygon_indexes[i];
+                if (adjacentPolygonIndex < 0 || adjacentPolygonIndex >= level.PolygonList.Count ||
+                    level.PolygonList[adjacentPolygonIndex].type != _polygon_is_platform)
+                {
+                    continue;
+                }
+
+                var adjacentPlatformIndex = level.PolygonList[adjacentPolygonIndex].permutation;
+                if (!PLATFORM_DOES_NOT_ACTIVATE_PARENT(NativeObject.static_flags) || parentPlatformIndex != adjacentPlatformIndex)
+                {
+                    var adjacentPlatform = GetSelectablePlatform(ParentLevel, adjacentPlatformIndex);
+                    if (adjacentPlatform)
+                    {
+                        adjacentPlatform.SetRuntimeState(state, NativeIndex);
+                    }
+                }
+            }
+        }
+
+        // set_light_status (lightsource.cpp) for its polygon's floor and ceiling lights
+        private void SetPolygonLightsRuntimeStatus(bool status)
+        {
+            var polygon = ParentLevel.Level.PolygonList[NativeObject.polygon_index];
+
+            if (ParentLevel.Lights.TryGetValue(polygon.floor_lightsource_index, out var floorLight))
+            {
+                floorLight.SetRuntimeStatus(status);
+            }
+
+            if (ParentLevel.Lights.TryGetValue(polygon.ceiling_lightsource_index, out var ceilingLight))
+            {
+                ceilingLight.SetRuntimeStatus(status);
+            }
+        }
+
         // A split platform's halves are one platform, so both reverse (the obstructed one playing the sound)
         public void ObstructRuntimeBehavior()
         {
@@ -253,7 +409,7 @@ namespace RuntimeCore.Entities.Geometry
 
             if (!IsRuntimeActive)
             {
-                SetRuntimeActive(true);
+                SetRuntimeState(true, cstypes.NONE);
                 return;
             }
 
@@ -319,6 +475,15 @@ namespace RuntimeCore.Entities.Geometry
             get
             {
                 return linkedSurface == LinkedSurfaces.Ceiling && OtherHalf ? OtherHalf : this;
+            }
+        }
+
+        // The half that speaks for a split platform, as one platform (its floor's, as for its sounds)
+        private LevelEntity_Platform PrimaryHalf
+        {
+            get
+            {
+                return SoundHalf;
             }
         }
 
@@ -405,9 +570,8 @@ namespace RuntimeCore.Entities.Geometry
                         {
                             currentState = States.Extended;
 
-                            if (PLATFORM_DEACTIVATES_AT_EACH_LEVEL(NativeObject.static_flags) || (PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) && PLATFORM_DEACTIVATES_AT_INITIAL_LEVEL(NativeObject.static_flags)))
+                            if (ReachLevel(PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags)))
                             {
-                                DeactivateRuntimeBehavior();
                                 return;
                             }
                         }
@@ -448,9 +612,8 @@ namespace RuntimeCore.Entities.Geometry
                         {
                             currentState = States.Contracted;
 
-                            if (PLATFORM_DEACTIVATES_AT_EACH_LEVEL(NativeObject.static_flags) || (!PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags) && PLATFORM_DEACTIVATES_AT_INITIAL_LEVEL(NativeObject.static_flags)))
+                            if (ReachLevel(!PLATFORM_IS_INITIALLY_EXTENDED(NativeObject.static_flags)))
                             {
-                                DeactivateRuntimeBehavior();
                                 return;
                             }
                         }
@@ -512,13 +675,50 @@ namespace RuntimeCore.Entities.Geometry
             var endTime = Time.realtimeSinceStartup + duration;
 
             var startingPosition = currentPosition;
+            var lastTime = GetStateOffsetRealTimeSinceStartup();
+            var wasBlocked = false;
 
-            while (GetStateOffsetRealTimeSinceStartup() < endTime)
+            while (true)
             {
                 // Do Movement
-                var remainingProgress = (endTime - GetStateOffsetRealTimeSinceStartup()) / duration;
+                var now = GetStateOffsetRealTimeSinceStartup();
+                var remainingProgress = Mathf.Max(0f, (endTime - now) / duration);
+                var position = Mathf.Lerp(targetPosition, startingPosition, remainingProgress);
 
-                SetCurrentPosition(Mathf.Lerp(targetPosition, startingPosition, remainingProgress));
+                // Staying put is never obstructed (so one that just reversed doesn't reverse again before it moves)
+                if (position != currentPosition && IsHeightChangeLegal != null && !IsHeightChangeLegal(this, position))
+                {
+                    // Obstructed (update_platforms in platforms.cpp): it plays its sound the first time it's blocked, and
+                    // reverses if it does, or else waits where it is (its time to travel put off by the time it waited). A
+                    // split platform's halves are blocked together, so each reverses (or waits) on its own.
+                    if (!wasBlocked)
+                    {
+                        PlayRuntimeSound(_obstructed_sound);
+                    }
+
+                    wasBlocked = true;
+
+                    if (PLATFORM_REVERSES_DIRECTION_WHEN_OBSTRUCTED(NativeObject.static_flags))
+                    {
+                        startsMovingSilently = true;
+                        BeginState(currentState == States.Extending ? States.Contracting : States.Extending, loop: false);
+                        return;
+                    }
+
+                    endTime += now - lastTime;
+                }
+                else
+                {
+                    wasBlocked = false;
+                    SetCurrentPosition(position);
+
+                    if (remainingProgress <= 0f)
+                    {
+                        break;
+                    }
+                }
+
+                lastTime = now;
 
                 await Awaitable.NextFrameAsync();
 
@@ -527,8 +727,6 @@ namespace RuntimeCore.Entities.Geometry
                     return;
                 }
             }
-
-            SetCurrentPosition(targetPosition);
 
             remainingStateTime = GetStateOffsetRealTimeSinceStartup() - endTime;
         }

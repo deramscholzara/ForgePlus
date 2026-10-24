@@ -196,6 +196,27 @@ MonoBehaviour:
   - rid: 552786457188368449
   - rid: 552786457188368450
   - rid: 552786457188368451
+  - rid: 552786629739413553
+  - rid: 552786629739413554
+  - rid: 552786629739413555
+  - rid: 552786629739413556
+  - rid: 552786629739413557
+  - rid: 552786629739413558
+  - rid: 552786629739413559
+  - rid: 552786629739413560
+  - rid: 552786629739413561
+  - rid: 552786629739413562
+  - rid: 552786629739413563
+  - rid: 552786629739413564
+  - rid: 552786629739413565
+  - rid: 552786629739413566
+  - rid: 552786629739413567
+  - rid: 552786629739413568
+  - rid: 552786629739413569
+  - rid: 552786629739413570
+  - rid: 552786629739413571
+  - rid: 552786629739413572
+  - rid: 552786629739413573
   references:
     version: 2
     RefIds:
@@ -1439,14 +1460,14 @@ MonoBehaviour:
         m_KeyId: 5435900372336645
         m_Metadata:
           m_Items: []
-        m_Value: 'Light Multiplier'
+        m_Value: Light Multiplier
     - rid: 552786457188368450
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
         m_KeyId: 5435900372336646
         m_Metadata:
           m_Items: []
-        m_Value: 'How much light surfaces give Surface Cache Global Illumination to bounce onto other surfaces, from none (0x) to ten times their own (10x). Only while Surface Cache Global Illumination is on.'
+        m_Value: How much light surfaces give Surface Cache Global Illumination to bounce onto other surfaces, from none (0x) to ten times their own (10x). Only while Surface Cache Global Illumination is on.
     - rid: 552786457188368451
       type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
       data:
@@ -1454,3 +1475,150 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: '{0:0.0}x'
+    - rid: 552786629739413553
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299904
+        m_Metadata:
+          m_Items: []
+        m_Value: Play Mode
+    - rid: 552786629739413554
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299905
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Forward
+    - rid: 552786629739413555
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299906
+        m_Metadata:
+          m_Items: []
+        m_Value: In Play mode, moves the player forward while held.
+    - rid: 552786629739413556
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299907
+        m_Metadata:
+          m_Items: []
+        m_Value: Move Back
+    - rid: 552786629739413557
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299908
+        m_Metadata:
+          m_Items: []
+        m_Value: In Play mode, moves the player back while held.
+    - rid: 552786629739413558
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299909
+        m_Metadata:
+          m_Items: []
+        m_Value: Sidestep Left
+    - rid: 552786629739413559
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299910
+        m_Metadata:
+          m_Items: []
+        m_Value: In Play mode, moves the player to its left while held.
+    - rid: 552786629739413560
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299911
+        m_Metadata:
+          m_Items: []
+        m_Value: Sidestep Right
+    - rid: 552786629739413561
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299912
+        m_Metadata:
+          m_Items: []
+        m_Value: In Play mode, moves the player to its right while held.
+    - rid: 552786629739413562
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299913
+        m_Metadata:
+          m_Items: []
+        m_Value: Walk
+    - rid: 552786629739413563
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299914
+        m_Metadata:
+          m_Items: []
+        m_Value: In Play mode, the player walks rather than runs while held.
+    - rid: 552786629739413564
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299915
+        m_Metadata:
+          m_Items: []
+        m_Value: Action
+    - rid: 552786629739413565
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299916
+        m_Metadata:
+          m_Items: []
+        m_Value: In Play mode, uses the door, platform, switch or terminal in front of the player and within its reach, as the game's action key does.
+    - rid: 552786629739413566
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299917
+        m_Metadata:
+          m_Items: []
+        m_Value: Swim
+    - rid: 552786629739413567
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299918
+        m_Metadata:
+          m_Items: []
+        m_Value: In Play mode, swims up while held with the player's head under a liquid.
+    - rid: 552786629739413568
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299919
+        m_Metadata:
+          m_Items: []
+        m_Value: Next Page
+    - rid: 552786629739413569
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299920
+        m_Metadata:
+          m_Items: []
+        m_Value: Reading a terminal in Play mode, goes on to its next page, or out of the terminal after its last.
+    - rid: 552786629739413570
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299921
+        m_Metadata:
+          m_Items: []
+        m_Value: Previous Page
+    - rid: 552786629739413571
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299922
+        m_Metadata:
+          m_Items: []
+        m_Value: Reading a terminal in Play mode, goes back to its previous page.
+    - rid: 552786629739413572
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299923
+        m_Metadata:
+          m_Items: []
+        m_Value: Exit
+    - rid: 552786629739413573
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 8140898210299924
+        m_Metadata:
+          m_Items: []
+        m_Value: In Play mode, leaves the terminal being read, or else Play mode itself.

@@ -3,8 +3,10 @@
 // Not ported (the running game): initializing, updating and toggling control panels
 // (initialize_control_panels_for_level, update_control_panels, change_device_state, update_action_key,
 // untoggled_repair_switches_on_level, assume_correct_switch_position, try_and_toggle_control_panel,
-// line_side_has_control_panel, find_action_key_target, ...), and control_panel_settings (and its MML).
+// find_action_key_target, ...), and control_panel_settings (and its MML). line_side_has_control_panel is ported, for
+// Play mode's action key.
 using Unity.Scripting.LifecycleManagement;
+using static AlephOne.csalerts;
 using static AlephOne.csmacros;
 using static AlephOne.cstypes;
 using static AlephOne.items;
@@ -202,6 +204,44 @@ namespace AlephOne
                     def.sounds[type] = which;
                 }
             }
+        }
+
+        // ForgePlus: for Play mode's action key
+        //tiennou: removed static for lua access
+        public static bool line_side_has_control_panel(MapLevel level, short line_index, short polygon_index, out short side_index_with_panel)
+        {
+            short side_index = NONE;
+            bool has_panel = false;
+            line_data line = get_line_data(level, line_index);
+            side_data side = null;
+
+            side_index_with_panel = NONE;
+
+            if (line.clockwise_polygon_owner == polygon_index)
+            {
+                side_index = line.clockwise_polygon_side_index;
+                if (side_index != NONE)
+                {
+                    side = get_side_data(level, side_index);
+                }
+            }
+            else
+            {
+                assert(line.counterclockwise_polygon_owner == polygon_index);
+                side_index = line.counterclockwise_polygon_side_index;
+                if (side_index != NONE)
+                {
+                    side = get_side_data(level, side_index);
+                }
+            }
+
+            if (side != null && SIDE_IS_CONTROL_PANEL(side))
+            {
+                side_index_with_panel = side_index;
+                has_panel = true;
+            }
+
+            return has_panel;
         }
 
         public static short get_panel_class(short panel_type)

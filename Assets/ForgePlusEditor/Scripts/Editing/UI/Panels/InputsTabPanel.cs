@@ -130,6 +130,18 @@ namespace ForgePlus.UI
                 new Entry("ToggleMenu", () => ForgePlusInput.Interface.ToggleMenu, InputContexts.Always),
                 new Entry("Undo", () => ForgePlusInput.Interface.Undo, InputContexts.Always),
                 new Entry("Redo", () => ForgePlusInput.Interface.Redo, InputContexts.Always)),
+            // Only in Play mode, where the others don't act
+            new Category("Play",
+                new Entry("PlayMoveForward", () => ForgePlusInput.Play.Advance, InputContexts.PlayWalk, "positive"),
+                new Entry("PlayMoveBack", () => ForgePlusInput.Play.Advance, InputContexts.PlayWalk, "negative"),
+                new Entry("PlayMoveLeft", () => ForgePlusInput.Play.Strafe, InputContexts.PlayWalk, "negative"),
+                new Entry("PlayMoveRight", () => ForgePlusInput.Play.Strafe, InputContexts.PlayWalk, "positive"),
+                new Entry("PlayWalk", () => ForgePlusInput.Play.Walk, InputContexts.PlayWalk),
+                new Entry("PlayAction", () => ForgePlusInput.Play.Action, InputContexts.PlayWalk),
+                new Entry("PlaySwim", () => ForgePlusInput.Play.Swim, InputContexts.PlayWalk),
+                new Entry("PlayNextPage", () => ForgePlusInput.Play.NextPage, InputContexts.PlayTerminal),
+                new Entry("PlayPreviousPage", () => ForgePlusInput.Play.PreviousPage, InputContexts.PlayTerminal),
+                new Entry("PlayExit", () => ForgePlusInput.Play.Exit, InputContexts.Play)),
         };
 
         private const InputContexts TextureModeContexts =

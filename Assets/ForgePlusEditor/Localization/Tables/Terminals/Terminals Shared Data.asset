@@ -337,6 +337,11 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 8140885358952448
+    m_Key: Terminals.Group.Checkpoint.Description
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

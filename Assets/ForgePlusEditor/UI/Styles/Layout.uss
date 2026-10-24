@@ -371,6 +371,46 @@
     color: var(--fp-text-bright);
 }
 
+/* ---------- Play button (left of the errors toggle) ---------- */
+
+.fp-play-button-slot {
+    position: absolute;
+    right: 60px;
+    bottom: 0;
+    width: 80px;
+    height: var(--fp-short-control-height);
+}
+
+.fp-play-button-slot > .fp-panel,
+.fp-play-button,
+.fp-play-button > * {
+    flex-grow: 1;
+}
+
+.fp-play-button {
+    flex-direction: row;
+}
+
+/* ---------- Play mode's layer (a terminal being read), the only UI shown while it's on (ForgePlusUI) ---------- */
+
+.fp-play-layer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    display: none;
+    /* A terminal takes the place of the player's view, as the game's does */
+    background-color: rgb(0, 0, 0);
+}
+
+.fp-play-layer > .fp-panel {
+    width: 1000px;
+    max-width: 90%;
+}
+
 /* ---------- Undo and Redo (in the bottom left corner, opposite the errors toggle) ---------- */
 
 .fp-history-slot {
@@ -401,9 +441,10 @@
 /* ---------- Level name ---------- */
 
 /* Beside the errors toggle */
+/* Left of the Play button */
 .fp-level-name {
     position: absolute;
-    right: 60px;
+    right: 150px;
     bottom: 2px;
     margin: 0;
     padding: 0;

@@ -912,6 +912,111 @@ MonoBehaviour:
     m_Flags: 1
     m_Metadata:
       m_Items: []
+  - m_Id: 8140898210299904
+    m_Key: InputsTab.PlayHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299905
+    m_Key: InputsTab.PlayMoveForward.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299906
+    m_Key: InputsTab.PlayMoveForward.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299907
+    m_Key: InputsTab.PlayMoveBack.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299908
+    m_Key: InputsTab.PlayMoveBack.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299909
+    m_Key: InputsTab.PlayMoveLeft.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299910
+    m_Key: InputsTab.PlayMoveLeft.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299911
+    m_Key: InputsTab.PlayMoveRight.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299912
+    m_Key: InputsTab.PlayMoveRight.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299913
+    m_Key: InputsTab.PlayWalk.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299914
+    m_Key: InputsTab.PlayWalk.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299915
+    m_Key: InputsTab.PlayAction.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299916
+    m_Key: InputsTab.PlayAction.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299917
+    m_Key: InputsTab.PlaySwim.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299918
+    m_Key: InputsTab.PlaySwim.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299919
+    m_Key: InputsTab.PlayNextPage.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299920
+    m_Key: InputsTab.PlayNextPage.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299921
+    m_Key: InputsTab.PlayPreviousPage.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299922
+    m_Key: InputsTab.PlayPreviousPage.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299923
+    m_Key: InputsTab.PlayExit.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8140898210299924
+    m_Key: InputsTab.PlayExit.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

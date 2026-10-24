@@ -1,0 +1,9 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
+    <!-- Starts Play mode (after asking), while the open level has a player start to begin at -->
+    <ui:VisualElement class="fp-play-button" picking-mode="Ignore">
+        <ui:Instance template="Button" name="play" tooltip="@Common/PlayButton.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Common/PlayButton.Text" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

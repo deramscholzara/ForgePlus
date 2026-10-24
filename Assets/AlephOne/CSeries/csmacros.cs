@@ -10,6 +10,12 @@ namespace AlephOne
         public static int MAX(int a, int b) { return ((a) >= (b) ? (a) : (b)); }
         public static int MIN(int a, int b) { return ((a) <= (b) ? (a) : (b)); }
 
+        public static int FLOOR(int n, int floor) { return ((n) < (floor) ? (floor) : (n)); }
+        public static int CEILING(int n, int ceiling) { return ((n) > (ceiling) ? (ceiling) : (n)); }
+        public static int PIN(int n, int floor, int ceiling) { return ((n) < (floor) ? (floor) : CEILING(n, ceiling)); }
+
+        public static int SGN(int x) { return ((x) != 0 ? ((x) < 0 ? -1 : 1) : 0); }
+
         // 1L<<(bit), unsigned so that FLAG(a)|FLAG(b) fits the uint flag fields
         public static uint FLAG(int bit) { return (1u << (bit)); }
         public static bool TEST_FLAG32(uint flags, int bit) { return (((flags) & FLAG(bit)) != 0); }

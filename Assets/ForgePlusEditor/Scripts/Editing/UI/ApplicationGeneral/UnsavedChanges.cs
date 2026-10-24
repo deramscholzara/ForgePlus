@@ -44,6 +44,10 @@ namespace ForgePlus.ApplicationGeneral
         // Whether to go ahead with the action: there's nothing unsaved, they were saved, or they're to be discarded
         public static async Task<bool> Confirm()
         {
+            // Play mode ends first (such as when the window's closed), so the dialog can be seen and the level's back as
+            // it was edited
+            Play.PlayThisLevel.End();
+
             if (!Exist)
             {
                 return true;

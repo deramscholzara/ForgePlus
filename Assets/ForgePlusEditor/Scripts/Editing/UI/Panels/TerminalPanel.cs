@@ -35,11 +35,23 @@ namespace ForgePlus.UI
 
         private static Texture2D staticTexture;
 
-        private TerminalsViewModel terminals;
+        // The pages shown, or null for Terminals mode's preview (ForgePlusUI.Terminals)
+        private readonly ITerminalPages pages;
+
+        private ITerminalPages terminals;
         private VisualElement screen;
         private IVisualElementScheduledItem staticAnimation;
         private float scale;
         private bool hasDrawn;
+
+        public TerminalPanel()
+        {
+        }
+
+        public TerminalPanel(ITerminalPages pages)
+        {
+            this.pages = pages;
+        }
 
         protected override string LayoutPath
         {
@@ -51,18 +63,18 @@ namespace ForgePlus.UI
 
         protected override void OnLoaded()
         {
-            terminals = ForgePlusUI.Instance.Terminals;
+            terminals = pages ?? ForgePlusUI.Instance.Terminals;
             screen = Root.Q("screen");
 
             var back = Root.Find<Button>("back");
-            back.BindEnabled(terminals, nameof(TerminalsViewModel.CanGoBack));
+            back.BindEnabled(terminals, nameof(ITerminalPages.CanGoBack));
             back.clicked += terminals.Back;
 
             var next = Root.Find<Button>("next");
-            next.BindEnabled(terminals, nameof(TerminalsViewModel.CanGoNext));
+            next.BindEnabled(terminals, nameof(ITerminalPages.CanGoNext));
             next.clicked += terminals.Next;
 
-            Root.Q<Label>("page").Bind("text", terminals, nameof(TerminalsViewModel.PageCaption));
+            Root.Q<Label>("page").Bind("text", terminals, nameof(ITerminalPages.PageCaption));
 
             screen.RegisterCallback<GeometryChangedEvent>(OnScreenGeometryChanged);
             terminals.OnPageChanged += OnPageChanged;
@@ -128,6 +140,11 @@ namespace ForgePlus.UI
                 case _pict_group:
                     AddBackground(fullScreen);
                     AddPicture(group.permutation, group.flags);
+                    AddLines(terminals.GetPageLines(), TerminalLayout.GetTextBounds(group));
+                    break;
+                case _checkpoint_group when !terminals.ShowsCheckpointMaps:
+                    AddBackground(fullScreen);
+                    AddNote(TerminalLayout.GetDirective(group), Describe(group), TerminalLayout.GetObjectBounds(group.flags));
                     AddLines(terminals.GetPageLines(), TerminalLayout.GetTextBounds(group));
                     break;
                 case _checkpoint_group:
@@ -405,6 +422,8 @@ namespace ForgePlus.UI
                     return Strings.Get(Strings.Terminals, "Terminals.Group.Track.Description", group.permutation);
                 case _camera_group:
                     return Strings.Get(Strings.Terminals, "Terminals.Group.Camera.Description", group.permutation);
+                case _checkpoint_group:
+                    return Strings.Get(Strings.Terminals, "Terminals.Group.Checkpoint.Description", group.permutation);
                 default:
                     return Strings.Get(Strings.Terminals, "Terminals.Group.Default.Description", group.type);
             }

@@ -343,6 +343,11 @@ namespace ForgePlus.Sound
         // SoundManager::PlaySound, with 3D sounds off (as Aleph One's default preferences have them)
         private void PlaySound(short soundIndex, world_location3d source)
         {
+            PlaySound(soundIndex, source, FIXED_ONE);
+        }
+
+        private void PlaySound(short soundIndex, world_location3d source, int pitch)
+        {
             var file = SoundsLoading.Instance.File;
             if (soundIndex == NONE || file == null || !isHearing)
             {
@@ -350,7 +355,7 @@ namespace ForgePlus.Sound
             }
 
             var variables = CalculateSoundVariables(file.SoundFile, soundIndex, source, soundWorld.Listener, soundWorld.sound_obstructed_proc);
-            BufferSound(soundIndex, FIXED_ONE, LevelSoundVoice.ToGain(variables.volume),
+            BufferSound(soundIndex, pitch, LevelSoundVoice.ToGain(variables.volume),
                 LevelSoundVoice.Pan(variables.left_volume, variables.right_volume), isPanning: true);
         }
 
@@ -388,6 +393,21 @@ namespace ForgePlus.Sound
         }
 
         // As play_platform_sound (platforms.cpp), from the platform's polygon
+        // As play_side_sound (sound.cpp): from the middle of the side's line, in its polygon (such as a control panel's
+        // sounds, as Play mode uses them)
+        public void PlaySideSound(short sideIndex, short soundIndex, int pitch)
+        {
+            if (!isHearing || sideIndex < 0 || sideIndex >= worldLevel.Level.SideList.Count)
+            {
+                return;
+            }
+
+            var side = worldLevel.Level.SideList[sideIndex];
+            map.calculate_line_midpoint(worldLevel.Level, side.line_index, out var midpoint);
+
+            PlaySound(soundIndex, new world_location3d { point = midpoint, polygon_index = side.polygon_index }, pitch);
+        }
+
         private void OnPlatformSound(LevelEntity_Platform platform, short soundCode, bool isExtending, bool isFullyContracted)
         {
             if (!isHearing || platform.ParentLevel != worldLevel)

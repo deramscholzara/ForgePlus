@@ -81,6 +81,14 @@ namespace ForgePlus.LevelManipulation
             }
         }
 
+        // Where the reference point's cube is, while Reference Point is on
+        public static bool TryGetReferencePoint(out Vector3 position)
+        {
+            position = point ? point.transform.position : default;
+
+            return mode == Modes.ReferencePoint && point;
+        }
+
         public static void Update()
         {
             if (mode == Modes.Off)

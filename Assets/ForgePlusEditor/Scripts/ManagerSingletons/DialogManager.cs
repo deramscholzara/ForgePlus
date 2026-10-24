@@ -34,12 +34,13 @@ namespace ForgePlus.ApplicationGeneral
             return (await DisplayQueuedDialog(title, message: null, options, optionLabels, checkboxLabel: null)).Option;
         }
 
-        // With a message, and a checkbox (if it has a label) whose state is returned with the chosen option
+        // With a message, and a checkbox (if it has a label) whose state is returned with the chosen option. Options can
+        // be grayed out, and have tooltips (ObjectSelectorDialog).
         public async Task<(string Option, bool IsChecked)> DisplayQueuedDialog(string title, string message, IList<string> options,
-            IList<string> optionLabels, string checkboxLabel)
+            IList<string> optionLabels, string checkboxLabel, IList<bool> optionsEnabled = null, IList<string> optionTooltips = null)
         {
             return await DisplayQueued(
-                () => new ObjectSelectorDialog(title, options, optionLabels, message, checkboxLabel),
+                () => new ObjectSelectorDialog(title, options, optionLabels, message, checkboxLabel, optionsEnabled, optionTooltips),
                 async dialog => (await dialog.Selection, dialog.IsChecked));
         }
 

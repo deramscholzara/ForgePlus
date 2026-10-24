@@ -16,7 +16,7 @@ namespace ForgePlus.UI
     // (a page is a group, or a screenful of a group's text), whose group is the one edited. An edit that breaks the
     // terminal (TerminalRules), or a permutation that refers to what doesn't exist, is ignored.
     [NoAutoStaticsCleanup]
-    public class TerminalsViewModel : BindableObject, IDisposable
+    public class TerminalsViewModel : BindableObject, ITerminalPages, IDisposable
     {
         // The properties that describe the terminal, group and page, which all change with the page
         private static readonly string[] PageProperties =
@@ -444,6 +444,15 @@ namespace ForgePlus.UI
             get
             {
                 return pageIndex + 1 < pages.Count;
+            }
+        }
+
+        // The preview frames the editor's camera on a checkpoint's goal
+        public bool ShowsCheckpointMaps
+        {
+            get
+            {
+                return true;
             }
         }
 

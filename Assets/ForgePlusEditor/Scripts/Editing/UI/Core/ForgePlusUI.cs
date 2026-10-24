@@ -4,6 +4,7 @@ using ForgePlus.History;
 using ForgePlus.Inspection;
 using ForgePlus.LevelManipulation;
 using ForgePlus.Localization;
+using ForgePlus.Play;
 using ForgePlus.Sound;
 using System.Collections.Generic;
 using Unity.Localization;
@@ -28,6 +29,10 @@ namespace ForgePlus.UI
 
         private VisualElement root;
         private bool isVisible = true;
+
+        // What Play mode hid (with how each was shown), and whether the UI was shown, as it began
+        private readonly List<(VisualElement Element, StyleEnum<DisplayStyle> Display)> hiddenForPlay = new List<(VisualElement, StyleEnum<DisplayStyle>)>();
+        private bool wasVisibleBeforePlay = true;
 
         private PanelSlot visualizationSlot;
         private PanelSlot inspectorSlot;
@@ -158,6 +163,7 @@ namespace ForgePlus.UI
 
             CreateSlot("header-slot").Show<HeaderPanel>();
             CreateSlot("manipulation-slot").Show<ManipulationPanel>();
+            CreateSlot("play-button-slot").Show<PlayButtonPanel>();
             CreateSlot("errors-toggle-slot").Show<ErrorsTogglePanel>();
             CreateSlot("history-slot").Show<HistoryPanel>();
 
@@ -184,6 +190,9 @@ namespace ForgePlus.UI
 
         private void OnDestroy()
         {
+            // Its inputs, cursor and camera go back as they were
+            PlayThisLevel.End();
+
             var modeManager = ModeManager.Instance;
             if (modeManager)
             {
@@ -262,6 +271,13 @@ namespace ForgePlus.UI
                 return;
             }
 
+            // Play mode has inputs of its own, and none of the editor's
+            if (PlayThisLevel.IsActive)
+            {
+                PlayThisLevel.Update();
+                return;
+            }
+
             if (Hotkeys.WasPressed(ForgePlusInput.Interface.ToggleUI))
             {
                 SetVisible(!isVisible);
@@ -331,6 +347,44 @@ namespace ForgePlus.UI
         {
             isVisible = visible;
             root.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
+        }
+
+        // Play mode shows nothing of the UI but its own layer (which it shows a terminal in, while one's read), even if
+        // the UI was hidden. Afterward, everything is shown (or hidden) as it was. Returns the Play layer.
+        public VisualElement SetPlaying(bool isPlaying)
+        {
+            var playLayer = root.Q("play-layer");
+
+            if (isPlaying)
+            {
+                wasVisibleBeforePlay = isVisible;
+                SetVisible(true);
+
+                hiddenForPlay.Clear();
+                for (var shown = playLayer; shown != root && shown.parent != null; shown = shown.parent)
+                {
+                    foreach (var sibling in shown.parent.Children())
+                    {
+                        if (sibling != shown)
+                        {
+                            hiddenForPlay.Add((sibling, sibling.style.display));
+                            sibling.style.display = DisplayStyle.None;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var (element, display) in hiddenForPlay)
+                {
+                    element.style.display = display;
+                }
+
+                hiddenForPlay.Clear();
+                SetVisible(wasVisibleBeforePlay);
+            }
+
+            return playLayer;
         }
 
         // The menu's, or the Errors panel's

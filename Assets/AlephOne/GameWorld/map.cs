@@ -1,8 +1,8 @@
 ﻿// Port of Aleph One: Source_Files/GameWorld/map.h, and the map-data parts of map.cpp
 //
 // Not ported (runtime only): object_data, dynamic_data and game_data (saved games), map objects and
-// their polygon lists, animation, sounds, rendering, collision (keep_line_segment_out_of_walls, ...; but
-// line_is_obstructed and its helpers are, for sounds), the automap, and the MARATHON.C,
+// their polygon lists, animation, sounds, rendering, collision with objects (keep_line_segment_out_of_walls and
+// its helpers are, for ForgePlus's Play mode, as are line_is_obstructed and its, for sounds), the automap, and the MARATHON.C,
 // PLACEMENT.C, DEVICES.C and GAME_WAD.C prototypes (those an editor needs are in their own files).
 using System;
 using static AlephOne.csalerts;
@@ -1405,6 +1405,280 @@ namespace AlephOne
             /* adjust the line */
             e0.x = unchecked((short) (e0.x + dx)); e0.y = unchecked((short) (e0.y + dy));
             e1.x = unchecked((short) (e1.x + dx)); e1.y = unchecked((short) (e1.y + dy));
+        }
+
+        /* closest_point may be the same as p; if we're within 1 of our source point in either
+            direction assume that we are actually at the source point */
+        public static int closest_point_on_line(world_point2d e0, world_point2d e1, world_point2d p, out world_point2d closest_point)
+        {
+            short line_dx, line_dy, dx, dy;
+            world_point2d calculated_closest_point;
+            int numerator, denominator;
+            int t;
+
+            /* calculate dx,dy and line_dx,line_dy */
+            dx = unchecked((short) (p.x - e0.x)); dy = unchecked((short) (p.y - e0.y));
+            line_dx = unchecked((short) (e1.x - e0.x)); line_dy = unchecked((short) (e1.y - e0.y));
+
+            /* same comment as above for calculating t; this is not wholly accurate */
+            numerator = line_dx * dx + line_dy * dy;
+            denominator = line_dx * line_dx + line_dy * line_dy;
+            while (numerator >= (1 << 23) || numerator <= -(1 << 23)) { numerator >>= 1; denominator >>= 1; }
+            numerator <<= 8;
+            if ((denominator >>= 8) == 0) denominator = 1;
+            t = numerator / denominator;
+
+            /* if we've only changed by ±1 in x and y, return the original p to avoid sliding down
+                the edge on successive calls */
+            calculated_closest_point.x = unchecked((short) (e0.x + FIXED_INTEGERAL_PART(unchecked(t * line_dx))));
+            calculated_closest_point.y = unchecked((short) (e0.y + FIXED_INTEGERAL_PART(unchecked(t * line_dy))));
+            switch (calculated_closest_point.x - p.x)
+            {
+                case -1:
+                case 0:
+                case 1:
+                    switch (calculated_closest_point.y - p.y)
+                    {
+                        case -1:
+                        case 0:
+                        case 1:
+                            calculated_closest_point = p;
+                            break;
+                    }
+                    break;
+            }
+            closest_point = calculated_closest_point;
+
+            return t;
+        }
+
+        public static void closest_point_on_circle(world_point2d c, short radius, world_point2d p, out world_point2d closest_point)
+        {
+            short dx = unchecked((short) (p.x - c.x));
+            short dy = unchecked((short) (p.y - c.y));
+            short magnitude = unchecked((short) isqrt(unchecked((uint) (dx * dx + dy * dy))));
+
+            if (magnitude != 0)
+            {
+                closest_point.x = unchecked((short) (c.x + (dx * radius) / magnitude));
+                closest_point.y = unchecked((short) (c.y + (dy * radius) / magnitude));
+            }
+            else
+            {
+                closest_point = p;
+            }
+        }
+
+        /* keep out states */
+        private const short _first_line_pass = 0;
+        private const short _second_line_pass = 1; /* if _first_line_pass yeilded more than one collision we have to go back
+            and make sure we don't hit anything (or only hit one thing which we hit the first time) */
+        private const short _second_line_pass_made_contact = 2; /* we've already hit one thing we hit last time, if we hit
+            anything else then we abort */
+        private const short _aborted = 3; /* if we hit two lines on the second pass, we give up */
+        private const short _point_pass = 4; /* checking against all points (and hit as many as we can) */
+
+        /* returns height at clipped p1 */
+        public static bool keep_line_segment_out_of_walls(MapLevel level,
+            short polygon_index, /* where we started */
+            world_point3d p0,
+            ref world_point3d p1,
+            short maximum_delta_height, /* the maximum positive change in height we can tolerate */
+            short height, /* the height of the object being moved */
+            out short adjusted_floor_height,
+            out short adjusted_ceiling_height,
+            out short supporting_polygon_index)
+        {
+            polygon_data polygon = get_polygon_data(level, polygon_index);
+            int indexes = get_map_indexes(level, polygon.first_exclusion_zone_index, (short) (polygon.line_exclusion_zone_count + polygon.point_exclusion_zone_count));
+            int line_collision_bitmap;
+            bool clipped = false;
+            short state;
+            short i;
+
+            supporting_polygon_index = polygon_index;
+            adjusted_floor_height = polygon.floor_height;
+            adjusted_ceiling_height = polygon.ceiling_height;
+
+            // Skip the whole thing if exclusion-zone indexes were not found
+            if (indexes == NONE)
+            {
+                polygon.line_exclusion_zone_count = 0;
+                polygon.point_exclusion_zone_count = 0;
+                return clipped;
+            }
+
+            state = _first_line_pass;
+            line_collision_bitmap = 0;
+            do
+            {
+                for (i = 0; i < polygon.line_exclusion_zone_count && state != _aborted; ++i)
+                {
+                    short signed_line_index = level.MapIndexList[indexes + i];
+                    short unsigned_line_index = signed_line_index < 0 ? (short) (-signed_line_index - 1) : signed_line_index;
+
+                    // If there is some map-index screwup...
+                    if (unsigned_line_index >= level.LineList.Count)
+                        continue;
+
+                    line_data line = get_line_data(level, unsigned_line_index);
+                    short side_index = signed_line_index < 0 ? line.counterclockwise_polygon_side_index : line.clockwise_polygon_side_index;
+
+                    if (side_index != NONE)
+                    {
+                        side_exclusion_zone zone = get_side_data(level, side_index).exclusion_zone;
+
+                        if ((p1.x - zone.e0.x) * (zone.e1.y - zone.e0.y) - (p1.y - zone.e0.y) * (zone.e1.x - zone.e0.x) > 0 &&
+                            (p1.x - zone.e2.x) * (zone.e0.y - zone.e2.y) - (p1.y - zone.e2.y) * (zone.e0.x - zone.e2.x) > 0 &&
+                            (p1.x - zone.e1.x) * (zone.e3.y - zone.e1.y) - (p1.y - zone.e1.y) * (zone.e3.x - zone.e1.x) > 0)
+                        {
+                            short adjacent_polygon_index = signed_line_index < 0 ? line.clockwise_polygon_owner : line.counterclockwise_polygon_owner;
+                            polygon_data adjacent_polygon = adjacent_polygon_index == NONE ? null : get_polygon_data(level, adjacent_polygon_index);
+                            short lowest_ceiling;
+                            short highest_floor;
+
+                            if (adjacent_polygon != null)
+                            {
+                                lowest_ceiling = adjacent_polygon.ceiling_height < polygon.ceiling_height ? adjacent_polygon.ceiling_height : polygon.ceiling_height;
+                                highest_floor = adjacent_polygon.floor_height > polygon.floor_height ? adjacent_polygon.floor_height : polygon.floor_height;
+                            }
+                            else
+                            {
+                                lowest_ceiling = highest_floor = 0;
+                            }
+
+                            /* if a) this line is solid, b) the new polygon is farther than maximum_delta height
+                                above our feet, or c) the new polygon is lower than the top of our head then
+                                we can't move into the new polygon */
+                            if (LINE_IS_SOLID(line) || adjacent_polygon == null ||
+                                adjacent_polygon.floor_height - p1.z > maximum_delta_height ||
+                                adjacent_polygon.ceiling_height - p1.z < height ||
+                                lowest_ceiling - highest_floor < height)
+                            {
+                                var clipped_point = p1.xy();
+
+                                switch (state)
+                                {
+                                    case _first_line_pass:
+                                        /* first pass: set the flag and do the clip */
+                                        line_collision_bitmap |= 1 << i;
+                                        closest_point_on_line(zone.e0, zone.e1, clipped_point, out clipped_point);
+                                        clipped = true;
+                                        break;
+
+                                    case _second_line_pass:
+                                        if ((line_collision_bitmap & (1 << i)) != 0)
+                                        {
+                                            /* we hit this line before, change states (we can only hit one thing we hit before) */
+                                            closest_point_on_line(zone.e0, zone.e1, clipped_point, out clipped_point);
+                                            state = _second_line_pass_made_contact;
+                                        }
+                                        else
+                                        {
+                                            /* forget it; we hit something we didn't hit the first time */
+                                            state = _aborted;
+                                        }
+                                        break;
+
+                                    case _second_line_pass_made_contact:
+                                        /* we have no tolerance for hitting two things during the second pass */
+                                        state = _aborted;
+                                        break;
+
+                                    default:
+                                        assert(false);
+                                        break;
+                                }
+
+                                p1.x = clipped_point.x;
+                                p1.y = clipped_point.y;
+                            }
+                            else
+                            {
+                                if (adjacent_polygon.floor_height > adjusted_floor_height)
+                                {
+                                    adjusted_floor_height = adjacent_polygon.floor_height;
+                                    supporting_polygon_index = adjacent_polygon_index;
+                                }
+                                if (adjacent_polygon.ceiling_height > adjusted_ceiling_height)
+                                {
+                                    adjusted_ceiling_height = adjacent_polygon.ceiling_height;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                switch (state)
+                {
+                    case _first_line_pass:
+                        state = _second_line_pass; break;
+                    case _second_line_pass:
+                    case _second_line_pass_made_contact:
+                        state = _point_pass; break;
+                }
+            }
+            while (state == _second_line_pass);
+
+            /* if we didn't abort while clipping lines, try clipping against points... */
+            if (state != _aborted)
+            {
+                for (i = 0; i < polygon.point_exclusion_zone_count; ++i)
+                {
+                    short endpoint_index = level.MapIndexList[indexes + polygon.line_exclusion_zone_count + i];
+
+                    // If there is some map-index screwup...
+                    if (endpoint_index < 0 || endpoint_index >= level.EndpointList.Count)
+                        continue;
+
+                    endpoint_data endpoint = get_endpoint_data(level, endpoint_index);
+                    short dx = unchecked((short) (endpoint.vertex.x - p1.x));
+                    short dy = unchecked((short) (endpoint.vertex.y - p1.y));
+                    int distance_squared = dx * dx + dy * dy;
+
+                    if (distance_squared < MINIMUM_SEPARATION_FROM_WALL * MINIMUM_SEPARATION_FROM_WALL)
+                    {
+                        if (endpoint.highest_adjacent_floor_height - p1.z > maximum_delta_height ||
+                            endpoint.lowest_adjacent_ceiling_height - p1.z < height ||
+                            ENDPOINT_IS_SOLID(endpoint))
+                        {
+                            closest_point_on_circle(endpoint.vertex, MINIMUM_SEPARATION_FROM_WALL, p1.xy(), out var clipped_point);
+                            p1.x = clipped_point.x;
+                            p1.y = clipped_point.y;
+                            clipped = true;
+                        }
+                        else
+                        {
+                            if (endpoint.highest_adjacent_floor_height > adjusted_floor_height)
+                            {
+                                adjusted_floor_height = endpoint.highest_adjacent_floor_height;
+                                supporting_polygon_index = endpoint.supporting_polygon_index;
+                            }
+                            if (endpoint.lowest_adjacent_ceiling_height > adjusted_ceiling_height) adjusted_ceiling_height = endpoint.lowest_adjacent_ceiling_height;
+                        }
+                    }
+                }
+            }
+
+            if (state == _aborted) { p1.x = p0.x; p1.y = p0.y; }
+            return clipped;
+        }
+
+        /* given the ray p0,theta,d, calculate a point p1 such that p1 is on the ray but still inside
+            the [-32k,32k] bounds of our map. p0 can be the same as p1 */
+        public static void ray_to_line_segment(world_point2d p0, out world_point2d p1, short theta, short d)
+        {
+            short dx = cosine_table[theta], dy = sine_table[theta];
+            int x = (int) p0.x + (int) ((d * dx) >> TRIG_SHIFT);
+            int y = (int) p0.y + (int) ((d * dy) >> TRIG_SHIFT);
+
+            if (x < INT16_MIN) { x = INT16_MIN; y = (int) p0.y + (dy * (INT16_MIN - p0.x)) / dx; }
+            if (x > INT16_MAX) { x = INT16_MAX; y = (int) p0.y + (dy * (INT16_MAX - p0.x)) / dx; }
+            if (y < INT16_MIN) { y = INT16_MIN; x = (int) p0.x + (dx * (INT16_MIN - p0.y)) / dy; }
+            if (y > INT16_MAX) { y = INT16_MAX; x = (int) p0.x + (dx * (INT16_MAX - p0.y)) / dy; }
+
+            p1.x = (short) x;
+            p1.y = (short) y;
         }
 
         /* computes the squared distance from p to the line segment e0e1 */

@@ -3,7 +3,8 @@
 // Not ported (the running platform state machine): update_platforms, platform_was_entered,
 // try_and_change_platform_state, try_and_change_tagged_platform_states, set_platform_state,
 // monster_can_enter/leave_platform, player_touch_platform_state, platform_is_legal_player_target,
-// platform_is_at_initial_state, adjust_platform_for_media, and the MML for key items and damage. Which sound a platform plays
+// platform_is_at_initial_state, adjust_platform_for_media, and the MML for key items and damage. adjust_platform_endpoint_and_line_heights
+// is ported, for Play mode (which moves platforms in a copy of the level). Which sound a platform plays
 // (play_platform_sound) is ported, as get_platform_sound, but not playing it.
 using System.Collections.Generic;
 using Unity.Scripting.LifecycleManagement;
@@ -619,6 +620,72 @@ namespace AlephOne
             // polygon->ceiling_height= platform->ceiling_height;
             // adjust_platform_endpoint_and_line_heights(platform_index);
             // adjust_platform_for_media(platform_index, true);
+        }
+
+        // ForgePlus: for Play mode, which moves platforms' polygons in a copy of the level (never the edited one)
+        public static void adjust_platform_endpoint_and_line_heights(MapLevel level, short platform_index)
+        {
+            platform_data platform = get_platform_data(level, platform_index);
+            polygon_data polygon = get_polygon_data(level, platform.polygon_index);
+            short i;
+
+            for (i = 0; i < polygon.vertex_count; ++i)
+            {
+                endpoint_data endpoint = get_endpoint_data(level, polygon.endpoint_indexes[i]);
+                line_data line = get_line_data(level, polygon.line_indexes[i]);
+                short polygon_count = platform.endpoint_owners[i].polygon_index_count;
+                int polygon_indexes = get_map_indexes(level, platform.endpoint_owners[i].first_polygon_index, polygon_count);
+                short line_count = platform.endpoint_owners[i].line_index_count;
+                int line_indexes = get_map_indexes(level, platform.endpoint_owners[i].first_line_index, line_count);
+                short lowest_adjacent_ceiling = 0, highest_adjacent_floor = 0, supporting_polygon_index = NONE;
+                polygon_data adjacent_polygon;
+                short j;
+
+                /* adjust line heights and set proper line transparency and solidity */
+                // Skip this step if line indexes were not found
+                if (polygon.adjacent_polygon_indexes[i] != NONE && line_indexes != NONE)
+                {
+                    adjacent_polygon = get_polygon_data(level, polygon.adjacent_polygon_indexes[i]);
+                    line.highest_adjacent_floor = (short) MAX(polygon.floor_height, adjacent_polygon.floor_height);
+                    line.lowest_adjacent_ceiling = (short) MIN(polygon.ceiling_height, adjacent_polygon.ceiling_height);
+
+                    /* only worry about transparency and solidity if there's a polygon on the other side */
+                    if (LINE_IS_VARIABLE_ELEVATION(line))
+                    {
+                        SET_LINE_TRANSPARENCY(line, line.highest_adjacent_floor < line.lowest_adjacent_ceiling);
+                        SET_LINE_SOLIDITY(line, line.highest_adjacent_floor >= line.lowest_adjacent_ceiling);
+                    }
+
+                    /* and only if there is another polygon does this endpoint have a chance of being transparent */
+                    for (j = 0; j < line_count; ++j) if (LINE_IS_SOLID(get_line_data(level, level.MapIndexList[line_indexes + j]))) break;
+                    SET_ENDPOINT_SOLIDITY(endpoint, (j != line_count));
+
+                    /* and only if there is another polygon does this endpoint have a chance of being transparent */
+                    for (j = 0; j < line_count; ++j) if (!LINE_IS_TRANSPARENT(get_line_data(level, level.MapIndexList[line_indexes + j]))) break;
+                    SET_ENDPOINT_TRANSPARENCY(endpoint, (j == line_count));
+                }
+                else
+                {
+                    line.highest_adjacent_floor = polygon.floor_height;
+                    line.lowest_adjacent_ceiling = polygon.ceiling_height;
+                }
+
+                /* adjust endpoint heights */
+                // Skip this step if no polygon indexes were found
+                if (polygon_indexes != NONE)
+                {
+                    for (j = 0; j < polygon_count; ++j)
+                    {
+                        short adjacent_polygon_index = level.MapIndexList[polygon_indexes + j];
+                        adjacent_polygon = get_polygon_data(level, adjacent_polygon_index);
+                        if (j == 0 || highest_adjacent_floor < adjacent_polygon.floor_height) { highest_adjacent_floor = adjacent_polygon.floor_height; supporting_polygon_index = adjacent_polygon_index; }
+                        if (j == 0 || lowest_adjacent_ceiling > adjacent_polygon.ceiling_height) lowest_adjacent_ceiling = adjacent_polygon.ceiling_height;
+                    }
+                }
+                endpoint.highest_adjacent_floor_height = highest_adjacent_floor;
+                endpoint.lowest_adjacent_ceiling_height = lowest_adjacent_ceiling;
+                endpoint.supporting_polygon_index = supporting_polygon_index;
+            }
         }
 
         // ForgePlus: the static data export_tag_to_global_array_and_size() (game_wad.cpp) saves for a platform, when the

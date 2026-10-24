@@ -87,7 +87,8 @@ namespace ForgePlus.History
         {
             isEditMarked = false;
 
-            if (trackedData.Count == 0 || UndoHistory.IsUndoingOrRedoing)
+            // Play mode shows control panels' states on the level's sides until it ends (PlayWorld), which isn't an edit
+            if (trackedData.Count == 0 || UndoHistory.IsUndoingOrRedoing || Play.PlayThisLevel.IsActive)
             {
                 return;
             }

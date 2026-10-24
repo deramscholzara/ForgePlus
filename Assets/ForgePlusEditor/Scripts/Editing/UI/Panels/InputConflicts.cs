@@ -49,9 +49,18 @@ namespace ForgePlus.UI
         // Dragging a field's label in the UI to change its value
         ValueDrag = 1 << 11,
 
+        // Walking around in Play mode
+        PlayWalk = 1 << 12,
+
+        // Reading a terminal in Play mode
+        PlayTerminal = 1 << 13,
+
         // Any press of Select in the level
         WorldPointer = WorldClick | RectangleSelect | GeometryDrag | ObjectDrag | Draw | TextureClick | TextureDragStart |
                        TextureDrag,
+
+        // Play mode, where no other inputs act (not even those that always do otherwise)
+        Play = PlayWalk | PlayTerminal,
     }
 
     // Which of the inputs' bindings conflict: two bindings conflict when they're the same key or button (or the same
@@ -123,6 +132,11 @@ namespace ForgePlus.UI
 
         private static bool Overlaps(InputContexts first, InputContexts second)
         {
+            if (((first | second) & InputContexts.Play) != 0)
+            {
+                return (first & second & InputContexts.Play) != 0;
+            }
+
             return (first & second) != 0 || (first & InputContexts.Always) != 0 || (second & InputContexts.Always) != 0;
         }
 
