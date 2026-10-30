@@ -253,6 +253,11 @@
     flex-wrap: wrap;
 }
 
+/* Set apart from the tab above it */
+.fp-level-delete {
+    margin-top: 10px;
+}
+
 .fp-level-tabs__tab {
     height: var(--fp-short-control-height);
     margin: 0 4px 4px 0;

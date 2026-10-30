@@ -5,6 +5,7 @@ using ForgePlus.DataFileIO.Extensions;
 using ForgePlus.Extensions;
 using ForgePlus.LevelManipulation;
 using ForgePlus.Localization;
+using RuntimeCore.Entities;
 using SFB;
 using System;
 using System.IO;
@@ -87,6 +88,68 @@ namespace ForgePlus.DataFileIO
 
             return MapsFile.Levels.Count - 1;
         }
+
+        // Whether the open level can be deleted: a map file must keep at least one level
+        public bool CanDeleteOpenLevel
+        {
+            get
+            {
+                return LevelEntity_Level.Instance && MapsFile != null && OpenLevelIndex >= 0 && MapsFile.Levels.Count > 1;
+            }
+        }
+
+        // The open level, after asking, taken out of the loaded map file (which is saved right away, so it can't be undone),
+        // and then closed (dropping its unsaved edits). If the map file can't be saved, the level stays open, edits and all.
+        // Completes with whether it was deleted.
+        public async Task<bool> DeleteOpenLevel()
+        {
+            if (!CanDeleteOpenLevel)
+            {
+                return false;
+            }
+
+            Play.PlayThisLevel.End();
+
+            var levelIndex = OpenLevelIndex;
+            var levelName = MapsFile.Levels[levelIndex].GetLevelName();
+
+            var result = await DialogManager.Instance.DisplayQueuedDialog(
+                title: Strings.Get(Strings.Common, "Dialog.DeleteLevel.Title"),
+                message: Strings.Get(Strings.Common, "Dialog.DeleteLevel.Message", levelName),
+                options: new[] { DeleteLevelOption },
+                optionLabels: new[] { Strings.Get(Strings.Common, "Dialog.DeleteLevel.Confirm") },
+                checkboxLabel: null);
+
+            if (result.Option != DeleteLevelOption || data == null || OpenLevelIndex != levelIndex)
+            {
+                return false;
+            }
+
+            UIBlocking.Instance.Block();
+
+            try
+            {
+                data.DeleteLevel(levelIndex);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError($"Attempt to delete level {levelIndex} from \"{FileSettings.Instance.GetFilePath(DataFileTypes.Maps)}\" failed with exception: {exception}");
+                return false;
+            }
+            finally
+            {
+                UIBlocking.Instance.Unblock();
+            }
+
+            CloseLevel();
+
+            // The directory was reread from the saved file, so the names changed even if closing didn't change them
+            OnLevelNamesChanged?.Invoke();
+
+            return true;
+        }
+
+        private const string DeleteLevelOption = "Delete";
 
         // The level name (Mac Roman, with room for its NUL), which can't be blank
         private static async Task<string> AskForLevelName(string title, string message)

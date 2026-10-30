@@ -7,6 +7,7 @@
     <ui:Template name="DropdownRow" src="../Templates/InspectorDropdownRow.uxml" />
     <ui:Template name="TextBlock" src="../Templates/InspectorTextBlock.uxml" />
     <ui:Template name="RadioToggle" src="../Templates/RadioToggle.uxml" />
+    <ui:Template name="Button" src="../Templates/Button.uxml" />
     <!-- Bound to Inspector_Level, which shows the tab (tab-*) chosen in the tabs -->
     <ui:VisualElement class="fp-inspector">
         <ui:Instance template="Header">
@@ -202,5 +203,8 @@
             </ui:Instance>
             <ui:Instance template="TextBlock" name="LuaText" />
         </ui:VisualElement>
+        <ui:Instance template="Button" name="delete-level" class="fp-inspector-action fp-level-delete" tooltip="@Level/Inspector.Level.DeleteLevel.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Level/Inspector.Level.DeleteLevel.Control.Text" />
+        </ui:Instance>
     </ui:VisualElement>
 </ui:UXML>

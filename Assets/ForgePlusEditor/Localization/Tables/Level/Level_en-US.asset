@@ -139,6 +139,8 @@ MonoBehaviour:
   - rid: 552786204080472218
   - rid: 552786204080472219
   - rid: 552786204080472220
+  - rid: 552786749222813753
+  - rid: 552786749222813754
   references:
     version: 2
     RefIds:
@@ -996,3 +998,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: How big the level's Lua script is, kept and saved as it was loaded
+    - rid: 552786749222813753
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10101589125251072
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete Level
+    - rid: 552786749222813754
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10101589133639680
+        m_Metadata:
+          m_Items: []
+        m_Value: Deletes this level from the map file, which is saved right away (so it can't be undone), and closes it, discarding its unsaved edits. Later levels move up one, along with their chapter screens, and other levels' terminals are updated to match. Unavailable for the map file's only level, since a map file must have at least one.

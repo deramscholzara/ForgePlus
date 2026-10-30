@@ -590,6 +590,9 @@ MonoBehaviour:
   - rid: 552786630167494707
   - rid: 552786749222813702
   - rid: 552786749222813703
+  - rid: 552786749222813755
+  - rid: 552786749222813756
+  - rid: 552786749222813757
   references:
     version: 2
     RefIds:
@@ -4608,3 +4611,24 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: 'Fills the space under media with fog, seen from inside or outside it, and from above through its surface. Each media type''s fog color and density are in the Settings tab. Only shown while media is. Display only: nothing is saved in the level.'
+    - rid: 552786749222813755
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10101601028685824
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete Level
+    - rid: 552786749222813756
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10101601028685825
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete "{0}" from the map file? The map file is saved right away, so this can't be undone, and the level's unsaved edits are discarded. Later levels move up one, and other levels' terminals that teleport to them are updated to match.
+    - rid: 552786749222813757
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10101601028685826
+        m_Metadata:
+          m_Items: []
+        m_Value: Delete

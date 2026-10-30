@@ -525,6 +525,15 @@
     margin: 0 5px 10px 5px;
 }
 
+/* Dark text on the value color, as the inspector's fields are (rather than the dialog's light text) */
+.fp-dialog__text-field > .unity-base-text-field__input {
+    margin: 0;
+    padding: 0 5px;
+    background-color: var(--fp-value-area);
+    color: var(--fp-value-text);
+    -unity-text-align: middle-left;
+}
+
 .fp-dialog__buttons {
     flex-direction: row;
 }

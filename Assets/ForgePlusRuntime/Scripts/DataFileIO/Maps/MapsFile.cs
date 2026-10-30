@@ -15,6 +15,10 @@ namespace ForgePlus.DataFileIO
         // Deepest first: its 32-bit, 16-bit and 8-bit versions (images.cpp: _scenario_file_delta32/16)
         public static readonly short[] ChapterScreenDepthOffsets = { 20000, 10000, 0 };
 
+        // An inter-level teleport to this ends the game (interface.cpp: EPILOGUE_LEVEL_NUMBER), as Marathon Infinity's last
+        // terminals use it
+        public const short EpilogueLevel = 256;
+
         private static readonly uint[] PhysicsTags =
         {
             tags.MONSTER_PHYSICS_TAG, tags.EFFECTS_PHYSICS_TAG, tags.PROJECTILE_PHYSICS_TAG, tags.PHYSICS_PHYSICS_TAG,
@@ -195,6 +199,100 @@ namespace ForgePlus.DataFileIO
 
             var savePath = File.GetPath();
             Save(savePath, saveFile => game_wad.save_levels(saveFile, levels));
+        }
+
+        // The level, taken out of the file, with the others saved as they are in the file (as AddLevel does). Later levels
+        // move up one, so their chapter screens' pictures (and color tables) are renumbered to follow them, and the level's
+        // own are left out. The other levels' terminals are kept pointing where they did: their inter-level teleports to
+        // later levels, and their pictures that were renumbered. Its contents change, so its checksum is regenerated.
+        // Afterward, this refers to the saved file.
+        public void DeleteLevel(int deletedLevelIndex)
+        {
+            if (deletedLevelIndex < 0 || deletedLevelIndex >= Levels.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(deletedLevelIndex));
+            }
+
+            if (Levels.Count <= 1)
+            {
+                throw new InvalidOperationException("A map file must have at least one level.");
+            }
+
+            var oldLevelCount = Levels.Count;
+
+            // The ID the resource has once the level's gone (or null, if it's left out)
+            short? NewResourceId(uint type, short id)
+            {
+                if (Forks.IsResourceRemoved(type, id))
+                {
+                    return null;
+                }
+
+                if (type != MacResourceFork.PictType && type != MacResourceFork.ClutType)
+                {
+                    return id;
+                }
+
+                foreach (var offset in ChapterScreenDepthOffsets)
+                {
+                    var levelIndex = id - ChapterScreenBase - offset;
+                    if (levelIndex >= 0 && levelIndex < oldLevelCount)
+                    {
+                        if (levelIndex == deletedLevelIndex)
+                        {
+                            return null;
+                        }
+
+                        return levelIndex > deletedLevelIndex ? (short) (id - 1) : id;
+                    }
+                }
+
+                return id;
+            }
+
+            var levels = new List<MapLevel>(oldLevelCount - 1);
+            for (var levelIndex = 0; levelIndex < oldLevelCount; levelIndex++)
+            {
+                if (levelIndex == deletedLevelIndex)
+                {
+                    continue;
+                }
+
+                // Only pictures that are renumbered (which needs an editable resource fork that has them)
+                var level = LoadLevel(levelIndex);
+                RetargetTerminals(level, deletedLevelIndex, pictId => Forks.CanEditResources && Forks.ResourceFork.Has(MacResourceFork.PictType, pictId) ? NewResourceId(MacResourceFork.PictType, pictId) : pictId);
+                levels.Add(level);
+            }
+
+            var resourceFork = Forks.ResourceFork?.Rebuild(NewResourceId);
+
+            var savePath = File.GetPath();
+            Save(savePath, saveFile => game_wad.save_levels(saveFile, levels), resourceFork);
+        }
+
+        // Inter-level teleports past the deleted level go one level lower (one to the deleted level now goes to the level
+        // that followed it), and pictures go to their new IDs (a picture that's left out stays as it was)
+        private static void RetargetTerminals(MapLevel level, int deletedLevelIndex, Func<short, short?> newPictId)
+        {
+            foreach (var terminal in level.map_terminal_text)
+            {
+                foreach (var group in terminal.groupings)
+                {
+                    switch (group.type)
+                    {
+                        case computer_interface._interlevel_teleport_group:
+                            if (group.permutation > deletedLevelIndex && group.permutation != EpilogueLevel)
+                            {
+                                group.permutation--;
+                            }
+
+                            break;
+                        case computer_interface._pict_group:
+                            group.permutation = newPictId(group.permutation) ?? group.permutation;
+                            break;
+                    }
+                }
+            }
         }
 
         private int CountEmbeddedPhysicsLevels()

@@ -98,6 +98,19 @@ namespace ForgePlus.DataFileIO
             file.AddLevel(level);
         }
 
+        // MapsFile.DeleteLevel, for a level that isn't open (or the open one, just before it's closed)
+        public void DeleteLevel(int levelIndex)
+        {
+            LoadData();
+
+            if (file == null)
+            {
+                throw new IOException($"Tried deleting a level with no Maps file loaded.");
+            }
+
+            file.DeleteLevel(levelIndex);
+        }
+
         public void SaveMerged(string savePath, bool keepChecksum)
         {
             if (currentlyOpenLevel == null)

@@ -12,9 +12,6 @@ namespace ForgePlus.UI
     // falling back to #UNFINISHED: next_terminal_group), and read on until a group ends it or its groups run out.
     public static class TerminalRules
     {
-        // interface.cpp: EPILOGUE_LEVEL_NUMBER, which ends the game (as Marathon Infinity's last terminals use it)
-        private const short EpilogueLevel = 256;
-
         private static readonly short[] SectionStartTypes = { _unfinished_group, _success_group, _failure_group };
 
         public enum GroupKind
@@ -189,7 +186,7 @@ namespace ForgePlus.UI
                 case _interlevel_teleport_group:
                 {
                     var mapsFile = MapsLoading.Instance.MapsFile;
-                    return mapsFile == null || permutation == EpilogueLevel || (permutation >= 0 && permutation < mapsFile.Levels.Count);
+                    return mapsFile == null || permutation == MapsFile.EpilogueLevel || (permutation >= 0 && permutation < mapsFile.Levels.Count);
                 }
                 case _intralevel_teleport_group:
                     return !level || (permutation >= 0 && permutation < level.Level.PolygonList.Count);

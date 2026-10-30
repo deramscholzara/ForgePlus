@@ -715,8 +715,15 @@ namespace ForgePlus.Inspection
 
             ShowTab(selectedTab);
 
+            var deleteButton = Root.Find<Button>("delete-level");
+            deleteButton.BindEnabled(this, nameof(CanDeleteLevel));
+            deleteButton.clicked += DeleteLevel;
+
             // Saving reloads the map file, which no longer has a chapter screen that was turned off
             MapsLoading.Instance.OnSaveCompleted += OnSaveCompleted;
+
+            // A level added to the map file can make this one deletable
+            MapsLoading.Instance.OnLevelNamesChanged += RefreshValuesInInspector;
         }
 
         protected override void OnUnloading()
@@ -724,6 +731,30 @@ namespace ForgePlus.Inspection
             base.OnUnloading();
 
             MapsLoading.Instance.OnSaveCompleted -= OnSaveCompleted;
+            MapsLoading.Instance.OnLevelNamesChanged -= RefreshValuesInInspector;
+        }
+
+        // Grayed out for the map file's only level, since a map file must have at least one
+        [CreateProperty]
+        public bool CanDeleteLevel
+        {
+            get
+            {
+                return MapsLoading.Instance.CanDeleteOpenLevel;
+            }
+        }
+
+        // The level's closed once it's deleted, so the Files tab is shown, to open another
+        private static async void DeleteLevel()
+        {
+            if (!await MapsLoading.Instance.DeleteOpenLevel())
+            {
+                return;
+            }
+
+            var editor = ForgePlusUI.Instance.Editor;
+            editor.MenuTabIndex = 0;
+            editor.MenuOpen = true;
         }
 
         private static string EnvironmentChoice(short code)

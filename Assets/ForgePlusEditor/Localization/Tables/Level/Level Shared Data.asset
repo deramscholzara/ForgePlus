@@ -627,6 +627,16 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 10101589125251072
+    m_Key: Inspector.Level.DeleteLevel.Control.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10101589133639680
+    m_Key: Inspector.Level.DeleteLevel.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:
