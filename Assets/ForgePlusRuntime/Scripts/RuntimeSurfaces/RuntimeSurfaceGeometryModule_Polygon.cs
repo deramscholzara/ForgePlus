@@ -39,9 +39,16 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void AssembleSurface()
         {
-            // Note: ApplyTextureOffset() & ApplyTransferMode() will be run due to vertex
-            //       count change being detected during ApplyPositionsAndTriangles()
-            ApplyPositionsAndTriangles();
+            // Its whole mesh is written at once, alongside the level's other surfaces' as it's built (SurfaceMeshBatch)
+            SurfaceMeshBatch.Add(SurfaceMesh,
+                                 BuildPositions(),
+                                 BuildTriangles(),
+                                 BuildTextureUVs(),
+                                 meshOuterLayerUVs: null,
+                                 ambientDelta: 0f,
+                                 normalsFaceUp: dataSource == LevelEntity_Polygon.DataSources.Media);
+
+            ApplyTransferMode();
             ApplyTransformPosition();
 
             ApplyPlatform();
@@ -56,82 +63,16 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyPositionsAndTriangles()
         {
-            var positions = new Vector3[polygonEntity.NativeObject.vertex_count];
-            var triangles = new int[(polygonEntity.NativeObject.vertex_count - 2) * (dataSource == LevelEntity_Polygon.DataSources.Media ? 6 : 3)];
+            var positions = BuildPositions();
 
-            // Using Collapsing Convex-Polygon Traversal for speediness reasons
-            for (int earlyVertexIndex = 0, lateVertexIndex = polygonEntity.NativeObject.vertex_count - 1, currentTriangleIndex = 0;
-                 earlyVertexIndex <= lateVertexIndex;
-                 earlyVertexIndex++, lateVertexIndex--)
-            {
-                AssignVertexPosition(earlyVertexIndex, polygonEntity.NativeObject, positions);
-
-                if (earlyVertexIndex < lateVertexIndex)
-                {
-                    // Vertex-traversal has not intersected, so continue
-                    AssignVertexPosition(lateVertexIndex, polygonEntity.NativeObject, positions);
-
-                    // Note: only need to rebuild triangles if the vertex count changed
-                    if (polygonEntity.NativeObject.vertex_count != SurfaceMesh.vertexCount &&
-                        earlyVertexIndex + 1 < lateVertexIndex)
-                    {
-                        // Vertex-traversal is not on the final vertices, so continue
-                        AssignTriangle(earlyVertexIndex,
-                                       lateVertexIndex,
-                                       currentTriangleIndex,
-                                       triangles,
-                                       reverseOrder: dataSource == LevelEntity_Polygon.DataSources.Ceiling);
-
-                        currentTriangleIndex += 3;
-
-                        if (dataSource == LevelEntity_Polygon.DataSources.Media)
-                        {
-                            // Backside triangles for media
-                            AssignTriangle(earlyVertexIndex,
-                                           lateVertexIndex,
-                                           currentTriangleIndex,
-                                           triangles,
-                                           reverseOrder: true);
-
-                            currentTriangleIndex += 3;
-                        }
-
-                        if (earlyVertexIndex + 1 < lateVertexIndex - 1)
-                        {
-                            // Vertex traversal is not about to intersect, so continue
-                            AssignTriangle(earlyVertexIndex,
-                                           lateVertexIndex,
-                                           currentTriangleIndex,
-                                           triangles,
-                                           isLateTriangle: true,
-                                           reverseOrder: dataSource == LevelEntity_Polygon.DataSources.Ceiling);
-
-                            currentTriangleIndex += 3;
-
-                            if (dataSource == LevelEntity_Polygon.DataSources.Media)
-                            {
-                                // Backside triangles for media
-                                AssignTriangle(earlyVertexIndex,
-                                               lateVertexIndex,
-                                               currentTriangleIndex,
-                                               triangles,
-                                               isLateTriangle: true,
-                                               reverseOrder: true);
-
-                                currentTriangleIndex += 3;
-                            }
-                        }
-                    }
-                }
-            }
-
-            var vertexCountChanged = polygonEntity.NativeObject.vertex_count != SurfaceMesh.vertexCount;
+            var vertexCountChanged = positions.Length != SurfaceMesh.vertexCount;
 
             SurfaceMesh.SetVertices(positions);
 
+            // Triangles only need rebuilding if the vertex count changed
             if (vertexCountChanged)
             {
-                SurfaceMesh.SetTriangles(triangles, submesh: 0);
+                SurfaceMesh.SetTriangles(BuildTriangles(), submesh: 0);
 
                 ApplyTextureOffset();
                 ApplyTransferMode();
@@ -283,26 +224,8 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyTextureOffset(bool innerLayer = true)
         {
-            Vector2[] UVs;
+            var UVs = BuildTextureUVs();
 
-            switch (dataSource)
-            {
-                case LevelEntity_Polygon.DataSources.Floor:
-                    UVs = BuildUVs(polygonEntity.NativeObject.floor_origin.x, polygonEntity.NativeObject.floor_origin.y);
-                    break;
-
-                case LevelEntity_Polygon.DataSources.Ceiling:
-                    UVs = BuildUVs(polygonEntity.NativeObject.ceiling_origin.x, polygonEntity.NativeObject.ceiling_origin.y);
-                    break;
-
-                case LevelEntity_Polygon.DataSources.Media:
-                    UVs = BuildUVs(0, 0);
-                    break;
-
-                default:
-                    throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
-            }
-            
             SurfaceMesh.SetUVs(channel: 0, UVs);
 
             // Polygons have no ambient delta, but a mesh missing the channel leaves shaders that read it (SimpleVisuals)
@@ -485,19 +408,83 @@ namespace RuntimeCore.Entities.Geometry
                     throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
 
-            // PhysX can't make a collider from a surface with no area ("cleaning the mesh failed"); one is added if it
-            // gets some (RuntimeSurfaceGeometry.ApplyShape)
-            if (RuntimeSurfaceGeometry.HasArea(SurfaceMesh))
-            {
-                SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
-            }
+            // One is added later if it has no area yet but gets some (RuntimeSurfaceGeometry.ApplyShape)
+            AddColliderOnceWritten();
         }
 
-        private void AssignVertexPosition(int vertexIndex, polygon_data polygon, Vector3[] vertexPositions)
+        private Vector3[] BuildPositions()
         {
-            var endpointIndex = polygon.endpoint_indexes[vertexIndex];
+            var polygon = polygonEntity.NativeObject;
+            var positions = new Vector3[polygon.vertex_count];
 
-            vertexPositions[vertexIndex] = GeometryUtilities.GetMeshVertex(polygonEntity.ParentLevel.Level, endpointIndex);
+            for (var i = 0; i < positions.Length; i++)
+            {
+                positions[i] = GeometryUtilities.GetMeshVertex(polygonEntity.ParentLevel.Level, polygon.endpoint_indexes[i]);
+            }
+
+            return positions;
+        }
+
+        private int[] BuildTriangles()
+        {
+            var vertexCount = polygonEntity.NativeObject.vertex_count;
+            var isMedia = dataSource == LevelEntity_Polygon.DataSources.Media;
+            var isCeiling = dataSource == LevelEntity_Polygon.DataSources.Ceiling;
+            var triangles = new int[(vertexCount - 2) * (isMedia ? 6 : 3)];
+
+            // Using Collapsing Convex-Polygon Traversal for speediness reasons, until the traversal reaches the final vertices
+            for (int earlyVertexIndex = 0, lateVertexIndex = vertexCount - 1, currentTriangleIndex = 0;
+                 earlyVertexIndex + 1 < lateVertexIndex;
+                 earlyVertexIndex++, lateVertexIndex--)
+            {
+                AssignTriangle(earlyVertexIndex,
+                               lateVertexIndex,
+                               currentTriangleIndex,
+                               triangles,
+                               reverseOrder: isCeiling);
+
+                currentTriangleIndex += 3;
+
+                if (isMedia)
+                {
+                    // Backside triangles for media
+                    AssignTriangle(earlyVertexIndex,
+                                   lateVertexIndex,
+                                   currentTriangleIndex,
+                                   triangles,
+                                   reverseOrder: true);
+
+                    currentTriangleIndex += 3;
+                }
+
+                if (earlyVertexIndex + 1 < lateVertexIndex - 1)
+                {
+                    // Vertex traversal is not about to intersect, so continue
+                    AssignTriangle(earlyVertexIndex,
+                                   lateVertexIndex,
+                                   currentTriangleIndex,
+                                   triangles,
+                                   isLateTriangle: true,
+                                   reverseOrder: isCeiling);
+
+                    currentTriangleIndex += 3;
+
+                    if (isMedia)
+                    {
+                        // Backside triangles for media
+                        AssignTriangle(earlyVertexIndex,
+                                       lateVertexIndex,
+                                       currentTriangleIndex,
+                                       triangles,
+                                       isLateTriangle: true,
+                                       reverseOrder: true);
+
+                        currentTriangleIndex += 3;
+                    }
+                }
+            }
+
+            return triangles;
         }
 
         private void AssignTriangle(int earlyVertexIndex, int lateVertexIndex, int currentTriangleIndex, int[] triangles, bool reverseOrder = false, bool isLateTriangle = false)
@@ -520,6 +507,24 @@ namespace RuntimeCore.Entities.Geometry
                 var firstIndex = triangles[currentTriangleIndex];
                 triangles[currentTriangleIndex] = triangles[currentTriangleIndex + 2];
                 triangles[currentTriangleIndex + 2] = firstIndex;
+            }
+        }
+
+        private Vector2[] BuildTextureUVs()
+        {
+            switch (dataSource)
+            {
+                case LevelEntity_Polygon.DataSources.Floor:
+                    return BuildUVs(polygonEntity.NativeObject.floor_origin.x, polygonEntity.NativeObject.floor_origin.y);
+
+                case LevelEntity_Polygon.DataSources.Ceiling:
+                    return BuildUVs(polygonEntity.NativeObject.ceiling_origin.x, polygonEntity.NativeObject.ceiling_origin.y);
+
+                case LevelEntity_Polygon.DataSources.Media:
+                    return BuildUVs(0, 0);
+
+                default:
+                    throw new NotImplementedException($"DataSource '{dataSource}' is not implemented.");
             }
         }
 

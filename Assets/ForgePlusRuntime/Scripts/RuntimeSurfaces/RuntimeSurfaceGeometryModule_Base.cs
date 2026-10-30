@@ -46,9 +46,13 @@ namespace RuntimeCore.Entities.Geometry
             return level.Lights.TryGetValue(lightIndex, out var light) ? light : null;
         }
 
+        // Those its renderer has (kept, so they needn't be read back from it)
+        private Material[] rendererMaterials;
+
         public void ApplyRendererMaterials()
         {
-            SurfaceRenderer.sharedMaterials = SurfaceMaterials.Get(MaterialKey);
+            rendererMaterials = SurfaceMaterials.Get(MaterialKey);
+            SurfaceRenderer.sharedMaterials = rendererMaterials;
 
             ApplySurfaceCacheAdmission();
         }
@@ -56,7 +60,20 @@ namespace RuntimeCore.Entities.Geometry
         // Whether Surface Cache Global Illumination takes it in, after its materials or size change
         public void ApplySurfaceCacheAdmission()
         {
-            SurfaceCacheAdmission.Admit(SurfaceRenderer, IsExcludedFromSurfaceCache());
+            SurfaceCacheAdmission.Admit(SurfaceRenderer, rendererMaterials, IsExcludedFromSurfaceCache());
+        }
+
+        // Once its mesh is written (SurfaceMeshBatch), as PhysX can't make a collider from a surface with no area
+        // ("cleaning the mesh failed")
+        protected void AddColliderOnceWritten()
+        {
+            SurfaceMeshBatch.AfterWriting(() =>
+            {
+                if (SurfaceRenderer && RuntimeSurfaceGeometry.HasArea(SurfaceMesh))
+                {
+                    SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
+                }
+            });
         }
 
         // Placeholders (an unassigned texture, or a texture that's missing) give it nothing worth bouncing

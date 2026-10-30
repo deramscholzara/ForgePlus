@@ -14,7 +14,7 @@ namespace ForgePlus.ApplicationGeneral
     // texture and shader) for each combination of source materials, lights, media and transfer mode looks, shared by every
     // surface with that combination. A light sets its intensity on its own copies, a media sets its flow on its own copy,
     // a transfer mode sets its keywords and speeds on its own copies (TransferModeLook), and Simple Visuals swaps all of
-    // their shaders (SimpleVisuals). They're forgotten as the level closes.
+    // their shaders (SimpleVisuals). They're forgotten as the level closes, and reused by the next level's surfaces.
     [AutoStaticsCleanup]
     public static partial class SurfaceMaterials
     {
@@ -74,6 +74,11 @@ namespace ForgePlus.ApplicationGeneral
 
         private static readonly Dictionary<Key, Material[]> materials = new Dictionary<Key, Material[]>();
 
+        // The last closed level's materials, by shader, to be given new properties rather than made again (as copying a
+        // material's properties onto one costs a fraction of making one). Those the next level doesn't reuse are destroyed
+        // as it closes.
+        private static readonly Dictionary<Shader, Stack<Material>> unusedMaterials = new Dictionary<Shader, Stack<Material>>();
+
         // Whether the materials are forgotten as this Play session's levels close
         private static bool isForgettingOnLevelClose;
 
@@ -131,8 +136,8 @@ namespace ForgePlus.ApplicationGeneral
             }
 
             keyMaterials = key.LayeredTransparentSideSourceMaterial ?
-                           new[] { new Material(key.SourceMaterial), new Material(key.LayeredTransparentSideSourceMaterial) } :
-                           new[] { new Material(key.SourceMaterial) };
+                           new[] { Copy(key.SourceMaterial), Copy(key.LayeredTransparentSideSourceMaterial) } :
+                           new[] { Copy(key.SourceMaterial) };
 
             materials[key] = keyMaterials;
 
@@ -160,6 +165,28 @@ namespace ForgePlus.ApplicationGeneral
             }
 
             return keyMaterials;
+        }
+
+        // A closed level's material with the same shader, if there's one left, otherwise a new one. Copying the source's
+        // properties also copies its keywords, render queue and global illumination flags.
+        private static Material Copy(Material sourceMaterial)
+        {
+            if (unusedMaterials.TryGetValue(sourceMaterial.shader, out var unused))
+            {
+                while (unused.Count > 0)
+                {
+                    var material = unused.Pop();
+                    if (material)
+                    {
+                        material.CopyPropertiesFromMaterial(sourceMaterial);
+                        material.name = sourceMaterial.name;
+
+                        return material;
+                    }
+                }
+            }
+
+            return new Material(sourceMaterial);
         }
 
         public static void SetSimpleVisualsEnabled(bool enabled)
@@ -212,6 +239,7 @@ namespace ForgePlus.ApplicationGeneral
         private static void ResetStatics()
         {
             materials.Clear();
+            unusedMaterials.Clear();
             isForgettingOnLevelClose = false;
             SurfaceCacheAdmission.Forget();
             StopRefreshing();
@@ -289,6 +317,40 @@ namespace ForgePlus.ApplicationGeneral
 
         private static void Forget()
         {
+            // Those the closed level didn't reuse are destroyed, and its own are kept for the next level. (Those Simple
+            // Visuals has given its shader are kept by it, so none reuses them, and they're destroyed as the next closes.)
+            foreach (var unused in unusedMaterials.Values)
+            {
+                foreach (var material in unused)
+                {
+                    if (material)
+                    {
+                        UnityEngine.Object.Destroy(material);
+                    }
+                }
+
+                unused.Clear();
+            }
+
+            foreach (var keyMaterials in materials.Values)
+            {
+                foreach (var material in keyMaterials)
+                {
+                    if (!material)
+                    {
+                        continue;
+                    }
+
+                    if (!unusedMaterials.TryGetValue(material.shader, out var unused))
+                    {
+                        unused = new Stack<Material>();
+                        unusedMaterials.Add(material.shader, unused);
+                    }
+
+                    unused.Push(material);
+                }
+            }
+
             materials.Clear();
             StopRefreshing();
             SimpleVisuals.Forget();

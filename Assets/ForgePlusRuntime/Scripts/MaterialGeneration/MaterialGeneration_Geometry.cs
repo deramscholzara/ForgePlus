@@ -90,6 +90,10 @@ namespace RuntimeCore.Materials
         private static readonly Dictionary<ushort, Material> LandscapeMaterials = new Dictionary<ushort, Material>(4);
         private static readonly Dictionary<ushort, Material> MediaMaterials = new Dictionary<ushort, Material>(5);
 
+        // The texture each of those materials was last given, as reading a material's texture back from it costs far more
+        // than a lookup, and every surface's material is looked up as a level's built
+        private static readonly Dictionary<Material, Texture2D> AssignedTextures = new Dictionary<Material, Texture2D>(255);
+
         public static IDictionary<ushort, Texture2D> GetAllLoadedTextures()
         {
             return Textures;
@@ -223,11 +227,11 @@ namespace RuntimeCore.Materials
         {
             if (!shapeDescriptor.IsEmptyShapeDescriptor())
             {
-                if (TextureUsageCounter.ContainsKey(shapeDescriptor))
+                if (TextureUsageCounter.TryGetValue(shapeDescriptor, out var usageCount))
                 {
                     if (incrementUsageCounter)
                     {
-                        TextureUsageCounter[shapeDescriptor]++;
+                        TextureUsageCounter[shapeDescriptor] = usageCount + 1;
                     }
                 }
                 else
@@ -301,6 +305,7 @@ namespace RuntimeCore.Materials
             TransparentLayeredOuterMaterials.Clear();
             LandscapeMaterials.Clear();
             MediaMaterials.Clear();
+            AssignedTextures.Clear();
 
             StaticMaterials.Clear();
 
@@ -373,6 +378,7 @@ namespace RuntimeCore.Materials
             foreach (var material in materials.Values)
             {
                 material.mainTexture = null;
+                AssignedTextures.Remove(material);
                 ApplyMmlMaps(material, bumpMap: null, glowMap: null);
             }
         }
@@ -448,12 +454,7 @@ namespace RuntimeCore.Materials
 
         private static Material GetTrackedMaterial(ushort shapeDescriptor, Texture2D textureToUse, Shader shaderToUse, IDictionary<ushort, Material> trackedMaterials)
         {
-            Material material;
-            if (trackedMaterials.ContainsKey(shapeDescriptor))
-            {
-                material = trackedMaterials[shapeDescriptor];
-            }
-            else
+            if (!trackedMaterials.TryGetValue(shapeDescriptor, out var material))
             {
                 material = CreateMaterial(shaderToUse);
                 trackedMaterials[shapeDescriptor] = material;
@@ -461,9 +462,12 @@ namespace RuntimeCore.Materials
                 SetSurfaceCacheEmission(material);
             }
 
-            if (material.mainTexture != textureToUse)
+            // A material that's never been given one has none
+            AssignedTextures.TryGetValue(material, out var assignedTexture);
+            if (!ReferenceEquals(assignedTexture, textureToUse))
             {
                 material.mainTexture = textureToUse;
+                AssignedTextures[material] = textureToUse;
                 material.name = $"Collection({shapeDescriptor.GetCollection()}) Bitmap({shapeDescriptor.GetShape()})";
 
                 ApplyMmlMaps(material,

@@ -68,8 +68,9 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
-        // After a surface's materials or size change
-        public static void Admit(MeshRenderer renderer, bool isExcluded)
+        // After a surface's materials or size change. Its materials, if they're known (null otherwise), save reading them
+        // back from the renderer.
+        public static void Admit(MeshRenderer renderer, IReadOnlyList<Material> materials, bool isExcluded)
         {
             surfaceRenderers.Add(renderer);
             Release(renderer);
@@ -83,7 +84,7 @@ namespace ForgePlus.ApplicationGeneral
 
             excludedRenderers.Remove(renderer);
 
-            Place(renderer);
+            Place(renderer, materials);
 
             if (isEnabled)
             {
@@ -101,19 +102,25 @@ namespace ForgePlus.ApplicationGeneral
         }
 
         // Held out while it has materials not let in yet (and Surface Cache Global Illumination is on), otherwise let in
-        private static void Place(MeshRenderer renderer)
+        private static void Place(MeshRenderer renderer, IReadOnlyList<Material> materials = null)
         {
+            if (materials == null)
+            {
+                renderer.GetSharedMaterials(rendererMaterials);
+                materials = rendererMaterials;
+            }
+
             if (!isEnabled)
             {
-                LetIn(renderer);
+                LetIn(renderer, materials);
                 return;
             }
 
             HashSet<Material> waitingOn = null;
 
-            renderer.GetSharedMaterials(rendererMaterials);
-            foreach (var material in rendererMaterials)
+            for (var i = 0; i < materials.Count; i++)
             {
+                var material = materials[i];
                 if (material && !admittedMaterials.Contains(material))
                 {
                     waitingOn ??= materialSetPool.Count > 0 ? materialSetPool.Pop() : new HashSet<Material>();
@@ -123,7 +130,7 @@ namespace ForgePlus.ApplicationGeneral
 
             if (waitingOn == null)
             {
-                LetIn(renderer);
+                LetIn(renderer, materials);
                 return;
             }
 
@@ -144,24 +151,34 @@ namespace ForgePlus.ApplicationGeneral
             }
         }
 
-        private static void LetIn(MeshRenderer renderer)
+        // Its materials are read from it if they aren't given
+        private static void LetIn(MeshRenderer renderer, IReadOnlyList<Material> materials = null)
         {
             SetRenderingLayer(renderer, SurfaceCacheRenderingLayers.Included);
 
             // Its own list, as letting in the renderers that were only waiting on these materials lets them in here too
-            var materials = materialListPool.Count > 0 ? materialListPool.Pop() : new List<Material>();
-            renderer.GetSharedMaterials(materials);
-
-            foreach (var material in materials)
+            List<Material> readMaterials = null;
+            if (materials == null)
             {
+                readMaterials = materialListPool.Count > 0 ? materialListPool.Pop() : new List<Material>();
+                renderer.GetSharedMaterials(readMaterials);
+                materials = readMaterials;
+            }
+
+            for (var i = 0; i < materials.Count; i++)
+            {
+                var material = materials[i];
                 if (material && admittedMaterials.Add(material))
                 {
                     LetInRenderersWaitingOnlyOn(material);
                 }
             }
 
-            materials.Clear();
-            materialListPool.Push(materials);
+            if (readMaterials != null)
+            {
+                readMaterials.Clear();
+                materialListPool.Push(readMaterials);
+            }
         }
 
         // A material that's in now brings in no new material with the renderers that were only waiting on it

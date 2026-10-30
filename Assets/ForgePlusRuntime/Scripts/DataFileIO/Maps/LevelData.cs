@@ -250,55 +250,65 @@ namespace ForgePlus.DataFileIO
 
             #endregion Initialization_Medias
 
-            #region Polygons_And_Media
-
-            var buildPolygonsStartTime = DateTime.Now;
-
-            var polygonsGroupGO = new GameObject("Polygons");
-            polygonsGroupGO.transform.SetParent(runtimeLevel.transform);
-
-            for (short polygonIndex = 0; polygonIndex < level.PolygonList.Count; polygonIndex++)
+            // Every surface's mesh is written together once they've all been added (SurfaceMeshBatch)
+            var writeSurfaceMeshesStartTime = DateTime.Now;
+            using (SurfaceMeshBatch.Open())
             {
-                var polygon = level.PolygonList[polygonIndex];
+                #region Polygons_And_Media
 
-                var polygonRootGO = new GameObject($"Polygon ({polygonIndex})");
-                polygonRootGO.transform.SetParent(polygonsGroupGO.transform);
+                var buildPolygonsStartTime = DateTime.Now;
 
-                var runtimePolygon = polygonRootGO.AddComponent<LevelEntity_Polygon>();
-                runtimeLevel.Polygons[polygonIndex] = runtimePolygon;
-                runtimePolygon.InitializeEntity(runtimeLevel, polygonIndex, polygon);
+                var polygonsGroupGO = new GameObject("Polygons");
+                polygonsGroupGO.transform.SetParent(runtimeLevel.transform);
+
+                for (short polygonIndex = 0; polygonIndex < level.PolygonList.Count; polygonIndex++)
+                {
+                    var polygon = level.PolygonList[polygonIndex];
+
+                    var polygonRootGO = new GameObject($"Polygon ({polygonIndex})");
+                    polygonRootGO.transform.SetParent(polygonsGroupGO.transform);
+
+                    var runtimePolygon = polygonRootGO.AddComponent<LevelEntity_Polygon>();
+                    runtimeLevel.Polygons[polygonIndex] = runtimePolygon;
+                    runtimePolygon.InitializeEntity(runtimeLevel, polygonIndex, polygon);
+                }
+
+                Debug.Log($"--- LevelBuild: Built Polygons, Medias, & Platforms in timespan: {DateTime.Now - buildPolygonsStartTime}");
+
+                #endregion Polygons_And_Media
+
+                #region Lines_And_Sides
+
+                var buildSidesStartTime = DateTime.Now;
+
+                var linesGroupGO = new GameObject("Lines");
+                linesGroupGO.transform.SetParent(runtimeLevel.transform);
+
+                for (short lineIndex = 0; lineIndex < level.LineList.Count; lineIndex++)
+                {
+                    GameObject lineRootGO = new GameObject($"Line ({lineIndex})");
+                    lineRootGO.transform.SetParent(linesGroupGO.transform);
+
+                    var line = level.LineList[lineIndex];
+
+                    var runtimeLine = lineRootGO.AddComponent<LevelEntity_Line>();
+                    runtimeLevel.Lines[lineIndex] = runtimeLine;
+                    runtimeLine.NativeIndex = lineIndex;
+                    runtimeLine.NativeObject = line;
+                    runtimeLine.ParentLevel = runtimeLevel;
+
+                    runtimeLine.GenerateSurfaces();
+                }
+
+                Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
+
+                // Written as the batch closes
+                writeSurfaceMeshesStartTime = DateTime.Now;
+
+                #endregion Lines_And_Sides
             }
 
-            Debug.Log($"--- LevelBuild: Built Polygons, Medias, & Platforms in timespan: {DateTime.Now - buildPolygonsStartTime}");
-
-            #endregion Polygons_And_Media
-
-            #region Lines_And_Sides
-
-            var buildSidesStartTime = DateTime.Now;
-
-            var linesGroupGO = new GameObject("Lines");
-            linesGroupGO.transform.SetParent(runtimeLevel.transform);
-
-            for (short lineIndex = 0; lineIndex < level.LineList.Count; lineIndex++)
-            {
-                GameObject lineRootGO = new GameObject($"Line ({lineIndex})");
-                lineRootGO.transform.SetParent(linesGroupGO.transform);
-
-                var line = level.LineList[lineIndex];
-
-                var runtimeLine = lineRootGO.AddComponent<LevelEntity_Line>();
-                runtimeLevel.Lines[lineIndex] = runtimeLine;
-                runtimeLine.NativeIndex = lineIndex;
-                runtimeLine.NativeObject = line;
-                runtimeLine.ParentLevel = runtimeLevel;
-
-                runtimeLine.GenerateSurfaces();
-            }
-
-            Debug.Log($"--- LevelBuild: Built Lines & Sides in timespan: {DateTime.Now - buildSidesStartTime}");
-
-            #endregion Lines_And_Sides
+            Debug.Log($"--- LevelBuild: Wrote surface meshes & colliders in timespan: {DateTime.Now - writeSurfaceMeshesStartTime}");
 
             #region Objects_And_Placements
 

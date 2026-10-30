@@ -34,6 +34,9 @@ namespace RuntimeCore.Entities.Geometry
         private static readonly Vector3[] ScratchPositions = new Vector3[4];
         private static readonly Vector2[] ScratchUVs = new Vector2[4];
 
+        // Vertex order: bottom-left, top-left, top-right, bottom-right
+        private static readonly int[] QuadTriangles = { 0, 1, 2, 2, 3, 0 };
+
         // Sides smaller than this (in square world units) are left out of Surface Cache Global Illumination
         private const float MinimumSurfaceCacheArea = 0.1f;
 
@@ -171,30 +174,37 @@ namespace RuntimeCore.Entities.Geometry
                 Debug.Log($"Null Side: {sideEntity.name}", sideEntity);
             }
 
-            ApplyPositionsAndTriangles();
+            fullSizePositions = BuildFullSizePositions();
             ApplyTransformPosition();
 
             ApplyPlatform();
 
-            ApplyTextureOffset(innerLayer: true);
+            // Copied, as they're built in a shared scratch array
+            var textureUVs = (Vector2[])BuildTextureUVs(innerLayer: true).Clone();
             ApplyTransferMode(innerLayer: true);
             ApplyLight(innerLayer: true);
             ApplySourceMaterial(innerLayer: true);
 
-            // Tangents follow the UVs, which didn't exist yet when ApplyPositionsAndTriangles calculated them
-            SurfaceMesh.RecalculateTangents(MeshUpdateFlags.DontNotifyMeshUsers |
-                                            MeshUpdateFlags.DontRecalculateBounds |
-                                            MeshUpdateFlags.DontResetBoneBounds);
-
+            Vector2[] outerLayerUVs = null;
             if (sideEntity.NativeObject.HasLayeredTransparentSide(sideEntity.ParentLevel.Level))
             {
-                ApplyTextureOffset(innerLayer: false);
+                outerLayerUVs = (Vector2[])BuildTextureUVs(innerLayer: false).Clone();
                 ApplyTransferMode(innerLayer: false);
                 ApplyLight(innerLayer: false);
                 ApplySourceMaterial(innerLayer: false);
             }
 
-            ApplyAmbientDelta();
+            // Its whole mesh is written at once, alongside the level's other surfaces' as it's built (SurfaceMeshBatch)
+            SurfaceMeshBatch.Add(SurfaceMesh,
+                                 fullSizePositions,
+                                 QuadTriangles,
+                                 textureUVs,
+                                 outerLayerUVs,
+                                 AmbientDelta,
+                                 normalsFaceUp: false);
+
+            // Clipping must be applied to the new geometry
+            InvalidatePlatformClipping();
 
             ApplyRendererMaterials();
 
@@ -203,32 +213,10 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyPositionsAndTriangles()
         {
-            var line = Line;
-
-            var endpointIndexA = sideEntity.IsClockwise ? line.endpoint_indexes[0] : line.endpoint_indexes[1];
-            var endpointIndexB = sideEntity.IsClockwise ? line.endpoint_indexes[1] : line.endpoint_indexes[0];
-
-            var bottomPosition = (short)(LowElevation - HighElevation);
-
-            var positions = new Vector3[]
-            {
-                GeometryUtilities.GetMeshVertex(sideEntity.ParentLevel.Level, endpointIndexA, bottomPosition),
-                GeometryUtilities.GetMeshVertex(sideEntity.ParentLevel.Level, endpointIndexA),
-                GeometryUtilities.GetMeshVertex(sideEntity.ParentLevel.Level, endpointIndexB),
-                GeometryUtilities.GetMeshVertex(sideEntity.ParentLevel.Level, endpointIndexB, bottomPosition)
-            };
-
-            var triangles = new int[6];
-
-            triangles[0] = 0;
-            triangles[1] = 1;
-            triangles[2] = 2;
-            triangles[3] = 2;
-            triangles[4] = 3;
-            triangles[5] = 0;
+            var positions = BuildFullSizePositions();
 
             SurfaceMesh.SetVertices(positions);
-            SurfaceMesh.SetTriangles(triangles, submesh: 0);
+            SurfaceMesh.SetTriangles(QuadTriangles, submesh: 0);
 
             SurfaceMesh.RecalculateNormals(MeshUpdateFlags.DontNotifyMeshUsers |
                                            MeshUpdateFlags.DontRecalculateBounds |
@@ -242,6 +230,25 @@ namespace RuntimeCore.Entities.Geometry
 
             // Clipping must be reapplied to the new geometry
             InvalidatePlatformClipping();
+        }
+
+        // Vertex order: bottom-left, top-left, top-right, bottom-right
+        private Vector3[] BuildFullSizePositions()
+        {
+            var line = Line;
+
+            var endpointIndexA = sideEntity.IsClockwise ? line.endpoint_indexes[0] : line.endpoint_indexes[1];
+            var endpointIndexB = sideEntity.IsClockwise ? line.endpoint_indexes[1] : line.endpoint_indexes[0];
+
+            var bottomPosition = (short)(LowElevation - HighElevation);
+
+            return new Vector3[]
+            {
+                GeometryUtilities.GetMeshVertex(sideEntity.ParentLevel.Level, endpointIndexA, bottomPosition),
+                GeometryUtilities.GetMeshVertex(sideEntity.ParentLevel.Level, endpointIndexA),
+                GeometryUtilities.GetMeshVertex(sideEntity.ParentLevel.Level, endpointIndexB),
+                GeometryUtilities.GetMeshVertex(sideEntity.ParentLevel.Level, endpointIndexB, bottomPosition)
+            };
         }
 
         public override void ApplyTransformPosition()
@@ -494,39 +501,38 @@ namespace RuntimeCore.Entities.Geometry
 
         public override void ApplyTextureOffset(bool innerLayer)
         {
-            Vector2[] UVs;
-
-            var bottom = (float)(LowElevation - HighElevation);
-
-            if (sideEntity.NativeObject == null)
-            {
-                UVs = BuildUVs(0, 0f, bottom, 0f);
-
-                SurfaceMesh.SetUVs(channel: 0, UVs);
-            }
-            else
-            {
-                // A platform's own sides are aligned as when it's open (when they can be seen), and other sides
-                // as with the platforms where the level starts them (UpdatePlatformClipping keeps them aligned)
-                GetAlephOneSurface(FacingPolygonIsPlatform ? PlatformHeights.Open : PlatformHeights.Initial,
-                                   PlatformHeights.Initial,
-                                   innerLayer,
-                                   out _,
-                                   out _,
-                                   out var textureAnchor);
-
-                // Relative to the top of the surface, where its transform is
-                textureAnchor -= HighElevation;
-
-                UVs = BuildUVs(GetTexture(innerLayer).x0, textureAnchor, bottom, 0f);
-
-                SurfaceMesh.SetUVs(channel: innerLayer ? 0 : 1, UVs);
-            }
+            // A null side only has the one layer
+            SurfaceMesh.SetUVs(channel: sideEntity.NativeObject == null || innerLayer ? 0 : 1, BuildTextureUVs(innerLayer));
 
             if (innerLayer)
             {
                 InvalidatePlatformClipping();
             }
+        }
+
+        // For the full size surface. Returns the shared scratch array (BuildUVs).
+        private Vector2[] BuildTextureUVs(bool innerLayer)
+        {
+            var bottom = (float)(LowElevation - HighElevation);
+
+            if (sideEntity.NativeObject == null)
+            {
+                return BuildUVs(0, 0f, bottom, 0f);
+            }
+
+            // A platform's own sides are aligned as when it's open (when they can be seen), and other sides
+            // as with the platforms where the level starts them (UpdatePlatformClipping keeps them aligned)
+            GetAlephOneSurface(FacingPolygonIsPlatform ? PlatformHeights.Open : PlatformHeights.Initial,
+                               PlatformHeights.Initial,
+                               innerLayer,
+                               out _,
+                               out _,
+                               out var textureAnchor);
+
+            // Relative to the top of the surface, where its transform is
+            textureAnchor -= HighElevation;
+
+            return BuildUVs(GetTexture(innerLayer).x0, textureAnchor, bottom, 0f);
         }
 
         public override void ApplyTransferMode(bool innerLayer)
@@ -571,13 +577,22 @@ namespace RuntimeCore.Entities.Geometry
             MaterialKey = modifiedMaterialKey;
         }
 
-        // Applies to both layers of a layered transparent side. Aleph One pins the lit result to between dark and full
-        // (render.c: render_node_side), so a delta past full light either way is clamped here.
+        // Aleph One pins the lit result to between dark and full (render.c: render_node_side), so a delta past full light
+        // either way is clamped
+        private float AmbientDelta
+        {
+            get
+            {
+                return sideEntity.NativeObject == null ?
+                       0f :
+                       Mathf.Clamp((float)sideEntity.NativeObject.ambient_delta / cstypes.FIXED_ONE, -1f, 1f);
+            }
+        }
+
+        // Applies to both layers of a layered transparent side
         public void ApplyAmbientDelta()
         {
-            var ambientDelta = sideEntity.NativeObject == null ?
-                               0f :
-                               Mathf.Clamp((float)sideEntity.NativeObject.ambient_delta / cstypes.FIXED_ONE, -1f, 1f);
+            var ambientDelta = AmbientDelta;
 
             var uv4 = ScratchUVs;
             for (var i = 0; i < uv4.Length; i++)
@@ -672,11 +687,10 @@ namespace RuntimeCore.Entities.Geometry
 
             sideEntity.ParentLevel.EditableSurface_Sides.Add(sideSurface);
 
-            // PhysX can't make a collider from a surface with no area ("cleaning the mesh failed"), as a side of a line with
-            // no length (or no height) has
-            if (HighElevation > LowElevation && RuntimeSurfaceGeometry.HasArea(SurfaceMesh))
+            // Not for a side of a line with no length (or no height), which has no area
+            if (HighElevation > LowElevation)
             {
-                SurfaceRenderer.gameObject.AddComponent<MeshCollider>();
+                AddColliderOnceWritten();
             }
         }
 
