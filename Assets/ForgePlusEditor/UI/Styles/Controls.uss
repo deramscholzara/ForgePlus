@@ -314,6 +314,24 @@
     color: var(--fp-control-text);
 }
 
+/* ---------- Color field (a number field's row, with a swatch at its end) ---------- */
+
+.fp-color-row {
+    flex-direction: row;
+    background-color: var(--fp-slider-background);
+}
+
+.fp-color-row__field {
+    flex-grow: 1;
+}
+
+.fp-color-row__swatch {
+    width: 40px;
+    margin: 5px 5px 5px 0;
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.3);
+}
+
 /* ---------- Slider (a labeled row) ---------- */
 
 .fp-slider {

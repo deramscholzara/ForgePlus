@@ -588,6 +588,8 @@ MonoBehaviour:
   - rid: 552786630167494705
   - rid: 552786630167494706
   - rid: 552786630167494707
+  - rid: 552786749222813702
+  - rid: 552786749222813703
   references:
     version: 2
     RefIds:
@@ -4592,3 +4594,17 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: Starts on the floor right below the Culling Simulation's reference point, or else the camera, facing the way the camera does (and kept clear of walls). Only while one of them is inside a polygon, between its floor and ceiling, and not in the top-down view.
+    - rid: 552786749222813702
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10052099437641728
+        m_Metadata:
+          m_Items: []
+        m_Value: Media Fog
+    - rid: 552786749222813703
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10052099441836032
+        m_Metadata:
+          m_Items: []
+        m_Value: 'Fills the space under media with fog, seen from inside or outside it, and from above through its surface. Each media type''s fog color and density are in the Settings tab. Only shown while media is. Display only: nothing is saved in the level.'

@@ -22,6 +22,7 @@ namespace ForgePlus.UI
             Root.Find<Toggle>("simple-visuals").BindValue(settings, nameof(SettingsViewModel.SimpleVisualsEnabled));
             Root.Find<Toggle>("diagnostic-visuals").BindValue(settings, nameof(SettingsViewModel.DiagnosticVisualsEnabled));
             Root.Find<Toggle>("show-lighting").BindValue(settings, nameof(SettingsViewModel.ShowLightingEnabled));
+            Root.Find<Toggle>("media-fog").BindValue(settings, nameof(SettingsViewModel.MediaFogEnabled));
 
             Root.Find<Toggle>("sprite-previews").BindValue(settings, nameof(SettingsViewModel.SpritePreviewsEnabled));
             Root.Find<Toggle>("clip-platform-sides").BindValue(settings, nameof(SettingsViewModel.ClipPlatformSidesEnabled));

@@ -66,6 +66,28 @@ namespace RuntimeCore.Entities
             InspectorPanel.Instance.AddInspector(inspector);
         }
 
+        // A polygon's floor (x) and ceiling (y) heights (world units), where a platform's simulation has a platform's
+        public Unity.Mathematics.int2 LiveHeights(short polygonIndex)
+        {
+            var polygon = Level.PolygonList[polygonIndex];
+            var heights = new Unity.Mathematics.int2(polygon.floor_height, polygon.ceiling_height);
+
+            if (polygon.type == map._polygon_is_platform)
+            {
+                if (FloorPlatforms != null && FloorPlatforms.TryGetValue(polygon.permutation, out var floorPlatform) && floorPlatform)
+                {
+                    heights.x = (int) Unity.Mathematics.math.round(floorPlatform.CurrentHeightInWorldUnitIncrements);
+                }
+
+                if (CeilingPlatforms != null && CeilingPlatforms.TryGetValue(polygon.permutation, out var ceilingPlatform) && ceilingPlatform)
+                {
+                    heights.y = (int) Unity.Mathematics.math.round(ceilingPlatform.CurrentHeightInWorldUnitIncrements);
+                }
+            }
+
+            return heights;
+        }
+
         public void PrepareForDestruction()
         {
             foreach (var light in Lights.Values)

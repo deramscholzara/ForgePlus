@@ -238,6 +238,9 @@ namespace ForgePlus.UI
             FillablePolygons.Update();
             CullingSimulation.Update();
 
+            // After culling, which hides volumes as it hides their polygons
+            MediaFog.Update();
+
             // Once a frame at most, after what may have changed them
             Errors.RefreshIfRequested();
             DiagnosticVisuals.RefreshIfRequested();

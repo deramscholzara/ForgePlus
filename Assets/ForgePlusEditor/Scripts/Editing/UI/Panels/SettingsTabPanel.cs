@@ -53,6 +53,35 @@ namespace ForgePlus.UI
             var orthographicGridOpacity = Root.Q("orthographic-grid-opacity");
             orthographicGridOpacity.Q<SliderInt>("control").BindValue(settings, nameof(SettingsViewModel.OrthographicGridOpacityPercent));
             orthographicGridOpacity.Q<Label>("value").Bind("text", settings, nameof(SettingsViewModel.OrthographicGridOpacityText));
+
+            AddMediaFogTypes(settings);
+        }
+
+        // A color and a density for each media type's fog
+        private void AddMediaFogTypes(SettingsViewModel settings)
+        {
+            var container = Root.Q("media-fog-types");
+            var template = LoadTemplate("MediaFogType");
+
+            foreach (var mediaFogType in settings.MediaFogTypes)
+            {
+                var element = template.Instantiate();
+                element.pickingMode = PickingMode.Ignore;
+                container.Add(element);
+                Localization.Strings.Localize(element);
+
+                var color = element.Q("color");
+                var colorField = color.Q<TextField>("control");
+                colorField.Bind("label", mediaFogType, nameof(MediaFogTypeViewModel.ColorLabel));
+                colorField.BindValue(mediaFogType, nameof(MediaFogTypeViewModel.ColorText));
+                color.Q("swatch").Bind("style.backgroundColor", mediaFogType, nameof(MediaFogTypeViewModel.SwatchColor));
+
+                var density = element.Q("density");
+                var densitySlider = density.Q<SliderInt>("control");
+                densitySlider.Bind("label", mediaFogType, nameof(MediaFogTypeViewModel.DensityLabel));
+                densitySlider.BindValue(mediaFogType, nameof(MediaFogTypeViewModel.DensityThousandths));
+                density.Q<Label>("value").Bind("text", mediaFogType, nameof(MediaFogTypeViewModel.DensityText));
+            }
         }
     }
 }

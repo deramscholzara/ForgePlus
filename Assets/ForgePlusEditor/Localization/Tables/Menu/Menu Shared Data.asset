@@ -1017,6 +1017,36 @@ MonoBehaviour:
     m_Flags: 0
     m_Metadata:
       m_Items: []
+  - m_Id: 10052098120630272
+    m_Key: SettingsTab.MediaFogHeader.Text
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10052098120630273
+    m_Key: SettingsTab.MediaFogColor.Control.Label
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10052098120630274
+    m_Key: SettingsTab.MediaFogColor.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10052098120630275
+    m_Key: SettingsTab.MediaFogDensity.Control.Label
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10052098120630276
+    m_Key: SettingsTab.MediaFogDensity.Tooltip
+    m_Flags: 0
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10052098120630277
+    m_Key: SettingsTab.MediaFogDensity.Value
+    m_Flags: 1
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   references:

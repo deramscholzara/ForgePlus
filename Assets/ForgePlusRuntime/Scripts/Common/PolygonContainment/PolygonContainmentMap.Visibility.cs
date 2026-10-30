@@ -51,8 +51,8 @@ namespace ForgePlus.PolygonContainment
             var isChanged = false;
             for (var i = 0; i < variableElevationLines.Length; i++)
             {
-                var first = LiveHeights(levelEntity, variableElevationLinePolygons[i * 2]);
-                var second = LiveHeights(levelEntity, variableElevationLinePolygons[i * 2 + 1]);
+                var first = levelEntity.LiveHeights(variableElevationLinePolygons[i * 2]);
+                var second = levelEntity.LiveHeights(variableElevationLinePolygons[i * 2 + 1]);
                 var transparent = math.max(first.x, second.x) < math.min(first.y, second.y) ? (byte) 1 : (byte) 0;
 
                 var lineIndex = variableElevationLines[i];
@@ -64,28 +64,6 @@ namespace ForgePlus.PolygonContainment
             }
 
             return isChanged;
-        }
-
-        // A polygon's floor and ceiling heights (world units), where a platform's simulation has a platform's
-        private int2 LiveHeights(LevelEntity_Level levelEntity, short polygonIndex)
-        {
-            var polygon = Level.PolygonList[polygonIndex];
-            var heights = new int2(polygon.floor_height, polygon.ceiling_height);
-
-            if (polygon.type == map._polygon_is_platform)
-            {
-                if (levelEntity.FloorPlatforms != null && levelEntity.FloorPlatforms.TryGetValue(polygon.permutation, out var floorPlatform) && floorPlatform)
-                {
-                    heights.x = (int) math.round(floorPlatform.CurrentHeightInWorldUnitIncrements);
-                }
-
-                if (levelEntity.CeilingPlatforms != null && levelEntity.CeilingPlatforms.TryGetValue(polygon.permutation, out var ceilingPlatform) && ceilingPlatform)
-                {
-                    heights.y = (int) math.round(ceilingPlatform.CurrentHeightInWorldUnitIncrements);
-                }
-            }
-
-            return heights;
         }
 
         // Whether each polygon can be seen from the point (given in world units), which is in the origin polygon. Run on a

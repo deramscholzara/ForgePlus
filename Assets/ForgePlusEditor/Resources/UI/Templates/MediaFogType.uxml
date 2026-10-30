@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Template name="ColorFieldRow" src="ColorFieldRow.uxml" />
+    <ui:Template name="SliderValueRow" src="SliderValueRow.uxml" />
+    <!-- One media type's fog settings in the Settings tab (SettingsTabPanel): its color, then its density per world unit
+         (from none to one, in thousandths) -->
+    <ui:VisualElement picking-mode="Ignore">
+        <ui:Instance template="ColorFieldRow" name="color" class="fp-setting" tooltip="@Menu/SettingsTab.MediaFogColor.Tooltip" />
+        <ui:Instance template="SliderValueRow" name="density" class="fp-setting" tooltip="@Menu/SettingsTab.MediaFogDensity.Tooltip">
+            <ui:AttributeOverrides element-name="control" high-value="1000" />
+        </ui:Instance>
+    </ui:VisualElement>
+</ui:UXML>

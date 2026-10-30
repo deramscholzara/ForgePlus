@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <!-- A labeled color, typed as hexadecimal ("#0000FF") and committed on return or leaving the field, with a swatch of
+         it at its end -->
+    <ui:VisualElement class="fp-color-row fp-template">
+        <ui:TextField name="control" label="Label" is-delayed="true" max-length="7" class="fp-number-row fp-color-row__field" />
+        <ui:VisualElement name="swatch" class="fp-color-row__swatch" picking-mode="Ignore" />
+    </ui:VisualElement>
+</ui:UXML>

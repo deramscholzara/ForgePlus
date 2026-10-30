@@ -17,6 +17,10 @@
         <ui:Instance template="Toggle" name="show-lighting" class="fp-toggle--wide-short fp-view-option" tooltip="@Geometry/VisualizationGeometry.ShowLighting.Tooltip">
             <ui:AttributeOverrides element-name="control" text="@Geometry/VisualizationGeometry.ShowLighting.Control.Text" />
         </ui:Instance>
+        <!-- Fog under media, while media is shown (its colors and densities are in the Settings tab) -->
+        <ui:Instance template="Toggle" name="media-fog" class="fp-toggle--wide-short fp-view-option" tooltip="@Common/ViewOptions.MediaFog.Tooltip">
+            <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.MediaFog.Control.Text" />
+        </ui:Instance>
         <ui:VisualElement class="fp-separator fp-separator--horizontal fp-separator--spaced" />
         <ui:Instance template="Toggle" name="sprite-previews" class="fp-toggle--wide-short fp-view-option">
             <ui:AttributeOverrides element-name="control" text="@Common/ViewOptions.SpritePreviews.Control.Text" />

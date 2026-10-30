@@ -47,6 +47,15 @@ namespace ForgePlus.ApplicationGeneral
         private const string PlayerPrefsSettingsKey_UndoSteps = "Settings_UndoSteps";
         private const string PlayerPrefsSettingsKey_PointClickAreaSteps = "Settings_PointClickAreaSteps";
         private const string PlayerPrefsSettingsKey_PointSnapDistance = "Settings_PointSnapDistance";
+        private const string PlayerPrefsSettingsKey_MediaFog = "Settings_MediaFog";
+
+        // Followed by the media type's number
+        private const string PlayerPrefsSettingsKeyPrefix_MediaFogColor = "Settings_MediaFogColor_";
+        private const string PlayerPrefsSettingsKeyPrefix_MediaFogDensity = "Settings_MediaFogDensity_";
+
+        // Media fog's density per world unit, in thousandths (so the slider's steps are exact), from none to one
+        public const int MaximumMediaFogDensityThousandths = 1000;
+        public static readonly int DefaultMediaFogDensityThousandths = Mathf.RoundToInt(MediaFog.DefaultDensityPerWorldUnit * 1000f);
 
         // No longer a setting (invalid moves are always prevented, unless Allow Invalid Move is held), so its saved value
         // is removed
@@ -778,6 +787,65 @@ namespace ForgePlus.ApplicationGeneral
             Shader.SetGlobalFloat(minimumLightPropertyId, showLightingEnabled ? MinimumLight : 1f);
         }
 
+        // Fog under media (MediaFog), drawn while media is shown
+        public bool MediaFogEnabled
+        {
+            get
+            {
+                return PlayerPrefs.GetInt(PlayerPrefsSettingsKey_MediaFog, 1) != 0;
+            }
+            set
+            {
+                PlayerPrefs.SetInt(PlayerPrefsSettingsKey_MediaFog, value ? 1 : 0);
+
+                MediaFog.IsEnabled = value;
+
+                OnSettingChanged?.Invoke(nameof(MediaFogEnabled));
+            }
+        }
+
+        // What OnSettingChanged gives as a media type's fog color or density changes
+        public static string MediaFogSettingName(short mediaType)
+        {
+            return $"MediaFog.{mediaType}";
+        }
+
+        // As Aleph One tints the view under the type's media, until it's changed
+        public Color GetMediaFogColor(short mediaType)
+        {
+            var saved = PlayerPrefs.GetString(PlayerPrefsSettingsKeyPrefix_MediaFogColor + mediaType, string.Empty);
+
+            return ColorUtility.TryParseHtmlString(saved, out var color) ? color : MediaFog.DefaultColors[mediaType];
+        }
+
+        public void SetMediaFogColor(short mediaType, Color color)
+        {
+            PlayerPrefs.SetString(PlayerPrefsSettingsKeyPrefix_MediaFogColor + mediaType, "#" + ColorUtility.ToHtmlStringRGB(color));
+
+            ApplyMediaFogAppearance(mediaType);
+
+            OnSettingChanged?.Invoke(MediaFogSettingName(mediaType));
+        }
+
+        public int GetMediaFogDensityThousandths(short mediaType)
+        {
+            return Math.Clamp(PlayerPrefs.GetInt(PlayerPrefsSettingsKeyPrefix_MediaFogDensity + mediaType, DefaultMediaFogDensityThousandths), 0, MaximumMediaFogDensityThousandths);
+        }
+
+        public void SetMediaFogDensityThousandths(short mediaType, int thousandths)
+        {
+            PlayerPrefs.SetInt(PlayerPrefsSettingsKeyPrefix_MediaFogDensity + mediaType, Math.Clamp(thousandths, 0, MaximumMediaFogDensityThousandths));
+
+            ApplyMediaFogAppearance(mediaType);
+
+            OnSettingChanged?.Invoke(MediaFogSettingName(mediaType));
+        }
+
+        private void ApplyMediaFogAppearance(short mediaType)
+        {
+            MediaFog.SetAppearance(mediaType, GetMediaFogColor(mediaType), GetMediaFogDensityThousandths(mediaType) / 1000f);
+        }
+
         // Shows only what Aleph One would draw from the camera, or from a reference point (CullingSimulation), in every
         // mode. Off as ForgePlus starts (it isn't saved).
         public CullingSimulation.Modes CullingSimulationMode
@@ -864,9 +932,19 @@ namespace ForgePlus.ApplicationGeneral
                 PlayerPrefsSettingsKey_PointSnapDistance,
                 PlayerPrefsSettingsKey_OrthographicGridOpacity,
                 PlayerPrefsSettingsKey_UIScale,
+                PlayerPrefsSettingsKey_MediaFog,
             })
             {
                 PlayerPrefs.DeleteKey(key);
+            }
+
+            for (short mediaType = 0; mediaType < AlephOne.media.NUMBER_OF_MEDIA_TYPES; mediaType++)
+            {
+                PlayerPrefs.DeleteKey(PlayerPrefsSettingsKeyPrefix_MediaFogColor + mediaType);
+                PlayerPrefs.DeleteKey(PlayerPrefsSettingsKeyPrefix_MediaFogDensity + mediaType);
+
+                ApplyMediaFogAppearance(mediaType);
+                OnSettingChanged?.Invoke(MediaFogSettingName(mediaType));
             }
 
             // Each set to its default (what it reads without its key), which applies it as changing it would
@@ -890,6 +968,7 @@ namespace ForgePlus.ApplicationGeneral
             PointSnapDistance = PointSnapDistance;
             OrthographicGridOpacityPercent = OrthographicGridOpacityPercent;
             UIScalePercent = UIScalePercent;
+            MediaFogEnabled = MediaFogEnabled;
 
             MmlLoading.Instance.ResetPluginStates();
 
@@ -899,6 +978,7 @@ namespace ForgePlus.ApplicationGeneral
         private void ApplyGeometryVisibility()
         {
             LevelEntity_Media.SurfacesAreVisible = MediaIsShown;
+            MediaFog.MediaIsShown = MediaIsShown;
             RuntimeSurfaceGeometry.SetKindVisibility(polygonsEnabled, sidesEnabled);
             DiagnosticVisuals.Refresh();
 
@@ -921,6 +1001,12 @@ namespace ForgePlus.ApplicationGeneral
             ShowInvalidSidesEnabled = ShowInvalidSidesEnabled;
             ImproperFractionsEnabled = ImproperFractionsEnabled;
             UndoSteps = UndoSteps;
+            MediaFogEnabled = MediaFogEnabled;
+
+            for (short mediaType = 0; mediaType < AlephOne.media.NUMBER_OF_MEDIA_TYPES; mediaType++)
+            {
+                ApplyMediaFogAppearance(mediaType);
+            }
 
             ModeManager.Instance.OnPrimaryModeChanged += OnPrimaryModeChanged;
 

@@ -213,6 +213,42 @@ namespace ForgePlus.UI
         }
 
         [CreateProperty]
+        public bool MediaFogEnabled
+        {
+            get
+            {
+                return SettingsManager.Instance.MediaFogEnabled;
+            }
+            set
+            {
+                if (value != SettingsManager.Instance.MediaFogEnabled)
+                {
+                    SettingsManager.Instance.MediaFogEnabled = value;
+                }
+            }
+        }
+
+        // Each media type's fog settings, in the order of the types
+        public System.Collections.Generic.IReadOnlyList<MediaFogTypeViewModel> MediaFogTypes
+        {
+            get
+            {
+                if (mediaFogTypes == null)
+                {
+                    mediaFogTypes = new System.Collections.Generic.List<MediaFogTypeViewModel>();
+                    for (short mediaType = 0; mediaType < AlephOne.media.NUMBER_OF_MEDIA_TYPES; mediaType++)
+                    {
+                        mediaFogTypes.Add(new MediaFogTypeViewModel(mediaType));
+                    }
+                }
+
+                return mediaFogTypes;
+            }
+        }
+
+        private System.Collections.Generic.List<MediaFogTypeViewModel> mediaFogTypes;
+
+        [CreateProperty]
         public bool MediaEditable
         {
             get
@@ -639,6 +675,16 @@ namespace ForgePlus.UI
             }
 
             SoundsLoading.Instance.OnDataLoadCompleted -= OnSoundsLoadCompleted;
+
+            if (mediaFogTypes != null)
+            {
+                foreach (var mediaFogType in mediaFogTypes)
+                {
+                    mediaFogType.Dispose();
+                }
+
+                mediaFogTypes = null;
+            }
         }
 
         private void OnSettingChanged(string setting)

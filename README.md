@@ -225,6 +225,7 @@ Liquids such as water, lava and sewage.
 - **Click** a polygon's floor, ceiling or media surface to select its media. Walls can't be clicked in this mode.
 - **Paint tool:** apply the palette's media to polygons, or paint **None** to remove it.
 - **Inspector:** type, low and high heights, flow direction and strength, light, minimum light intensity, Floor Obstructs Sound.
+- **Media Fog** (in More Display Options) fills the space under liquids with fog, so you can see how deep and murky they are. Each media type's fog color and density are in Settings.
 
 ### Sounds
 
@@ -327,6 +328,8 @@ Information about the map file itself: its name (editable), file and data versio
 
 Walk around the level as a player would, without leaving Forge+. Click **Play** in the bottom-right corner (it's available while the open level has a player start), then choose how to start:
 
+![The Play This Level dialog](Documentation/Images/play-dialog.jpg)
+
 - **Begin:** starts at one of the level's player starts, picked at random.
 - **Begin From Here:** starts on the floor below the Culling Simulation reference point if there is one, or else below the camera, facing the way the camera faces. This is available while that point is inside a polygon, between its floor and ceiling, and you're not in the top-down view.
 
@@ -339,6 +342,8 @@ While playing:
 - Lights, media and platforms run as they do in the game, starting from their initial states.
 - Player starts, goals and sound sources are hidden.
 - Monsters, items, weapons and the HUD aren't simulated, and you can't die.
+
+![Playing a level: the interface is hidden, and you see what a player standing there would](Documentation/Images/play-view.jpg)
 
 Press <kbd>Esc</kbd> to leave a terminal, or to leave Play mode. Nothing you do while playing changes the level or the undo history, and the level's lights, media and platforms start over afterward.
 
@@ -391,6 +396,7 @@ The **More Display Options** dropdown (under the visibility toggles) has:
 | **Simple Visuals** | Draws every surface with a plain grid texture, so shapes are easier to see |
 | **Diagnostic Visuals** | Shows concave polygons in red and overlapping volumes in faint yellow |
 | **Show Lighting** | Shows the level's lighting |
+| **Media Fog** | Fills the space under liquids with fog, as Aleph One tints the view underwater. You can see it from inside the liquid, from outside it, and from above through its surface. It's lit by each polygon's media light, and only shown while media is. Set each media type's fog color and density in Settings. On by default, and display only (nothing is saved in the level) |
 | **Sprite Previews** | Shows sprites for objects |
 | **Clip Platform Sides** | Clips the walls of platforms the way the game does |
 | **Show Invalid Sides** | Shows the walls of lines that have no side data for them |
@@ -398,6 +404,8 @@ The **More Display Options** dropdown (under the visibility toggles) has:
 | **Play Level Audio** | Plays what the game would play at the camera's position (needs a Sounds file) |
 
 Options the current mode controls are grayed out. Press <kbd>`</kbd> (backquote) at any time to hide or show the whole interface.
+
+![The same Jjaro liquid seen from below its surface, with Media Fog off (left) and on (right)](Documentation/Images/media-fog.jpg)
 
 **Culling Simulation** (the dropdown below More Display Options) shows only what Aleph One would draw from a point: the polygon that point is in, and the polygons visible from it in any direction. It works in every mode, and is off each time Forge+ starts.
 
@@ -408,6 +416,8 @@ Options the current mode controls are grayed out. Press <kbd>`</kbd> (backquote)
 | **Reference Point** | A white cube placed in front of the camera. Drag it around the level to check visibility from anywhere while you fly elsewhere |
 
 While the point isn't inside a polygon, nothing is hidden. Overlapping polygons ("5-D space") aren't trimmed yet.
+
+![Culling Simulation from a Reference Point: only the polygons visible from the white cube are drawn](Documentation/Images/culling-simulation.jpg)
 
 ---
 
@@ -463,6 +473,8 @@ The **Settings** tab of the Menu is grouped into sections:
 | | Bloom, Vignette, Color Adjustment, Ambient Occlusion | On | Visual effects in the view |
 | | Surface Cache Global Illumination | Off | Higher-quality light bouncing |
 | | Light Multiplier | 1x | How much light surfaces give Surface Cache Global Illumination to bounce onto other surfaces (0x–10x). Only while Surface Cache Global Illumination is on |
+| **Media Fog** | Color (per media type) | Aleph One's underwater tint for that type | The fog's color under each media type, typed as hexadecimal (`#RRGGBB`), with a swatch beside it |
+| | Density (per media type) | 0.125 | How thick each media type's fog is per world unit (0–1). 0 draws no fog. The default matches Aleph One's below-liquid fog, which fades over 8 world units |
 | **Units** | Display World-Units as Improper Fractions | Off | Shows `-512/1024` instead of `-1 and 512/1024` |
 | **Editing** | Undo Steps | 50 | How many changes you can undo (1–10,000) |
 | | Point Click Area | 100% | How large points' clickable area is (100–200%) |

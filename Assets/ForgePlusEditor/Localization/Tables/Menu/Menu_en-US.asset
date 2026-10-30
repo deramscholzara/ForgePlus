@@ -217,6 +217,12 @@ MonoBehaviour:
   - rid: 552786629739413571
   - rid: 552786629739413572
   - rid: 552786629739413573
+  - rid: 552786749222813696
+  - rid: 552786749222813697
+  - rid: 552786749222813698
+  - rid: 552786749222813699
+  - rid: 552786749222813700
+  - rid: 552786749222813701
   references:
     version: 2
     RefIds:
@@ -1622,3 +1628,45 @@ MonoBehaviour:
         m_Metadata:
           m_Items: []
         m_Value: In Play mode, leaves the terminal being read, or else Play mode itself.
+    - rid: 552786749222813696
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10052098120630272
+        m_Metadata:
+          m_Items: []
+        m_Value: Media Fog
+    - rid: 552786749222813697
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10052098120630273
+        m_Metadata:
+          m_Items: []
+        m_Value: Color ({0})
+    - rid: 552786749222813698
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10052098120630274
+        m_Metadata:
+          m_Items: []
+        m_Value: The color of the fog under this type of media (Media Fog, in More Display Options), as hexadecimal (#RRGGBB). It's lit by each polygon's media light. It starts as the tint Aleph One gives the view from under this type of media.
+    - rid: 552786749222813699
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10052098120630275
+        m_Metadata:
+          m_Items: []
+        m_Value: Density ({0})
+    - rid: 552786749222813700
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10052098120630276
+        m_Metadata:
+          m_Items: []
+        m_Value: 'How thick the fog under this type of media is (Media Fog, in More Display Options), per world unit seen through: the farther through it, the more of the fog''s color covers what''s behind (exponentially). None draws no fog. It starts at Aleph One''s below-liquid fog density, an eighth (a fog depth of 8 world units).'
+    - rid: 552786749222813701
+      type: {class: StringEntry, ns: Unity.Localization, asm: UnityEngine.LocalizationRuntimeModule}
+      data:
+        m_KeyId: 10052098120630277
+        m_Metadata:
+          m_Items: []
+        m_Value: '{0:0.000}'
