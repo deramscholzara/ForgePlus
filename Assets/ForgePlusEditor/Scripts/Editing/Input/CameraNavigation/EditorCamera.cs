@@ -117,6 +117,11 @@ namespace ForgePlus.CameraNavigation
         private float panHeight;
         private Vector3 panGrabPoint;
 
+        // Whether the cursor is hidden and locked for looking around (UpdateLookCursor), and where it was as it began
+        private bool isCursorHiddenForLook;
+        private Vector2 lookCursorStartPosition;
+        private bool isLookCursorReturnPending;
+
         // Where the camera was (and its field of view) as something else took control of it
         private (Vector3 Position, Quaternion Rotation, float FieldOfView)? externalControl;
 
@@ -203,6 +208,9 @@ namespace ForgePlus.CameraNavigation
             isFraming = false;
             isPanning = false;
             currentVelocityVector = Vector3.zero;
+
+            // Freed again before what takes control sets the cursor as it needs (and puts it back as it was afterward)
+            UpdateLookCursor(isLooking: false);
 
             externalControl = (transform.position, transform.rotation, viewCamera.fieldOfView);
 
@@ -638,6 +646,68 @@ namespace ForgePlus.CameraNavigation
 #endif
         }
 
+        private void OnDisable()
+        {
+            UpdateLookCursor(isLooking: false);
+        }
+
+        // Switching to another app mid-look frees the cursor there
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus)
+            {
+                UpdateLookCursor(isLooking: false);
+            }
+        }
+
+        // Hidden and locked while looking around (Look's button held), as it isn't pointing at anything meanwhile (and so
+        // it can't leave the window or reach the screen's edge), and shown again where it was as the button is let go, or
+        // the app loses focus
+        private void UpdateLookCursor(bool isLooking)
+        {
+            var hides = isLooking && Application.isFocused;
+            if (hides == isCursorHiddenForLook)
+            {
+                return;
+            }
+
+            isCursorHiddenForLook = hides;
+
+            var mouse = Mouse.current;
+            if (hides)
+            {
+                lookCursorStartPosition = mouse != null ? mouse.position.ReadValue() : Vector2.zero;
+
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
+                // Unlocking leaves it in the middle of the window, so it's put back where it was pressed, now and again on
+                // the next frame (in case the unlock only takes effect then)
+                mouse?.WarpCursorPosition(lookCursorStartPosition);
+                isLookCursorReturnPending = true;
+            }
+        }
+
+        private void ReturnLookCursorIfPending()
+        {
+            if (!isLookCursorReturnPending)
+            {
+                return;
+            }
+
+            isLookCursorReturnPending = false;
+
+            if (!isCursorHiddenForLook && Application.isFocused)
+            {
+                Mouse.current?.WarpCursorPosition(lookCursorStartPosition);
+            }
+        }
+
         private void Start()
         {
             UIBlocking.Instance.OnChanged += OnInputBlockerChanged;
@@ -647,10 +717,15 @@ namespace ForgePlus.CameraNavigation
 
         private void Update()
         {
+            ReturnLookCursorIfPending();
+
             if (IsExternallyControlled)
             {
                 return;
             }
+
+            // As Looking (below) turns the view: not while it's looking down, moving into or out of that, or blocked
+            UpdateLookCursor(!isOrthographic && !isTransitioning && !IsNavigationBlocked && Hotkeys.IsPressed(ForgePlusInput.Camera.EnableLook));
 
             // Not navigation, so it carries on while navigation is blocked
             if (isTransitioning)
